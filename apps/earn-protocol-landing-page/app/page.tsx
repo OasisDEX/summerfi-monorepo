@@ -1,12 +1,13 @@
 'use client'
 
-import { Audits } from '@summerfi/app-earn-ui'
+import { Audits, LatestNews } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 
 import { LandingPageHero, ProtocolScroller } from '@/components/layout/LandingPageContent'
 import { OurProducts } from '@/components/layout/LandingPageContent/components/OurProducts'
 import { YieldProtocolOpenToAll } from '@/components/layout/LandingPageContent/components/YieldProtocolOpenToAll'
 import { BuildBySummerFiPlain } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
+import { LandingFaqSection } from '@/components/layout/LandingPageContent/content/LandingFaqSection'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
@@ -27,7 +28,7 @@ export default function HomePage() {
     <div
       style={{
         display: 'flex',
-        gap: '8px',
+        gap: '24px',
         flexDirection: 'column',
         alignItems: 'center',
         padding: '0 24px',
@@ -42,13 +43,39 @@ export default function HomePage() {
       <ProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
       <YieldProtocolOpenToAll />
       <OurProducts />
-      <Audits
-        noHeader
-        chainSecurityLogo={chainSecurityLogo}
-        prototechLabsLogo={prototechLabsLogo}
-        onAuditClick={handleAuditClick}
-      />
-      <BuildBySummerFiPlain />
+      <LatestNews news={landingPageData?.blogPosts} />
+      <div
+        style={{
+          marginTop: 'var(--spacing-space-3x-large)',
+          paddingTop: 'var(--spacing-space-3x-large)',
+          width: '100%',
+        }}
+      >
+        <Audits
+          noHeader
+          chainSecurityLogo={chainSecurityLogo}
+          prototechLabsLogo={prototechLabsLogo}
+          onAuditClick={handleAuditClick}
+        />
+      </div>
+      <div
+        style={{
+          marginTop: 'var(--spacing-space-3x-large)',
+          paddingTop: 'var(--spacing-space-3x-large)',
+          width: '100%',
+        }}
+      >
+        <BuildBySummerFiPlain />
+      </div>
+      <div
+        style={{
+          marginTop: 'var(--spacing-space-3x-large)',
+          marginBottom: 'var(--spacing-space-3x-large)',
+          width: '100%',
+        }}
+      >
+        <LandingFaqSection />
+      </div>
     </div>
   )
 }

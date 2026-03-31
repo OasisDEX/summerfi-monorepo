@@ -83,6 +83,7 @@ export {
   SlideCarouselButtonPosition,
   SliderCarouselDotsPosition,
 } from './components/molecules/SlideCarousel/SlideCarousel'
+export { LatestNews } from './components/molecules/LatestNews/LatestNews'
 export {
   LinkCard,
   type LinkCardWithIcon,
