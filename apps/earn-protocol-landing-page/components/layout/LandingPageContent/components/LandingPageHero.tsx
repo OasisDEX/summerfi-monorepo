@@ -33,15 +33,16 @@ export const LandingPageHero = ({
   vaultsApyByNetworkMap,
   vaultsInfo,
   rewardTokenPrices,
+  tvl,
 }: {
   vaultsList?: SDKVaultishType[]
   vaultsApyByNetworkMap?: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   rewardTokenPrices?: RewardTokenPrices
+  tvl?: number
 }) => {
   const heroStats = useMemo(() => {
     const formattedProtocolsSupportedList = getVaultsProtocolsList(vaultsList ?? [])
-    const tvl = vaultsList?.reduce((sum, vault) => sum + Number(vault.totalValueLockedUSD), 0) ?? 0
     const noOfVaults = vaultsList?.length ?? 0
 
     const maxApy =
@@ -111,7 +112,7 @@ export const LandingPageHero = ({
         ),
       },
     ]
-  }, [rewardTokenPrices, vaultsApyByNetworkMap, vaultsInfo, vaultsList])
+  }, [rewardTokenPrices, vaultsApyByNetworkMap, vaultsInfo, vaultsList, tvl])
 
   const handleGetStartedClick = () => {
     EarnProtocolEvents.buttonClicked({
