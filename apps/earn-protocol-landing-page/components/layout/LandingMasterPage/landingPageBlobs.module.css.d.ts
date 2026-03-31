@@ -7,6 +7,7 @@ declare const styles: {
   readonly "driftSmall2": string;
   readonly "driftSmall3": string;
   readonly "driftSmall4": string;
+  readonly "gradientBottom": string;
   readonly "largeBlobDrift1": string;
   readonly "largeBlobDrift2": string;
   readonly "largeBlobDrift3": string;

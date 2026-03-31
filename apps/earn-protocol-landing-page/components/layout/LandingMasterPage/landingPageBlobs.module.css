@@ -188,3 +188,12 @@
 .largeBlobDrift3 {
   animation: driftLarge3 15s ease-in-out infinite;
 }
+
+.gradientBottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 500px;
+  background: linear-gradient(180deg, rgba(16, 16, 16, 0) 0%, rgb(16, 16, 16) 100%);
+}

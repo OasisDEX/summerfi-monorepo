@@ -149,7 +149,7 @@ const LandingPageLargeBlobs = () => {
   )
 }
 
-export const LandingPageBlobs = () => {
+export const LandingPageBlobs = ({ isMainPage }: { isMainPage: boolean }) => {
   return (
     <div className={landingPageBlobsStyles.blobsContainer}>
       <Image
@@ -164,8 +164,9 @@ export const LandingPageBlobs = () => {
         }}
         priority
       />
-      <LandingPageLargeBlobs />
+      {isMainPage && <LandingPageLargeBlobs />}
       <LandingPageSmallBlobs />
+      {!isMainPage && <div className={landingPageBlobsStyles.gradientBottom} />}
     </div>
   )
 }

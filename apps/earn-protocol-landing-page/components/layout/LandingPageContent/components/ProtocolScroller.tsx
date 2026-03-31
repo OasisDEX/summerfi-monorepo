@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Icon, Text } from '@summerfi/app-earn-ui'
+import { Icon, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import {
   type LandingPageData,
   supportedDefillamaProtocols,
@@ -70,9 +70,13 @@ export const ProtocolScrollerItem = ({
       <div className={protocolScrollerStyles.protocolScrollerItemTvl}>
         <Text variant="p3semi">TVL</Text>
         <Text variant="p2semi">
-          {formatAsShorthandNumbers(tvl, {
-            precision: 2,
-          })}
+          {tvl ? (
+            formatAsShorthandNumbers(tvl, {
+              precision: 2,
+            })
+          ) : (
+            <SkeletonLine width={50} height={12} style={{ margin: '6px auto' }} />
+          )}
         </Text>
       </div>
     </div>

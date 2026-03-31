@@ -34,6 +34,8 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
 
   useScrollTracker({})
 
+  const isMainPage = pathname === '/'
+
   const isBeachClub = pathname.includes('beach-club')
 
   const showPalms = isBeachClub
@@ -76,7 +78,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
       {landingPageData?.systemConfig.bannerMessage && (
         <GlobalIssueBanner message={landingPageData.systemConfig.bannerMessage} />
       )}
-      <LandingPageBlobs />
+      <LandingPageBlobs isMainPage={isMainPage} />
       <div className={landingMasterPageStyles.appContainer}>
         <NavigationWrapper />
         {showPalms && (

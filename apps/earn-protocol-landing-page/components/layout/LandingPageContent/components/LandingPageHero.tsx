@@ -5,6 +5,7 @@ import {
   Emphasis,
   getRewardsTokenBonus,
   getVaultsProtocolsList,
+  SkeletonLine,
   Text,
 } from '@summerfi/app-earn-ui'
 import {
@@ -86,17 +87,36 @@ export const LandingPageHero = ({
     return [
       {
         label: 'TVL',
-        value: tvl ? formatCryptoBalance(tvl) : '-',
+        value: tvl ? (
+          formatCryptoBalance(tvl)
+        ) : (
+          <SkeletonLine height={30} width={70} style={{ margin: '5px 0' }} />
+        ),
       },
       {
         label: '# of Vaults',
-        value: noOfVaults ? noOfVaults.toLocaleString('en', { maximumFractionDigits: 0 }) : '-',
+        value: noOfVaults ? (
+          noOfVaults.toLocaleString('en', { maximumFractionDigits: 0 })
+        ) : (
+          <SkeletonLine height={30} width={70} style={{ margin: '5px 0' }} />
+        ),
       },
       {
         label: 'Markets Optimized',
-        value: formattedProtocolsSupportedList.allVaultsProtocols.length,
+        value: vaultsList ? (
+          formattedProtocolsSupportedList.allVaultsProtocols.length
+        ) : (
+          <SkeletonLine height={30} width={70} style={{ margin: '5px 0' }} />
+        ),
       },
-      { label: 'Max APY', value: formatDecimalAsPercent(maxApy, { precision: 2 }) },
+      {
+        label: 'Max APY',
+        value: maxApy ? (
+          formatDecimalAsPercent(maxApy, { precision: 2 })
+        ) : (
+          <SkeletonLine height={30} width={70} style={{ margin: '5px 0' }} />
+        ),
+      },
     ]
   }, [rewardTokenPrices, vaultsApyByNetworkMap, vaultsInfo, vaultsList])
 
