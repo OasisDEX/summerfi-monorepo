@@ -68,6 +68,7 @@ import { RewardTokenClaimBox } from '@/components/layout/VaultManageView/RewardT
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
+import { OrderInfoIntentSwap } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -348,6 +349,8 @@ export const VaultManageViewComponent = ({
     approvalCustomValue: approvalAmountParsed,
     sidebarTransactionType,
     setSidebarTransactionType,
+    isDepositWithSwap,
+    setIsDepositWithSwap,
   })
 
   const sdk = useAppSDK()
@@ -536,11 +539,21 @@ export const VaultManageViewComponent = ({
             selectedVault={selectedSwitchVault}
           />
         )
-      } else if (isDepositWithSwap) {
-        // TODO: handle deposit with swap flow in a separate component
-        // return (
-        // new component for deposit with swap flow, we can reuse some of the existing components like token selector and amount input, but the flow is different enough that it deserves its own component
-        // )
+      } else if (isDepositWithSwap && userWalletAddress && vaultToken && selectedToken) {
+        return (
+          <OrderInfoIntentSwap
+            amount={transactionAmount}
+            chainId={vaultChainId}
+            fleetAddressValue={vault.id as `0x${string}`}
+            publicClient={publicClient}
+            userWalletAddress={userWalletAddress as `0x${string}`}
+            fromToken={selectedToken}
+            toToken={vaultToken}
+            onStartAgain={() => {
+              setIsDepositWithSwap(false)
+            }}
+          />
+        )
       } else if (isDepositOrWithdraw) {
         return (
           <ControlsDepositWithdraw
@@ -691,6 +704,7 @@ export const VaultManageViewComponent = ({
     vault,
     vaultChainId,
     vaultsApyByNetworkMap,
+    isDepositWithSwap,
   ])
 
   const sidebarTitle = useMemo(() => {

@@ -25,7 +25,6 @@ export const getIntentSwapsSendDepositOrderHandler =
     fromAmount,
     toAmount,
     sender,
-    spender,
     order,
     viemAccount: account,
     publicClient,
@@ -37,7 +36,6 @@ export const getIntentSwapsSendDepositOrderHandler =
     fromAmount: ITokenAmount
     toAmount: ITokenAmount
     sender: AddressValue
-    spender: AddressValue
     order: UnsignedOrder
     viemAccount: Account
     publicClient: PublicClient
@@ -46,13 +44,14 @@ export const getIntentSwapsSendDepositOrderHandler =
   }) => {
     const permitAmount = toAmount.toSolidityValue()
     const permitTokenAddress = toAmount.token.address.toSolidityValue()
+    const { admiralsQuarters: aqAddress } = sdk.armada.getAddresses({ chainId })
 
     const { permitData, signature } = await sdk.intentSwaps.createPermit2Data({
       chainId,
       viemAccount: account,
       tokenAddress: permitTokenAddress,
       amount: permitAmount,
-      spenderAddress: spender,
+      spenderAddress: aqAddress,
     })
     const enterFleetCallData = encodeFunctionData({
       abi: getAdmiralsQuartersAbi(),
@@ -67,7 +66,7 @@ export const getIntentSwapsSendDepositOrderHandler =
     const gasLimit = '2500000'
     const hooks: { target: `0x${string}`; callData: `0x${string}`; gasLimit: string }[] = [
       {
-        target: spender,
+        target: aqAddress,
         callData: multicallCallData,
         gasLimit,
       },

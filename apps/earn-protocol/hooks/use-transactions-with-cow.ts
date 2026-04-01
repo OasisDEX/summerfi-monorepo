@@ -344,6 +344,8 @@ export const useTransaction = ({
     getPermit2AuthorizationTx,
     getIntentSwapsSellOrderQuote,
     positionAmount,
+    isDepositWithSwap,
+    setIsDepositWithSwap,
   ])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined
@@ -902,6 +904,7 @@ export const useTransaction = ({
     isDeposit,
     isWithdraw,
     transactions,
+    isDepositWithSwap,
   ])
 
   // watch for sendUserOperationError
