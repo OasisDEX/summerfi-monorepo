@@ -758,7 +758,7 @@ export const VaultManageViewComponent = ({
       ) : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     goBackAction: nextTransaction?.type ? backToInit : undefined,
-    primaryButton: sidebar.primaryButton,
+    primaryButton: { ...sidebar.primaryButton, hidden: isDepositWithSwap },
     secondaryButton: sidebar.secondaryButton,
     footnote: (
       <>

@@ -94,6 +94,7 @@ import { getIntentSwapsSellOrderQuoteHandler } from '../handlers/getIntentSwapsS
 import { getIntentSwapsSendDepositOrderHandler } from '../handlers/getIntentSwapsSendHookOrderHandler'
 import { getIntentSwapsCancelOrderHandler } from '../handlers/getIntentSwapsCancelOrderHandler'
 import { getIntentSwapsCheckOrderHandler } from '../handlers/getIntentSwapsCheckOrderHandler'
+import { getAddressesHandler } from '../handlers/getAddressesHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -289,6 +290,7 @@ export const useSDK = (params: UseSdk) => {
     [sdk],
   )
   const getIntentSwapsPermit2RevokeTx = useMemo(() => getPermit2RevokeTxHandler(sdk), [sdk])
+  const getAddresses = useMemo(() => getAddressesHandler(sdk), [sdk])
 
   const memo = useMemo(
     () => ({
@@ -388,6 +390,7 @@ export const useSDK = (params: UseSdk) => {
       getIntentSwapsIsPermit2AuthorizationNeeded,
       getIntentSwapsPermit2AuthorizationTx,
       getIntentSwapsPermit2RevokeTx,
+      getAddresses,
     }),
     [
       getCurrentUser,
@@ -485,6 +488,7 @@ export const useSDK = (params: UseSdk) => {
       getIntentSwapsIsPermit2AuthorizationNeeded,
       getIntentSwapsPermit2AuthorizationTx,
       getIntentSwapsPermit2RevokeTx,
+      getAddresses,
     ],
   )
 

@@ -1084,4 +1084,14 @@ export interface IArmadaManagerUsersClient {
     owner: IAddress
     authorizedCaller: IAddress
   }): Promise<boolean>
+
+  /**
+   * @name getProtocolAddresses
+   * @description Returns the deployed contract addresses for the Armada protocol on a given chain
+   * @param params.chainId The chain ID to retrieve addresses for
+   * @returns Promise with a record containing the admiralsQuarters contract address
+   */
+  getProtocolAddresses(params: {
+    chainId: ChainId
+  }): Promise<Record<'admiralsQuarters', AddressValue>>
 }

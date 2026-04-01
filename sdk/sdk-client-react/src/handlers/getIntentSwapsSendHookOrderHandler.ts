@@ -44,7 +44,7 @@ export const getIntentSwapsSendDepositOrderHandler =
   }) => {
     const permitAmount = toAmount.toSolidityValue()
     const permitTokenAddress = toAmount.token.address.toSolidityValue()
-    const { admiralsQuarters: aqAddress } = sdk.armada.getAddresses({ chainId })
+    const { admiralsQuarters: aqAddress } = await sdk.armada.users.getProtocolAddresses({ chainId })
 
     const { permitData, signature } = await sdk.intentSwaps.createPermit2Data({
       chainId,
