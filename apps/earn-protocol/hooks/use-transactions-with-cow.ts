@@ -81,6 +81,8 @@ type UseTransactionParams = {
   setSidebarTransactionType?: Dispatch<SetStateAction<TransactionAction>>
   referralCode?: string
   referralCodeError?: string | null
+  isDepositWithSwap: boolean
+  setIsDepositWithSwap: Dispatch<SetStateAction<boolean>>
 }
 
 const errorsMap = {
@@ -109,6 +111,8 @@ export const useTransaction = ({
   approvalCustomValue,
   sidebarTransactionType,
   setSidebarTransactionType,
+  isDepositWithSwap,
+  setIsDepositWithSwap,
   referralCode,
   referralCodeError,
 }: UseTransactionParams) => {
@@ -122,10 +126,8 @@ export const useTransaction = ({
     getWithdrawTx: getWithdrawTX,
     getVaultSwitchTx,
     getIntentSwapsSellOrderQuote,
-    getIntentSwapsCheckOrder,
     getPermit2AuthorizationTx,
     isPermit2AuthorizationNeeded,
-    getIntentSwapsSendDepositOrder,
   } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
@@ -214,6 +216,11 @@ export const useTransaction = ({
                 tokenAddress: toToken.address.toSolidityValue(),
               })
             : []
+          if (transactionsList.length === 0 && !isDepositWithSwap) {
+            setIsDepositWithSwap(true)
+
+            return
+          }
         } else {
           setTxStatus('loadingTx')
           transactionsList = await {
@@ -244,12 +251,7 @@ export const useTransaction = ({
         })
 
         if (transactionsList.length <= 0) {
-          if (isDeposit) {
-            // on deposit tx can be empty and it should then go to the swap flow
-            // do nothing
-          } else {
-            throw new Error('Error getting the transactions list')
-          }
+          throw new Error('Error getting the transactions list')
         }
         // Map to TransactionWithStatus and set executed to false
         setTransactions(
@@ -717,12 +719,14 @@ export const useTransaction = ({
           [TransactionType.Deposit]: 'Deposit',
           [TransactionType.Withdraw]: 'Withdraw',
           [TransactionType.VaultSwitch]: 'Switch',
+          [TransactionType.Permit2Authorization]: `Authorize Permit2`,
         }[
           nextTransaction.type as
             | TransactionType.Approve
             | TransactionType.Deposit
             | TransactionType.Withdraw
             | TransactionType.VaultSwitch
+            | TransactionType.Permit2Authorization
         ],
         action: executeNextTransaction,
       }
@@ -771,14 +775,6 @@ export const useTransaction = ({
         disabled: true,
       }
     }
-
-    // if (isDeposit) {
-    //   // for deposit we want to show Cow Swap simulation
-    //   return {
-    //     label: 'Preview',
-    //     action: getCowTransactionsList,
-    //   }
-    // }
 
     return {
       label: 'Preview',
@@ -855,7 +851,8 @@ export const useTransaction = ({
       !isSendingUserOperation &&
       transactions?.every((tx) => tx.executed) && // Check if all transactions are executed
       !waitingForTx &&
-      sidebarTransactionType !== TransactionAction.SWITCH
+      sidebarTransactionType !== TransactionAction.SWITCH &&
+      !isDepositWithSwap
     ) {
       // we do not want to reset the sidebar on switch
       // because there is a separate success screen

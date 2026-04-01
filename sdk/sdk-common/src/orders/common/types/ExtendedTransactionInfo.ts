@@ -24,8 +24,8 @@ export enum TransactionType {
   VaultSwitch = 'VaultSwitch',
   MerklClaim = 'MerklClaim',
   ToggleAQasMerklRewardsOperator = 'ToggleAQasMerklRewardsOperator',
-  Permit2Authorization = 'Permit2 Authorization',
-  Permit2Revoke = 'Permit2 Revoke',
+  Permit2Authorization = 'Permit2Authorization',
+  Permit2Revoke = 'Permit2Revoke',
 }
 
 export type TransactionPriceImpact = {

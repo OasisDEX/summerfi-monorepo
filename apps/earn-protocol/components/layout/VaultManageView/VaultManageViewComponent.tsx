@@ -191,6 +191,7 @@ export const VaultManageViewComponent = ({
   const [sidebarTransactionType, setSidebarTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
+  const [isDepositWithSwap, setIsDepositWithSwap] = useState<boolean>(false)
   const revalidatePositionData = useRevalidatePositionData()
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
@@ -535,6 +536,11 @@ export const VaultManageViewComponent = ({
             selectedVault={selectedSwitchVault}
           />
         )
+      } else if (isDepositWithSwap) {
+        // TODO: handle deposit with swap flow in a separate component
+        // return (
+        // new component for deposit with swap flow, we can reuse some of the existing components like token selector and amount input, but the flow is different enough that it deserves its own component
+        // )
       } else if (isDepositOrWithdraw) {
         return (
           <ControlsDepositWithdraw
