@@ -196,6 +196,13 @@ export class CowSwapProvider
     const supportedChainId = this._assertSupportedChainId(chainId)
     const chainInfo = getChainInfoByChainId(supportedChainId)
 
+    LoggingService.debug('Sending order to CowSwap with parameters:', {
+      chainId,
+      order,
+      signingResult,
+      sender: sender.toString(),
+      sellAmount: formatEther(BigInt(order.sellAmount)),
+    })
     // Handle native currency wrapping if needed
     if (params.fromAmount.token.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
       // check balance of wrapped native currency
@@ -205,9 +212,8 @@ export class CowSwapProvider
         address: Address.createFromEthereum({ value: wrappedNativeCurrencyAddress }),
         walletAddress: Address.createFromEthereum({ value: sender.value }),
       })
-      LoggingService.debug({
+      LoggingService.debug('Checking native currency balance', {
         wrappedNativeCurrencyBalance: wrappedNativeCurrencyBalance.toString(),
-        sellAmount: formatEther(BigInt(order.sellAmount)),
       })
       // if wrapped native currency balance is less than sell amount, need to wrap more
       if (BigInt(wrappedNativeCurrencyBalance.toSolidityValue()) < BigInt(order.sellAmount)) {
@@ -218,10 +224,8 @@ export class CowSwapProvider
           address: Address.createFromEthereum({ value: NATIVE_CURRENCY_ADDRESS_LOWERCASE }),
           walletAddress: Address.createFromEthereum({ value: sender.value }),
         })
-        LoggingService.debug({
-          wrappedNativeCurrencyBalance: wrappedNativeCurrencyBalance.toString(),
+        LoggingService.debug('Need to wrap more native currency', {
           nativeCurrencyBalance: nativeCurrencyBalance.toString(),
-          sellAmount: formatEther(BigInt(order.sellAmount)),
         })
         // if native currency balance + wrapped native currency balance < sell amount, cannot wrap enough
         if (
@@ -235,7 +239,11 @@ export class CowSwapProvider
         } else {
           // return transaction info to wrap required amount of native currency
           // amount to wrap = sell amount - wrapped native currency balance
-
+          LoggingService.debug('Returning transaction info to wrap native currency', {
+            amountToWrap: formatEther(
+              BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.toSolidityValue()),
+            ),
+          })
           return {
             status: CowSwapSendOrderStatus.WrapToNative,
             transactionInfo: {
@@ -276,6 +284,10 @@ export class CowSwapProvider
     })
 
     if (approval) {
+      LoggingService.debug('Returning transaction info for approval', {
+        spender: this._getCowAddress(supportedChainId, 'relayer').toString(),
+        amount: sellAmount.toString(),
+      })
       return {
         status: CowSwapSendOrderStatus.AllowanceNeeded,
         transactionInfo: approval,
@@ -284,6 +296,9 @@ export class CowSwapProvider
 
     const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
 
+    LoggingService.debug('Sending order to CowSwap API', {
+      order,
+    })
     try {
       const orderId = await orderBookApi.sendOrder({
         ...order,
@@ -309,6 +324,7 @@ export class CowSwapProvider
     const supportedChainId = this._assertSupportedChainId(chainId)
     const orderUids = [orderId]
 
+    LoggingService.debug('Cancelling order(s) on CowSwap with order ID(s):', orderUids)
     try {
       const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
 
@@ -318,6 +334,7 @@ export class CowSwapProvider
       })
 
       const result = cancellationsResult + ' order(s) ' + orderUids.join(', ')
+      LoggingService.debug('Order cancellation result:', result)
 
       return { result }
     } catch (e) {

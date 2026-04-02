@@ -273,6 +273,7 @@ export const OrderInfoIntentSwap = ({
         <Text variant="p2semi" style={{ color: 'var(--color-semantic-negative-100)' }}>
           {quoteError ?? 'Failed to get quote'}
         </Text>
+        <div style={{ width: '100%', marginTop: 'var(--general-space-20)' }} />
         <Button variant="primaryLarge" onClick={handleStartAgain}>
           Start again
         </Button>
@@ -286,6 +287,7 @@ export const OrderInfoIntentSwap = ({
         <Text variant="p2semi" style={{ color: 'var(--color-semantic-negative-100)' }}>
           {error ?? 'An error occurred'}
         </Text>
+        <div style={{ width: '100%', marginTop: 'var(--general-space-20)' }} />
         <Button variant="primaryLarge" onClick={handleStartAgain}>
           Start again
         </Button>
@@ -327,6 +329,7 @@ export const OrderInfoIntentSwap = ({
             />
           </div>
         )}
+        <div style={{ width: '100%', marginTop: 'var(--general-space-20)' }} />
         <Button variant="primaryLarge" onClick={handleStartAgain}>
           Start again
         </Button>
@@ -340,6 +343,7 @@ export const OrderInfoIntentSwap = ({
         <Text variant="p2semi" style={{ color: 'var(--color-semantic-negative-100)' }}>
           Transaction rejected. Please try again.
         </Text>
+        <div style={{ width: '100%', marginTop: 'var(--general-space-20)' }} />
         <Button variant="primaryLarge" onClick={handleRetry}>
           Try again
         </Button>
@@ -359,6 +363,7 @@ export const OrderInfoIntentSwap = ({
             ? 'Your swap order was cancelled.'
             : 'Your swap order expired before it could be filled.'}
         </Text>
+        <div style={{ width: '100%', marginTop: 'var(--general-space-20)' }} />
         <Button variant="primaryLarge" onClick={handleStartAgain}>
           Start again
         </Button>
