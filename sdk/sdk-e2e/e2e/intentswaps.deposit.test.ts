@@ -214,6 +214,7 @@ describe('Intent swaps: Swap with Deposit', () => {
           sender: senderAddress,
           publicClient: publicClient,
           fromAmount: sellQuote.fromAmount,
+          limitPrice: sellQuote.limitPrice,
           toToken,
           order: sellQuote.order,
           postHooks: hooks,

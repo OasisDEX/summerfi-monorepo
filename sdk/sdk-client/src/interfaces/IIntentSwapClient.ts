@@ -9,6 +9,7 @@ import type {
   HexData,
   Permit2AuthorizationTransactionInfo,
   Permit2RevokeTransactionInfo,
+  IPrice,
 } from '@summerfi/sdk-common'
 import type { EnrichedOrder, UnsignedOrder } from '@cowprotocol/cow-sdk'
 import type { Account, PublicClient, WalletClient, SignTypedDataParameters } from 'viem'
@@ -95,6 +96,7 @@ export interface IIntentSwapClient {
    */
   sendHookOrder(params: {
     fromAmount: ITokenAmount
+    limitPrice: IPrice
     toToken: IToken
     sender: IAddress
     chainId: ChainId

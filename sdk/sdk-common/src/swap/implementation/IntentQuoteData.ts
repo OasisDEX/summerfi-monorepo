@@ -11,7 +11,7 @@ export type IntentQuoteData = {
   providerType: IntentSwapProviderType
   fromAmount: ITokenAmount
   toAmount: ITokenAmount
-  limitPrice?: IPrice
+  limitPrice: IPrice
   validTo: number // timestamp
   order: UnsignedOrder
 }

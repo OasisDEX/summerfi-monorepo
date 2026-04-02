@@ -12,6 +12,7 @@ import {
   AdapterContext,
   type OrderPostingResult,
   OrderBookApi,
+  type LimitTradeParameters,
 } from '@cowprotocol/cow-sdk'
 import { ViemAdapter } from '@cowprotocol/sdk-viem-adapter'
 import { encodeFunctionData, maxUint256, erc20Abi } from 'viem'
@@ -102,6 +103,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       sender,
       publicClient,
       fromAmount,
+      limitPrice,
       toToken,
       postHooks,
       preHooks,
@@ -157,13 +159,16 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       }
     }
 
-    const parameters: TradeParameters = {
+    const buyAmount = limitPrice.multiply(fromAmount)
+
+    const parameters: LimitTradeParameters = {
       kind: OrderKind.SELL,
       sellToken: fromAmount.token.address.toSolidityValue(),
       sellTokenDecimals: fromAmount.token.decimals,
       buyToken: toToken.address.toSolidityValue(),
       buyTokenDecimals: toToken.decimals,
-      amount: fromAmount.toSolidityValue().toString(),
+      sellAmount: fromAmount.toSolidityValue().toString(),
+      buyAmount: buyAmount.toSolidityValue().toString(),
       slippageBps: 100,
       validTo: order.validTo,
     }
@@ -183,7 +188,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
 
     let orderPostResult: OrderPostingResult
     try {
-      orderPostResult = await tradingSdk.postSwapOrder(parameters, advancedSettings)
+      orderPostResult = await tradingSdk.postLimitOrder(parameters, advancedSettings)
     } catch (error) {
       LoggingService.error('IntentSwapClient: Error posting swap order:', error)
       throw error
