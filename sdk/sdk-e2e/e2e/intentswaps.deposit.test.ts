@@ -10,7 +10,7 @@ import {
 import { FleetAddresses, RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
 import assert from 'assert'
 import { makeSDK } from '@summerfi/sdk-client'
-import { createSendTransactionTool, getPublicClientForChain } from '@summerfi/testing-utils'
+import { createSendTransactionTool, getPublicClientForChain, getWalletClientForChain } from '@summerfi/testing-utils'
 import { privateKeyToAccount } from 'viem/accounts'
 import { encodeFunctionData } from 'viem'
 
@@ -83,6 +83,7 @@ describe('Intent swaps: Swap with Deposit', () => {
     } = scenario
 
     const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
+    const walletClient = getWalletClientForChain(chainId, RpcUrls[chainId], signerPrivateKey)
 
     it('should complete intent swap flow', async () => {
       const sdk = makeSDK({
@@ -160,6 +161,7 @@ describe('Intent swaps: Swap with Deposit', () => {
 
       const { permitData, signature } = await sdk.intentSwaps.createPermit2Data({
         chainId,
+        signTypedData: account.signTypedData.bind(account),
         viemAccount: account,
         tokenAddress: permitTokenAddress,
         amount: permitAmount,
@@ -204,7 +206,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       do {
         const orderReturn = await sdk.intentSwaps.sendHookOrder({
           chainId,
-          account: account,
+          walletClient,
           sender: senderAddress,
           publicClient: publicClient,
           fromAmount: sellQuote.fromAmount,
@@ -223,7 +225,7 @@ describe('Intent swaps: Swap with Deposit', () => {
         const cancelResult = await sdk.intentSwaps.cancelOrder({
           chainId,
           orderId: orderId,
-          account,
+          walletClient,
           publicClient,
         })
 

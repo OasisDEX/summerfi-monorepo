@@ -1,6 +1,11 @@
 import type { ISDKAdminManager, ISDKManager, UnsignedOrder } from '@summerfi/sdk-client'
 import { Address, type AddressValue, type ChainId, type ITokenAmount } from '@summerfi/sdk-common'
-import { encodeFunctionData, type Account, type PublicClient } from 'viem'
+import {
+  encodeFunctionData,
+  type PublicClient,
+  type SignTypedDataParameters,
+  type WalletClient,
+} from 'viem'
 
 /**
  * @name getIntentSwapsSendDepositOrderHandler
@@ -26,10 +31,11 @@ export const getIntentSwapsSendDepositOrderHandler =
     toAmount,
     sender,
     order,
-    viemAccount: account,
+    walletClient,
     publicClient,
     referralCode = '0x',
     apiKey,
+    signTypedData,
   }: {
     chainId: ChainId
     fleetAddressValue: AddressValue
@@ -37,10 +43,11 @@ export const getIntentSwapsSendDepositOrderHandler =
     toAmount: ITokenAmount
     sender: AddressValue
     order: UnsignedOrder
-    viemAccount: Account
+    walletClient: WalletClient
     publicClient: PublicClient
     referralCode?: `0x${string}`
     apiKey?: string
+    signTypedData: (params: SignTypedDataParameters) => Promise<`0x${string}`>
   }) => {
     const permitAmount = toAmount.toSolidityValue()
     const permitTokenAddress = toAmount.token.address.toSolidityValue()
@@ -48,7 +55,10 @@ export const getIntentSwapsSendDepositOrderHandler =
 
     const { permitData, signature } = await sdk.intentSwaps.createPermit2Data({
       chainId,
-      viemAccount: account,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      viemAccount: walletClient.account as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      signTypedData,
       tokenAddress: permitTokenAddress,
       amount: permitAmount,
       spenderAddress: aqAddress,
@@ -78,7 +88,8 @@ export const getIntentSwapsSendDepositOrderHandler =
       sender: Address.createFromEthereum({ value: sender }),
       chainId,
       order,
-      account,
+      walletClient,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       publicClient,
       postHooks: hooks,
       apiKey,

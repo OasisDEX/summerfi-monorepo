@@ -69,8 +69,11 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     const adapter = new ViemAdapter({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       provider: params.publicClient as any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      signer: params.account as any,
+      ...(params.account
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          { signer: params.account as any }
+        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          { walletClient: params.walletClient as any }),
     })
     AdapterContext.getInstance().setAdapter(adapter)
 
@@ -94,6 +97,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     const {
       chainId,
       account,
+      walletClient,
       sender,
       publicClient,
       fromAmount,
@@ -108,19 +112,23 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     const adapter = new ViemAdapter({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       provider: publicClient as any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      signer: account as any,
+      ...(account
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          { signer: account as any } // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        : { walletClient: walletClient as any }),
     })
     AdapterContext.getInstance().setAdapter(adapter)
 
-    const options = apiKey ? new OrderBookApi({ chainId: chainId as SupportedChainId, apiKey }) : {}
+    const orderBookApi = apiKey
+      ? new OrderBookApi({ chainId: chainId as SupportedChainId, apiKey })
+      : undefined
 
-    const sdk = new TradingSdk(
+    const tradingSdk = new TradingSdk(
       {
         chainId: chainId as SupportedChainId,
         appCode: 'summerfi-sdk',
       },
-      options,
+      { orderBookApi: orderBookApi },
       adapter,
     )
 
@@ -128,14 +136,14 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     const isErc20 = fromAmount.token.symbol !== 'ETH'
     if (isErc20) {
       const fromTokenAddress = fromAmount.token.address.toSolidityValue()
-      const currentAllowance = await sdk.getCowProtocolAllowance({
+      const currentAllowance = await tradingSdk.getCowProtocolAllowance({
         tokenAddress: fromTokenAddress,
         owner: sender.toSolidityValue(),
       })
       const requiredAmount = fromAmount.toSolidityValue()
       // Only approve if needed
       if (currentAllowance < requiredAmount) {
-        const txHash = await sdk.approveCowProtocol({
+        const txHash = await tradingSdk.approveCowProtocol({
           tokenAddress: fromTokenAddress,
           amount: requiredAmount,
         })
@@ -168,7 +176,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
 
     let orderPostResult: OrderPostingResult
     try {
-      orderPostResult = await sdk.postSwapOrder(parameters, advancedSettings)
+      orderPostResult = await tradingSdk.postSwapOrder(parameters, advancedSettings)
     } catch (error) {
       LoggingService.error('Error posting swap order:', error)
       throw error
@@ -187,8 +195,10 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     const adapter = new ViemAdapter({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       provider: params.publicClient as any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      signer: params.account as any,
+      ...(params.account
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          { signer: params.account as any } // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        : { walletClient: params.walletClient as any }),
     })
     AdapterContext.getInstance().setAdapter(adapter)
 
@@ -291,7 +301,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
 
   /** @see IIntentSwapClient.createPermit2Data */
   createPermit2Data: IIntentSwapClient['createPermit2Data'] = async (params) => {
-    const { chainId, tokenAddress, amount, spenderAddress, viemAccount: account } = params
+    const { chainId, tokenAddress, amount, spenderAddress, signTypedData, viemAccount } = params
 
     const nonce = BigInt(Date.now())
     const deadline = BigInt(Math.floor(Date.now() / 1000) + 60 * 30) // 30 minutes
@@ -324,13 +334,15 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       ],
     }
 
-    if (!account.signTypedData) {
-      throw new Error(
-        'Account does not support signTypedData. Use a local account (e.g. privateKeyToAccount).',
-      )
+    if (!signTypedData) {
+      throw new Error('signTypedData is required to create Permit2 data.')
+    }
+    if (!viemAccount) {
+      throw new Error('viemAccount is required to create Permit2 data.')
     }
 
-    const signature = await account.signTypedData({
+    const signature = await signTypedData({
+      account: viemAccount,
       domain,
       types,
       primaryType: 'PermitTransferFrom',

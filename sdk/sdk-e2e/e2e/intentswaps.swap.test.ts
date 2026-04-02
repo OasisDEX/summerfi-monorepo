@@ -8,8 +8,11 @@ import {
 import { RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
 import assert from 'assert'
 import { makeSDK } from '@summerfi/sdk-client'
-import { createSendTransactionTool, getPublicClientForChain } from '@summerfi/testing-utils'
-import { privateKeyToAccount } from 'viem/accounts'
+import {
+  createSendTransactionTool,
+  getPublicClientForChain,
+  getWalletClientForChain,
+} from '@summerfi/testing-utils'
 
 jest.setTimeout(300000)
 
@@ -19,7 +22,6 @@ jest.setTimeout(300000)
 describe('Intent swaps: Swap', () => {
   const signerPrivateKey = SharedConfig.testUserPrivateKey
   const senderAddressValue = SharedConfig.testUserAddressValue
-  const account = privateKeyToAccount(signerPrivateKey)
 
   // Configure test scenarios here
   const intentSwapScenarios: {
@@ -56,6 +58,7 @@ describe('Intent swaps: Swap', () => {
       scenario
 
     const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
+    const walletClient = getWalletClientForChain(chainId, RpcUrls[chainId], signerPrivateKey)
 
     it('should complete intent swap flow', async () => {
       const sdk = makeSDK({
@@ -102,7 +105,7 @@ describe('Intent swaps: Swap', () => {
           fromAmount: sellQuote.fromAmount,
           chainId,
           order: sellQuote.order,
-          account,
+          walletClient,
           publicClient,
         })
         orderId = await handleOrderReturn({
@@ -128,7 +131,7 @@ describe('Intent swaps: Swap', () => {
       const cancelResult = await sdk.intentSwaps.cancelOrder({
         chainId,
         orderId: orderId,
-        account,
+        walletClient,
         publicClient,
       })
       console.log('Cancel Order:', cancelResult)

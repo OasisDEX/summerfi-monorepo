@@ -1,15 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useChain, useSigner, useSmartAccountClient } from '@account-kit/react'
-import {
-  Button,
-  getAccountType,
-  Icon,
-  LoadingSpinner,
-  OrderInformation,
-  Text,
-} from '@summerfi/app-earn-ui'
+import { Button, Icon, LoadingSpinner, OrderInformation, Text } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import {
@@ -20,7 +12,7 @@ import {
 } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import type { PublicClient } from 'viem'
-import { useConnectorClient, useSignTypedData } from 'wagmi'
+import { useSignTypedData, useWalletClient } from 'wagmi'
 
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
@@ -67,11 +59,8 @@ export const OrderInfoIntentSwap = ({
     getIntentSwapsCheckOrder,
   } = useAppSDK()
 
-  const { data: walletClient } = useConnectorClient()
+  const { data: walletClient } = useWalletClient()
   const { signTypedDataAsync } = useSignTypedData()
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const signingAccount = { ...walletClient?.account, signTypedData: signTypedDataAsync } as any
 
   const [step, setStep] = useState<SwapStep>('loading_quote')
   const [quote, setQuote] = useState<IntentQuoteData | undefined>(undefined)
@@ -156,7 +145,7 @@ export const OrderInfoIntentSwap = ({
   }, [onStartAgain])
 
   const handleConfirmDeposit = useCallback(async () => {
-    if (!quote) return
+    if (!quote || !walletClient) return
 
     setStep('sending')
     setError(undefined)
@@ -170,7 +159,9 @@ export const OrderInfoIntentSwap = ({
         sender: userWalletAddress,
         order: quote.order,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        viemAccount: signingAccount as any,
+        signTypedData: signTypedDataAsync as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        walletClient: walletClient as any,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         publicClient: publicClient as any,
         referralCode: (referralCode ?? '0x') as `0x${string}`,
@@ -191,9 +182,10 @@ export const OrderInfoIntentSwap = ({
     fleetAddressValue,
     userWalletAddress,
     publicClient,
+    walletClient,
     referralCode,
     getIntentSwapsSendDepositOrder,
-    signingAccount,
+    signTypedDataAsync,
   ])
 
   const handleCancelOrder = useCallback(async () => {
@@ -205,7 +197,7 @@ export const OrderInfoIntentSwap = ({
         chainId,
         orderId,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        account: signingAccount as any,
+        walletClient: walletClient as any,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         publicClient: publicClient as any,
       })
@@ -217,7 +209,7 @@ export const OrderInfoIntentSwap = ({
     } finally {
       setIsCancelling(false)
     }
-  }, [orderId, chainId, publicClient, getIntentSwapsCancelOrder, isCancelling, signingAccount])
+  }, [orderId, chainId, publicClient, getIntentSwapsCancelOrder, isCancelling, walletClient])
 
   if (step === 'loading_quote') {
     return (
@@ -422,7 +414,7 @@ export const OrderInfoIntentSwap = ({
           ]}
         />
       </div>
-      <Button variant="primaryLarge" onClick={handleConfirmDeposit} disabled={!signingAccount}>
+      <Button variant="primaryLarge" onClick={handleConfirmDeposit} disabled={!walletClient}>
         Confirm Deposit
       </Button>
     </div>

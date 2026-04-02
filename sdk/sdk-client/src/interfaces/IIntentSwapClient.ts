@@ -11,7 +11,7 @@ import type {
   Permit2RevokeTransactionInfo,
 } from '@summerfi/sdk-common'
 import type { EnrichedOrder, UnsignedOrder } from '@cowprotocol/cow-sdk'
-import type { Account, PublicClient } from 'viem'
+import type { Account, PublicClient, WalletClient, SignTypedDataParameters } from 'viem'
 
 export type CowHook = {
   target: HexData
@@ -70,7 +70,8 @@ export interface IIntentSwapClient {
     sender: IAddress
     chainId: ChainId
     order: UnsignedOrder
-    account: Account
+    walletClient: WalletClient
+    account?: Account
     publicClient: PublicClient
   }): Promise<
     | { status: 'wrap_to_native'; transactionInfo: TransactionInfo }
@@ -96,7 +97,8 @@ export interface IIntentSwapClient {
     sender: IAddress
     chainId: ChainId
     order: UnsignedOrder
-    account: Account
+    walletClient: WalletClient
+    account?: Account
     publicClient: PublicClient
     preHooks?: CowHook[]
     postHooks?: CowHook[]
@@ -115,7 +117,8 @@ export interface IIntentSwapClient {
   cancelOrder(params: {
     chainId: ChainId
     orderId: string
-    account: Account
+    walletClient: WalletClient
+    account?: Account
     publicClient: PublicClient
   }): Promise<{ result: string }>
 
@@ -180,7 +183,8 @@ export interface IIntentSwapClient {
     tokenAddress: AddressValue
     amount: bigint
     spenderAddress: AddressValue
-    viemAccount: Account
+    viemAccount?: Account
+    signTypedData: (params: SignTypedDataParameters) => Promise<`0x${string}`>
   }): Promise<{
     permitData: {
       permitted: { token: `0x${string}`; amount: bigint }
