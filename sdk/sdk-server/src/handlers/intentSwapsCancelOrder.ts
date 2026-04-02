@@ -14,6 +14,6 @@ export const intentSwapsCancelOrder = publicProcedure
       }),
     }),
   )
-  .mutation(async (opts): Promise<{ result: string }> => {
+  .query(async (opts): Promise<{ result: string }> => {
     return opts.ctx.intentSwapsManager.cancelOrder(opts.input)
   })

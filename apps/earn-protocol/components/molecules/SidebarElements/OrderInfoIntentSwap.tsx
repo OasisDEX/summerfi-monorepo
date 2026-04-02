@@ -11,6 +11,7 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
+import Link from 'next/link'
 import type { PublicClient } from 'viem'
 import { useSignTypedData, useWalletClient } from 'wagmi'
 
@@ -62,6 +63,20 @@ const truncateMiddle = (str: string, front = 10, back = 6): string => {
 
   return `${str.slice(0, front)}...${str.slice(-back)}`
 }
+
+const LinkText = ({ children }: { children: string }) => (
+  <Text
+    as="p"
+    variant="p3semi"
+    style={{
+      color: 'var(--color-text-link)',
+      textDecoration: 'none',
+      cursor: 'pointer',
+    }}
+  >
+    {children}
+  </Text>
+)
 
 export const OrderInfoIntentSwap = ({
   fromToken,
@@ -298,13 +313,13 @@ export const OrderInfoIntentSwap = ({
                 {
                   label: 'Order ID',
                   value: (
-                    <a
+                    <Link
                       href={getCowExplorerUrl(chainId, orderId)}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {truncateMiddle(orderId)}
-                    </a>
+                      <LinkText>{truncateMiddle(orderId)}</LinkText>
+                    </Link>
                   ),
                 },
                 { label: 'Status', value: 'Fulfilled' },
@@ -408,13 +423,13 @@ export const OrderInfoIntentSwap = ({
               {
                 label: 'Order ID',
                 value: orderId ? (
-                  <a
+                  <Link
                     href={getCowExplorerUrl(chainId, orderId)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {truncateMiddle(orderId)}
-                  </a>
+                    <LinkText>{truncateMiddle(orderId)}</LinkText>
+                  </Link>
                 ) : (
                   'Pending...'
                 ),
