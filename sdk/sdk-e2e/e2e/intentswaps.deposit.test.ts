@@ -10,7 +10,11 @@ import {
 import { FleetAddresses, RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
 import assert from 'assert'
 import { makeSDK } from '@summerfi/sdk-client'
-import { createSendTransactionTool, getPublicClientForChain, getWalletClientForChain } from '@summerfi/testing-utils'
+import {
+  createSendTransactionTool,
+  getPublicClientForChain,
+  getWalletClientForChain,
+} from '@summerfi/testing-utils'
 import { privateKeyToAccount } from 'viem/accounts'
 import { encodeFunctionData } from 'viem'
 
@@ -22,7 +26,6 @@ jest.setTimeout(300000)
 describe('Intent swaps: Swap with Deposit', () => {
   const signerPrivateKey = SharedConfig.testUserPrivateKey
   const senderAddressValue = SharedConfig.testUserAddressValue
-  const account = privateKeyToAccount(signerPrivateKey)
   const spenderAddressValue = '0x066bA278928cF2f502318C7f689b769F72d67809' // AQ
 
   // Configure test scenarios here
@@ -64,8 +67,8 @@ describe('Intent swaps: Swap with Deposit', () => {
       amountValue: '1',
       fleetAddressValue: FleetAddresses.Base.ETH,
       sendOrder: true,
-      cancelOrder: false,
-      authorizePermit2: true,
+      cancelOrder: true,
+      // authorizePermit2: true,
     },
   ]
 
@@ -84,6 +87,9 @@ describe('Intent swaps: Swap with Deposit', () => {
 
     const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
     const walletClient = getWalletClientForChain(chainId, RpcUrls[chainId], signerPrivateKey)
+    if (walletClient.account == null) {
+      throw new Error('Wallet client account is null')
+    }
 
     it('should complete intent swap flow', async () => {
       const sdk = makeSDK({
@@ -161,17 +167,12 @@ describe('Intent swaps: Swap with Deposit', () => {
 
       const { permitData, signature } = await sdk.intentSwaps.createPermit2Data({
         chainId,
-        signTypedData: account.signTypedData.bind(account),
-        viemAccount: account,
+        signTypedData: walletClient.signTypedData,
+        viemAccount: walletClient.account,
         tokenAddress: permitTokenAddress,
         amount: permitAmount,
         spenderAddress,
       })
-
-      if (sendOrder === false) {
-        console.log('Skipping sending order')
-        return
-      }
 
       const enterFleetCallData = encodeFunctionData({
         abi: getAdmiralsQuartersAbi(),
@@ -201,6 +202,10 @@ describe('Intent swaps: Swap with Deposit', () => {
         })),
       )
 
+      if (sendOrder === false) {
+        console.log('Skipping sending order')
+        return
+      }
       // loop to check allowance, wrap if needed, and finally send order
       let orderId: string | undefined
       do {

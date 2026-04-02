@@ -27,6 +27,7 @@ type SwapStep =
   | 'success'
   | 'cancelled'
   | 'expired'
+  | 'rejected'
   | 'error'
 
 type OrderInfoIntentSwapProps = {
@@ -39,6 +40,27 @@ type OrderInfoIntentSwapProps = {
   userWalletAddress: AddressValue
   referralCode?: string
   onStartAgain: () => void
+}
+
+const getCowExplorerUrl = (chainId: SupportedNetworkIds, id: string): string => {
+  const prefixMap: { [key: number]: string } = {
+    1: '',
+    8453: 'base/',
+    42161: 'arb1/',
+  }
+  const prefix = prefixMap[chainId]
+
+  if (!prefix) {
+    throw new Error(`Unsupported chain ID: ${chainId}`)
+  }
+
+  return `https://explorer.cow.fi/${prefix}orders/${id}`
+}
+
+const truncateMiddle = (str: string, front = 10, back = 6): string => {
+  if (str.length <= front + back) return str
+
+  return `${str.slice(0, front)}...${str.slice(-back)}`
 }
 
 export const OrderInfoIntentSwap = ({
@@ -144,6 +166,10 @@ export const OrderInfoIntentSwap = ({
     onStartAgain()
   }, [onStartAgain])
 
+  const handleRetry = useCallback(() => {
+    setStep('quote')
+  }, [])
+
   const handleConfirmDeposit = useCallback(async () => {
     if (!quote || !walletClient) return
 
@@ -173,8 +199,14 @@ export const OrderInfoIntentSwap = ({
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Error sending deposit order:', err)
-      setError(err instanceof Error ? err.message : 'Failed to send deposit order')
-      setStep('error')
+      const isRejected = err instanceof Error && /rejected|denied/iu.test(err.message)
+
+      if (isRejected) {
+        setStep('rejected')
+      } else {
+        setError(err instanceof Error ? err.message : 'Failed to send deposit order')
+        setStep('error')
+      }
     }
   }, [
     quote,
@@ -254,7 +286,7 @@ export const OrderInfoIntentSwap = ({
           {'->'}
           <Icon tokenName={toToken.symbol.toUpperCase() as TokenSymbolsList} size={48} />
         </div>
-        <Text variant="h2">Order Fulfilled!</Text>
+        <Text variant="h2">Order fulfilled!</Text>
         <Text variant="p2semi">
           Your {fromToken.symbol} has been swapped and deposited successfully.
         </Text>
@@ -263,7 +295,18 @@ export const OrderInfoIntentSwap = ({
             <OrderInformation
               wrapperStyles={{ padding: 'var(--general-space-8)' }}
               items={[
-                { label: 'Order ID', value: `${orderId.slice(0, 10)}...` },
+                {
+                  label: 'Order ID',
+                  value: (
+                    <a
+                      href={getCowExplorerUrl(chainId, orderId)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {truncateMiddle(orderId)}
+                    </a>
+                  ),
+                },
                 { label: 'Status', value: 'Fulfilled' },
               ]}
             />
@@ -276,10 +319,26 @@ export const OrderInfoIntentSwap = ({
     )
   }
 
+  if (step === 'rejected') {
+    return (
+      <div className={orderInfoDepositWithdrawStyles.depositViewWrapper}>
+        <Text variant="p2semi" style={{ color: 'var(--color-semantic-negative-100)' }}>
+          Transaction rejected. Please try again.
+        </Text>
+        <Button variant="primaryLarge" onClick={handleRetry}>
+          Try again
+        </Button>
+        <Button variant="secondarySmall" onClick={handleStartAgain}>
+          Start again
+        </Button>
+      </div>
+    )
+  }
+
   if (step === 'cancelled' || step === 'expired') {
     return (
       <div className={orderInfoDepositWithdrawStyles.depositViewWrapper}>
-        <Text variant="h2">{step === 'cancelled' ? 'Order Cancelled' : 'Order Expired'}</Text>
+        <Text variant="h2">{step === 'cancelled' ? 'Order cancelled' : 'Order expired'}</Text>
         <Text variant="p2semi">
           {step === 'cancelled'
             ? 'Your swap order was cancelled.'
@@ -309,7 +368,7 @@ export const OrderInfoIntentSwap = ({
           <Icon tokenName={toToken.symbol.toUpperCase() as TokenSymbolsList} size={64} />
         </div>
         <LoadingSpinner />
-        <Text variant="p2semi">Submitting order...</Text>
+        <Text variant="p2semi">Confirm and sign...</Text>
         <div className={orderInfoDepositWithdrawStyles.depositDetails}>
           <OrderInformation
             wrapperStyles={{ padding: 'var(--general-space-8)' }}
@@ -333,7 +392,7 @@ export const OrderInfoIntentSwap = ({
           {'->'}
           <Icon tokenName={toToken.symbol.toUpperCase() as TokenSymbolsList} size={64} />
         </div>
-        <Text variant="h2">Order Submitted</Text>
+        <Text variant="h2">Order submitted</Text>
         <Text variant="p2semi">Waiting for order to be filled...</Text>
         <div className={orderInfoDepositWithdrawStyles.depositDetails}>
           <Text variant="p3semi" className={orderInfoDepositWithdrawStyles.depositDetailsTitle}>
@@ -348,11 +407,21 @@ export const OrderInfoIntentSwap = ({
               },
               {
                 label: 'Order ID',
-                value: orderId ? `${orderId.slice(0, 10)}...` : 'Pending...',
+                value: orderId ? (
+                  <a
+                    href={getCowExplorerUrl(chainId, orderId)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {truncateMiddle(orderId)}
+                  </a>
+                ) : (
+                  'Pending...'
+                ),
               },
               {
                 label: 'Status',
-                value: orderStatus ?? 'open',
+                value: orderStatus === 'open' ? 'Pending' : orderStatus,
               },
             ]}
           />
@@ -409,13 +478,24 @@ export const OrderInfoIntentSwap = ({
             },
             {
               label: 'Quote valid until',
-              value: new Date(quote.validTo * 1000).toLocaleTimeString(),
+              value: new Date(quote.validTo * 1000).toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+              }),
             },
           ]}
         />
       </div>
+      <div
+        style={{
+          width: '100%',
+          marginTop: 'var(--general-space-20)',
+        }}
+      >
+        {' '}
+      </div>
       <Button variant="primaryLarge" onClick={handleConfirmDeposit} disabled={!walletClient}>
-        Confirm Deposit
+        Confirm and Sign
       </Button>
     </div>
   )

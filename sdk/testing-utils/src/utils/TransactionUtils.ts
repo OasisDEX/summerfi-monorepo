@@ -77,6 +77,7 @@ export class TransactionUtils {
     })
 
     this.walletClient = createWalletClient({
+      account: this.account ?? undefined,
       transport: this.transport,
       chain: this.chain,
     })

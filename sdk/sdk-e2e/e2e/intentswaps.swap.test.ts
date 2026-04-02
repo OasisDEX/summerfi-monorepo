@@ -59,6 +59,9 @@ describe('Intent swaps: Swap', () => {
 
     const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
     const walletClient = getWalletClientForChain(chainId, RpcUrls[chainId], signerPrivateKey)
+    if (walletClient.account == null) {
+      throw new Error('Wallet client account is null')
+    }
 
     it('should complete intent swap flow', async () => {
       const sdk = makeSDK({
@@ -69,6 +72,7 @@ describe('Intent swaps: Swap', () => {
         rpcUrl: RpcUrls[chainId],
         signerPrivateKey,
         senderAddressValue,
+        simulateOnly: false,
       })
 
       const userAddress = Address.createFromEthereum({ value: senderAddressValue })
@@ -96,7 +100,6 @@ describe('Intent swaps: Swap', () => {
         console.log('Skipping sending order')
         return
       }
-
       // loop to check allowance, wrap if needed, and finally send order
       let orderId: string | undefined
       do {

@@ -307,12 +307,11 @@ export class CowSwapProvider
   cancelOrder: IIntentSwapProvider['cancelOrder'] = async (params) => {
     const { chainId, orderId, signingResult } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
-
-    const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
-
     const orderUids = [orderId]
 
     try {
+      const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
+
       const cancellationsResult = await orderBookApi.sendSignedOrderCancellations({
         ...signingResult,
         orderUids,
