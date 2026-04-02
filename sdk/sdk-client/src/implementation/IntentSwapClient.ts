@@ -237,12 +237,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       functionName: 'allowance',
       args: [params.ownerAddress.toSolidityValue() as `0x${string}`, PERMIT2_ADDRESS],
     })
-    console.log(
-      'current allowance is: ',
-      allowance.toString(),
-      'required amount is: ',
-      params.amount.toString(),
-    )
+
     return allowance < params.amount
   }
 

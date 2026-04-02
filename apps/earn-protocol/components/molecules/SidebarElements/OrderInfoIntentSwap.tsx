@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useChain, useSmartAccountClient } from '@account-kit/react'
+import { useChain, useSigner, useSmartAccountClient } from '@account-kit/react'
 import {
   Button,
   getAccountType,
@@ -20,6 +20,7 @@ import {
 } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import type { PublicClient } from 'viem'
+import { useConnectorClient, useSignTypedData } from 'wagmi'
 
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
@@ -59,16 +60,18 @@ export const OrderInfoIntentSwap = ({
   referralCode,
   onStartAgain,
 }: OrderInfoIntentSwapProps) => {
-  const { chain } = useChain()
-  const { client: smartAccountClient } = useSmartAccountClient({
-    type: getAccountType(chain.id),
-  })
   const {
     getIntentSwapsSellOrderQuote,
     getIntentSwapsSendDepositOrder,
     getIntentSwapsCancelOrder,
     getIntentSwapsCheckOrder,
   } = useAppSDK()
+
+  const { data: walletClient } = useConnectorClient()
+  const { signTypedDataAsync } = useSignTypedData()
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const signingAccount = { ...walletClient?.account, signTypedData: signTypedDataAsync } as any
 
   const [step, setStep] = useState<SwapStep>('loading_quote')
   const [quote, setQuote] = useState<IntentQuoteData | undefined>(undefined)
@@ -99,6 +102,8 @@ export const OrderInfoIntentSwap = ({
 
         setStep('quote')
       } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching quote:', err)
         setQuoteError(err instanceof Error ? err.message : 'Failed to get quote')
         setStep('quote_error')
       }
@@ -151,7 +156,7 @@ export const OrderInfoIntentSwap = ({
   }, [onStartAgain])
 
   const handleConfirmDeposit = useCallback(async () => {
-    if (!quote || !smartAccountClient?.account) return
+    if (!quote) return
 
     setStep('sending')
     setError(undefined)
@@ -164,9 +169,8 @@ export const OrderInfoIntentSwap = ({
         toAmount: quote.toAmount,
         sender: userWalletAddress,
         order: quote.order,
-        // SmartContractAccount from Account Kit satisfies the Account interface for signing
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        viemAccount: smartAccountClient.account as any,
+        viemAccount: signingAccount as any,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         publicClient: publicClient as any,
         referralCode: (referralCode ?? '0x') as `0x${string}`,
@@ -176,22 +180,24 @@ export const OrderInfoIntentSwap = ({
       setOrderStatus('open')
       setStep('polling')
     } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Error sending deposit order:', err)
       setError(err instanceof Error ? err.message : 'Failed to send deposit order')
       setStep('error')
     }
   }, [
     quote,
-    smartAccountClient,
     chainId,
     fleetAddressValue,
     userWalletAddress,
     publicClient,
     referralCode,
     getIntentSwapsSendDepositOrder,
+    signingAccount,
   ])
 
   const handleCancelOrder = useCallback(async () => {
-    if (!orderId || !smartAccountClient?.account || isCancelling) return
+    if (!orderId || isCancelling) return
 
     setIsCancelling(true)
     try {
@@ -199,7 +205,7 @@ export const OrderInfoIntentSwap = ({
         chainId,
         orderId,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        account: smartAccountClient.account as any,
+        account: signingAccount as any,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         publicClient: publicClient as any,
       })
@@ -211,7 +217,7 @@ export const OrderInfoIntentSwap = ({
     } finally {
       setIsCancelling(false)
     }
-  }, [orderId, smartAccountClient, chainId, publicClient, getIntentSwapsCancelOrder, isCancelling])
+  }, [orderId, chainId, publicClient, getIntentSwapsCancelOrder, isCancelling, signingAccount])
 
   if (step === 'loading_quote') {
     return (
@@ -228,7 +234,7 @@ export const OrderInfoIntentSwap = ({
         <Text variant="p2semi" style={{ color: 'var(--color-semantic-negative-100)' }}>
           {quoteError ?? 'Failed to get quote'}
         </Text>
-        <Button variant="primarySmall" onClick={handleStartAgain}>
+        <Button variant="primaryLarge" onClick={handleStartAgain}>
           Start again
         </Button>
       </div>
@@ -241,7 +247,7 @@ export const OrderInfoIntentSwap = ({
         <Text variant="p2semi" style={{ color: 'var(--color-semantic-negative-100)' }}>
           {error ?? 'An error occurred'}
         </Text>
-        <Button variant="primarySmall" onClick={handleStartAgain}>
+        <Button variant="primaryLarge" onClick={handleStartAgain}>
           Start again
         </Button>
       </div>
@@ -271,7 +277,7 @@ export const OrderInfoIntentSwap = ({
             />
           </div>
         )}
-        <Button variant="primarySmall" onClick={handleStartAgain}>
+        <Button variant="primaryLarge" onClick={handleStartAgain}>
           Start again
         </Button>
       </div>
@@ -287,7 +293,7 @@ export const OrderInfoIntentSwap = ({
             ? 'Your swap order was cancelled.'
             : 'Your swap order expired before it could be filled.'}
         </Text>
-        <Button variant="primarySmall" onClick={handleStartAgain}>
+        <Button variant="primaryLarge" onClick={handleStartAgain}>
           Start again
         </Button>
       </div>
@@ -416,11 +422,7 @@ export const OrderInfoIntentSwap = ({
           ]}
         />
       </div>
-      <Button
-        variant="primarySmall"
-        onClick={handleConfirmDeposit}
-        disabled={!smartAccountClient?.account}
-      >
+      <Button variant="primaryLarge" onClick={handleConfirmDeposit} disabled={!signingAccount}>
         Confirm Deposit
       </Button>
     </div>

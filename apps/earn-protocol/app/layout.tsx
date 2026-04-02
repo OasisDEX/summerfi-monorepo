@@ -113,8 +113,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const chainId: number | undefined = accountKitState.state?.chainId
   const forkRpcUrl: string | undefined = chainId ? forks[chainId] : undefined
 
+  const accountKitConfig = getAccountKitConfig({ forkRpcUrl, chainId, basePath: '/earn' })
+
   const accountKitInitializedState = cookieToInitialState(
-    getAccountKitConfig({ forkRpcUrl, chainId, basePath: '/earn' }),
+    accountKitConfig,
     (await headers()).get('cookie') ?? undefined,
   )
 
@@ -135,6 +137,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}
         <GoogleTagManager />
         <GlobalProvider
+          cookie={cookie}
           accountKitInitializedState={accountKitInitializedState}
           config={config}
           sumrPriceUsd={sumrPriceUsd}
