@@ -18,6 +18,7 @@ export const NetworkDisplay: React.FC<NetworkDisplayProps> = ({ chainId, amount 
     <div className={styles.networkDisplay}>
       <div className={styles.iconWrapper}>
         <Icon iconName="sumr" size={16} className={styles.sumrIcon} />
+        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
         {networkIcon && <Icon size={44} iconName={networkIcon} />}
       </div>
       {amount && (

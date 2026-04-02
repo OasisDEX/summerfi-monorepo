@@ -7,7 +7,7 @@ import {
   NonOwnerPortfolioBanner,
   TabBar,
   Text,
-  useUserWallet,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import {
   type BlogPosts,
@@ -86,7 +86,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 }) => {
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
-  const { userWalletAddress, isLoadingAccount } = useUserWallet()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,

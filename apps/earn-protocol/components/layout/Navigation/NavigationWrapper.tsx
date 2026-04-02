@@ -9,13 +9,12 @@ import {
   NavigationExtraComponents,
   SkeletonLine,
   useCurrentUrl,
+  useEarnProtocolWallet,
   useMobileCheck,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
-import { AutoConnectSafe } from '@/components/molecules/AutoConnectSafe/AutoConnectSafe'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
@@ -33,7 +32,7 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
 export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd }) => {
   const currentPath = usePathname()
   const path = useCurrentUrl()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { features, setRunningGame, setIsGameByInvite } = useSystemConfig()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
@@ -111,15 +110,12 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
       startTheGame={features?.Game ? startGame : undefined}
       featuresConfig={features}
       extraComponents={
-        <>
-          <AutoConnectSafe />
-          <NavigationExtraComponents
-            beachClubEnabled={beachClubEnabled}
-            isEarnApp
-            userWalletAddress={userWalletAddress}
-            onNavItemClick={onNavItemClick}
-          />
-        </>
+        <NavigationExtraComponents
+          beachClubEnabled={beachClubEnabled}
+          isEarnApp
+          userWalletAddress={userWalletAddress}
+          onNavItemClick={onNavItemClick}
+        />
       }
     />
   )

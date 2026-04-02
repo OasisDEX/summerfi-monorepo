@@ -10,11 +10,9 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
   reactStrictMode: false,
   serverExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
   experimental: {
-    // serverComponentsHmrCache: true,
     optimizePackageImports: [
-      '@account-kit/core',
-      '@account-kit/infra',
-      '@account-kit/react',
+      '@privy-io/react-auth',
+      '@privy-io/wagmi',
       '@summerfi/app-earn-ui',
       '@summerfi/app-icons',
       '@summerfi/app-risk',

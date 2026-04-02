@@ -11,9 +11,9 @@ import { ProtocolAccessManagerWhitelistAbi } from '@summerfi/armada-protocol-abi
  * @implements IProtocolAccessManagerWhiteListContract
  */
 export class ProtocolAccessManagerWhiteListContract<
-    const TClient extends IBlockchainClient,
-    TAddress extends IAddress,
-  >
+  const TClient extends IBlockchainClient,
+  TAddress extends IAddress,
+>
   extends ContractWrapper<typeof ProtocolAccessManagerWhitelistAbi, TClient, TAddress>
   implements IProtocolAccessManagerWhiteListContract
 {

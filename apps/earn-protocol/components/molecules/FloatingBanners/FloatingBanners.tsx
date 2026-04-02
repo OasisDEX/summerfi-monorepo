@@ -1,6 +1,6 @@
 'use client'
 
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 
 import { BeachClubFloatingBanner } from '@/components/molecules/BeachClubFloatingBanner/BeachClubFloatingBanner'
 import {
@@ -14,7 +14,7 @@ interface FloatingBannersProps {
 }
 
 export const FloatingBanners = ({ largeUsersData, largeUsersCookie }: FloatingBannersProps) => {
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const isLargeUser = largeUsersData?.includes(userWalletAddress?.toLowerCase() ?? '')
 

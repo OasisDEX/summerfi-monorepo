@@ -1,11 +1,8 @@
 'use client'
-import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { getAccountType, useIsIframe } from '@summerfi/app-earn-ui'
+import { useEarnProtocolSendUserOperation, useIsIframe } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
-import { sdkNetworkToChain } from '@summerfi/app-utils'
 import { type PublicClient } from 'viem'
 
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useSafeTransaction } from '@/hooks/use-safe-transaction'
 
@@ -39,10 +36,6 @@ export const useClaimVaultMerkleRewardsTransaction = ({
 } => {
   const { getVaultRewardsMerklClaimTx, getChainInfo, getCurrentUser } = useAppSDK()
 
-  const { client: smartAccountClient } = useSmartAccountClient({
-    type: getAccountType(sdkNetworkToChain(network).id),
-  })
-
   const { sendSafeWalletTransaction, waitingForTx } = useSafeTransaction({
     network,
     onSuccess,
@@ -56,8 +49,7 @@ export const useClaimVaultMerkleRewardsTransaction = ({
     sendUserOperationAsync,
     error: sendUserOperationError,
     isSendingUserOperation,
-  } = useSendUserOperation({
-    client: smartAccountClient,
+  } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess,
     onError,
@@ -92,19 +84,11 @@ export const useClaimVaultMerkleRewardsTransaction = ({
       value: BigInt(tx[0].transaction.value),
     }
 
-    const resolvedOverrides = await getGasSponsorshipOverride({
-      smartAccountClient,
-      txParams,
-    })
-
     if (isIframe) {
       return sendSafeWalletTransaction(txParams)
     }
 
-    return await sendUserOperationAsync({
-      uo: txParams,
-      overrides: resolvedOverrides,
-    })
+    return await sendUserOperationAsync(txParams)
   }
 
   return {

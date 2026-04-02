@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 'use client'
 
 import { useMemo } from 'react'
@@ -63,7 +64,7 @@ export const VaultDetailsHistoricalYieldChart = ({
 
       return filteredPoint
     })
-  }, [timeframe, chartData, currentOptions, summerVaultName])
+  }, [timeframe, chartData, currentOptions])
 
   const parsedDataWithCutoff =
     !chartData || chartData.data['7d'].length <= POINTS_REQUIRED_FOR_CHART['7d'] ? [] : parsedData

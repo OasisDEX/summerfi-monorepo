@@ -2,7 +2,6 @@
 
 import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@account-kit/react'
 import {
   Button,
   Card,
@@ -11,7 +10,8 @@ import {
   SkeletonLine,
   Text,
   useAmount,
-  useUserWallet,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultType, type SupportedNetworkIds } from '@summerfi/app-types'
 import {
@@ -45,11 +45,11 @@ interface PanelAssetManagementProps {
 }
 
 export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, institutionName }) => {
-  const { chain, isSettingChain } = useChain()
+  const { chain, isSettingChain } = useEarnProtocolChain()
   const { addTransaction, removeTransaction, updateTransaction, transactionQueue } =
     useSDKTransactionQueue()
   const { revalidateTags } = useRevalidateTags()
-  const { isLoadingAccount, userWalletAddress } = useUserWallet()
+  const { isLoadingAccount, address: userWalletAddress } = useEarnProtocolWallet()
   const { publicClient } = useNetworkAlignedClient()
   const { getDepositTx, getWithdrawTx, isWhitelisted } = useAdminAppSDK(institutionName)
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))

@@ -1,5 +1,4 @@
 import type { FC } from 'react'
-import { useChain } from '@account-kit/react'
 import {
   Button,
   Card,
@@ -7,6 +6,7 @@ import {
   Icon,
   LoadableAvatar,
   Text,
+  useEarnProtocolChain,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
@@ -175,12 +175,12 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
   sumrPriceUsd,
 }) => {
   const { walletAddress } = useParams()
-  const { chain } = useChain()
+  const { chain } = useEarnProtocolChain()
 
   const sumrClaimedStepBefore =
     state.claimStatus === UiTransactionStatuses.COMPLETED
       ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        externalData.sumrToClaim.aggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
+        (externalData.sumrToClaim.aggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0)
       : 0
 
   const externalDataSumrDelegated = externalData.sumrStakeDelegate.sumrDelegated

@@ -3,10 +3,10 @@ import type { PlopTypes } from '@turbo/gen'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const setupNamesAction: PlopTypes.CustomActionFunction = async (answers: any) => {
   const name = answers.name
-  ;(answers.namePascalCase = toPascalCase(name)),
+  ;((answers.namePascalCase = toPascalCase(name)),
     (answers.nameKebabCase = toKebabCase(name)),
     (answers.nameCamelCase = toCamelCase(name)),
-    (answers.nameCapitalised = name.toUpperCase())
+    (answers.nameCapitalised = name.toUpperCase()))
 
   return 'Added casing variants'
 }

@@ -1,5 +1,5 @@
 'use client'
-import { Card, Text, useUserWallet, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, Text, useEarnProtocolWallet, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import classNames from './SumrNotTransferable.module.css'
@@ -38,7 +38,7 @@ const getBoxes = (userWalletAddress: string | undefined) => [
 ]
 
 export const SumrNotTransferable = () => {
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   return (
     <div className={classNames.sumrNotTransferableWrapper}>

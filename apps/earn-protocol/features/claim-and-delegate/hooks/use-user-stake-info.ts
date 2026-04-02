@@ -1,4 +1,4 @@
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { useQuery } from '@tanstack/react-query'
 import { zeroAddress } from 'viem'
 
@@ -28,7 +28,7 @@ const getUserStakeInfo = async (
  *  - isSumrStakeInfoLoading: Loading state indicator
  */
 export const useUserStakeInfo = () => {
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { features } = useSystemConfig()
   const stakingV2Enabled = !!features?.StakingV2
 

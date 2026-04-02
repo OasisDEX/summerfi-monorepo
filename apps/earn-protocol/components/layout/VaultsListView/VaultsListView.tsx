@@ -1,7 +1,6 @@
 'use client'
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
-import { useUser } from '@account-kit/react'
 import {
   Card,
   DataBlock,
@@ -11,16 +10,15 @@ import {
   getVaultPositionUrl,
   getVaultsProtocolsList,
   getVaultUrl,
-  isUserSmartAccount,
   SumrStakeCard,
   TabBar,
   Text,
   useAmount,
   useAmountWithSwap,
+  useEarnProtocolWallet,
   useLocalConfig,
   useMobileCheck,
   useTokenSelector,
-  useUserWallet,
   VaultCard,
   VaultGrid,
   VaultSimulationForm,
@@ -63,7 +61,6 @@ import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
-import { filterOutNonSCACompatibleVaults } from '@/helpers/filter-out-non-sca-compatible-vaults'
 import { getManagementFee } from '@/helpers/get-management-fee'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -109,7 +106,7 @@ export const VaultsListView = ({
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const inputChangeHandler = useHandleInputChangeEvent()
   const dropdownChangeHandler = useHandleDropdownChangeEvent()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const revalidateVaultsListData = useRevalidateVaultsListData()
   const { features } = useSystemConfig()
   const [maxApy, setMaxApy] = useState<number>(0)
@@ -118,9 +115,6 @@ export const VaultsListView = ({
   const {
     state: { sumrNetApyConfig, slippageConfig },
   } = useLocalConfig()
-
-  const user = useUser()
-  const userIsSmartAccount = isUserSmartAccount(user)
 
   const { sumrStakeInfo } = useUserStakeInfo()
 
@@ -305,11 +299,7 @@ export const VaultsListView = ({
       ? (networkFilteredVaults.filter(filterAssetVaults) as SDKVaultishType[] | undefined)
       : networkFilteredVaults
 
-    const accountTypeFilteredVaults = userIsSmartAccount
-      ? filterOutNonSCACompatibleVaults(assetFilteredVaults ?? [])
-      : assetFilteredVaults
-
-    const sortedVaults = accountTypeFilteredVaults?.sort(sortVaults)
+    const sortedVaults = assetFilteredVaults?.sort(sortVaults)
 
     return sortedVaults
   }, [
@@ -318,7 +308,6 @@ export const VaultsListView = ({
     filterNetworkVaults,
     filterAssets.length,
     filterAssetVaults,
-    userIsSmartAccount,
     sortVaults,
   ])
 

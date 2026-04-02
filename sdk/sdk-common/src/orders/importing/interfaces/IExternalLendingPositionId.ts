@@ -21,9 +21,7 @@ export const __signature__: unique symbol = Symbol()
  * @description Identifier for an external position to the Summer system
  */
 export interface IExternalLendingPositionId
-  extends IExternalLendingPositionIdData,
-    ILendingPositionId,
-    IPrintable {
+  extends IExternalLendingPositionIdData, ILendingPositionId, IPrintable {
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
   /** Type of the position */

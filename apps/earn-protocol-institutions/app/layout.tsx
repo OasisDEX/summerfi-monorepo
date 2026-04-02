@@ -1,10 +1,6 @@
 import { ToastContainer } from 'react-toastify'
-import { cookieToInitialState } from '@account-kit/core'
 import {
-  accountKitCookieStateName,
   analyticsCookieName,
-  forksCookieName,
-  getAccountKitConfig,
   GlobalIssueBanner,
   GlobalStyles,
   GoogleTagManager,
@@ -81,16 +77,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     )
   }
 
-  const forks = safeParseJson(getServerSideCookies(forksCookieName, cookie))
-  const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
-  const chainId: number | undefined = accountKitState.state?.chainId
-  const forkRpcUrl: string | undefined = chainId ? forks[chainId] : undefined
-
-  const accountKitInitializedState = cookieToInitialState(
-    getAccountKitConfig({ forkRpcUrl, chainId, isInstitutions: true }),
-    (await headers()).get('cookie') ?? undefined,
-  )
-
   // the style on the html tag is needed to prevent a flash of white background on page load
   return (
     <html lang={locale} suppressHydrationWarning style={{ backgroundColor: '#1c1c1c' }}>
@@ -108,7 +94,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}
         <GoogleTagManager />
         <GlobalProvider
-          accountKitInitializedState={accountKitInitializedState}
           config={config}
           analyticsCookie={analyticsCookie}
           deviceType={resolvedDeviceType}

@@ -10,9 +10,9 @@ import { ConfigurationManagerAbi } from '@summerfi/armada-protocol-abis'
  * @implements IConfigurationManagerContract
  */
 export class ConfigurationManagerContract<
-    const TClient extends IBlockchainClient,
-    TAddress extends IAddress,
-  >
+  const TClient extends IBlockchainClient,
+  TAddress extends IAddress,
+>
   extends ContractWrapper<typeof ConfigurationManagerAbi, TClient, TAddress>
   implements IConfigurationManagerContract
 {

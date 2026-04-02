@@ -1,8 +1,14 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useChain } from '@account-kit/react'
-import { Card, getArkNiceName, Icon, Table, Text } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  getArkNiceName,
+  Icon,
+  Table,
+  Text,
+  useEarnProtocolChain,
+} from '@summerfi/app-earn-ui'
 import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
@@ -160,7 +166,7 @@ export const PanelRiskParameters = ({
   const chainId = networkNameToSDKId(network)
   const sdkNetworkName = chainIdToSDKNetwork(chainId)
   const { refresh: refreshView } = useRouter()
-  const { chain, isSettingChain } = useChain()
+  const { chain, isSettingChain } = useEarnProtocolChain()
   const { revalidateTags } = useRevalidateTags()
 
   const isProperChain = useMemo(() => {

@@ -10,7 +10,7 @@ import {
   Icon,
   INTERNAL_LINKS,
   Text,
-  useUserWallet,
+  useEarnProtocolWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
@@ -30,7 +30,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
   viewWalletAddress,
 }) => {
   const resolvedInitReferralCode = beachClubData.custom_code ?? beachClubData.referral_code
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const [refCode, setRefCode] = useState(resolvedInitReferralCode)
   const [isLoading, setIsLoading] = useState(false)
   const handleButtonClick = useHandleButtonClickEvent()

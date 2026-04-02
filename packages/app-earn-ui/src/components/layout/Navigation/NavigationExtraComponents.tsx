@@ -33,6 +33,7 @@ export const NavigationExtraComponents: FC<NavigationExtraComponentsProps> = ({
       {beachClubEnabled && (
         <Link
           href={resolvedBeachClubLink}
+          suppressHydrationWarning
           onClick={() => onNavItemClick?.({ buttonName: 'beach-club', isEarnApp })}
         >
           <Text

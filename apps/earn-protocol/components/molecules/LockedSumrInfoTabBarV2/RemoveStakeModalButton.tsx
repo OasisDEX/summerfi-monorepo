@@ -1,5 +1,4 @@
 import { type ChangeEvent, type FC, useCallback, useMemo, useState } from 'react'
-import { useChain } from '@account-kit/react'
 import {
   Alert,
   Badge,
@@ -9,10 +8,10 @@ import {
   LoadingSpinner,
   MobileDrawer,
   Modal,
-  SDKChainIdToAAChainMap,
   SkeletonLine,
   Text,
   useAmount,
+  useEarnProtocolChain,
   useMobileCheck,
   WithArrow,
 } from '@summerfi/app-earn-ui'
@@ -45,7 +44,7 @@ const RemoveStakeModal: FC<{
   handleOpenClose,
   penaltyPercentage,
 }) => {
-  const { chain, setChain } = useChain()
+  const { chain, setChain } = useEarnProtocolChain()
   const inputChangeHandler = useHandleInputChangeEvent()
 
   const isCorrectNetwork = chain.id === SupportedNetworkIds.Base
@@ -91,7 +90,7 @@ const RemoveStakeModal: FC<{
 
   const handleRemoveStake = useCallback(async () => {
     if (!isCorrectNetwork) {
-      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
+      setChain({ chain: SupportedNetworkIds.Base })
 
       return
     }
@@ -232,7 +231,7 @@ export const RemoveStakeModalButton: FC<{
   refetchStakingData,
   penaltyPercentage,
 }) => {
-  const { isSettingChain } = useChain()
+  const { isSettingChain } = useEarnProtocolChain()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const [isOpen, setIsOpen] = useState(false)

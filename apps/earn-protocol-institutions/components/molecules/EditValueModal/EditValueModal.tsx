@@ -7,7 +7,7 @@ import {
   Modal,
   Text,
   useAmount,
-  useUserWallet,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { slugify } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -37,7 +37,7 @@ export const EditTokenValueModal = ({
   loading?: boolean
   onAddTransaction: (value: BigNumber) => void
 }) => {
-  const { userWalletAddress, isLoadingAccount } = useUserWallet()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const [isOpen, setIsOpen] = useState(false)
 
   const { amountDisplay, amountParsed, manualSetAmount, onBlur, onFocus } = useAmount({
@@ -161,7 +161,7 @@ export const EditPercentageValueModal = ({
   onAddTransaction: (value: BigNumber) => void
 }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const { userWalletAddress, isLoadingAccount } = useUserWallet()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
 
   const { amountDisplay, amountParsed, manualSetAmount, onBlur, onFocus } = useAmount({
     inputName: `insti-${slugify(editValue.label)}-percentage-edit-modal`,

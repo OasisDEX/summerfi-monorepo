@@ -17,7 +17,7 @@ export function FormSubmitButton({
 
   return (
     <Button variant="primarySmall" type="submit" className={className} disabled={pending}>
-      {pending ? pendingLabel : label ?? 'Submit'}
+      {pending ? pendingLabel : (label ?? 'Submit')}
     </Button>
   )
 }

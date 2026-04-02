@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { type IconNamesList } from '@summerfi/app-types'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -33,6 +33,7 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): R
           prefetch={!item.prefetchDisabled}
           target={item.target}
           onClick={item.onClick}
+          suppressHydrationWarning
         >
           <div className={navigationItemsStyles.navigationItemsItem}>
             <div className={navigationItemsStyles.navigationItemsIconWrapper}>

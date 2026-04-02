@@ -6,9 +6,9 @@ import { type MerchandiseFormValues } from '@/features/merchandise/types'
  * @returns True if all required fields (name, email, address, country, zip, size) are filled, false otherwise
  */
 export const areAllMerchandiseFormFieldsFilled = (formValues: MerchandiseFormValues) => {
-  const { name, email, address, country, zip, size } = formValues
+  const { name: formNameValue, email, address, country, zip, size } = formValues
 
-  if (!name || !email || !address || !country || !zip || !size) {
+  if (!formNameValue || !email || !address || !country || !zip || !size) {
     return false
   }
 

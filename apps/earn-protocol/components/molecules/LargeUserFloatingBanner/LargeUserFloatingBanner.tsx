@@ -5,7 +5,7 @@ import {
   FloatingBanner,
   type FloatingBannerActionType,
   Text,
-  useUserWallet,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 import Image from 'next/image'
@@ -28,7 +28,7 @@ interface LargeUserFloatingBannerProps {
 export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ largeUsersData }) => {
   const [isClosed, setIsClosed] = useState(false)
   const cookie = getCookie(largeUsersCookieName)
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const handleButtonClick = useHandleButtonClickEvent()
   const handleDisplayBanner = useDisplayBannerEvent()

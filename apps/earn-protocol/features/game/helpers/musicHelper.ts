@@ -788,10 +788,10 @@ function scheduler() {
 function initAudioContext() {
   if (!audioContext) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      audioContext = new (window.AudioContext ||
-        (window as typeof window & { webkitAudioContext?: typeof AudioContext })
-          .webkitAudioContext)()
+      audioContext = new (
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+      )()
 
       // Create master gain node
       mainGainNode = audioContext.createGain()

@@ -32,9 +32,9 @@ import { encodeFunctionData } from 'viem'
  * @implements IFleetCommanderContract
  */
 export class FleetCommanderContract<
-    const TClient extends IBlockchainClient,
-    TAddress extends IAddress,
-  >
+  const TClient extends IBlockchainClient,
+  TAddress extends IAddress,
+>
   extends ContractWrapper<typeof FleetCommanderAbi, TClient, TAddress>
   implements IFleetCommanderContract
 {

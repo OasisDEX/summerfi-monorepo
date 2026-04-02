@@ -1,6 +1,5 @@
 'use client'
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { useAuthModal } from '@account-kit/react'
 import {
   Button,
   Card,
@@ -11,7 +10,8 @@ import {
   SkeletonLine,
   Text,
   Tooltip,
-  useUserWallet,
+  useEarnProtocolLogin,
+  useEarnProtocolWallet,
   WithArrow,
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
@@ -44,8 +44,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
   sumrStakingV2LandingPageData,
 }) => {
   const tooltipEventHandler = useHandleTooltipOpenEvent()
-  const { userWalletAddress } = useUserWallet()
-  const { openAuthModal } = useAuthModal()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
+  const { login } = useEarnProtocolLogin()
 
   const {
     maxApy,
@@ -144,12 +144,12 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
             {/* Space for separation */}
           </Text>
         </Text>
-        <Button variant="primarySmall" onClick={openAuthModal}>
+        <Button variant="primarySmall" onClick={login}>
           Connect wallet
         </Button>
       </Card>
     )
-  }, [userWalletAddress, isLoading, userStakingData, totalSumrStaked, openAuthModal])
+  }, [userWalletAddress, isLoading, userStakingData, totalSumrStaked, login])
 
   const rightCard = useMemo(() => {
     return userWalletAddress ? (
@@ -176,8 +176,9 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
             </>
           )}
         </Text>
+        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
         {!userWalletAddress ? (
-          <Button variant="secondarySmall" onClick={openAuthModal}>
+          <Button variant="secondarySmall" onClick={login}>
             Connect wallet
           </Button>
         ) : (
@@ -200,12 +201,12 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
             {/* Space for separation */}
           </Text>
         </Text>
-        <Button variant="secondarySmall" onClick={openAuthModal}>
+        <Button variant="secondarySmall" onClick={login}>
           Connect wallet
         </Button>
       </Card>
     )
-  }, [userWalletAddress, isLoading, userStakingData, openAuthModal, averageLockDuration])
+  }, [userWalletAddress, isLoading, userStakingData, login, averageLockDuration])
 
   return (
     <>

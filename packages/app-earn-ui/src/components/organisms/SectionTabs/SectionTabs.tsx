@@ -63,7 +63,7 @@ export const SectionTabs = ({
             })}
           >
             <Text
-              variant={activeSection === id ? activeSectionColor ?? 'p1semiColorful' : 'p1semi'}
+              variant={activeSection === id ? (activeSectionColor ?? 'p1semiColorful') : 'p1semi'}
             >
               {title}
             </Text>

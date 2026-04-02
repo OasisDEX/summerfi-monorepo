@@ -198,7 +198,7 @@ export const Sidebar: FC<SidebarProps> = ({
       <div
         style={{
           width: '100%',
-          marginTop: error ?? footnote ? 'var(--general-space-20)' : undefined,
+          marginTop: (error ?? footnote) ? 'var(--general-space-20)' : undefined,
         }}
       >
         <AnimateHeight show={!!error} id="sidebar-error">

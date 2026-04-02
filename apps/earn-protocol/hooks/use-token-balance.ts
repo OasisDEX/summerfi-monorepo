@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { ten } from '@summerfi/app-utils'
 import { getChainInfoByChainId, type HexData, type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
@@ -47,7 +47,7 @@ export const useTokenBalance = ({
   const [vaultToken, setVaultToken] = useState<IToken>()
   const [token, setToken] = useState<IToken>()
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const walletAddress = overwriteWalletAddress ?? userWalletAddress
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(!!walletAddress)
   const cacheRef = useRef<Map<string, { vaultToken: IToken; token: IToken; balance: BigNumber }>>(

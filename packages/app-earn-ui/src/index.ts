@@ -195,8 +195,18 @@ export { useHoldAlt } from './hooks/use-hold-alt'
 export { useApyUpdatedAt } from './hooks/use-apy-updated-at'
 export { useSumrRewardsToDate } from './hooks/use-sumr-rewards-to-date'
 export { useClientChainId } from './hooks/use-client-chain-id'
-export { useUserWallet } from './hooks/use-user-wallet'
 export { useTokenTransfer } from './hooks/use-token-transfer'
+export {
+  getEarnProtocolChainById,
+  useEarnProtocolWallet,
+  useEarnProtocolChain,
+  useEarnProtocolLogin,
+  useEarnProtocolLogout,
+  useEarnProtocolSignerStatus,
+  useEarnProtocolSigner,
+  useEarnProtocolSignMessage,
+  useEarnProtocolSendUserOperation,
+} from './hooks/use-earn-wallet-actions'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { vaultFaqData } from './common/faq/vault-faq'
@@ -265,25 +275,14 @@ export {
 // constants
 export { SUMR_CAP } from './constants/earn-protocol'
 export { networkIdIconNameMap, networkNameIconNameMap } from './constants/icon-maps'
-export { accountKitCookieStateName, forksCookieName } from './constants/cookie-names'
+export { forksCookieName } from './constants/cookie-names'
+export { supportedViemChains } from './constants/supported-chains'
+export { queryClient } from './constants/query-client'
 
 // beach club
 export { BeachClubSteps } from './features/beach-club//BeachClubSteps/BeachClubSteps'
 export { BeachClubRewardSimulation } from './features/beach-club/BeachClubRewardSimulation/BeachClubRewardSimulation'
 export { BeachClubRadialGradient } from './features/beach-club/BeachClubRadialGradient/BeachClubRadialGradient'
-
-// aa kit
-export {
-  queryClient,
-  customAAKitSonicConfig,
-  customAAKitHyperliquidConfig,
-  SDKChainIdToAAChainMap,
-  getAccountKitConfig,
-} from './account-kit/config'
-export { getAccountType, overridesGasSponsorship } from './account-kit/constants'
-export { AccountKitAccountType } from './account-kit/types'
-export { isUserEOA } from './account-kit/helpers/is-user-eoa'
-export { isUserSmartAccount } from './account-kit/helpers/is-user-smart-account'
 
 export {
   VaultExposure,

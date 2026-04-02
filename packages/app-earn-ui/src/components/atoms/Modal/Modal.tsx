@@ -26,7 +26,12 @@ export const Modal: FC<ModalProps> = ({
   noScroll = false,
 }) => {
   const ref = useRef<HTMLDialogElement>(null)
-  const defaultBodyOverflow = useMemo(() => document.body.style.overflow, [])
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const defaultBodyOverflow = useMemo(() => {
+    if (typeof document === 'undefined') return 'visible'
+
+    return document.body.style.overflow || 'visible'
+  }, [])
 
   useEffect(() => {
     const handleOutsideClick = (ev: MouseEvent) => {

@@ -17,9 +17,9 @@ import type { ITokensManager } from '@summerfi/tokens-common'
  * @implements IFleetCommanderWhitelistContract
  */
 export class FleetCommanderWhitelistContract<
-    const TClient extends IBlockchainClient,
-    TAddress extends IAddress,
-  >
+  const TClient extends IBlockchainClient,
+  TAddress extends IAddress,
+>
   extends ContractWrapper<typeof FleetCommanderWhitelistAbi, TClient, TAddress>
   implements IFleetCommanderWhitelistContract
 {
