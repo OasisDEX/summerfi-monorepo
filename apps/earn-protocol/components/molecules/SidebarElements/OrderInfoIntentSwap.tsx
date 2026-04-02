@@ -363,6 +363,28 @@ export const OrderInfoIntentSwap = ({
             ? 'Your swap order was cancelled.'
             : 'Your swap order expired before it could be filled.'}
         </Text>
+        {orderId && (
+          <div className={orderInfoDepositWithdrawStyles.depositDetails}>
+            <OrderInformation
+              wrapperStyles={{ padding: 'var(--general-space-8)' }}
+              items={[
+                {
+                  label: 'Order ID',
+                  value: (
+                    <Link
+                      href={getCowExplorerUrl(chainId, orderId)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <LinkText>{truncateMiddle(orderId)}</LinkText>
+                    </Link>
+                  ),
+                },
+                { label: 'Status', value: step === 'cancelled' ? 'Cancelled' : 'Expired' },
+              ]}
+            />
+          </div>
+        )}
         <div style={{ width: '100%', marginTop: 'var(--general-space-20)' }} />
         <Button variant="primaryLarge" onClick={handleStartAgain}>
           Start again
