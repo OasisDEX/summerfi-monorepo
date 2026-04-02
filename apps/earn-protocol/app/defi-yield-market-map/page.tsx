@@ -242,7 +242,9 @@ function ModalContent({
             >
               Top Yield Pools
             </Text>
-            {data?.pools.map((pool) => <PoolRow key={pool.pool} pool={pool} />)}
+            {data?.pools.map((pool) => (
+              <PoolRow key={pool.pool} pool={pool} />
+            ))}
           </div>
         </AnimateHeight>
 

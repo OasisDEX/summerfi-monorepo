@@ -87,7 +87,7 @@ export const NavigationMenuMobile = ({
             link.link ? (
               <Link
                 key={`Mobile_${link.id}`}
-                href={link.disabled ? '' : link.link ?? '/'}
+                href={link.disabled ? '' : (link.link ?? '/')}
                 className={clsx({
                   [navigationMenuMobileStyles.activeLink]: currentPath === link.link,
                 })}

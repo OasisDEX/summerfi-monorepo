@@ -1,0 +1,483 @@
+import { Icon, Text } from '@summerfi/app-earn-ui'
+import { formatDecimalAsPercent } from '@summerfi/app-utils'
+import Image from 'next/image'
+
+import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
+import balanceMarketLogo from '@/public/img/landing-page/private-markets/logo_balance.svg'
+import utilaMarketLogo from '@/public/img/landing-page/private-markets/logo_utila.svg'
+import m1CapitalLogo from '@/public/img/landing-page/private-markets/m1_capital.svg'
+
+import styles from '@/components/layout/LandingPageContent/components/OurProductsList.module.css'
+
+import integrateWithBalance from '@/public/img/landing-page/integrate-via/balance.png'
+import integrateWithDefiSaver from '@/public/img/landing-page/integrate-via/defi_saver.png'
+import integrateViaEnso from '@/public/img/landing-page/integrate-via/enso.png'
+import integrateViaSummer from '@/public/img/landing-page/integrate-via/summer.png'
+import integrateWithTargen from '@/public/img/landing-page/integrate-via/targen.png'
+import integrateWithUtila from '@/public/img/landing-page/integrate-via/utila.png'
+import integrateWithVaultsFyi from '@/public/img/landing-page/integrate-via/vault_fyi.png'
+import integrateViaYieldXyz from '@/public/img/landing-page/integrate-via/yield_xyz.png'
+import ourProductsGridBackground from '@/public/img/landing-page/our-products-grid-bg.png'
+import ourProductsLinesBackground from '@/public/img/landing-page/our-products-lines-bg.png'
+import stacMarketLogo from '@/public/img/landing-page/private-markets/stac.png'
+import superstateMarketLogo from '@/public/img/landing-page/private-markets/superstate.png'
+import vaneckMarketLogo from '@/public/img/landing-page/private-markets/vaneck.png'
+import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisdomtree.png'
+import aaveProtocolIcon from '@/public/img/landing-page/protocols/icon_aave.png'
+import gauntletProtocolIcon from '@/public/img/landing-page/protocols/icon_gauntlet.png'
+import kpkProtocolIcon from '@/public/img/landing-page/protocols/icon_kpk.png'
+import mapleProtocolIcon from '@/public/img/landing-page/protocols/icon_maple.png'
+import morphoProtocolIcon from '@/public/img/landing-page/protocols/icon_morpho.png'
+import skyProtocolIcon from '@/public/img/landing-page/protocols/icon_sky.png'
+import sparkProtocolIcon from '@/public/img/landing-page/protocols/icon_spark.png'
+import steakhouseProtocolIcon from '@/public/img/landing-page/protocols/icon_steakhouse.png'
+import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-screenshot.png'
+
+const protocolIcons = [
+  { name: 'Morpho', src: morphoProtocolIcon },
+  { name: 'Aave', src: aaveProtocolIcon },
+  { name: 'Spark', src: sparkProtocolIcon },
+  { name: 'Sky', src: skyProtocolIcon },
+  { name: 'Maple', src: mapleProtocolIcon },
+  { name: 'Gauntlet', src: gauntletProtocolIcon },
+  { name: 'Steakhouse', src: steakhouseProtocolIcon },
+  { name: 'KPK', src: kpkProtocolIcon },
+]
+
+const CheckLine = ({ text }: { text: string }) => {
+  return (
+    <div className={styles.checkLine}>
+      <Icon iconName="checkmark" size={18} />
+      <Text as="p" variant="p2" className={styles.cardBody}>
+        {text}
+      </Text>
+    </div>
+  )
+}
+
+const ProtocolIconRow = ({ withMore = true }: { withMore?: boolean }) => {
+  return (
+    <div className={styles.protocolRow}>
+      {protocolIcons.map((icon) => (
+        <div key={icon.name} className={styles.protocolIconWrap}>
+          <Image
+            alt={icon.name}
+            src={icon.src}
+            width={32}
+            height={32}
+            className={styles.protocolIcon}
+          />
+        </div>
+      ))}
+      {withMore && (
+        <div className={styles.morePill}>
+          <Text as="span" variant="p4semi">
+            + More
+          </Text>
+        </div>
+      )}
+    </div>
+  )
+}
+
+const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVault: number }) => {
+  return (
+    <article className={`${styles.productCard}`}>
+      <Image
+        alt="background lines"
+        src={ourProductsLinesBackground}
+        className={styles.ourProductsLinesBackground}
+      />
+      <div className={styles.permissionlessDefiVaultsBackgroundOrb} />
+      <div className={styles.cardContent}>
+        <div className={styles.cardMain}>
+          <div>
+            <Text as="p" variant="p3colorful">
+              Permissionless DeFi Vaults
+            </Text>
+            <Text as="h3" variant="h4" className={styles.cardTitle}>
+              Get automated exposure to DeFi&apos;s highest quality yield
+            </Text>
+            <Text as="p" variant="p2" className={styles.cardBody}>
+              Outperform with automated access to DeFi&apos;s best yield sources
+            </Text>
+          </div>
+          <div className={styles.checksGroup}>
+            <CheckLine text="Risk Managed vaults: Higher risk adjusted yields managed by Block Analitica" />
+            <CheckLine text="DAO Managed vaults: DeFi's best yields optimized for higher risk/reward yields" />
+          </div>
+          <div className={styles.metaBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Markets and strategies including
+            </Text>
+            <ProtocolIconRow />
+          </div>
+          <button className={styles.learnMoreButton} type="button">
+            <Text as="span" variant="p3">
+              Learn more
+            </Text>
+          </button>
+        </div>
+        <aside className={styles.cardSide}>
+          <div className={styles.sideStatBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Earn up to
+            </Text>
+            <Text as="p" variant="h2" className={styles.apyValue}>
+              {formatDecimalAsPercent(maxApyRegularVault, {
+                precision: 2,
+              })}
+            </Text>
+          </div>
+          <div className={styles.sideStatBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Risk managed by
+            </Text>
+            <Image alt="Block Analitica" src={blockAnalyticaLogo} width={133} height={54} />
+          </div>
+          <div className={styles.sideStatBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Only the best assets
+            </Text>
+            <div className={styles.assetIcons}>
+              <div className={styles.assetIcon}>
+                <Icon tokenName="USDC" />
+              </div>
+              <div className={styles.assetIcon}>
+                <Icon tokenName="ETH" />
+              </div>
+              <div className={styles.assetIcon}>
+                <Icon tokenName="USDT" />
+              </div>
+              <div className={styles.assetIcon}>
+                <Icon tokenName="EURC" />
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </article>
+  )
+}
+
+const PermissionlessRwaVaultsCard = () => {
+  return (
+    <article className={`${styles.productCard} ${styles.rwaCard}`}>
+      <div className={styles.permissionlessRwaVaultsBackgroundOrb} />
+      <div className={styles.cardContent}>
+        <div className={styles.cardMain}>
+          <div>
+            <Text as="p" variant="p3colorful">
+              Permissioned RWA Vaults
+            </Text>
+            <Text as="h3" variant="h4" className={styles.cardTitle}>
+              Instant access to a cross section of RWA private markets in a single Vault
+            </Text>
+            <Text as="p" variant="p2" className={styles.cardBody}>
+              Purpose built Vaults designed for Institutions, HNWs, Hedge Funds and Custodians to
+              earn from the best RWA markets without the hassle.
+            </Text>
+          </div>
+          <div className={styles.checksGroup}>
+            <CheckLine text="Deposits only ever allocated to permissioned markets" />
+            <CheckLine text="Actively managed and rebalanced by M1-Capital" />
+            <CheckLine text="Available now via Utila, Balance Custody and Summer.fi (KYC required)" />
+          </div>
+          <div className={styles.metaBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Markets and strategies including
+            </Text>
+            <div className={styles.partnerLogos}>
+              <Image
+                alt="Vaneck"
+                src={vaneckMarketLogo}
+                width={180}
+                height={54}
+                className={styles.partnerLogo}
+              />
+              <Image
+                alt="Stac"
+                src={stacMarketLogo}
+                width={140}
+                height={54}
+                className={styles.partnerLogo}
+              />
+              <Image
+                alt="Superstate"
+                src={superstateMarketLogo}
+                width={261}
+                height={54}
+                className={styles.partnerLogo}
+              />
+              <Image
+                alt="WisdomTree"
+                src={wisdomTreeMarketLogo}
+                width={172}
+                height={54}
+                className={styles.partnerLogo}
+              />
+            </div>
+          </div>
+          <button className={styles.learnMoreButton} type="button">
+            <Text as="span" variant="p3">
+              Learn more
+            </Text>
+          </button>
+        </div>
+        <aside className={styles.cardSide}>
+          <div className={styles.sideStatBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Earn up to
+            </Text>
+            <Text as="p" variant="h2" className={styles.apyValue}>
+              ?????????
+            </Text>
+          </div>
+          <div className={styles.sideStatBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Available on
+            </Text>
+            <div className={styles.verticalLogos}>
+              <Image
+                alt="Utila"
+                src={utilaMarketLogo}
+                width={98}
+                height={24}
+                className={styles.smallBrandLogo}
+              />
+              <Image
+                alt="Balance"
+                src={balanceMarketLogo}
+                width={137}
+                height={27}
+                className={styles.smallBrandLogo}
+              />
+            </div>
+          </div>
+          <div
+            className={styles.sideStatBlock}
+            style={{
+              marginTop: 'var(--spacing-space-2x-large)',
+            }}
+          >
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Managed by
+            </Text>
+            <Image
+              alt="M1 Capital"
+              src={m1CapitalLogo}
+              width={302}
+              height={54}
+              className={styles.m1Logo}
+            />
+          </div>
+        </aside>
+      </div>
+    </article>
+  )
+}
+
+const BuildYourOwnVaultCard = () => {
+  return (
+    <article className={`${styles.productCard} ${styles.buildCard}`}>
+      <Image
+        alt="background grid"
+        src={ourProductsGridBackground}
+        className={styles.ourProductsGridBackground}
+      />
+      <div className={styles.cardContent}>
+        <div className={styles.cardMain}>
+          <div>
+            <Text as="p" variant="p3colorful">
+              Build your own DeFi Vault
+            </Text>
+            <Text as="h3" variant="h4" className={styles.cardTitle}>
+              Institutional Vault infrastructure to design your own DeFi and RWA Vaults
+            </Text>
+            <Text as="p" variant="p2" className={styles.cardBody}>
+              Self-Managed Vaults enable unlimited access to DeFi and RWA yield for institutions who
+              want to build custom Vaults with minimal overhead.
+            </Text>
+          </div>
+          <div
+            className={styles.checksGroup}
+            style={{
+              maxWidth: '540px',
+            }}
+          >
+            <CheckLine text="Access any onchain market, permissioned or permissionless" />
+            <CheckLine text="Choose from off-the-shelf automated keepers for optimization or run your own" />
+            <CheckLine text="One deployment, unlimited possibilities with all upgrades and new market development handled by Summer.fi" />
+          </div>
+          <div className={styles.metaBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Choose from any market or protocol including
+            </Text>
+            <ProtocolIconRow />
+          </div>
+          <button className={styles.learnMoreButton} type="button">
+            <Text as="span" variant="p3">
+              Learn more
+            </Text>
+          </button>
+        </div>
+        <aside className={styles.cardSide}>
+          <div className={styles.sideStatBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Opt in risk management from
+            </Text>
+            <Image alt="Block Analitica" src={blockAnalyticaLogo} width={214} height={100} />
+          </div>
+          <div className={styles.vaultExposureScreenshotWrapper}>
+            <Image src={vaultExposureScreenshot} alt="vault exposure screenshot" />
+          </div>
+        </aside>
+      </div>
+    </article>
+  )
+}
+
+const IntegrateHighQualityYield = () => {
+  return (
+    <article className={`${styles.productCard} ${styles.integratorCard}`}>
+      <div className={styles.cardContent}>
+        <div className={styles.cardMain}>
+          <div>
+            <Text as="p" variant="p3colorful">
+              Integrate high quality DeFi yield
+            </Text>
+            <Text as="h3" variant="h4" className={styles.cardTitle}>
+              Give your users access to the best yields, effortlessly
+            </Text>
+          </div>
+          <div className={styles.checksGroup}>
+            <CheckLine text="Offer yield up to integrate via Summer.fi SDK, Yield.xyz or Enso Finance." />
+            <CheckLine text="Join leading custodians and apps such as Utila, Balance Custody, DeFi Saver, Vaults.fyi and more." />
+            <CheckLine text="One integration gives your users continuous access as Vaults evolve." />
+          </div>
+          <div className={styles.integratorMetaGrid}>
+            <div>
+              <Text as="p" variant="p4semi" className={styles.metaLabel}>
+                Earn up to
+              </Text>
+              <Text as="p" variant="h2" className={styles.apyValue}>
+                ?????????
+              </Text>
+            </div>
+            <div>
+              <Text as="p" variant="p4semi" className={styles.metaLabel}>
+                Optimized access to
+              </Text>
+              <div className={styles.protocolRow}>
+                {protocolIcons.slice(0, 5).map((icon) => (
+                  <div key={icon.name} className={styles.protocolIconWrap}>
+                    <Image
+                      alt={icon.name}
+                      src={icon.src}
+                      width={32}
+                      height={32}
+                      className={styles.protocolIcon}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className={styles.metaBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Integrate via
+            </Text>
+            <div className={styles.partnerLogos}>
+              <Image
+                alt="Summer.fi"
+                src={integrateViaSummer}
+                width={233}
+                height={54}
+                className={styles.partnerLogo}
+              />
+              <Image
+                alt="Yield.xyz"
+                src={integrateViaYieldXyz}
+                width={203}
+                height={54}
+                className={styles.partnerLogo}
+              />
+              <Image
+                alt="Enso"
+                src={integrateViaEnso}
+                width={232}
+                height={54}
+                className={styles.partnerLogo}
+              />
+            </div>
+          </div>
+          <button className={styles.learnMoreButton} type="button">
+            <Text as="span" variant="p3">
+              Learn more
+            </Text>
+          </button>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            width: '100%',
+          }}
+        >
+          <aside className={styles.cardSideStacked}>
+            <Image
+              alt="DeFi Saver"
+              src={integrateWithDefiSaver}
+              width={162}
+              height={39}
+              className={styles.stackLogo}
+            />
+            <Image
+              alt="Balance"
+              src={integrateWithBalance}
+              width={149}
+              height={29}
+              className={styles.stackLogo}
+            />
+            <Image
+              alt="Targen"
+              src={integrateWithTargen}
+              width={136}
+              height={25}
+              className={styles.stackLogo}
+            />
+            <Image
+              alt="Vaults.fyi"
+              src={integrateWithVaultsFyi}
+              width={141}
+              height={37}
+              className={styles.stackLogo}
+            />
+            <Image
+              alt="Utila"
+              src={integrateWithUtila}
+              width={117}
+              height={29}
+              className={styles.stackLogo}
+            />
+          </aside>
+        </div>
+      </div>
+    </article>
+  )
+}
+
+export const OurProductsList = ({
+  ourProductsStats,
+}: {
+  ourProductsStats: { maxApyRegularVault: number }
+}) => {
+  return (
+    <div className={styles.cardsList}>
+      <PermissionlessDeFiVaultsCard maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
+      <PermissionlessRwaVaultsCard />
+      <BuildYourOwnVaultCard />
+      <IntegrateHighQualityYield />
+    </div>
+  )
+}

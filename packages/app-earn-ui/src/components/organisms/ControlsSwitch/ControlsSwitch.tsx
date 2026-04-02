@@ -66,7 +66,7 @@ const VaultSwitchCard = ({
   const apySpreadColor =
     apySpread && apySpread > 0 ? 'var(--color-text-success)' : 'var(--color-text-warning)'
 
-  const resolvedRisk = isDaoManaged ? 'higher' : risk ?? 'lower'
+  const resolvedRisk = isDaoManaged ? 'higher' : (risk ?? 'lower')
 
   return (
     <GradientBox withHover selected={selected} onClick={onClick}>

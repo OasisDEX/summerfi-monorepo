@@ -3,19 +3,17 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
-  getAccountType,
-  SDKChainIdToAAChainMap,
+  getEarnProtocolChainById,
   SUCCESS_TOAST_CONFIG,
+  useEarnProtocolSendUserOperation,
+  useEarnProtocolWallet,
   useIsIframe,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { type EarnTransactionViewStates, SupportedNetworkIds } from '@summerfi/app-types'
-import { supportedSDKNetwork } from '@summerfi/app-utils'
+import { supportedSDKNetwork, supportedSDKNetworkId } from '@summerfi/app-utils'
 
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { usePublicClient } from '@/hooks/usePublicClient'
@@ -45,9 +43,9 @@ export const useSimpleTransaction = ({
   txItem: SDKTransactionItem
 }) => {
   const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[chainId],
+    chain: getEarnProtocolChainById(supportedSDKNetworkId(chainId)),
   })
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>(
     txItem.txInitialState ?? 'idle',
@@ -55,7 +53,6 @@ export const useSimpleTransaction = ({
 
   const [txError, setTxError] = useState('')
   const isIframe = useIsIframe()
-  const { client: smartAccountClient } = useSmartAccountClient({ type: getAccountType(chainId) })
 
   useEffect(() => {
     if (txItem.txInitialState && txItem.txInitialState !== txStatus) {
@@ -68,8 +65,7 @@ export const useSimpleTransaction = ({
     sendUserOperation,
     error: sendUserOperationError,
     isSendingUserOperation,
-  } = useSendUserOperation({
-    client: smartAccountClient,
+  } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess: ({ hash }) => {
       if (isIframe) {
@@ -96,25 +92,19 @@ export const useSimpleTransaction = ({
   })
 
   const sendTransaction = useCallback(
-    (
-      {
+    ({
+      target,
+      data,
+      value = 0n,
+    }: {
+      target: `0x${string}`
+      data: `0x${string}`
+      value?: bigint
+    }) => {
+      return sendUserOperation({
         target,
         data,
-        value = 0n,
-      }: {
-        target: `0x${string}`
-        data: `0x${string}`
-        value?: bigint
-      },
-      overrides?: { paymasterAndData: `0x${string}` },
-    ) => {
-      return sendUserOperation({
-        uo: {
-          target,
-          data,
-          value,
-        },
-        overrides,
+        value,
       })
     },
     [sendUserOperation],
@@ -166,7 +156,7 @@ export const useSimpleTransaction = ({
   )
 
   const executeTransaction = useCallback(
-    async (transaction: SDKTransactionItem) => {
+    (transaction: SDKTransactionItem) => {
       setTxStatus('txInProgress')
       setTxError('')
 
@@ -185,25 +175,13 @@ export const useSimpleTransaction = ({
         value: BigInt(transaction.txData.transaction.value ?? 0),
       }
 
-      const resolvedOverrides = await getGasSponsorshipOverride({
-        smartAccountClient,
-        txParams,
-      })
-
       if (isIframe) {
         sendSafeWalletTransaction(txParams)
       } else {
-        sendTransaction(txParams, resolvedOverrides)
+        sendTransaction(txParams)
       }
     },
-    [
-      userWalletAddress,
-      publicClient,
-      smartAccountClient,
-      isIframe,
-      sendSafeWalletTransaction,
-      sendTransaction,
-    ],
+    [userWalletAddress, publicClient, isIframe, sendSafeWalletTransaction, sendTransaction],
   )
 
   const backToInit = useCallback(() => {

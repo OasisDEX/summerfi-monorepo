@@ -11,11 +11,10 @@ import textNumberAnimatedStyles from '@/components/atoms/Text/TextNumberAnimated
 
 export type TextNumberAnimatedAllowedHtmlTags = 'span' | 'div' | 'p'
 
-interface TextNumberAnimatedProps
-  extends Omit<
-    AtomProps<TextNumberAnimatedAllowedHtmlTags, keyof typeof textNumberAnimatedStyles>,
-    'children' | 'ref'
-  > {
+interface TextNumberAnimatedProps extends Omit<
+  AtomProps<TextNumberAnimatedAllowedHtmlTags, keyof typeof textNumberAnimatedStyles>,
+  'children' | 'ref'
+> {
   value: number
 }
 

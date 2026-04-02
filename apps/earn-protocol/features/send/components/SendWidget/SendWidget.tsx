@@ -1,14 +1,14 @@
 'use client'
 import { type FC, useReducer } from 'react'
-import { useChain } from '@account-kit/react'
 import {
+  getEarnProtocolChainById,
   getTokenGuarded,
   Modal,
-  SDKChainIdToAAChainMap,
   Sidebar,
   type SidebarProps,
   useAmount,
   useClientChainId,
+  useEarnProtocolChain,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
 import {
@@ -84,7 +84,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
 
   const { clientChainId } = useClientChainId()
 
-  const { setChain } = useChain()
+  const { setChain } = useEarnProtocolChain()
 
   const dropdownOptions = walletDataAssetsSortedByUsdValue
     .filter((item) =>
@@ -103,7 +103,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
     }))
 
   const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[supportedSDKNetworkId(state.tokenDropdown.chainId)],
+    chain: getEarnProtocolChainById(supportedSDKNetworkId(state.tokenDropdown.chainId)),
   })
 
   const {
@@ -218,7 +218,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
       action: () => {
         if (!isCorrectChain) {
           setChain({
-            chain: SDKChainIdToAAChainMap[supportedSDKNetworkId(state.tokenDropdown.chainId)],
+            chain: state.tokenDropdown.chainId,
           })
 
           return null

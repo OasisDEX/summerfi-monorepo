@@ -19,7 +19,6 @@ import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useScrollTracker } from '@/hooks/use-scroll-tracker'
 
-import './global.css'
 import masterPageStyles from './MasterPage.module.css'
 
 interface MasterPageProps {

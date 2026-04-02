@@ -7,9 +7,10 @@ import {
   NonOwnerPortfolioBanner,
   TabBar,
   Text,
-  useUserWallet,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import {
+  type BlogPosts,
   type GetVaultsApyResponse,
   type RewardTokenPrices,
   type SDKVaultishType,
@@ -18,7 +19,6 @@ import {
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
 import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
-import { type BlogPosts } from '@/app/server-handlers/raw-calls/blog-posts/types'
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { type PortfolioSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -86,7 +86,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 }) => {
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
-  const { userWalletAddress, isLoadingAccount } = useUserWallet()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,

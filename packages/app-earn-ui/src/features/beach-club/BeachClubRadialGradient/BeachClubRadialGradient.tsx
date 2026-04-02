@@ -24,7 +24,7 @@ export const BeachClubRadialGradient: FC<BeachClubRadialGradientProps> = ({
         overflow: 'hidden',
         transition: 'opacity 0.3s ease-in-out',
         zIndex: -1,
-        opacity: isBeachClub ? opacity ?? 1 : 0,
+        opacity: isBeachClub ? (opacity ?? 1) : 0,
         ...wrapperStyle,
       }}
       className={classNames.beachClubRadialGradient}

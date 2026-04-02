@@ -1,12 +1,5 @@
 import { useCallback } from 'react'
-import {
-  useChain,
-  useSigner,
-  useSignMessage,
-  useSmartAccountClient,
-  useUser,
-} from '@account-kit/react'
-import { AccountKitAccountType, getAccountType } from '@summerfi/app-earn-ui'
+import { useEarnProtocolSignMessage } from '@summerfi/app-earn-ui'
 import { type TOSSignMessage } from '@summerfi/app-tos'
 
 /**
@@ -14,26 +7,11 @@ import { type TOSSignMessage } from '@summerfi/app-tos'
  * @returns Object containing signTosMessage function to sign TOS data
  */
 export const useTermsOfServiceSigner = () => {
-  const user = useUser()
-  const { chain } = useChain()
-  const { client } = useSmartAccountClient({ type: getAccountType(chain.id) })
-  const { signMessageAsync } = useSignMessage({
-    client,
-  })
-  const signer = useSigner()
+  const { signMessageAsync } = useEarnProtocolSignMessage()
 
   const signTosMessage: TOSSignMessage = useCallback(
-    async (data: string) => {
-      if (user?.type === AccountKitAccountType.EOA) {
-        return await signMessageAsync({ message: data })
-      }
-      // different handling for SCA, since signMessageAsync returns signature string
-      // that is completely different from signer.signMessage
-      else return await signer?.signMessage(data)
-    },
-    // skipped signMessageAsync on purpose
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [signer, user?.type],
+    async (data: string) => await signMessageAsync({ message: data }),
+    [signMessageAsync],
   )
 
   return signTosMessage

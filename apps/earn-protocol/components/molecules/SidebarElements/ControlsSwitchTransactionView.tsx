@@ -319,7 +319,9 @@ export const ControlsSwitchTransactionView = ({
             title="From"
             chainId={vaultChainId}
             tokenName={currentToken}
-            risk={currentVault.isDaoManaged ? 'higher' : currentVault.customFields?.risk ?? 'lower'}
+            risk={
+              currentVault.isDaoManaged ? 'higher' : (currentVault.customFields?.risk ?? 'lower')
+            }
             isDaoManaged={currentVault.isDaoManaged}
             apy={currentLiveApy}
             amount={currentAmount}
@@ -335,7 +337,7 @@ export const ControlsSwitchTransactionView = ({
               title="To"
               chainId={vaultChainId}
               tokenName={nextToken}
-              risk={nextVault.isDaoManaged ? 'higher' : nextVault.customFields?.risk ?? 'lower'}
+              risk={nextVault.isDaoManaged ? 'higher' : (nextVault.customFields?.risk ?? 'lower')}
               apy={nextLiveApy}
               isDaoManaged={nextVault.isDaoManaged}
               amount={nextAmount}

@@ -1,7 +1,12 @@
 'use client'
 import { type FC, useEffect, useReducer, useState } from 'react'
-import { useChain } from '@account-kit/react'
-import { Modal, Sidebar, type SidebarProps, useMobileCheck } from '@summerfi/app-earn-ui'
+import {
+  Modal,
+  Sidebar,
+  type SidebarProps,
+  useEarnProtocolChain,
+  useMobileCheck,
+} from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { Transak } from '@transak/transak-sdk'
 
@@ -47,7 +52,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
   onClose,
   injectedNetwork,
 }) => {
-  const { chain } = useChain()
+  const { chain } = useEarnProtocolChain()
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
   const [transakInstance, setTransakInstance] = useState<Transak | null>(null)

@@ -19,8 +19,7 @@ export abstract class ContractWrapper<
   const TAbi extends ContractAbi,
   const TClient extends IBlockchainClient,
   TAddress extends IAddress,
-> implements IContractWrapper
-{
+> implements IContractWrapper {
   private readonly _blockchainClient: TClient
   private readonly _chainInfo: IChainInfo
   private readonly _address: TAddress

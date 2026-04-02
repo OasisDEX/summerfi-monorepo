@@ -1,6 +1,6 @@
 'use client'
 
-import { type PropsWithChildren, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { type PropsWithChildren, useLayoutEffect } from 'react'
 import {
   BeachClubRadialGradient,
   Footer,
@@ -11,6 +11,7 @@ import {
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
+import { LandingPageBlobs } from '@/components/layout/LandingMasterPage/LandingPageBlobs'
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
@@ -27,51 +28,17 @@ interface LandingMasterPageProps {}
 export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProps>> = ({
   children,
 }) => {
-  const [scrolledAmount, setScrolledAmount] = useState(0)
   const { landingPageData } = useLandingPageData()
   const pathname = usePathname()
   const pageViewedEventHandler = usePageviewEvent()
 
   useScrollTracker({})
 
+  const isMainPage = pathname === '/'
+
   const isBeachClub = pathname.includes('beach-club')
-  const isLegal =
-    pathname.includes('privacy') || pathname.includes('terms') || pathname.includes('cookie')
-  const isInstitutions = pathname.includes('institutions')
-  const isTeam = pathname.includes('team')
 
-  const showBubbles = !isBeachClub && !isLegal
   const showPalms = isBeachClub
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolledAmount(window.scrollY)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
-
-  const scrollAction = useMemo(() => {
-    if (isTeam) {
-      return {
-        offset: Number(scrolledAmount * 0.2) - 100,
-        opacity: 0.2 - Number(scrolledAmount * 0.0003),
-      }
-    }
-
-    if (isInstitutions) {
-      return {
-        offset: Number(scrolledAmount * 0.2) - 100,
-        opacity: 0.6 - Number(scrolledAmount * 0.001),
-      }
-    }
-
-    return { offset: scrolledAmount * 0.2, opacity: 1 - Number(scrolledAmount * 0.0015) }
-  }, [scrolledAmount, isInstitutions, isTeam])
 
   const onFooterItemClick = ({ buttonName }: { buttonName: string }) => {
     EarnProtocolEvents.buttonClicked({
@@ -111,25 +78,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
       {landingPageData?.systemConfig.bannerMessage && (
         <GlobalIssueBanner message={landingPageData.systemConfig.bannerMessage} />
       )}
-
-      {showBubbles && (
-        <div
-          className={landingMasterPageStyles.bubbles}
-          style={{ top: `${scrollAction.offset}px`, opacity: scrollAction.opacity }}
-        >
-          <div className={landingMasterPageStyles.bubblesShadow} />
-          <video
-            width="100%"
-            autoPlay
-            loop
-            muted
-            playsInline
-            className={landingMasterPageStyles.video}
-          >
-            <source src="/img/landing-page/bubbles.mp4" type="video/mp4" />
-          </video>
-        </div>
-      )}
+      <LandingPageBlobs isMainPage={isMainPage} />
       <div className={landingMasterPageStyles.appContainer}>
         <NavigationWrapper />
         {showPalms && (

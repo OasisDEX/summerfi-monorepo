@@ -77,7 +77,7 @@ const mapStrategiesToMultiselectOptions = (
       label: getDisplayToken(vault.inputToken.symbol),
       labelSuffix: (
         <Risk
-          risk={vault.isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower'}
+          risk={vault.isDaoManaged ? 'higher' : (vault.customFields?.risk ?? 'lower')}
           variant="p4semi"
           styles={{ lineHeight: 'unset' }}
         />
@@ -93,7 +93,7 @@ const mapStrategiesToMultiselectOptions = (
       label: getDisplayToken(vault.inputToken.symbol),
       labelSuffix: (
         <Risk
-          risk={vault.isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower'}
+          risk={vault.isDaoManaged ? 'higher' : (vault.customFields?.risk ?? 'lower')}
           variant="p4semi"
           styles={{ lineHeight: 'unset' }}
         />

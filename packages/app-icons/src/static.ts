@@ -115,9 +115,10 @@ export const iconsSync = {
   checkmark_circle: import('./icons/checkmark_circle.svg?react') as Promise<
     typeof import('*.svg?react')
   >,
-  checkmark_colorful_beach_club: import(
-    './icons/checkmark_colorful_beach_club.svg?react'
-  ) as Promise<typeof import('*.svg?react')>,
+  checkmark_colorful_beach_club:
+    import('./icons/checkmark_colorful_beach_club.svg?react') as Promise<
+      typeof import('*.svg?react')
+    >,
   checkmark_colorful_circle: import('./icons/checkmark_colorful_circle.svg?react') as Promise<
     typeof import('*.svg?react')
   >,
@@ -258,9 +259,10 @@ export const iconsSync = {
   golem_circle_color: import('./icons/golem_circle_color.svg?react') as Promise<
     typeof import('*.svg?react')
   >,
-  guniv3_dai_usdc1_circles_color: import(
-    './icons/guniv3_dai_usdc1_circles_color.svg?react'
-  ) as Promise<typeof import('*.svg?react')>,
+  guniv3_dai_usdc1_circles_color:
+    import('./icons/guniv3_dai_usdc1_circles_color.svg?react') as Promise<
+      typeof import('*.svg?react')
+    >,
   gusd_circle_color: import('./icons/gusd_circle_color.svg?react') as Promise<
     typeof import('*.svg?react')
   >,
@@ -542,12 +544,14 @@ export const iconsSync = {
   summer_illustration_switch: import('./icons/summer_illustration_switch.svg?react') as Promise<
     typeof import('*.svg?react')
   >,
-  summer_illustration_transak_logo: import(
-    './icons/summer_illustration_transak_logo.svg?react'
-  ) as Promise<typeof import('*.svg?react')>,
-  summer_illustration_verification: import(
-    './icons/summer_illustration_verification.svg?react'
-  ) as Promise<typeof import('*.svg?react')>,
+  summer_illustration_transak_logo:
+    import('./icons/summer_illustration_transak_logo.svg?react') as Promise<
+      typeof import('*.svg?react')
+    >,
+  summer_illustration_verification:
+    import('./icons/summer_illustration_verification.svg?react') as Promise<
+      typeof import('*.svg?react')
+    >,
   summer_light: import('./icons/summer_light.svg?react') as Promise<typeof import('*.svg?react')>,
   sumr: import('./icons/sumr.svg?react') as Promise<typeof import('*.svg?react')>,
   susd_circle: import('./icons/susd_circle.svg?react') as Promise<typeof import('*.svg?react')>,

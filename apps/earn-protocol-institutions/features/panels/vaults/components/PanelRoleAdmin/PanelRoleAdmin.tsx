@@ -2,8 +2,15 @@
 
 import { type FC, useCallback, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@account-kit/react'
-import { Card, ERROR_TOAST_CONFIG, Input, Table, Text, useUserWallet } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  ERROR_TOAST_CONFIG,
+  Input,
+  Table,
+  Text,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
+} from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { chainIdToSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
@@ -39,12 +46,12 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
   network,
 }) => {
   const [rolesUsersFilter, setRolesUsersFilter] = useState('')
-  const { isLoadingAccount, userWalletAddress } = useUserWallet()
   const { grantContractSpecificRole, revokeContractSpecificRole } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
   const sdkNetworkName = chainIdToSDKNetwork(chainId)
-  const { chain, isSettingChain } = useChain()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
+  const { chain, isSettingChain } = useEarnProtocolChain()
   const { revalidateTags } = useRevalidateTags()
 
   const isProperChain = useMemo(() => {

@@ -261,10 +261,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   }
 
   const rewardTokensClaimableNow: {
-    [tokenSymbol: string]: {
-      amount: number
-      tokenAddress: string
-    }
+    [tokenSymbol: string]: { amount: number; tokenAddress: string }
   } = {
     WSTETH: rewardTokenVisibilityMap.WSTETH
       ? {

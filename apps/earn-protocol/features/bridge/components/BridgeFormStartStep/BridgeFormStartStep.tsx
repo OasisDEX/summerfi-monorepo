@@ -1,13 +1,13 @@
 import { type Dispatch, type FC, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@account-kit/react'
 import {
   ERROR_TOAST_CONFIG,
   InputWithDropdown,
   Sidebar,
   SUCCESS_TOAST_CONFIG,
   useAmount,
-  useUserWallet,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
@@ -33,7 +33,6 @@ import { TransactionDetails } from '@/features/bridge/components/TransactionDeta
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useBridgeTransaction } from '@/features/bridge/hooks/use-bridge-transaction'
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
-import { sdkNetworkToAAChain } from '@/helpers/sdk-network-to-aa-chain'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
@@ -52,8 +51,9 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({
   sumrPriceUsd,
 }) => {
   const router = useRouter()
-  const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useChain()
-  const { userWalletAddress, isLoadingAccount: isUserWalletLoading } = useUserWallet()
+  const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useEarnProtocolChain()
+  const { address: userWalletAddress, isLoadingAccount: isUserWalletLoading } =
+    useEarnProtocolWallet()
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const humanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
   const searchParams = useSearchParams()
@@ -247,14 +247,17 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({
   }
 
   const handleDestinationChainChange = (newDestination: SupportedSDKNetworks) => {
-    dispatch({ type: 'update-destination-chain', payload: sdkNetworkToAAChain(newDestination) })
+    dispatch({
+      type: 'update-destination-chain',
+      payload: sdkNetworkToChain(newDestination),
+    })
     if (amountParsed.gt(0)) {
       prepareTransaction()
     }
   }
 
   const handleSourceChainChange = (network: SupportedSDKNetworks) => {
-    const nextSourceChain = sdkNetworkToAAChain(network)
+    const nextSourceChain = sdkNetworkToChain(network)
 
     setSourceChain({ chain: nextSourceChain })
     if (amountParsed.gt(0)) {
@@ -262,8 +265,8 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({
     }
   }
 
-  const gasOnSource = transaction ? gasEstimate ?? '0' : '0'
-  const gasOnSourceRaw = transaction ? rawGasEstimate ?? '0' : '0'
+  const gasOnSource = transaction ? (gasEstimate ?? '0') : '0'
+  const gasOnSourceRaw = transaction ? (rawGasEstimate ?? '0') : '0'
 
   const handleAmountChangeWithPercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPercentage(null)

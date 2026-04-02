@@ -31,7 +31,7 @@ export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 
   customVaultName,
   isDaoManaged,
 }) => {
-  const resolvedRisk = isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower'
+  const resolvedRisk = isDaoManaged ? 'higher' : (vault.customFields?.risk ?? 'lower')
 
   return (
     <div

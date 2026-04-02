@@ -4,8 +4,8 @@ import {
   LocalConfigDispatchActions,
   type SumrNetApyConfig,
   sumrNetApyConfigCookieName,
+  useEarnProtocolWallet,
   useLocalConfig,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 
@@ -25,7 +25,7 @@ export const useSumrNetApyConfig = (): [SumrNetApyConfig, (value: SumrNetApyConf
     dispatch,
   } = useLocalConfig()
   const cookie = getCookie(sumrNetApyConfigCookieName)
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const setValue = (value: SumrNetApyConfig) => {
     const nextValue = { ...value, dilutedValuation: value.dilutedValuation.replaceAll(',', '') }

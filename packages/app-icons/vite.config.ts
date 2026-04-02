@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { defineConfig, createLogger } from 'vite'
+import { defineConfig, createLogger, UserConfig } from 'vite'
 
 // generates typescript declaration files (just the js/ts, css is done in package.json)
 import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite'
@@ -66,5 +66,5 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-  }
+  } as UserConfig
 })

@@ -1,0 +1,356 @@
+.blobsContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes driftSmall1 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(12px, -8px);
+  }
+
+  50% {
+    transform: translate(-8px, 10px);
+  }
+
+  75% {
+    transform: translate(10px, 6px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes driftSmall2 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-10px, 12px);
+  }
+
+  50% {
+    transform: translate(8px, -10px);
+  }
+
+  75% {
+    transform: translate(-6px, -8px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes driftSmall3 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  33% {
+    transform: translate(14px, 8px);
+  }
+
+  66% {
+    transform: translate(-12px, -6px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes driftSmall4 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-8px, -10px);
+  }
+
+  50% {
+    transform: translate(10px, 8px);
+  }
+
+  75% {
+    transform: translate(-6px, 12px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes driftLarge1 {
+  0% {
+    transform: translate(-50%, -50%);
+  }
+
+  25% {
+    transform: translate(calc(-50% + 20px), calc(-50% - 15px));
+  }
+
+  50% {
+    transform: translate(calc(-50% - 15px), calc(-50% + 18px));
+  }
+
+  75% {
+    transform: translate(calc(-50% + 18px), calc(-50% + 10px));
+  }
+
+  100% {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes driftLarge2 {
+  0% {
+    transform: translate(-50%, -50%);
+  }
+
+  20% {
+    transform: translate(calc(-50% - 18px), calc(-50% + 16px));
+  }
+
+  40% {
+    transform: translate(calc(-50% + 16px), calc(-50% - 14px));
+  }
+
+  60% {
+    transform: translate(calc(-50% - 12px), calc(-50% - 10px));
+  }
+
+  80% {
+    transform: translate(calc(-50% + 14px), calc(-50% + 12px));
+  }
+
+  100% {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes driftLarge3 {
+  0% {
+    transform: translate(-50%, -50%);
+  }
+
+  33% {
+    transform: translate(calc(-50% + 16px), calc(-50% + 14px));
+  }
+
+  66% {
+    transform: translate(calc(-50% - 14px), calc(-50% - 16px));
+  }
+
+  100% {
+    transform: translate(-50%, -50%);
+  }
+}
+
+.smallBlobDrift1 {
+  animation: driftSmall1 25s ease-in-out infinite;
+}
+
+.smallBlobDrift2 {
+  animation: driftSmall2 30s ease-in-out infinite;
+}
+
+.smallBlobDrift3 {
+  animation: driftSmall3 10s ease-in-out infinite;
+}
+
+.smallBlobDrift4 {
+  animation: driftSmall4 24s ease-in-out infinite;
+}
+
+.largeBlobDrift1 {
+  animation: driftLarge1 22s ease-in-out infinite;
+}
+
+.largeBlobDrift2 {
+  animation: driftLarge2 20s ease-in-out infinite;
+}
+
+.largeBlobDrift3 {
+  animation: driftLarge3 15s ease-in-out infinite;
+}
+
+@keyframes morphSmall1 {
+
+  0%,
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+
+  25% {
+    border-radius: 40% 60% 70% 30% / 30% 70% 40% 60%;
+  }
+
+  50% {
+    border-radius: 70% 30% 50% 50% / 40% 60% 30% 70%;
+  }
+
+  75% {
+    border-radius: 30% 70% 40% 60% / 70% 40% 60% 30%;
+  }
+}
+
+@keyframes morphSmall2 {
+
+  0%,
+  100% {
+    border-radius: 50% 50% 40% 60% / 40% 60% 50% 50%;
+  }
+
+  33% {
+    border-radius: 40% 60% 60% 40% / 60% 40% 40% 60%;
+  }
+
+  66% {
+    border-radius: 60% 40% 50% 50% / 50% 50% 60% 40%;
+  }
+}
+
+@keyframes morphLarge1 {
+
+  0%,
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+
+  20% {
+    border-radius: 40% 60% 50% 50% / 50% 50% 40% 60%;
+  }
+
+  40% {
+    border-radius: 50% 50% 60% 40% / 30% 70% 50% 50%;
+  }
+
+  60% {
+    border-radius: 30% 70% 40% 60% / 70% 40% 60% 30%;
+  }
+
+  80% {
+    border-radius: 70% 30% 50% 50% / 40% 60% 30% 70%;
+  }
+}
+
+@keyframes morphLarge2 {
+
+  0%,
+  100% {
+    border-radius: 40% 60% 70% 30% / 50% 50% 30% 70%;
+  }
+
+  25% {
+    border-radius: 70% 30% 40% 60% / 60% 40% 70% 30%;
+  }
+
+  50% {
+    border-radius: 50% 50% 30% 70% / 40% 60% 50% 50%;
+  }
+
+  75% {
+    border-radius: 30% 70% 60% 40% / 70% 30% 40% 60%;
+  }
+}
+
+@keyframes morphLarge3 {
+
+  0%,
+  100% {
+    border-radius: 55% 45% 60% 40% / 45% 55% 35% 65%;
+  }
+
+  33% {
+    border-radius: 35% 65% 45% 55% / 65% 35% 55% 45%;
+  }
+
+  66% {
+    border-radius: 65% 35% 35% 65% / 35% 65% 65% 35%;
+  }
+}
+
+@keyframes pulseSmall {
+
+  0%,
+  100% {
+    scale: 1;
+  }
+
+  50% {
+    scale: 1.3;
+  }
+}
+
+@keyframes pulseLarge {
+
+  0%,
+  100% {
+    scale: 1;
+  }
+
+  50% {
+    scale: 1.06;
+  }
+}
+
+.smallBlobAlive1 {
+  animation: driftSmall1 25s ease-in-out infinite, pulseSmall 6s ease-in-out infinite;
+}
+
+.smallBlobAlive2 {
+  animation: driftSmall2 30s ease-in-out infinite, pulseSmall 7s ease-in-out infinite;
+}
+
+.smallBlobAlive3 {
+  animation: driftSmall3 10s ease-in-out infinite, pulseSmall 5s ease-in-out infinite;
+}
+
+.smallBlobAlive4 {
+  animation: driftSmall4 24s ease-in-out infinite, pulseSmall 8s ease-in-out infinite;
+}
+
+.smallBlobMorph1 {
+  animation: morphSmall1 8s ease-in-out infinite;
+}
+
+.smallBlobMorph2 {
+  animation: morphSmall2 10s ease-in-out infinite;
+}
+
+.largeBlobAlive1 {
+  animation: driftLarge1 22s ease-in-out infinite, morphLarge1 15s ease-in-out infinite,
+    pulseLarge 10s ease-in-out infinite;
+}
+
+.largeBlobAlive2 {
+  animation: driftLarge2 20s ease-in-out infinite, morphLarge2 18s ease-in-out infinite,
+    pulseLarge 12s ease-in-out infinite;
+}
+
+.largeBlobAlive3 {
+  animation: driftLarge3 15s ease-in-out infinite, morphLarge3 14s ease-in-out infinite,
+    pulseLarge 9s ease-in-out infinite;
+}
+
+.gradientBottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 500px;
+  background: linear-gradient(180deg, rgba(16, 16, 16, 0) 0%, rgb(16, 16, 16) 100%);
+}

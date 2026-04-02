@@ -1,0 +1,36 @@
+declare const styles: {
+  readonly "blobsContainer": string;
+  readonly "driftLarge1": string;
+  readonly "driftLarge2": string;
+  readonly "driftLarge3": string;
+  readonly "driftSmall1": string;
+  readonly "driftSmall2": string;
+  readonly "driftSmall3": string;
+  readonly "driftSmall4": string;
+  readonly "gradientBottom": string;
+  readonly "largeBlobAlive1": string;
+  readonly "largeBlobAlive2": string;
+  readonly "largeBlobAlive3": string;
+  readonly "largeBlobDrift1": string;
+  readonly "largeBlobDrift2": string;
+  readonly "largeBlobDrift3": string;
+  readonly "morphLarge1": string;
+  readonly "morphLarge2": string;
+  readonly "morphLarge3": string;
+  readonly "morphSmall1": string;
+  readonly "morphSmall2": string;
+  readonly "pulseLarge": string;
+  readonly "pulseSmall": string;
+  readonly "smallBlobAlive1": string;
+  readonly "smallBlobAlive2": string;
+  readonly "smallBlobAlive3": string;
+  readonly "smallBlobAlive4": string;
+  readonly "smallBlobDrift1": string;
+  readonly "smallBlobDrift2": string;
+  readonly "smallBlobDrift3": string;
+  readonly "smallBlobDrift4": string;
+  readonly "smallBlobMorph1": string;
+  readonly "smallBlobMorph2": string;
+};
+export = styles;
+

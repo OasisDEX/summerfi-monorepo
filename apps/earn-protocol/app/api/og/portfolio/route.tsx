@@ -25,86 +25,84 @@ export function GET(request: NextRequest) {
     }
 
     return new ImageResponse(
-      (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily:
+            '"Roboto","Ubuntu","Cantarell","Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"',
+          color: '#fff',
+          gap: '0',
+          textAlign: 'center',
+        }}
+      >
+        <img
+          src="https://summer.fi/earn/img/branding/background-dark.png"
+          alt="Lazy Summer Protocol background"
+          style={{
+            position: 'absolute',
+            width: '140%',
+            height: '140%',
+            transform: `rotate(-${Math.ceil(Number(Math.random() * 5))}deg)`,
+            objectFit: 'cover',
+          }}
+        />
+        <img
+          src="https://summer.fi/earn/img/branding/logo-dark.svg"
+          alt="Lazy Summer Protocol"
+          style={{
+            marginBottom: '60px',
+            height: '100px',
+          }}
+        />
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            width: '100%',
-            height: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily:
-              '"Roboto","Ubuntu","Cantarell","Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"',
-            color: '#fff',
-            gap: '0',
-            textAlign: 'center',
+            gap: '20px',
+            borderTop: '1px solid #ff49a4',
+            borderBottom: '1px solid #ff49a4',
           }}
         >
-          <img
-            src="https://summer.fi/earn/img/branding/background-dark.png"
-            alt="Lazy Summer Protocol background"
-            style={{
-              position: 'absolute',
-              width: '140%',
-              height: '140%',
-              transform: `rotate(-${Math.ceil(Number(Math.random() * 5))}deg)`,
-              objectFit: 'cover',
-            }}
-          />
-          <img
-            src="https://summer.fi/earn/img/branding/logo-dark.svg"
-            alt="Lazy Summer Protocol"
-            style={{
-              marginBottom: '60px',
-              height: '100px',
-            }}
-          />
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '20px',
-              borderTop: '1px solid #ff49a4',
-              borderBottom: '1px solid #ff49a4',
-            }}
-          >
-            <p
-              style={{
-                display: 'flex',
-                textAlign: 'center',
-                margin: '20px auto 0',
-                lineHeight: '140px',
-                fontSize: '140px',
-                color: '#ff49a4',
-              }}
-            >
-              {String(amount)}
-            </p>
-            <p
-              style={{
-                display: 'flex',
-                paddingBottom: '25px',
-                textAlign: 'center',
-                margin: '20px auto 0',
-                lineHeight: '60px',
-                fontSize: '60px',
-                color: '#fff',
-              }}
-            >
-              {String(sumrEarned)}&nbsp;SUMR&nbsp;earned
-            </p>
-          </div>
           <p
             style={{
-              fontSize: '40px',
-              fontFamily: 'monospace',
+              display: 'flex',
+              textAlign: 'center',
+              margin: '20px auto 0',
+              lineHeight: '140px',
+              fontSize: '140px',
+              color: '#ff49a4',
             }}
           >
-            {formatAddress(address, { first: 6 })} portfolio
+            {String(amount)}
+          </p>
+          <p
+            style={{
+              display: 'flex',
+              paddingBottom: '25px',
+              textAlign: 'center',
+              margin: '20px auto 0',
+              lineHeight: '60px',
+              fontSize: '60px',
+              color: '#fff',
+            }}
+          >
+            {String(sumrEarned)}&nbsp;SUMR&nbsp;earned
           </p>
         </div>
-      ),
+        <p
+          style={{
+            fontSize: '40px',
+            fontFamily: 'monospace',
+          }}
+        >
+          {formatAddress(address, { first: 6 })} portfolio
+        </p>
+      </div>,
       {
         width: 1200,
         height: 700,

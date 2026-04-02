@@ -1,8 +1,6 @@
 import { useCallback, useState } from 'react'
-import { useChain, useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { getAccountType } from '@summerfi/app-earn-ui'
+import { useEarnProtocolSendUserOperation } from '@summerfi/app-earn-ui'
 
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
 /**
@@ -30,9 +28,6 @@ export const useStakeSumrTransaction = ({
   onApproveError: () => void
 }) => {
   const { getStakeTx, getCurrentUser } = useAppSDK()
-  const { chain } = useChain()
-  const { client: smartAccountClient } = useSmartAccountClient({ type: getAccountType(chain.id) })
-
   const [stakeSumrTransaction, setStakeSumrTransaction] = useState<
     (() => Promise<unknown>) | undefined
   >(undefined)
@@ -45,8 +40,7 @@ export const useStakeSumrTransaction = ({
     sendUserOperationAsync: sendStakeSumrTransaction,
     error: sendStakeSumrTransactionError,
     isSendingUserOperation: isSendingStakeSumrTransaction,
-  } = useSendUserOperation({
-    client: smartAccountClient,
+  } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess: onStakeSuccess,
     onError: onStakeError,
@@ -56,8 +50,7 @@ export const useStakeSumrTransaction = ({
     sendUserOperationAsync: sendApproveSumrTransaction,
     error: sendApproveSumrTransactionError,
     isSendingUserOperation: isSendingApproveSumrTransaction,
-  } = useSendUserOperation({
-    client: smartAccountClient,
+  } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess: onApproveSuccess,
     onError: onApproveError,
@@ -83,15 +76,7 @@ export const useStakeSumrTransaction = ({
               value: BigInt(tx[0].transaction.value),
             }
 
-            const resolvedOverrides = await getGasSponsorshipOverride({
-              smartAccountClient,
-              txParams,
-            })
-
-            return await sendApproveSumrTransaction({
-              uo: txParams,
-              overrides: resolvedOverrides,
-            })
+            return await sendApproveSumrTransaction(txParams)
           }
 
           const _stakeSumrTransaction = async () => {
@@ -101,15 +86,7 @@ export const useStakeSumrTransaction = ({
               value: BigInt(tx[1].transaction.value),
             }
 
-            const resolvedOverrides = await getGasSponsorshipOverride({
-              smartAccountClient,
-              txParams,
-            })
-
-            return await sendStakeSumrTransaction({
-              uo: txParams,
-              overrides: resolvedOverrides,
-            })
+            return await sendStakeSumrTransaction(txParams)
           }
 
           setApproveSumrTransaction(() => _approveSumrTransaction)
@@ -124,15 +101,7 @@ export const useStakeSumrTransaction = ({
               value: BigInt(tx[0].transaction.value),
             }
 
-            const resolvedOverrides = await getGasSponsorshipOverride({
-              smartAccountClient,
-              txParams,
-            })
-
-            return await sendStakeSumrTransaction({
-              uo: txParams,
-              overrides: resolvedOverrides,
-            })
+            return await sendStakeSumrTransaction(txParams)
           }
 
           setStakeSumrTransaction(() => _stakeSumrTransaction)
@@ -150,13 +119,7 @@ export const useStakeSumrTransaction = ({
         setIsFetchingTx(false)
       }
     },
-    [
-      getCurrentUser,
-      getStakeTx,
-      sendApproveSumrTransaction,
-      sendStakeSumrTransaction,
-      smartAccountClient,
-    ],
+    [getCurrentUser, getStakeTx, sendApproveSumrTransaction, sendStakeSumrTransaction],
   )
 
   return {

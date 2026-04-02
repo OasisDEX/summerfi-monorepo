@@ -1,6 +1,6 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { useAuthModal, useLogout, useSignerStatus } from '@account-kit/react'
+import { useState } from 'react'
+import { useModalStatus } from '@privy-io/react-auth'
 import {
   Button,
   type ButtonClassNames,
@@ -12,8 +12,10 @@ import {
   type TextClassNames,
   Tooltip,
   useClientChainId,
+  useEarnProtocolLogin,
+  useEarnProtocolLogout,
+  useEarnProtocolWallet,
   useIsIframe,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   formatAddress,
@@ -188,26 +190,15 @@ export default function WalletLabel({
   buttonVariant = 'secondaryMedium',
 }: WalletLabelProps) {
   const [addressCopied, setAddressCopied] = useState(false)
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { clientChainId } = useClientChainId()
 
   const chainName = sdkChainIdToHumanNetwork(clientChainId)
 
-  const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
-  const { isInitializing: isSignerInitializing, isAuthenticating: isSignerAuthenticating } =
-    useSignerStatus()
-  const { logout } = useLogout()
+  const { login } = useEarnProtocolLogin()
+  const { logout } = useEarnProtocolLogout()
+  const { isOpen: isAuthModalOpen } = useModalStatus()
   const isIframe = useIsIframe()
-
-  const handleLogout = () => {
-    logout()
-  }
-
-  // removes dark mode from the document
-  // to ensure that account-kit modal is always in light mode
-  useEffect(() => {
-    document.documentElement.classList.remove('dark')
-  }, [])
 
   const handleCopyAddress = (address: string) => {
     navigator.clipboard.writeText(address)
@@ -218,7 +209,7 @@ export default function WalletLabel({
   }
 
   // we are not showing the skeleton in iframe, because isSignerInitializing never goes to true
-  if ((isSignerInitializing || isAuthModalOpen || isSignerAuthenticating) && !isIframe) {
+  if (isAuthModalOpen && !isIframe) {
     return (
       <Button variant={buttonVariant}>
         <SkeletonLine width={100} height={10} style={{ opacity: 0.2 }} />
@@ -230,7 +221,7 @@ export default function WalletLabel({
     if (variant === 'addressOnly') return null
 
     return (
-      <Button variant={buttonVariant} onClick={openAuthModal} className={walletLabelStyles.wrapper}>
+      <Button variant={buttonVariant} onClick={login} className={walletLabelStyles.wrapper}>
         {customLoginLabel ?? 'Log in'}
       </Button>
     )
@@ -279,7 +270,7 @@ export default function WalletLabel({
   if (variant === 'logoutOnly') {
     return (
       <div className={`${walletLabelStyles.actionsOnlyWrapper} ${className}`}>
-        <LogoutButton onLogout={handleLogout} />
+        <LogoutButton onLogout={logout} />
       </div>
     )
   }
@@ -295,7 +286,7 @@ export default function WalletLabel({
             address={userWalletAddress}
             onCopy={handleCopyAddress}
             copied={addressCopied}
-            onLogout={handleLogout}
+            onLogout={logout}
           />
         }
         tooltipCardVariant="cardSecondarySmallPaddings"
@@ -318,7 +309,7 @@ export default function WalletLabel({
         </div>
       </Tooltip>
       <div className={walletLabelStyles.mobileCopyLogoutButtons}>
-        <LogoutButton onLogout={handleLogout} variant="primaryMedium" />
+        <LogoutButton onLogout={logout} variant="primaryMedium" />
         <CopyAddressButton
           address={userWalletAddress.toString()}
           onCopy={handleCopyAddress}

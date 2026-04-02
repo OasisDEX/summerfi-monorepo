@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Emphasis, GradientBox, Icon, Text } from '@summerfi/app-earn-ui'
+import { Icon, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import {
   type LandingPageData,
   supportedDefillamaProtocols,
@@ -61,39 +61,25 @@ export const ProtocolScrollerItem = ({
   tvl,
   url,
 }: ProtocolScrollerItemProps) => {
-  const [itemHovered, setItemHovered] = useState(false)
-
-  const handleMouseOver = () => {
-    setItemHovered(true)
-  }
-
-  const handleMouseLeave = () => {
-    setItemHovered(false)
-  }
-
   const insides = (
-    <GradientBox
-      onMouseOver={handleMouseOver}
-      onMouseLeave={handleMouseLeave}
-      selected={itemHovered}
-      withHover
-      className={protocolScrollerStyles.protocolScrollerItemGradient}
-    >
-      <div className={protocolScrollerStyles.protocolScrollerItem}>
-        <div className={protocolScrollerStyles.protocolScrollerItemNameIcon}>
-          {protocolIcon}
-          <Text variant="p1semi">{protocol}</Text>
-        </div>
-        <div className={protocolScrollerStyles.protocolScrollerItemTvl}>
-          <Text variant="p3semi">TVL</Text>
-          <Text variant="p2semi">
-            {formatAsShorthandNumbers(tvl, {
-              precision: 2,
-            })}
-          </Text>
-        </div>
+    <div className={protocolScrollerStyles.protocolScrollerItem}>
+      <div className={protocolScrollerStyles.protocolScrollerItemNameIcon}>
+        {protocolIcon}
+        <Text variant="p1semi">{protocol}</Text>
       </div>
-    </GradientBox>
+      <div className={protocolScrollerStyles.protocolScrollerItemTvl}>
+        <Text variant="p3semi">TVL</Text>
+        <Text variant="p2semi">
+          {tvl ? (
+            formatAsShorthandNumbers(tvl, {
+              precision: 2,
+            })
+          ) : (
+            <SkeletonLine width={50} height={12} style={{ margin: '6px auto' }} />
+          )}
+        </Text>
+      </div>
+    </div>
   )
 
   if (!url) {
@@ -165,38 +151,8 @@ export const ProtocolScroller = ({
     }
   }, [hovered])
 
-  const totalLiquidityBigInt = useMemo(
-    () => protocolsList.reduce((acc, { tvl }) => acc + tvl, 0n),
-    [protocolsList],
-  )
-
-  const totalLiquidityInfo = useMemo(
-    () =>
-      formatAsShorthandNumbers(totalLiquidityBigInt, {
-        precision: 4,
-      }),
-    [totalLiquidityBigInt],
-  )
-
-  const totalLiquidityDisplay = useMemo(
-    () =>
-      formatAsShorthandNumbers(Math.floor(Number(totalLiquidityBigInt) / 1e9) * 1e9, {
-        precision: 0,
-      }),
-    [totalLiquidityBigInt],
-  )
-
   return (
     <div className={protocolScrollerStyles.protocolScrollerWrapper}>
-      <Text variant="h3" as="h3" className={protocolScrollerStyles.protocolScrollerHeader}>
-        <span className={protocolScrollerStyles.headerLine}>
-          Automated access to <Emphasis variant="h3colorful">DeFi&apos;s best protocols</Emphasis>
-        </span>
-        <span className={protocolScrollerStyles.headerLine}>
-          with over <span title={`$${totalLiquidityInfo}`}>${totalLiquidityDisplay}</span> of total
-          liquidity
-        </span>
-      </Text>
       <ProtocolScrollerTrack
         ref={trackRef}
         style={{

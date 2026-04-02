@@ -12,9 +12,9 @@ import { IManagerProvider } from '../interfaces/IManagerProvider'
  * Typically used when implementing providers for managers like OneInchSwapProvider in the
  * SwapManager
  */
-export abstract class ManagerProviderBase<ProviderType extends string>
-  implements IManagerProvider<ProviderType>
-{
+export abstract class ManagerProviderBase<
+  ProviderType extends string,
+> implements IManagerProvider<ProviderType> {
   /** @see IManagerProvider.type */
   readonly type: ProviderType
 

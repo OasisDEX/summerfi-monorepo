@@ -1,13 +1,29 @@
 'use client'
-import { HomepageCarousel, SkeletonLine, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { useMemo } from 'react'
+import {
+  Button,
+  Emphasis,
+  getRewardsTokenBonus,
+  getVaultsProtocolsList,
+  SkeletonLine,
+  Text,
+} from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
   type IArmadaVaultInfo,
   type RewardTokenPrices,
   type SDKVaultishType,
 } from '@summerfi/app-types'
+import {
+  findVaultInfo,
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  subgraphNetworkToId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 
+import { getManagementFee } from '@/helpers/get-management-fee'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.css'
@@ -17,49 +33,97 @@ export const LandingPageHero = ({
   vaultsApyByNetworkMap,
   vaultsInfo,
   rewardTokenPrices,
+  tvl,
 }: {
   vaultsList?: SDKVaultishType[]
   vaultsApyByNetworkMap?: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   rewardTokenPrices?: RewardTokenPrices
+  tvl?: number
 }) => {
-  const headerPartA = (
-    <Text
-      as="h1"
-      variant="h1"
-      style={{
-        color: 'var(--earn-protocol-secondary-100)',
-        textAlign: 'center',
-        fontWeight: '600',
-      }}
-    >
-      Automated Exposure to DeFi’s
-    </Text>
-  )
+  const heroStats = useMemo(() => {
+    const formattedProtocolsSupportedList = getVaultsProtocolsList(vaultsList ?? [])
+    const noOfVaults = vaultsList?.length ?? 0
 
-  const headerPartB = (
-    <Text
-      as="h1"
-      variant="h1"
-      style={{
-        color: 'var(--earn-protocol-primary-100)',
-        textAlign: 'center',
-        fontWeight: '600',
-      }}
-    >
-      Highest Quality{' '}
-      <span style={{ position: 'relative' }}>
-        Yield
-        <Text as="span" variant="p2" style={{ position: 'absolute', top: '-6px', right: '-8px' }}>
-          1
-        </Text>
-      </span>
-    </Text>
-  )
+    const maxApy =
+      (vaultsList
+        ? vaultsList.map((vault) => {
+            const vaultInfo = findVaultInfo(vaultsInfo, vault)
+            const managementFee = getManagementFee(vault.inputToken.symbol)
 
-  const handleGetStartedClick = (vault?: SDKVaultishType) => {
+            if (!vaultInfo) return 0
+            if (!vaultsApyByNetworkMap) return 0
+
+            const vaultApy =
+              vaultsApyByNetworkMap[
+                `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+              ]
+
+            const { totalAnnualRewardsPerToken } = getRewardsTokenBonus({
+              merklRewards: vaultInfo.merklRewards,
+              tokensPriceMap: rewardTokenPrices,
+              totalValueLockedUSD: vault.totalValueLockedUSD,
+            })
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            const grossRewardsTokenBonus = totalAnnualRewardsPerToken
+              ? Object.values(totalAnnualRewardsPerToken).reduce((acc, bonus) => acc + bonus, 0)
+              : 0
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            const grossApy = (vaultApy.apy ?? 0) + grossRewardsTokenBonus
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            const netApy = grossApy - (managementFee ?? 0)
+
+            return netApy
+          })
+        : []
+      ).sort((a, b) => b - a)[0] ?? 0
+
+    return [
+      {
+        label: 'TVL',
+        value: tvl ? (
+          formatCryptoBalance(tvl)
+        ) : (
+          <SkeletonLine height={30} width={70} style={{ margin: '5px 0' }} />
+        ),
+      },
+      {
+        label: '# of Vaults',
+        value: noOfVaults ? (
+          noOfVaults.toLocaleString('en', { maximumFractionDigits: 0 })
+        ) : (
+          <SkeletonLine height={30} width={70} style={{ margin: '5px 0' }} />
+        ),
+      },
+      {
+        label: 'Markets Optimized',
+        value: vaultsList ? (
+          formattedProtocolsSupportedList.allVaultsProtocols.length
+        ) : (
+          <SkeletonLine height={30} width={70} style={{ margin: '5px 0' }} />
+        ),
+      },
+      {
+        label: 'Max APY',
+        value: maxApy ? (
+          formatDecimalAsPercent(maxApy, { precision: 2 })
+        ) : (
+          <SkeletonLine height={30} width={70} style={{ margin: '5px 0' }} />
+        ),
+      },
+    ]
+  }, [rewardTokenPrices, vaultsApyByNetworkMap, vaultsInfo, vaultsList, tvl])
+
+  const handleGetStartedClick = () => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-get-started-${vault?.inputToken.symbol}-${vault?.protocol.network}`,
+      buttonName: `lp-get-started`,
+      page: '/',
+    })
+  }
+
+  const handleViewProductsClick = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: 'lp-view-products-hero',
       page: '/',
     })
   }
@@ -67,36 +131,48 @@ export const LandingPageHero = ({
   return (
     <div className={landingPageHeroStyles.landingPageHeroWrapper}>
       <div className={landingPageHeroStyles.heroHeader}>
-        <div className={landingPageHeroStyles.heroHeaderPartA}>{headerPartA}</div>
-        <div className={landingPageHeroStyles.heroHeaderPartB}>{headerPartB}</div>
+        <div className={landingPageHeroStyles.heroTextGroup}>
+          <Text variant="h1" as="h1" className={landingPageHeroStyles.heroTitle}>
+            <Emphasis variant="h1colorful">Earn more</Emphasis>, do less
+          </Text>
+          <Text variant="p1" className={landingPageHeroStyles.heroSubtitle}>
+            Institutional DeFi Vault infrastructure for everyone.
+          </Text>
+        </div>
+        <div className={landingPageHeroStyles.heroButtons}>
+          <Link
+            href="/earn"
+            prefetch={false}
+            className={landingPageHeroStyles.primaryCta}
+            onClick={() => handleGetStartedClick()}
+          >
+            <Button variant="primarySmall">Launch App</Button>
+          </Link>
+          <Link
+            href="/earn"
+            prefetch={false}
+            className={landingPageHeroStyles.primaryCta}
+            onClick={() => handleViewProductsClick()}
+          >
+            <Button variant="secondarySmall">View&nbsp;Products</Button>
+          </Link>
+        </div>
+        <div className={landingPageHeroStyles.heroStats}>
+          {heroStats.map((stat, index) => (
+            <div className={landingPageHeroStyles.heroStat} key={stat.label}>
+              <Text variant="p4semi" as="p" className={landingPageHeroStyles.heroStatLabel}>
+                {stat.label}
+              </Text>
+              <Text variant="h4" as="p" className={landingPageHeroStyles.heroStatValue}>
+                {stat.value}
+              </Text>
+              {index < heroStats.length - 1 && (
+                <span className={landingPageHeroStyles.heroStatDivider} />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-      <HomepageCarousel
-        vaultsList={vaultsList}
-        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-        vaultsInfo={vaultsInfo}
-        onGetStartedClick={handleGetStartedClick}
-        rewardTokenPrices={rewardTokenPrices}
-      />
-      <Link
-        href="/earn"
-        prefetch={false}
-        onClick={() => {
-          EarnProtocolEvents.buttonClicked({
-            buttonName: 'lp-view-all-strategies',
-            page: '/',
-          })
-        }}
-      >
-        <Text className={landingPageHeroStyles.viewAllStrategies} variant="p3semi">
-          {vaultsList?.length ? (
-            <WithArrow style={{ color: 'white' }}>
-              View all {vaultsList.length} strategies
-            </WithArrow>
-          ) : (
-            <SkeletonLine height={30} width={200} />
-          )}
-        </Text>
-      </Link>
     </div>
   )
 }

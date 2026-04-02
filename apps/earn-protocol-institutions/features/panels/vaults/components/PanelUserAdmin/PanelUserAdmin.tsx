@@ -2,7 +2,6 @@
 
 import { type FC, useCallback, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@account-kit/react'
 import {
   Card,
   ERROR_TOAST_CONFIG,
@@ -10,7 +9,8 @@ import {
   Table,
   type TableSortedColumn,
   Text,
-  useUserWallet,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
   WARNING_TOAST_CONFIG,
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
@@ -68,13 +68,13 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
   network,
   activeUsers,
 }) => {
-  const { isLoadingAccount, userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
+  const { chain, isSettingChain } = useEarnProtocolChain()
   const [activeUsersFilter, setActiveUsersFilter] = useState('')
   const [whitelistedUsersFilter, setWhitelistedUsersFilter] = useState('')
   const [whitelistedAQUsersFilter, setWhitelistedAQUsersFilter] = useState('')
   const chainId = networkNameToSDKId(network)
   const sdkNetworkName = chainIdToSDKNetwork(chainId)
-  const { chain, isSettingChain } = useChain()
   const { setWhitelistedTx, setWhitelistedAQTx } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const { revalidateTags } = useRevalidateTags()

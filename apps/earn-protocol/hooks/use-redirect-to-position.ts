@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { getVaultPositionUrl, getVaultUrl, useUserWallet } from '@summerfi/app-earn-ui'
+import { getVaultPositionUrl, getVaultUrl, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -22,7 +22,7 @@ export const useRedirectToPositionView = ({
 }) => {
   const pathname = usePathname()
   const { replace } = useRouter()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   useEffect(() => {
     if (!position || !userWalletAddress) {

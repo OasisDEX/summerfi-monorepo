@@ -13,7 +13,7 @@ export async function GET() {
     const data = await getMfaInfoAction()
 
     return NextResponse.json({ ok: true, data })
-  } catch (err: any) {
+  } catch (err: unknown) {
     return NextResponse.json({ ok: false, error: String(err) }, { status: 400 })
   }
 }
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       default:
         return NextResponse.json({ ok: false, error: 'Unknown action' }, { status: 400 })
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     return NextResponse.json({ ok: false, error: String(err) }, { status: 400 })
   }
 }
