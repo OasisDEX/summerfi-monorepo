@@ -20,6 +20,7 @@ export const intentSwapsGetSellOrderQuote = publicProcedure
       receiver: z.custom<IAddress>(isAddress).optional(),
       partiallyFillable: z.boolean().optional(),
       limitPrice: z.custom<IPrice>(isPrice).optional(),
+      slippage: z.number().optional(),
     }),
   )
   .query(async (opts) => {

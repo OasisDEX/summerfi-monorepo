@@ -34,6 +34,7 @@ export interface IIntentSwapClient {
    * @param receiver The address that will receive the tokens
    * @param partiallyFillable Whether the order can be partially filled (default: false)
    * @param limitPrice The maximum price the user is willing to accept (optional)
+   * @param slippage The maximum slippage the user is willing to accept (optional) in percentage (e.g. 1 for 1%)
    * @returns The quote data for the swap, including the order data which can be signed and sent to the provider
    *
    * Note: The quote does not guarantee the execution of the swap at the quoted amounts, as the market conditions may change.
@@ -46,6 +47,7 @@ export interface IIntentSwapClient {
     receiver?: IAddress
     partiallyFillable?: boolean
     limitPrice?: string
+    slippage?: number
   }): Promise<IntentQuoteData>
 
   /**

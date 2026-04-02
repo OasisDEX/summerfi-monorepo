@@ -11,7 +11,7 @@ const envSchema = z.object({
   ONE_INCH_API_VERSION: z.string().nonempty(),
   ONE_INCH_API_KEY: z.string().nonempty(),
   ONE_INCH_API_AUTH_HEADER: z.string().nonempty(),
-  ONE_INCH_SWAP_CHAIN_IDS: z.string().nonempty(),
+  ONE_INCH_SWAP_CHAIN_IDS: z.string().default(''),
   ONE_INCH_ALLOWED_SWAP_PROTOCOLS: z.string().default(''),
   ONE_INCH_EXCLUDED_SWAP_PROTOCOLS: z.string().default(''),
   ONE_INCH_API_SPOT_CHAIN_IDS: z.string().default(''),

@@ -78,6 +78,67 @@ const LinkText = ({ children }: { children: string }) => (
   </Text>
 )
 
+const getExchangeRate = (fromAmount: string, toAmount: string): string => {
+  const from = new BigNumber(fromAmount)
+  const to = new BigNumber(toAmount)
+
+  return from.isGreaterThan(0) ? to.div(from).toFixed(6) : 'n/a'
+}
+
+const TokenPairIcons = ({
+  fromToken,
+  toToken,
+  size,
+}: {
+  fromToken: IToken
+  toToken: IToken
+  size: number
+}) => (
+  <div className={orderInfoDepositWithdrawStyles.multipleTokensWrapper}>
+    <Icon tokenName={fromToken.symbol.toUpperCase() as TokenSymbolsList} size={size} />
+    {'->'}
+    <Icon tokenName={toToken.symbol.toUpperCase() as TokenSymbolsList} size={size} />
+  </div>
+)
+
+const SwapAmountRow = ({
+  fromToken,
+  toToken,
+  fromAmount,
+  toAmount,
+}: {
+  fromToken: IToken
+  toToken: IToken
+  fromAmount: string
+  toAmount: string
+}) => (
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      gap: '4px',
+    }}
+  >
+    <Icon tokenName={fromToken.symbol.toUpperCase() as TokenSymbolsList} size={20} />
+    {formatCryptoBalance(fromAmount)}&nbsp;{'->'}
+    <Icon tokenName={toToken.symbol.toUpperCase() as TokenSymbolsList} size={20} />
+    {formatCryptoBalance(toAmount)}
+  </div>
+)
+
+const OrderIdLinkValue = ({
+  chainId,
+  orderId,
+}: {
+  chainId: SupportedNetworkIds
+  orderId: string
+}) => (
+  <Link href={getCowExplorerUrl(chainId, orderId)} target="_blank" rel="noopener noreferrer">
+    <LinkText>{truncateMiddle(orderId)}</LinkText>
+  </Link>
+)
+
 export const OrderInfoIntentSwap = ({
   fromToken,
   toToken,
@@ -267,25 +328,16 @@ export const OrderInfoIntentSwap = ({
     )
   }
 
-  if (step === 'quote_error') {
-    return (
-      <div className={orderInfoDepositWithdrawStyles.depositViewWrapper}>
-        <Text variant="p2semi" style={{ color: 'var(--color-semantic-negative-100)' }}>
-          {quoteError ?? 'Failed to get quote'}
-        </Text>
-        <div style={{ width: '100%', marginTop: 'var(--general-space-20)' }} />
-        <Button variant="primaryLarge" onClick={handleStartAgain}>
-          Start again
-        </Button>
-      </div>
-    )
-  }
+  if (step === 'quote_error' || step === 'error') {
+    const message =
+      step === 'quote_error'
+        ? (quoteError ?? 'Failed to get quote')
+        : (error ?? 'An error occurred')
 
-  if (step === 'error') {
     return (
       <div className={orderInfoDepositWithdrawStyles.depositViewWrapper}>
         <Text variant="p2semi" style={{ color: 'var(--color-semantic-negative-100)' }}>
-          {error ?? 'An error occurred'}
+          {message}
         </Text>
         <div style={{ width: '100%', marginTop: 'var(--general-space-20)' }} />
         <Button variant="primaryLarge" onClick={handleStartAgain}>
@@ -296,34 +348,48 @@ export const OrderInfoIntentSwap = ({
   }
 
   if (step === 'success') {
+    const _exchangeRate = quote
+      ? getExchangeRate(quote.fromAmount.amount, quote.toAmount.amount)
+      : 'n/a'
+
     return (
       <div className={orderInfoDepositWithdrawStyles.depositViewWrapper}>
-        <div className={orderInfoDepositWithdrawStyles.multipleTokensWrapper}>
-          <Icon tokenName={fromToken.symbol.toUpperCase() as TokenSymbolsList} size={48} />
-          {'->'}
-          <Icon tokenName={toToken.symbol.toUpperCase() as TokenSymbolsList} size={48} />
-        </div>
+        <TokenPairIcons fromToken={fromToken} toToken={toToken} size={48} />
         <Text variant="h2">Order fulfilled!</Text>
         <Text variant="p2semi">
           Your {fromToken.symbol} has been swapped and deposited successfully.
         </Text>
-        {orderId && (
+        {quote && (
           <div className={orderInfoDepositWithdrawStyles.depositDetails}>
             <OrderInformation
               wrapperStyles={{ padding: 'var(--general-space-8)' }}
               items={[
                 {
-                  label: 'Order ID',
+                  label: 'Swap',
                   value: (
-                    <Link
-                      href={getCowExplorerUrl(chainId, orderId)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <LinkText>{truncateMiddle(orderId)}</LinkText>
-                    </Link>
+                    <SwapAmountRow
+                      fromToken={fromToken}
+                      toToken={toToken}
+                      fromAmount={quote.fromAmount.amount}
+                      toAmount={quote.toAmount.amount}
+                    />
                   ),
                 },
+                {
+                  label: 'Price',
+                  value:
+                    _exchangeRate === 'n/a'
+                      ? 'n/a'
+                      : `${_exchangeRate} ${toToken.symbol}/${fromToken.symbol}`,
+                },
+                ...(orderId
+                  ? [
+                      {
+                        label: 'Order ID',
+                        value: <OrderIdLinkValue chainId={chainId} orderId={orderId} />,
+                      },
+                    ]
+                  : []),
                 { label: 'Status', value: 'Fulfilled' },
               ]}
             />
@@ -370,15 +436,7 @@ export const OrderInfoIntentSwap = ({
               items={[
                 {
                   label: 'Order ID',
-                  value: (
-                    <Link
-                      href={getCowExplorerUrl(chainId, orderId)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <LinkText>{truncateMiddle(orderId)}</LinkText>
-                    </Link>
-                  ),
+                  value: <OrderIdLinkValue chainId={chainId} orderId={orderId} />,
                 },
                 { label: 'Status', value: step === 'cancelled' ? 'Cancelled' : 'Expired' },
               ]}
@@ -404,11 +462,7 @@ export const OrderInfoIntentSwap = ({
   if (step === 'sending') {
     return (
       <div className={orderInfoDepositWithdrawStyles.depositViewWrapper}>
-        <div className={orderInfoDepositWithdrawStyles.multipleTokensWrapper}>
-          <Icon tokenName={fromToken.symbol.toUpperCase() as TokenSymbolsList} size={64} />
-          {'->'}
-          <Icon tokenName={toToken.symbol.toUpperCase() as TokenSymbolsList} size={64} />
-        </div>
+        <TokenPairIcons fromToken={fromToken} toToken={toToken} size={64} />
         <LoadingSpinner />
         <Text variant="p2semi">Confirm and sign...</Text>
         <div className={orderInfoDepositWithdrawStyles.depositDetails}>
@@ -429,11 +483,7 @@ export const OrderInfoIntentSwap = ({
   if (step === 'polling') {
     return (
       <div className={orderInfoDepositWithdrawStyles.depositViewWrapper}>
-        <div className={orderInfoDepositWithdrawStyles.multipleTokensWrapper}>
-          <Icon tokenName={fromToken.symbol.toUpperCase() as TokenSymbolsList} size={64} />
-          {'->'}
-          <Icon tokenName={toToken.symbol.toUpperCase() as TokenSymbolsList} size={64} />
-        </div>
+        <TokenPairIcons fromToken={fromToken} toToken={toToken} size={64} />
         <Text variant="h2">Order submitted</Text>
         <Text variant="p2semi">Waiting for order to be filled...</Text>
         <div className={orderInfoDepositWithdrawStyles.depositDetails}>
@@ -450,13 +500,7 @@ export const OrderInfoIntentSwap = ({
               {
                 label: 'Order ID',
                 value: orderId ? (
-                  <Link
-                    href={getCowExplorerUrl(chainId, orderId)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <LinkText>{truncateMiddle(orderId)}</LinkText>
-                  </Link>
+                  <OrderIdLinkValue chainId={chainId} orderId={orderId} />
                 ) : (
                   'Pending...'
                 ),
@@ -496,19 +540,12 @@ export const OrderInfoIntentSwap = ({
             {
               label: 'Swap',
               value: (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    gap: '4px',
-                  }}
-                >
-                  <Icon tokenName={fromToken.symbol.toUpperCase() as TokenSymbolsList} size={20} />
-                  {formatCryptoBalance(quote.fromAmount.amount)}&nbsp;{'->'}
-                  <Icon tokenName={toToken.symbol.toUpperCase() as TokenSymbolsList} size={20} />
-                  {formatCryptoBalance(quote.toAmount.amount)}
-                </div>
+                <SwapAmountRow
+                  fromToken={fromToken}
+                  toToken={toToken}
+                  fromAmount={quote.fromAmount.amount}
+                  toAmount={quote.toAmount.amount}
+                />
               ),
             },
             {

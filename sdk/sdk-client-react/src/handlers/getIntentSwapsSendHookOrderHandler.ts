@@ -73,7 +73,7 @@ export const getIntentSwapsSendDepositOrderHandler =
       functionName: 'multicall',
       args: [[enterFleetCallData]],
     })
-    const gasLimit = '2500000'
+    const gasLimit = '5500000'
     const hooks: { target: `0x${string}`; callData: `0x${string}`; gasLimit: string }[] = [
       {
         target: aqAddress,

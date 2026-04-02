@@ -58,6 +58,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       receiver: params.receiver,
       partiallyFillable: params.partiallyFillable,
       limitPrice,
+      slippage: params.slippage,
     })
   }
 
@@ -105,6 +106,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       postHooks,
       preHooks,
       apiKey,
+      order,
     } = params
     // validate chainId
     this._validateChainId(chainId)
@@ -147,9 +149,11 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
           tokenAddress: fromTokenAddress,
           amount: requiredAmount,
         })
-        LoggingService.debug('Swap: approval transaction:', txHash)
+        LoggingService.debug('IntentSwapClient: approval transaction:', txHash)
       } else {
-        LoggingService.debug('Swap: sufficient allowance already exists. Skipping approval.')
+        LoggingService.debug(
+          'IntentSwapClient: sufficient allowance already exists. Skipping approval.',
+        )
       }
     }
 
@@ -160,10 +164,13 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       buyToken: toToken.address.toSolidityValue(),
       buyTokenDecimals: toToken.decimals,
       amount: fromAmount.toSolidityValue().toString(),
+      slippageBps: 100,
+      validTo: order.validTo,
     }
-    LoggingService.debug('Swap: trade parameters', parameters)
+    LoggingService.debug('IntentSwapClient: trade parameters', parameters)
 
     const advancedSettings: SwapAdvancedSettings = {
+      quoteRequest: {},
       appData: {
         metadata: {
           hooks: {
@@ -178,7 +185,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     try {
       orderPostResult = await tradingSdk.postSwapOrder(parameters, advancedSettings)
     } catch (error) {
-      LoggingService.error('Error posting swap order:', error)
+      LoggingService.error('IntentSwapClient: Error posting swap order:', error)
       throw error
     }
 

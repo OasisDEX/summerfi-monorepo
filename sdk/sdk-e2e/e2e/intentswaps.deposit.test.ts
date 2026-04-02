@@ -15,7 +15,6 @@ import {
   getPublicClientForChain,
   getWalletClientForChain,
 } from '@summerfi/testing-utils'
-import { privateKeyToAccount } from 'viem/accounts'
 import { encodeFunctionData } from 'viem'
 
 jest.setTimeout(300000)
@@ -51,25 +50,25 @@ describe('Intent swaps: Swap with Deposit', () => {
     //   authorizePermit2: true,
     // },
     // erc20 to erc20
-    // {
-    //   chainId: ChainIds.Base,
-    //   fromSymbol: 'EURC',
-    //   amountValue: '1',
-    //   fleetAddressValue: FleetAddresses.Base.USDC,
-    //   sendOrder: true,
-    //   cancelOrder: false,
-    //   authorizePermit2: true,
-    // },
-    // erc20 to eth
     {
       chainId: ChainIds.Base,
-      fromSymbol: 'USDC',
-      amountValue: '1',
-      fleetAddressValue: FleetAddresses.Base.ETH,
+      fromSymbol: 'DAI',
+      amountValue: '0.5',
+      fleetAddressValue: FleetAddresses.Base.EURC,
       sendOrder: true,
-      cancelOrder: true,
-      // authorizePermit2: true,
+      cancelOrder: false,
+      authorizePermit2: true,
     },
+    // erc20 to eth
+    // {
+    //   chainId: ChainIds.Base,
+    //   fromSymbol: 'USDC',
+    //   amountValue: '1',
+    //   fleetAddressValue: FleetAddresses.Base.ETH,
+    //   sendOrder: true,
+    //   cancelOrder: true,
+    //   // authorizePermit2: true,
+    // },
   ]
 
   describe.each(intentSwapScenarios)('with scenario %#', (scenario) => {
@@ -184,7 +183,7 @@ describe('Intent swaps: Swap with Deposit', () => {
         functionName: 'multicall',
         args: [[enterFleetCallData]],
       })
-      const gasLimit = '2500000'
+      const gasLimit = '5500000'
       const hooks: { target: `0x${string}`; callData: `0x${string}`; gasLimit: string }[] = [
         {
           target: spenderAddressValue,
@@ -249,6 +248,9 @@ describe('Intent swaps: Swap with Deposit', () => {
         retry++
         // wait with exponential backoff before checking order status again if order is not yet fulfilled
         if (orderInfo === null || orderInfo.order.status !== 'fulfilled') {
+          if (orderInfo?.order.status === 'expired') {
+            throw new Error(`Order ${orderId} has expired`)
+          }
           const waitTime = 1000 * Math.pow(2, retry - 1) // exponential backoff
           console.log(
             `Order not fulfilled yet (status: ${orderInfo?.order.status ?? 'null'}), retrying in ${waitTime} ms... (${retry}/10)`,

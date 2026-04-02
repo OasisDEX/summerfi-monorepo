@@ -13,6 +13,7 @@ import {
   type ITokenAmount,
   getChainInfoByChainId,
   NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+  type IPrice,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase, type IManagerProvider } from '@summerfi/sdk-server-common'
 import { type IIntentSwapProvider } from '@summerfi/swap-common'
@@ -118,6 +119,7 @@ export class CowSwapProvider
       receiver,
       sellAmountBeforeFee: sellAmount,
       kind: OrderQuoteSideKindSell.SELL,
+      validFor: 60 * 3, // Quote valid for 3 * 60 seconds
     }
 
     LoggingService.debug('Fetching quote from CowSwap with request:', quoteRequest)
@@ -140,32 +142,30 @@ export class CowSwapProvider
       partiallyFillable: params.partiallyFillable ?? false,
     }
 
-    let buyAmount = TokenAmount.createFromBaseUnit({
-      token: params.toToken,
-      amount: quote.buyAmount,
+    LoggingService.debug('Received quote from CowSwap:', {
+      ...quote,
+    })
+
+    const fee = TokenAmount.createFromBaseUnit({
+      token: params.fromAmount.token,
+      amount: order.feeAmount,
     })
 
     const fromAmountBN = new BigNumber(params.fromAmount.amount)
 
+    let minimumAmount = TokenAmount.createFromBaseUnit({
+      token: params.toToken,
+      // Apply slippage tolerance to the buy amount, slippage in percentage (e.g. 1 for 1%)
+      amount: new BigNumber(order.buyAmount)
+        .multipliedBy(1 - (params.slippage ?? 1) / 100)
+        .toString(),
+    })
     const quotePriceValue =
       fromAmountBN.isZero() || fromAmountBN.isNaN() || fromAmountBN.isNegative()
         ? '0'
-        : new BigNumber(buyAmount.amount).dividedBy(fromAmountBN).toString()
+        : new BigNumber(minimumAmount.amount).dividedBy(fromAmountBN).toString()
 
-    const quotePrice = Price.createFrom({
-      value: quotePriceValue,
-      base: params.fromAmount.token,
-      quote: params.toToken,
-    })
-    LoggingService.debug(
-      'Selling:',
-      params.fromAmount.toString(),
-      '\nQuote buy amount:',
-      buyAmount.toString(),
-      '\nQuote price:',
-      quotePrice.toString(),
-    )
-
+    let limitPrice: IPrice
     if (params.limitPrice) {
       // Calculate new buy amount for the given limit price
       // newBuyAmount = fromAmount * limitPrice
@@ -176,15 +176,34 @@ export class CowSwapProvider
         '\nLimit buy amount:',
         limitBuyAmount.toString(),
       )
-
-      order.buyAmount = limitBuyAmount.toSolidityValue().toString()
-      buyAmount = limitBuyAmount
+      minimumAmount = limitBuyAmount
+      limitPrice = params.limitPrice
+    } else {
+      limitPrice = Price.createFrom({
+        value: quotePriceValue,
+        base: params.fromAmount.token,
+        quote: params.toToken,
+      })
     }
+
+    LoggingService.debug(
+      'Selling:',
+      params.fromAmount.toString(),
+      '\nQuote minimum amount:',
+      minimumAmount.toString(),
+      '\nQuote limit price:',
+      limitPrice.toString(),
+      '\nQuote valid to:',
+      new Date(order.validTo * 1000).toLocaleString(),
+      '\nOrder fee:',
+      fee.toString(),
+    )
 
     return {
       providerType: IntentSwapProviderType.CowSwap,
       fromAmount: params.fromAmount,
-      toAmount: buyAmount,
+      toAmount: minimumAmount,
+      limitPrice,
       validTo: quote.validTo,
       order,
     }
