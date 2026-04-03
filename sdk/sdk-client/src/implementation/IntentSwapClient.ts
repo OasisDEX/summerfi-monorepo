@@ -26,7 +26,7 @@ import {
 } from '@summerfi/sdk-common'
 
 const PERMIT2_ADDRESS = '0x000000000022D473030F116dDEE9F6B43aC78BA3' as const
-const PERMIT2_EXPIRATION_MINUTES = 3
+const PERMIT2_EXPIRATION_MINUTES = 4
 
 /**
  * @name IntentSwapClient
@@ -61,7 +61,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       partiallyFillable: params.partiallyFillable,
       limitPrice,
       slippagePercentage: params.slippagePercentage,
-      validFor: PERMIT2_EXPIRATION_MINUTES,
+      validFor: PERMIT2_EXPIRATION_MINUTES * 60,
     })
   }
 
@@ -320,7 +320,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     const { chainId, tokenAddress, amount, spenderAddress, signTypedData, viemAccount } = params
 
     const nonce = BigInt(Date.now())
-    const deadline = BigInt(Math.floor(Date.now() / 1000) + PERMIT2_EXPIRATION_MINUTES) // 30 minutes
+    const deadline = BigInt(Math.floor(Date.now() / 1000) + PERMIT2_EXPIRATION_MINUTES * 60) // X minutes from now
 
     const permitData = {
       permitted: {
