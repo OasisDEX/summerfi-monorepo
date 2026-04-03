@@ -6,7 +6,6 @@ import {
   type SupportedChainId,
   ALL_SUPPORTED_CHAIN_IDS,
   TradingSdk,
-  type TradeParameters,
   type SwapAdvancedSettings,
   OrderKind,
   AdapterContext,
