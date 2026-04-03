@@ -119,7 +119,7 @@ export class CowSwapProvider
       receiver,
       sellAmountBeforeFee: sellAmount,
       kind: OrderQuoteSideKindSell.SELL,
-      validFor: 60 * 3, // Quote valid for 3 * 60 seconds
+      validFor: params.validFor, // Quote valid for 3 * 60 seconds
     }
 
     LoggingService.debug('Fetching quote from CowSwap with request:', quoteRequest)

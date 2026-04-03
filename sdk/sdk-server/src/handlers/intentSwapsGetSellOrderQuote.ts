@@ -21,6 +21,7 @@ export const intentSwapsGetSellOrderQuote = publicProcedure
       partiallyFillable: z.boolean().optional(),
       limitPrice: z.custom<IPrice>(isPrice).optional(),
       slippagePercentage: z.number().min(0).max(100).optional(),
+      validFor: z.number(),
     }),
   )
   .query(async (opts) => {
