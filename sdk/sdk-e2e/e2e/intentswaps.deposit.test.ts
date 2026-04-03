@@ -139,7 +139,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       })
       console.log('Is Permit2 Authorization Needed?', isPermit2AuthNeeded)
 
-      // send permit2 approval first otherwise deposit will fali
+      // send permit2 approval first otherwise deposit will fail
       if (isPermit2AuthNeeded && authorizePermit2) {
         const permit2AuthorizationTxInfo = await sdk.intentSwaps.getPermit2AuthorizationTx({
           tokenAddress: sellQuote.toAmount.token.address,
