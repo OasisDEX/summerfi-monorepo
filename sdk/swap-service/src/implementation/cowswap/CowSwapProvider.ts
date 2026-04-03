@@ -58,11 +58,11 @@ export class CowSwapProvider
    * https://docs.cow.fi/
    * */
 
-  private _supportedChainIds: SupportedChainId[]
-  private _allowanceManager: IAllowanceManager
-  private _tokensManager: ITokensManager
-  private _blockchainClientProvider: IBlockchainClientProvider
-  private _apiKey: string
+  private readonly _supportedChainIds: SupportedChainId[]
+  private readonly _allowanceManager: IAllowanceManager
+  private readonly _tokensManager: ITokensManager
+  private readonly _blockchainClientProvider: IBlockchainClientProvider
+  private readonly _apiKey: string
 
   /** CONSTRUCTOR */
 
@@ -128,7 +128,7 @@ export class CowSwapProvider
     let quote: OrderParameters | LimitOrderParameters
     try {
       const { quote: fetchedQuote } = await orderBookApi.getQuote(quoteRequest)
-      quote = fetchedQuote as UnsignedOrder
+      quote = fetchedQuote
     } catch (e) {
       LoggingService.error('Error fetching quote from CowSwap:', e)
       throw new Error('Failed to fetch quote from CowSwap')
