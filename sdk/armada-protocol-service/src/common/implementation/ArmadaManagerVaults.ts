@@ -1536,12 +1536,12 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
 
       return gasWithBuffer.toString()
     } catch (error) {
-      LoggingService.error('Failed to estimate gas, using fallback', { error })
-      // Fallback to a reasonable default if estimation fails
+      LoggingService.error(
+        `Failed to estimate gas but it shouldn't happen (no allowance?), returning undefined`,
+        { error },
+      )
+      return undefined
     }
-    throw new Error(
-      'Gas estimation failed but it should not happen, tx is failing possible no allowance',
-    )
   }
 
   private _calculateFinalWithdrawAmount(params: {
