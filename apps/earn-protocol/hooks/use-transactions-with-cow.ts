@@ -828,6 +828,10 @@ export const useTransaction = ({
       return 'Preview\u00A0switch'
     }
 
+    if (nextTransaction?.type === TransactionType.Permit2Authorization) {
+      return 'Permit2\u00A0authorization'
+    }
+
     return nextTransaction?.type
       ? capitalize(nextTransaction.type)
       : capitalize(TransactionAction.DEPOSIT)

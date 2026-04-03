@@ -670,7 +670,11 @@ export const VaultManageViewComponent = ({
         />
       )
     } else if (nextTransaction.type === TransactionType.Permit2Authorization) {
-      return <ControlsPermit2Authorization tokenSymbol={approvalTokenSymbol} />
+      if (!vaultToken) {
+        return <div>Loading...</div>
+      }
+
+      return <ControlsPermit2Authorization tokenSymbol={vaultToken.symbol} />
     } else {
       // this is a fail safe for the mapping missing here at the end
       // we should never get here

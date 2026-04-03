@@ -17,9 +17,9 @@ export const ControlsPermit2Authorization = ({
         {tokenSymbol}
       </Text>
       <Text variant="p2" className={controlsPermit2AuthorizationStyles.descriptionText}>
-        Allow the Permit2 contract to use your {tokenSymbol}. Permit2 is an industry-standard
-        approval contract — this one-time approval enables gasless token permissions across any dApp
-        that supports it (Summer.fi included).
+        Allow the <b>Permit2</b> contract to use your <b>{tokenSymbol}</b>. <b>Permit2</b> is an
+        industry-standard approval contract - this one-time approval enables gasless token approvals
+        across any dApp that supports it (Summer.fi included).
       </Text>
     </div>
   )
