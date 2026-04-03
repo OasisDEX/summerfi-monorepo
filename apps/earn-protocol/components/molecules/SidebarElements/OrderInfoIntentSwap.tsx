@@ -41,6 +41,7 @@ type OrderInfoIntentSwapProps = {
   publicClient: PublicClient
   userWalletAddress: AddressValue
   referralCode?: string
+  slippagePercentage?: number
   onStartAgain: () => void
 }
 
@@ -149,6 +150,7 @@ export const OrderInfoIntentSwap = ({
   publicClient,
   userWalletAddress,
   referralCode,
+  slippagePercentage,
   onStartAgain,
 }: OrderInfoIntentSwapProps) => {
   const {
@@ -184,6 +186,7 @@ export const OrderInfoIntentSwap = ({
           fromAmount,
           toToken,
           sender: userWalletAddress,
+          slippagePercentage,
         })
 
         setQuote(result)
@@ -198,7 +201,14 @@ export const OrderInfoIntentSwap = ({
     }
 
     fetchQuote()
-  }, [amount, fromToken, toToken, userWalletAddress, getIntentSwapsSellOrderQuote])
+  }, [
+    amount,
+    fromToken,
+    toToken,
+    userWalletAddress,
+    slippagePercentage,
+    getIntentSwapsSellOrderQuote,
+  ])
 
   // poll for order status every 2s
   useEffect(() => {

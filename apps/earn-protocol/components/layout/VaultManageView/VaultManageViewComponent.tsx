@@ -547,6 +547,7 @@ export const VaultManageViewComponent = ({
             userWalletAddress={userWalletAddress as `0x${string}`}
             fromToken={selectedToken}
             toToken={vaultToken}
+            slippagePercentage={Number(slippageConfig.slippage)}
             onStartAgain={() => {
               setIsDepositWithSwap(false)
             }}

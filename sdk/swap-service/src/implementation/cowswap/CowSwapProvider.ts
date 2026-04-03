@@ -158,6 +158,7 @@ export class CowSwapProvider
       // Apply slippage tolerance to the buy amount, slippage in percentage (e.g. 1 for 1%)
       amount: new BigNumber(order.buyAmount)
         .multipliedBy(1 - (params.slippagePercentage ?? 1) / 100)
+        .integerValue(BigNumber.ROUND_FLOOR)
         .toString(),
     })
     const quotePriceValue =
