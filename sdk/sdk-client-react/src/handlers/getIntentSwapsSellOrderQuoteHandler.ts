@@ -21,6 +21,7 @@ export const getIntentSwapsSellOrderQuoteHandler =
     receiver,
     partiallyFillable,
     limitPrice,
+    slippagePercentage,
   }: {
     fromAmount: ITokenAmount
     toToken: IToken
@@ -28,6 +29,7 @@ export const getIntentSwapsSellOrderQuoteHandler =
     receiver?: AddressValue
     partiallyFillable?: boolean
     limitPrice?: string
+    slippagePercentage?: number
   }) => {
     return sdk.intentSwaps.getSellOrderQuote({
       fromAmount,
@@ -36,5 +38,6 @@ export const getIntentSwapsSellOrderQuoteHandler =
       receiver: receiver ? Address.createFromEthereum({ value: receiver }) : undefined,
       partiallyFillable,
       limitPrice,
+      slippagePercentage,
     })
   }

@@ -59,7 +59,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       receiver: params.receiver,
       partiallyFillable: params.partiallyFillable,
       limitPrice,
-      slippage: params.slippage,
+      slippagePercentage: params.slippagePercentage,
     })
   }
 
@@ -137,9 +137,9 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     )
 
     // approval
-    const isErc20 = fromAmount.token.symbol !== 'ETH'
-    if (isErc20) {
-      const fromTokenAddress = fromAmount.token.address.toSolidityValue()
+    const fromTokenAddress = fromAmount.token.address.toSolidityValue()
+    const isNativeToken = fromTokenAddress === NATIVE_CURRENCY_ADDRESS_LOWERCASE
+    if (!isNativeToken) {
       const currentAllowance = await tradingSdk.getCowProtocolAllowance({
         tokenAddress: fromTokenAddress,
         owner: sender.toSolidityValue(),
@@ -243,12 +243,12 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     params,
   ) => {
     if (params.amount === 0n) {
-      console.log('Allowance amount is zero')
+      LoggingService.debug('Allowance amount is zero')
       return false
     }
 
     if (params.tokenAddress.toSolidityValue() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
-      console.log('Token is native currency, no approval needed')
+      LoggingService.debug('Token is native currency, no approval needed')
       // Native token (e.g. ETH) does not require approval
       return false
     }

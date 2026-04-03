@@ -157,7 +157,7 @@ export class CowSwapProvider
       token: params.toToken,
       // Apply slippage tolerance to the buy amount, slippage in percentage (e.g. 1 for 1%)
       amount: new BigNumber(order.buyAmount)
-        .multipliedBy(1 - (params.slippage ?? 1) / 100)
+        .multipliedBy(1 - (params.slippagePercentage ?? 1) / 100)
         .toString(),
     })
     const quotePriceValue =
@@ -218,7 +218,6 @@ export class CowSwapProvider
     LoggingService.debug('Sending order to CowSwap with parameters:', {
       chainId,
       order,
-      signingResult,
       sender: sender.toString(),
       sellAmount: formatEther(BigInt(order.sellAmount)),
     })

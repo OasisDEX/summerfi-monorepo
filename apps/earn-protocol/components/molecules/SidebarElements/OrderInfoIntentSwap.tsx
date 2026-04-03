@@ -259,6 +259,7 @@ export const OrderInfoIntentSwap = ({
         fleetAddressValue,
         fromAmount: quote.fromAmount,
         toAmount: quote.toAmount,
+        limitPrice: quote.limitPrice,
         sender: userWalletAddress,
         order: quote.order,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

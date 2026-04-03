@@ -185,17 +185,22 @@ export const useTransaction = ({
 
         if (isDeposit && fromToken.symbol !== toToken.symbol) {
           const sender = userWalletAddress as `0x${string}`
-
           const fromAmount = TokenAmount.createFrom({
             amount: amount.toString(),
             token: fromToken,
           })
+
           const orderQuote = await getIntentSwapsSellOrderQuote({
             sender,
             fromAmount,
             toToken,
+            slippagePercentage: Number(slippageConfig.slippage),
           })
           const { toAmount } = orderQuote
+
+          if (!publicClient) {
+            throw new Error('Public client is required for deposit with swap')
+          }
 
           const isPermit2AuthNeeded = await isPermit2AuthorizationNeeded({
             ownerAddress: sender,
@@ -340,6 +345,7 @@ export const useTransaction = ({
     positionAmount,
     isDepositWithSwap,
     setIsDepositWithSwap,
+    publicClient,
   ])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined

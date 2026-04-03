@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager, UnsignedOrder } from '@summerfi/sdk-client'
+import type { IPrice, ISDKAdminManager, ISDKManager, UnsignedOrder } from '@summerfi/sdk-client'
 import { Address, type AddressValue, type ChainId, type ITokenAmount } from '@summerfi/sdk-common'
 import {
   encodeFunctionData,
@@ -29,6 +29,7 @@ export const getIntentSwapsSendDepositOrderHandler =
     fleetAddressValue,
     fromAmount,
     toAmount,
+    limitPrice,
     sender,
     order,
     walletClient,
@@ -41,6 +42,7 @@ export const getIntentSwapsSendDepositOrderHandler =
     fleetAddressValue: AddressValue
     fromAmount: ITokenAmount
     toAmount: ITokenAmount
+    limitPrice: IPrice
     sender: AddressValue
     order: UnsignedOrder
     walletClient: WalletClient
@@ -84,12 +86,13 @@ export const getIntentSwapsSendDepositOrderHandler =
 
     return sdk.intentSwaps.sendHookOrder({
       fromAmount,
+      limitPrice,
       toToken: toAmount.token,
       sender: Address.createFromEthereum({ value: sender }),
       chainId,
       order,
       walletClient,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any,
       publicClient,
       postHooks: hooks,
       apiKey,

@@ -7,7 +7,6 @@ import {
 } from '@summerfi/sdk-common'
 import { isHex } from 'viem/utils'
 import { TransactionUtils } from './TransactionUtils'
-import type { Account } from 'viem'
 
 export type SendTransactionTool = ReturnType<typeof createSendTransactionTool>
 export type SendTransactionToolStatus = 'success' | 'reverted'
@@ -20,7 +19,7 @@ export const createSendTransactionTool = (params: {
   simulateOnly?: boolean
 }) => {
   const { chainId, rpcUrl, signerPrivateKey, senderAddressValue } = params
-  const simulateOnly = signerPrivateKey == null ? true : params.simulateOnly ?? true
+  const simulateOnly = signerPrivateKey == null ? true : (params.simulateOnly ?? true)
 
   if (signerPrivateKey != null && !isHex(signerPrivateKey)) {
     throw new Error('Signer privateKey is not a hex string')
