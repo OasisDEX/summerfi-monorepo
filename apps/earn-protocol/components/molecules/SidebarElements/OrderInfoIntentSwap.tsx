@@ -30,6 +30,7 @@ type SwapStep =
   | 'expired'
   | 'rejected'
   | 'error'
+  | 'cancel_error'
 
 type OrderInfoIntentSwapProps = {
   fromToken: IToken
@@ -44,14 +45,14 @@ type OrderInfoIntentSwapProps = {
 }
 
 const getCowExplorerUrl = (chainId: SupportedNetworkIds, id: string): string => {
-  const prefixMap: { [key: number]: string } = {
-    1: '',
+  const prefixMap: { [key: number]: string | undefined } = {
+    1: '', // mainnet has no prefix
     8453: 'base/',
     42161: 'arb1/',
   }
   const prefix = prefixMap[chainId]
 
-  if (!prefix) {
+  if (prefix === undefined) {
     throw new Error(`Unsupported chain ID: ${chainId}`)
   }
 
@@ -314,6 +315,8 @@ export const OrderInfoIntentSwap = ({
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Error cancelling order:', err)
+      setError(err instanceof Error ? err.message : 'Failed to cancel order')
+      setStep('cancel_error')
     } finally {
       setIsCancelling(false)
     }
@@ -324,6 +327,37 @@ export const OrderInfoIntentSwap = ({
       <div className={orderInfoDepositWithdrawStyles.depositViewWrapper}>
         <LoadingSpinner />
         <Text variant="p2semi">Getting quote...</Text>
+      </div>
+    )
+  }
+
+  if (step === 'cancel_error') {
+    return (
+      <div className={orderInfoDepositWithdrawStyles.depositViewWrapper}>
+        <Text variant="p2semi" style={{ color: 'var(--color-semantic-negative-100)' }}>
+          {error ?? 'Failed to cancel order'}
+        </Text>
+        {orderId && (
+          <div className={orderInfoDepositWithdrawStyles.depositDetails}>
+            <OrderInformation
+              wrapperStyles={{ padding: 'var(--general-space-8)' }}
+              items={[
+                {
+                  label: 'Order ID',
+                  value: <OrderIdLinkValue chainId={chainId} orderId={orderId} />,
+                },
+                { label: 'Status', value: 'Open' },
+              ]}
+            />
+          </div>
+        )}
+        <div style={{ width: '100%', marginTop: 'var(--general-space-20)' }} />
+        <Button variant="primaryLarge" onClick={handleCancelOrder} disabled={isCancelling}>
+          {isCancelling ? 'Cancelling...' : 'Try again'}
+        </Button>
+        <Button variant="secondarySmall" onClick={handleStartAgain}>
+          Start again
+        </Button>
       </div>
     )
   }
