@@ -184,6 +184,7 @@ export const useTransaction = ({
         }[sidebarTransactionType] as IToken
 
         if (isDeposit && fromToken.symbol !== toToken.symbol) {
+          setTxStatus('loadingTx')
           const sender = userWalletAddress as `0x${string}`
           const fromAmount = TokenAmount.createFrom({
             amount: amount.toString(),
@@ -216,6 +217,7 @@ export const useTransaction = ({
             : []
           if (transactionsList.length === 0 && !isDepositWithSwap) {
             setIsDepositWithSwap(true)
+            setTxStatus('idle')
 
             return
           }

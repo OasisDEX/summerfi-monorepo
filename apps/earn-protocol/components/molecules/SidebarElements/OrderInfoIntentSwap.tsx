@@ -424,7 +424,7 @@ export const OrderInfoIntentSwap = ({
                   ),
                 },
                 {
-                  label: 'Price',
+                  label: 'Limit price',
                   value:
                     _exchangeRate === 'n/a'
                       ? 'n/a'
@@ -475,22 +475,35 @@ export const OrderInfoIntentSwap = ({
         <Text variant="p2semi">
           {step === 'cancelled'
             ? 'Your swap order was cancelled.'
-            : 'Your swap order expired before it could be filled.'}
+            : 'Your swap order expired before it could be filled by the market. Please create a new order.'}
         </Text>
-        {orderId && (
-          <div className={orderInfoDepositWithdrawStyles.depositDetails}>
-            <OrderInformation
-              wrapperStyles={{ padding: 'var(--general-space-8)' }}
-              items={[
-                {
-                  label: 'Order ID',
-                  value: <OrderIdLinkValue chainId={chainId} orderId={orderId} />,
-                },
-                { label: 'Status', value: step === 'cancelled' ? 'Cancelled' : 'Expired' },
-              ]}
-            />
-          </div>
-        )}
+        <div className={orderInfoDepositWithdrawStyles.depositDetails}>
+          <OrderInformation
+            wrapperStyles={{ padding: 'var(--general-space-8)' }}
+            items={[
+              ...(quote
+                ? [
+                    {
+                      label: 'Swap',
+                      value: `${formatCryptoBalance(quote.fromAmount.amount)} ${fromToken.symbol} → ${formatCryptoBalance(quote.toAmount.amount)} ${toToken.symbol}`,
+                    },
+                  ]
+                : []),
+              ...(slippagePercentage !== undefined
+                ? [{ label: 'Slippage', value: `${slippagePercentage}%` }]
+                : []),
+              ...(orderId
+                ? [
+                    {
+                      label: 'Order ID',
+                      value: <OrderIdLinkValue chainId={chainId} orderId={orderId} />,
+                    },
+                  ]
+                : []),
+              { label: 'Status', value: step === 'cancelled' ? 'Cancelled' : 'Expired' },
+            ]}
+          />
+        </div>
         <div style={{ width: '100%', marginTop: 'var(--general-space-20)' }} />
         <Button variant="primaryLarge" onClick={handleStartAgain}>
           Start again
@@ -521,6 +534,16 @@ export const OrderInfoIntentSwap = ({
                 label: 'Swap',
                 value: `${formatCryptoBalance(quote.fromAmount.amount)} ${fromToken.symbol} → ${formatCryptoBalance(quote.toAmount.amount)} ${toToken.symbol}`,
               },
+              {
+                label: 'Limit price',
+                value:
+                  exchangeRate === 'n/a'
+                    ? 'n/a'
+                    : `${exchangeRate} ${toToken.symbol}/${fromToken.symbol}`,
+              },
+              ...(slippagePercentage !== undefined
+                ? [{ label: 'Slippage', value: `${slippagePercentage}%` }]
+                : []),
             ]}
           />
         </div>
@@ -545,6 +568,13 @@ export const OrderInfoIntentSwap = ({
                 label: 'Swap',
                 value: `${formatCryptoBalance(quote.fromAmount.amount)} ${fromToken.symbol} → ${formatCryptoBalance(quote.toAmount.amount)} ${toToken.symbol}`,
               },
+              {
+                label: 'Limit price',
+                value: `${new BigNumber(quote.limitPrice.value).toFixed(6)} ${toToken.symbol}/${fromToken.symbol}`,
+              },
+              ...(slippagePercentage !== undefined
+                ? [{ label: 'Slippage', value: `${slippagePercentage}%` }]
+                : []),
               {
                 label: 'Order ID',
                 value: orderId ? (
@@ -597,12 +627,15 @@ export const OrderInfoIntentSwap = ({
               ),
             },
             {
-              label: 'Price',
+              label: 'Limit price',
               value:
                 exchangeRate === 'n/a'
                   ? 'n/a'
                   : `${exchangeRate} ${toToken.symbol}/${fromToken.symbol}`,
             },
+            ...(slippagePercentage !== undefined
+              ? [{ label: 'Slippage', value: `${slippagePercentage}%` }]
+              : []),
             {
               label: 'Quote valid until',
               value: new Date(quote.validTo * 1000).toLocaleTimeString(undefined, {
