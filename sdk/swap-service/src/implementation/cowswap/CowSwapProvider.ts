@@ -399,6 +399,7 @@ export class CowSwapProvider
       orderBookApi.getOrder(orderId),
       // orderBookApi.getTrades({ orderUid: orderId }),
     ]).catch((e) => {
+      LoggingService.error('Error checking order on CowSwap:', e)
       return [null]
     })
 

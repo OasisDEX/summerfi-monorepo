@@ -130,6 +130,14 @@ const OrderInfoWithdraw = dynamic(
   { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
 )
 
+const ControlsPermit2Authorization = dynamic(
+  () =>
+    import('@/components/molecules/SidebarElements/ControlsPermit2Authorization').then(
+      (mod) => mod.ControlsPermit2Authorization,
+    ),
+  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
+)
+
 export const VaultManageViewComponent = ({
   vault,
   vaults,
@@ -430,6 +438,11 @@ export const VaultManageViewComponent = ({
     publicClient,
   })
 
+  // reset the depositWithSwap state when changing between  tabs
+  useEffect(() => {
+    setIsDepositWithSwap(false)
+  }, [sidebarTransactionType])
+
   useEffect(() => {
     const savedVaultsListData = getStorageOnce()
 
@@ -537,7 +550,13 @@ export const VaultManageViewComponent = ({
             selectedVault={selectedSwitchVault}
           />
         )
-      } else if (isDepositWithSwap && userWalletAddress && vaultToken && selectedToken) {
+      } else if (
+        isDepositWithSwap &&
+        sidebarTransactionType === TransactionAction.DEPOSIT &&
+        userWalletAddress &&
+        vaultToken &&
+        selectedToken
+      ) {
         return (
           <OrderInfoIntentSwap
             amount={transactionAmount}
@@ -650,6 +669,8 @@ export const VaultManageViewComponent = ({
           transactionFeeLoading={transactionFeeLoading}
         />
       )
+    } else if (nextTransaction.type === TransactionType.Permit2Authorization) {
+      return <ControlsPermit2Authorization tokenSymbol={approvalTokenSymbol} />
     } else {
       // this is a fail safe for the mapping missing here at the end
       // we should never get here
@@ -709,6 +730,7 @@ export const VaultManageViewComponent = ({
     approvalOnBlur,
     approvalOnFocus,
     amountParsed,
+    slippageConfig.slippage,
   ])
 
   const sidebarTitle = useMemo(() => {

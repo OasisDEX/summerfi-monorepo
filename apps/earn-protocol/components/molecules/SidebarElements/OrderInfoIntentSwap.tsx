@@ -171,6 +171,7 @@ export const OrderInfoIntentSwap = ({
   const [isCancelling, setIsCancelling] = useState(false)
   const [error, setError] = useState<string | undefined>(undefined)
   const pollingIntervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
+  const isCancellingRef = useRef(false)
 
   // fetch quote on mount / when inputs change
   useEffect(() => {
@@ -219,7 +220,7 @@ export const OrderInfoIntentSwap = ({
         try {
           const orderInfo = await getIntentSwapsCheckOrder({ chainId, orderId })
 
-          if (!orderInfo) return
+          if (!orderInfo || isCancellingRef.current) return
 
           const { status: orderCheckStatus } = orderInfo.order
 
@@ -312,6 +313,8 @@ export const OrderInfoIntentSwap = ({
     if (!orderId || isCancelling) return
 
     setIsCancelling(true)
+    isCancellingRef.current = true
+    clearInterval(pollingIntervalRef.current)
     try {
       await getIntentSwapsCancelOrder({
         chainId,
@@ -321,7 +324,6 @@ export const OrderInfoIntentSwap = ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         publicClient: publicClient as any,
       })
-      clearInterval(pollingIntervalRef.current)
       setStep('cancelled')
     } catch (err) {
       // eslint-disable-next-line no-console
@@ -330,6 +332,7 @@ export const OrderInfoIntentSwap = ({
       setStep('cancel_error')
     } finally {
       setIsCancelling(false)
+      isCancellingRef.current = false
     }
   }, [orderId, chainId, publicClient, getIntentSwapsCancelOrder, isCancelling, walletClient])
 

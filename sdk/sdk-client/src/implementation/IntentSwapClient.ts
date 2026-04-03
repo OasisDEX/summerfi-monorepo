@@ -13,6 +13,7 @@ import {
   type OrderPostingResult,
   OrderBookApi,
   type LimitTradeParameters,
+  WRAPPED_NATIVE_CURRENCIES,
 } from '@cowprotocol/cow-sdk'
 import { ViemAdapter } from '@cowprotocol/sdk-viem-adapter'
 import { encodeFunctionData, maxUint256, erc20Abi } from 'viem'
@@ -163,7 +164,9 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
 
     const parameters: LimitTradeParameters = {
       kind: OrderKind.SELL,
-      sellToken: fromAmount.token.address.toSolidityValue(),
+      sellToken: isNativeToken
+        ? WRAPPED_NATIVE_CURRENCIES[chainId as SupportedChainId].address
+        : fromTokenAddress,
       sellTokenDecimals: fromAmount.token.decimals,
       buyToken: toToken.address.toSolidityValue(),
       buyTokenDecimals: toToken.decimals,
