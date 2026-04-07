@@ -1,0 +1,36 @@
+.heroWrapper {
+  width: 100vw;
+  height: 640px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.heroWrapper.heroWrapperLarge {
+  height: 870px;
+}
+
+.heroWrapperSpacer {
+  position: relative;
+  width: 100%;
+  /* managing the push-down of the content below the hero wrapper, so it doesn't overlap with the hero wrapper */
+  /* these are the heights of the navigation */
+  height: calc(640px - (102px + 56px));
+
+  @media (max-width: 1025px) {
+    height: calc(640px - (100px + 56px));
+  }
+
+  @media (max-width: 532px) {
+    height: calc(640px - (84px + 56px));
+  }
+}
+
+.heroWrapperSpacer.heroWrapperSpacerLarge {
+  height: 870px;
+}

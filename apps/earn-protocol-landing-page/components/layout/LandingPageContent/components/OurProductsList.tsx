@@ -1,8 +1,9 @@
-import { type ReactNode } from 'react'
 import { Icon, Text } from '@summerfi/app-earn-ui'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
+import Link from 'next/dist/client/link'
 import Image from 'next/image'
 
+import { TagButton } from '@/components/atoms/TagButton'
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
 import balanceMarketLogo from '@/public/img/landing-page/private-markets/logo_balance.svg'
 import utilaMarketLogo from '@/public/img/landing-page/private-markets/logo_utila.svg'
@@ -81,29 +82,6 @@ const ProtocolIconRow = ({ withMore = true }: { withMore?: boolean }) => {
   )
 }
 
-const ComingSoonButton = ({ children }: { children?: ReactNode }) => {
-  return (
-    <button
-      style={{
-        padding: '4px 24px',
-        border: '1px solid rgba(153, 43, 105, 0.5)',
-        borderRadius: '12px',
-        color: 'rgba(153, 43, 105, 0.8)',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        fontSize: '12px',
-        lineHeight: '16px',
-        cursor: 'not-allowed',
-        display: 'block',
-        textAlign: 'center',
-        outline: 'none',
-      }}
-      disabled
-    >
-      {children ?? 'Coming soon'}
-    </button>
-  )
-}
-
 const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVault: number }) => {
   return (
     <article className={`${styles.productCard}`}>
@@ -140,11 +118,13 @@ const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVau
             </Text>
             <ProtocolIconRow />
           </div>
-          <button className={styles.learnMoreButton} type="button">
-            <Text as="span" variant="p3">
-              Learn more
-            </Text>
-          </button>
+          <Link href="/permissionless-vaults">
+            <button className={styles.learnMoreButton} type="button">
+              <Text as="span" variant="p3">
+                Learn more
+              </Text>
+            </button>
+          </Link>
         </div>
         <aside className={styles.cardSide}>
           <div className={styles.sideStatBlock}>
@@ -266,9 +246,10 @@ const PermissionlessRwaVaultsCard = () => {
             <Text as="p" variant="p4semi" className={styles.metaLabel}>
               Earn up to
             </Text>
-            <Text as="p" variant="h2" className={styles.apyValue}>
-              <ComingSoonButton />
-            </Text>
+            <TagButton>Coming soon</TagButton>
+            {/* <Text as="p" variant="h2" className={styles.apyValue}>
+              8.5%
+            </Text> */}
           </div>
           <div className={styles.sideStatBlock}>
             <Text as="p" variant="p4semi" className={styles.metaLabel}>
