@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import { Icon, Text } from '@summerfi/app-earn-ui'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import Image from 'next/image'
@@ -80,12 +81,39 @@ const ProtocolIconRow = ({ withMore = true }: { withMore?: boolean }) => {
   )
 }
 
+const ComingSoonButton = ({ children }: { children?: ReactNode }) => {
+  return (
+    <button
+      style={{
+        padding: '4px 24px',
+        border: '1px solid rgba(153, 43, 105, 0.5)',
+        borderRadius: '12px',
+        color: 'rgba(153, 43, 105, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        fontSize: '12px',
+        lineHeight: '16px',
+        cursor: 'not-allowed',
+        display: 'block',
+        textAlign: 'center',
+        outline: 'none',
+      }}
+      disabled
+    >
+      {children ?? 'Coming soon'}
+    </button>
+  )
+}
+
 const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVault: number }) => {
   return (
     <article className={`${styles.productCard}`}>
       <Image
         alt="background lines"
         src={ourProductsLinesBackground}
+        style={{
+          width: 'auto',
+          height: 'auto',
+        }}
         className={styles.ourProductsLinesBackground}
       />
       <div className={styles.permissionlessDefiVaultsBackgroundOrb} />
@@ -133,7 +161,16 @@ const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVau
             <Text as="p" variant="p4semi" className={styles.metaLabel}>
               Risk managed by
             </Text>
-            <Image alt="Block Analitica" src={blockAnalyticaLogo} width={133} height={54} />
+            <Image
+              alt="Block Analitica"
+              src={blockAnalyticaLogo}
+              width={133}
+              height={54}
+              style={{
+                width: 'auto',
+                height: 'auto',
+              }}
+            />
           </div>
           <div className={styles.sideStatBlock}>
             <Text as="p" variant="p4semi" className={styles.metaLabel}>
@@ -230,7 +267,7 @@ const PermissionlessRwaVaultsCard = () => {
               Earn up to
             </Text>
             <Text as="p" variant="h2" className={styles.apyValue}>
-              ?????????
+              <ComingSoonButton />
             </Text>
           </div>
           <div className={styles.sideStatBlock}>
@@ -252,6 +289,9 @@ const PermissionlessRwaVaultsCard = () => {
                 height={27}
                 className={styles.smallBrandLogo}
               />
+              <Text as="p" variant="p4semi" className={styles.metaLabel}>
+                (More coming soon)
+              </Text>
             </div>
           </div>
           <div
@@ -283,6 +323,10 @@ const BuildYourOwnVaultCard = () => {
       <Image
         alt="background grid"
         src={ourProductsGridBackground}
+        style={{
+          width: 'auto',
+          height: 'auto',
+        }}
         className={styles.ourProductsGridBackground}
       />
       <div className={styles.cardContent}>
@@ -306,6 +350,7 @@ const BuildYourOwnVaultCard = () => {
             }}
           >
             <CheckLine text="Access any onchain market, permissioned or permissionless" />
+            <CheckLine text="Create a new revenue stream for your business" />
             <CheckLine text="Choose from off-the-shelf automated keepers for optimization or run your own" />
             <CheckLine text="One deployment, unlimited possibilities with all upgrades and new market development handled by Summer.fi" />
           </div>
@@ -326,7 +371,16 @@ const BuildYourOwnVaultCard = () => {
             <Text as="p" variant="p4semi" className={styles.metaLabel}>
               Opt in risk management from
             </Text>
-            <Image alt="Block Analitica" src={blockAnalyticaLogo} width={214} height={100} />
+            <Image
+              alt="Block Analitica"
+              src={blockAnalyticaLogo}
+              width={214}
+              height={100}
+              style={{
+                width: 'auto',
+                height: 'auto',
+              }}
+            />
           </div>
           <div className={styles.vaultExposureScreenshotWrapper}>
             <Image src={vaultExposureScreenshot} alt="vault exposure screenshot" />
@@ -337,7 +391,7 @@ const BuildYourOwnVaultCard = () => {
   )
 }
 
-const IntegrateHighQualityYield = () => {
+const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault: number }) => {
   return (
     <article className={`${styles.productCard} ${styles.integratorCard}`}>
       <div className={styles.cardContent}>
@@ -352,8 +406,9 @@ const IntegrateHighQualityYield = () => {
           </div>
           <div className={styles.checksGroup}>
             <CheckLine text="Offer yield up to integrate via Summer.fi SDK, Yield.xyz or Enso Finance." />
-            <CheckLine text="Join leading custodians and apps such as Utila, Balance Custody, DeFi Saver, Vaults.fyi and more." />
-            <CheckLine text="One integration gives your users continuous access as Vaults evolve." />
+            <CheckLine text="Join leading custodians and apps such as Utila, Balance Custody, DeFi Saver, Vaults.fyi and more offering the highest quality yield." />
+            <CheckLine text="Earn revenue share on all integrated vaults (DeFi and RWA)" />
+            <CheckLine text="The Vaults update, meaning you don’t have to - one integration gives unlimited access for your users.  " />
           </div>
           <div className={styles.integratorMetaGrid}>
             <div>
@@ -361,7 +416,9 @@ const IntegrateHighQualityYield = () => {
                 Earn up to
               </Text>
               <Text as="p" variant="h2" className={styles.apyValue}>
-                ?????????
+                {formatDecimalAsPercent(maxApyRegularVault, {
+                  precision: 2,
+                })}
               </Text>
             </div>
             <div>
@@ -477,7 +534,7 @@ export const OurProductsList = ({
       <PermissionlessDeFiVaultsCard maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
       <PermissionlessRwaVaultsCard />
       <BuildYourOwnVaultCard />
-      <IntegrateHighQualityYield />
+      <IntegrateHighQualityYield maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
     </div>
   )
 }

@@ -41,6 +41,14 @@ export const LandingPageHero = ({
   rewardTokenPrices?: RewardTokenPrices
   tvl?: number
 }) => {
+  const smoothScrollToId = (id: string) => {
+    const element = document.getElementById(id)
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   const heroStats = useMemo(() => {
     const formattedProtocolsSupportedList = getVaultsProtocolsList(vaultsList ?? [])
     const noOfVaults = vaultsList?.length ?? 0
@@ -122,6 +130,7 @@ export const LandingPageHero = ({
   }
 
   const handleViewProductsClick = () => {
+    smoothScrollToId('our-products')
     EarnProtocolEvents.buttonClicked({
       buttonName: 'lp-view-products-hero',
       page: '/',
@@ -148,14 +157,13 @@ export const LandingPageHero = ({
           >
             <Button variant="primarySmall">Launch App</Button>
           </Link>
-          <Link
-            href="/earn"
-            prefetch={false}
+          <Button
+            variant="secondarySmall"
             className={landingPageHeroStyles.primaryCta}
             onClick={() => handleViewProductsClick()}
           >
-            <Button variant="secondarySmall">View&nbsp;Products</Button>
-          </Link>
+            View&nbsp;Products
+          </Button>
         </div>
         <div className={landingPageHeroStyles.heroStats}>
           {heroStats.map((stat, index) => (

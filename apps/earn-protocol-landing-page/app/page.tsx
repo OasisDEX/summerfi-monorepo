@@ -12,6 +12,7 @@ import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
+import sherlockLogo from '@/public/img/landing-page/auditor-logos/sherlock.svg'
 
 export default function HomePage() {
   const { landingPageData } = useLandingPageData()
@@ -61,6 +62,7 @@ export default function HomePage() {
           noHeader
           chainSecurityLogo={chainSecurityLogo}
           prototechLabsLogo={prototechLabsLogo}
+          sherlockLogo={sherlockLogo}
           onAuditClick={handleAuditClick}
         />
       </div>

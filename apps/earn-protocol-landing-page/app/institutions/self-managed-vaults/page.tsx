@@ -27,6 +27,7 @@ import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import { useScrolled } from '@/hooks/use-scrolled'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
+import sherlockLogo from '@/public/img/landing-page/auditor-logos/sherlock.svg'
 
 import selfManagedVaultsStyles from './selfManagedVaults.module.css'
 import institutionsPageStyles from '@/app/institutions/institutionsPage.module.css'
@@ -351,6 +352,7 @@ export default function SelfManagedVaults() {
         <Audits
           chainSecurityLogo={chainSecurityLogo}
           prototechLabsLogo={prototechLabsLogo}
+          sherlockLogo={sherlockLogo}
           onAuditClick={handleAuditClick}
         />
       </div>

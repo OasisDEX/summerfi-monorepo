@@ -37,12 +37,14 @@ const AuditBlock = ({
 export const Audits = ({
   chainSecurityLogo,
   prototechLabsLogo,
+  sherlockLogo,
   onAuditClick,
   noHeader,
   fullWidth,
 }: {
-  chainSecurityLogo: StaticImageData
-  prototechLabsLogo: StaticImageData
+  chainSecurityLogo?: StaticImageData
+  prototechLabsLogo?: StaticImageData
+  sherlockLogo?: StaticImageData
   onAuditClick: (auditId: string) => void
   noHeader?: boolean
   fullWidth?: boolean
@@ -76,18 +78,30 @@ export const Audits = ({
           width: fullWidth ? '100%' : undefined,
         }}
       >
-        <AuditBlock
-          auditUrl="https://www.chainsecurity.com/smart-contract-audit-reports"
-          image={chainSecurityLogo}
-          description="ChainSecurity works with top-tier DeFi protocols, research institutions, central banks, and large organizations."
-          onAuditClick={handleAuditClick('chain-security')}
-        />
-        <AuditBlock
-          auditUrl="https://www.prototechlabs.dev/"
-          image={prototechLabsLogo}
-          description="Prototech Labs is a DeFi & Web3 professional services consultancy helping businesses, DAOs, and protocols implement innovative blockchain solutions."
-          onAuditClick={handleAuditClick('prototech-labs')}
-        />
+        {chainSecurityLogo && (
+          <AuditBlock
+            auditUrl="https://www.chainsecurity.com/smart-contract-audit-reports"
+            image={chainSecurityLogo}
+            description="ChainSecurity works with top-tier DeFi protocols, research institutions, central banks, and large organizations."
+            onAuditClick={handleAuditClick('chain-security')}
+          />
+        )}
+        {prototechLabsLogo && (
+          <AuditBlock
+            auditUrl="https://www.prototechlabs.dev/"
+            image={prototechLabsLogo}
+            description="Prototech Labs is a DeFi & Web3 professional services consultancy helping businesses, DAOs, and protocols implement innovative blockchain solutions."
+            onAuditClick={handleAuditClick('prototech-labs')}
+          />
+        )}
+        {sherlockLogo && (
+          <AuditBlock
+            auditUrl="https://sherlock.xyz/"
+            image={sherlockLogo}
+            description="Sherlock secures leading Web3 protocols, elite independent security experts, DAOs, and top-tier DeFi projects. "
+            onAuditClick={handleAuditClick('sherlock')}
+          />
+        )}
       </div>
     </div>
   )
