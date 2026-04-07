@@ -8,6 +8,7 @@ export default function PermissionlessVaults() {
   return (
     <>
       <HeroWrapper
+        large
         style={{
           display: 'flex',
           flexDirection: 'column',
