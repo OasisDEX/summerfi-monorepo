@@ -183,7 +183,13 @@ export const useTransaction = ({
           [TransactionAction.WITHDRAW]: token,
         }[sidebarTransactionType] as IToken
 
-        if (isDeposit && fromToken.symbol !== toToken.symbol) {
+        if (
+          isDeposit &&
+          ((fromToken.symbol !== toToken.symbol && fromToken.symbol !== 'WETH') ||
+          toToken.symbol === 'WETH'
+            ? fromToken.symbol !== 'WETH' && fromToken.symbol !== 'ETH'
+            : false)
+        ) {
           setTxStatus('loadingTx')
           const sender = userWalletAddress as `0x${string}`
           const fromAmount = TokenAmount.createFrom({
