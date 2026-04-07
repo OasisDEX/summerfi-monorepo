@@ -438,9 +438,15 @@ export const VaultManageViewComponent = ({
     publicClient,
   })
 
-  // reset the depositWithSwap state when changing between  tabs
+  // reset the depositWithSwap state when changing between tabs
   useEffect(() => {
-    setIsDepositWithSwap(false)
+    setIsDepositWithSwap((state) => {
+      if (state) {
+        return false
+      }
+
+      return state
+    })
   }, [sidebarTransactionType])
 
   useEffect(() => {
@@ -741,17 +747,28 @@ export const VaultManageViewComponent = ({
     if (!nextTransaction) {
       if (isSwitch && txStatus === 'txSuccess') {
         return sidebar.title
+      } else if (isDepositWithSwap) {
+        return sidebar.title
       }
 
       return sidebarTransactionType
     }
 
     return sidebar.title
-  }, [isSwitch, nextTransaction, sidebar.title, sidebarTransactionType, txStatus])
+  }, [
+    isDepositWithSwap,
+    isSwitch,
+    nextTransaction,
+    sidebar.title,
+    sidebarTransactionType,
+    txStatus,
+  ])
 
   const sidebarTitleTabs = useMemo(() => {
     if (!nextTransaction) {
       if (isSwitch && txStatus === 'txSuccess') {
+        return undefined
+      } else if (isDepositWithSwap) {
         return undefined
       }
 
@@ -759,7 +776,7 @@ export const VaultManageViewComponent = ({
     }
 
     return undefined
-  }, [nextTransaction, sidebarTabsList, isSwitch, txStatus])
+  }, [nextTransaction, sidebarTabsList, isSwitch, txStatus, isDepositWithSwap])
 
   const sidebarProps: SidebarProps = {
     title: sidebarTitle,
@@ -787,7 +804,7 @@ export const VaultManageViewComponent = ({
         />
       ) : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-    goBackAction: nextTransaction?.type ? backToInit : undefined,
+    goBackAction: (nextTransaction?.type ?? isDepositWithSwap) ? backToInit : undefined,
     primaryButton: { ...sidebar.primaryButton, hidden: isDepositWithSwap },
     secondaryButton: sidebar.secondaryButton,
     footnote: (

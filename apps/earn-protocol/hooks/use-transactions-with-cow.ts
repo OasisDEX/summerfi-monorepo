@@ -184,11 +184,12 @@ export const useTransaction = ({
         }[sidebarTransactionType] as IToken
 
         if (
+          amount &&
           isDeposit &&
-          ((fromToken.symbol !== toToken.symbol && fromToken.symbol !== 'WETH') ||
-          toToken.symbol === 'WETH'
-            ? fromToken.symbol !== 'WETH' && fromToken.symbol !== 'ETH'
-            : false)
+          ((toToken.symbol !== 'WETH' && fromToken.symbol !== toToken.symbol) ||
+            (toToken.symbol === 'WETH' &&
+              fromToken.symbol !== toToken.symbol &&
+              fromToken.symbol !== 'ETH'))
         ) {
           setTxStatus('loadingTx')
           const sender = userWalletAddress as `0x${string}`
@@ -576,6 +577,7 @@ export const useTransaction = ({
 
   const backToInit = useCallback(() => {
     // just goes to the first view, without any transactions loaded
+    setIsDepositWithSwap(false)
     setTransactions(undefined)
     setTxStatus('idle')
     setApprovalType('deposit')
@@ -839,11 +841,14 @@ export const useTransaction = ({
     if (nextTransaction?.type === TransactionType.Permit2Authorization) {
       return 'Permit2\u00A0authorization'
     }
+    if (isDepositWithSwap) {
+      return 'Preview\u00A0deposit\u00A0with\u00A0swap'
+    }
 
     return nextTransaction?.type
       ? capitalize(nextTransaction.type)
       : capitalize(TransactionAction.DEPOSIT)
-  }, [nextTransaction, sidebarTransactionType, txStatus])
+  }, [nextTransaction, sidebarTransactionType, txStatus, isDepositWithSwap])
 
   // refresh data when all transactions are executed and are successful
   useEffect(() => {
