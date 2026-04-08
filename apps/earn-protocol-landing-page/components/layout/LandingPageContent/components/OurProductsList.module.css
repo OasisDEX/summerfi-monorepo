@@ -107,15 +107,6 @@
   gap: 12px;
 }
 
-.checkLine {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.checkLine svg {
-  opacity: 0.4;
-}
 
 .metaBlock {
   display: flex;

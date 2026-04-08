@@ -6,15 +6,17 @@ export const HeroWrapper = ({
   large = false,
   children,
   style,
+  className,
 }: {
   large?: boolean
   children: ReactNode
   style?: CSSProperties
+  className?: string
 }) => {
   return (
     <>
       <div
-        className={`${heroWrapperStyles.heroWrapper} ${large ? heroWrapperStyles.heroWrapperLarge : ''}`}
+        className={`${heroWrapperStyles.heroWrapper} ${large ? heroWrapperStyles.heroWrapperLarge : ''} ${className ?? ''}`}
         style={style}
       >
         {children}

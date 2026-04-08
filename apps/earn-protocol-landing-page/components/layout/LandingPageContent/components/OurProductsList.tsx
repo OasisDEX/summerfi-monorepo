@@ -4,6 +4,11 @@ import Link from 'next/dist/client/link'
 import Image from 'next/image'
 
 import { TagButton } from '@/components/atoms/TagButton'
+import { CheckLine } from '@/components/layout/LandingPageContent/components/CheckLine'
+import {
+  ProtocolIconsWithMore,
+  protocolIconsWithMoreList,
+} from '@/components/layout/sub-pages/ProtocolIconsWithMore'
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
 import balanceMarketLogo from '@/public/img/landing-page/private-markets/logo_balance.svg'
 import utilaMarketLogo from '@/public/img/landing-page/private-markets/logo_utila.svg'
@@ -25,62 +30,7 @@ import stacMarketLogo from '@/public/img/landing-page/private-markets/stac.png'
 import superstateMarketLogo from '@/public/img/landing-page/private-markets/superstate.png'
 import vaneckMarketLogo from '@/public/img/landing-page/private-markets/vaneck.png'
 import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisdomtree.png'
-import aaveProtocolIcon from '@/public/img/landing-page/protocols/icon_aave.png'
-import gauntletProtocolIcon from '@/public/img/landing-page/protocols/icon_gauntlet.png'
-import kpkProtocolIcon from '@/public/img/landing-page/protocols/icon_kpk.png'
-import mapleProtocolIcon from '@/public/img/landing-page/protocols/icon_maple.png'
-import morphoProtocolIcon from '@/public/img/landing-page/protocols/icon_morpho.png'
-import skyProtocolIcon from '@/public/img/landing-page/protocols/icon_sky.png'
-import sparkProtocolIcon from '@/public/img/landing-page/protocols/icon_spark.png'
-import steakhouseProtocolIcon from '@/public/img/landing-page/protocols/icon_steakhouse.png'
 import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-screenshot.png'
-
-const protocolIcons = [
-  { name: 'Morpho', src: morphoProtocolIcon },
-  { name: 'Aave', src: aaveProtocolIcon },
-  { name: 'Spark', src: sparkProtocolIcon },
-  { name: 'Sky', src: skyProtocolIcon },
-  { name: 'Maple', src: mapleProtocolIcon },
-  { name: 'Gauntlet', src: gauntletProtocolIcon },
-  { name: 'Steakhouse', src: steakhouseProtocolIcon },
-  { name: 'KPK', src: kpkProtocolIcon },
-]
-
-const CheckLine = ({ text }: { text: string }) => {
-  return (
-    <div className={styles.checkLine}>
-      <Icon iconName="checkmark" size={18} />
-      <Text as="p" variant="p2" className={styles.cardBody}>
-        {text}
-      </Text>
-    </div>
-  )
-}
-
-const ProtocolIconRow = ({ withMore = true }: { withMore?: boolean }) => {
-  return (
-    <div className={styles.protocolRow}>
-      {protocolIcons.map((icon) => (
-        <div key={icon.name} className={styles.protocolIconWrap}>
-          <Image
-            alt={icon.name}
-            src={icon.src}
-            width={32}
-            height={32}
-            className={styles.protocolIcon}
-          />
-        </div>
-      ))}
-      {withMore && (
-        <div className={styles.morePill}>
-          <Text as="span" variant="p4semi">
-            + More
-          </Text>
-        </div>
-      )}
-    </div>
-  )
-}
 
 const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVault: number }) => {
   return (
@@ -116,7 +66,7 @@ const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVau
             <Text as="p" variant="p4semi" className={styles.metaLabel}>
               Markets and strategies including
             </Text>
-            <ProtocolIconRow />
+            <ProtocolIconsWithMore />
           </div>
           <Link href="/permissionless-vaults">
             <button className={styles.learnMoreButton} type="button">
@@ -341,7 +291,7 @@ const BuildYourOwnVaultCard = () => {
             <Text as="p" variant="p4semi" className={styles.metaLabel}>
               Choose from any market or protocol including
             </Text>
-            <ProtocolIconRow />
+            <ProtocolIconsWithMore />
           </div>
           <Link href="/self-managed-vaults">
             <button className={styles.learnMoreButton} type="button">
@@ -411,7 +361,7 @@ const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault:
                 Optimized access to
               </Text>
               <div className={styles.protocolRow}>
-                {protocolIcons.slice(0, 5).map((icon) => (
+                {protocolIconsWithMoreList.slice(0, 5).map((icon) => (
                   <div key={icon.name} className={styles.protocolIconWrap}>
                     <Image
                       alt={icon.name}
