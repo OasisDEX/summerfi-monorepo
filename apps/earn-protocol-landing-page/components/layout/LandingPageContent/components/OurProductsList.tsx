@@ -235,11 +235,13 @@ const PermissionlessRwaVaultsCard = () => {
               />
             </div>
           </div>
-          <button className={styles.learnMoreButton} type="button">
-            <Text as="span" variant="p3">
-              Learn more
-            </Text>
-          </button>
+          <Link href="/rwa-vaults">
+            <button className={styles.learnMoreButton} type="button">
+              <Text as="span" variant="p3">
+                Learn more
+              </Text>
+            </button>
+          </Link>
         </div>
         <aside className={styles.cardSide}>
           <div className={styles.sideStatBlock}>
@@ -341,11 +343,13 @@ const BuildYourOwnVaultCard = () => {
             </Text>
             <ProtocolIconRow />
           </div>
-          <button className={styles.learnMoreButton} type="button">
-            <Text as="span" variant="p3">
-              Learn more
-            </Text>
-          </button>
+          <Link href="/self-managed-vaults">
+            <button className={styles.learnMoreButton} type="button">
+              <Text as="span" variant="p3">
+                Learn more
+              </Text>
+            </button>
+          </Link>
         </div>
         <aside className={styles.cardSide}>
           <div className={styles.sideStatBlock}>
@@ -449,11 +453,13 @@ const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault:
               />
             </div>
           </div>
-          <button className={styles.learnMoreButton} type="button">
-            <Text as="span" variant="p3">
-              Learn more
-            </Text>
-          </button>
+          <Link href="/integrations">
+            <button className={styles.learnMoreButton} type="button">
+              <Text as="span" variant="p3">
+                Learn more
+              </Text>
+            </button>
+          </Link>
         </div>
         <div
           style={{

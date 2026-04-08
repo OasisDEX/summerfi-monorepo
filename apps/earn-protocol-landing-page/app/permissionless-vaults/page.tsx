@@ -1,10 +1,15 @@
-import { Emphasis, Text } from '@summerfi/app-earn-ui'
+'use client'
+
+import { Emphasis, Text, VaultCardsCarousel } from '@summerfi/app-earn-ui'
 
 import { TagButton } from '@/components/atoms/TagButton'
 import { LandingPageBlobs } from '@/components/layout/LandingMasterPage/LandingPageBlobs'
 import { HeroWrapper } from '@/components/layout/sub-pages/HeroWrapper'
+import { useLandingPageData } from '@/contexts/LandingPageContext'
 
 export default function PermissionlessVaults() {
+  const { landingPageData } = useLandingPageData()
+
   return (
     <>
       <HeroWrapper
@@ -29,12 +34,16 @@ export default function PermissionlessVaults() {
         </div>
         <div
           style={{
+            position: 'relative',
+            zIndex: 1,
             maxWidth: '1200px',
             textAlign: 'center',
             alignItems: 'center',
             display: 'flex',
             flexDirection: 'column',
             gap: 'var(--spacing-space-small)',
+            marginTop: 'var(--spacing-space-3x-large)',
+            marginBottom: 'var(--spacing-space-2x-large)',
           }}
         >
           <TagButton>Permisionless DeFi Vaults</TagButton>
@@ -53,7 +62,12 @@ export default function PermissionlessVaults() {
             - automatically rebalanced, built-in risk-management and liquid anytime.
           </Text>
         </div>
-        CAROUSEL
+        <VaultCardsCarousel
+          vaultsList={landingPageData?.vaultsWithConfig}
+          rewardTokenPrices={landingPageData?.rewardTokenPrices}
+          vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
+          vaultsInfo={landingPageData?.vaultsInfo}
+        />
       </HeroWrapper>
       <h1>Permissionless Vaults</h1>
     </>
