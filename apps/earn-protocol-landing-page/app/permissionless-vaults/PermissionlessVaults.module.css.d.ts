@@ -15,7 +15,6 @@ declare const styles: {
   readonly "subLandingPageSectionData": string;
   readonly "subLandingPageSectionDataAlignStart": string;
   readonly "subLandingPageSectionFirst": string;
-  readonly "subLandingPageSectionFirstData": string;
   readonly "subLandingPageSubtext": string;
   readonly "subLandingPageTextColumn": string;
   readonly "subLandingPageTextColumnLargeGap": string;

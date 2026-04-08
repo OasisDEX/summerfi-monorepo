@@ -38,7 +38,7 @@
   gap: 24px;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1100px) {
   .subLandingPageSectionFirst {
     padding-right: 0;
   }
@@ -55,8 +55,8 @@
   align-items: flex-start;
 }
 
-@media (max-width: 900px) {
-  .subLandingPageSectionFirstData {
+@media (max-width: 1100px) {
+  .subLandingPageSectionData {
     flex-direction: column;
   }
 }
@@ -125,7 +125,7 @@
   stroke: rgba(186, 93, 139, 1);
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1100px) {
   .subLandingPageTextColumn {
     max-width: 50%;
   }
@@ -141,13 +141,15 @@
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1100px) {
   .vaultExposureScreenshotWrapper {
+
     img {
       min-height: 400px;
       min-width: 526px;
       position: relative;
       right: -100px;
+      margin-right: -100px;
     }
   }
 }

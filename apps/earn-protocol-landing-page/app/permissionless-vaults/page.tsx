@@ -1,9 +1,18 @@
 'use client'
 
-import { Button, Emphasis, Icon, Text, VaultCardsCarousel, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Audits,
+  Button,
+  Emphasis,
+  Icon,
+  Text,
+  VaultCardsCarousel,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { TagButton } from '@/components/atoms/TagButton'
 import { LandingPageBlobs } from '@/components/layout/LandingMasterPage/LandingPageBlobs'
@@ -12,6 +21,10 @@ import { HeroWrapper } from '@/components/layout/sub-pages/HeroWrapper'
 import { ProtocolIconsWithMore } from '@/components/layout/sub-pages/ProtocolIconsWithMore'
 import { SubLandingPageSection } from '@/components/layout/sub-pages/SubLandingPageSection'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
+import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
+import sherlockLogo from '@/public/img/landing-page/auditor-logos/sherlock.svg'
 
 import permissionlessVaultsStyles from './PermissionlessVaults.module.css'
 
@@ -21,6 +34,13 @@ import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-sc
 
 export default function PermissionlessVaults() {
   const { landingPageData } = useLandingPageData()
+  const pathname = usePathname()
+  const handleAuditClick = (auditId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-self-managed-vaults-audit-${auditId}-learn-more`,
+      page: pathname,
+    })
+  }
 
   return (
     <>
@@ -47,14 +67,14 @@ export default function PermissionlessVaults() {
           vaultsInfo={landingPageData?.vaultsInfo}
         />
       </HeroWrapper>
-      <div className={permissionlessVaultsStyles.pageContentWrapper}>
+      <div
+        className={permissionlessVaultsStyles.pageContentWrapper}
+        style={{
+          overflow: 'hidden',
+        }}
+      >
         <SubLandingPageSection className={permissionlessVaultsStyles.subLandingPageSectionFirst}>
-          <div
-            className={clsx(
-              permissionlessVaultsStyles.subLandingPageSectionFirstData,
-              permissionlessVaultsStyles.subLandingPageSectionData,
-            )}
-          >
+          <div className={clsx(permissionlessVaultsStyles.subLandingPageSectionData)}>
             <div
               className={clsx(
                 permissionlessVaultsStyles.subLandingPageTextColumn,
@@ -138,7 +158,12 @@ export default function PermissionlessVaults() {
           </div>
         </SubLandingPageSection>
         <SubLandingPageSection>
-          <div className={permissionlessVaultsStyles.riskManagedCardsRow}>
+          <div
+            className={clsx(
+              permissionlessVaultsStyles.riskManagedCardsRow,
+              permissionlessVaultsStyles.subLandingPageSectionData,
+            )}
+          >
             <div className={permissionlessVaultsStyles.riskManagedCard}>
               <Image src={blockAnaliticaPinkFaded} alt="block analitica" />
               <div className={permissionlessVaultsStyles.riskManagedCardTextGroup}>
@@ -192,6 +217,70 @@ export default function PermissionlessVaults() {
               </Link>
             </div>
           </div>
+        </SubLandingPageSection>
+        <SubLandingPageSection
+          style={{
+            flexDirection: 'column',
+            gap: 'var(--spacing-space-large)',
+          }}
+        >
+          <Text variant="p1semi" className={permissionlessVaultsStyles.subLandingPageSubtext}>
+            Features
+          </Text>
+          <div
+            className={clsx(
+              permissionlessVaultsStyles.subLandingPageSectionData,
+              permissionlessVaultsStyles.subLandingPageSectionDataAlignStart,
+            )}
+          >
+            <div className={permissionlessVaultsStyles.subLandingPageTextColumn}>
+              <Text variant="p3colorful">01.</Text>
+              <Text variant="h4">Never chase another yield source</Text>
+              <Text
+                variant="p1"
+                className={permissionlessVaultsStyles.subLandingPageSubtext}
+                style={{
+                  marginBottom: '18px',
+                }}
+              >
+                Stop checking dashboards, searching for new protocols and listening to DeFi
+                influencers. Lazy Summer protocol automatically adds new yield sources that are
+                performing well.
+              </Text>
+              <div className={permissionlessVaultsStyles.iconColumn}>
+                <CheckLine text="Lazy Summer governance approves new yield sources." />
+                <CheckLine text="SUMR community monitors top performing yield sources." />
+              </div>
+            </div>
+            <div className={permissionlessVaultsStyles.subLandingPageTextColumn}>
+              <Text variant="p3colorful">02.</Text>
+              <Text variant="h4">
+                Instant liquidity, always. Withdraw your capital when you want.
+              </Text>
+              <Text
+                variant="p1"
+                className={permissionlessVaultsStyles.subLandingPageSubtext}
+                style={{
+                  marginBottom: '18px',
+                }}
+              >
+                Yield sources are only approved and allocated to if some amount of capital can be
+                withdrawn instantly.
+              </Text>
+              <div className={permissionlessVaultsStyles.iconColumn}>
+                <CheckLine text="Lazy Summer prioritized capital being withdrawable" />
+              </div>
+            </div>
+          </div>
+        </SubLandingPageSection>
+        <SubLandingPageSection>
+          <Audits
+            fullWidth
+            chainSecurityLogo={chainSecurityLogo}
+            prototechLabsLogo={prototechLabsLogo}
+            sherlockLogo={sherlockLogo}
+            onAuditClick={handleAuditClick}
+          />
         </SubLandingPageSection>
       </div>
     </>
