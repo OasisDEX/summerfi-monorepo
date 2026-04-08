@@ -363,4 +363,7 @@ export declare const IconsList: {
   tools_kitchen: IconExportType
   device_floppy: IconExportType
   trophy: IconExportType
+  shield_ban: IconExportType
+  award: IconExportType
+  chart: IconExportType
 }

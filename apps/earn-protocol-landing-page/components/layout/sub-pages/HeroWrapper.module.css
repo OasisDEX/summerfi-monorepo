@@ -33,5 +33,13 @@
 }
 
 .heroWrapperSpacer.heroWrapperSpacerLarge {
-  height: 870px;
+  height: calc(870px - (102px + 56px));
+
+  @media (max-width: 1025px) {
+    height: calc(870px - (100px + 56px));
+  }
+
+  @media (max-width: 532px) {
+    height: calc(870px - (84px + 56px));
+  }
 }
