@@ -68,6 +68,7 @@ export const OurProducts = ({
         style={{
           marginTop: 'var(--spacing-space-3x-large)',
         }}
+        id="our-products"
       >
         Our products
       </Text>

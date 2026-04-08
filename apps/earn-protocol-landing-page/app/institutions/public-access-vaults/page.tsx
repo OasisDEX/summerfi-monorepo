@@ -31,6 +31,7 @@ import { useScrolled } from '@/hooks/use-scrolled'
 import blueChipsImage from '@/public/img/institution/blue-chips.svg'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
+import sherlockLogo from '@/public/img/landing-page/auditor-logos/sherlock.svg'
 
 import publicAccessVaultsStyles from './publicAccessVaults.module.css'
 import institutionsPageStyles from '@/app/institutions/institutionsPage.module.css'
@@ -475,6 +476,7 @@ export default function PublicAccessVaults() {
         <Audits
           chainSecurityLogo={chainSecurityLogo}
           prototechLabsLogo={prototechLabsLogo}
+          sherlockLogo={sherlockLogo}
           onAuditClick={handleAuditClick}
         />
       </div>

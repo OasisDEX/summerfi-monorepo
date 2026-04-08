@@ -26,6 +26,7 @@ import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import { useScrolled } from '@/hooks/use-scrolled'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
+import sherlockLogo from '@/public/img/landing-page/auditor-logos/sherlock.svg'
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
 import aaveLogo from '@/public/img/landing-page/protocols/aave.svg'
 import morphoBlueLogo from '@/public/img/landing-page/protocols/morpho-blue.svg'
@@ -241,6 +242,7 @@ export default function InstitutionsPage() {
       <Audits
         chainSecurityLogo={chainSecurityLogo}
         prototechLabsLogo={prototechLabsLogo}
+        sherlockLogo={sherlockLogo}
         onAuditClick={handleAuditClick}
       />
       <div className={institutionsPageStyles.buildBySummerSpacer}>

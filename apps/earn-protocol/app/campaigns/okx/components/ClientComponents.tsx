@@ -14,6 +14,7 @@ import {
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import chainSecurityLogo from '@/public/img/campaigns/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/campaigns/auditor-logos/prototech-labs.svg'
+import sherlockLogo from '@/public/img/campaigns/auditor-logos/sherlock.svg'
 import blockAnalyticaLogo from '@/public/img/campaigns/block-analytica.svg'
 import liquidityImage from '@/public/img/campaigns/liquidity.svg'
 import arbitrumLogo from '@/public/img/campaigns/networks/arbitrum.svg'
@@ -159,6 +160,7 @@ export const OkxClientComponents = () => {
       <Audits
         chainSecurityLogo={chainSecurityLogo}
         prototechLabsLogo={prototechLabsLogo}
+        sherlockLogo={sherlockLogo}
         onAuditClick={(auditId: string) => () => {
           handleButtonClick(`audit-${auditId}-learn-more`)
         }}
