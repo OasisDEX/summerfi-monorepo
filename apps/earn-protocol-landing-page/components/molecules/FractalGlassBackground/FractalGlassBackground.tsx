@@ -193,8 +193,8 @@ export const FractalGlassBackground = ({ skewed = false }: { skewed?: boolean })
 
     const newBlobs: BlobState[] = BLOB_CONFIG.map((config, i) => {
       const xRange = Math.random() * (viewport.width + config.width)
-      const xShift = config.width * 0.8
-      const yShift = config.height * 0.8
+      const xShift = Math.min(config.width * 0.5, viewport.width * 0.5)
+      const yShift = Math.min(config.height * 0.5, COMPONENT_HEIGHT * 0.5)
 
       return {
         id: i,
