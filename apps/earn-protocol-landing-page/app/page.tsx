@@ -33,6 +33,8 @@ export default function HomePage() {
         flexDirection: 'column',
         alignItems: 'center',
         padding: '0 24px',
+        margin: '0 auto',
+        maxWidth: '1440px',
       }}
     >
       <LandingPageHero

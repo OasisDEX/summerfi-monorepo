@@ -1,0 +1,28 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.rect {
+  position: absolute;
+  top: 0;
+  width: 60px;
+  height: 100%;
+}
+
+.blobsContainer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform left top filter;
+}

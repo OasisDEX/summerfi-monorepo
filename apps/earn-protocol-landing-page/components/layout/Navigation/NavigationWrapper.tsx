@@ -35,44 +35,51 @@ export const NavigationWrapper: FC = () => {
   }
 
   return (
-    <Navigation
-      currentPath={currentPath}
-      logo={isBeachClub ? '/img/branding/logo-beach-club.svg' : '/img/branding/logo-dark.svg'}
-      logoSmall="/img/branding/dot-dark.svg"
-      links={getNavigationItems({ features, onNavItemClick })}
-      walletConnectionComponent={
-        <Link
-          href="/earn"
-          prefetch={false}
-          onClick={() => onNavItemClick({ buttonName: 'launch-app', isEarnApp: false })}
-        >
-          <Button
-            variant={isBeachClub ? 'beachClubMedium' : 'primaryMedium'}
-            className={navigationWrapperStyles.actionButton}
-          >
-            Launch app
-          </Button>
-        </Link>
-      }
-      startTheGame={
-        features?.Game
-          ? () => {
-              window.location.href = '/earn?game'
-            }
-          : undefined
-      }
-      onLogoClick={() => {
-        onNavItemClick({ buttonName: 'logo', isEarnApp: false })
-        // because router will use base path...
-        window.location.href = '/'
+    <div
+      style={{
+        position: 'relative',
+        zIndex: 2,
       }}
-      featuresConfig={features}
-      extraComponents={
-        <NavigationExtraComponents
-          beachClubEnabled={!!features?.BeachClub}
-          onNavItemClick={onNavItemClick}
-        />
-      }
-    />
+    >
+      <Navigation
+        currentPath={currentPath}
+        logo={isBeachClub ? '/img/branding/logo-beach-club.svg' : '/img/branding/logo-dark.svg'}
+        logoSmall="/img/branding/dot-dark.svg"
+        links={getNavigationItems({ features, onNavItemClick })}
+        walletConnectionComponent={
+          <Link
+            href="/earn"
+            prefetch={false}
+            onClick={() => onNavItemClick({ buttonName: 'launch-app', isEarnApp: false })}
+          >
+            <Button
+              variant={isBeachClub ? 'beachClubMedium' : 'primaryMedium'}
+              className={navigationWrapperStyles.actionButton}
+            >
+              Launch app
+            </Button>
+          </Link>
+        }
+        startTheGame={
+          features?.Game
+            ? () => {
+                window.location.href = '/earn?game'
+              }
+            : undefined
+        }
+        onLogoClick={() => {
+          onNavItemClick({ buttonName: 'logo', isEarnApp: false })
+          // because router will use base path...
+          window.location.href = '/'
+        }}
+        featuresConfig={features}
+        extraComponents={
+          <NavigationExtraComponents
+            beachClubEnabled={!!features?.BeachClub}
+            onNavItemClick={onNavItemClick}
+          />
+        }
+      />
+    </div>
   )
 }

@@ -74,35 +74,111 @@ export default defineConfig(({ mode }) => {
       {
         name: 'optimize-exports',
         generateBundle(_, bundle) {
+          // the castings and local typescript fixes are there just to satisfy the type system, they don't affect the actual code
           for (const chunk of Object.values(bundle)) {
-            if (chunk.type === 'chunk' && chunk.fileName === 'index.js') {
-              // Extract import/export pattern and convert to direct re-exports
-              const importRegex = /import \{ ([^}]+) \} from "([^"]+)";/g
-              const exportRegex = /export \{[^}]+\};/g
+            if (chunk.type !== 'chunk' || chunk.fileName !== 'index.js') continue
 
-              const imports = new Map()
-              let match
+            let ast
+            try {
+              ast = this.parse(chunk.code)
+            } catch (e) {
+              if (e instanceof Error) {
+                this.warn(`optimize-exports: failed to parse ${chunk.fileName}: ${e.message}`)
+              } else {
+                this.warn(`optimize-exports: failed to parse ${chunk.fileName}: unknown error`)
+              }
+              continue
+            }
 
-              // Collect all imports
-              while ((match = importRegex.exec(chunk.code)) !== null) {
-                const [, exports, path] = match
-                exports.split(',').forEach((exp) => {
-                  const [original, alias] = exp.trim().split(' as ')
-                  imports.set(alias?.trim() || original.trim(), { original: original.trim(), path })
-                })
+            const code = chunk.code
+            const nodesToRemove = new Set()
+            const directReExports = []
+
+            // imported local name -> { imported, sourcePath }
+            const importedBindings = new Map()
+
+            for (const node of ast.body) {
+              if (node.type !== 'ImportDeclaration') continue
+
+              const sourcePath = node.source.value
+              let allConsumable = true
+
+              for (const spec of node.specifiers) {
+                if (spec.type === 'ImportSpecifier') {
+                  importedBindings.set(spec.local.name, {
+                    imported: (
+                      spec.imported as {
+                        name: string
+                      }
+                    ).name,
+                    sourcePath,
+                  })
+                } else {
+                  // ImportDefaultSpecifier / ImportNamespaceSpecifier — can't convert
+                  allConsumable = false
+                }
               }
 
-              // Replace with direct re-exports
-              chunk.code = chunk.code.replace(importRegex, '')
-              chunk.code = chunk.code.replace(exportRegex, '')
-
-              // Add direct exports
-              const directExports = Array.from(imports.entries())
-                .map(([alias, { original, path }]) => `export { ${original} } from "${path}";`)
-                .join('\n')
-
-              chunk.code = directExports + '\n' + chunk.code
+              if (allConsumable) nodesToRemove.add(node)
             }
+
+            for (const node of ast.body) {
+              if (node.type !== 'ExportNamedDeclaration') continue
+              if (node.source) continue // already a direct re-export
+              if (node.declaration) continue // export const/class/function
+
+              const allAreImported = node.specifiers.every((s) =>
+                importedBindings.has((s.local as { name: string }).name),
+              )
+              if (!allAreImported) continue // exports a local binding — leave it
+
+              for (const spec of node.specifiers) {
+                const binding = importedBindings.get((spec.local as { name: string }).name)
+                const exportedName = (spec.exported as { name: string }).name
+                const importedName = binding.imported
+
+                const clause =
+                  importedName !== exportedName
+                    ? `${importedName} as ${exportedName}`
+                    : importedName
+
+                directReExports.push(`export { ${clause} } from "${binding.sourcePath}";`)
+                importedBindings.delete((spec.local as { name: string }).name)
+              }
+
+              nodesToRemove.add(node)
+            }
+
+            // Re-check: if an import node had some bindings left unconsumed, don't remove it
+            for (const node of [...nodesToRemove]) {
+              const castedNode = node as any
+              if (castedNode.type !== 'ImportDeclaration') continue
+              const hasUnconsumed = castedNode.specifiers.some(
+                (s: any) =>
+                  s.type === 'ImportSpecifier' &&
+                  importedBindings.has((s.local as { name: string }).name),
+              )
+              if (hasUnconsumed) nodesToRemove.delete(node)
+            }
+
+            if (nodesToRemove.size === 0 && directReExports.length === 0) continue
+
+            // Build output by slicing around removed nodes, sorted by position
+            const removed = [...nodesToRemove].sort((a, b) => (a as any).start - (b as any).start)
+            let result = ''
+            let cursor = 0
+
+            for (const node of removed) {
+              result += code.slice(cursor, (node as any).start)
+              // Advance past the node and any immediately following newline
+              cursor = (node as any).end
+              if (code[cursor] === '\n') cursor++
+            }
+
+            result += code.slice(cursor)
+
+            chunk.code =
+              directReExports.length > 0 ? directReExports.join('\n') + '\n' + result : result
           }
         },
       },
