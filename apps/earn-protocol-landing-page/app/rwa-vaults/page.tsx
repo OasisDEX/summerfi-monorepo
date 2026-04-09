@@ -1,4 +1,5 @@
-import { Emphasis, Icon, Text } from '@summerfi/app-earn-ui'
+'use client'
+import { Emphasis, Icon, LatestNews, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 
 import { TagButton } from '@/components/atoms/TagButton'
@@ -6,6 +7,7 @@ import { HeroWrapper } from '@/components/layout/HeroWrapper/HeroWrapper'
 import { CheckLine } from '@/components/layout/LandingPageContent/components/CheckLine'
 import { SubLandingPageSection } from '@/components/layout/SubLandingPageSection/SubLandingPageSection'
 import { FractalGlassBackground } from '@/components/molecules/FractalGlassBackground/FractalGlassBackground'
+import { useLandingPageData } from '@/contexts/LandingPageContext'
 import m1CapitalLogo from '@/public/img/landing-page/private-markets/m1_capital.svg'
 
 import rwaVaultsStyles from './RwaVaults.module.css'
@@ -19,6 +21,8 @@ import vaneckMarketLogo from '@/public/img/landing-page/private-markets/vaneck.p
 import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisdomtree.png'
 
 export default function RwaVaults() {
+  const { landingPageData } = useLandingPageData()
+
   return (
     <>
       <HeroWrapper className={rwaVaultsStyles.heroWrapper}>
@@ -121,10 +125,6 @@ export default function RwaVaults() {
             </div>
           </div>
         </div>
-      </SubLandingPageSection>
-      <SubLandingPageSection
-        className={`${rwaVaultsStyles.subLandingPageSection} ${rwaVaultsStyles.cardSection}`}
-      >
         <div className={rwaVaultsStyles.card}>
           <Image
             alt="background lines"
@@ -206,6 +206,9 @@ export default function RwaVaults() {
             </div>
           </div>
         </div>
+      </SubLandingPageSection>
+      <SubLandingPageSection>
+        <LatestNews news={landingPageData?.blogPosts} />
       </SubLandingPageSection>
     </>
   )

@@ -77,6 +77,9 @@
 }
 
 .cardSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
   padding-top: 0;
   padding-bottom: 0;
 }
