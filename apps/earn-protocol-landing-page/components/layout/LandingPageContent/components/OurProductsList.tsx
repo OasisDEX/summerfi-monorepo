@@ -8,7 +8,7 @@ import { CheckLine } from '@/components/layout/LandingPageContent/components/Che
 import {
   ProtocolIconsWithMore,
   protocolIconsWithMoreList,
-} from '@/components/layout/sub-pages/ProtocolIconsWithMore'
+} from '@/components/molecules/ProtocolIconsWithMore/ProtocolIconsWithMore'
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
 import balanceMarketLogo from '@/public/img/landing-page/private-markets/logo_balance.svg'
 import utilaMarketLogo from '@/public/img/landing-page/private-markets/logo_utila.svg'

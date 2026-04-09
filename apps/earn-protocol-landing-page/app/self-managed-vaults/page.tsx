@@ -1,7 +1,7 @@
 import { Emphasis, Text } from '@summerfi/app-earn-ui'
 
 import { TagButton } from '@/components/atoms/TagButton'
-import { HeroWrapper } from '@/components/layout/sub-pages/HeroWrapper'
+import { HeroWrapper } from '@/components/layout/HeroWrapper/HeroWrapper'
 
 export default function SelfManagedVaults() {
   return (
