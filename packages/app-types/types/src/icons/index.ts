@@ -288,6 +288,7 @@ export type IconNamesList =
   | 'withdraw'
   | 'cut'
   | 'shield_ban'
+  | 'shield_check'
   | 'award'
   | 'chart'
   | 'down_up'

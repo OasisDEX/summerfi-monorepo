@@ -1,14 +1,16 @@
-import { Emphasis, Text } from '@summerfi/app-earn-ui'
+import { Emphasis, Icon, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 
 import { TagButton } from '@/components/atoms/TagButton'
 import { HeroWrapper } from '@/components/layout/HeroWrapper/HeroWrapper'
+import { CheckLine } from '@/components/layout/LandingPageContent/components/CheckLine'
 import { SubLandingPageSection } from '@/components/layout/SubLandingPageSection/SubLandingPageSection'
 import { FractalGlassBackground } from '@/components/molecules/FractalGlassBackground/FractalGlassBackground'
 import m1CapitalLogo from '@/public/img/landing-page/private-markets/m1_capital.svg'
 
 import rwaVaultsStyles from './RwaVaults.module.css'
 
+import ourProductsLinesBackground from '@/public/img/landing-page/our-products-lines-bg.png'
 import apolloMarketLogo from '@/public/img/landing-page/private-markets/apollo.png'
 import mapleMarketLogo from '@/public/img/landing-page/private-markets/maple.png'
 import stacMarketLogo from '@/public/img/landing-page/private-markets/stac.png'
@@ -82,6 +84,126 @@ export default function RwaVaults() {
           </div>
           <div className={rwaVaultsStyles.partnerLogoFrame}>
             <Image alt="M1 Capital" src={m1CapitalLogo} width={290} />
+          </div>
+        </div>
+      </SubLandingPageSection>
+      <SubLandingPageSection
+        className={`${rwaVaultsStyles.subLandingPageSection} ${rwaVaultsStyles.cardSection}`}
+      >
+        <div className={rwaVaultsStyles.card}>
+          <Image
+            alt="background lines"
+            src={ourProductsLinesBackground}
+            className={rwaVaultsStyles.linesBackground}
+          />
+          <div className={rwaVaultsStyles.backgroundOrb} />
+          <div
+            className={rwaVaultsStyles.cardContent}
+            style={{
+              width: '456px',
+            }}
+          >
+            <div className={rwaVaultsStyles.iconBadge}>
+              <Icon iconName="chart" size={18} className={rwaVaultsStyles.icon} />
+            </div>
+            <Text variant="h4">Deep liquidity yield sources designed for institutions</Text>
+            <Text
+              variant="p2"
+              className={`${rwaVaultsStyles.subSectionTextSecondary} ${rwaVaultsStyles.cardSubtitle}`}
+            >
+              RWA Private access vaults have thoughtfully curated underlying yield sources with deep
+              liquidity and quality collateral in mind.
+            </Text>
+            <div className={rwaVaultsStyles.iconColumn}>
+              <CheckLine text="Deep liquidity value prop 1" />
+              <CheckLine text="Deep liquidity value prop 1" />
+              <CheckLine text="Deep liquidity value prop 1" />
+            </div>
+          </div>
+        </div>
+      </SubLandingPageSection>
+      <SubLandingPageSection
+        className={`${rwaVaultsStyles.subLandingPageSection} ${rwaVaultsStyles.cardSection}`}
+      >
+        <div className={rwaVaultsStyles.card}>
+          <Image
+            alt="background lines"
+            src={ourProductsLinesBackground}
+            className={`${rwaVaultsStyles.linesBackground} ${rwaVaultsStyles.linesBackgroundSecondBlock}`}
+          />
+          <div className={rwaVaultsStyles.backgroundOrb} />
+          <div className={rwaVaultsStyles.cardContent}>
+            <div className={rwaVaultsStyles.iconBadge}>
+              <Icon iconName="shield_check" size={18} className={rwaVaultsStyles.icon} />
+            </div>
+            <Text variant="h4">
+              Best in class Infrastructure, designed for institutional access
+            </Text>
+            <Text
+              variant="p2"
+              className={`${rwaVaultsStyles.subSectionTextSecondary} ${rwaVaultsStyles.cardSubtitle}`}
+            >
+              The Summer Institutional RWA Vaults put security above all else, and are built on top
+              of robust smart contracts developed for the Lazy Summer Protocol. With additional
+              layers to handle permissioned access, delayed redemption periods and various pricing
+              mechanisms from the underlying markets, the Summer Institutional Vaults lead the way
+              in allowing approved depositors access to a basket of RWA markets without concerns
+              about security.
+            </Text>
+            <div className={rwaVaultsStyles.infoGrid}>
+              <div className={rwaVaultsStyles.infoGridItem}>
+                <div className={rwaVaultsStyles.infoGridBullet} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <Text variant="p1" className={rwaVaultsStyles.infoGridTitle}>
+                    Ring-Fenced Liquidity (Permissioned Access)
+                  </Text>
+                  <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
+                    {`Unlike public DeFi lending pools where capital is mixed, Summer.fi's institutional RWA Vaults are restricted to deposits exclusively from whitelisted, pre-approved addresses, and only ever deposits into similar permissioned markets.`}
+                  </Text>
+                </div>
+              </div>
+              <div className={rwaVaultsStyles.infoGridItem}>
+                <div className={rwaVaultsStyles.infoGridBullet} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <Text variant="p1" className={rwaVaultsStyles.infoGridTitle}>
+                    Separately Managed Accounts (SMAs)
+                  </Text>
+                  <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
+                    The Vault infrastructure is designed so that capital is segregated. If an
+                    exploit or massive liquidation event happens in a different part of the DeFi
+                    ecosystem, your specific vault remains isolated from the contagion.
+                  </Text>
+                </div>
+              </div>
+              <div className={rwaVaultsStyles.infoGridItem}>
+                <div className={rwaVaultsStyles.infoGridBullet} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <Text variant="p1" className={rwaVaultsStyles.infoGridTitle}>
+                    Independent Management by M1 Capital
+                  </Text>
+                  <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
+                    While the Vault infrastructure is designed and developed by Summer.fi, your
+                    deposited assets are always allocated as per the strategy and risk assessment of
+                    experts. M1 Capital are a professional and experienced team with a proven track
+                    record.
+                  </Text>
+                </div>
+              </div>
+              <div className={rwaVaultsStyles.infoGridItem}>
+                <div className={rwaVaultsStyles.infoGridBullet} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <Text variant="p1" className={rwaVaultsStyles.infoGridTitle}>
+                    Self-custodial
+                  </Text>
+                  <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
+                    The Summer Institutional Vaults are entirely self-custodial, which means you
+                    never give custody of your assets to others. Only you can make instructions to
+                    deposit or withdraw your assets, and there is no access to your funds by
+                    Summer.fi or the Vault Manager.
+                  </Text>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </SubLandingPageSection>

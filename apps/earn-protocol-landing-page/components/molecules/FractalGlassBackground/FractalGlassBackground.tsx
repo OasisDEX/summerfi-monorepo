@@ -1,7 +1,7 @@
 'use client'
 
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
-import { debounce, throttle } from 'lodash-es'
+import { throttle } from 'lodash-es'
 
 import { useScrolled } from '@/hooks/use-scrolled'
 
@@ -86,7 +86,7 @@ const hexToRgba = (hex: string, alpha: number): string => {
 
 const getPositionedBlobs = (blobs: BlobState[], mouseOffset: Offset): PositionedBlob[] => {
   return blobs.map((blob) => {
-    const x = blob.baseX + Number(mouseOffset.x * blob.mouseOffsetStrength) - 900
+    const x = blob.baseX + Number(mouseOffset.x * blob.mouseOffsetStrength)
     const y = blob.baseY + Number(mouseOffset.y * blob.mouseOffsetStrength)
     const halfBlobWidth = blob.width / 2
     const halfBlobHeight = blob.height / 2
@@ -171,19 +171,7 @@ export const FractalGlassBackground = ({ skewed = false }: { skewed?: boolean })
   }, [scrolled])
 
   useEffect(() => {
-    const setSize = () => {
-      setViewport({ width: window.innerWidth })
-    }
-
-    const resizeHandler = debounce(setSize, 1000)
-
-    setSize()
-    window.addEventListener('resize', resizeHandler)
-
-    return () => {
-      window.removeEventListener('resize', resizeHandler)
-      resizeHandler.cancel()
-    }
+    setViewport({ width: window.innerWidth })
   }, [])
 
   useEffect(() => {
@@ -192,14 +180,13 @@ export const FractalGlassBackground = ({ skewed = false }: { skewed?: boolean })
     }
 
     const newBlobs: BlobState[] = BLOB_CONFIG.map((config, i) => {
-      const xRange = Math.random() * (viewport.width + config.width)
-      const xShift = Math.min(config.width * 0.5, viewport.width * 0.5)
-      const yShift = Math.min(config.height * 0.5, COMPONENT_HEIGHT * 0.5)
+      const baseX = Math.random() * (viewport.width - Number(config.width * 0.5))
+      const baseY = Math.random() * (COMPONENT_HEIGHT - Number(config.height * 0.5))
 
       return {
         id: i,
-        baseX: xRange - xShift,
-        baseY: COMPONENT_HEIGHT - yShift,
+        baseX,
+        baseY,
         color: BLOB_COLORS[i % BLOB_COLORS.length],
         width: config.width,
         height: config.height,

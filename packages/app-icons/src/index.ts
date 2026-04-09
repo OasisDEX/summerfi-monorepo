@@ -395,6 +395,7 @@ export const icons = {
   send: customLazy(() => import('./icons/send.svg?react')) as IconExportType,
   share: customLazy(() => import('./icons/share_v2.svg?react')) as IconExportType,
   shield_ban: customLazy(() => import('./icons/shield_ban.svg?react')) as IconExportType,
+  shield_check: customLazy(() => import('./icons/shield_check.svg?react')) as IconExportType,
   sign_out: customLazy(() => import('./icons/sign_out.svg?react')) as IconExportType,
   silo: customLazy(() => import('./icons/silo.svg?react')) as IconExportType,
   sky: customLazy(() => import('./icons/sky.svg?react')) as IconExportType,

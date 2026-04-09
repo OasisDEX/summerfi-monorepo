@@ -477,6 +477,7 @@ export const iconsSync = {
   send: import('./icons/send.svg?react') as Promise<typeof import('*.svg?react')>,
   share: import('./icons/share_v2.svg?react') as Promise<typeof import('*.svg?react')>,
   shield_ban: import('./icons/shield_ban.svg?react') as Promise<typeof import('*.svg?react')>,
+  shield_check: import('./icons/shield_check.svg?react') as Promise<typeof import('*.svg?react')>,
   sign_out: import('./icons/sign_out.svg?react') as Promise<typeof import('*.svg?react')>,
   silo: import('./icons/silo.svg?react') as Promise<typeof import('*.svg?react')>,
   sky: import('./icons/sky.svg?react') as Promise<typeof import('*.svg?react')>,
