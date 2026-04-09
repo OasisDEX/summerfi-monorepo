@@ -86,7 +86,7 @@ const hexToRgba = (hex: string, alpha: number): string => {
 
 const getPositionedBlobs = (blobs: BlobState[], mouseOffset: Offset): PositionedBlob[] => {
   return blobs.map((blob) => {
-    const x = blob.baseX + Number(mouseOffset.x * blob.mouseOffsetStrength)
+    const x = blob.baseX + Number(mouseOffset.x * blob.mouseOffsetStrength) - 900
     const y = blob.baseY + Number(mouseOffset.y * blob.mouseOffsetStrength)
     const halfBlobWidth = blob.width / 2
     const halfBlobHeight = blob.height / 2
@@ -247,7 +247,7 @@ export const FractalGlassBackground = ({ skewed = false }: { skewed?: boolean })
       if (el) {
         setCount(
           skewed
-            ? Math.ceil(el.offsetWidth / (RECT_WIDTH * 0.5))
+            ? Math.ceil(el.offsetWidth / (RECT_WIDTH * 0.8))
             : Math.ceil(el.offsetWidth / RECT_WIDTH),
         )
       }
@@ -303,7 +303,7 @@ export const FractalGlassBackground = ({ skewed = false }: { skewed?: boolean })
           className={styles.rect}
           style={{
             transform: skewed ? 'skewX(-30deg)' : undefined,
-            left: `${i * RECT_WIDTH}px`,
+            left: `${Number(i * RECT_WIDTH) - (skewed ? Math.tan((30 * Math.PI) / 180) * Number(RECT_WIDTH * 6) : 0)}px`,
             backdropFilter: rectBlurs[i],
             WebkitBackdropFilter: rectBlurs[i],
             background: rectGradients[i],
