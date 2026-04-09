@@ -2,6 +2,9 @@ import { Emphasis, Text } from '@summerfi/app-earn-ui'
 
 import { TagButton } from '@/components/atoms/TagButton'
 import { HeroWrapper } from '@/components/layout/HeroWrapper/HeroWrapper'
+import { FractalGlassBackground } from '@/components/molecules/FractalGlassBackground/FractalGlassBackground'
+
+import selfManagedVaultsStyles from './SelfManagedVaults.module.css'
 
 export default function SelfManagedVaults() {
   return (
@@ -12,6 +15,9 @@ export default function SelfManagedVaults() {
           flexDirection: 'column',
         }}
       >
+        <div className={selfManagedVaultsStyles.heroBackground}>
+          <FractalGlassBackground skewed />
+        </div>
         <div
           style={{
             maxWidth: '1200px',

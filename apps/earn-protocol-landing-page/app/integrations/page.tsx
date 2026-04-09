@@ -2,6 +2,9 @@ import { Emphasis, Text } from '@summerfi/app-earn-ui'
 
 import { TagButton } from '@/components/atoms/TagButton'
 import { HeroWrapper } from '@/components/layout/HeroWrapper/HeroWrapper'
+import { FractalGlassBackground } from '@/components/molecules/FractalGlassBackground/FractalGlassBackground'
+
+import integrationsStyles from './Integrations.module.css'
 
 export default function Integrations() {
   return (
@@ -12,6 +15,9 @@ export default function Integrations() {
           flexDirection: 'column',
         }}
       >
+        <div className={integrationsStyles.heroBackground}>
+          <FractalGlassBackground skewed />
+        </div>
         <div
           style={{
             maxWidth: '1200px',
