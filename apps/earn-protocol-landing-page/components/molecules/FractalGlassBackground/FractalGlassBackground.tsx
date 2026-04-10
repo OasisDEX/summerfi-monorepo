@@ -1,9 +1,7 @@
 'use client'
 
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, type RefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { throttle } from 'lodash-es'
-
-import { useScrolled } from '@/hooks/use-scrolled'
 
 import styles from './FractalGlassBackground.module.css'
 
@@ -32,14 +30,7 @@ const BLOB_CONFIG = [
     baseOffsetY: -50,
     mouseOffsetStrength: 0.4,
   },
-  {
-    width: 550,
-    height: 550,
-    blur: 90,
-    baseOffsetX: 300,
-    baseOffsetY: 100,
-    mouseOffsetStrength: 2,
-  },
+  { width: 550, height: 550, blur: 90, baseOffsetX: 300, baseOffsetY: 100, mouseOffsetStrength: 2 },
 ]
 
 type BlobState = {
@@ -51,18 +42,6 @@ type BlobState = {
   height: number
   blur: number
   mouseOffsetStrength: number
-}
-
-type Offset = {
-  x: number
-  y: number
-}
-
-type PositionedBlob = BlobState & {
-  x: number
-  y: number
-  centerX: number
-  centerY: number
 }
 
 const clamp = (value: number, min: number, max: number): number =>
@@ -84,148 +63,199 @@ const hexToRgba = (hex: string, alpha: number): string => {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
-const getPositionedBlobs = (blobs: BlobState[], mouseOffset: Offset): PositionedBlob[] => {
-  return blobs.map((blob) => {
-    const x = blob.baseX + Number(mouseOffset.x * blob.mouseOffsetStrength)
-    const y = blob.baseY + Number(mouseOffset.y * blob.mouseOffsetStrength)
-    const halfBlobWidth = blob.width / 2
-    const halfBlobHeight = blob.height / 2
-
-    return {
-      ...blob,
-      x,
-      y,
-      centerX: x + halfBlobWidth,
-      centerY: y + halfBlobHeight,
-    }
-  })
-}
-
-const getRectBlur = (rectCenterX: number, blobs: PositionedBlob[]): number => {
-  if (!blobs.length) {
-    return MAX_BLUR_PX
-  }
-
-  const closestNormalizedDistance = blobs.reduce((closestDistance, blob) => {
-    const distance = Math.hypot(rectCenterX - blob.centerX, RECT_CENTER_Y - blob.centerY)
-    const blobRadius = Math.max(blob.width, blob.height) / 2
-    const normalizedDistance = distance / blobRadius
-
-    return Math.min(closestDistance, normalizedDistance)
-  }, Number.POSITIVE_INFINITY)
-
-  const distanceFactor = clamp(closestNormalizedDistance, 0, 1)
-  const blurRange = MAX_BLUR_PX - MIN_BLUR_PX
-  const blurOffset = distanceFactor * blurRange
-
-  return MIN_BLUR_PX + blurOffset
-}
-
-const FractalGlassBackgroundBlobs = memo(({ blobs }: { blobs: PositionedBlob[] }) => {
-  return (
-    <div className={styles.blobsContainer}>
-      {blobs.map((blob) => {
-        return (
+const FractalGlassBackgroundBlobs = memo(
+  ({
+    blobs,
+    blobElemsRef,
+  }: {
+    blobs: BlobState[]
+    blobElemsRef: RefObject<(HTMLDivElement | null)[]>
+  }) => {
+    return (
+      <div className={styles.blobsContainer}>
+        {blobs.map((blob, i) => (
           <div
             key={blob.id}
+            ref={(el) => {
+              blobElemsRef.current[i] = el
+            }}
             className={styles.blob}
             style={{
-              left: `${blob.x}px`,
-              top: `${blob.y}px`,
+              // Base position only — mouse offset applied imperatively
+              left: `${blob.baseX}px`,
+              top: `${blob.baseY}px`,
               width: `${blob.width}px`,
               height: `${blob.height}px`,
               filter: `blur(${blob.blur}px)`,
               background: `radial-gradient(circle, ${hexToRgba(blob.color, 0.8)} 0%, ${hexToRgba(blob.color, 0.1)} 60%, ${hexToRgba(blob.color, 0)} 100%)`,
             }}
           />
-        )
-      })}
-    </div>
-  )
-})
+        ))}
+      </div>
+    )
+  },
+)
+
+const FractalGlassPanels = memo(
+  ({
+    count,
+    skewed,
+    rectElemsRef,
+  }: {
+    count: number
+    skewed: boolean
+    rectElemsRef: RefObject<(HTMLDivElement | null)[]>
+  }) => {
+    const rectGradients = useMemo(
+      () => Array.from({ length: count }, (_, i) => getRectGradient(i, count)),
+      [count],
+    )
+
+    return (
+      <>
+        {Array.from({ length: count }, (_, i) => (
+          <div
+            key={i}
+            ref={(el) => {
+              // Store refs to rect elements for direct DOM writes in the rAF loop
+              // (style updates for blur based on blob proximity)
+              rectElemsRef.current[i] = el
+            }}
+            className={styles.rect}
+            style={{
+              transform: skewed ? 'skewX(-30deg)' : undefined,
+              left: `${Number(i * RECT_WIDTH) - (skewed ? Math.tan((30 * Math.PI) / 180) * Number(RECT_WIDTH * 6) : 0)}px`,
+              background: rectGradients[i],
+            }}
+          />
+        ))}
+      </>
+    )
+  },
+)
 
 export const FractalGlassBackground = ({ skewed = false }: { skewed?: boolean }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [count, setCount] = useState(0)
   const [blobs, setBlobs] = useState<BlobState[]>([])
   const [viewport, setViewport] = useState({ width: 0 })
-  const [mouseOffset, setMouseOffset] = useState<Offset>({ x: 0, y: 0 })
-  const { scrolled } = useScrolled()
-  const isScrollingRef = useRef(false)
+
+  const mouseOffsetRef = useRef({ x: 0, y: 0 })
+  const rafIdRef = useRef<number | null>(null)
+
+  const rectElemsRef = useRef<(HTMLDivElement | null)[]>([])
+  const blobElemsRef = useRef<(HTMLDivElement | null)[]>([])
+
+  const blobsRef = useRef<BlobState[]>([])
 
   useEffect(() => {
-    /**
-     * Detect if the user is scrolling (+ 200ms after scroll end) to reduce mousemove handler work during scroll, which can cause jank due to the number of elements being re-rendered with new blur values on each mouse move.
-     */
-    if (scrolled > 0) {
-      isScrollingRef.current = true
-    }
-
-    const timeoutId = setTimeout(() => {
-      isScrollingRef.current = false
-    }, 200)
-
-    return () => {
-      clearTimeout(timeoutId)
-    }
-  }, [scrolled])
+    blobsRef.current = blobs
+  }, [blobs])
 
   useEffect(() => {
     setViewport({ width: window.innerWidth })
   }, [])
 
   useEffect(() => {
-    if (!viewport.width) {
-      return
-    }
-
-    const newBlobs: BlobState[] = BLOB_CONFIG.map((config, i) => {
-      const baseX = Math.random() * (viewport.width - Number(config.width * 0.5))
-      const baseY = Math.random() * (COMPONENT_HEIGHT - Number(config.height * 0.5))
-
-      return {
-        id: i,
-        baseX,
-        baseY,
-        color: BLOB_COLORS[i % BLOB_COLORS.length],
-        width: config.width,
-        height: config.height,
-        blur: config.blur,
-        mouseOffsetStrength: config.mouseOffsetStrength,
-      }
-    })
+    if (!viewport.width) return
+    const newBlobs: BlobState[] = BLOB_CONFIG.map((config, i) => ({
+      id: i,
+      baseX: Math.random() * (viewport.width - Number(config.width * 0.5)),
+      baseY: Math.random() * (COMPONENT_HEIGHT - Number(config.height * 0.5)),
+      color: BLOB_COLORS[i % BLOB_COLORS.length],
+      width: config.width,
+      height: config.height,
+      blur: config.blur,
+      mouseOffsetStrength: config.mouseOffsetStrength,
+    }))
 
     setBlobs(newBlobs)
   }, [viewport])
 
   useEffect(() => {
-    let rafId: number | null = null
-    let latestClientX = 0
-    let latestClientY = 0
+    const loop = () => {
+      rafIdRef.current = requestAnimationFrame(loop)
 
-    const handleMouseMove = (e: globalThis.MouseEvent) => {
-      latestClientX = e.clientX
-      latestClientY = e.clientY
+      const { x: mx, y: my } = mouseOffsetRef.current
+      const currentBlobs = blobsRef.current
 
-      if (rafId !== null || isScrollingRef.current) return
+      const positioned = currentBlobs.map((blob) => {
+        const x = blob.baseX + Number(mx * blob.mouseOffsetStrength)
+        const y = blob.baseY + Number(my * blob.mouseOffsetStrength)
 
-      rafId = requestAnimationFrame(() => {
-        rafId = null
-        const xNorm = (latestClientX / window.innerWidth) * 100
-        const yNorm = (latestClientY / window.innerHeight) * 100
-        const xPercent = xNorm - 50
-        const yPercent = yNorm - 50
-
-        setMouseOffset({ x: xPercent, y: yPercent })
+        return {
+          x,
+          y,
+          centerX: x + Number(blob.width / 2),
+          centerY: y + Number(blob.height / 2),
+          halfDim: Math.max(blob.width, blob.height) / 2,
+          strength: blob.mouseOffsetStrength,
+        }
       })
+
+      blobElemsRef.current.forEach((el, i) => {
+        if (!el || !currentBlobs[i]) return
+        el.style.left = `${positioned[i].x}px`
+        el.style.top = `${positioned[i].y}px`
+      })
+
+      const rectElems = rectElemsRef.current
+      const rectCount = rectElems.length
+
+      for (let i = 0; i < rectCount; i++) {
+        const el = rectElems[i]
+
+        // eslint-disable-next-line no-continue
+        if (!el) continue
+
+        if (i === rectCount - 1) {
+          el.style.backdropFilter = 'unset'
+          // eslint-disable-next-line no-continue
+          continue
+        }
+
+        const rectCenterX = Number(i * RECT_WIDTH) + HALF_RECT_WIDTH
+
+        let closestNorm = Infinity
+
+        for (let j = 0; j < positioned.length; j++) {
+          const pb = positioned[j]
+          const dx = rectCenterX - pb.centerX
+          const dy = RECT_CENTER_Y - pb.centerY
+          const dist = Math.sqrt(Number(dx * dx) + Number(dy * dy))
+          const norm = dist / pb.halfDim
+
+          if (norm < closestNorm) closestNorm = norm
+        }
+
+        const distanceFactor = clamp(closestNorm, 0, 1)
+        const blurPx = MIN_BLUR_PX + Number(distanceFactor * (MAX_BLUR_PX - MIN_BLUR_PX))
+        const blurStr = `blur(${blurPx.toFixed(1)}px)`
+
+        if (el.style.backdropFilter !== blurStr) {
+          el.style.backdropFilter = blurStr
+        }
+      }
+    }
+
+    rafIdRef.current = requestAnimationFrame(loop)
+
+    return () => {
+      if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current)
+    }
+  }, [])
+
+  useEffect(() => {
+    const handleMouseMove = (e: globalThis.MouseEvent) => {
+      mouseOffsetRef.current = {
+        x: Number((e.clientX / window.innerWidth) * 100) - 50,
+        y: Number((e.clientY / window.innerHeight) * 100) - 50,
+      }
     }
 
     window.addEventListener('mousemove', handleMouseMove)
 
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      if (rafId !== null) cancelAnimationFrame(rafId)
-    }
+    return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
   useEffect(() => {
@@ -256,47 +286,10 @@ export const FractalGlassBackground = ({ skewed = false }: { skewed?: boolean })
     }
   }, [skewed])
 
-  const positionedBlobs = useMemo(
-    () => getPositionedBlobs(blobs, mouseOffset),
-    [blobs, mouseOffset],
-  )
-
-  // Static: only changes when count changes
-  const rectGradients = useMemo(
-    () => Array.from({ length: count }, (_, i) => getRectGradient(i, count)),
-    [count],
-  )
-
-  // Dynamic: recomputed when blob positions change (every frame with mouse)
-  const rectBlurs = useMemo(
-    () =>
-      Array.from({ length: count }, (_, i) => {
-        if (i === count - 1) return 'unset'
-        const left = i * RECT_WIDTH
-        const rectCenterX = left + HALF_RECT_WIDTH
-        const blurPx = getRectBlur(rectCenterX, positionedBlobs)
-
-        return `blur(${blurPx.toFixed(1)}px)`
-      }),
-    [count, positionedBlobs],
-  )
-
   return (
     <div ref={containerRef} className={styles.container}>
-      <FractalGlassBackgroundBlobs blobs={positionedBlobs} />
-      {Array.from({ length: count }, (_, i) => (
-        <div
-          key={i}
-          className={styles.rect}
-          style={{
-            transform: skewed ? 'skewX(-30deg)' : undefined,
-            left: `${Number(i * RECT_WIDTH) - (skewed ? Math.tan((30 * Math.PI) / 180) * Number(RECT_WIDTH * 6) : 0)}px`,
-            backdropFilter: rectBlurs[i],
-            WebkitBackdropFilter: rectBlurs[i],
-            background: rectGradients[i],
-          }}
-        />
-      ))}
+      <FractalGlassBackgroundBlobs blobs={blobs} blobElemsRef={blobElemsRef} />
+      <FractalGlassPanels count={count} skewed={skewed} rectElemsRef={rectElemsRef} />
     </div>
   )
 }
