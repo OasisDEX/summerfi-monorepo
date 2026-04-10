@@ -38,6 +38,7 @@ const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVau
       <Image
         alt="background lines"
         src={ourProductsLinesBackground}
+        loading="eager"
         style={{
           width: 'auto',
           height: 'auto',

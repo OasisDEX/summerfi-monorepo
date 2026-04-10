@@ -98,6 +98,7 @@ export default function RwaVaults() {
           <Image
             alt="background lines"
             src={ourProductsLinesBackground}
+            loading="eager"
             className={rwaVaultsStyles.linesBackground}
           />
           <div className={rwaVaultsStyles.backgroundOrb} />
