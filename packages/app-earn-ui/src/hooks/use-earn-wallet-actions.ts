@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
 import {
   type SignAuthorizationReturnType,
@@ -9,7 +9,6 @@ import {
 } from 'viem'
 import { type Chain } from 'viem/chains'
 import {
-  useAccount,
   useChainId,
   useDisconnect,
   usePublicClient,
@@ -34,11 +33,76 @@ export const useEarnProtocolWallet = (): {
   address?: `0x${string}`
   isLoadingAccount: boolean
 } => {
-  const { address, isConnecting } = useAccount()
+  // use promise based wallet client retrieval to ensure we have the wallet client available, as some actions depend on it being ready
+  const [isLoadingAccount, setIsLoadingAccount] = useState(true)
+  const [connectedWalletAddress, setConnectedWalletAddress] = useState<`0x${string}` | undefined>(
+    undefined,
+  )
+  const { ready: privyReady, authenticated: privyAuthenticated } = usePrivy()
+  const {
+    data: walletClient,
+    promise: walletPendingPromise,
+    status: walletStatus,
+  } = useWalletClient()
+
+  useEffect(() => {
+    let isMounted = true
+
+    const checkWalletClient = async () => {
+      const walletClientAddress = walletClient
+        ? (walletClient.account.address as `0x${string}` | undefined)
+        : undefined
+
+      if (walletStatus === 'pending' || (privyAuthenticated && !walletClientAddress)) {
+        setIsLoadingAccount(true)
+      }
+
+      let walletClientResolved: WalletClient | null = walletClient ?? null
+
+      try {
+        walletClientResolved = await walletPendingPromise
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error while waiting for wallet client:', error)
+      } finally {
+        if (isMounted) {
+          if (walletClientResolved?.account?.address) {
+            setConnectedWalletAddress(
+              walletClientResolved.account.address as `0x${string}` | undefined,
+            )
+            setIsLoadingAccount(false)
+          } else {
+            setConnectedWalletAddress(undefined)
+
+            const shouldKeepLoading =
+              !privyReady ||
+              walletStatus === 'pending' ||
+              (privyAuthenticated && !walletClientResolved?.account?.address)
+
+            if (!shouldKeepLoading) {
+              // eslint-disable-next-line no-console
+              console.error(
+                'Wallet client is not available or address is missing',
+                walletClientResolved,
+              )
+            }
+
+            setIsLoadingAccount(shouldKeepLoading)
+          }
+        }
+      }
+    }
+
+    checkWalletClient()
+
+    return () => {
+      isMounted = false
+    }
+  }, [privyAuthenticated, privyReady, walletClient, walletPendingPromise, walletStatus])
 
   return {
-    address,
-    isLoadingAccount: isConnecting,
+    address: connectedWalletAddress,
+    isLoadingAccount: isLoadingAccount || !privyReady,
   }
 }
 

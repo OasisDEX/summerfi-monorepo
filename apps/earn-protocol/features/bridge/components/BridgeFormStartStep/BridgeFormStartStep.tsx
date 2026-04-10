@@ -157,7 +157,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({
   useEffect(() => {
     if (!userWalletAddress && !isUserWalletLoading) {
       try {
-        router.push('/earn')
+        router.push('/')
       } catch (err) {
         dispatch({
           type: 'error',

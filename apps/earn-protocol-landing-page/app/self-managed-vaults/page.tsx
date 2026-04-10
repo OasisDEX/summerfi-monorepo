@@ -53,8 +53,8 @@ export default function SelfManagedVaults() {
         >
           <TagButton>Self Managed Vaults</TagButton>
           <Text variant="h1">
-            <Emphasis variant="h1colorful">Unlimited access to DeFi yield,</Emphasis>
-            built for forward thinking institutions
+            <Emphasis variant="h1colorful">Unlimited access to DeFi yield,</Emphasis> built for
+            forward thinking institutions
           </Text>
           <Text
             variant="p1"
