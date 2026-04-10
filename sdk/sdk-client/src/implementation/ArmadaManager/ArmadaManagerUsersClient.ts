@@ -510,19 +510,19 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerUsersClient['getProtocolAddresses']> {
     const addressesMap = {
       8453: {
-        admiralsQuarters: '0x066bA278928cF2f502318C7f689b769F72d67809',
+        admiralsQuarters: '0xfec27FAAF888Fb4C2Ce6d51547F82E5D05F5D12d',
       },
       42161: {
-        admiralsQuarters: '0x1db04f01386c6BE2d22b7947236d8ACc05901219',
+        admiralsQuarters: '0xc098248Ec73DF55c0fb3f9bEfcF62eE4C45097D1',
       },
       1: {
-        admiralsQuarters: '0xD03bD9Ef8c72Aee3DBb5b8DF83c479D847622Dba',
+        admiralsQuarters: '0xf5A69789Bf5e62A43C47E4c8d857b8DAE14d4ab0',
       },
       146: {
-        admiralsQuarters: '0xa514a99b3584D152b2BE9cBe3e7B34Ad40954410',
+        admiralsQuarters: '0x4cEeE1b6289624d381383C1Bb42B118d5f2c3274',
       },
       999: {
-        admiralsQuarters: '0x3D4AE5aefbE0F5471Eb33BCFcBBcf6d9234D32a5',
+        admiralsQuarters: '0x2c93a68Fbe527aD1594ae0B11b50CFEcBBf3255f',
       },
     } as const
     const addresses = addressesMap[params.chainId]
