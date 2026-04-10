@@ -180,7 +180,7 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
   onSuccess,
   onError,
 }) => {
-  const { data: walletClient } = useWalletClient()
+  const { data: walletClient, promise: walletPendingPromise } = useWalletClient()
   const publicClient = usePublicClient()
   const [isSendingUserOperation, setIsSendingUserOperation] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -195,7 +195,22 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
       data: `0x${string}`
       value?: bigint
     }) => {
+      let walletClientResolved: WalletClient | null = walletClient ?? null
+
       if (!walletClient) {
+        try {
+          walletClientResolved = await walletPendingPromise
+        } catch (pendingError) {
+          const resolvedPendingError =
+            pendingError instanceof Error ? pendingError : new Error(String(pendingError))
+
+          setError(resolvedPendingError)
+          onError?.(resolvedPendingError)
+
+          throw resolvedPendingError
+        }
+      }
+      if (!walletClientResolved) {
         const missingWalletError = new Error('Wallet is not connected')
 
         setError(missingWalletError)
@@ -204,16 +219,33 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
         throw missingWalletError
       }
 
+      if (!walletClientResolved.account) {
+        const missingAccountError = new Error('No account found in wallet')
+
+        setError(missingAccountError)
+        onError?.(missingAccountError)
+
+        throw missingAccountError
+      }
+      if (!walletClientResolved.chain) {
+        const missingChainError = new Error('No chain found in wallet')
+
+        setError(missingChainError)
+        onError?.(missingChainError)
+
+        throw missingChainError
+      }
+
       try {
         setIsSendingUserOperation(true)
         setError(null)
 
-        const hash = await walletClient.sendTransaction({
-          account: walletClient.account,
+        const hash = await walletClientResolved.sendTransaction({
+          account: walletClientResolved.account,
           to: target,
           data,
           value: value ?? 0n,
-          chain: getEarnProtocolChainById(walletClient.chain.id),
+          chain: getEarnProtocolChainById(walletClientResolved.chain.id),
         })
 
         if (waitForTxn && publicClient) {
@@ -234,7 +266,7 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
         setIsSendingUserOperation(false)
       }
     },
-    [onError, onSuccess, publicClient, waitForTxn, walletClient],
+    [onError, onSuccess, publicClient, waitForTxn, walletClient, walletPendingPromise],
   )
 
   const sendUserOperation = useCallback(
