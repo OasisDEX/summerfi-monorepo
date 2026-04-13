@@ -10,7 +10,6 @@ declare const styles: {
   readonly "cardSideStacked": string;
   readonly "cardTitle": string;
   readonly "cardsList": string;
-  readonly "checkLine": string;
   readonly "checksGroup": string;
   readonly "integratorCard": string;
   readonly "integratorMetaGrid": string;

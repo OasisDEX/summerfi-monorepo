@@ -26,15 +26,8 @@ export type NavigationItemsProps = {
 export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): React.ReactNode => {
   return (
     <div className={navigationItemsStyles.navigationItemsWrapper}>
-      {items.map((item) => (
-        <Link
-          href={item.url}
-          key={`NavItems_${item.id}`}
-          prefetch={!item.prefetchDisabled}
-          target={item.target}
-          onClick={item.onClick}
-          suppressHydrationWarning
-        >
+      {items.map((item) => {
+        const linkContent = (
           <div className={navigationItemsStyles.navigationItemsItem}>
             <div className={navigationItemsStyles.navigationItemsIconWrapper}>
               <Icon iconName={item.icon} size={item.iconSize ?? 32} />
@@ -56,8 +49,31 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): R
               </Text>
             </div>
           </div>
-        </Link>
-      ))}
+        )
+
+        return item.url.startsWith('/') ? (
+          <Link
+            href={item.url}
+            key={`NavItems_${item.id}`}
+            prefetch={!item.prefetchDisabled}
+            target={item.target}
+            onClick={item.onClick}
+            suppressHydrationWarning
+          >
+            {linkContent}
+          </Link>
+        ) : (
+          <a
+            href={item.url}
+            key={`NavItems_${item.id}`}
+            target={item.target}
+            onClick={item.onClick}
+            suppressHydrationWarning
+          >
+            {linkContent}
+          </a>
+        )
+      })}
     </div>
   )
 }

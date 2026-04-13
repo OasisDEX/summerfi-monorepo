@@ -53,6 +53,7 @@ export const iconsSync = {
   augur: import('./icons/augur.svg?react') as Promise<typeof import('*.svg?react')>,
   autoBuy: import('./icons/autoBuy.svg?react') as Promise<typeof import('*.svg?react')>,
   autoSell: import('./icons/autoSell.svg?react') as Promise<typeof import('*.svg?react')>,
+  award: import('./icons/award.svg?react') as Promise<typeof import('*.svg?react')>,
   autoTakeProfit: import('./icons/takeProfit.svg?react') as Promise<typeof import('*.svg?react')>,
   bal_circle_color: import('./icons/bal_circle_color.svg?react') as Promise<
     typeof import('*.svg?react')
@@ -112,6 +113,7 @@ export const iconsSync = {
     typeof import('*.svg?react')
   >,
   chainlink: import('./icons/chainlink.svg?react') as Promise<typeof import('*.svg?react')>,
+  chart: import('./icons/chart.svg?react') as Promise<typeof import('*.svg?react')>,
   checkmark_circle: import('./icons/checkmark_circle.svg?react') as Promise<
     typeof import('*.svg?react')
   >,
@@ -474,6 +476,8 @@ export const iconsSync = {
   search_icon: import('./icons/search_icon.svg?react') as Promise<typeof import('*.svg?react')>,
   send: import('./icons/send.svg?react') as Promise<typeof import('*.svg?react')>,
   share: import('./icons/share_v2.svg?react') as Promise<typeof import('*.svg?react')>,
+  shield_ban: import('./icons/shield_ban.svg?react') as Promise<typeof import('*.svg?react')>,
+  shield_check: import('./icons/shield_check.svg?react') as Promise<typeof import('*.svg?react')>,
   sign_out: import('./icons/sign_out.svg?react') as Promise<typeof import('*.svg?react')>,
   silo: import('./icons/silo.svg?react') as Promise<typeof import('*.svg?react')>,
   sky: import('./icons/sky.svg?react') as Promise<typeof import('*.svg?react')>,

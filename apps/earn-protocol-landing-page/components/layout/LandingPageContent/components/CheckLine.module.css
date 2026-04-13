@@ -1,0 +1,13 @@
+.checkLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkLine svg {
+  opacity: 0.4;
+}
+
+.checkLineBody {
+  color: #bab8b9;
+}

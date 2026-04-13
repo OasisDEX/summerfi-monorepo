@@ -60,6 +60,8 @@ export const Audits = ({
         style={{
           maxWidth: fullWidth ? '100%' : undefined,
           width: fullWidth ? '100%' : undefined,
+          margin: fullWidth ? '0 auto' : undefined,
+          padding: fullWidth ? '0' : undefined,
         }}
       >
         {!noHeader && (
@@ -76,6 +78,8 @@ export const Audits = ({
         style={{
           maxWidth: fullWidth ? '100%' : undefined,
           width: fullWidth ? '100%' : undefined,
+          margin: fullWidth ? '0 auto' : undefined,
+          padding: fullWidth ? '0' : undefined,
         }}
       >
         {chainSecurityLogo && (

@@ -121,6 +121,8 @@ export { IllustrationCircle } from './components/molecules/IllustrationCircle/Il
 export { TokenWithNetworkIcon } from './components/molecules/TokenWithNetworkIcon/TokenWithNetworkIcon'
 export { OrderInformation } from './components/molecules/OrderInformation/OrderInformation'
 export { PositionCard } from './components/molecules/PositionCard/PositionCard'
+export { VaultCardHomepage } from './components/molecules/VaultCardHomepage/VaultCardHomepage'
+export { VaultCardsCarousel } from './components/molecules/VaultCardsCarousel/VaultCardsCarousel'
 export {
   TableCellAllocationCap,
   TableCellAllocationCapTooltipDataBlock,

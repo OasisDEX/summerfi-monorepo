@@ -48,6 +48,7 @@ export const icons = {
   augur: customLazy(() => import('./icons/augur.svg?react')) as IconExportType,
   autoBuy: customLazy(() => import('./icons/autoBuy.svg?react')) as IconExportType,
   autoSell: customLazy(() => import('./icons/autoSell.svg?react')) as IconExportType,
+  award: customLazy(() => import('./icons/award.svg?react')) as IconExportType,
   autoTakeProfit: customLazy(() => import('./icons/takeProfit.svg?react')) as IconExportType,
   bal_circle_color: customLazy(
     () => import('./icons/bal_circle_color.svg?react'),
@@ -97,6 +98,7 @@ export const icons = {
   ) as IconExportType,
   chainlink_color: customLazy(() => import('./icons/chainlink_color.svg?react')) as IconExportType,
   chainlink: customLazy(() => import('./icons/chainlink.svg?react')) as IconExportType,
+  chart: customLazy(() => import('./icons/chart.svg?react')) as IconExportType,
   checkmark_colorful: customLazy(
     () => import('./icons/checkmark_colorful.svg?react'),
   ) as IconExportType,
@@ -392,6 +394,8 @@ export const icons = {
   search_icon: customLazy(() => import('./icons/search_icon.svg?react')) as IconExportType,
   send: customLazy(() => import('./icons/send.svg?react')) as IconExportType,
   share: customLazy(() => import('./icons/share_v2.svg?react')) as IconExportType,
+  shield_ban: customLazy(() => import('./icons/shield_ban.svg?react')) as IconExportType,
+  shield_check: customLazy(() => import('./icons/shield_check.svg?react')) as IconExportType,
   sign_out: customLazy(() => import('./icons/sign_out.svg?react')) as IconExportType,
   silo: customLazy(() => import('./icons/silo.svg?react')) as IconExportType,
   sky: customLazy(() => import('./icons/sky.svg?react')) as IconExportType,

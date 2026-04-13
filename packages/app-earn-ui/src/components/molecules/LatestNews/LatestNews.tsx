@@ -51,10 +51,6 @@ export const LatestNews: (props: LatestNewsProps) => ReactNode | null = ({ news 
     }
   }, [emblaApi, onSelect])
 
-  if (!news || news.length === 0) {
-    return null
-  }
-
   return (
     <section className={styles.section}>
       <Text variant="h3" as="h3" className={styles.heading}>
@@ -63,7 +59,7 @@ export const LatestNews: (props: LatestNewsProps) => ReactNode | null = ({ news 
 
       <div className={styles.viewport} ref={emblaRef}>
         <div className={styles.container}>
-          {news.map((item) => (
+          {(news ?? []).map((item) => (
             <article className={styles.slide} key={item.id}>
               <Link href={item.url} prefetch={false} className={styles.card} target="_blank">
                 <div className={styles.media}>
