@@ -6,6 +6,7 @@ import { OracleManagerClient } from './OracleManagerClient'
 import { UsersManager } from './UsersManager'
 import type { ISDKAdminManager } from '../interfaces/ISDKAdminManager'
 import { TokensManagerClient2 } from './TokensManagerClient2'
+import { IntentSwapClient } from './IntentSwapClient'
 
 /** @see ISDKAdminManager */
 export class SDKAdminManager implements ISDKAdminManager {
@@ -15,6 +16,7 @@ export class SDKAdminManager implements ISDKAdminManager {
   public readonly armada: ArmadaManagerClient
   public readonly swaps: SwapManagerClient
   public readonly oracle: OracleManagerClient
+  public readonly intentSwaps: IntentSwapClient
 
   public constructor(params: { rpcClient: RPCMainClientType }) {
     this.chains = new ChainsManagerClient(params)
@@ -23,5 +25,6 @@ export class SDKAdminManager implements ISDKAdminManager {
     this.armada = new ArmadaManagerClient(params)
     this.swaps = new SwapManagerClient(params)
     this.oracle = new OracleManagerClient(params)
+    this.intentSwaps = new IntentSwapClient(params)
   }
 }

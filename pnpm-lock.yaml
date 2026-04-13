@@ -3120,11 +3120,17 @@ importers:
   sdk/sdk-client:
     dependencies:
       '@cowprotocol/cow-sdk':
-        specifier: ^6.3.2
-        version: 6.3.3(ethers@5.8.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+        specifier: ^7.4.1
+        version: 7.4.2(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+      '@cowprotocol/sdk-viem-adapter':
+        specifier: ^0.3.10
+        version: 0.3.10(viem@2.47.1)
       '@ethersproject/abstract-signer':
         specifier: ^5.8.0
         version: 5.8.0
+      '@summerfi/armada-protocol-abis':
+        specifier: workspace:*
+        version: link:../../armada-protocol/abis
       '@summerfi/armada-protocol-common':
         specifier: workspace:*
         version: link:../armada-protocol-common
@@ -3146,6 +3152,9 @@ importers:
       '@trpc/client':
         specifier: 11.8.0
         version: 11.8.0(@trpc/server@11.8.0)(typescript@5.9.3)
+      '@uniswap/permit2-sdk':
+        specifier: ^1.4.0
+        version: 1.4.0
     devDependencies:
       '@microsoft/api-extractor':
         specifier: ^7.52.13
@@ -3200,8 +3209,8 @@ importers:
   sdk/sdk-common:
     dependencies:
       '@cowprotocol/cow-sdk':
-        specifier: ^6.3.2
-        version: 6.3.3(ethers@5.8.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+        specifier: ^7.4.1
+        version: 7.4.2(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -3221,6 +3230,9 @@ importers:
 
   sdk/sdk-e2e:
     dependencies:
+      '@uniswap/permit2-sdk':
+        specifier: ^1.4.0
+        version: 1.4.0
       ethers:
         specifier: ^5.7.2
         version: 5.8.0
@@ -3302,8 +3314,8 @@ importers:
   sdk/sdk-server:
     dependencies:
       '@cowprotocol/cow-sdk':
-        specifier: ^6.3.2
-        version: 6.3.3(ethers@5.8.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+        specifier: ^7.4.1
+        version: 7.4.2(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
       '@summerfi/abi-provider-common':
         specifier: workspace:*
         version: link:../abi-provider-common
@@ -3581,8 +3593,8 @@ importers:
   sdk/swap-common:
     dependencies:
       '@cowprotocol/cow-sdk':
-        specifier: ^6.3.2
-        version: 6.3.3(ethers@5.8.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+        specifier: ^7.4.1
+        version: 7.4.2(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -3612,11 +3624,17 @@ importers:
         specifier: ^1.8.0
         version: 1.8.0(ethers@5.8.0)
       '@cowprotocol/cow-sdk':
-        specifier: ^6.3.2
-        version: 6.3.3(ethers@5.8.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+        specifier: ^7.4.1
+        version: 7.4.2(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+      '@cowprotocol/sdk-viem-adapter':
+        specifier: ^0.3.10
+        version: 0.3.10(viem@2.47.1)
       '@summerfi/allowance-manager-common':
         specifier: workspace:*
         version: link:../allowance-manager-common
+      '@summerfi/blockchain-client-common':
+        specifier: workspace:*
+        version: link:../blockchain-client-common
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -7207,22 +7225,6 @@ packages:
       - zod
     dev: false
 
-  /@cowprotocol/app-data@3.3.1(cross-fetch@3.2.0)(ethers@5.8.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0):
-    resolution: {integrity: sha512-1019+vlzSeKi1SMUo5isMy5Tb+mzoPPBjGHVpqgYYaLVBUhiapUFlmtleYswMkvAyMegvqaLG+ccF2emKEPPsw==}
-    peerDependencies:
-      cross-fetch: ^3.x
-      ethers: ^5.0.0
-      ipfs-only-hash: ^4.x
-      multiformats: ^9.x
-    dependencies:
-      ajv: 8.18.0
-      cross-fetch: 3.2.0
-      ethers: 5.8.0
-      ipfs-only-hash: 4.0.0
-      json-stringify-deterministic: 1.0.12
-      multiformats: 9.9.0
-    dev: false
-
   /@cowprotocol/contracts@1.8.0(ethers@5.8.0):
     resolution: {integrity: sha512-rMEHo1UBB6k4kRoWejHZNGggg6IBVt7vAd8x0FhEvjxhbq3zlAex61f9HpAcDExJNuvfwwDjsOc/7UGztCzhSw==}
     peerDependencies:
@@ -7231,31 +7233,120 @@ packages:
       ethers: 5.8.0
     dev: false
 
-  /@cowprotocol/cow-sdk@6.3.3(ethers@5.8.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0):
-    resolution: {integrity: sha512-34fy9xdmWn2/4LBEP7vPYG5WBMBHdc45ajaETt2RnpNIJYxHt/0IYjBKIdDw4QT73JVEo6+1TMSBUha1eSMn+A==}
-    engines: {node: '>=16.14'}
+  /@cowprotocol/cow-sdk@7.4.2(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0):
+    resolution: {integrity: sha512-rgsautC9YJILjLdF0RIMqKQIMS0K32USECusI2U5634fyBm1zI3ao7HTpcZ0gJ7FiGYMhDn+D6fhM0rk7wN/DA==}
     peerDependencies:
-      ethers: ^5.7.2
+      '@openzeppelin/merkle-tree': ^1.x
+      cross-fetch: ^3.x
+      ipfs-only-hash: ^4.x
+      multiformats: ^9.x
+    peerDependenciesMeta:
+      '@openzeppelin/merkle-tree':
+        optional: true
+      ipfs-only-hash:
+        optional: true
+      multiformats:
+        optional: true
     dependencies:
-      '@cowprotocol/app-data': 3.3.1(cross-fetch@3.2.0)(ethers@5.8.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
-      '@cowprotocol/contracts': 1.8.0(ethers@5.8.0)
-      '@ethersproject/abstract-signer': 5.8.0
-      '@openzeppelin/merkle-tree': 1.0.8
-      '@weiroll/weiroll.js': 0.3.0
+      '@cowprotocol/sdk-app-data': 4.6.7(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+      '@cowprotocol/sdk-common': 0.7.0
+      '@cowprotocol/sdk-config': 0.10.0
+      '@cowprotocol/sdk-contracts-ts': 1.8.0
+      '@cowprotocol/sdk-order-book': 1.1.2
+      '@cowprotocol/sdk-order-signing': 0.1.37
+      '@cowprotocol/sdk-trading': 1.0.3(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
       cross-fetch: 3.2.0
-      deepmerge: 4.3.1
-      ethers: 5.8.0
+      ipfs-only-hash: 4.0.0
+      multiformats: 9.9.0
+    transitivePeerDependencies:
+      - ajv
+      - encoding
+    dev: false
+
+  /@cowprotocol/sdk-app-data@4.6.7(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0):
+    resolution: {integrity: sha512-5jI2xjuTEYvN8gAlzBqxsz5yWWhD11faRbnpvANhfDFIeFzEhhXryQxm6WQlBDoXEehZFG7CL033u91u4IVMAA==}
+    peerDependencies:
+      ajv: ^8.x
+      cross-fetch: ^3.x
+      ipfs-only-hash: ^4.x
+      multiformats: ^9.x
+    dependencies:
+      '@cowprotocol/sdk-common': 0.7.0
+      ajv: 8.18.0
+      cross-fetch: 3.2.0
+      ipfs-only-hash: 4.0.0
+      json-stringify-deterministic: 1.0.12
+      multiformats: 9.9.0
+    dev: false
+
+  /@cowprotocol/sdk-common@0.7.0:
+    resolution: {integrity: sha512-cJZ8qdDXFu4JWNFdbGvM9nspfTTxyeuQvhbbh20boztJ+O7KfanjuW4/pePkZRJAs0O8e187Vgih2nKqQnH3EA==}
+    dependencies:
+      '@cowprotocol/sdk-config': 0.10.0
+    dev: false
+
+  /@cowprotocol/sdk-config@0.10.0:
+    resolution: {integrity: sha512-pLOsrqF6vs8EUCv8VpwEJ4VPcu2MPIphWo8nwdnvFg7ck23nseV3zBGlpyuftyae+fE9SnG71dPZNp8YlCZTPQ==}
+    dependencies:
       exponential-backoff: 3.1.3
-      graphql: 16.11.0
-      graphql-request: 6.1.0(graphql@16.11.0)
+      limiter: 2.1.0
+    dev: false
+
+  /@cowprotocol/sdk-contracts-ts@1.8.0:
+    resolution: {integrity: sha512-C+h34iYCYZWbuWT1u+taCegtqxewPaBmKGLLU7YLX7IqOGHqZ9VM2Opavy0iS52BLmqyXH0V2deb+g9QbDcq1Q==}
+    dependencies:
+      '@cowprotocol/sdk-common': 0.7.0
+      '@cowprotocol/sdk-config': 0.10.0
+    dev: false
+
+  /@cowprotocol/sdk-order-book@1.1.2:
+    resolution: {integrity: sha512-KDMmlg1EwU5ATOdkttPuxluI1SNPQ73IQaMkacRAw36QUF1FVPaLLUEEZyrBSOABxlmSu4jwpZBV7mPnLATZAQ==}
+    dependencies:
+      '@cowprotocol/sdk-common': 0.7.0
+      '@cowprotocol/sdk-config': 0.10.0
+      cross-fetch: 3.2.0
+      exponential-backoff: 3.1.3
       limiter: 3.0.0
     transitivePeerDependencies:
-      - bufferutil
+      - encoding
+    dev: false
+
+  /@cowprotocol/sdk-order-signing@0.1.37:
+    resolution: {integrity: sha512-aY0z0keHFy7Ss1CTQv6eAZQ7s4B1E9HullWq8NeofFKs+1ZAuQfs+WebHaxPzp2q+YahZ9Ai9r/rvwdHIdKCOQ==}
+    dependencies:
+      '@cowprotocol/sdk-common': 0.7.0
+      '@cowprotocol/sdk-config': 0.10.0
+      '@cowprotocol/sdk-contracts-ts': 1.8.0
+      '@cowprotocol/sdk-order-book': 1.1.2
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@cowprotocol/sdk-trading@1.0.3(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0):
+    resolution: {integrity: sha512-Wkfd1HjweiS8YYvMnA4o/e+wfrD8BjkPfoUZ2GYCz8P8AZvVLmrraQxAGYO3N7QQSE7uRILqvBwPIFhcGrdZvw==}
+    dependencies:
+      '@cowprotocol/sdk-app-data': 4.6.7(ajv@8.18.0)(cross-fetch@3.2.0)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+      '@cowprotocol/sdk-common': 0.7.0
+      '@cowprotocol/sdk-config': 0.10.0
+      '@cowprotocol/sdk-contracts-ts': 1.8.0
+      '@cowprotocol/sdk-order-book': 1.1.2
+      '@cowprotocol/sdk-order-signing': 0.1.37
+      deepmerge: 4.3.1
+    transitivePeerDependencies:
+      - ajv
+      - cross-fetch
       - encoding
       - ipfs-only-hash
       - multiformats
-      - supports-color
-      - utf-8-validate
+    dev: false
+
+  /@cowprotocol/sdk-viem-adapter@0.3.10(viem@2.47.1):
+    resolution: {integrity: sha512-94jspduAor+aPMcbSO1zIFKDHQFJ3SSLEtyT+/BRaLToTDWUjXO7ePYsf4+catzN4vUax5wOxUx8S3PLHc7meg==}
+    peerDependencies:
+      viem: ^2.28.4
+    dependencies:
+      '@cowprotocol/sdk-common': 0.7.0
+      viem: 2.47.1(typescript@5.9.3)
     dev: false
 
   /@cspotcode/source-map-support@0.8.1:
@@ -11111,16 +11202,6 @@ packages:
       react-dom: 19.2.3(react@19.2.3)
     dev: false
 
-  /@metamask/abi-utils@2.0.4:
-    resolution: {integrity: sha512-StnIgUB75x7a7AgUhiaUZDpCsqGp7VkNnZh2XivXkJ6mPkE83U8ARGQj5MbRis7VJY8BC5V1AbB1fjdh0hupPQ==}
-    engines: {node: '>=16.0.0'}
-    dependencies:
-      '@metamask/superstruct': 3.2.1
-      '@metamask/utils': 9.3.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /@metamask/eth-json-rpc-provider@1.0.1:
     resolution: {integrity: sha512-whiUMPlAOrVGmX8aKYVPvlKyG4CpQXiNNyt74vE1xb5sPvmx5oA7B/kOi/JdBvhGQq97U1/AVdXEdk2zkP8qyA==}
     engines: {node: '>=14.0.0'}
@@ -11805,13 +11886,6 @@ packages:
     dependencies:
       '@noble/hashes': 1.7.2
 
-  /@noble/curves@1.9.0:
-    resolution: {integrity: sha512-7YDlXiNMdO1YZeH6t/kvopHHbIZzlxrCV9WLqCY6QhcXOoXiNCMDqJIglZ9Yjx5+w7Dz30TITFrlTjnRg7sKEg==}
-    engines: {node: ^14.21.3 || >=16}
-    dependencies:
-      '@noble/hashes': 1.8.0
-    dev: false
-
   /@noble/curves@1.9.1:
     resolution: {integrity: sha512-k11yZxZg+t+gWvBbIswW0yoJlu8cHOC7dhunwOzoWH/mXGBiYyR4YY6hAEK/3EUs4UpB8la1RfdRpeGsFHkWsA==}
     engines: {node: ^14.21.3 || >=16}
@@ -12266,15 +12340,6 @@ packages:
   /@openzeppelin/contracts@4.9.6:
     resolution: {integrity: sha512-xSmezSupL+y9VkHZJGDoCBpmnB2ogM13ccaYDWqJTfS3dbuHkgjuwDFUmaFauBCboQMGB/S5UqUl2y54X99BmA==}
     dev: true
-
-  /@openzeppelin/merkle-tree@1.0.8:
-    resolution: {integrity: sha512-E2c9/Y3vjZXwVvPZKqCKUn7upnvam1P1ZhowJyZVQSkzZm5WhumtaRr+wkUXrZVfkIc7Gfrl7xzabElqDL09ow==}
-    dependencies:
-      '@metamask/abi-utils': 2.0.4
-      ethereum-cryptography: 3.2.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
 
   /@oxc-parser/binding-darwin-arm64@0.68.1:
     resolution: {integrity: sha512-Y5FBQyPCLsldAZYEd+oZcUboXwpcLf42Lakx3EYtiYDbuK9M3IqBXMGxdM07P4PfGQrKYn6/cC8xAqkVHnbWPw==}
@@ -17409,6 +17474,16 @@ packages:
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
     dev: true
 
+  /@uniswap/permit2-sdk@1.4.0:
+    resolution: {integrity: sha512-l/aGhfhB93M76vXs4eB8QNwhELE6bs66kh7F1cyobaPtINaVpMmlJv+j3KmHeHwAZIsh7QXyYzhDxs07u0Pe4Q==}
+    dependencies:
+      ethers: 5.8.0
+      tiny-invariant: 1.3.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
   /@unrs/resolver-binding-android-arm-eabi@1.11.1:
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
     cpu: [arm]
@@ -19238,16 +19313,6 @@ packages:
     dependencies:
       '@walletconnect/window-getters': 1.0.1
       tslib: 1.14.1
-    dev: false
-
-  /@weiroll/weiroll.js@0.3.0:
-    resolution: {integrity: sha512-RV+iKtY/V/Oc0zoPFPaNGAkOOOV89uGdiocxWd4HT5XNdGob0/XI+07GtP0Dv3B7QLwLTs8QMNKPvsH846svrw==}
-    engines: {node: '>=14'}
-    dependencies:
-      ethers: 5.8.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
     dev: false
 
   /@whatwg-node/disposablestack@0.0.6:
@@ -23718,17 +23783,6 @@ packages:
       '@scure/bip32': 1.4.0
       '@scure/bip39': 1.3.0
 
-  /ethereum-cryptography@3.2.0:
-    resolution: {integrity: sha512-Urr5YVsalH+Jo0sYkTkv1MyI9bLYZwW8BENZCeE1QYaTHETEYx0Nv/SVsWkSqpYrzweg6d8KMY1wTjH/1m/BIg==}
-    engines: {node: ^14.21.3 || >=16, npm: '>=9'}
-    dependencies:
-      '@noble/ciphers': 1.3.0
-      '@noble/curves': 1.9.0
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
-    dev: false
-
   /ethereumjs-util@7.1.5:
     resolution: {integrity: sha512-SDl5kKrQAudFBUe5OJM9Ac6WmMyYmXX/6sTmLZ3ffG2eY6ZIGBes3pEDxNN6V72WyOw4CPD5RomKdsa8DAAwLg==}
     engines: {node: '>=10.0.0'}
@@ -26997,6 +27051,10 @@ packages:
     resolution: {integrity: sha512-zriv+MY+61RXT0QsrO1ZJtL5umouqqSWmCGBkp2wJm35kniunBAA4qhUKx8Lvg/QcwrF9xuw9E6PkevKFf4boQ==}
     dev: false
 
+  /just-performance@4.3.0:
+    resolution: {integrity: sha512-L7RjvtJsL0QO8xFs5wEoDDzzJwoiowRw6Rn/GnvldlchS2JQr9wFYPiwZcDfrbbujEKqKN0tvENdbjXdYhDp5Q==}
+    dev: false
+
   /keccak@3.0.4:
     resolution: {integrity: sha512-3vKuW0jV8J3XNTzvfyicFR5qvxrSAGl7KIhvgOu5cmWwM7tZRj3fMbj/pfIf4be7aznbc+prBWGjywox/g2Y6Q==}
     engines: {node: '>=10.0.0'}
@@ -27301,6 +27359,12 @@ packages:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
     dev: true
+
+  /limiter@2.1.0:
+    resolution: {integrity: sha512-361TYz6iay6n+9KvUUImqdLuFigK+K79qrUtBsXhJTLdH4rIt/r1y8r1iozwh8KbZNpujbFTSh74mJ7bwbAMOw==}
+    dependencies:
+      just-performance: 4.3.0
+    dev: false
 
   /limiter@3.0.0:
     resolution: {integrity: sha512-hev7DuXojsTFl2YwyzUJMDnZ/qBDd3yZQLSH3aD4tdL1cqfc3TMnoecEJtWFaQFdErZsKoFMBTxF/FBSkgDbEg==}
@@ -29092,6 +29156,27 @@ packages:
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.3(typescript@5.9.3)(zod@3.25.61)
+      eventemitter3: 5.0.1
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - zod
+    dev: false
+
+  /ox@0.14.0(typescript@5.9.3):
+    resolution: {integrity: sha512-WLOB7IKnmI3Ol6RAqY7CJdZKl8QaI44LN91OGF1061YIeN6bL5IsFcdp7+oQShRyamE/8fW/CBRWhJAOzI35Dw==}
+    peerDependencies:
+      typescript: '>=5.4.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.1
+      '@noble/ciphers': 1.3.0
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+      abitype: 1.2.3(typescript@5.9.3)(zod@4.3.6)
       eventemitter3: 5.0.1
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -34285,6 +34370,29 @@ packages:
       abitype: 1.2.3(typescript@5.9.3)(zod@3.25.61)
       isows: 1.0.7(ws@8.18.3)
       ox: 0.11.1(typescript@5.9.3)(zod@3.25.61)
+      typescript: 5.9.3
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+    dev: false
+
+  /viem@2.47.1(typescript@5.9.3):
+    resolution: {integrity: sha512-frlK109+X5z2vlZeIGKa6Rxev6CcIpumV/VVhaIPc/QFotiB6t/CgUwkMlYfr4F2YNBZZ2l6jguWz2sY1XrQHw==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+      abitype: 1.2.3(typescript@5.9.3)(zod@4.3.6)
+      isows: 1.0.7(ws@8.18.3)
+      ox: 0.14.0(typescript@5.9.3)
       typescript: 5.9.3
       ws: 8.18.3
     transitivePeerDependencies:

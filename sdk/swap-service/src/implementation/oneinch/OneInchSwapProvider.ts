@@ -314,8 +314,7 @@ export class OneInchSwapProvider
       !ONE_INCH_API_URL ||
       !ONE_INCH_API_KEY ||
       !ONE_INCH_API_VERSION ||
-      ONE_INCH_ALLOWED_SWAP_PROTOCOLS == null ||
-      !ONE_INCH_SWAP_CHAIN_IDS
+      ONE_INCH_ALLOWED_SWAP_PROTOCOLS == null
     ) {
       console.error(
         JSON.stringify(
@@ -324,7 +323,6 @@ export class OneInchSwapProvider
             ONE_INCH_API_KEY,
             ONE_INCH_API_VERSION,
             ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
-            ONE_INCH_SWAP_CHAIN_IDS,
           }),
           null,
           2,

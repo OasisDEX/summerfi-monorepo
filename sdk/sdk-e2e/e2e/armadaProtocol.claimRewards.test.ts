@@ -47,7 +47,7 @@ describe('Armada Protocol - Claim Rewards', () => {
     const userSendTxTool = createSendTransactionTool({
       chainId,
       rpcUrl: RpcUrls[chainId],
-      senderAddress: userAddress,
+      senderAddressValue: userAddress,
       signerPrivateKey,
       simulateOnly,
     })

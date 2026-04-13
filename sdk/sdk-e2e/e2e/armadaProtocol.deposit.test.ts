@@ -29,7 +29,7 @@ describe('Armada Protocol - Deposit', () => {
     swapToSymbol?: string
     stake?: boolean
     referralCode?: string
-    signerAddressValue?: AddressValue
+    senderAddressValue?: AddressValue
     signerPrivateKey?: HexData
     simulateOnly: boolean
   }[] = [
@@ -44,7 +44,7 @@ describe('Armada Protocol - Deposit', () => {
     {
       chainConfig: InstiTestConfigs[TestClientIds.ACME],
       amountValue: '1',
-      signerAddressValue: SharedConfig.e2eUserAddressValue,
+      senderAddressValue: SharedConfig.e2eUserAddressValue,
       signerPrivateKey: SharedConfig.e2eUserPrivateKey,
       simulateOnly: true,
     },
@@ -59,19 +59,20 @@ describe('Armada Protocol - Deposit', () => {
         swapToSymbol,
         stake = false,
         referralCode,
-        signerAddressValue = SharedConfig.testUserAddressValue,
+        senderAddressValue = SharedConfig.testUserAddressValue,
         signerPrivateKey = SharedConfig.testUserPrivateKey,
         simulateOnly = true,
       }) => {
         const { rpcUrl, chainId, fleetAddressValue, symbol } = chainConfig
 
         const chainInfo = getChainInfoByChainId(chainId)
-        const user = User.createFromEthereum(chainId, signerAddressValue)
+        const user = User.createFromEthereum(chainId, senderAddressValue)
         const userSendTxTool = createSendTransactionTool({
           chainId,
           rpcUrl,
           signerPrivateKey,
           simulateOnly,
+          senderAddressValue,
         })
 
         const vaultId = ArmadaVaultId.createFrom({

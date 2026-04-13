@@ -7,23 +7,25 @@ import {
 } from '@summerfi/sdk-common'
 import { RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
 import assert from 'assert'
-import { makeSDKWithSigner } from '@summerfi/sdk-client'
-import { Wallet } from 'ethers'
-import { createSendTransactionTool } from '@summerfi/testing-utils'
+import { makeSDK } from '@summerfi/sdk-client'
+import {
+  createSendTransactionTool,
+  getPublicClientForChain,
+  getWalletClientForChain,
+} from '@summerfi/testing-utils'
 
 jest.setTimeout(300000)
 
 /**
  * @group e2e
  */
-describe('Intent swaps', () => {
+describe('Intent swaps: Swap', () => {
   const signerPrivateKey = SharedConfig.testUserPrivateKey
-  const signerAddressValue = SharedConfig.testUserAddressValue
+  const senderAddressValue = SharedConfig.testUserAddressValue
 
   // Configure test scenarios here
   const intentSwapScenarios: {
     chainId: ChainId
-    rpcUrl: string
     fromSymbol: string
     amountValue: string
     toSymbol: string
@@ -31,50 +33,49 @@ describe('Intent swaps', () => {
     cancelOrder: boolean
     limitPrice?: string
   }[] = [
-    {
-      chainId: ChainIds.Base,
-      rpcUrl: RpcUrls.Base,
-      fromSymbol: 'ETH',
-      amountValue: '0.0005',
-      toSymbol: 'USDC',
-      limitPrice: '4720',
-      sendOrder: true,
-      cancelOrder: true,
-    },
     // {
-    //   fromSymbol: 'USDC',
-    //   amountValue: '4',
-    //   toSymbol: 'ETH',
-    //   limitPrice: '0.0003',
+    //   chainId: ChainIds.Base,
+    //   fromSymbol: 'ETH',
+    //   amountValue: '0.0005',
+    //   toSymbol: 'USDC',
+    //   limitPrice: '4720',
     //   sendOrder: true,
     //   cancelOrder: true,
     // },
+    {
+      chainId: ChainIds.Base,
+      fromSymbol: 'USDC',
+      amountValue: '5',
+      toSymbol: 'ETH',
+      // limitPrice: '0.0003',
+      sendOrder: true,
+      cancelOrder: true,
+    },
   ]
 
   describe.each(intentSwapScenarios)('with scenario %#', (scenario) => {
-    const {
-      chainId,
-      rpcUrl,
-      fromSymbol,
-      amountValue,
-      toSymbol,
-      limitPrice,
-      sendOrder,
-      cancelOrder,
-    } = scenario
+    const { chainId, fromSymbol, amountValue, toSymbol, limitPrice, sendOrder, cancelOrder } =
+      scenario
+
+    const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
+    const walletClient = getWalletClientForChain(chainId, RpcUrls[chainId], signerPrivateKey)
+    if (walletClient.account == null) {
+      throw new Error('Wallet client account is null')
+    }
 
     it('should complete intent swap flow', async () => {
-      const sdk = makeSDKWithSigner({
+      const sdk = makeSDK({
         apiDomainUrl: SDKApiUrl,
-        signer: new Wallet(signerPrivateKey),
       })
       const userSendTxTool = createSendTransactionTool({
         chainId,
-        rpcUrl,
+        rpcUrl: RpcUrls[chainId],
         signerPrivateKey,
+        senderAddressValue,
+        simulateOnly: false,
       })
 
-      const userAddress = Address.createFromEthereum({ value: signerAddressValue })
+      const userAddress = Address.createFromEthereum({ value: senderAddressValue })
 
       // for ETH, we cannot use ETH directly we need to use WETH
       // there is eth-flow but only smart wallets and no limit orders
@@ -93,13 +94,12 @@ describe('Intent swaps', () => {
         toToken,
         limitPrice,
       })
-      console.log('Sell Order Quote:', sellQuote.order)
+      console.log('Sell Order Quote:', fromAmount.toString(), '=>', sellQuote.toAmount.toString())
 
       if (sendOrder === false) {
         console.log('Skipping sending order')
         return
       }
-
       // loop to check allowance, wrap if needed, and finally send order
       let orderId: string | undefined
       do {
@@ -108,6 +108,8 @@ describe('Intent swaps', () => {
           fromAmount: sellQuote.fromAmount,
           chainId,
           order: sellQuote.order,
+          walletClient,
+          publicClient,
         })
         orderId = await handleOrderReturn({
           orderReturn,
@@ -132,6 +134,8 @@ describe('Intent swaps', () => {
       const cancelResult = await sdk.intentSwaps.cancelOrder({
         chainId,
         orderId: orderId,
+        walletClient,
+        publicClient,
       })
       console.log('Cancel Order:', cancelResult)
     })

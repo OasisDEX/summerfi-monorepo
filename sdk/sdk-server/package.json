@@ -17,7 +17,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@cowprotocol/cow-sdk": "^6.3.2",
+    "@cowprotocol/cow-sdk": "^7.4.1",
     "@summerfi/abi-provider-common": "workspace:*",
     "@summerfi/abi-provider-service": "workspace:*",
     "@summerfi/address-book-common": "workspace:*",

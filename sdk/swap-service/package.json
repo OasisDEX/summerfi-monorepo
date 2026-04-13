@@ -14,15 +14,16 @@
     "watch": "tsc -w",
     "test": "jest tests/ --passWithNoTests",
     "testw": "jest --watch",
-    "e2e": "jest e2e/",
     "build": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@cowprotocol/contracts": "^1.8.0",
-    "@cowprotocol/cow-sdk": "^6.3.2",
+    "@cowprotocol/cow-sdk": "^7.4.1",
+    "@cowprotocol/sdk-viem-adapter": "^0.3.10",
     "@summerfi/allowance-manager-common": "workspace:*",
+    "@summerfi/blockchain-client-common": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",

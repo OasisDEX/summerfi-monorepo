@@ -1,5 +1,6 @@
-import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
+import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import {
   Address,
@@ -12,6 +13,7 @@ import {
   type ITokenAmount,
   getChainInfoByChainId,
   NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+  type IPrice,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase, type IManagerProvider } from '@summerfi/sdk-server-common'
 import { type IIntentSwapProvider } from '@summerfi/swap-common'
@@ -27,7 +29,10 @@ import {
   ETH_FLOW_ADDRESSES,
   WRAPPED_NATIVE_CURRENCIES,
   COW_PROTOCOL_VAULT_RELAYER_ADDRESS,
+  type OrderParameters,
+  type LimitOrderParameters,
 } from '@cowprotocol/cow-sdk'
+
 import { encodeFunctionData, formatEther } from 'viem'
 import { invalidateOrderAbi } from './invalidateOrderAbi'
 import { BigNumber } from 'bignumber.js'
@@ -56,6 +61,8 @@ export class CowSwapProvider
   private readonly _supportedChainIds: SupportedChainId[]
   private readonly _allowanceManager: IAllowanceManager
   private readonly _tokensManager: ITokensManager
+  private readonly _blockchainClientProvider: IBlockchainClientProvider
+  private readonly _apiKey: string
 
   /** CONSTRUCTOR */
 
@@ -63,14 +70,17 @@ export class CowSwapProvider
     configProvider: IConfigurationProvider
     allowanceManager: IAllowanceManager
     tokensManager: ITokensManager
+    blockchainClientProvider: IBlockchainClientProvider
   }) {
     super({ ...params, type: IntentSwapProviderType.CowSwap })
 
     this._allowanceManager = params.allowanceManager
     this._tokensManager = params.tokensManager
+    this._blockchainClientProvider = params.blockchainClientProvider
     this._supportedChainIds = ALL_SUPPORTED_CHAIN_IDS.filter((chainId) =>
       isChainId(chainId),
     ) as SupportedChainId[]
+    this._apiKey = this.configProvider.getConfigurationItem({ name: 'COW_SWAP_API_KEY' })
   }
 
   /** PUBLIC */
@@ -94,6 +104,10 @@ export class CowSwapProvider
     const buyTokenAddress = params.toToken.address.value
 
     const sellAmount = params.fromAmount.toSolidityValue().toString()
+    if (BigInt(sellAmount) <= 0n) {
+      throw new Error('Sell amount must be greater than 0')
+    }
+
     const from = params.sender.value
     // If receiver is not provided, use the from address as the receiver
     const receiver = params.receiver?.value ?? params.sender.value
@@ -101,14 +115,24 @@ export class CowSwapProvider
     const quoteRequest: OrderQuoteRequest = {
       sellToken: sellTokenAddress,
       buyToken: buyTokenAddress,
-      sellAmountBeforeFee: sellAmount,
-      kind: OrderQuoteSideKindSell.SELL,
       from,
       receiver,
+      sellAmountBeforeFee: sellAmount,
+      kind: OrderQuoteSideKindSell.SELL,
+      validFor: params.validFor, // Quote valid for 3 * 60 seconds
     }
 
-    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
-    const { quote } = await orderBookApi.getQuote(quoteRequest)
+    LoggingService.debug('Fetching quote from CowSwap with request:', quoteRequest)
+
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
+    let quote: OrderParameters | LimitOrderParameters
+    try {
+      const { quote: fetchedQuote } = await orderBookApi.getQuote(quoteRequest)
+      quote = fetchedQuote
+    } catch (e) {
+      LoggingService.error('Error fetching quote from CowSwap:', e)
+      throw new Error('Failed to fetch quote from CowSwap')
+    }
 
     const order: UnsignedOrder = {
       ...quote,
@@ -118,32 +142,31 @@ export class CowSwapProvider
       partiallyFillable: params.partiallyFillable ?? false,
     }
 
-    let buyAmount = TokenAmount.createFromBaseUnit({
-      token: params.toToken,
-      amount: quote.buyAmount,
+    LoggingService.debug('Received quote from CowSwap:', {
+      ...quote,
+    })
+
+    const fee = TokenAmount.createFromBaseUnit({
+      token: params.fromAmount.token,
+      amount: order.feeAmount,
     })
 
     const fromAmountBN = new BigNumber(params.fromAmount.amount)
 
+    let minimumAmount = TokenAmount.createFromBaseUnit({
+      token: params.toToken,
+      // Apply slippage tolerance to the buy amount, slippage in percentage (e.g. 1 for 1%)
+      amount: new BigNumber(order.buyAmount)
+        .multipliedBy(1 - (params.slippagePercentage ?? 1) / 100)
+        .integerValue(BigNumber.ROUND_FLOOR)
+        .toString(),
+    })
     const quotePriceValue =
       fromAmountBN.isZero() || fromAmountBN.isNaN() || fromAmountBN.isNegative()
         ? '0'
-        : new BigNumber(buyAmount.amount).dividedBy(fromAmountBN).toString()
+        : new BigNumber(minimumAmount.amount).dividedBy(fromAmountBN).toString()
 
-    const quotePrice = Price.createFrom({
-      value: quotePriceValue,
-      base: params.fromAmount.token,
-      quote: params.toToken,
-    })
-    LoggingService.debug(
-      'Selling:',
-      params.fromAmount.toString(),
-      '\nQuote buy amount:',
-      buyAmount.toString(),
-      '\nQuote price:',
-      quotePrice.toString(),
-    )
-
+    let limitPrice: IPrice
     if (params.limitPrice) {
       // Calculate new buy amount for the given limit price
       // newBuyAmount = fromAmount * limitPrice
@@ -154,15 +177,34 @@ export class CowSwapProvider
         '\nLimit buy amount:',
         limitBuyAmount.toString(),
       )
-
-      order.buyAmount = limitBuyAmount.toSolidityValue().toString()
-      buyAmount = limitBuyAmount
+      minimumAmount = limitBuyAmount
+      limitPrice = params.limitPrice
+    } else {
+      limitPrice = Price.createFrom({
+        value: quotePriceValue,
+        base: params.fromAmount.token,
+        quote: params.toToken,
+      })
     }
+
+    LoggingService.debug(
+      'Selling:',
+      params.fromAmount.toString(),
+      '\nQuote minimum amount:',
+      minimumAmount.toString(),
+      '\nQuote limit price:',
+      limitPrice.toString(),
+      '\nQuote valid to:',
+      new Date(order.validTo * 1000).toLocaleString(),
+      '\nOrder fee:',
+      fee.toString(),
+    )
 
     return {
       providerType: IntentSwapProviderType.CowSwap,
       fromAmount: params.fromAmount,
-      toAmount: buyAmount,
+      toAmount: minimumAmount,
+      limitPrice,
       validTo: quote.validTo,
       order,
     }
@@ -174,6 +216,12 @@ export class CowSwapProvider
     const supportedChainId = this._assertSupportedChainId(chainId)
     const chainInfo = getChainInfoByChainId(supportedChainId)
 
+    LoggingService.debug('Sending order to CowSwap with parameters:', {
+      chainId,
+      order,
+      sender: sender.toString(),
+      sellAmount: formatEther(BigInt(order.sellAmount)),
+    })
     // Handle native currency wrapping if needed
     if (params.fromAmount.token.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
       // check balance of wrapped native currency
@@ -183,9 +231,8 @@ export class CowSwapProvider
         address: Address.createFromEthereum({ value: wrappedNativeCurrencyAddress }),
         walletAddress: Address.createFromEthereum({ value: sender.value }),
       })
-      LoggingService.debug({
+      LoggingService.debug('Checking native currency balance', {
         wrappedNativeCurrencyBalance: wrappedNativeCurrencyBalance.toString(),
-        sellAmount: formatEther(BigInt(order.sellAmount)),
       })
       // if wrapped native currency balance is less than sell amount, need to wrap more
       if (BigInt(wrappedNativeCurrencyBalance.toSolidityValue()) < BigInt(order.sellAmount)) {
@@ -196,10 +243,8 @@ export class CowSwapProvider
           address: Address.createFromEthereum({ value: NATIVE_CURRENCY_ADDRESS_LOWERCASE }),
           walletAddress: Address.createFromEthereum({ value: sender.value }),
         })
-        LoggingService.debug({
-          wrappedNativeCurrencyBalance: wrappedNativeCurrencyBalance.toString(),
+        LoggingService.debug('Need to wrap more native currency', {
           nativeCurrencyBalance: nativeCurrencyBalance.toString(),
-          sellAmount: formatEther(BigInt(order.sellAmount)),
         })
         // if native currency balance + wrapped native currency balance < sell amount, cannot wrap enough
         if (
@@ -213,7 +258,11 @@ export class CowSwapProvider
         } else {
           // return transaction info to wrap required amount of native currency
           // amount to wrap = sell amount - wrapped native currency balance
-
+          LoggingService.debug('Returning transaction info to wrap native currency', {
+            amountToWrap: formatEther(
+              BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.toSolidityValue()),
+            ),
+          })
           return {
             status: CowSwapSendOrderStatus.WrapToNative,
             transactionInfo: {
@@ -254,14 +303,21 @@ export class CowSwapProvider
     })
 
     if (approval) {
+      LoggingService.debug('Returning transaction info for approval', {
+        spender: this._getCowAddress(supportedChainId, 'relayer').toString(),
+        amount: sellAmount.toString(),
+      })
       return {
         status: CowSwapSendOrderStatus.AllowanceNeeded,
         transactionInfo: approval,
       }
     }
 
-    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
 
+    LoggingService.debug('Sending order to CowSwap API', {
+      order,
+    })
     try {
       const orderId = await orderBookApi.sendOrder({
         ...order,
@@ -275,9 +331,9 @@ export class CowSwapProvider
         orderId: orderId,
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      LoggingService.error('Error sending order to CowSwap:', e?.body?.errorType)
-      throw new Error(`Failed to send order: ${e?.body?.errorType}`)
+    } catch (e) {
+      LoggingService.error('Error sending order to CowSwap:', e)
+      throw new Error(`Failed to send order`)
     }
   }
 
@@ -285,24 +341,24 @@ export class CowSwapProvider
   cancelOrder: IIntentSwapProvider['cancelOrder'] = async (params) => {
     const { chainId, orderId, signingResult } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
-
-    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
-
     const orderUids = [orderId]
 
+    LoggingService.debug('Cancelling order(s) on CowSwap with order ID(s):', orderUids)
     try {
+      const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
+
       const cancellationsResult = await orderBookApi.sendSignedOrderCancellations({
         ...signingResult,
         orderUids,
       })
 
       const result = cancellationsResult + ' order(s) ' + orderUids.join(', ')
+      LoggingService.debug('Order cancellation result:', result)
 
       return { result }
     } catch (e) {
-      throw new Error(
-        `Failed to cancel order(s) ${orderUids.join(', ')}: ${this._parseErrorType()}`,
-      )
+      LoggingService.error('Error cancelling order(s) on CowSwap:', e)
+      throw new Error(`Failed to cancel order(s) ${orderUids.join(', ')}`)
     }
   }
 
@@ -336,17 +392,21 @@ export class CowSwapProvider
     const { orderId, chainId } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
 
-    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
 
     // fetch two promises in parallel
     const [order /**trades*/] = await Promise.all([
       orderBookApi.getOrder(orderId),
-      orderBookApi.getTrades({ orderUid: orderId }),
-    ])
+      // orderBookApi.getTrades({ orderUid: orderId }),
+    ]).catch((e) => {
+      LoggingService.error('Error checking order on CowSwap:', e)
+      return [null]
+    })
 
     if (!order) {
       return null
     }
+
     return {
       order,
     }
@@ -359,7 +419,7 @@ export class CowSwapProvider
    * @param errorDescription The error description from CowSwap
    * @returns The parsed error type
    */
-  private _parseErrorType(): SwapErrorType {
+  private _parseErrorType(_e: unknown): SwapErrorType {
     return SwapErrorType.Unknown
   }
 

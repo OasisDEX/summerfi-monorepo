@@ -16,6 +16,7 @@ import {
   StakeTransactionInfo,
   UnstakeTransactionInfo,
   ApproveTransactionInfo,
+  type Permit2AuthorizationTransactionInfo,
 } from '@summerfi/sdk-common'
 import { ChainId } from '@summerfi/serverless-shared'
 import { EarnAppConfigType, EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
@@ -218,6 +219,7 @@ export type TransactionWithStatus = (
   | DelegateTransactionInfo
   | StakeTransactionInfo
   | UnstakeTransactionInfo
+  | Permit2AuthorizationTransactionInfo
 ) & {
   executed: boolean
   txHash?: string

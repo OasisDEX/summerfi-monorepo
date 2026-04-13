@@ -1,20 +1,32 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { type QuoteData, type SdkClient } from '@summerfi/app-types'
+import { type SdkClient } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 
+type SpotPriceQuote = {
+  fromTokenAmount: {
+    amount: string
+    token: { symbol: string }
+    toBigNumber(): BigNumber
+  }
+  toTokenAmount: {
+    amount: string
+    token: { symbol: string }
+    toBigNumber(): BigNumber
+  }
+}
+
 /**
- * Hook that fetches and manages swap quotes between tokens with debounced updates.
+ * Hook that fetches token spot prices and calculates equivalent token amounts.
  *
- * @param chainId - Network chain ID where the swap will occur
- * @param fromAmount - Amount of source token to swap
+ * @param chainId - Network chain ID where the tokens exist
+ * @param fromAmount - Amount of source token to convert
  * @param fromTokenSymbol - Symbol of the source token
  * @param toTokenSymbol - Symbol of the destination token
- * @param slippage - Allowed slippage percentage for the swap
- * @param sdk - SDK client instance for fetching quotes
+ * @param sdk - SDK client instance for fetching prices
  *
  * @returns {Object} Quote information:
- *   - quote: Current quote data containing swap details and prices
+ *   - quote: Simplified quote with fromTokenAmount and toTokenAmount based on USD spot prices
  *   - quoteLoading: Boolean indicating if a quote is being fetched
  *
  * @remarks
@@ -39,10 +51,10 @@ export const useSwapQuote = ({
   sdk: SdkClient
   defaultQuoteLoading?: boolean
 }): {
-  quote: QuoteData | undefined
+  quote: SpotPriceQuote | undefined
   quoteLoading: boolean
 } => {
-  const [quote, setQuote] = useState<QuoteData>()
+  const [quote, setQuote] = useState<SpotPriceQuote>()
   const [quoteLoading, setQuoteLoading] = useState(defaultQuoteLoading)
 
   useEffect(() => {
@@ -57,14 +69,33 @@ export const useSwapQuote = ({
           symbol: toTokenSymbol,
         }),
       ])
-      const swapQuote = await sdk.getSwapQuote({
-        fromAmount: fromAmount.toString(),
-        fromToken,
-        toToken,
-        slippage,
+
+      const chainInfo = sdk.getTargetChainInfo(chainId)
+      const spotPrices = await sdk.getSpotPrices({
+        chainInfo,
+        baseTokens: [fromToken, toToken],
       })
 
-      setQuote(swapQuote)
+      const fromPrice = spotPrices.priceByAddress[fromToken.address.value.toLowerCase()]
+      const toPrice = spotPrices.priceByAddress[toToken.address.value.toLowerCase()]
+      const toAmount = new BigNumber(fromAmount)
+        .multipliedBy(fromPrice.value)
+        .dividedBy(toPrice.value)
+        .multipliedBy(new BigNumber(1).minus(new BigNumber(slippage).dividedBy(100)))
+        .toFixed()
+
+      setQuote({
+        fromTokenAmount: {
+          amount: fromAmount,
+          token: fromToken,
+          toBigNumber: () => new BigNumber(fromAmount),
+        },
+        toTokenAmount: {
+          amount: toAmount,
+          token: toToken,
+          toBigNumber: () => new BigNumber(toAmount),
+        },
+      })
     }
 
     if (new BigNumber(fromAmount).isGreaterThan(0) && fromTokenSymbol !== toTokenSymbol) {
@@ -74,7 +105,7 @@ export const useSwapQuote = ({
           fetchQuote()
             .catch((err) => {
               // eslint-disable-next-line no-console
-              console.error('Error fetching swap quote', err)
+              console.error('Error fetching spot price quote', err)
               setQuote(undefined)
             })
             .finally(() => {

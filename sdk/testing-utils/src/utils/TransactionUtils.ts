@@ -1,6 +1,7 @@
 import { getRpcGatewayEndpoint } from '@summerfi/blockchain-client-provider'
 import { IChainInfo, Maybe, Transaction } from '@summerfi/sdk-common'
 import {
+  Address,
   Account,
   Chain,
   Hash,
@@ -76,6 +77,7 @@ export class TransactionUtils {
     })
 
     this.walletClient = createWalletClient({
+      account: this.account ?? undefined,
       transport: this.transport,
       chain: this.chain,
     })
@@ -118,7 +120,7 @@ export class TransactionUtils {
 
   async sendSimulation(params: {
     transaction: Transaction
-    senderAddress?: Hex
+    senderAddress?: Address
   }): Promise<CallReturnType> {
     const account = this.account
 

@@ -5,7 +5,7 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  padding: var(--spacing-space-x-large) 0;
+  padding-top: var(--spacing-space-x-large);
   gap: var(--spacing-space-small);
 }
 

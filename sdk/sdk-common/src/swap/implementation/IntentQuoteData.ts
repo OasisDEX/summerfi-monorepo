@@ -1,6 +1,7 @@
 import type { UnsignedOrder } from '@cowprotocol/cow-sdk'
-import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
+import type { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import type { IntentSwapProviderType } from '../enums/IntentSwapProviderType'
+import type { IPrice } from '../../common/interfaces/IPrice'
 
 /**
  * @name IntentQuoteData
@@ -10,6 +11,7 @@ export type IntentQuoteData = {
   providerType: IntentSwapProviderType
   fromAmount: ITokenAmount
   toAmount: ITokenAmount
+  limitPrice: IPrice
   validTo: number // timestamp
   order: UnsignedOrder
 }

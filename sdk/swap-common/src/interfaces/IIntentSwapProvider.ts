@@ -23,6 +23,8 @@ export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProvider
    * @param receiver The address that will receive the tokens
    * @param partiallyFillable Whether the order can be partially filled (default: false)
    * @param limitPrice The maximum price the user is willing to accept (optional)
+   * @param slippagePercentage The maximum slippage the user is willing to accept (optional) in percentage (e.g. 1 for 1%)
+   * @param validFor The duration in seconds for which the quote is valid (optional)
    * @returns The quote data for the swap, including the order data which can be signed and sent to the provider
    *
    * Note: The quote does not guarantee the execution of the swap at the quoted amounts, as the market conditions may change.
@@ -35,6 +37,8 @@ export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProvider
     receiver?: IAddress
     partiallyFillable?: boolean
     limitPrice?: IPrice
+    slippagePercentage?: number
+    validFor: number
   }): Promise<IntentQuoteData>
 
   /**

@@ -67,6 +67,7 @@ import { RewardTokenClaimBox } from '@/components/layout/VaultManageView/RewardT
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
+import { OrderInfoIntentSwap } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -87,7 +88,7 @@ import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
-import { useTransaction } from '@/hooks/use-transaction'
+import { useTransaction } from '@/hooks/use-transactions-with-cow'
 
 const ControlsApproval = dynamic(
   () =>
@@ -125,6 +126,14 @@ const OrderInfoWithdraw = dynamic(
   () =>
     import('@/components/molecules/SidebarElements/OrderInfoWithdraw').then(
       (mod) => mod.OrderInfoWithdraw,
+    ),
+  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
+)
+
+const ControlsPermit2Authorization = dynamic(
+  () =>
+    import('@/components/molecules/SidebarElements/ControlsPermit2Authorization').then(
+      (mod) => mod.ControlsPermit2Authorization,
     ),
   { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
 )
@@ -189,6 +198,7 @@ export const VaultManageViewComponent = ({
   const [sidebarTransactionType, setSidebarTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
+  const [isDepositWithSwap, setIsDepositWithSwap] = useState<boolean>(false)
   const revalidatePositionData = useRevalidatePositionData()
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
@@ -345,6 +355,8 @@ export const VaultManageViewComponent = ({
     approvalCustomValue: approvalAmountParsed,
     sidebarTransactionType,
     setSidebarTransactionType,
+    isDepositWithSwap,
+    setIsDepositWithSwap,
   })
 
   const sdk = useAppSDK()
@@ -425,6 +437,17 @@ export const VaultManageViewComponent = ({
     walletAddress: userWalletAddress,
     publicClient,
   })
+
+  // reset the depositWithSwap state when changing between tabs
+  useEffect(() => {
+    setIsDepositWithSwap((state) => {
+      if (state) {
+        return false
+      }
+
+      return state
+    })
+  }, [sidebarTransactionType])
 
   useEffect(() => {
     const savedVaultsListData = getStorageOnce()
@@ -533,6 +556,28 @@ export const VaultManageViewComponent = ({
             selectedVault={selectedSwitchVault}
           />
         )
+      } else if (
+        isDepositWithSwap &&
+        sidebarTransactionType === TransactionAction.DEPOSIT &&
+        userWalletAddress &&
+        vaultToken &&
+        selectedToken
+      ) {
+        return (
+          <OrderInfoIntentSwap
+            amount={transactionAmount}
+            chainId={vaultChainId}
+            fleetAddressValue={vault.id as `0x${string}`}
+            publicClient={publicClient}
+            userWalletAddress={userWalletAddress as `0x${string}`}
+            fromToken={selectedToken}
+            toToken={vaultToken}
+            slippagePercentage={Number(slippageConfig.slippage)}
+            onStartAgain={() => {
+              setIsDepositWithSwap(false)
+            }}
+          />
+        )
       } else if (isDepositOrWithdraw) {
         return (
           <ControlsDepositWithdraw
@@ -630,64 +675,79 @@ export const VaultManageViewComponent = ({
           transactionFeeLoading={transactionFeeLoading}
         />
       )
+    } else if (nextTransaction.type === TransactionType.Permit2Authorization) {
+      if (!vaultToken) {
+        return <div>Loading...</div>
+      }
+
+      return <ControlsPermit2Authorization tokenSymbol={vaultToken.symbol} />
     } else {
       // this is a fail safe for the mapping missing here at the end
       // we should never get here
       return <div>Transaction type ({nextTransaction.type}) not supported</div>
     }
   }, [
+    nextTransaction,
+    isSwitch,
+    selectedSwitchVault,
+    isDepositWithSwap,
+    userWalletAddress,
+    vaultToken,
+    selectedToken,
+    isDepositOrWithdraw,
+    txStatus,
+    position,
+    vault,
+    potentialVaultsToSwitchTo,
+    vaultChainId,
+    vaultsApyByNetworkMap,
+    setSelectedSwitchVault,
+    transactions,
+    transactionAmount,
+    publicClient,
     amountDisplay,
     amountDisplayUSDWithSwap,
-    amountParsed,
-    approvalCustomAmount,
+    handleAmountChange,
+    handleTokenSelectionChangeWrapper,
+    sidebarTransactionType,
+    baseTokenOptions,
+    tokenOptions,
+    selectedTokenOption,
+    onFocus,
+    onBlur,
+    ownerView,
+    selectedTokenBalance,
+    netValue,
+    selectedTokenBalanceLoading,
+    manualSetAmount,
+    considerSwitchingContent,
+    switchAmountDisplay,
+    switchManualSetAmount,
+    sidebar.primaryButton.loading,
+    switchOnBlur,
+    switchOnFocus,
+    transactionFee,
+    transactionFeeLoading,
+    switchResetToInitialAmount,
+    isEditingSwitchAmount,
+    setIsEditingSwitchAmount,
+    approvalTokenSymbol,
+    approvalType,
+    setApprovalType,
     approvalHandleAmountChange,
+    approvalCustomAmount,
     approvalManualSetAmount,
     approvalOnBlur,
     approvalOnFocus,
-    approvalTokenSymbol,
-    approvalType,
-    baseTokenOptions,
-    considerSwitchingContent,
-    handleAmountChange,
-    handleTokenSelectionChangeWrapper,
-    isDepositOrWithdraw,
-    isEditingSwitchAmount,
-    isSwitch,
-    manualSetAmount,
-    netValue,
-    nextTransaction,
-    onBlur,
-    onFocus,
-    ownerView,
-    position,
-    potentialVaultsToSwitchTo,
-    selectedSwitchVault,
-    selectedTokenBalance,
-    selectedTokenBalanceLoading,
-    selectedTokenOption,
-    setApprovalType,
-    setIsEditingSwitchAmount,
-    setSelectedSwitchVault,
-    sidebar.primaryButton.loading,
-    sidebarTransactionType,
-    switchAmountDisplay,
-    switchManualSetAmount,
-    switchOnBlur,
-    switchOnFocus,
-    switchResetToInitialAmount,
-    tokenOptions,
-    transactionFee,
-    transactionFeeLoading,
-    transactions,
-    txStatus,
-    vault,
-    vaultChainId,
-    vaultsApyByNetworkMap,
+    amountParsed,
+    slippageConfig.slippage,
   ])
 
   const sidebarTitle = useMemo(() => {
     if (!nextTransaction) {
       if (isSwitch && txStatus === 'txSuccess') {
+        return sidebar.title
+      } else if (isDepositWithSwap) {
         return sidebar.title
       }
 
@@ -695,11 +755,20 @@ export const VaultManageViewComponent = ({
     }
 
     return sidebar.title
-  }, [isSwitch, nextTransaction, sidebar.title, sidebarTransactionType, txStatus])
+  }, [
+    isDepositWithSwap,
+    isSwitch,
+    nextTransaction,
+    sidebar.title,
+    sidebarTransactionType,
+    txStatus,
+  ])
 
   const sidebarTitleTabs = useMemo(() => {
     if (!nextTransaction) {
       if (isSwitch && txStatus === 'txSuccess') {
+        return undefined
+      } else if (isDepositWithSwap) {
         return undefined
       }
 
@@ -707,7 +776,7 @@ export const VaultManageViewComponent = ({
     }
 
     return undefined
-  }, [nextTransaction, sidebarTabsList, isSwitch, txStatus])
+  }, [nextTransaction, sidebarTabsList, isSwitch, txStatus, isDepositWithSwap])
 
   const sidebarProps: SidebarProps = {
     title: sidebarTitle,
@@ -735,8 +804,8 @@ export const VaultManageViewComponent = ({
         />
       ) : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-    goBackAction: nextTransaction?.type ? backToInit : undefined,
-    primaryButton: sidebar.primaryButton,
+    goBackAction: (nextTransaction?.type ?? isDepositWithSwap) ? backToInit : undefined,
+    primaryButton: { ...sidebar.primaryButton, hidden: isDepositWithSwap },
     secondaryButton: sidebar.secondaryButton,
     footnote: (
       <>

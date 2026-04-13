@@ -167,6 +167,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     configProvider,
     allowanceManager,
     tokensManager,
+    blockchainClientProvider,
   })
 
   const armadaManager = ArmadaManagerFactory.newArmadaManager({

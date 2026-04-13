@@ -87,6 +87,14 @@ import { setFleetDepositCapHandler } from '../handlers/setFleetDepositCapHandler
 import { setMinimumBufferBalanceHandler } from '../handlers/setMinimumBufferBalanceHandler'
 import { setArkDepositCapHandler } from '../handlers/setArkDepositCapHandler'
 import { setArkMaxDepositPercentageOfTVLHandler } from '../handlers/setArkMaxDepositPercentageOfTVLHandler'
+import { isPermit2AuthorizationNeededHandler } from '../handlers/isPermit2AuthorizationNeededHandler'
+import { getPermit2AuthorizationTxHandler } from '../handlers/getPermit2AuthorizeTxHandler'
+import { getPermit2RevokeTxHandler } from '../handlers/getPermit2UnauthorizeTxHandler'
+import { getIntentSwapsSellOrderQuoteHandler } from '../handlers/getIntentSwapsSellOrderQuoteHandler'
+import { getIntentSwapsSendDepositOrderHandler } from '../handlers/getIntentSwapsSendHookOrderHandler'
+import { getIntentSwapsCancelOrderHandler } from '../handlers/getIntentSwapsCancelOrderHandler'
+import { getIntentSwapsCheckOrderHandler } from '../handlers/getIntentSwapsCheckOrderHandler'
+import { getAddressesHandler } from '../handlers/getAddressesHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -254,6 +262,36 @@ export const useSDK = (params: UseSdk) => {
     [sdk],
   )
 
+  // PERMIT2 HANDLERS
+  const isPermit2AuthorizationNeeded = useMemo(
+    () => isPermit2AuthorizationNeededHandler(sdk),
+    [sdk],
+  )
+  const getPermit2AuthorizationTx = useMemo(() => getPermit2AuthorizationTxHandler(sdk), [sdk])
+  const getPermit2RevokeTx = useMemo(() => getPermit2RevokeTxHandler(sdk), [sdk])
+
+  // INTENT SWAPS HANDLERS
+  const getIntentSwapsSellOrderQuote = useMemo(
+    () => getIntentSwapsSellOrderQuoteHandler(sdk),
+    [sdk],
+  )
+  const getIntentSwapsSendDepositOrder = useMemo(
+    () => getIntentSwapsSendDepositOrderHandler(sdk),
+    [sdk],
+  )
+  const getIntentSwapsCancelOrder = useMemo(() => getIntentSwapsCancelOrderHandler(sdk), [sdk])
+  const getIntentSwapsCheckOrder = useMemo(() => getIntentSwapsCheckOrderHandler(sdk), [sdk])
+  const getIntentSwapsIsPermit2AuthorizationNeeded = useMemo(
+    () => isPermit2AuthorizationNeededHandler(sdk),
+    [sdk],
+  )
+  const getIntentSwapsPermit2AuthorizationTx = useMemo(
+    () => getPermit2AuthorizationTxHandler(sdk),
+    [sdk],
+  )
+  const getIntentSwapsPermit2RevokeTx = useMemo(() => getPermit2RevokeTxHandler(sdk), [sdk])
+  const getAddresses = useMemo(() => getAddressesHandler(sdk), [sdk])
+
   const memo = useMemo(
     () => ({
       getCurrentUser,
@@ -342,6 +380,17 @@ export const useSDK = (params: UseSdk) => {
       setMinimumBufferBalance,
       setArkDepositCap,
       setArkMaxDepositPercentageOfTVL,
+      isPermit2AuthorizationNeeded,
+      getPermit2AuthorizationTx,
+      getPermit2RevokeTx,
+      getIntentSwapsSellOrderQuote,
+      getIntentSwapsSendDepositOrder,
+      getIntentSwapsCancelOrder,
+      getIntentSwapsCheckOrder,
+      getIntentSwapsIsPermit2AuthorizationNeeded,
+      getIntentSwapsPermit2AuthorizationTx,
+      getIntentSwapsPermit2RevokeTx,
+      getAddresses,
     }),
     [
       getCurrentUser,
@@ -429,6 +478,17 @@ export const useSDK = (params: UseSdk) => {
       setMinimumBufferBalance,
       setArkDepositCap,
       setArkMaxDepositPercentageOfTVL,
+      isPermit2AuthorizationNeeded,
+      getPermit2AuthorizationTx,
+      getPermit2RevokeTx,
+      getIntentSwapsSellOrderQuote,
+      getIntentSwapsSendDepositOrder,
+      getIntentSwapsCancelOrder,
+      getIntentSwapsCheckOrder,
+      getIntentSwapsIsPermit2AuthorizationNeeded,
+      getIntentSwapsPermit2AuthorizationTx,
+      getIntentSwapsPermit2RevokeTx,
+      getAddresses,
     ],
   )
 

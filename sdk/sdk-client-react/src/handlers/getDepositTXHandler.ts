@@ -29,7 +29,7 @@ export const getDepositTXHandler =
     shouldStake?: boolean
     referralCode?: string
   }) => {
-    const poolId = ArmadaVaultId.createFrom({
+    const vaultId = ArmadaVaultId.createFrom({
       chainInfo,
       fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
     })
@@ -42,7 +42,7 @@ export const getDepositTXHandler =
     })
 
     return sdk.armada.users.getNewDepositTx({
-      vaultId: poolId,
+      vaultId: vaultId,
       user,
       amount: amount,
       slippage: Percentage.createFrom({ value: slippage }),

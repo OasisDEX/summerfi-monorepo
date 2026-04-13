@@ -503,4 +503,33 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerUsersClient['getVaultsHistoricalRates']> {
     return this.rpcClient.armada.users.getVaultsHistoricalRates.query(params)
   }
+
+  /** @see IArmadaManagerUsersClient.getProtocolAddresses */
+  async getProtocolAddresses(
+    params: Parameters<IArmadaManagerUsersClient['getProtocolAddresses']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getProtocolAddresses']> {
+    const addressesMap = {
+      8453: {
+        admiralsQuarters: '0xfec27FAAF888Fb4C2Ce6d51547F82E5D05F5D12d',
+      },
+      42161: {
+        admiralsQuarters: '0xc098248Ec73DF55c0fb3f9bEfcF62eE4C45097D1',
+      },
+      1: {
+        admiralsQuarters: '0xf5A69789Bf5e62A43C47E4c8d857b8DAE14d4ab0',
+      },
+      146: {
+        admiralsQuarters: '0x4cEeE1b6289624d381383C1Bb42B118d5f2c3274',
+      },
+      999: {
+        admiralsQuarters: '0x2c93a68Fbe527aD1594ae0B11b50CFEcBBf3255f',
+      },
+    } as const
+    const addresses = addressesMap[params.chainId]
+    if (!addresses) {
+      throw new Error(`Unsupported chainId: ${params.chainId}`)
+    }
+
+    return addresses
+  }
 }

@@ -123,7 +123,7 @@ export type { DeviceInfo } from './src/device-type'
 export { TransactionAction } from './src/transaction'
 
 export type { SdkClient } from './src/sdk-client-react'
-export type { IToken, QuoteData } from './src/sdk-common'
+export { type IToken, type ITokenAmount } from './src/sdk-common'
 
 export type Address = `0x${string}`
 export type TxData = `0x${string}`
