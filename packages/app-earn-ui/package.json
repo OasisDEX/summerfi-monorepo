@@ -57,7 +57,7 @@
     "embla-carousel-react": "8.3.0",
     "embla-carousel": "8.3.0",
     "lodash-es": "^4.17.1",
-    "next": "16.2.1",
+    "next": "16.2.3",
     "react-animate-height": "^3.2.3",
     "react-dom": "19.2.3",
     "react": "19.2.3",

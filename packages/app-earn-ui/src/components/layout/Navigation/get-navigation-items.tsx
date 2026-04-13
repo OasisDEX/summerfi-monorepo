@@ -203,7 +203,7 @@ export const getNavigationItems = ({
           : []),
       ]
 
-  return [
+  const finalLinksArray = [
     {
       label: 'Earn',
       id: 'earn',
@@ -225,4 +225,6 @@ export const getNavigationItems = ({
       onClick: handleButtonClick('support'),
     },
   ]
+
+  return finalLinksArray
 }

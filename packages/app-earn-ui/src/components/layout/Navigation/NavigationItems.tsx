@@ -63,15 +63,21 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): R
             {linkContent}
           </Link>
         ) : (
-          <a
+          <Link
             href={item.url}
+            as={item.url}
+            rel="external"
             key={`NavItems_${item.id}`}
             target={item.target}
-            onClick={item.onClick}
+            onClick={(e) => {
+              e.preventDefault()
+              item.onClick?.()
+              window.location.href = item.url
+            }}
             suppressHydrationWarning
           >
             {linkContent}
-          </a>
+          </Link>
         )
       })}
     </div>

@@ -62,8 +62,14 @@ export const useEarnProtocolWallet = (): {
       try {
         walletClientResolved = await walletPendingPromise
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error while waiting for wallet client:', error)
+        if ((error as Error).message.startsWith('Connector not connected.')) {
+          // This error is expected when the wallet is not connected, so we can ignore it
+        } else {
+          console.error('Error while waiting for wallet client:', {
+            error,
+            errorMessage: (error as Error).message,
+          })
+        }
       } finally {
         if (isMounted) {
           if (walletClientResolved?.account?.address) {
@@ -80,11 +86,7 @@ export const useEarnProtocolWallet = (): {
               (privyAuthenticated && !walletClientResolved?.account?.address)
 
             if (!shouldKeepLoading) {
-              // eslint-disable-next-line no-console
-              console.error(
-                'Wallet client is not available or address is missing',
-                walletClientResolved,
-              )
+              // wallet is not connected
             }
 
             setIsLoadingAccount(shouldKeepLoading)
