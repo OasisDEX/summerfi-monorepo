@@ -3,8 +3,8 @@ import Safe from '@safe-global/safe-apps-sdk'
 import { type Address, type SupportedSDKNetworks, type TxData } from '@summerfi/app-types'
 import { type PublicClient } from 'viem'
 
-import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
+import { getSafeTxHash } from '@summerfi/app-earn-ui'
 
 /**
  * Hook for managing Safe wallet transactions
@@ -46,6 +46,11 @@ export const useSafeTransaction = ({
         .then(({ safeTxHash }) => {
           getSafeTxHash(safeTxHash, network)
             .then((safeTransactionData) => {
+              if (!safeTransactionData) {
+                // not a safe transaction, cannot proceed
+                onError()
+                return
+              }
               if (safeTransactionData.transactionHash) {
                 setWaitingForTx(safeTransactionData.transactionHash)
               }

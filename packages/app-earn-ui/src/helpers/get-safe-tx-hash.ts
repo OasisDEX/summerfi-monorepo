@@ -41,40 +41,48 @@ type SafeTransactionDataType = {
   signatures: unknown
 }
 
-const subgraphNetworkToSafeSDKAPI = (network: SupportedSDKNetworks) => {
+const subgraphNetworkToSafeSDKAPINetworkName = (network: SupportedSDKNetworks) => {
   return {
-    [SupportedSDKNetworks.Mainnet.toLowerCase()]: 'https://safe-transaction-mainnet.safe.global',
-    [SupportedSDKNetworks.ArbitrumOne.toLowerCase()]:
-      'https://safe-transaction-arbitrum.safe.global',
-    [SupportedSDKNetworks.Base.toLowerCase()]: 'https://safe-transaction-base.safe.global',
+    [SupportedSDKNetworks.Mainnet.toLowerCase()]: 'eth',
+    [SupportedSDKNetworks.ArbitrumOne.toLowerCase()]: 'arb1',
+    [SupportedSDKNetworks.Base.toLowerCase()]: 'base',
+    [SupportedSDKNetworks.SonicMainnet.toLowerCase()]: 'sonic',
   }[network.toLowerCase()]
 }
 
 export const getSafeTxHash = async (
   safeTxHash: string,
   network: SupportedSDKNetworks,
-): Promise<SafeTransactionDataType> => {
-  let safeTransactionData: SafeTransactionDataType
+  maxRetries: number = 15,
+): Promise<SafeTransactionDataType | false> => {
+  let safeTransactionData: SafeTransactionDataType | any
   let retries = 0
 
-  await new Promise((resolve) => {
-    setTimeout(resolve, 3000)
-  })
+  await new Promise((resolve) => setTimeout(resolve, 3000))
 
   do {
-    safeTransactionData = (await fetch(
-      `${subgraphNetworkToSafeSDKAPI(network)}/api/v1/multisig-transactions/${safeTxHash}/`,
-    ).then((res) => res.json())) as SafeTransactionDataType
+    const res = await fetch(
+      `https://api.safe.global/tx-service/${subgraphNetworkToSafeSDKAPINetworkName(network)}api/v2/multisig-transactions/${safeTxHash}/`,
+    )
+
+    safeTransactionData = await res.json()
+
+    // handle "not found" case
+    if (safeTransactionData?.detail === 'No MultisigTransaction matches the given query.') {
+      return false
+    }
 
     if (!safeTransactionData.transactionHash) {
       retries++
-      const waitTime = retries > 10 ? 10000 : 3000
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, waitTime)
-      })
+      if (retries >= maxRetries) {
+        return false
+      }
+
+      const waitTime = retries > 10 ? 10000 : 3000
+      await new Promise((resolve) => setTimeout(resolve, waitTime))
     }
   } while (!safeTransactionData.transactionHash)
 
-  return safeTransactionData
+  return safeTransactionData as SafeTransactionDataType
 }

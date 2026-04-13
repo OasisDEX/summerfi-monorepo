@@ -6,7 +6,7 @@
   height: 0;
   transition: opacity 0.3s ease-in-out;
   pointer-events: none;
-  width: 100vw;
+  width: 90vw;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -21,17 +21,29 @@
 }
 
 .bannerWrapperWarning {
-  background-color: var(--color-background-warning);
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--color-background-warning) 5%,
+      var(--color-background-warning) 95%,
+      transparent 100%);
   color: var(--color-text-warning);
 }
 
 .bannerWrapperCritical {
-  background-color: var(--color-background-critical);
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--color-background-critical) 5%,
+      var(--color-background-critical) 95%,
+      transparent 100%);
   color: var(--color-text-critical);
 }
 
 .bannerWrapperSuccess {
-  background-color: var(--color-background-success);
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--color-background-success) 5%,
+      var(--color-background-success) 95%,
+      transparent 100%);
   color: var(--color-text-success);
 }
 
@@ -42,7 +54,11 @@
   justify-content: center;
   text-align: center;
   padding: var(--general-space-16);
-  background-color: var(--earn-protocol-critical-10);
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--earn-protocol-critical-10) 5%,
+      var(--earn-protocol-critical-10) 95%,
+      transparent 100%);
   color: var(--earn-protocol-secondary-100);
   position: relative;
   z-index: 2;
@@ -55,7 +71,11 @@
   justify-content: center;
   text-align: center;
   padding: var(--general-space-16);
-  background-color: var(--earn-protocol-warning-10);
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--earn-protocol-warning-10) 5%,
+      var(--earn-protocol-warning-10) 95%,
+      transparent 100%);
   color: var(--earn-protocol-warning-100);
   border-radius: var(--radius-large);
   margin-bottom: var(--spacing-space-large);

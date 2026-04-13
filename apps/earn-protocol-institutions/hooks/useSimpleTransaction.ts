@@ -10,11 +10,11 @@ import {
   useEarnProtocolSendUserOperation,
   useEarnProtocolWallet,
   useIsIframe,
+  getSafeTxHash,
 } from '@summerfi/app-earn-ui'
 import { type EarnTransactionViewStates, SupportedNetworkIds } from '@summerfi/app-types'
 import { supportedSDKNetwork, supportedSDKNetworkId } from '@summerfi/app-utils'
 
-import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { usePublicClient } from '@/hooks/usePublicClient'
 import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
@@ -71,6 +71,11 @@ export const useSimpleTransaction = ({
       if (isIframe) {
         getSafeTxHash(hash, supportedSDKNetwork(chainId))
           .then((safeTransactionData) => {
+            if (!safeTransactionData) {
+              // not a safe transaction, proceed with the original hash
+              setWaitingForTx(hash)
+              return
+            }
             if (safeTransactionData.transactionHash) {
               setWaitingForTx(safeTransactionData.transactionHash)
             }
@@ -136,6 +141,11 @@ export const useSimpleTransaction = ({
           setTxStatus('txInProgress')
           getSafeTxHash(safeTxHash, supportedSDKNetwork(chainId))
             .then((safeTransactionData) => {
+              if (!safeTransactionData) {
+                // not a safe transaction, proceed with the original hash
+                setWaitingForTx(safeTxHash as `0x${string}`)
+                return
+              }
               if (safeTransactionData.transactionHash) {
                 setWaitingForTx(safeTransactionData.transactionHash)
               }

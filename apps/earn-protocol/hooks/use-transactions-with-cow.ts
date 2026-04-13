@@ -20,6 +20,7 @@ import {
   useEarnProtocolSendUserOperation,
   useEarnProtocolWallet,
   useIsIframe,
+  getSafeTxHash,
 } from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
@@ -51,7 +52,6 @@ import { type PublicClient } from 'viem'
 
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
-import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleButtonClickEvent, useHandleTransactionEvent } from '@/hooks/use-mixpanel-event'
@@ -379,6 +379,11 @@ export const useTransaction = ({
       if (isIframe) {
         getSafeTxHash(hash, supportedSDKNetwork(vault.protocol.network))
           .then((safeTransactionData) => {
+            if (!safeTransactionData) {
+              // not a safe transaction, proceed with the original hash
+              setWaitingForTx(hash)
+              return
+            }
             if (safeTransactionData.transactionHash) {
               setWaitingForTx(safeTransactionData.transactionHash)
             }
@@ -487,6 +492,11 @@ export const useTransaction = ({
           setTxStatus('txInProgress')
           getSafeTxHash(safeTxHash, supportedSDKNetwork(vault.protocol.network))
             .then((safeTransactionData) => {
+              if (!safeTransactionData) {
+                // not a safe transaction, proceed with the original hash
+                setWaitingForTx(safeTxHash as `0x${string}`)
+                return
+              }
               if (safeTransactionData.transactionHash) {
                 setWaitingForTx(safeTransactionData.transactionHash)
               }

@@ -18,6 +18,8 @@ import {
 } from 'wagmi'
 
 import { supportedViemChains } from '@/constants/supported-chains'
+import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
+import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 
 export const getEarnProtocolChainById = (chainId?: number): Chain => {
   const mappedChain = supportedViemChains.find((chain) => chain.id === chainId)
@@ -284,7 +286,6 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
 
         throw missingWalletError
       }
-
       if (!walletClientResolved.account) {
         const missingAccountError = new Error('No account found in wallet')
 
@@ -313,6 +314,33 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
           value: value ?? 0n,
           chain: getEarnProtocolChainById(walletClientResolved.chain.id),
         })
+
+        const checkIfSafeHash = await getSafeTxHash(
+          hash,
+          chainIdToSDKNetwork(walletClientResolved.chain.id),
+          1,
+        )
+
+        if (checkIfSafeHash && publicClient) {
+          // if the hash corresponds to a safe transaction, we want to wait for the safe transaction hash instead of the original one
+          const safeTransactionData = checkIfSafeHash.transactionHash
+            ? // it might have resolved already when checking, so we can use the transaction hash from the check, but if it hasn't resolved yet, we need to wait for it with retries, as it can take some time for the safe transaction hash to be available in the subgraph after the original transaction is mined
+              checkIfSafeHash
+            : await getSafeTxHash(hash, chainIdToSDKNetwork(walletClientResolved.chain.id))
+
+          if (!safeTransactionData) {
+            // this is no op, just for type safety, as getSafeTxHash should return false if the hash is not a safe transaction hash, but we already check that above
+            return { hash }
+          }
+
+          if (safeTransactionData.transactionHash) {
+            await publicClient.waitForTransactionReceipt({
+              hash: safeTransactionData.transactionHash,
+            })
+            onSuccess?.({ hash: safeTransactionData.transactionHash as `0x${string}` })
+            return { hash: safeTransactionData.transactionHash as `0x${string}` }
+          }
+        }
 
         if (waitForTxn && publicClient) {
           await publicClient.waitForTransactionReceipt({ hash })

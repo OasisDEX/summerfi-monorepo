@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useEarnProtocolSendUserOperation, useIsIframe } from '@summerfi/app-earn-ui'
+import { useEarnProtocolSendUserOperation, useIsIframe, getSafeTxHash } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds, type TransactionHash } from '@summerfi/app-types'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 import { Address, type IToken, TransactionType } from '@summerfi/sdk-common'
 import { encodeFunctionData, type PublicClient } from 'viem'
 
-import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { isValidAddress } from '@/helpers/is-valid-address'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 
@@ -52,6 +51,18 @@ export const useSendTransaction = ({
       if (isIframe) {
         getSafeTxHash(hash, chainIdToSDKNetwork(chainId))
           .then((safeTransactionData) => {
+            if (!safeTransactionData) {
+              // not a safe transaction, proceed with the original hash
+              setWaitingForTx(hash)
+              setTxHashes((prev) => [
+                ...prev,
+                {
+                  type,
+                  hash,
+                },
+              ])
+              return
+            }
             if (safeTransactionData.transactionHash) {
               setWaitingForTx(safeTransactionData.transactionHash)
             }

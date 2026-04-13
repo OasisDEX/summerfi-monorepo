@@ -3,6 +3,7 @@ import {
   useEarnProtocolChain,
   useEarnProtocolSendUserOperation,
   useIsIframe,
+  getSafeTxHash,
 } from '@summerfi/app-earn-ui'
 import { type Address, type SupportedNetworkIds, type TransactionHash } from '@summerfi/app-types'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'
@@ -14,7 +15,6 @@ import {
 } from '@summerfi/sdk-common'
 
 import { MigrationSteps } from '@/features/migration/types'
-import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { usePublicClient } from '@/hooks/use-public-client'
@@ -103,6 +103,18 @@ export const useMigrationTransaction = ({
       if (isIframe) {
         getSafeTxHash(hash, chainIdToSDKNetwork(vaultChainId))
           .then((safeTransactionData) => {
+            if (!safeTransactionData) {
+              // not a safe transaction, proceed with the original hash
+              setWaitingForTx(hash)
+              setTxHashes((prev) => [
+                ...prev,
+                {
+                  type,
+                  hash,
+                },
+              ])
+              return
+            }
             if (safeTransactionData.transactionHash) {
               setWaitingForTx(safeTransactionData.transactionHash)
             }

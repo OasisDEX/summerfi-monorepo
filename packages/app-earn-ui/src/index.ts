@@ -179,7 +179,6 @@ export type { PanelNavigationProps } from './components/organisms/PanelNavigatio
 export { CountDown } from './components/organisms/CountDown/CountDown'
 
 export { useToggle } from './hooks/use-toggle'
-export { useHash } from './hooks/use-hash'
 export { useOutsideElementClickHandler } from './hooks/use-outside-element-click-handler'
 export { useCurrentUrl } from './hooks/use-current-url'
 export { useQueryParams } from './hooks/use-query-params'
@@ -245,6 +244,7 @@ export { getArkNiceName } from './helpers/get-ark-nice-name'
 export { getUniqueColor } from './helpers/get-unique-color'
 export { getProtocolLabel } from './helpers/get-protocol-label'
 export { riskColors } from './helpers/risk-colors'
+export { getSafeTxHash } from './helpers/get-safe-tx-hash.ts'
 
 // forecast stuff
 export { parseForecastDatapoints } from './features/forecast/parse-forecast-datapoints'
