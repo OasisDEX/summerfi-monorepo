@@ -1,4 +1,4 @@
-import { Icon, Text } from '@summerfi/app-earn-ui'
+import { AnimateHeight, Icon, Text } from '@summerfi/app-earn-ui'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import Link from 'next/dist/client/link'
 import Image from 'next/image'
@@ -26,9 +26,11 @@ import integrateWithVaultsFyi from '@/public/img/landing-page/integrate-via/vaul
 import integrateViaYieldXyz from '@/public/img/landing-page/integrate-via/yield_xyz.png'
 import ourProductsGridBackground from '@/public/img/landing-page/our-products-grid-bg.png'
 import ourProductsLinesBackground from '@/public/img/landing-page/our-products-lines-bg.png'
+import franklinTempletonMarketLogo from '@/public/img/landing-page/private-markets/franklin_templeton.png'
+import mapleMarketLogo from '@/public/img/landing-page/private-markets/maple.png'
+import securitizeMarketLogo from '@/public/img/landing-page/private-markets/securitize.png'
 import stacMarketLogo from '@/public/img/landing-page/private-markets/stac.png'
 import superstateMarketLogo from '@/public/img/landing-page/private-markets/superstate.png'
-import vaneckMarketLogo from '@/public/img/landing-page/private-markets/vaneck.png'
 import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisdomtree.png'
 import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-screenshot.png'
 
@@ -90,22 +92,7 @@ const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVau
           </div>
           <div className={styles.sideStatBlock}>
             <Text as="p" variant="p4semi" className={styles.metaLabel}>
-              Risk managed by
-            </Text>
-            <Image
-              alt="Block Analitica"
-              src={blockAnalyticaLogo}
-              width={133}
-              height={54}
-              style={{
-                width: 'auto',
-                height: 'auto',
-              }}
-            />
-          </div>
-          <div className={styles.sideStatBlock}>
-            <Text as="p" variant="p4semi" className={styles.metaLabel}>
-              Only the best assets
+              Available assets
             </Text>
             <div className={styles.assetIcons}>
               <div className={styles.assetIcon}>
@@ -121,6 +108,22 @@ const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVau
                 <Icon tokenName="EURC" />
               </div>
             </div>
+          </div>
+          <div className={styles.sideStatBlock}>
+            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+              Risk managed by
+            </Text>
+            <Image
+              alt="Block Analitica"
+              src={blockAnalyticaLogo}
+              width={110}
+              height={45}
+              style={{
+                marginTop: '16px',
+                width: 'auto',
+                height: '45px',
+              }}
+            />
           </div>
         </aside>
       </div>
@@ -139,17 +142,17 @@ const PermissionlessRwaVaultsCard = () => {
               Permissioned RWA Vaults
             </Text>
             <Text as="h3" variant="h4" className={styles.cardTitle}>
-              Instant access to a cross section of RWA private markets in a single Vault
+              Instant access to a basket of RWA private markets in a single Vault
             </Text>
             <Text as="p" variant="p2" className={styles.cardBody}>
-              Purpose built Vaults designed for Institutions, HNWs, Hedge Funds and Custodians to
+              Purpose built Vaults designed for Institutions, HNW’s, Hedge Funds and Custodians to
               earn from the best RWA markets without the hassle.
             </Text>
           </div>
           <div className={styles.checksGroup}>
             <CheckLine text="Deposits only ever allocated to permissioned markets" />
             <CheckLine text="Actively managed and rebalanced by M1-Capital" />
-            <CheckLine text="Available now via Utila, Balance Custody and Summer.fi (KYC required)" />
+            <CheckLine text="Coming soon via Utilia, Balance Custody and Summer.fi (KYC required)" />
           </div>
           <div className={styles.metaBlock}>
             <Text as="p" variant="p4semi" className={styles.metaLabel}>
@@ -157,16 +160,23 @@ const PermissionlessRwaVaultsCard = () => {
             </Text>
             <div className={styles.partnerLogos}>
               <Image
-                alt="Vaneck"
-                src={vaneckMarketLogo}
+                alt="Securitize"
+                src={securitizeMarketLogo}
                 width={180}
                 height={54}
                 className={styles.partnerLogo}
               />
               <Image
-                alt="Stac"
-                src={stacMarketLogo}
-                width={140}
+                alt="Franklin Templeton"
+                src={franklinTempletonMarketLogo}
+                width={180}
+                height={54}
+                className={styles.partnerLogo}
+              />
+              <Image
+                alt="Maple"
+                src={mapleMarketLogo}
+                width={180}
                 height={54}
                 className={styles.partnerLogo}
               />
@@ -181,6 +191,13 @@ const PermissionlessRwaVaultsCard = () => {
                 alt="WisdomTree"
                 src={wisdomTreeMarketLogo}
                 width={172}
+                height={54}
+                className={styles.partnerLogo}
+              />
+              <Image
+                alt="Stac"
+                src={stacMarketLogo}
+                width={140}
                 height={54}
                 className={styles.partnerLogo}
               />
@@ -228,12 +245,7 @@ const PermissionlessRwaVaultsCard = () => {
               </Text>
             </div>
           </div>
-          <div
-            className={styles.sideStatBlock}
-            style={{
-              marginTop: 'var(--spacing-space-2x-large)',
-            }}
-          >
+          <div className={styles.sideStatBlock}>
             <Text as="p" variant="p4semi" className={styles.metaLabel}>
               Managed by
             </Text>
@@ -265,7 +277,11 @@ const BuildYourOwnVaultCard = () => {
       />
       <div className={styles.cardContent}>
         <div className={styles.cardMain}>
-          <div>
+          <div
+            style={{
+              maxWidth: '540px',
+            }}
+          >
             <Text as="p" variant="p3colorful">
               Build your own DeFi Vault
             </Text>
@@ -310,11 +326,12 @@ const BuildYourOwnVaultCard = () => {
             <Image
               alt="Block Analitica"
               src={blockAnalyticaLogo}
-              width={214}
-              height={100}
+              width={110}
+              height={45}
               style={{
+                marginTop: '16px',
                 width: 'auto',
-                height: 'auto',
+                height: '45px',
               }}
             />
           </div>
@@ -464,15 +481,32 @@ const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault:
 
 export const OurProductsList = ({
   ourProductsStats,
+  activeTab,
 }: {
   ourProductsStats: { maxApyRegularVault: number }
+  activeTab: string
 }) => {
+  const showAllVaults = activeTab === 'all-vaults'
+  const showPermissionlessDefiVaults = showAllVaults || activeTab === 'permissionless-defi-vaults'
+  const showPermissionedRwaVaults = showAllVaults || activeTab === 'permissioned-rwa-vaults'
+  const showBuildYourOwnVault = showAllVaults || activeTab === 'build-your-own-defi-vault'
+  const showIntegrateHighQualityYield =
+    showAllVaults || activeTab === 'integrate-high-quality-defi-yield'
+
   return (
     <div className={styles.cardsList}>
-      <PermissionlessDeFiVaultsCard maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
-      <PermissionlessRwaVaultsCard />
-      <BuildYourOwnVaultCard />
-      <IntegrateHighQualityYield maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
+      <AnimateHeight id="permissionless-defi-vaults" show={showPermissionlessDefiVaults}>
+        <PermissionlessDeFiVaultsCard maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
+      </AnimateHeight>
+      <AnimateHeight id="permissioned-rwa-vaults" show={showPermissionedRwaVaults}>
+        <PermissionlessRwaVaultsCard />
+      </AnimateHeight>
+      <AnimateHeight id="build-your-own-defi-vault" show={showBuildYourOwnVault}>
+        <BuildYourOwnVaultCard />
+      </AnimateHeight>
+      <AnimateHeight id="integrate-high-quality-defi-yield" show={showIntegrateHighQualityYield}>
+        <IntegrateHighQualityYield maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
+      </AnimateHeight>
     </div>
   )
 }

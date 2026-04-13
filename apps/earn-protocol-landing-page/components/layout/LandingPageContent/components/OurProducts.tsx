@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { getRewardsTokenBonus, Text } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
@@ -11,6 +11,44 @@ import { findVaultInfo, subgraphNetworkToId, supportedSDKNetwork } from '@summer
 import { OurProductsList } from '@/components/layout/LandingPageContent/components/OurProductsList'
 import { getManagementFee } from '@/helpers/get-management-fee'
 
+import tabStyles from '@/components/layout/LandingPageContent/components/OurProductsTabs.module.css'
+
+const tabs = [
+  { id: 'all-vaults', label: 'All Vaults' },
+  { id: 'permissionless-defi-vaults', label: 'Permissionless DeFi Vaults' },
+  { id: 'permissioned-rwa-vaults', label: 'Permissioned RWA Vaults' },
+  { id: 'build-your-own-defi-vault', label: 'Build your own DeFi Vault' },
+  { id: 'integrate-high-quality-defi-yield', label: 'Integrate high quality DeFi yield' },
+]
+
+const OurProductsTabs = ({
+  activeTab,
+  setActiveTab,
+}: {
+  activeTab: string
+  setActiveTab: (tabId: string) => void
+}) => {
+  return (
+    <div className={tabStyles.tabsWrapper}>
+      <div className={tabStyles.tabsList}>
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            className={`${tabStyles.tabButton} ${activeTab === tab.id ? tabStyles.tabButtonActive : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+            aria-pressed={activeTab === tab.id}
+          >
+            <Text as="span" variant="p3semi" style={{ color: 'inherit' }}>
+              {tab.label}
+            </Text>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export const OurProducts = ({
   vaultsList,
   vaultsApyByNetworkMap,
@@ -22,6 +60,7 @@ export const OurProducts = ({
   vaultsInfo?: IArmadaVaultInfo[]
   rewardTokenPrices?: RewardTokenPrices
 }) => {
+  const [activeTab, setActiveTab] = useState(tabs[0].id)
   const ourProductsStats = useMemo(() => {
     const maxApyRegularVault =
       (vaultsList
@@ -82,7 +121,8 @@ export const OurProducts = ({
         Capture optimized yield, unlock RWA private markets, and launch custom vaults - backed by
         institutional-grade risk and infrastructure
       </Text>
-      <OurProductsList ourProductsStats={ourProductsStats} />
+      <OurProductsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+      <OurProductsList ourProductsStats={ourProductsStats} activeTab={activeTab} />
     </>
   )
 }

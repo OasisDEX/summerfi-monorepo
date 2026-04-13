@@ -1,7 +1,6 @@
 .cardsList {
   display: flex;
   flex-direction: column;
-  gap: 24px;
   width: 100%;
 }
 
@@ -10,6 +9,8 @@
   overflow: hidden;
   border: 1px solid #232323;
   border-radius: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 0 2px 0 #3D2319, 0 0 12px 0 rgba(73, 22, 22, 0.50);
 }
 
 .productCard::before {
@@ -206,10 +207,12 @@
 }
 
 .partnerLogos {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 16px;
+  /* three columns of partner logos */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  justify-items: flex-start;
+  margin: 24px 0;
+  gap: 48px;
 }
 
 .partnerLogo {
@@ -238,16 +241,11 @@
 }
 
 .vaultExposureScreenshotWrapper {
-  width: 600px;
+  width: 660px;
   overflow: hidden;
   position: relative;
-  right: -80px;
-  bottom: -100px;
-}
-
-.vaultExposureScreenshotWrapper img {
-  border-radius: 32px;
-  border: 2px solid rgba(186, 93, 139, 0.6);
+  right: -120px;
+  bottom: 0;
 }
 
 .integratorMetaGrid {
