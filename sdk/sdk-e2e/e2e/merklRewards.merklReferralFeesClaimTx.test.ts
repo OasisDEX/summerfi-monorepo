@@ -94,7 +94,7 @@ describe('Merkl Rewards - getReferralFeesMerklClaimTx', () => {
       // try to send tx
       sendTxTool = createSendTransactionTool({
         chainId: firstChainId,
-        senderAddress: userAddress,
+        senderAddressValue: userAddress,
         rpcUrl,
         signerPrivateKey,
         simulateOnly,

@@ -85,7 +85,7 @@ describe('Merkl Rewards - getVaultRewardsMerklClaimTx', () => {
       // try to send tx
       sendTxTool = createSendTransactionTool({
         chainId: firstChainId,
-        senderAddress: userAddress,
+        senderAddressValue: userAddress,
         rpcUrl: RpcUrls[firstChainId],
         signerPrivateKey,
         simulateOnly,

@@ -1,6 +1,7 @@
-import { Address, User, type AddressValue } from '@summerfi/sdk-common'
-import { createSdkTestSetup } from './utils/createSdkTestSetup'
-import type { TestConfigKey } from './utils/testConfig'
+import { Address, ChainIds, User, type AddressValue, type ChainId } from '@summerfi/sdk-common'
+import { makeSDK } from '@summerfi/sdk-client'
+import { createSendTransactionTool } from '@summerfi/testing-utils'
+import { SDKApiUrl, RpcUrls, SharedConfig } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -9,48 +10,49 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - Gov V2 Authorization', () => {
   const scenarios: {
-    testConfigKey: TestConfigKey
+    userAddress: AddressValue
+    chainId: ChainId
     shouldAuthorize: boolean
-    target?: AddressValue
+    target: AddressValue
   }[] = [
-    // {
-    //   testConfigKey: 'BaseUSDC',
-    //   shouldAuthorize: true,
-    // },
-    // {
-    //   testConfigKey: 'BaseUSDC',
-    //   shouldAuthorize: false,
-    // },
     {
-      testConfigKey: 'BaseUSDC',
+      userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+      chainId: ChainIds.Base,
       shouldAuthorize: false,
-      target: '0x4e92071F9BC94011419Dc03fEaCA32D11241313a', // aq
+      target: '0xfec27FAAF888Fb4C2Ce6d51547F82E5D05F5D12d', // aq
     },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testConfigKey: chainConfigKey, shouldAuthorize, target } = scenario
-    const setup = createSdkTestSetup(chainConfigKey)
-    const { sdk, chainId, userAddress, userSendTxTool } = setup
+    const { userAddress, chainId, shouldAuthorize, target } = scenario
 
-    const user = User.createFromEthereum(chainId, userAddress.value)
+    const sdk = makeSDK({ apiDomainUrl: SDKApiUrl })
+    const userSendTxTool = createSendTransactionTool({
+      chainId,
+      rpcUrl: RpcUrls[chainId as keyof typeof RpcUrls],
+      senderAddressValue: userAddress,
+      signerPrivateKey: SharedConfig.testUserPrivateKey,
+      simulateOnly: false,
+    })
+
+    const user = User.createFromEthereum(chainId, userAddress)
 
     // Use a deterministic test address as the authorized caller
     const testAuthorizedCaller = Address.createFromEthereum({
-      value: target ?? '0x0000000000000000000000000000000000000001',
+      value: target,
     })
 
-    it(`should ${shouldAuthorize ? 'authorize' : 'revoke authorization for'} a caller for staking rewards`, async () => {
+    it('should send authorization transaction and set staking rewards caller authorization state', async () => {
       // Check initial authorization status
       const initialAuthStatus = await sdk.armada.users.isAuthorizedStakingRewardsCallerV2({
-        owner: userAddress,
+        owner: Address.createFromEthereum({ value: userAddress }),
         authorizedCaller: testAuthorizedCaller,
       })
       console.log(
         `Initial authorization status for ${testAuthorizedCaller.value}: ${initialAuthStatus}`,
       )
 
-      // If we're trying to authorize and already authorized, or revoke and not authorized, skip
+      // Skip if already in the desired state
       if (shouldAuthorize === initialAuthStatus) {
         console.log(
           `Skipping - caller is already ${shouldAuthorize ? 'authorized' : 'not authorized'}`,
@@ -72,9 +74,9 @@ describe('Armada Protocol - Gov V2 Authorization', () => {
       const txStatus = await userSendTxTool(authorizeTx, { confirmations: 5 })
       expect(txStatus).toStrictEqual(['success'])
 
-      // Verify the authorization status changed
+      // Verify the final authorization state matches the desired value
       const afterAuthStatus = await sdk.armada.users.isAuthorizedStakingRewardsCallerV2({
-        owner: userAddress,
+        owner: Address.createFromEthereum({ value: userAddress }),
         authorizedCaller: testAuthorizedCaller,
       })
       console.log(

@@ -2,9 +2,9 @@ import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
 
 const scenarios: { userAddress: AddressValue }[] = [
-  { userAddress: '0x805769AA22219E3a29b301Ab5897B903A9ad2C4A' },
+  { userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' },
+  // { userAddress: '0x805769AA22219E3a29b301Ab5897B903A9ad2C4A' },
   // { userAddress: '0x38233654FB0843c8024527682352A5d41E7f7324' },
-  // { userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' },
   // { userAddress: '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d' },
   // { userAddress: '0xE9c245293DAC615c11A5bF26FCec91C3617645E4' },
 ]
@@ -98,7 +98,7 @@ describe('Merkl Rewards - Authorization', () => {
         console.log(`✅ Unauthorized user correctly returned false`)
       })
 
-      it.skip('should throw error for unsupported chain', async () => {
+      it('should throw error for unsupported chain', async () => {
         const unsupportedChainId = 999999 as ChainId
 
         await expect(
