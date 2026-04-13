@@ -20,6 +20,7 @@ interface ClaimDelegateToClaimProps {
   merklIsAuthorizedOnBase?: boolean
   isChangingNetwork?: boolean
   canClaim: boolean
+  clientChainId?: number
   isOnlyStep?: boolean
   isOwner?: boolean
   needsToAuthorizeStakingRewardsCallerBase?: boolean
@@ -31,6 +32,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   claimableRaw,
   balance,
   chainId,
+  clientChainId,
   onClaim,
   isLoading,
   merklIsAuthorizedOnBase,
@@ -41,6 +43,9 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   needsToAuthorizeStakingRewardsCallerBase,
 }) => {
   const buttonLabel = useMemo(() => {
+    if (Number(clientChainId) !== chainId) {
+      return 'Switch network to claim'
+    }
     if (typeof merklIsAuthorizedOnBase !== 'undefined' && !merklIsAuthorizedOnBase) {
       return 'Authorize Merkl'
     }
@@ -59,11 +64,13 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
 
     return isOnlyStep ? 'Claim' : 'Claim 1/2'
   }, [
-    isLoading,
-    isChangingNetwork,
-    isOnlyStep,
-    needsToAuthorizeStakingRewardsCallerBase,
+    clientChainId,
+    chainId,
     merklIsAuthorizedOnBase,
+    needsToAuthorizeStakingRewardsCallerBase,
+    isChangingNetwork,
+    isLoading,
+    isOnlyStep,
   ])
 
   return (

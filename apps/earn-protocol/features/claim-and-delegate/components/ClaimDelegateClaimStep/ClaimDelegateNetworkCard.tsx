@@ -19,6 +19,7 @@ interface ClaimDelegateNetworkCardProps {
   isOnlyStep?: boolean
   isOwner?: boolean
   earnedAdditionalInfo?: ReactNode
+  clientChainId?: number
   authorizedStakingRewardsCallerBase?: AuthorizedStakingRewardsCallerBaseStatus
 }
 
@@ -30,6 +31,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
   walletAddress,
   merklIsAuthorizedOnBase,
   onClaim,
+  clientChainId,
   isLoading,
   isChangingNetwork,
   isChangingNetworkTo,
@@ -61,6 +63,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
   return (
     <ClaimDelegateToClaim
       chainId={chainId}
+      clientChainId={clientChainId}
       earned={formattedClaimable}
       earnedAdditionalInfo={earnedAdditionalInfo}
       claimableRaw={claimableAmount}

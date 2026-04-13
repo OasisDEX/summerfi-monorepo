@@ -6,11 +6,11 @@ import { toast } from 'react-toastify'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
   getEarnProtocolChainById,
+  getSafeTxHash,
   SUCCESS_TOAST_CONFIG,
   useEarnProtocolSendUserOperation,
   useEarnProtocolWallet,
   useIsIframe,
-  getSafeTxHash,
 } from '@summerfi/app-earn-ui'
 import { type EarnTransactionViewStates, SupportedNetworkIds } from '@summerfi/app-types'
 import { supportedSDKNetwork, supportedSDKNetworkId } from '@summerfi/app-utils'
@@ -74,6 +74,7 @@ export const useSimpleTransaction = ({
             if (!safeTransactionData) {
               // not a safe transaction, proceed with the original hash
               setWaitingForTx(hash)
+
               return
             }
             if (safeTransactionData.transactionHash) {
@@ -144,6 +145,7 @@ export const useSimpleTransaction = ({
               if (!safeTransactionData) {
                 // not a safe transaction, proceed with the original hash
                 setWaitingForTx(safeTxHash as `0x${string}`)
+
                 return
               }
               if (safeTransactionData.transactionHash) {

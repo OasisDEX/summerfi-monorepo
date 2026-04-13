@@ -297,7 +297,6 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     }
 
     if (Number(clientChainId) !== Number(chainId)) {
-      dispatch({ type: 'set-pending-claim', payload: chainId })
       setChain({ chain: chainId })
 
       return
@@ -379,6 +378,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       {/* Base network card */}
       <ClaimDelegateNetworkCard
         chainId={SupportedNetworkIds.Base}
+        clientChainId={clientChainId}
         claimableAmount={state.claimableBalances[SupportedNetworkIds.Base] || 0}
         balance={state.walletBalances.base || 0}
         sumrPriceUsd={sumrPriceUsd}
@@ -400,6 +400,11 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         walletAddress={resolvedWalletAddress}
         merklIsAuthorizedOnBase={merklIsAuthorizedOnBase}
         onClaim={() => {
+          if (Number(clientChainId) !== Number(SupportedNetworkIds.Base)) {
+            setChain({ chain: SupportedNetworkIds.Base })
+
+            return
+          }
           if (!isOptInOpen && !merklIsAuthorizedOnBase) {
             handleOptInOpenClose()
 
@@ -442,11 +447,20 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
           <ClaimDelegateNetworkCard
             key={item.chainId}
             chainId={item.chainId}
+            clientChainId={clientChainId}
             claimableAmount={state.claimableBalances[item.chainId] || 0}
             balance={state.walletBalances[network] || 0}
             sumrPriceUsd={sumrPriceUsd}
             walletAddress={resolvedWalletAddress}
-            onClaim={() => handleClaimClick(item.chainId)}
+            onClaim={() => {
+              if (Number(clientChainId) !== Number(item.chainId)) {
+                dispatch({ type: 'set-pending-claim', payload: item.chainId })
+                setChain({ chain: item.chainId })
+
+                return
+              }
+              handleClaimClick(item.chainId)
+            }}
             isLoading={
               state.claimStatus === UiTransactionStatuses.PENDING &&
               (state.pendingClaimChainId === item.chainId || clientChainId === item.chainId)

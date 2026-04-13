@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import {
+  getSafeTxHash,
   useEarnProtocolChain,
   useEarnProtocolSendUserOperation,
   useIsIframe,
-  getSafeTxHash,
 } from '@summerfi/app-earn-ui'
 import { type Address, type SupportedNetworkIds, type TransactionHash } from '@summerfi/app-types'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'
@@ -113,6 +113,7 @@ export const useMigrationTransaction = ({
                   hash,
                 },
               ])
+
               return
             }
             if (safeTransactionData.transactionHash) {

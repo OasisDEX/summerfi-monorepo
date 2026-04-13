@@ -12,6 +12,7 @@ import {
 import Safe from '@safe-global/safe-apps-sdk'
 import {
   getEarnProtocolChainById,
+  getSafeTxHash,
   getVaultPositionUrl,
   getVaultUrl,
   useClientChainId,
@@ -20,7 +21,6 @@ import {
   useEarnProtocolSendUserOperation,
   useEarnProtocolWallet,
   useIsIframe,
-  getSafeTxHash,
 } from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
@@ -382,6 +382,7 @@ export const useTransaction = ({
             if (!safeTransactionData) {
               // not a safe transaction, proceed with the original hash
               setWaitingForTx(hash)
+
               return
             }
             if (safeTransactionData.transactionHash) {
@@ -495,6 +496,7 @@ export const useTransaction = ({
               if (!safeTransactionData) {
                 // not a safe transaction, proceed with the original hash
                 setWaitingForTx(safeTxHash as `0x${string}`)
+
                 return
               }
               if (safeTransactionData.transactionHash) {
