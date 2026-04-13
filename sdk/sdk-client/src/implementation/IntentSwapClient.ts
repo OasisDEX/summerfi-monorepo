@@ -26,7 +26,7 @@ import {
 } from '@summerfi/sdk-common'
 
 const PERMIT2_ADDRESS = '0x000000000022D473030F116dDEE9F6B43aC78BA3' as const
-const PERMIT2_EXPIRATION_MINUTES = 3
+const PERMIT2_EXPIRATION_MINUTES = 10
 
 /**
  * @name IntentSwapClient
