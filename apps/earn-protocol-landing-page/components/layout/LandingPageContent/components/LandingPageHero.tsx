@@ -13,11 +13,12 @@ import {
   type IArmadaVaultInfo,
   type RewardTokenPrices,
   type SDKVaultishType,
+  type TotalRebalanceItemsPerStrategyId,
 } from '@summerfi/app-types'
 import {
   findVaultInfo,
-  formatCryptoBalance,
   formatDecimalAsPercent,
+  getRebalanceSavedTimeInHours,
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
@@ -33,13 +34,13 @@ export const LandingPageHero = ({
   vaultsApyByNetworkMap,
   vaultsInfo,
   rewardTokenPrices,
-  tvl,
+  totalRebalancesPerStrategyId,
 }: {
   vaultsList?: SDKVaultishType[]
   vaultsApyByNetworkMap?: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   rewardTokenPrices?: RewardTokenPrices
-  tvl?: number
+  totalRebalancesPerStrategyId?: TotalRebalanceItemsPerStrategyId[]
 }) => {
   const smoothScrollToId = (id: string) => {
     const element = document.getElementById(id)
@@ -51,7 +52,14 @@ export const LandingPageHero = ({
 
   const heroStats = useMemo(() => {
     const formattedProtocolsSupportedList = getVaultsProtocolsList(vaultsList ?? [])
-    const noOfVaults = vaultsList?.length ?? 0
+    const totalRebalances = totalRebalancesPerStrategyId
+      ? Object.values(totalRebalancesPerStrategyId).reduce(
+          (acc, rebalances) => acc + Number(rebalances.count),
+          0,
+        )
+      : 0
+
+    const rebalanceTimeSavedInHours = getRebalanceSavedTimeInHours(totalRebalances)
 
     const maxApy =
       (vaultsList
@@ -88,17 +96,17 @@ export const LandingPageHero = ({
 
     return [
       {
-        label: 'TVL',
-        value: tvl ? (
-          formatCryptoBalance(tvl)
+        label: 'Total Rebalances',
+        value: totalRebalances ? (
+          Number(totalRebalances).toLocaleString('en-US', { maximumFractionDigits: 0 })
         ) : (
           <SkeletonLine height={30} width={70} style={{ margin: '5px 0' }} />
         ),
       },
       {
-        label: '# of Vaults',
-        value: noOfVaults ? (
-          noOfVaults.toLocaleString('en', { maximumFractionDigits: 0 })
+        label: 'Hours of user time saved',
+        value: rebalanceTimeSavedInHours ? (
+          rebalanceTimeSavedInHours.toLocaleString('en-US', { maximumFractionDigits: 1 })
         ) : (
           <SkeletonLine height={30} width={70} style={{ margin: '5px 0' }} />
         ),
@@ -120,7 +128,13 @@ export const LandingPageHero = ({
         ),
       },
     ]
-  }, [rewardTokenPrices, vaultsApyByNetworkMap, vaultsInfo, vaultsList, tvl])
+  }, [
+    vaultsList,
+    totalRebalancesPerStrategyId,
+    vaultsInfo,
+    vaultsApyByNetworkMap,
+    rewardTokenPrices,
+  ])
 
   const handleGetStartedClick = () => {
     EarnProtocolEvents.buttonClicked({

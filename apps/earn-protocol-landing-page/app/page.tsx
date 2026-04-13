@@ -39,10 +39,10 @@ export default function HomePage() {
     >
       <LandingPageHero
         vaultsInfo={landingPageData?.vaultsInfo}
+        totalRebalancesPerStrategyId={landingPageData?.totalRebalanceItemsPerStrategyId}
         vaultsList={landingPageData?.vaultsWithConfig}
         vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
         rewardTokenPrices={landingPageData?.rewardTokenPrices}
-        tvl={landingPageData?.tvl}
       />
       <ProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
       <YieldProtocolOpenToAll />

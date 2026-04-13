@@ -1,10 +1,10 @@
 import { Emphasis, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 
-import zapIcon from '@/public/img/landing-page/icons/badge-check.svg'
+import badgeIcon from '@/public/img/landing-page/icons/badge-check.svg'
 import galleryIcon from '@/public/img/landing-page/icons/gallery-vertical-end.svg'
 import shieldIcon from '@/public/img/landing-page/icons/shield-half.svg'
-import badgeIcon from '@/public/img/landing-page/icons/zap.svg'
+import zapIcon from '@/public/img/landing-page/icons/zap.svg'
 
 import styles from '@/components/layout/LandingPageContent/components/YieldProtocolOpenToAll.module.css'
 
@@ -38,10 +38,12 @@ export const YieldProtocolOpenToAll = () => {
         variant="h5"
         style={{
           marginBottom: 'var(--spacing-space-large)',
+          textAlign: 'center',
         }}
       >
-        Summer.fi is the <Emphasis variant="h5colorful">yield protocol open to all</Emphasis>, where
-        serious capital earns more by doing less.
+        The Lazy Summer Protocol is the{' '}
+        <Emphasis variant="h5colorful">yield protocol open to all</Emphasis>, where serious
+        <br /> capital earns more by doing less.
       </Text>
       <div className={styles.container}>
         {items.map((item) => (

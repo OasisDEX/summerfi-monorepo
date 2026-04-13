@@ -13,7 +13,7 @@ import landingPageBlobsStyles from '@/components/layout/LandingMasterPage/landin
 /* ------------------------------------------------------------------ */
 
 const SMALL_COLORS = ['#de207f', '#DB70A5', '#8D3360', '#5E1238']
-const LARGE_COLORS = ['#5B035D', '#DB70A5', '#5D1A03', '#de207f']
+const LARGE_COLORS = ['#DB70A5', '#5B035D', '#5D1A03', '#de207f']
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -57,11 +57,14 @@ const lerp = (current: number, target: number, rate: number): number => {
 
 const GRAVITY_CENTER_X = 0.7
 const GRAVITY_CENTER_Y = 0.5
-const GRAVITY_MOUSE_RADIUS = 0.5 // fraction of width – outer activation radius
-const GRAVITY_LERP_SPEED = 1.3 // how fast activation catches up (units/sec)
-const BLACKHOLE_PULL_SPEED = 1.2 // how fast small blobs are permanently sucked in
+const GRAVITY_MOUSE_RADIUS = 0.4 // fraction of width – outer activation radius
+const GRAVITY_LERP_SPEED = 1.6 // how fast activation catches up (units/sec)
+const GRAVITY_RADIUS_GROW_SPEED = 300 // px/sec while cursor is held near center
+const GRAVITY_RADIUS_SHRINK_SPEED = 400 // px/sec when cursor leaves center
+const BLACKHOLE_PULL_SPEED = 1.6 // how fast small blobs are permanently sucked in
 const BLACKHOLE_DEATH_RADIUS = 150 // pixels from center before the blob dies and fades away
-const BLACKHOLE_DEATH_FADE = 0.7 // seconds of fade after entering black hole core
+const BLACKHOLE_DEATH_FADE = 1 // seconds of fade after entering black hole core
+const SMALL_TRAIL_SEGMENTS = 24
 
 const easeInOutCubic = (x: number): number => {
   return x < 0.5
@@ -79,6 +82,7 @@ const calcGravityPull = (
   gravityCy: number,
   activation: number,
   inverseMaxDist: number,
+  gravityRadius: number,
 ): { pullX: number; pullY: number } => {
   if (activation <= 0.001) return { pullX: 0, pullY: 0 }
 
@@ -87,10 +91,12 @@ const calcGravityPull = (
   const bDy = Number(gravityCy) - Number(blobY)
   const blobDist = Math.sqrt(Number(Number(bDx) * Number(bDx)) + Number(Number(bDy) * Number(bDy)))
 
-  const normalizedDist = Math.min(Number(blobDist) * Number(inverseMaxDist), 1)
+  const maxDist = Number(1 / inverseMaxDist)
+  const effectiveRadius = Math.min(Number(Math.max(gravityRadius, 1)), maxDist)
+  const normalizedDist = Math.min(Number(blobDist) / Number(effectiveRadius), 1)
 
-  // the stronger the activation the further blobs are reached
-  const reachMultiplier = 0.2 + Number(Number(activation) * 0.2)
+  // the stronger the activation, the wider the pull reach
+  const reachMultiplier = 0.35 + Number(Number(activation) * 0.65)
   const adjustedDist = Math.min(Number(normalizedDist) / Number(reachMultiplier), 1)
 
   // ease per-blob pull so nearby ones snap harder
@@ -127,16 +133,53 @@ interface SmallBlob {
   deathStartAge: number | null // when black hole death fade starts
   renderX: number // cached final x for this frame
   renderY: number // cached final y for this frame
+  hasRender: boolean
+  trailX: number[] // ring buffer of previous x positions
+  trailY: number[] // ring buffer of previous y positions
+  trailHead: number
+  trailCount: number
 }
 
-const spawnSmallBlob = (width: number, height: number, preAge?: number): SmallBlob => {
+const spawnSmallBlob = (
+  width: number,
+  height: number,
+  preAge?: number,
+  avoidCenter?: { x: number; y: number; radius: number },
+): SmallBlob => {
   const rgb = hexToRgb(pickRandom(SMALL_COLORS))
   const fromBottom = Math.random() > 0.5
   const direction: 1 | -1 = fromBottom ? 1 : -1
   const startY = fromBottom ? Number(height) + rand(10, 60) : rand(-60, -10)
 
+  let x = rand(Number(width) * 0.05, Number(width) * 0.95)
+
+  if (avoidCenter) {
+    let candidateX = x
+    let tries = 0
+
+    while (tries < 6) {
+      const dx = Number(candidateX) - Number(avoidCenter.x)
+      const dy = Number(startY) - Number(avoidCenter.y)
+      const dist = Math.sqrt(Number(Number(dx) * Number(dx)) + Number(Number(dy) * Number(dy)))
+
+      if (dist > Number(avoidCenter.radius) * 1.05) {
+        break
+      }
+
+      candidateX = rand(Number(width) * 0.05, Number(width) * 0.95)
+      tries += 1
+    }
+
+    if (tries >= 6) {
+      candidateX =
+        Number(avoidCenter.x) < Number(width) / 2 ? Number(width) * 0.95 : Number(width) * 0.05
+    }
+
+    x = candidateX
+  }
+
   return {
-    x: rand(Number(width) * 0.05, Number(width) * 0.95),
+    x,
     startY,
     fromBottom,
     age: preAge ?? 0,
@@ -154,6 +197,11 @@ const spawnSmallBlob = (width: number, height: number, preAge?: number): SmallBl
     deathStartAge: null,
     renderX: 0,
     renderY: 0,
+    hasRender: false,
+    trailX: new Array(SMALL_TRAIL_SEGMENTS).fill(0),
+    trailY: new Array(SMALL_TRAIL_SEGMENTS).fill(0),
+    trailHead: 0,
+    trailCount: 0,
   }
 }
 
@@ -164,6 +212,7 @@ const updateSmallBlob = (
   gravityCy: number,
   activation: number,
   inverseMaxDist: number,
+  gravityRadius: number,
 ) => {
   // compute natural position (same formula as drawSmallBlob)
   const t = Number(blob.age) / Number(blob.lifetime)
@@ -189,6 +238,7 @@ const updateSmallBlob = (
     gravityCy,
     activation,
     inverseMaxDist,
+    gravityRadius,
   )
 
   // accumulate into permanent offset
@@ -197,8 +247,21 @@ const updateSmallBlob = (
   blob.offsetY =
     Number(blob.offsetY) + Number(Number(pullY) * Number(dt) * Number(BLACKHOLE_PULL_SPEED))
 
+  const hadRender = blob.hasRender
+  const prevRenderX = blob.renderX
+  const prevRenderY = blob.renderY
+
   blob.renderX = Number(baseCurrentX) + Number(blob.offsetX)
   blob.renderY = Number(currentY) + Number(blob.offsetY)
+  blob.hasRender = true
+
+  // store exact previous rendered position in a fixed-size ring buffer
+  if (hadRender) {
+    blob.trailHead = Number((Number(blob.trailHead) + 1) % Number(SMALL_TRAIL_SEGMENTS))
+    blob.trailX[blob.trailHead] = prevRenderX
+    blob.trailY[blob.trailHead] = prevRenderY
+    blob.trailCount = Math.min(Number(blob.trailCount) + 1, Number(SMALL_TRAIL_SEGMENTS))
+  }
 
   // if the blob reaches the black hole core, cap lifetime so it fades away naturally
   const distanceToCore = Math.sqrt(
@@ -247,6 +310,26 @@ const drawSmallBlob = (ctx: CanvasRenderingContext2D, blob: SmallBlob) => {
   const [r, g, b] = blob.color
   const alpha = Number(Number(envelope) * 0.9)
 
+  // trail: exact previous positions, drawn as solid circles to keep cost low
+  if (blob.trailCount > 0 && currentSize > 0.35) {
+    let trailIndex = blob.trailHead
+
+    for (let i = 0; i < blob.trailCount; i++) {
+      const fade = 1 - Number(Number(i + 1) / Number(blob.trailCount + 1))
+      const trailAlpha = Number(alpha) * 0.9 * Number(fade)
+      const trailSize = Number(currentSize) * (0.25 + Number(Number(fade) * 0.35))
+
+      if (trailAlpha > 0.003 && trailSize > 0.2) {
+        ctx.fillStyle = rgbaString(r, g, b, trailAlpha)
+        ctx.beginPath()
+        ctx.arc(blob.trailX[trailIndex], blob.trailY[trailIndex], trailSize, 0, TWO_PI)
+        ctx.fill()
+      }
+
+      trailIndex = trailIndex === 0 ? SMALL_TRAIL_SEGMENTS - 1 : trailIndex - 1
+    }
+  }
+
   // glow layer
   const grad = ctx.createRadialGradient(currentX, finalY, 0, currentX, finalY, glowRadius)
 
@@ -294,7 +377,7 @@ interface LargeBlob {
 }
 
 const createLargeBlob = (index: number, total: number): LargeBlob => {
-  const rgb = hexToRgb(pickRandom(LARGE_COLORS))
+  const rgb = hexToRgb(LARGE_COLORS[index % LARGE_COLORS.length])
   // concentrate vertically near center (0.45–0.55 range)
   const ySpread = total > 1 ? Number(0.45 + Number(Number(index / Number(total - 1)) * 0.1)) : 0.5
 
@@ -327,6 +410,7 @@ const drawLargeBlob = (
   gravityCy: number,
   activation: number,
   inverseMaxDist: number,
+  gravityRadius: number,
 ) => {
   const t = Number(time) * 0.001
 
@@ -356,7 +440,15 @@ const drawLargeBlob = (
     Number(0.2 * Math.sin(Number(Number(blob.fadeSpeed) * Number(t)) + Number(blob.fadePhase)))
 
   // gravity pull toward center
-  const { pullX, pullY } = calcGravityPull(cx, cy, gravityCx, gravityCy, activation, inverseMaxDist)
+  const { pullX, pullY } = calcGravityPull(
+    cx,
+    cy,
+    gravityCx,
+    gravityCy,
+    activation,
+    inverseMaxDist,
+    gravityRadius,
+  )
   const finalCx = Number(cx) + Number(pullX)
   const finalCy = Number(cy) + Number(pullY)
 
@@ -423,6 +515,7 @@ export const LandingPageBlobs = ({
     let rafId = 0
     let prevTime = 0
     let smoothedActivation = 0
+    let dynamicMouseRadius = 1
 
     // blob pools
     let smallBlobs: SmallBlob[] = []
@@ -444,6 +537,8 @@ export const LandingPageBlobs = ({
       canvas.style.height = `${height}px`
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
+      dynamicMouseRadius = Number(Math.max(width, height)) * Number(GRAVITY_MOUSE_RADIUS)
+
       // re-create large blobs on resize (they are position-relative)
       largeBlobs = Array.from({ length: largeBlobCount }, (_, i) =>
         createLargeBlob(i, largeBlobCount),
@@ -460,10 +555,10 @@ export const LandingPageBlobs = ({
       })
     }
 
-    const ensureSmallBlobs = () => {
+    const ensureSmallBlobs = (avoidCenter?: { x: number; y: number; radius: number }) => {
       // keep pool at target count – respawn dead ones
       while (smallBlobs.length < smallBlobCount) {
-        smallBlobs.push(spawnSmallBlob(width, height))
+        smallBlobs.push(spawnSmallBlob(width, height, undefined, avoidCenter))
       }
     }
 
@@ -486,8 +581,26 @@ export const LandingPageBlobs = ({
       const mouseDist = Math.sqrt(
         Number(Number(mDx) * Number(mDx)) + Number(Number(mDy) * Number(mDy)),
       )
-      const mouseRadius = Number(height) * Number(GRAVITY_MOUSE_RADIUS)
-      const rawActivation = Math.max(0, 1 - Number(Number(mouseDist) / Number(mouseRadius)))
+      const baseMouseRadius = Number(height) * Number(GRAVITY_MOUSE_RADIUS)
+      const maxMouseRadius = Math.max(Number(width), Number(height))
+      const isHoldingCenter = mouseDist <= Number(BLACKHOLE_DEATH_RADIUS)
+
+      if (isHoldingCenter) {
+        dynamicMouseRadius = Math.min(
+          Number(maxMouseRadius),
+          Number(dynamicMouseRadius) + Number(Number(dt) * Number(GRAVITY_RADIUS_GROW_SPEED)),
+        )
+      } else {
+        dynamicMouseRadius = Math.max(
+          Number(baseMouseRadius),
+          Number(dynamicMouseRadius) - Number(Number(dt) * Number(GRAVITY_RADIUS_SHRINK_SPEED)),
+        )
+      }
+
+      const rawActivation = Math.max(
+        0,
+        1 - Number(Number(mouseDist) / Number(Math.max(dynamicMouseRadius, 1))),
+      )
       const targetActivation = easeInOutCubic(rawActivation)
 
       smoothedActivation = lerp(
@@ -497,13 +610,25 @@ export const LandingPageBlobs = ({
       )
 
       // --- small blobs (behind) ---
-      ensureSmallBlobs()
+      ensureSmallBlobs({
+        x: gravityCx,
+        y: gravityCy,
+        radius: Math.min(Number(dynamicMouseRadius), Number(BLACKHOLE_DEATH_RADIUS) * 2),
+      })
       let writeIndex = 0
 
       for (const sb of smallBlobs) {
-        sb.age = Number(Number(sb.age) + Number(dt)) // + Number(targetActivation * 0.1)
+        sb.age = Number(Number(sb.age) + Number(dt))
 
-        updateSmallBlob(sb, dt, gravityCx, gravityCy, smoothedActivation, inverseMaxDist)
+        updateSmallBlob(
+          sb,
+          dt,
+          gravityCx,
+          gravityCy,
+          smoothedActivation,
+          inverseMaxDist,
+          dynamicMouseRadius,
+        )
         drawSmallBlob(ctx, sb)
 
         const isNaturalDead = sb.age > sb.lifetime
@@ -530,6 +655,7 @@ export const LandingPageBlobs = ({
           gravityCy,
           smoothedActivation,
           inverseMaxDist,
+          dynamicMouseRadius,
         )
       }
 
