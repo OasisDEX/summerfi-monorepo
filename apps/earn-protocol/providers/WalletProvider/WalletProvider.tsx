@@ -33,6 +33,13 @@ export const WalletProvider: FC<{
           showWalletLoginFirst: true,
           theme: 'dark',
           accentColor: '#ff49a4',
+          walletList: [
+            'detected_ethereum_wallets',
+            'metamask',
+            'safe',
+            'wallet_connect',
+            'wallet_connect_qr',
+          ],
         },
         embeddedWallets: {
           disableAutomaticMigration: true,
