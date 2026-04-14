@@ -19,6 +19,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { useSafeAutoConnect } from '@/hooks/use-safe-app'
 
 const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
   ssr: false,
@@ -30,6 +31,7 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
 })
 
 export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd }) => {
+  useSafeAutoConnect()
   const currentPath = usePathname()
   const path = useCurrentUrl()
   const { address: userWalletAddress } = useEarnProtocolWallet()
