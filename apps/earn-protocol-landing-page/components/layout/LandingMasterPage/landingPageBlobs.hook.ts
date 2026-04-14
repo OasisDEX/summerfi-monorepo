@@ -1,0 +1,760 @@
+/* eslint-disable no-mixed-operators */
+import { type RefObject, useEffect } from 'react'
+import { debounce } from 'lodash-es'
+
+import {
+  BLACKHOLE_DEATH_FADE,
+  BLACKHOLE_DEATH_RADIUS,
+  COMET_DEBRIS_CAP_MULTIPLIER,
+  COMET_DEBRIS_DRAG,
+  COMET_DEBRIS_LIFETIME_MAX,
+  COMET_DEBRIS_LIFETIME_MIN,
+  COMET_DEBRIS_MAX,
+  COMET_DEBRIS_MIN,
+  COMET_DEBRIS_SIZE_MAX,
+  COMET_DEBRIS_SIZE_MIN,
+  COMET_DEBRIS_SPREAD,
+  DEBRIS_FRAG,
+  DEBRIS_VERT,
+  FRAME_DT,
+  FRAME_DURATION_MS,
+  GRAVITY_CENTER_X,
+  GRAVITY_CENTER_Y,
+  GRAVITY_DEBRIS_THRESHOLD,
+  GRAVITY_LERP_SPEED,
+  GRAVITY_MOUSE_RADIUS,
+  GRAVITY_RADIUS_GROW_SPEED,
+  GRAVITY_RADIUS_SHRINK_SPEED,
+  LARGE_BLOB_ACTIVE_ALPHA_BOOST,
+  LARGE_BLOB_ACTIVE_SCALE_BOOST,
+  LARGE_BLOB_CENTER_PULL,
+  LARGE_BLOB_IDLE_ALPHA,
+  LARGE_BLOB_RESPONSE_LERP_SPEED,
+  LARGE_FRAG,
+  LARGE_VERT,
+  SMALL_FRAG,
+  SMALL_VERT,
+  TAIL_FRAG,
+  TAIL_VERT,
+} from '@/components/layout/LandingMasterPage/landingPageBlobs.constants'
+import {
+  calcGravityPull,
+  createLargeBlob,
+  easeInOutCubic,
+  lerp,
+  linkProgram,
+  rand,
+  spawnSmallBlob,
+  updateSmallBlob,
+} from '@/components/layout/LandingMasterPage/landingPageBlobs.helpers'
+import {
+  type DebrisParticle,
+  type LargeBlob,
+  type SmallBlob,
+} from '@/components/layout/LandingMasterPage/landingPageBlobs.types'
+
+export const useLandingPageBlobs = ({
+  canvasRef,
+  canvasRectRef,
+  mouseRef,
+  handleMouseMove,
+  smallBlobCount,
+  largeBlobCount,
+}: {
+  canvasRef?: RefObject<HTMLCanvasElement | null>
+  canvasRectRef: RefObject<DOMRect | null>
+  mouseRef: RefObject<{ x: number; y: number }>
+  handleMouseMove: (ev: MouseEvent) => void
+  smallBlobCount: number
+  largeBlobCount: number
+}) => {
+  useEffect(() => {
+    const canvas = canvasRef?.current
+
+    if (!canvas) return undefined
+
+    // ---- WebGL2 context ----
+    const gl = canvas.getContext('webgl2', {
+      alpha: true,
+      premultipliedAlpha: true,
+      antialias: false,
+    }) as WebGL2RenderingContext | null
+
+    if (!gl) return undefined
+
+    gl.enable(gl.BLEND)
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA) // premultiplied
+
+    // ---- compile programs ----
+    let smallProg: WebGLProgram
+    let tailProg: WebGLProgram
+    let debrisProg: WebGLProgram
+    let largeProg: WebGLProgram
+
+    try {
+      smallProg = linkProgram(gl, SMALL_VERT, SMALL_FRAG)
+      tailProg = linkProgram(gl, TAIL_VERT, TAIL_FRAG)
+      debrisProg = linkProgram(gl, DEBRIS_VERT, DEBRIS_FRAG)
+      largeProg = linkProgram(gl, LARGE_VERT, LARGE_FRAG)
+    } catch {
+      return undefined
+    }
+
+    // ---- small blob geometry: unit quad (-1..1) ----
+    const quadVerts = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1])
+    const quadBuf = gl.createBuffer() as WebGLBuffer
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf)
+    gl.bufferData(gl.ARRAY_BUFFER, quadVerts, gl.STATIC_DRAW)
+
+    // ---- small blob instance buffer ----
+    // layout: center(2) size(1) glow(1) alpha(1) color(3) tailA(2) tailB(2) tailTip(2) hasTail(1) = 15 floats
+    const SMALL_STRIDE = 15
+    const smallInstBuf = gl.createBuffer() as WebGLBuffer
+
+    // ---- small blob VAO ----
+    const smallVAO = gl.createVertexArray() as WebGLVertexArrayObject
+
+    gl.bindVertexArray(smallVAO)
+
+    // quad positions
+    gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf)
+    const aPosSmall = gl.getAttribLocation(smallProg, 'a_pos')
+
+    gl.enableVertexAttribArray(aPosSmall)
+    gl.vertexAttribPointer(aPosSmall, 2, gl.FLOAT, false, 0, 0)
+
+    // instance buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, smallInstBuf)
+    const fsize = 4
+
+    const bindInst = (attrName: string, size: number, offset: number) => {
+      const loc = gl.getAttribLocation(smallProg, attrName)
+
+      if (loc < 0) return
+      gl.enableVertexAttribArray(loc)
+      gl.vertexAttribPointer(loc, size, gl.FLOAT, false, SMALL_STRIDE * fsize, offset * fsize)
+      gl.vertexAttribDivisor(loc, 1)
+    }
+
+    bindInst('a_center', 2, 0)
+    bindInst('a_size', 1, 2)
+    bindInst('a_glow', 1, 3)
+    bindInst('a_alpha', 1, 4)
+    bindInst('a_color', 3, 5)
+    bindInst('a_tailA', 2, 8)
+    bindInst('a_tailB', 2, 10)
+    bindInst('a_tailTip', 2, 12)
+    bindInst('a_hasTail', 1, 14)
+
+    gl.bindVertexArray(null)
+
+    // ---- debris VAO ----
+    // layout per point: center(2) size(1) color(3) alpha(1) = 7 floats
+    const DEBRIS_VSTRIDE = 7
+    const debrisBuf = gl.createBuffer() as WebGLBuffer
+    const debrisVAO = gl.createVertexArray() as WebGLVertexArrayObject
+
+    gl.bindVertexArray(debrisVAO)
+    gl.bindBuffer(gl.ARRAY_BUFFER, debrisBuf)
+
+    const aDebrisCenter = gl.getAttribLocation(debrisProg, 'a_center')
+    const aDebrisSize = gl.getAttribLocation(debrisProg, 'a_size')
+    const aDebrisColor = gl.getAttribLocation(debrisProg, 'a_color')
+    const aDebrisAlpha = gl.getAttribLocation(debrisProg, 'a_alpha')
+
+    gl.enableVertexAttribArray(aDebrisCenter)
+    gl.vertexAttribPointer(aDebrisCenter, 2, gl.FLOAT, false, DEBRIS_VSTRIDE * fsize, 0)
+    gl.enableVertexAttribArray(aDebrisSize)
+    gl.vertexAttribPointer(aDebrisSize, 1, gl.FLOAT, false, DEBRIS_VSTRIDE * fsize, 2 * fsize)
+    gl.enableVertexAttribArray(aDebrisColor)
+    gl.vertexAttribPointer(aDebrisColor, 3, gl.FLOAT, false, DEBRIS_VSTRIDE * fsize, 3 * fsize)
+    gl.enableVertexAttribArray(aDebrisAlpha)
+    gl.vertexAttribPointer(aDebrisAlpha, 1, gl.FLOAT, false, DEBRIS_VSTRIDE * fsize, 6 * fsize)
+
+    gl.bindVertexArray(null)
+
+    // ---- tail VAO ----
+    // layout per vertex (3 verts per tail): vertex(2) color(3) alpha(1) = 6 floats
+    const TAIL_VSTRIDE = 6
+    const tailBuf = gl.createBuffer() as WebGLBuffer
+    const tailVAO = gl.createVertexArray() as WebGLVertexArrayObject
+
+    gl.bindVertexArray(tailVAO)
+    gl.bindBuffer(gl.ARRAY_BUFFER, tailBuf)
+
+    const aVertexTail = gl.getAttribLocation(tailProg, 'a_vertex')
+    const aColorTail = gl.getAttribLocation(tailProg, 'a_color')
+    const aAlphaTail = gl.getAttribLocation(tailProg, 'a_alpha')
+
+    gl.enableVertexAttribArray(aVertexTail)
+    gl.vertexAttribPointer(aVertexTail, 2, gl.FLOAT, false, TAIL_VSTRIDE * fsize, 0)
+    gl.enableVertexAttribArray(aColorTail)
+    gl.vertexAttribPointer(aColorTail, 3, gl.FLOAT, false, TAIL_VSTRIDE * fsize, 2 * fsize)
+    gl.enableVertexAttribArray(aAlphaTail)
+    gl.vertexAttribPointer(aAlphaTail, 1, gl.FLOAT, false, TAIL_VSTRIDE * fsize, 5 * fsize)
+
+    gl.bindVertexArray(null)
+
+    // ---- large blob VAO (reuses quadBuf for geometry, instance buffer for blobs) ----
+    const largeInstBuf = gl.createBuffer() as WebGLBuffer
+    // layout: center(2) radius(1) alpha(1) color(3) = 7 floats
+    const LARGE_STRIDE = 7
+    const largeVAO = gl.createVertexArray() as WebGLVertexArrayObject
+
+    gl.bindVertexArray(largeVAO)
+    gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf)
+    const aPosLarge = gl.getAttribLocation(largeProg, 'a_pos')
+
+    gl.enableVertexAttribArray(aPosLarge)
+    gl.vertexAttribPointer(aPosLarge, 2, gl.FLOAT, false, 0, 0)
+    gl.bindBuffer(gl.ARRAY_BUFFER, largeInstBuf)
+
+    const bindLargeInst = (attrName: string, size: number, offset: number) => {
+      const loc = gl.getAttribLocation(largeProg, attrName)
+
+      if (loc < 0) return
+      gl.enableVertexAttribArray(loc)
+      gl.vertexAttribPointer(loc, size, gl.FLOAT, false, LARGE_STRIDE * fsize, offset * fsize)
+      gl.vertexAttribDivisor(loc, 1)
+    }
+
+    bindLargeInst('a_center', 2, 0)
+    bindLargeInst('a_radius', 1, 2)
+    bindLargeInst('a_alpha', 1, 3)
+    bindLargeInst('a_color', 3, 4)
+
+    gl.bindVertexArray(null)
+
+    // ---- simulation state ----
+    let width = 0
+    let height = 0
+    let rafId = 0
+    let initRafId = 0
+    let prevTime = 0
+    let frameAccumulator = 0
+    let smoothedActivation = 0
+    let largeBlobActivation = 0
+    let dynamicMouseRadius = 1
+    let resizeObserver: ResizeObserver | null = null
+    let smallBlobs: SmallBlob[] = []
+    let largeBlobs: LargeBlob[] = []
+    const debrisParticles: DebrisParticle[] = []
+    const debrisParticleCap = Math.max(200, smallBlobCount * COMET_DEBRIS_CAP_MULTIPLIER)
+
+    // cached typed arrays (grown as needed)
+    let smallInstData = new Float32Array(smallBlobCount * SMALL_STRIDE)
+    let debrisData = new Float32Array(debrisParticleCap * DEBRIS_VSTRIDE)
+    let tailVertData = new Float32Array(smallBlobCount * 3 * TAIL_VSTRIDE)
+    let largeInstData = new Float32Array(largeBlobCount * LARGE_STRIDE)
+
+    const resize = () => {
+      const container = canvas.parentElement
+
+      if (!container) return
+      const rect = container.getBoundingClientRect()
+      const dpr = window.devicePixelRatio || 1
+
+      width = Math.max(rect.width, 1)
+      height = Math.max(rect.height, 1)
+      canvas.width = Math.round(width * dpr)
+      canvas.height = Math.round(height * dpr)
+      gl.viewport(0, 0, canvas.width, canvas.height)
+      canvasRectRef.current = rect
+      dynamicMouseRadius = Math.max(width, height) * GRAVITY_MOUSE_RADIUS
+      largeBlobs = Array.from({ length: largeBlobCount }, (_, i) =>
+        createLargeBlob(i, largeBlobCount),
+      )
+    }
+    const resizeDebounced = debounce(resize, 120)
+
+    const seedSmallBlobs = () => {
+      smallBlobs = Array.from({ length: smallBlobCount }, () =>
+        spawnSmallBlob(width, height, rand(50, 100)),
+      )
+    }
+
+    const ensureSmallBlobs = (avoidCenter?: { x: number; y: number; radius: number }) => {
+      while (smallBlobs.length < smallBlobCount) {
+        smallBlobs.push(spawnSmallBlob(width, height, undefined, avoidCenter))
+      }
+    }
+
+    const tick = (time: number) => {
+      if (prevTime === 0) {
+        prevTime = time
+        rafId = requestAnimationFrame(tick)
+
+        return
+      }
+
+      frameAccumulator += time - prevTime
+      prevTime = time
+      frameAccumulator = Math.min(frameAccumulator, FRAME_DURATION_MS * 5)
+
+      if (frameAccumulator < FRAME_DURATION_MS) {
+        rafId = requestAnimationFrame(tick)
+
+        return
+      }
+
+      while (frameAccumulator >= FRAME_DURATION_MS) {
+        frameAccumulator -= FRAME_DURATION_MS
+        const dt = FRAME_DT
+
+        // ---------- gravity ----------
+        const simGravCx = GRAVITY_CENTER_X * width
+        const simGravCy = GRAVITY_CENTER_Y * height
+        const simInvMaxDist = 1 / Math.sqrt(width * width + height * height)
+
+        const mDx = mouseRef.current.x - simGravCx
+        const mDy = mouseRef.current.y - simGravCy
+        const mouseDist = Math.sqrt(mDx * mDx + mDy * mDy)
+        const baseMouseRadius = height * GRAVITY_MOUSE_RADIUS
+        const maxMouseRadius = Math.max(width, height)
+        const isHoldingCenter = mouseDist <= BLACKHOLE_DEATH_RADIUS
+
+        if (isHoldingCenter) {
+          dynamicMouseRadius = Math.min(
+            maxMouseRadius,
+            dynamicMouseRadius + dt * GRAVITY_RADIUS_GROW_SPEED,
+          )
+        } else {
+          dynamicMouseRadius = Math.max(
+            baseMouseRadius,
+            dynamicMouseRadius - dt * GRAVITY_RADIUS_SHRINK_SPEED,
+          )
+        }
+
+        const rawActivation = Math.max(0, 1 - mouseDist / Math.max(dynamicMouseRadius, 1))
+        const targetActivation = easeInOutCubic(rawActivation)
+
+        smoothedActivation = lerp(
+          smoothedActivation,
+          targetActivation,
+          Math.min(dt * GRAVITY_LERP_SPEED, 1),
+        )
+        largeBlobActivation = lerp(
+          largeBlobActivation,
+          smoothedActivation,
+          Math.min(dt * LARGE_BLOB_RESPONSE_LERP_SPEED, 1),
+        )
+
+        // ---------- update small blobs ----------
+        ensureSmallBlobs({
+          x: simGravCx,
+          y: simGravCy,
+          radius: Math.min(dynamicMouseRadius, BLACKHOLE_DEATH_RADIUS * 2),
+        })
+
+        let writeIndex = 0
+
+        for (const sb of smallBlobs) {
+          sb.age += dt
+          updateSmallBlob(
+            sb,
+            dt,
+            simGravCx,
+            simGravCy,
+            smoothedActivation,
+            simInvMaxDist,
+            dynamicMouseRadius,
+          )
+
+          const isNaturalDead = sb.age > sb.lifetime
+          const isBlackHoleDead =
+            sb.deathStartAge !== null && sb.age - sb.deathStartAge > BLACKHOLE_DEATH_FADE
+
+          if (!isNaturalDead && !isBlackHoleDead) {
+            smallBlobs[writeIndex++] = sb
+          }
+        }
+        smallBlobs.length = writeIndex
+
+        // ---------- debris simulation + emission ----------
+        let debrisWrite = 0
+
+        for (const particle of debrisParticles) {
+          particle.age += dt
+
+          if (particle.age < particle.lifetime) {
+            particle.vx *= COMET_DEBRIS_DRAG
+            particle.vy *= COMET_DEBRIS_DRAG
+            particle.x += particle.vx * dt
+            particle.y += particle.vy * dt
+            debrisParticles[debrisWrite] = particle
+            debrisWrite++
+          }
+        }
+        debrisParticles.length = debrisWrite
+
+        for (const sb of smallBlobs) {
+          const progress = sb.age / sb.lifetime
+          const fadeIn = Math.min(progress / 0.15, 1)
+          const fadeOut = Math.min((1 - progress) / 0.2, 1)
+          const deathT =
+            sb.deathStartAge === null
+              ? 0
+              : Math.min((sb.age - sb.deathStartAge) / BLACKHOLE_DEATH_FADE, 1)
+          const envelope = fadeIn * fadeOut * (1 - deathT)
+
+          if (envelope > 0 && sb.hasTail) {
+            const currentSize = sb.size * envelope
+
+            if (currentSize > 0.35) {
+              const motionX = sb.tailStartX - sb.tailEndX
+              const motionY = sb.tailStartY - sb.tailEndY
+              const motionLen = Math.sqrt(motionX * motionX + motionY * motionY)
+
+              if (motionLen > 0.001) {
+                const dirX = motionX / motionLen
+                const dirY = motionY / motionLen
+                const perpX = -dirY
+                const perpY = dirX
+                const normalizedSize = Math.min(currentSize / 3, 1)
+                const gravityFactor = Math.min(sb.gravityInfluence / 0.12, 1)
+                const targetDebris =
+                  COMET_DEBRIS_MIN + normalizedSize * (COMET_DEBRIS_MAX - COMET_DEBRIS_MIN)
+                const emitCount = Math.max(
+                  1,
+                  Math.min(COMET_DEBRIS_MAX, Math.floor(targetDebris * gravityFactor)),
+                )
+
+                const shouldEmitDebris = sb.gravityInfluence > GRAVITY_DEBRIS_THRESHOLD
+
+                if (shouldEmitDebris) {
+                  for (let i = 0; i < emitCount; i++) {
+                    if (debrisParticles.length >= debrisParticleCap) {
+                      break
+                    }
+
+                    const idxFactor = (i + 1) / (emitCount + 1)
+                    const jitter = (Math.random() - 0.5) * currentSize * COMET_DEBRIS_SPREAD
+                    const emitDist = idxFactor * motionLen * (0.25 + normalizedSize * 0.8)
+                    const spawnX = sb.renderX - dirX * emitDist + perpX * jitter
+                    const spawnY = sb.renderY - dirY * emitDist + perpY * jitter
+                    const sparkSpeed = rand(14, 62) * (0.45 + normalizedSize + gravityFactor)
+                    const lateralSpeed = rand(-22, 22) * (0.7 + normalizedSize)
+                    const vx = -dirX * sparkSpeed + perpX * lateralSpeed
+                    const vy = -dirY * sparkSpeed + perpY * lateralSpeed
+                    const lifetime = rand(COMET_DEBRIS_LIFETIME_MIN, COMET_DEBRIS_LIFETIME_MAX)
+                    const size =
+                      COMET_DEBRIS_SIZE_MIN +
+                      (COMET_DEBRIS_SIZE_MAX - COMET_DEBRIS_SIZE_MIN) *
+                        normalizedSize *
+                        (1 - idxFactor * 0.5)
+                    const baseAlpha = envelope * gravityFactor * rand(0.28, 0.6)
+
+                    debrisParticles.push({
+                      x: spawnX,
+                      y: spawnY,
+                      vx,
+                      vy,
+                      age: 0,
+                      lifetime,
+                      size,
+                      baseAlpha,
+                      phase: rand(0, Math.PI * 2),
+                      color: sb.color,
+                    })
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // ---------- build GPU data & render ----------
+      gl.clearColor(0, 0, 0, 0)
+      gl.clear(gl.COLOR_BUFFER_BIT)
+
+      const renderGravCx = GRAVITY_CENTER_X * width
+      const renderGravCy = GRAVITY_CENTER_Y * height
+      const t = prevTime * 0.001
+
+      // ---- debris pass (behind tails and heads) ----
+      let debrisCount = 0
+
+      if (debrisData.length < debrisParticles.length * DEBRIS_VSTRIDE) {
+        debrisData = new Float32Array(
+          Math.max(debrisParticles.length * DEBRIS_VSTRIDE * 2, debrisData.length * 2),
+        )
+      }
+
+      for (const particle of debrisParticles) {
+        const lifeT = Math.min(particle.age / particle.lifetime, 1)
+        const fade = 1 - lifeT
+        const sparkle = 0.45 + 0.55 * Math.abs(Math.sin(particle.age * 22 + particle.phase))
+        const alpha = particle.baseAlpha * fade * sparkle
+
+        if (alpha > 0.004) {
+          const base = debrisCount * DEBRIS_VSTRIDE
+          const [r, g, b] = particle.color
+
+          debrisData[base + 0] = particle.x
+          debrisData[base + 1] = particle.y
+          debrisData[base + 2] = particle.size
+          debrisData[base + 3] = r
+          debrisData[base + 4] = g
+          debrisData[base + 5] = b
+          debrisData[base + 6] = alpha
+          debrisCount++
+        }
+      }
+
+      if (debrisCount > 0) {
+        gl.useProgram(debrisProg)
+        gl.uniform2f(
+          gl.getUniformLocation(debrisProg, 'u_resolution'),
+          canvas.width / (window.devicePixelRatio || 1),
+          canvas.height / (window.devicePixelRatio || 1),
+        )
+        gl.bindVertexArray(debrisVAO)
+        gl.bindBuffer(gl.ARRAY_BUFFER, debrisBuf)
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          debrisData.subarray(0, debrisCount * DEBRIS_VSTRIDE),
+          gl.DYNAMIC_DRAW,
+        )
+        gl.drawArrays(gl.POINTS, 0, debrisCount)
+        gl.bindVertexArray(null)
+      }
+
+      // ---- tail pass ----
+      let tailCount = 0
+
+      if (tailVertData.length < smallBlobs.length * 3 * TAIL_VSTRIDE) {
+        tailVertData = new Float32Array(smallBlobs.length * 3 * TAIL_VSTRIDE * 2)
+      }
+
+      for (const sb of smallBlobs) {
+        const progress = sb.age / sb.lifetime
+        const fadeIn = Math.min(progress / 0.15, 1)
+        const fadeOut = Math.min((1 - progress) / 0.2, 1)
+        const deathT =
+          sb.deathStartAge === null
+            ? 0
+            : Math.min((sb.age - sb.deathStartAge) / BLACKHOLE_DEATH_FADE, 1)
+        const envelope = fadeIn * fadeOut * (1 - deathT)
+
+        const shouldSkipTail = envelope <= 0 || !sb.hasTail
+
+        if (!shouldSkipTail) {
+          const currentSize = sb.size * envelope
+          const dxT = sb.tailEndX - sb.tailStartX
+          const dyT = sb.tailEndY - sb.tailStartY
+          const tLen = Math.sqrt(dxT * dxT + dyT * dyT)
+
+          if (currentSize > 0.35 && tLen > 0) {
+            const perpX = -dyT / tLen
+            const perpY = dxT / tLen
+            const alpha = envelope * 0.9
+            const [r, g, b] = sb.color
+            const base = tailCount * 3 * TAIL_VSTRIDE
+
+            tailVertData[base + 0] = sb.tailStartX + perpX * currentSize
+            tailVertData[base + 1] = sb.tailStartY + perpY * currentSize
+            tailVertData[base + 2] = r
+            tailVertData[base + 3] = g
+            tailVertData[base + 4] = b
+            tailVertData[base + 5] = alpha
+
+            tailVertData[base + 6] = sb.tailStartX - perpX * currentSize
+            tailVertData[base + 7] = sb.tailStartY - perpY * currentSize
+            tailVertData[base + 8] = r
+            tailVertData[base + 9] = g
+            tailVertData[base + 10] = b
+            tailVertData[base + 11] = alpha
+
+            tailVertData[base + 12] = sb.tailEndX
+            tailVertData[base + 13] = sb.tailEndY
+            tailVertData[base + 14] = r
+            tailVertData[base + 15] = g
+            tailVertData[base + 16] = b
+            tailVertData[base + 17] = 0
+
+            tailCount++
+          }
+        }
+      }
+
+      if (tailCount > 0) {
+        gl.useProgram(tailProg)
+        gl.uniform2f(
+          gl.getUniformLocation(tailProg, 'u_resolution'),
+          canvas.width / (window.devicePixelRatio || 1),
+          canvas.height / (window.devicePixelRatio || 1),
+        )
+        gl.bindVertexArray(tailVAO)
+        gl.bindBuffer(gl.ARRAY_BUFFER, tailBuf)
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          tailVertData.subarray(0, tailCount * 3 * TAIL_VSTRIDE),
+          gl.DYNAMIC_DRAW,
+        )
+        gl.drawArrays(gl.TRIANGLES, 0, tailCount * 3)
+        gl.bindVertexArray(null)
+      }
+
+      // ---- small blob instanced pass ----
+      let instCount = 0
+
+      if (smallInstData.length < smallBlobs.length * SMALL_STRIDE) {
+        smallInstData = new Float32Array(smallBlobs.length * SMALL_STRIDE * 2)
+      }
+
+      for (const sb of smallBlobs) {
+        const progress = sb.age / sb.lifetime
+        const fadeIn = Math.min(progress / 0.15, 1)
+        const fadeOut = Math.min((1 - progress) / 0.2, 1)
+        const deathT =
+          sb.deathStartAge === null
+            ? 0
+            : Math.min((sb.age - sb.deathStartAge) / BLACKHOLE_DEATH_FADE, 1)
+        const envelope = fadeIn * fadeOut * (1 - deathT)
+
+        if (envelope > 0) {
+          const currentSize = sb.size * envelope
+          const glowIntensity = 0.7 + 0.5 * Math.abs(Math.sin(sb.age * 0.8 + sb.glowPhase))
+          const glowRadius = currentSize * (2.5 + glowIntensity * 4)
+          const alpha = envelope * 0.9
+          const [r, g, b] = sb.color
+          const base = instCount * SMALL_STRIDE
+
+          smallInstData[base + 0] = sb.renderX
+          smallInstData[base + 1] = sb.renderY
+          smallInstData[base + 2] = currentSize
+          smallInstData[base + 3] = glowRadius
+          smallInstData[base + 4] = alpha
+          smallInstData[base + 5] = r
+          smallInstData[base + 6] = g
+          smallInstData[base + 7] = b
+          smallInstData[base + 8] = sb.tailStartX
+          smallInstData[base + 9] = sb.tailStartY
+          smallInstData[base + 10] = sb.tailEndX - sb.tailStartX
+          smallInstData[base + 11] = sb.tailEndY - sb.tailStartY
+          smallInstData[base + 12] = sb.tailEndX
+          smallInstData[base + 13] = sb.tailEndY
+          smallInstData[base + 14] = sb.hasTail ? 1 : 0
+          instCount++
+        }
+      }
+
+      if (instCount > 0) {
+        gl.useProgram(smallProg)
+        gl.uniform2f(
+          gl.getUniformLocation(smallProg, 'u_resolution'),
+          canvas.width / (window.devicePixelRatio || 1),
+          canvas.height / (window.devicePixelRatio || 1),
+        )
+        gl.bindVertexArray(smallVAO)
+        gl.bindBuffer(gl.ARRAY_BUFFER, smallInstBuf)
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          smallInstData.subarray(0, instCount * SMALL_STRIDE),
+          gl.DYNAMIC_DRAW,
+        )
+        gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, instCount)
+        gl.bindVertexArray(null)
+      }
+
+      // ---- large blob instanced pass ----
+      if (largeInstData.length < largeBlobCount * LARGE_STRIDE) {
+        largeInstData = new Float32Array(largeBlobCount * LARGE_STRIDE * 2)
+      }
+
+      const activationEased = easeInOutCubic(largeBlobActivation)
+      let lCount = 0
+
+      const lrgInvMaxDist = 1 / Math.sqrt(width * width + height * height)
+
+      for (const lb of largeBlobs) {
+        const cx = lb.baseX * width + lb.driftAmpX * Math.sin(lb.driftSpeedX * t) + lb.driftPhaseX
+        const cy = lb.baseY * height + lb.driftAmpY * Math.cos(lb.driftSpeedY * t) + lb.driftPhaseY
+
+        const centerWeight = activationEased * LARGE_BLOB_CENTER_PULL
+        const centeredCx = lerp(cx, renderGravCx, centerWeight)
+        const centeredCy = lerp(cy, renderGravCy, centerWeight)
+
+        const wobble = 1 + 0.1 * Math.sin(lb.wobbleSpeed * t + lb.wobblePhase)
+        const activeScale = 1 + activationEased * LARGE_BLOB_ACTIVE_SCALE_BOOST
+        const currentRadius = lb.size * wobble * activeScale
+
+        const fadeAlpha =
+          LARGE_BLOB_IDLE_ALPHA +
+          activationEased * LARGE_BLOB_ACTIVE_ALPHA_BOOST +
+          0.2 * Math.sin(lb.fadeSpeed * t + lb.fadePhase)
+
+        const { pullX, pullY } = calcGravityPull(
+          centeredCx,
+          centeredCy,
+          renderGravCx,
+          renderGravCy,
+          largeBlobActivation,
+          lrgInvMaxDist,
+          dynamicMouseRadius,
+        )
+        const finalCx = centeredCx + pullX
+        const finalCy = centeredCy + pullY
+
+        const base = lCount * LARGE_STRIDE
+
+        largeInstData[base + 0] = finalCx
+        largeInstData[base + 1] = finalCy
+        largeInstData[base + 2] = currentRadius
+        largeInstData[base + 3] = fadeAlpha
+        // eslint-disable-next-line prefer-destructuring
+        largeInstData[base + 4] = lb.color[0]
+        // eslint-disable-next-line prefer-destructuring
+        largeInstData[base + 5] = lb.color[1]
+        // eslint-disable-next-line prefer-destructuring
+        largeInstData[base + 6] = lb.color[2]
+        lCount++
+      }
+
+      if (lCount > 0) {
+        gl.useProgram(largeProg)
+        gl.uniform2f(
+          gl.getUniformLocation(largeProg, 'u_resolution'),
+          canvas.width / (window.devicePixelRatio || 1),
+          canvas.height / (window.devicePixelRatio || 1),
+        )
+        gl.bindVertexArray(largeVAO)
+        gl.bindBuffer(gl.ARRAY_BUFFER, largeInstBuf)
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          largeInstData.subarray(0, lCount * LARGE_STRIDE),
+          gl.DYNAMIC_DRAW,
+        )
+        gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, lCount)
+        gl.bindVertexArray(null)
+      }
+
+      rafId = requestAnimationFrame(tick)
+    }
+
+    initRafId = requestAnimationFrame(() => {
+      resize()
+      seedSmallBlobs()
+      rafId = requestAnimationFrame(tick)
+    })
+
+    const resizeContainer = canvas.parentElement
+
+    if (resizeContainer) {
+      resizeObserver = new ResizeObserver(() => resizeDebounced())
+      resizeObserver.observe(resizeContainer)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+
+    return () => {
+      cancelAnimationFrame(initRafId)
+      cancelAnimationFrame(rafId)
+      resizeObserver?.disconnect()
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [smallBlobCount, largeBlobCount, handleMouseMove])
+}
