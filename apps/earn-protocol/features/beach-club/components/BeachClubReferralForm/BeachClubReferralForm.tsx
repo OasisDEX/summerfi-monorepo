@@ -33,7 +33,7 @@ export const BeachClubReferralForm: FC<BeachClubReferralFormProps> = ({
 }) => {
   const [value, setValue] = useState(refferalCodeFromCookie ?? '')
   const [isValid, setIsValid] = useState(false)
-  const debounceRef = useRef<NodeJS.Timeout | null>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = useCallback(

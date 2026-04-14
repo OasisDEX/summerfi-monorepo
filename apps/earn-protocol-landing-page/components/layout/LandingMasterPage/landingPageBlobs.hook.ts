@@ -4,7 +4,6 @@ import { debounce } from 'lodash-es'
 
 import {
   BLACKHOLE_DEATH_FADE,
-  BLACKHOLE_DEATH_RADIUS,
   COMET_DEBRIS_CAP_MULTIPLIER,
   COMET_DEBRIS_DRAG,
   COMET_DEBRIS_LIFETIME_MAX,
@@ -56,15 +55,11 @@ import {
 export const useLandingPageBlobs = ({
   canvasRef,
   canvasRectRef,
-  mouseRef,
-  handleMouseMove,
   smallBlobCount,
   largeBlobCount,
 }: {
   canvasRef?: RefObject<HTMLCanvasElement | null>
   canvasRectRef: RefObject<DOMRect | null>
-  mouseRef: RefObject<{ x: number; y: number }>
-  handleMouseMove: (ev: MouseEvent) => void
   smallBlobCount: number
   largeBlobCount: number
 }) => {
@@ -248,6 +243,14 @@ export const useLandingPageBlobs = ({
     let tailVertData = new Float32Array(smallBlobCount * 3 * TAIL_VSTRIDE)
     let largeInstData = new Float32Array(largeBlobCount * LARGE_STRIDE)
 
+    // autonomous black hole pulses: random cooldown, strength and duration
+    let pulseCooldown = rand(1, 2)
+    let pulseDuration = 0
+    let pulseElapsed = 0
+    let pulseStrength = 0
+    let pulseRadiusMultiplier = 1
+    let autoPulseStrength = 0
+
     const resize = () => {
       const container = canvas.parentElement
 
@@ -274,9 +277,9 @@ export const useLandingPageBlobs = ({
       )
     }
 
-    const ensureSmallBlobs = (avoidCenter?: { x: number; y: number; radius: number }) => {
+    const ensureSmallBlobs = () => {
       while (smallBlobs.length < smallBlobCount) {
-        smallBlobs.push(spawnSmallBlob(width, height, undefined, avoidCenter))
+        smallBlobs.push(spawnSmallBlob(width, height, undefined))
       }
     }
 
@@ -306,27 +309,49 @@ export const useLandingPageBlobs = ({
         const simGravCx = GRAVITY_CENTER_X * width
         const simGravCy = GRAVITY_CENTER_Y * height
         const simInvMaxDist = 1 / Math.sqrt(width * width + height * height)
-
-        const mDx = mouseRef.current.x - simGravCx
-        const mDy = mouseRef.current.y - simGravCy
-        const mouseDist = Math.sqrt(mDx * mDx + mDy * mDy)
         const baseMouseRadius = height * GRAVITY_MOUSE_RADIUS
-        const maxMouseRadius = Math.max(width, height)
-        const isHoldingCenter = mouseDist <= BLACKHOLE_DEATH_RADIUS
 
-        if (isHoldingCenter) {
-          dynamicMouseRadius = Math.min(
-            maxMouseRadius,
-            dynamicMouseRadius + dt * GRAVITY_RADIUS_GROW_SPEED,
-          )
+        if (pulseDuration > 0) {
+          pulseElapsed += dt
+
+          if (pulseElapsed >= pulseDuration) {
+            pulseDuration = 0
+            pulseElapsed = 0
+            pulseCooldown = rand(3, 5)
+          }
         } else {
-          dynamicMouseRadius = Math.max(
-            baseMouseRadius,
-            dynamicMouseRadius - dt * GRAVITY_RADIUS_SHRINK_SPEED,
-          )
+          pulseCooldown -= dt
+
+          if (pulseCooldown <= 0) {
+            pulseDuration = rand(2.5, 4)
+            pulseElapsed = 0
+            pulseStrength = rand(0.6, 1.2)
+            pulseRadiusMultiplier = rand(1.5, 3)
+          }
         }
 
-        const rawActivation = Math.max(0, 1 - mouseDist / Math.max(dynamicMouseRadius, 1))
+        const pulseT = pulseDuration > 0 ? Math.min(pulseElapsed / pulseDuration, 1) : 0
+
+        const pulseEnvelope = Math.sin(Math.PI * pulseT)
+        const pulseTargetStrength = pulseStrength * pulseEnvelope
+
+        if (pulseTargetStrength >= autoPulseStrength) {
+          autoPulseStrength = pulseTargetStrength
+        } else {
+          const strengthDecayStep = dt * GRAVITY_RADIUS_SHRINK_SPEED * 0.0025
+
+          autoPulseStrength = Math.max(pulseTargetStrength, autoPulseStrength - strengthDecayStep)
+        }
+
+        const rawActivation = autoPulseStrength
+        const targetRadius =
+          baseMouseRadius * (0.6 + pulseRadiusMultiplier * Math.max(autoPulseStrength, 0.05))
+
+        dynamicMouseRadius = lerp(
+          dynamicMouseRadius,
+          targetRadius,
+          Math.min(dt * GRAVITY_RADIUS_GROW_SPEED * 0.02, 1),
+        )
         const targetActivation = easeInOutCubic(rawActivation)
 
         smoothedActivation = lerp(
@@ -341,11 +366,7 @@ export const useLandingPageBlobs = ({
         )
 
         // ---------- update small blobs ----------
-        ensureSmallBlobs({
-          x: simGravCx,
-          y: simGravCy,
-          radius: Math.min(dynamicMouseRadius, BLACKHOLE_DEATH_RADIUS * 2),
-        })
+        ensureSmallBlobs()
 
         let writeIndex = 0
 
@@ -747,14 +768,11 @@ export const useLandingPageBlobs = ({
       resizeObserver.observe(resizeContainer)
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-
     return () => {
       cancelAnimationFrame(initRafId)
       cancelAnimationFrame(rafId)
       resizeObserver?.disconnect()
-      window.removeEventListener('mousemove', handleMouseMove)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [smallBlobCount, largeBlobCount, handleMouseMove])
+  }, [smallBlobCount, largeBlobCount])
 }

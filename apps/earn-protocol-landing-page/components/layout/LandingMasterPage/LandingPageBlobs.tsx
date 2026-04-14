@@ -1,7 +1,7 @@
 /* eslint-disable no-mixed-operators */
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 import { useLandingPageBlobs } from '@/components/layout/LandingMasterPage/landingPageBlobs.hook'
@@ -21,14 +21,6 @@ export const LandingPageBlobs = ({
   const [localSmallBlobCount, setLocalSmallBlobCount] = useState(smallBlobCount)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const canvasRectRef = useRef<DOMRect | null>(null)
-  const mouseRef = useRef({ x: -9999, y: -9999 })
-
-  const handleMouseMove = useCallback((ev: MouseEvent) => {
-    const rect = canvasRectRef.current
-
-    if (!rect) return
-    mouseRef.current = { x: ev.clientX - rect.left, y: ev.clientY - rect.top }
-  }, [])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -42,8 +34,6 @@ export const LandingPageBlobs = ({
   useLandingPageBlobs({
     canvasRef,
     canvasRectRef,
-    mouseRef,
-    handleMouseMove,
     smallBlobCount: localSmallBlobCount,
     largeBlobCount,
   })

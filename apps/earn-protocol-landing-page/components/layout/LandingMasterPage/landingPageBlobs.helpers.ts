@@ -78,35 +78,12 @@ export const linkProgram = (
   return p
 }
 
-export const spawnSmallBlob = (
-  width: number,
-  height: number,
-  preAge?: number,
-  avoidCenter?: { x: number; y: number; radius: number },
-): SmallBlob => {
+export const spawnSmallBlob = (width: number, height: number, preAge?: number): SmallBlob => {
   const color = pickRandom(SMALL_COLORS)
   const fromBottom = Math.random() > 0.5
   const direction: 1 | -1 = fromBottom ? 1 : -1
   const startY = fromBottom ? height + rand(10, 60) : rand(-60, -10)
-  let x = rand(width * 0.05, width * 0.95)
-
-  if (avoidCenter) {
-    let candidateX = x
-    let tries = 0
-
-    while (tries < 6) {
-      const dx = candidateX - avoidCenter.x
-      const dy = startY - avoidCenter.y
-
-      if (Math.sqrt(dx * dx + dy * dy) > avoidCenter.radius * 1.05) break
-      candidateX = rand(width * 0.05, width * 0.95)
-      tries++
-    }
-    if (tries >= 6) {
-      candidateX = avoidCenter.x < width / 2 ? width * 0.95 : width * 0.05
-    }
-    x = candidateX
-  }
+  const x = rand(width * 0.2, width * 0.8)
 
   return {
     x,
