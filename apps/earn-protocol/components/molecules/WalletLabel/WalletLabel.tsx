@@ -13,7 +13,6 @@ import {
   Tooltip,
   useClientChainId,
   useEarnProtocolLogin,
-  useEarnProtocolLogout,
   useEarnProtocolWallet,
   useIsIframe,
 } from '@summerfi/app-earn-ui'
@@ -195,8 +194,7 @@ export default function WalletLabel({
 
   const chainName = sdkChainIdToHumanNetwork(clientChainId)
 
-  const { login } = useEarnProtocolLogin()
-  const { logout } = useEarnProtocolLogout()
+  const { login, logout, isOpen: isAuthmodalLoading } = useEarnProtocolLogin()
   const { isOpen: isAuthModalOpen } = useModalStatus()
   const isIframe = useIsIframe()
 
@@ -209,7 +207,7 @@ export default function WalletLabel({
   }
 
   // we are not showing the skeleton in iframe, because isSignerInitializing never goes to true
-  if (isAuthModalOpen && !isIframe) {
+  if ((isAuthModalOpen || isAuthmodalLoading) && !isIframe) {
     return (
       <Button variant={buttonVariant}>
         <SkeletonLine width={100} height={10} style={{ opacity: 0.2 }} />

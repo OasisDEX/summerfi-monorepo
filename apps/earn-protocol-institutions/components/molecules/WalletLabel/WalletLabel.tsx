@@ -12,7 +12,6 @@ import {
   Tooltip,
   useClientChainId,
   useEarnProtocolLogin,
-  useEarnProtocolLogout,
   useEarnProtocolSignerStatus,
   useEarnProtocolWallet,
   useIsIframe,
@@ -196,10 +195,9 @@ export default function WalletLabel({
 
   const chainName = sdkChainIdToHumanNetwork(clientChainId)
 
-  const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
+  const { login, isOpen: isAuthModalOpen, logout } = useEarnProtocolLogin()
   const { isInitializing: isSignerInitializing, isAuthenticating: isSignerAuthenticating } =
     useEarnProtocolSignerStatus()
-  const { logout } = useEarnProtocolLogout()
   const isIframe = useIsIframe()
 
   const handleCopyAddress = (address: string) => {

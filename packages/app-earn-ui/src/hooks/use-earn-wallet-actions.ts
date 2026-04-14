@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
+import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 import {
   type SignAuthorizationReturnType,
   type SignTransactionReturnType,
@@ -10,6 +11,7 @@ import {
 import { type Chain } from 'viem/chains'
 import {
   useChainId,
+  useConnections,
   useDisconnect,
   usePublicClient,
   useSignMessage,
@@ -19,7 +21,6 @@ import {
 
 import { supportedViemChains } from '@/constants/supported-chains'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
-import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 
 export const getEarnProtocolChainById = (chainId?: number): Chain => {
   const mappedChain = supportedViemChains.find((chain) => chain.id === chainId)
@@ -40,7 +41,7 @@ export const useEarnProtocolWallet = (): {
   const [connectedWalletAddress, setConnectedWalletAddress] = useState<`0x${string}` | undefined>(
     undefined,
   )
-  const { ready: privyReady, authenticated: privyAuthenticated } = usePrivy()
+  const { ready: privyReady } = usePrivy()
   const {
     data: walletClient,
     promise: walletPendingPromise,
@@ -55,7 +56,7 @@ export const useEarnProtocolWallet = (): {
         ? (walletClient.account.address as `0x${string}` | undefined)
         : undefined
 
-      if (walletStatus === 'pending' || (privyAuthenticated && !walletClientAddress)) {
+      if (walletStatus === 'pending' || !walletClientAddress) {
         setIsLoadingAccount(true)
       }
 
@@ -67,6 +68,7 @@ export const useEarnProtocolWallet = (): {
         if ((error as Error).message.startsWith('Connector not connected.')) {
           // This error is expected when the wallet is not connected, so we can ignore it
         } else {
+          // eslint-disable-next-line no-console
           console.error('Error while waiting for wallet client:', {
             error,
             errorMessage: (error as Error).message,
@@ -83,9 +85,7 @@ export const useEarnProtocolWallet = (): {
             setConnectedWalletAddress(undefined)
 
             const shouldKeepLoading =
-              !privyReady ||
-              walletStatus === 'pending' ||
-              (privyAuthenticated && !walletClientResolved?.account?.address)
+              !privyReady || walletStatus === 'pending' || !walletClientResolved?.account?.address
 
             if (!shouldKeepLoading) {
               // wallet is not connected
@@ -102,7 +102,19 @@ export const useEarnProtocolWallet = (): {
     return () => {
       isMounted = false
     }
-  }, [privyAuthenticated, privyReady, walletClient, walletPendingPromise, walletStatus])
+  }, [privyReady, walletClient, walletPendingPromise, walletStatus])
+
+  useEffect(() => {
+    if (walletClient) {
+      const walletAddress = walletClient.account.address as `0x${string}` | undefined
+
+      setConnectedWalletAddress(walletAddress)
+      setIsLoadingAccount(false)
+    } else {
+      setConnectedWalletAddress(undefined)
+      setIsLoadingAccount(true)
+    }
+  }, [walletClient])
 
   return {
     address: connectedWalletAddress,
@@ -137,22 +149,37 @@ export const useEarnProtocolChain: () => {
 export const useEarnProtocolLogin: () => {
   login: () => void
   isOpen: boolean
+  logout: () => void
 } = () => {
-  const { connectWallet, isModalOpen } = usePrivy()
+  const [isLoading, setIsLoading] = useState(false)
+
+  const { connectWallet, isModalOpen, ready } = usePrivy()
+  const { disconnectAsync } = useDisconnect()
+  const connections = useConnections()
+
+  const handleLogout = useCallback(() => {
+    connections.forEach(async (connection) => {
+      setIsLoading(true)
+      try {
+        await connection.connector.disconnect()
+        await disconnectAsync({ connector: connection.connector })
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error during logout:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    })
+  }, [connections, disconnectAsync])
+
+  useEffect(() => {
+    setIsLoading(isModalOpen)
+  }, [isModalOpen])
 
   return {
     login: connectWallet,
-    isOpen: isModalOpen,
-  }
-}
-
-export const useEarnProtocolLogout: () => {
-  logout: () => void
-} = () => {
-  const { disconnect } = useDisconnect()
-
-  return {
-    logout: disconnect,
+    logout: handleLogout,
+    isOpen: isLoading || !ready,
   }
 }
 
@@ -338,6 +365,7 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
               hash: safeTransactionData.transactionHash,
             })
             onSuccess?.({ hash: safeTransactionData.transactionHash as `0x${string}` })
+
             return { hash: safeTransactionData.transactionHash as `0x${string}` }
           }
         }

@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import {
   useClientChainId,
-  useEarnProtocolLogout,
+  useEarnProtocolLogin,
   useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { fetchRisk } from '@summerfi/app-risk'
@@ -21,7 +21,7 @@ export const useRiskVerification = ({
 }: {
   cookiePrefix: TermsOfServiceCookiePrefix
 }) => {
-  const { logout } = useEarnProtocolLogout()
+  const { logout } = useEarnProtocolLogin()
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { clientChainId } = useClientChainId()
 

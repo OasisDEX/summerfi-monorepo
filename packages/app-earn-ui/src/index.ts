@@ -202,7 +202,6 @@ export {
   useEarnProtocolWallet,
   useEarnProtocolChain,
   useEarnProtocolLogin,
-  useEarnProtocolLogout,
   useEarnProtocolSignerStatus,
   useEarnProtocolSigner,
   useEarnProtocolSignMessage,
