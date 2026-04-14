@@ -19,7 +19,9 @@ import styles from '@/components/layout/LandingPageContent/components/OurProduct
 import integrateWithBalance from '@/public/img/landing-page/integrate-via/balance.png'
 import integrateWithDefiSaver from '@/public/img/landing-page/integrate-via/defi_saver.png'
 import integrateViaEnso from '@/public/img/landing-page/integrate-via/enso.png'
+import integrateViaSecuritize from '@/public/img/landing-page/integrate-via/securitize.png'
 import integrateViaSummer from '@/public/img/landing-page/integrate-via/summer.png'
+import integrateViaSuperstate from '@/public/img/landing-page/integrate-via/superstate.png'
 import integrateWithTargen from '@/public/img/landing-page/integrate-via/targen.png'
 import integrateWithUtila from '@/public/img/landing-page/integrate-via/utila.png'
 import integrateWithVaultsFyi from '@/public/img/landing-page/integrate-via/vault_fyi.png'
@@ -32,6 +34,7 @@ import securitizeMarketLogo from '@/public/img/landing-page/private-markets/secu
 // import stacMarketLogo from '@/public/img/landing-page/private-markets/stac.png'
 import superstateMarketLogo from '@/public/img/landing-page/private-markets/superstate.png'
 import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisdomtree.png'
+import sdkScreenshot from '@/public/img/landing-page/sdk-screenshot.png'
 import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-screenshot.png'
 
 const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVault: number }) => {
@@ -347,11 +350,16 @@ const BuildYourOwnVaultCard = () => {
   )
 }
 
-const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault: number }) => {
+const IntegrateHighQualityYield = () => {
   return (
     <article className={`${styles.productCard} ${styles.integratorCard}`}>
       <div className={styles.cardContent}>
-        <div className={styles.cardMain}>
+        <div
+          className={styles.cardMain}
+          style={{
+            maxWidth: '740px',
+          }}
+        >
           <div>
             <Text as="p" variant="p3colorful">
               Integrate high quality DeFi yield
@@ -372,9 +380,7 @@ const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault:
                 Earn up to
               </Text>
               <Text as="p" variant="h2" className={styles.apyValue}>
-                {formatDecimalAsPercent(maxApyRegularVault, {
-                  precision: 2,
-                })}
+                20bps
               </Text>
             </div>
             <div>
@@ -405,7 +411,7 @@ const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault:
                 alt="Summer.fi"
                 src={integrateViaSummer}
                 width={233}
-                height={54}
+                height={70}
                 className={styles.partnerLogo}
               />
               <Image
@@ -418,6 +424,20 @@ const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault:
               <Image
                 alt="Enso"
                 src={integrateViaEnso}
+                width={232}
+                height={54}
+                className={styles.partnerLogo}
+              />
+              <Image
+                alt="Superstate"
+                src={integrateViaSuperstate}
+                width={232}
+                height={54}
+                className={styles.partnerLogo}
+              />
+              <Image
+                alt="Securitize"
+                src={integrateViaSecuritize}
                 width={232}
                 height={54}
                 className={styles.partnerLogo}
@@ -439,42 +459,48 @@ const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault:
             width: '100%',
           }}
         >
-          <aside className={styles.cardSideStacked}>
-            <Image
-              alt="DeFi Saver"
-              src={integrateWithDefiSaver}
-              width={162}
-              height={39}
-              className={styles.stackLogo}
-            />
-            <Image
-              alt="Balance"
-              src={integrateWithBalance}
-              width={149}
-              height={29}
-              className={styles.stackLogo}
-            />
-            <Image
-              alt="Targen"
-              src={integrateWithTargen}
-              width={136}
-              height={25}
-              className={styles.stackLogo}
-            />
-            <Image
-              alt="Vaults.fyi"
-              src={integrateWithVaultsFyi}
-              width={141}
-              height={37}
-              className={styles.stackLogo}
-            />
-            <Image
-              alt="Utila"
-              src={integrateWithUtila}
-              width={117}
-              height={29}
-              className={styles.stackLogo}
-            />
+          <aside className={styles.cardSide}>
+            <div className={styles.sdkScreenshotWrapper}>
+              <Image src={sdkScreenshot} alt="SDK screenshot" />
+            </div>
+            <div className={styles.integrateViaGrid}>
+              <Image
+                alt="DeFi Saver"
+                src={integrateWithDefiSaver}
+                width={162}
+                height={39}
+                className={styles.stackLogo}
+              />
+              <Image
+                alt="Balance"
+                src={integrateWithBalance}
+                width={149}
+                height={29}
+                className={styles.stackLogo}
+              />
+              <Image
+                alt="Vaults.fyi"
+                src={integrateWithVaultsFyi}
+                width={141}
+                height={37}
+                className={styles.stackLogo}
+              />
+              <div />
+              <Image
+                alt="Utila"
+                src={integrateWithUtila}
+                width={117}
+                height={29}
+                className={styles.stackLogo}
+              />
+              <Image
+                alt="Targen"
+                src={integrateWithTargen}
+                width={136}
+                height={25}
+                className={styles.stackLogo}
+              />
+            </div>
           </aside>
         </div>
       </div>
@@ -508,7 +534,7 @@ export const OurProductsList = ({
         <BuildYourOwnVaultCard />
       </AnimateHeight>
       <AnimateHeight id="integrate-high-quality-defi-yield" show={showIntegrateHighQualityYield}>
-        <IntegrateHighQualityYield maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
+        <IntegrateHighQualityYield />
       </AnimateHeight>
     </div>
   )

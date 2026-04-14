@@ -155,7 +155,7 @@ export const LandingPageHero = ({
             className={landingPageHeroStyles.primaryCta}
             onClick={() => handleGetStartedClick()}
           >
-            <Button variant="primarySmall">Launch App</Button>
+            <Button variant="primarySmall">Launch&nbsp;App</Button>
           </Link>
           <Button
             variant="secondarySmall"

@@ -11,6 +11,7 @@ declare const styles: {
   readonly "cardTitle": string;
   readonly "cardsList": string;
   readonly "checksGroup": string;
+  readonly "integrateViaGrid": string;
   readonly "integratorCard": string;
   readonly "integratorMetaGrid": string;
   readonly "learnMoreButton": string;
@@ -29,6 +30,7 @@ declare const styles: {
   readonly "protocolIconWrap": string;
   readonly "protocolRow": string;
   readonly "rwaCard": string;
+  readonly "sdkScreenshotWrapper": string;
   readonly "sideStatBlock": string;
   readonly "smallBrandLogo": string;
   readonly "stackLogo": string;
