@@ -326,10 +326,10 @@ const drawSmallBlob = (ctx: CanvasRenderingContext2D, blob: SmallBlob) => {
 
   // variable glow throughout flight (slower oscillation: 0.4 instead of 1.5)
   const baseGlowIntensity =
-    0.3 + Number(0.5 * Math.abs(Math.sin(Number(Number(blob.age) * 5) + Number(blob.glowPhase))))
+    0.7 + Number(0.5 * Math.abs(Math.sin(Number(Number(blob.age) * 0.8) + Number(blob.glowPhase))))
   const glowIntensity = Number(baseGlowIntensity)
   // smaller glow: multiplier reduced from (3 + intensity*8) to (1.5 + intensity*3)
-  const glowRadius = Number(currentSize) * (1.5 + Number(Number(glowIntensity) * 3))
+  const glowRadius = Number(currentSize) * (2.5 + Number(Number(glowIntensity) * 4))
 
   const [r, g, b] = blob.color
   const blobTailColor = rgbaString(r, g, b, 1)
@@ -375,8 +375,9 @@ const drawSmallBlob = (ctx: CanvasRenderingContext2D, blob: SmallBlob) => {
   // glow layer
   const grad = ctx.createRadialGradient(currentX, finalY, 0, currentX, finalY, glowRadius)
 
-  grad.addColorStop(0, rgbaString(r, g, b, Number(alpha) * Number(glowIntensity) * 0.5))
-  grad.addColorStop(0.4, rgbaString(r, g, b, Number(alpha) * Number(glowIntensity) * 0.15))
+  grad.addColorStop(0, rgbaString(r, g, b, Number(alpha) * Number(glowIntensity)))
+  grad.addColorStop(0.3, rgbaString(r, g, b, Number(alpha) * Number(glowIntensity) * 0.2))
+  grad.addColorStop(0.6, rgbaString(r, g, b, Number(alpha) * Number(glowIntensity) * 0.1))
   grad.addColorStop(1, rgbaString(r, g, b, 0))
 
   ctx.fillStyle = grad
