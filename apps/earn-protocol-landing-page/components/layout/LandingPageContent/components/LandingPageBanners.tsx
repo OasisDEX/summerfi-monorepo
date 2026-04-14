@@ -33,7 +33,7 @@ export const LandingPageBanners = () => {
         </HeaderDisclaimer>
       )}
       {landingPageData?.systemConfig.features.AdrollPixelScript && userConfig?.analyticsCookie && (
-        <Script strategy="afterInteractive" id="adroll-pixel-script">
+        <Script strategy="lazyOnload" id="adroll-pixel-script">
           {adRollPixelScript}
         </Script>
       )}

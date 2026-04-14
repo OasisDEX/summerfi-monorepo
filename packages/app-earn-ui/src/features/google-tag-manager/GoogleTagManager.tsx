@@ -8,7 +8,7 @@ export const GoogleTagManager: FC = () => {
     <>
       <Script
         id="gtm-script"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         type="text/javascript"
         dangerouslySetInnerHTML={{
           __html: `

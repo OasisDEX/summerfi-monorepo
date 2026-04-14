@@ -43,7 +43,8 @@ const hexToRgb = (hex: string): [number, number, number] => {
 }
 
 const rgbaString = (r: number, g: number, b: number, a: number): string =>
-  `rgba(${r}, ${g}, ${b}, ${a})`
+  // eslint-disable-next-line prefer-template
+  'rgba(' + r + ', ' + g + ', ' + b + ', ' + a + ')'
 
 const TWO_PI = Number(Math.PI) * 2
 
@@ -58,13 +59,17 @@ const lerp = (current: number, target: number, rate: number): number => {
 const GRAVITY_CENTER_X = 0.7
 const GRAVITY_CENTER_Y = 0.5
 const GRAVITY_MOUSE_RADIUS = 0.4 // fraction of width – outer activation radius
-const GRAVITY_LERP_SPEED = 1.6 // how fast activation catches up (units/sec)
+const GRAVITY_LERP_SPEED = 1.2 // how fast activation catches up (units/sec)
 const GRAVITY_RADIUS_GROW_SPEED = 300 // px/sec while cursor is held near center
 const GRAVITY_RADIUS_SHRINK_SPEED = 400 // px/sec when cursor leaves center
-const BLACKHOLE_PULL_SPEED = 1.6 // how fast small blobs are permanently sucked in
-const BLACKHOLE_DEATH_RADIUS = 150 // pixels from center before the blob dies and fades away
+const BLACKHOLE_PULL_SPEED = 2.6 // how fast small blobs are permanently sucked in
+const BLACKHOLE_DEATH_RADIUS = 100 // pixels from center before the blob dies and fades away
 const BLACKHOLE_DEATH_FADE = 1 // seconds of fade after entering black hole core
-const SMALL_TRAIL_SEGMENTS = 24
+const LARGE_BLOB_IDLE_ALPHA = 0.38
+const LARGE_BLOB_ACTIVE_ALPHA_BOOST = 0.3
+const LARGE_BLOB_CENTER_PULL = 0.6
+const LARGE_BLOB_ACTIVE_SCALE_BOOST = -0.22
+const LARGE_BLOB_RESPONSE_LERP_SPEED = 0.4
 
 const easeInOutCubic = (x: number): number => {
   return x < 0.5
@@ -134,10 +139,11 @@ interface SmallBlob {
   renderX: number // cached final x for this frame
   renderY: number // cached final y for this frame
   hasRender: boolean
-  trailX: number[] // ring buffer of previous x positions
-  trailY: number[] // ring buffer of previous y positions
-  trailHead: number
-  trailCount: number
+  tailStartX: number
+  tailStartY: number
+  tailEndX: number
+  tailEndY: number
+  hasTail: boolean
 }
 
 const spawnSmallBlob = (
@@ -198,10 +204,11 @@ const spawnSmallBlob = (
     renderX: 0,
     renderY: 0,
     hasRender: false,
-    trailX: new Array(SMALL_TRAIL_SEGMENTS).fill(0),
-    trailY: new Array(SMALL_TRAIL_SEGMENTS).fill(0),
-    trailHead: 0,
-    trailCount: 0,
+    tailStartX: 0,
+    tailStartY: 0,
+    tailEndX: 0,
+    tailEndY: 0,
+    hasTail: false,
   }
 }
 
@@ -255,12 +262,27 @@ const updateSmallBlob = (
   blob.renderY = Number(currentY) + Number(blob.offsetY)
   blob.hasRender = true
 
-  // store exact previous rendered position in a fixed-size ring buffer
+  // derive a short tapered trail from motion between previous and current points
   if (hadRender) {
-    blob.trailHead = Number((Number(blob.trailHead) + 1) % Number(SMALL_TRAIL_SEGMENTS))
-    blob.trailX[blob.trailHead] = prevRenderX
-    blob.trailY[blob.trailHead] = prevRenderY
-    blob.trailCount = Math.min(Number(blob.trailCount) + 1, Number(SMALL_TRAIL_SEGMENTS))
+    const vX = Number(blob.renderX) - Number(prevRenderX)
+    const vY = Number(blob.renderY) - Number(prevRenderY)
+    const velocity = Math.sqrt(Number(Number(vX) * Number(vX)) + Number(Number(vY) * Number(vY)))
+
+    if (velocity > 0.001) {
+      const dirX = Number(vX) / Number(velocity)
+      const dirY = Number(vY) / Number(velocity)
+      const tailLength = Math.min(Number(Math.max(Number(velocity) * 14, 6)), 40)
+
+      blob.tailStartX = Number(blob.renderX) - Number(Number(dirX) * Number(tailLength) * 0.05)
+      blob.tailStartY = Number(blob.renderY) - Number(Number(dirY) * Number(tailLength) * 0.05)
+      blob.tailEndX = Number(blob.renderX) - Number(Number(dirX) * Number(tailLength))
+      blob.tailEndY = Number(blob.renderY) - Number(Number(dirY) * Number(tailLength))
+      blob.hasTail = true
+    } else {
+      blob.hasTail = false
+    }
+  } else {
+    blob.hasTail = false
   }
 
   // if the blob reaches the black hole core, cap lifetime so it fades away naturally
@@ -301,35 +323,52 @@ const drawSmallBlob = (ctx: CanvasRenderingContext2D, blob: SmallBlob) => {
 
   // variable glow throughout flight (slower oscillation: 0.4 instead of 1.5)
   const baseGlowIntensity =
-    0.3 + Number(0.5 * Math.abs(Math.sin(Number(Number(blob.age) * 0.4) + Number(blob.glowPhase))))
-  const deathGlowBoost = Number(deathT) * 0.8
-  const glowIntensity = Number(baseGlowIntensity) + Number(deathGlowBoost)
+    0.3 + Number(0.5 * Math.abs(Math.sin(Number(Number(blob.age) * 5) + Number(blob.glowPhase))))
+  const glowIntensity = Number(baseGlowIntensity)
   // smaller glow: multiplier reduced from (3 + intensity*8) to (1.5 + intensity*3)
   const glowRadius = Number(currentSize) * (1.5 + Number(Number(glowIntensity) * 3))
 
   const [r, g, b] = blob.color
+  const blobTailColor = rgbaString(r, g, b, 1)
   const alpha = Number(Number(envelope) * 0.9)
 
-  // trail: exact previous positions, drawn as solid circles to keep cost low
-  if (blob.trailCount > 0 && currentSize > 0.35) {
-    let trailIndex = blob.trailHead
+  // two-segment line makes a cheap tapered trail using only start/end points
+  if (blob.hasTail && currentSize > 0.35) {
+    const dx = blob.tailEndX - blob.tailStartX
+    const dy = blob.tailEndY - blob.tailStartY
+    const tailLength = Math.sqrt(Number(dx * dx) + Number(dy * dy))
 
-    for (let i = 0; i < blob.trailCount; i++) {
-      const fade = 1 - Number(Number(i + 1) / Number(blob.trailCount + 1))
-      const trailAlpha = Number(alpha) * 0.9 * Number(fade)
-      const trailSize = Number(currentSize) * (0.25 + Number(Number(fade) * 0.35))
+    if (tailLength > 0) {
+      // Perpendicular unit vector
+      const perpX = -dy / tailLength
+      const perpY = dx / tailLength
 
-      if (trailAlpha > 0.003 && trailSize > 0.2) {
-        ctx.fillStyle = rgbaString(r, g, b, trailAlpha)
-        ctx.beginPath()
-        ctx.arc(blob.trailX[trailIndex], blob.trailY[trailIndex], trailSize, 0, TWO_PI)
-        ctx.fill()
-      }
+      ctx.save()
+      ctx.globalAlpha = Number(alpha)
+      ctx.fillStyle = blobTailColor
 
-      trailIndex = trailIndex === 0 ? SMALL_TRAIL_SEGMENTS - 1 : trailIndex - 1
+      ctx.beginPath()
+      ctx.moveTo(
+        blob.tailStartX + Number(perpX * currentSize),
+        blob.tailStartY + Number(perpY * currentSize),
+      )
+      ctx.lineTo(
+        blob.tailStartX - Number(perpX * currentSize),
+        blob.tailStartY - Number(perpY * currentSize),
+      )
+      ctx.lineTo(blob.tailEndX, blob.tailEndY)
+      ctx.closePath()
+      ctx.fill()
+
+      ctx.restore()
     }
   }
 
+  // core dot: solid fill keeps per-frame allocations lower than another radial gradient
+  ctx.fillStyle = rgbaString(r, g, b, alpha)
+  ctx.beginPath()
+  ctx.arc(currentX, finalY, currentSize, 0, TWO_PI)
+  ctx.fill()
   // glow layer
   const grad = ctx.createRadialGradient(currentX, finalY, 0, currentX, finalY, glowRadius)
 
@@ -340,17 +379,6 @@ const drawSmallBlob = (ctx: CanvasRenderingContext2D, blob: SmallBlob) => {
   ctx.fillStyle = grad
   ctx.beginPath()
   ctx.arc(currentX, finalY, glowRadius, 0, TWO_PI)
-  ctx.fill()
-
-  // core dot
-  const coreGrad = ctx.createRadialGradient(currentX, finalY, 0, currentX, finalY, currentSize)
-
-  coreGrad.addColorStop(0, rgbaString(r, g, b, alpha))
-  coreGrad.addColorStop(1, rgbaString(r, g, b, Number(alpha) * 0.3))
-
-  ctx.fillStyle = coreGrad
-  ctx.beginPath()
-  ctx.arc(currentX, finalY, currentSize, 0, TWO_PI)
   ctx.fill()
 }
 
@@ -374,17 +402,54 @@ interface LargeBlob {
   fadeSpeed: number
   baseBlur: number
   color: [number, number, number]
+  sprite: HTMLCanvasElement
+}
+
+const createLargeBlobSprite = (
+  color: [number, number, number],
+  radius: number,
+  blurAmount: number,
+): HTMLCanvasElement => {
+  const padding = Math.max(Number(blurAmount) * 1.25, 24)
+  const spriteRadius = Number(radius) + Number(padding)
+  const side = Math.max(Math.ceil(Number(spriteRadius) * 2), 2)
+  const canvas = document.createElement('canvas')
+
+  canvas.width = side
+  canvas.height = side
+
+  const ctx = canvas.getContext('2d')
+
+  if (!ctx) return canvas
+
+  const center = Number(side) / 2
+  const [r, g, b] = color
+  const gradient = ctx.createRadialGradient(center, center, 0, center, center, spriteRadius)
+
+  gradient.addColorStop(0, rgbaString(r, g, b, 0.95))
+  gradient.addColorStop(0.45, rgbaString(r, g, b, 0.55))
+  gradient.addColorStop(0.75, rgbaString(r, g, b, 0.2))
+  gradient.addColorStop(1, rgbaString(r, g, b, 0))
+
+  ctx.fillStyle = gradient
+  ctx.beginPath()
+  ctx.arc(center, center, spriteRadius, 0, TWO_PI)
+  ctx.fill()
+
+  return canvas
 }
 
 const createLargeBlob = (index: number, total: number): LargeBlob => {
   const rgb = hexToRgb(LARGE_COLORS[index % LARGE_COLORS.length])
+  const size = rand(160, 320)
+  const baseBlur = rand(18, 72)
   // concentrate vertically near center (0.45–0.55 range)
   const ySpread = total > 1 ? Number(0.45 + Number(Number(index / Number(total - 1)) * 0.1)) : 0.5
 
   return {
     baseX: rand(0.65, 0.75),
     baseY: ySpread,
-    size: rand(160, 320),
+    size,
     driftPhaseX: rand(0, Number(Math.PI) * 2),
     driftPhaseY: rand(0, Number(Math.PI) * 2),
     driftSpeedX: rand(0.08, 0.18),
@@ -395,8 +460,9 @@ const createLargeBlob = (index: number, total: number): LargeBlob => {
     wobbleSpeed: rand(0.4, 0.9),
     fadePhase: rand(0, Number(Math.PI) * 2),
     fadeSpeed: rand(0.15, 0.35),
-    baseBlur: rand(2, 125),
+    baseBlur,
     color: rgb,
+    sprite: createLargeBlobSprite(rgb, size, baseBlur),
   }
 }
 
@@ -413,6 +479,7 @@ const drawLargeBlob = (
   gravityRadius: number,
 ) => {
   const t = Number(time) * 0.001
+  const activationEased = easeInOutCubic(activation)
 
   // drift
   const cx =
@@ -428,48 +495,50 @@ const drawLargeBlob = (
         Number(blob.driftPhaseY),
     )
 
+  const centerWeight = Number(activationEased) * Number(LARGE_BLOB_CENTER_PULL)
+  const centeredCx = lerp(cx, gravityCx, centerWeight)
+  const centeredCy = lerp(cy, gravityCy, centerWeight)
+
   // wobble (slight scale oscillation)
   const wobble =
     1 +
-    Number(0.06 * Math.sin(Number(Number(blob.wobbleSpeed) * Number(t)) + Number(blob.wobblePhase)))
-  const currentRadius = Number(blob.size) * Number(wobble)
+    Number(0.1 * Math.sin(Number(Number(blob.wobbleSpeed) * Number(t)) + Number(blob.wobblePhase)))
+  const activeScale = 1 + Number(Number(activationEased) * Number(LARGE_BLOB_ACTIVE_SCALE_BOOST))
+  const currentRadius = Number(blob.size) * Number(wobble) * Number(activeScale)
 
-  // fade in/out gently (higher base opacity for more contrast)
+  // idle is intentionally faint, activation boosts intensity for black hole focus
   const fadeAlpha =
-    0.7 +
+    Number(LARGE_BLOB_IDLE_ALPHA) +
+    Number(Number(activationEased) * Number(LARGE_BLOB_ACTIVE_ALPHA_BOOST)) +
     Number(0.2 * Math.sin(Number(Number(blob.fadeSpeed) * Number(t)) + Number(blob.fadePhase)))
 
   // gravity pull toward center
   const { pullX, pullY } = calcGravityPull(
-    cx,
-    cy,
+    centeredCx,
+    centeredCy,
     gravityCx,
     gravityCy,
     activation,
     inverseMaxDist,
     gravityRadius,
   )
-  const finalCx = Number(cx) + Number(pullX)
-  const finalCy = Number(cy) + Number(pullY)
+  const finalCx = Number(centeredCx) + Number(pullX)
+  const finalCy = Number(centeredCy) + Number(pullY)
 
-  const [r, g, b] = blob.color
-  const totalBlur = Number(blob.baseBlur)
+  const baseRadius = Number(blob.size)
+  const scale = Number(currentRadius) / Number(Math.max(baseRadius, 1))
+  const drawWidth = Number(blob.sprite.width) * Number(scale)
+  const drawHeight = Number(blob.sprite.height) * Number(scale)
 
   ctx.save()
-  ctx.filter = `blur(${totalBlur}px)`
   ctx.globalAlpha = fadeAlpha
-
-  const grad = ctx.createRadialGradient(finalCx, finalCy, 0, finalCx, finalCy, currentRadius)
-
-  grad.addColorStop(0, rgbaString(r, g, b, 0.95))
-  grad.addColorStop(0.45, rgbaString(r, g, b, 0.55))
-  grad.addColorStop(0.75, rgbaString(r, g, b, 0.2))
-  grad.addColorStop(1, rgbaString(r, g, b, 0))
-
-  ctx.fillStyle = grad
-  ctx.beginPath()
-  ctx.arc(finalCx, finalCy, currentRadius, 0, TWO_PI)
-  ctx.fill()
+  ctx.drawImage(
+    blob.sprite,
+    Number(finalCx) - Number(Number(drawWidth) / 2),
+    Number(finalCy) - Number(Number(drawHeight) / 2),
+    drawWidth,
+    drawHeight,
+  )
   ctx.restore()
 }
 
@@ -483,17 +552,17 @@ type LandingPageBlobsProps = {
 }
 
 export const LandingPageBlobs = ({
-  smallBlobCount = 100,
+  smallBlobCount = 50,
   largeBlobCount = 5,
 }: LandingPageBlobsProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const canvasRectRef = useRef<DOMRect | null>(null)
   const mouseRef = useRef({ x: -9999, y: -9999 })
 
   const handleMouseMove = useCallback((ev: MouseEvent) => {
-    const canvas = canvasRef.current
+    const rect = canvasRectRef.current
 
-    if (!canvas) return
-    const rect = canvas.getBoundingClientRect()
+    if (!rect) return
 
     mouseRef.current = {
       x: Number(ev.clientX) - Number(rect.left),
@@ -513,9 +582,12 @@ export const LandingPageBlobs = ({
     let width = 0
     let height = 0
     let rafId = 0
+    let initRafId = 0
     let prevTime = 0
     let smoothedActivation = 0
+    let largeBlobActivation = 0
     let dynamicMouseRadius = 1
+    let resizeObserver: ResizeObserver | null = null
 
     // blob pools
     let smallBlobs: SmallBlob[] = []
@@ -533,9 +605,8 @@ export const LandingPageBlobs = ({
       height = Math.max(Number(rect.height), 1)
       canvas.width = Math.round(Number(width) * Number(dpr))
       canvas.height = Math.round(Number(height) * Number(dpr))
-      canvas.style.width = `${width}px`
-      canvas.style.height = `${height}px`
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      canvasRectRef.current = rect
 
       dynamicMouseRadius = Number(Math.max(width, height)) * Number(GRAVITY_MOUSE_RADIUS)
 
@@ -544,7 +615,7 @@ export const LandingPageBlobs = ({
         createLargeBlob(i, largeBlobCount),
       )
     }
-    const resizeDebounced = debounce(resize, 1000)
+    const resizeDebounced = debounce(resize, 120)
 
     const seedSmallBlobs = () => {
       // pre-seed blobs at random ages so canvas starts populated
@@ -609,6 +680,13 @@ export const LandingPageBlobs = ({
         Math.min(Number(dt) * Number(GRAVITY_LERP_SPEED), 1),
       )
 
+      // large blobs intentionally lag behind to avoid overly snappy convergence/intensity
+      largeBlobActivation = lerp(
+        largeBlobActivation,
+        smoothedActivation,
+        Math.min(Number(dt) * Number(LARGE_BLOB_RESPONSE_LERP_SPEED), 1),
+      )
+
       // --- small blobs (behind) ---
       ensureSmallBlobs({
         x: gravityCx,
@@ -653,7 +731,7 @@ export const LandingPageBlobs = ({
           height,
           gravityCx,
           gravityCy,
-          smoothedActivation,
+          largeBlobActivation,
           inverseMaxDist,
           dynamicMouseRadius,
         )
@@ -662,16 +740,30 @@ export const LandingPageBlobs = ({
       rafId = requestAnimationFrame(tick)
     }
 
-    resize()
-    seedSmallBlobs()
-    rafId = requestAnimationFrame(tick)
+    initRafId = requestAnimationFrame(() => {
+      resize()
+      seedSmallBlobs()
+      rafId = requestAnimationFrame(tick)
+    })
 
-    window.addEventListener('resize', resizeDebounced)
+    const resizeContainer = canvas.parentElement
+
+    if (resizeContainer) {
+      resizeObserver = new ResizeObserver(() => {
+        resizeDebounced()
+      })
+      resizeObserver.observe(resizeContainer)
+    }
+
+    window.addEventListener('scroll', resizeDebounced, { passive: true })
     window.addEventListener('mousemove', handleMouseMove)
 
     return () => {
-      window.removeEventListener('resize', resizeDebounced)
+      cancelAnimationFrame(initRafId)
+      resizeObserver?.disconnect()
+      window.removeEventListener('scroll', resizeDebounced)
       window.removeEventListener('mousemove', handleMouseMove)
+      resizeDebounced.cancel()
       cancelAnimationFrame(rafId)
     }
   }, [smallBlobCount, largeBlobCount, handleMouseMove])

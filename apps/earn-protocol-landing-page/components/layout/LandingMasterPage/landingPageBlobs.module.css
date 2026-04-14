@@ -1,3 +1,13 @@
+@keyframes blobsContainerFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .blobsContainer {
   position: absolute;
   top: 0;
@@ -7,6 +17,8 @@
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
+  opacity: 0;
+  animation: blobsContainerFadeIn 1.5s ease-out forwards 1s;
 }
 
 .canvas {

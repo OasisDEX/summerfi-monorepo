@@ -309,7 +309,7 @@ export const InstitutionsContactForm = () => {
     <Card className={institutionsContactFormStyles.cardStyles}>
       <Script
         src={`https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
       <Text variant="h3" as="h3">
         Want to learn more about Summer.fi&apos;s Self Managed Vaults?
