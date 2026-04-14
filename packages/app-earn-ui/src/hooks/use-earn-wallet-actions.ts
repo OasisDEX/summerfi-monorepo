@@ -348,14 +348,14 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
           1,
         )
 
-        if (checkIfSafeHash && publicClient) {
+        if (checkIfSafeHash && checkIfSafeHash.safe && publicClient) {
           // if the hash corresponds to a safe transaction, we want to wait for the safe transaction hash instead of the original one
           const safeTransactionData = checkIfSafeHash.transactionHash
             ? // it might have resolved already when checking, so we can use the transaction hash from the check, but if it hasn't resolved yet, we need to wait for it with retries, as it can take some time for the safe transaction hash to be available in the subgraph after the original transaction is mined
               checkIfSafeHash
             : await getSafeTxHash(hash, chainIdToSDKNetwork(walletClientResolved.chain.id))
 
-          if (!safeTransactionData) {
+          if (!safeTransactionData || !safeTransactionData.safe) {
             // this is no op, just for type safety, as getSafeTxHash should return false if the hash is not a safe transaction hash, but we already check that above
             return { hash }
           }

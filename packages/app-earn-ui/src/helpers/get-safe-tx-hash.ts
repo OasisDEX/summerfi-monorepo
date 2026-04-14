@@ -39,6 +39,8 @@ type SafeTransactionDataType = {
   }[]
   trusted: boolean
   signatures: unknown
+  // error case
+  detail?: string
 }
 
 const subgraphNetworkToSafeSDKAPINetworkName = (network: SupportedSDKNetworks) => {
@@ -55,10 +57,12 @@ export const getSafeTxHash = async (
   network: SupportedSDKNetworks,
   maxRetries: number = 15,
 ): Promise<SafeTransactionDataType | false> => {
-  let safeTransactionData: SafeTransactionDataType | any
+  let safeTransactionData: SafeTransactionDataType | undefined
   let retries = 0
 
-  await new Promise((resolve) => setTimeout(resolve, 3000))
+  await new Promise((resolve) => {
+    setTimeout(resolve, 3000)
+  })
 
   do {
     const res = await fetch(
@@ -72,17 +76,19 @@ export const getSafeTxHash = async (
       return false
     }
 
-    if (!safeTransactionData.transactionHash) {
-      retries++
-
+    if (!safeTransactionData?.transactionHash) {
       if (retries >= maxRetries) {
         return false
       }
+      retries++
 
       const waitTime = retries > 10 ? 10000 : 3000
-      await new Promise((resolve) => setTimeout(resolve, waitTime))
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, waitTime)
+      })
     }
-  } while (!safeTransactionData.transactionHash)
+  } while (!safeTransactionData?.transactionHash)
 
   return safeTransactionData as SafeTransactionDataType
 }
