@@ -245,10 +245,12 @@ type useEarnProtocolSendUserOperationType = ({
   waitForTxn,
   onSuccess,
   onError,
+  forceChainId,
 }: {
   waitForTxn?: boolean | undefined
   onSuccess?: ((data: { hash: `0x${string}` }) => void) | undefined
   onError?: ((error: Error) => void) | undefined
+  forceChainId?: number | undefined
 }) => {
   sendUserOperation: (params: {
     target: `0x${string}`
@@ -274,8 +276,15 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
   waitForTxn = true,
   onSuccess,
   onError,
+  forceChainId,
 }) => {
-  const { data: walletClient, promise: walletPendingPromise } = useWalletClient()
+  const { promise: walletPendingPromise } = useWalletClient(
+    forceChainId
+      ? {
+          chainId: forceChainId,
+        }
+      : undefined,
+  )
   const publicClient = usePublicClient()
   const [isSendingUserOperation, setIsSendingUserOperation] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -290,21 +299,20 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
       data: `0x${string}`
       value?: bigint
     }) => {
-      let walletClientResolved: WalletClient | null = walletClient ?? null
+      let walletClientResolved: WalletClient | null = null
 
-      if (!walletClient) {
-        try {
-          walletClientResolved = await walletPendingPromise
-        } catch (pendingError) {
-          const resolvedPendingError =
-            pendingError instanceof Error ? pendingError : new Error(String(pendingError))
+      try {
+        walletClientResolved = await walletPendingPromise
+      } catch (pendingError) {
+        const resolvedPendingError =
+          pendingError instanceof Error ? pendingError : new Error(String(pendingError))
 
-          setError(resolvedPendingError)
-          onError?.(resolvedPendingError)
+        setError(resolvedPendingError)
+        onError?.(resolvedPendingError)
 
-          throw resolvedPendingError
-        }
+        throw resolvedPendingError
       }
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!walletClientResolved) {
         const missingWalletError = new Error('Wallet is not connected')
 
@@ -329,6 +337,8 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
 
         throw missingChainError
       }
+
+      console.log('walletClientResolved', walletClientResolved.chain.id)
 
       try {
         setIsSendingUserOperation(true)
@@ -388,7 +398,7 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
         setIsSendingUserOperation(false)
       }
     },
-    [onError, onSuccess, publicClient, waitForTxn, walletClient, walletPendingPromise],
+    [onError, onSuccess, publicClient, waitForTxn, walletPendingPromise],
   )
 
   const sendUserOperation = useCallback(

@@ -97,7 +97,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const [searchValue, setSearchValue] = useState('')
 
   // Simple debounce with ref
-  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)

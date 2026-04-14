@@ -75,7 +75,7 @@ export function useCrossChainMessages({
   }, [srcTxHash, client, memoizedOnSuccess])
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout
+    let intervalId: ReturnType<typeof setInterval>
 
     const poll = async () => {
       const shouldContinue = await fetchMessages()

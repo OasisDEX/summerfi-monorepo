@@ -163,6 +163,7 @@ export const useMigrationTransaction = ({
     error: sendApproveTransactionError,
     isSendingUserOperation: isSendingApproveTransaction,
   } = useEarnProtocolSendUserOperation({
+    forceChainId: vaultChainId,
     waitForTxn: true,
     onSuccess: ({ hash }) => {
       onSuccessHandler({

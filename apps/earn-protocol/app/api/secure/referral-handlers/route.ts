@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const formData = await req.formData()
+  const formData = (await req.formData()) as unknown as FormData // typescript being weird with formData typing
   const referralCodeId = formData.get('referralCodeId') as string
   const newCustomCode = formData.get('customCode') as string
   const manualWalletAddress = formData.get('manualWalletAddress') as string

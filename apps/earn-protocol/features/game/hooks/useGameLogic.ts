@@ -79,7 +79,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
   const [responseTimes, setResponseTimes] = useState<number[]>([])
   const [roundStartTime, setRoundStartTime] = useState<number>(Date.now())
   const [flyingApys, setFlyingApys] = useState<FlyingApyState[]>([])
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const prevStreakRef = useRef(streak)
   const flyingApyIdCounter = useRef(0)
   const cardRefs = useRef<HTMLDivElement[]>([]) // Ref to hold card DOM elements
