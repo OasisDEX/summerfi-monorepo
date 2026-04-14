@@ -38,8 +38,8 @@ const DelegatePage = async ({ params }: DelegatePageProps) => {
   }
 
   const sumrPriceUsd = getEstimatedSumrPrice({
-    config,
     sumrPrice: sumrPrice.usd,
+    config,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 
