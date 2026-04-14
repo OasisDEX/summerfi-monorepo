@@ -10,7 +10,15 @@ import { safe } from 'wagmi/connectors'
 const supportedChains = Object.values(supportedViemChains) as [Chain, ...Chain[]]
 
 const wagmiConfig = createConfig({
-  connectors: [safe({ allowedDomains: [/app\.safe\.global$/u] })],
+  connectors: [
+    safe({
+      // Safe's parent origin can vary across environments and versions.
+      allowedDomains: [/^https:\/\/([\w-]+\.)?safe\.global$/u],
+      // The connector defaults this timeout to 10ms, which is too low in real-world iframe loads.
+      // eslint-disable-next-line camelcase
+      unstable_getInfoTimeout: 1_000,
+    }),
+  ],
   chains: supportedChains,
   transports: supportedChains.reduce<{
     [key: number]: ReturnType<typeof http>
