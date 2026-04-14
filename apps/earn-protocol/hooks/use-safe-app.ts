@@ -16,6 +16,10 @@ export function useSafeAutoConnect() {
       return
     }
 
-    connect({ connector: safeConnector })
+    safeConnector.getProvider().then((provider) => {
+      if (provider) {
+        connect({ connector: safeConnector })
+      }
+    })
   }, [connect, connectors, isConnected])
 }

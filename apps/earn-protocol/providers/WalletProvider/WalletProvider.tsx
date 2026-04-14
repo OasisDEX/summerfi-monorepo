@@ -10,11 +10,7 @@ import { safe } from 'wagmi/connectors'
 const supportedChains = Object.values(supportedViemChains) as [Chain, ...Chain[]]
 
 const wagmiConfig = createConfig({
-  connectors: [
-    safe({
-      allowedDomains: [/app\.safe\.global/u],
-    }),
-  ],
+  connectors: [safe({ allowedDomains: [/app\.safe\.global$/u] })],
   chains: supportedChains,
   transports: supportedChains.reduce<{
     [key: number]: ReturnType<typeof http>
