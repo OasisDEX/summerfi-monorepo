@@ -39,7 +39,7 @@ export default function HomePage() {
     >
       <LandingPageHero
         vaultsInfo={landingPageData?.vaultsInfo}
-        totalRebalancesPerStrategyId={landingPageData?.totalRebalanceItemsPerStrategyId}
+        tvl={landingPageData?.tvl}
         vaultsList={landingPageData?.vaultsWithConfig}
         vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
         rewardTokenPrices={landingPageData?.rewardTokenPrices}

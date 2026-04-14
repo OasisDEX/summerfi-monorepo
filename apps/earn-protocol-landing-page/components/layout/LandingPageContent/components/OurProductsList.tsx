@@ -29,7 +29,7 @@ import ourProductsLinesBackground from '@/public/img/landing-page/our-products-l
 import franklinTempletonMarketLogo from '@/public/img/landing-page/private-markets/franklin_templeton.png'
 import mapleMarketLogo from '@/public/img/landing-page/private-markets/maple.png'
 import securitizeMarketLogo from '@/public/img/landing-page/private-markets/securitize.png'
-import stacMarketLogo from '@/public/img/landing-page/private-markets/stac.png'
+// import stacMarketLogo from '@/public/img/landing-page/private-markets/stac.png'
 import superstateMarketLogo from '@/public/img/landing-page/private-markets/superstate.png'
 import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisdomtree.png'
 import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-screenshot.png'
@@ -96,16 +96,16 @@ const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVau
             </Text>
             <div className={styles.assetIcons}>
               <div className={styles.assetIcon}>
-                <Icon tokenName="USDC" />
+                <Icon tokenName="USDC" size={40} />
               </div>
               <div className={styles.assetIcon}>
-                <Icon tokenName="ETH" />
+                <Icon tokenName="ETH" size={40} />
               </div>
               <div className={styles.assetIcon}>
-                <Icon tokenName="USDT" />
+                <Icon tokenName="USDT" size={40} />
               </div>
               <div className={styles.assetIcon}>
-                <Icon tokenName="EURC" />
+                <Icon tokenName="EURC" size={40} />
               </div>
             </div>
           </div>
@@ -194,13 +194,13 @@ const PermissionlessRwaVaultsCard = () => {
                 height={54}
                 className={styles.partnerLogo}
               />
-              <Image
+              {/* <Image
                 alt="Stac"
                 src={stacMarketLogo}
                 width={140}
                 height={54}
                 className={styles.partnerLogo}
-              />
+              /> */}
             </div>
           </div>
           <Link href="/rwa-vaults">
@@ -213,9 +213,9 @@ const PermissionlessRwaVaultsCard = () => {
         </div>
         <aside className={styles.cardSide}>
           <div className={styles.sideStatBlock}>
-            <Text as="p" variant="p4semi" className={styles.metaLabel}>
+            {/* <Text as="p" variant="p4semi" className={styles.metaLabel}>
               Earn up to
-            </Text>
+            </Text> */}
             <TagButton>Coming soon</TagButton>
             {/* <Text as="p" variant="h2" className={styles.apyValue}>
               8.5%
@@ -279,7 +279,10 @@ const BuildYourOwnVaultCard = () => {
         <div className={styles.cardMain}>
           <div
             style={{
+              display: 'flex',
+              flexDirection: 'column',
               maxWidth: '540px',
+              gap: '12px',
             }}
           >
             <Text as="p" variant="p3colorful">

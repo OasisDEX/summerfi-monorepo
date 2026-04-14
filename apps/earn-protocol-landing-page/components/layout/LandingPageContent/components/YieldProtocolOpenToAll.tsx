@@ -27,7 +27,8 @@ const items = [
   {
     icon: badgeIcon,
     title: 'Instant liquidity, always',
-    description: 'Lazy Summer vaults prioritize deep and instant liquidity always available.',
+    description:
+      'Lazy Summer vaults prioritizes deep and instant liquidity, so you can always exit.',
   },
 ]
 

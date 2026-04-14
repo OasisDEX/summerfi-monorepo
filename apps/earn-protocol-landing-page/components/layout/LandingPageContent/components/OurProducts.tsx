@@ -116,6 +116,9 @@ export const OurProducts = ({
         style={{
           marginBottom: 'var(--spacing-space-large)',
           color: 'var(--color-text-secondary)',
+          maxWidth: '900px',
+          margin: '0 auto',
+          textAlign: 'center',
         }}
       >
         Capture optimized yield, unlock RWA private markets, and launch custom vaults - backed by

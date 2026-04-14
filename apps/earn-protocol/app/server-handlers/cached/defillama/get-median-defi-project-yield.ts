@@ -90,6 +90,6 @@ export const getCachedMedianDefiProjectYield = async ({
     // eslint-disable-next-line no-console
     console.error(`Error fetching median DeFi yield`, error)
 
-    throw error
+    return [0, 0]
   }
 }

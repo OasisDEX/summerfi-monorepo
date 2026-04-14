@@ -62,9 +62,12 @@ const GRAVITY_MOUSE_RADIUS = 0.4 // fraction of width – outer activation radiu
 const GRAVITY_LERP_SPEED = 1.2 // how fast activation catches up (units/sec)
 const GRAVITY_RADIUS_GROW_SPEED = 300 // px/sec while cursor is held near center
 const GRAVITY_RADIUS_SHRINK_SPEED = 400 // px/sec when cursor leaves center
-const BLACKHOLE_PULL_SPEED = 2.6 // how fast small blobs are permanently sucked in
+const BLACKHOLE_PULL_SPEED = 1.6 // how fast small blobs are permanently sucked in
 const BLACKHOLE_DEATH_RADIUS = 100 // pixels from center before the blob dies and fades away
 const BLACKHOLE_DEATH_FADE = 1 // seconds of fade after entering black hole core
+const FRAME_RATE = 60
+const FRAME_DURATION_MS = Number(1000 / FRAME_RATE)
+const FRAME_DT = Number(1 / FRAME_RATE)
 const LARGE_BLOB_IDLE_ALPHA = 0.38
 const LARGE_BLOB_ACTIVE_ALPHA_BOOST = 0.3
 const LARGE_BLOB_CENTER_PULL = 0.6
@@ -584,6 +587,7 @@ export const LandingPageBlobs = ({
     let rafId = 0
     let initRafId = 0
     let prevTime = 0
+    let frameAccumulator = 0
     let smoothedActivation = 0
     let largeBlobActivation = 0
     let dynamicMouseRadius = 1
@@ -634,107 +638,126 @@ export const LandingPageBlobs = ({
     }
 
     const tick = (time: number) => {
-      const dt = prevTime === 0 ? 0.016 : Number(time - prevTime) * 0.001
+      if (prevTime === 0) {
+        prevTime = time
+        rafId = requestAnimationFrame(tick)
 
+        return
+      }
+
+      frameAccumulator += Number(time - prevTime)
       prevTime = time
+      frameAccumulator = Math.min(Number(frameAccumulator), Number(FRAME_DURATION_MS) * 5)
 
-      ctx.clearRect(0, 0, width, height)
+      if (frameAccumulator < Number(FRAME_DURATION_MS)) {
+        rafId = requestAnimationFrame(tick)
 
-      // --- compute smoothed gravity activation once per frame ---
-      const gravityCx = Number(GRAVITY_CENTER_X) * Number(width)
-      const gravityCy = Number(GRAVITY_CENTER_Y) * Number(height)
-      const inverseMaxDist =
-        1 /
-        Math.sqrt(Number(Number(width) * Number(width)) + Number(Number(height) * Number(height)))
-
-      const mDx = Number(mouseRef.current.x) - Number(gravityCx)
-      const mDy = Number(mouseRef.current.y) - Number(gravityCy)
-      const mouseDist = Math.sqrt(
-        Number(Number(mDx) * Number(mDx)) + Number(Number(mDy) * Number(mDy)),
-      )
-      const baseMouseRadius = Number(height) * Number(GRAVITY_MOUSE_RADIUS)
-      const maxMouseRadius = Math.max(Number(width), Number(height))
-      const isHoldingCenter = mouseDist <= Number(BLACKHOLE_DEATH_RADIUS)
-
-      if (isHoldingCenter) {
-        dynamicMouseRadius = Math.min(
-          Number(maxMouseRadius),
-          Number(dynamicMouseRadius) + Number(Number(dt) * Number(GRAVITY_RADIUS_GROW_SPEED)),
-        )
-      } else {
-        dynamicMouseRadius = Math.max(
-          Number(baseMouseRadius),
-          Number(dynamicMouseRadius) - Number(Number(dt) * Number(GRAVITY_RADIUS_SHRINK_SPEED)),
-        )
+        return
       }
 
-      const rawActivation = Math.max(
-        0,
-        1 - Number(Number(mouseDist) / Number(Math.max(dynamicMouseRadius, 1))),
-      )
-      const targetActivation = easeInOutCubic(rawActivation)
+      while (frameAccumulator >= Number(FRAME_DURATION_MS)) {
+        const dt = FRAME_DT
 
-      smoothedActivation = lerp(
-        smoothedActivation,
-        targetActivation,
-        Math.min(Number(dt) * Number(GRAVITY_LERP_SPEED), 1),
-      )
+        frameAccumulator -= Number(FRAME_DURATION_MS)
 
-      // large blobs intentionally lag behind to avoid overly snappy convergence/intensity
-      largeBlobActivation = lerp(
-        largeBlobActivation,
-        smoothedActivation,
-        Math.min(Number(dt) * Number(LARGE_BLOB_RESPONSE_LERP_SPEED), 1),
-      )
+        ctx.clearRect(0, 0, width, height)
 
-      // --- small blobs (behind) ---
-      ensureSmallBlobs({
-        x: gravityCx,
-        y: gravityCy,
-        radius: Math.min(Number(dynamicMouseRadius), Number(BLACKHOLE_DEATH_RADIUS) * 2),
-      })
-      let writeIndex = 0
+        // --- compute smoothed gravity activation once per frame ---
+        const gravityCx = Number(GRAVITY_CENTER_X) * Number(width)
+        const gravityCy = Number(GRAVITY_CENTER_Y) * Number(height)
+        const inverseMaxDist =
+          1 /
+          Math.sqrt(Number(Number(width) * Number(width)) + Number(Number(height) * Number(height)))
 
-      for (const sb of smallBlobs) {
-        sb.age = Number(Number(sb.age) + Number(dt))
-
-        updateSmallBlob(
-          sb,
-          dt,
-          gravityCx,
-          gravityCy,
-          smoothedActivation,
-          inverseMaxDist,
-          dynamicMouseRadius,
+        const mDx = Number(mouseRef.current.x) - Number(gravityCx)
+        const mDy = Number(mouseRef.current.y) - Number(gravityCy)
+        const mouseDist = Math.sqrt(
+          Number(Number(mDx) * Number(mDx)) + Number(Number(mDy) * Number(mDy)),
         )
-        drawSmallBlob(ctx, sb)
+        const baseMouseRadius = Number(height) * Number(GRAVITY_MOUSE_RADIUS)
+        const maxMouseRadius = Math.max(Number(width), Number(height))
+        const isHoldingCenter = mouseDist <= Number(BLACKHOLE_DEATH_RADIUS)
 
-        const isNaturalDead = sb.age > sb.lifetime
-        const isBlackHoleDead =
-          sb.deathStartAge !== null &&
-          Number(Number(sb.age) - Number(sb.deathStartAge)) > Number(BLACKHOLE_DEATH_FADE)
-
-        if (!isNaturalDead && !isBlackHoleDead) {
-          smallBlobs[writeIndex] = sb
-          writeIndex += 1
+        if (isHoldingCenter) {
+          dynamicMouseRadius = Math.min(
+            Number(maxMouseRadius),
+            Number(dynamicMouseRadius) + Number(Number(dt) * Number(GRAVITY_RADIUS_GROW_SPEED)),
+          )
+        } else {
+          dynamicMouseRadius = Math.max(
+            Number(baseMouseRadius),
+            Number(dynamicMouseRadius) - Number(Number(dt) * Number(GRAVITY_RADIUS_SHRINK_SPEED)),
+          )
         }
-      }
-      smallBlobs.length = writeIndex
 
-      // --- large blobs (on top) ---
-      for (const lb of largeBlobs) {
-        drawLargeBlob(
-          ctx,
-          lb,
-          time,
-          width,
-          height,
-          gravityCx,
-          gravityCy,
-          largeBlobActivation,
-          inverseMaxDist,
-          dynamicMouseRadius,
+        const rawActivation = Math.max(
+          0,
+          1 - Number(Number(mouseDist) / Number(Math.max(dynamicMouseRadius, 1))),
         )
+        const targetActivation = easeInOutCubic(rawActivation)
+
+        smoothedActivation = lerp(
+          smoothedActivation,
+          targetActivation,
+          Math.min(Number(dt) * Number(GRAVITY_LERP_SPEED), 1),
+        )
+
+        // large blobs intentionally lag behind to avoid overly snappy convergence/intensity
+        largeBlobActivation = lerp(
+          largeBlobActivation,
+          smoothedActivation,
+          Math.min(Number(dt) * Number(LARGE_BLOB_RESPONSE_LERP_SPEED), 1),
+        )
+
+        // --- small blobs (behind) ---
+        ensureSmallBlobs({
+          x: gravityCx,
+          y: gravityCy,
+          radius: Math.min(Number(dynamicMouseRadius), Number(BLACKHOLE_DEATH_RADIUS) * 2),
+        })
+        let writeIndex = 0
+
+        for (const sb of smallBlobs) {
+          sb.age = Number(Number(sb.age) + Number(dt))
+
+          updateSmallBlob(
+            sb,
+            dt,
+            gravityCx,
+            gravityCy,
+            smoothedActivation,
+            inverseMaxDist,
+            dynamicMouseRadius,
+          )
+          drawSmallBlob(ctx, sb)
+
+          const isNaturalDead = sb.age > sb.lifetime
+          const isBlackHoleDead =
+            sb.deathStartAge !== null &&
+            Number(Number(sb.age) - Number(sb.deathStartAge)) > Number(BLACKHOLE_DEATH_FADE)
+
+          if (!isNaturalDead && !isBlackHoleDead) {
+            smallBlobs[writeIndex] = sb
+            writeIndex += 1
+          }
+        }
+        smallBlobs.length = writeIndex
+
+        // --- large blobs (on top) ---
+        for (const lb of largeBlobs) {
+          drawLargeBlob(
+            ctx,
+            lb,
+            time,
+            width,
+            height,
+            gravityCx,
+            gravityCy,
+            largeBlobActivation,
+            inverseMaxDist,
+            dynamicMouseRadius,
+          )
+        }
       }
 
       rafId = requestAnimationFrame(tick)
@@ -755,15 +778,12 @@ export const LandingPageBlobs = ({
       resizeObserver.observe(resizeContainer)
     }
 
-    window.addEventListener('scroll', resizeDebounced, { passive: true })
     window.addEventListener('mousemove', handleMouseMove)
 
     return () => {
       cancelAnimationFrame(initRafId)
       resizeObserver?.disconnect()
-      window.removeEventListener('scroll', resizeDebounced)
       window.removeEventListener('mousemove', handleMouseMove)
-      resizeDebounced.cancel()
       cancelAnimationFrame(rafId)
     }
   }, [smallBlobCount, largeBlobCount, handleMouseMove])
