@@ -40,30 +40,29 @@ describe('Intent swaps: Swap with Deposit', () => {
     authorizePermit2?: boolean
     revokePermit2?: boolean
   }[] = [
-    // eth to erc20
-    // {
-    //   chainId: ChainIds.Base,
-    //   fromSymbol: 'ETH',
-    //   amountValue: '0.0005',
-    //   fleetAddressValue: FleetAddresses.Base.USDC,
-    //   sendOrder: true,
-    //   cancelOrder: false,
-    //   authorizePermit2: true,
-    // },
-    // erc20 to erc20
     {
       chainId: ChainIds.Base,
-      amountValue: '0.5',
-      fromFleetAddressValue: FleetAddresses.Base.USDC,
-      fleetAddressValue: FleetAddresses.Base.EURC,
+      amountValue: '0.0005',
+      fromFleetAddressValue: FleetAddresses.Base.ETH,
+      fleetAddressValue: FleetAddresses.Base.USDC,
       sendOrder: true,
-      cancelOrder: false,
+      cancelOrder: true,
       authorizePermit2: true,
     },
+    // erc20 to erc20
+    // {
+    //   chainId: ChainIds.Base,
+    //   amountValue: '0.5',
+    //   fromFleetAddressValue: FleetAddresses.Base.USDC,
+    //   fleetAddressValue: FleetAddresses.Base.EURC,
+    //   sendOrder: true,
+    //   cancelOrder: true,
+    //   authorizePermit2: true,
+    // },
     // erc20 to eth
     // {
     //   chainId: ChainIds.Base,
-    //   fromSymbol: 'USDC',
+    //   fromFleetAddressValue: FleetAddresses.Base.USDC,
     //   amountValue: '1',
     //   fleetAddressValue: FleetAddresses.Base.ETH,
     //   sendOrder: true,
@@ -160,29 +159,41 @@ describe('Intent swaps: Swap with Deposit', () => {
         assert(revokeTxStatus === 'success', 'Permit2 revoke transaction failed')
       }
 
-      const ownerAddress = senderAddress.toSolidityValue()
-      const spenderAddress = aqAddressValue
-      const permitAmount = sellQuote.toAmount.toSolidityValue()
-      const permitTokenAddress = sellQuote.toAmount.token.address.toSolidityValue()
+      const gasLimit = '5500000'
       const referralCode = '0x'
 
-      console.log('Permit', { permitAmount, permitTokenAddress })
+      const withdrawPermitAmount = fromAmount.toSolidityValue()
+      const withdrawPermitTokenAddress = fromAmount.token.address.toSolidityValue()
+      const depositPermitAmount = sellQuote.toAmount.toSolidityValue()
+      const depositPermitTokenAddress = sellQuote.toAmount.token.address.toSolidityValue()
 
-      const { permitData, signature } = await sdk.intentSwaps.createPermit2Data({
-        chainId,
-        signTypedData: walletClient.signTypedData,
-        viemAccount: walletClient.account,
-        tokenAddress: permitTokenAddress,
-        amount: permitAmount,
-        spenderAddress,
+      console.log('Permit', {
+        withdrawPermitAmount: withdrawPermitAmount,
+        withdrawPermitTokenAddress: withdrawPermitTokenAddress,
+        depositPermitAmount: depositPermitAmount,
+        depositPermitTokenAddress: depositPermitTokenAddress,
       })
 
-      const gasLimit = '5500000'
-
+      const { permitData: withdrawPermitData, signature: withdrawSignature } =
+        await sdk.intentSwaps.createPermit2Data({
+          chainId,
+          signTypedData: walletClient.signTypedData,
+          viemAccount: walletClient.account,
+          tokenAddress: withdrawPermitTokenAddress,
+          amount: withdrawPermitAmount,
+          spenderAddress: aqAddressValue,
+        })
       const withdrawCallData = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
         functionName: 'exitFleetWithPermit2',
-        args: [ownerAddress, fleetAddressValue, permitAmount, referralCode, permitData, signature],
+        args: [
+          senderAddressValue,
+          fleetAddressValue,
+          withdrawPermitAmount,
+          referralCode,
+          withdrawPermitData,
+          withdrawSignature,
+        ],
       })
       const withdrawMultiCallData = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
@@ -197,10 +208,27 @@ describe('Intent swaps: Swap with Deposit', () => {
         },
       ]
 
+      const { permitData: depositPermitData, signature: depositSignature } =
+        await sdk.intentSwaps.createPermit2Data({
+          chainId,
+          signTypedData: walletClient.signTypedData,
+          viemAccount: walletClient.account,
+          tokenAddress: depositPermitTokenAddress,
+          amount: depositPermitAmount,
+          spenderAddress: aqAddressValue,
+        })
+
       const enterFleetCallData = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
         functionName: 'enterFleetWithPermit2',
-        args: [ownerAddress, fleetAddressValue, permitAmount, referralCode, permitData, signature],
+        args: [
+          senderAddressValue,
+          fleetAddressValue,
+          depositPermitAmount,
+          referralCode,
+          depositPermitData,
+          depositSignature,
+        ],
       })
       const depositMultiCallData = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
@@ -240,7 +268,8 @@ describe('Intent swaps: Swap with Deposit', () => {
           limitPrice: sellQuote.limitPrice,
           toToken,
           order: sellQuote.order,
-          postHooks: postHooks,
+          preHooks,
+          postHooks,
         })
         orderId = await _handleOrderPrerequisites({
           orderReturn,
