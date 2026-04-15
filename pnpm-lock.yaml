@@ -3156,8 +3156,8 @@ importers:
         specifier: workspace:*
         version: link:../subgraph-manager-common
       '@trpc/client':
-        specifier: 11.8.0
-        version: 11.8.0(@trpc/server@11.8.0)(typescript@5.9.3)
+        specifier: 11.16.0
+        version: 11.16.0(@trpc/server@11.16.0)(typescript@5.9.3)
       '@uniswap/permit2-sdk':
         specifier: ^1.4.0
         version: 1.4.0
@@ -3304,8 +3304,8 @@ importers:
         specifier: workspace:*
         version: link:../sdk-server
       '@trpc/server':
-        specifier: 11.8.0
-        version: 11.8.0(typescript@5.9.3)
+        specifier: 11.16.0
+        version: 11.16.0(typescript@5.9.3)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -3422,8 +3422,8 @@ importers:
         specifier: workspace:*
         version: link:../tokens-service
       '@trpc/server':
-        specifier: 11.8.0
-        version: 11.8.0(typescript@5.9.3)
+        specifier: 11.16.0
+        version: 11.16.0(typescript@5.9.3)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -16466,18 +16466,20 @@ packages:
       query-string: 9.3.1
     dev: false
 
-  /@trpc/client@11.8.0(@trpc/server@11.8.0)(typescript@5.9.3):
-    resolution: {integrity: sha512-imJQeESX1hAapDaC4JB91yvXg41AZfBuTh/scnEiN/hAubZa5s/ikp0n+w29q2GCf+hREkr3WptUFKFJoDAIug==}
+  /@trpc/client@11.16.0(@trpc/server@11.16.0)(typescript@5.9.3):
+    resolution: {integrity: sha512-TxIzm7OoK3baKZ0XCbuMUbI3GhgjcbKHIc4nWVKaRpCRnbSh0T31BT6fTPYwtnA/Nur8pBCGqC2B4J5hEPiPFQ==}
+    hasBin: true
     peerDependencies:
-      '@trpc/server': 11.8.0
+      '@trpc/server': 11.16.0
       typescript: '>=5.7.2'
     dependencies:
-      '@trpc/server': 11.8.0(typescript@5.9.3)
+      '@trpc/server': 11.16.0(typescript@5.9.3)
       typescript: 5.9.3
     dev: false
 
-  /@trpc/server@11.8.0(typescript@5.9.3):
-    resolution: {integrity: sha512-DphyQnLuyX2nwJCQGWQ9zYz4hZGvRhSBqDhQ0SH3tDhQ3PU4u68xofA0pJ741Ir4InEAFD+TtJVLAQy+wVOkiQ==}
+  /@trpc/server@11.16.0(typescript@5.9.3):
+    resolution: {integrity: sha512-XgGuUMddrUTd04+za/WE5GFuZ1/YU9XQG0t3VL5WOIu2JspkOlq6k4RYEiqS6HSJt+S0RXaPdIoE2anIP/BBRQ==}
+    hasBin: true
     peerDependencies:
       typescript: '>=5.7.2'
     dependencies:
