@@ -191,7 +191,7 @@ export default function WalletLabel({
   customLoginLabel,
   buttonVariant = 'secondaryMedium',
 }: WalletLabelProps) {
-  useSafeAutoConnect()
+  const { connectSafe } = useSafeAutoConnect()
   const [addressCopied, setAddressCopied] = useState(false)
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { clientChainId } = useClientChainId()
@@ -226,7 +226,7 @@ export default function WalletLabel({
     return (
       <Button
         variant={buttonVariant}
-        onClick={login}
+        onClick={isIframe ? () => connectSafe() : login}
         className={clsx(walletLabelStyles.wrapper, className)}
       >
         {customLoginLabel ?? 'Connect wallet'}

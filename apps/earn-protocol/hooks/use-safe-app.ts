@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { SafeAppProvider } from '@safe-global/safe-apps-provider'
 import type { SafeInfo } from '@safe-global/safe-apps-sdk'
 import { useIsIframe } from '@summerfi/app-earn-ui'
@@ -10,6 +10,7 @@ export function useSafeAutoConnect() {
   const { connectAsync, connectors } = useConnect()
   const { reconnectAsync } = useReconnect()
   const { isConnected } = useAccount()
+  const [isConnecting, setIsConnecting] = useState(false)
   const providerRef = useRef<SafeAppProvider | undefined>(undefined)
   const providerPromiseRef = useRef<Promise<SafeAppProvider | undefined> | null>(null)
   const connectorsRef = useRef(connectors)
@@ -30,7 +31,7 @@ export function useSafeAutoConnect() {
         const SafeAppsSDK = (safeSdkModule as any).default ?? (safeSdkModule as any)
         const sdk = new SafeAppsSDK({})
 
-        const timeout = 10
+        const timeout = 10_000
         const safeInfo = (await Promise.race([
           sdk.safe.getInfo(),
           new Promise<never>((_, reject) => {
@@ -69,69 +70,79 @@ export function useSafeAutoConnect() {
 
     await reconnectAsync({ connectors: [safe()] })
 
-    return connectorsRef.current.find((c) => c.id === 'safe')
+    const reconnectedSafeConnector = connectorsRef.current.find((c) => c.id === 'safe')
+
+    if (reconnectedSafeConnector) {
+      return reconnectedSafeConnector
+    }
+
+    return undefined
   }, [isIframe, reconnectAsync])
 
   const connectSafe = useCallback(
     async (cb?: () => void) => {
-      if (!isIframe) {
+      if (!isIframe || isConnected || isConnecting) {
         cb?.()
 
         return
       }
 
-      const safeConnector = await ensureSafeConnector()
-      let provider: SafeAppProvider | undefined
-
-      if (safeConnector?.getProvider) {
-        try {
-          const maybeProvider = await safeConnector.getProvider()
-
-          provider = maybeProvider as SafeAppProvider | undefined
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn('safeConnector.getProvider() failed', error)
-        }
-      }
-
-      if (!provider) {
-        provider = await getSafeProvider()
-      }
-
-      if (!provider) {
-        // eslint-disable-next-line no-console
-        console.warn('No Safe provider available; auto-connect cannot proceed')
-        cb?.()
-
-        return
-      }
-
-      if (!safeConnector) {
-        // eslint-disable-next-line no-console
-        console.warn('Safe connector is not available even though provider exists')
-        cb?.()
-
-        return
-      }
+      setIsConnecting(true)
 
       try {
-        await connectAsync({ connector: safeConnector })
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn('Safe auto-connect failed during connectAsync', error)
-      }
+        const safeConnector = await ensureSafeConnector()
+        let provider: SafeAppProvider | undefined
 
-      cb?.()
+        if (safeConnector?.getProvider) {
+          try {
+            const maybeProvider = await safeConnector.getProvider()
+
+            provider = maybeProvider as SafeAppProvider | undefined
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.warn('safeConnector.getProvider() failed', error)
+          }
+        }
+
+        if (!provider) {
+          provider = await getSafeProvider()
+        }
+
+        if (!provider) {
+          // eslint-disable-next-line no-console
+          console.warn('No Safe provider available; auto-connect cannot proceed')
+
+          return
+        }
+
+        if (!safeConnector) {
+          // eslint-disable-next-line no-console
+          console.warn('Safe connector is not available even though provider exists')
+
+          return
+        }
+
+        try {
+          await connectAsync({ connector: safeConnector })
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.warn('Safe auto-connect failed during connectAsync', error)
+        }
+
+        cb?.()
+      } finally {
+        setIsConnecting(false)
+      }
     },
-    [connectAsync, ensureSafeConnector, getSafeProvider, isIframe],
+    [connectAsync, ensureSafeConnector, getSafeProvider, isConnected, isConnecting, isIframe],
   )
 
   useEffect(() => {
     if (!isIframe || isConnected) return
 
-    connectSafe(() => {
+    void connectSafe(() => {
       // eslint-disable-next-line no-console
-      console.log('Safe auto-connect finished')
+      console.log('Safe auto-connect attempt finished')
     })
   }, [connectSafe, isConnected, isIframe])
 

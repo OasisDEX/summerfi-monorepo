@@ -338,8 +338,6 @@ export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationT
         throw missingChainError
       }
 
-      console.log('walletClientResolved', walletClientResolved.chain.id)
-
       try {
         setIsSendingUserOperation(true)
         setError(null)
