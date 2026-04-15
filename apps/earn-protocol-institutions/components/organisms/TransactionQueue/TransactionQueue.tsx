@@ -97,6 +97,8 @@ export const TransactionQueue = ({
     )
   }, [])
 
+  const isOnWrongChain = userConnected && !isProperChain
+
   return (
     <Card className={transactionQueueStyles.cardWrapper}>
       <AnimateHeight
@@ -117,7 +119,7 @@ export const TransactionQueue = ({
       </AnimateHeight>
       <AnimateHeight
         id="transaction-queue-wrong-chain"
-        show={((userConnected && !isProperChain) || isSettingChain) && !isLoading}
+        show={(isOnWrongChain || isSettingChain) && !isLoading}
         keepChildrenRendered
       >
         <div
@@ -154,6 +156,7 @@ export const TransactionQueue = ({
                 txItem={txItem}
                 chainId={chainId}
                 onTxSuccess={onTxSuccess}
+                disabled={isOnWrongChain || isSettingChain}
               />
               <Button
                 variant="textSecondarySmall"

@@ -64,11 +64,11 @@ export const useWalletGlobalRole = ({ institutionName }: { institutionName: stri
   }, [isLoadingAccount, userWalletAddress, institutionName])
 
   const connectedRolesLabel = useMemo(() => {
-    if (isLoadingAccount || isLoadingConnectedRoles) {
-      return 'Loading...'
-    }
     if (!userWalletAddress) {
       return 'No wallet connected'
+    }
+    if (isLoadingAccount || isLoadingConnectedRoles) {
+      return 'Loading...'
     }
     if (!connectedRoles || connectedRoles.length === 0) {
       return 'No role'

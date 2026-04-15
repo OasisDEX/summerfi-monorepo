@@ -12,10 +12,12 @@ export const SimpleTransactionButton = ({
   txItem,
   chainId,
   onTxSuccess,
+  disabled,
 }: {
   txItem: SDKTransactionItem
   chainId: SupportedNetworkIds
   onTxSuccess?: (txId: string) => void
+  disabled?: boolean
 }) => {
   const { executeTransaction, isSendingUserOperation, txStatus, txError } = useSimpleTransaction({
     chainId,
@@ -33,9 +35,10 @@ export const SimpleTransactionButton = ({
       !!txItem.txError ||
       !txItem.txData?.transaction ||
       isLoading ||
+      !!disabled ||
       ['txInProgress', 'txSuccess'].includes(txStatus)
     )
-  }, [isLoading, txItem.txData?.transaction, txItem.txError, txStatus])
+  }, [isLoading, txItem.txData?.transaction, txItem.txError, txStatus, disabled])
 
   const buttonLabel = useMemo(() => {
     if (txStatus === 'txSuccess') {
