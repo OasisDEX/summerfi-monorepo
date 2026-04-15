@@ -23,6 +23,8 @@ import {
   supportedSDKNetworkId,
 } from '@summerfi/app-utils'
 
+import { useSafeAutoConnect } from '@/hooks/use-safe-app'
+
 import walletLabelStyles from './WalletLabel.module.css'
 
 type WalletLabelVariant = 'default' | 'addressOnly' | 'logoutOnly'
@@ -188,6 +190,7 @@ export default function WalletLabel({
   customLoginLabel,
   buttonVariant = 'secondaryMedium',
 }: WalletLabelProps) {
+  const { connectSafe } = useSafeAutoConnect()
   const [addressCopied, setAddressCopied] = useState(false)
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { clientChainId } = useClientChainId()
@@ -219,7 +222,11 @@ export default function WalletLabel({
     if (variant === 'addressOnly') return null
 
     return (
-      <Button variant={buttonVariant} onClick={login} className={walletLabelStyles.wrapper}>
+      <Button
+        variant={buttonVariant}
+        onClick={isIframe ? () => connectSafe() : login}
+        className={walletLabelStyles.wrapper}
+      >
         {customLoginLabel ?? 'Log in'}
       </Button>
     )
