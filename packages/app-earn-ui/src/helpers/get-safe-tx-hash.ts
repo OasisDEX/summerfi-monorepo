@@ -64,31 +64,44 @@ export const getSafeTxHash = async (
     setTimeout(resolve, 3000)
   })
 
+  let res: Response
+
   do {
-    const res = await fetch(
-      `https://api.safe.global/tx-service/${subgraphNetworkToSafeSDKAPINetworkName(network)}api/v2/multisig-transactions/${safeTxHash}/`,
+    res = await fetch(
+      `https://api.safe.global/tx-service/${subgraphNetworkToSafeSDKAPINetworkName(network)}/api/v2/multisig-transactions/${safeTxHash}/`,
     )
 
-    safeTransactionData = await res.json()
+    const rawBody = await res.text()
+    let parsedBody: unknown
 
-    // handle "not found" case
-    if (safeTransactionData?.detail === 'No MultisigTransaction matches the given query.') {
+    try {
+      parsedBody = rawBody ? JSON.parse(rawBody) : undefined
+    } catch {
+      parsedBody = undefined
+    }
+
+    safeTransactionData = parsedBody as SafeTransactionDataType | undefined
+
+    const isNotFound =
+      safeTransactionData?.detail === 'No MultisigTransaction matches the given query.'
+
+    if (isNotFound) {
       return false
     }
 
-    if (!safeTransactionData?.transactionHash) {
+    if (res.status !== 200 || !safeTransactionData?.transactionHash) {
       if (retries >= maxRetries) {
         return false
       }
-      retries++
 
+      retries++
       const waitTime = retries > 10 ? 10000 : 3000
 
       await new Promise((resolve) => {
         setTimeout(resolve, waitTime)
       })
     }
-  } while (!safeTransactionData?.transactionHash)
+  } while (res.status !== 200 || !safeTransactionData?.transactionHash)
 
   return safeTransactionData as SafeTransactionDataType
 }
