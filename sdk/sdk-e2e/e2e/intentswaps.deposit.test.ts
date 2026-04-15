@@ -56,7 +56,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       amountValue: '0.5',
       fleetAddressValue: FleetAddresses.Base.EURC,
       sendOrder: true,
-      cancelOrder: false,
+      cancelOrder: true,
       authorizePermit2: true,
     },
     // erc20 to eth

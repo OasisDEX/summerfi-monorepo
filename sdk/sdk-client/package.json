@@ -30,7 +30,7 @@
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
-    "@cowprotocol/cow-sdk": "^7.4.1",
+    "@cowprotocol/cow-sdk": "8.1.0",
     "@cowprotocol/sdk-viem-adapter": "^0.3.10",
     "@ethersproject/abstract-signer": "^5.8.0",
     "@summerfi/armada-protocol-abis": "workspace:*",

@@ -10,7 +10,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@cowprotocol/cow-sdk": "^7.4.1",
+    "@cowprotocol/cow-sdk": "8.1.0",
     "@cowprotocol/sdk-viem-adapter": "^0.3.10",
     "@ethersproject/abstract-signer": "^5.8.0",
     "@uniswap/permit2-sdk": "^1.4.0",

@@ -28,7 +28,7 @@
     "declarations": "tsc --emitDeclarationOnly -p tsconfig.bundle.json"
   },
   "dependencies": {
-    "@cowprotocol/cow-sdk": "^7.4.1",
+    "@cowprotocol/cow-sdk": "8.1.0",
     "@summerfi/common": "workspace:*",
     "superjson": "^1.13.3"
   },
