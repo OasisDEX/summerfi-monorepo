@@ -23,6 +23,7 @@
     "@loadable/component": "^5.16.4",
     "@number-flow/react": "^0.5.10",
     "@safe-global/safe-apps-sdk": "^9.0.0",
+    "@safe-global/safe-apps-provider": "0.18.6",
     "@summerfi/app-earn-ui": "workspace:*",
     "@summerfi/app-icons": "workspace:*",
     "@summerfi/app-risk": "workspace:*",

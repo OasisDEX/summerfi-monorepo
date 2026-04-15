@@ -1,23 +1,10 @@
 import { type FC, type ReactNode } from 'react'
 import { PrivyProvider } from '@privy-io/react-auth'
-import { createConfig, WagmiProvider } from '@privy-io/wagmi'
-import { queryClient, supportedViemChains } from '@summerfi/app-earn-ui'
+import { WagmiProvider } from '@privy-io/wagmi'
+import { queryClient } from '@summerfi/app-earn-ui'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { type Chain } from 'viem'
-import { http } from 'wagmi'
 
-const supportedChains = Object.values(supportedViemChains) as [Chain, ...Chain[]]
-
-const wagmiConfig = createConfig({
-  chains: supportedChains,
-  transports: supportedChains.reduce<{
-    [key: number]: ReturnType<typeof http>
-  }>((acc, chain) => {
-    acc[chain.id] = http(`/api/rpc/chain/${chain.id}`)
-
-    return acc
-  }, {}),
-})
+import { wagmiConfig } from '@/providers/WalletProvider/wagmi'
 
 export const WalletProvider: FC<{
   children: ReactNode
