@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 import {
@@ -20,6 +21,7 @@ import {
 } from 'wagmi'
 
 import { supportedViemChains } from '@/constants/supported-chains'
+import { ERROR_TOAST_CONFIG } from '@/features/toastify/config'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 
 export const getEarnProtocolChainById = (chainId?: number): Chain => {
@@ -62,9 +64,11 @@ export const useEarnProtocolChain: () => {
   chain: Chain
   setChain: ({ chain }: { chain: Chain | number }) => Promise<void>
   isSettingChain: boolean
+  settingChainError: Error | null
 } = () => {
   const chainId = useChainId()
-  const { switchChainAsync, isPending } = useSwitchChain()
+  const [localError, setLocalError] = useState<Error | null>(null)
+  const { switchChainAsync, isPending, error } = useSwitchChain()
 
   const setChain: ({ chain }: { chain: Chain | number }) => Promise<void> = useCallback(
     async ({ chain }: { chain: Chain | number }) => {
@@ -75,9 +79,21 @@ export const useEarnProtocolChain: () => {
     [switchChainAsync],
   )
 
+  useEffect(() => {
+    setLocalError(error ?? null)
+    if (error && localError) {
+      toast.error(
+        `Error switching chain: ${error.message.replaceAll('SwitchChainNotSupportedError:', '').trim()}`,
+        ERROR_TOAST_CONFIG,
+      )
+      setLocalError(null)
+    }
+  }, [error, localError])
+
   return {
     chain: getEarnProtocolChainById(chainId),
     setChain,
+    settingChainError: error,
     isSettingChain: isPending,
   }
 }
