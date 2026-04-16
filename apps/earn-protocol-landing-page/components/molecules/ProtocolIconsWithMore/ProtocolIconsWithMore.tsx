@@ -1,4 +1,4 @@
-import { Text } from '@summerfi/app-earn-ui'
+import { Text, Tooltip } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 
 import styles from '@/components/layout/LandingPageContent/components/OurProductsList.module.css'
@@ -33,15 +33,26 @@ export const ProtocolIconsWithMore = ({
   return (
     <div className={styles.protocolRow}>
       {protocolIconsWithMoreList.slice(0, limit || undefined).map((icon) => (
-        <div key={icon.name} className={styles.protocolIconWrap}>
-          <Image
-            alt={icon.name}
-            src={icon.src}
-            width={32}
-            height={32}
-            className={styles.protocolIcon}
-          />
-        </div>
+        <Tooltip
+          key={icon.name}
+          tooltip={icon.name}
+          hideDrawerOnMobile
+          showAbove
+          tooltipCardVariant="cardSecondarySmallPaddings"
+          tooltipWrapperStyles={{
+            top: '-30px',
+          }}
+        >
+          <div className={styles.protocolIconWrap}>
+            <Image
+              alt={icon.name}
+              src={icon.src}
+              width={32}
+              height={32}
+              className={styles.protocolIcon}
+            />
+          </div>
+        </Tooltip>
       ))}
       {withMore && (
         <div className={styles.morePill}>

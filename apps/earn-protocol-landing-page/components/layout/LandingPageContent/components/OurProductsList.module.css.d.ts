@@ -11,6 +11,7 @@ declare const styles: {
   readonly "cardTitle": string;
   readonly "cardsList": string;
   readonly "checksGroup": string;
+  readonly "empty": string;
   readonly "integrateViaGrid": string;
   readonly "integratorCard": string;
   readonly "integratorMetaGrid": string;
