@@ -67,28 +67,31 @@ export const useEarnProtocolChain: () => {
   settingChainError: Error | null
 } = () => {
   const chainId = useChainId()
-  const [localError, setLocalError] = useState<Error | null>(null)
   const { switchChainAsync, isPending, error } = useSwitchChain()
 
   const setChain: ({ chain }: { chain: Chain | number }) => Promise<void> = useCallback(
     async ({ chain }: { chain: Chain | number }) => {
       const nextChainId = typeof chain === 'number' ? chain : chain.id
 
+      if (nextChainId === chainId) {
+        return
+      }
+
       await switchChainAsync({ chainId: nextChainId })
     },
-    [switchChainAsync],
+    [switchChainAsync, chainId],
   )
 
   useEffect(() => {
-    setLocalError(error ?? null)
-    if (error && localError) {
-      toast.error(
-        `Error switching chain: ${error.message.replaceAll('SwitchChainNotSupportedError:', '').trim()}`,
-        ERROR_TOAST_CONFIG,
-      )
-      setLocalError(null)
+    if (!error) {
+      return
     }
-  }, [error, localError])
+
+    toast.error(
+      `Error switching chain: ${error.message.replaceAll('SwitchChainNotSupportedError:', '').trim()}`,
+      ERROR_TOAST_CONFIG,
+    )
+  }, [error])
 
   return {
     chain: getEarnProtocolChainById(chainId),
