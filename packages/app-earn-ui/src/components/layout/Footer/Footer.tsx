@@ -91,7 +91,11 @@ export const Footer: FC<FooterProps> = ({
   const isAltPressed = useHoldAlt()
 
   useEffect(() => {
-    consoleInfo()
+    const timeout = setTimeout(() => {
+      consoleInfo()
+    }, 3000)
+
+    return () => clearTimeout(timeout)
   }, [])
 
   return (
