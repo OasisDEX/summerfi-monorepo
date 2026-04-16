@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { usePrivy } from '@privy-io/react-auth'
+import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 import {
   type SignAuthorizationReturnType,
@@ -10,8 +10,8 @@ import {
 } from 'viem'
 import { type Chain } from 'viem/chains'
 import {
+  useAccount,
   useChainId,
-  useConnections,
   useDisconnect,
   usePublicClient,
   useSignMessage,
@@ -36,89 +36,25 @@ export const useEarnProtocolWallet = (): {
   address?: `0x${string}`
   isLoadingAccount: boolean
 } => {
-  // use promise based wallet client retrieval to ensure we have the wallet client available, as some actions depend on it being ready
-  const [isLoadingAccount, setIsLoadingAccount] = useState(true)
-  const [connectedWalletAddress, setConnectedWalletAddress] = useState<`0x${string}` | undefined>(
-    undefined,
-  )
   const { ready: privyReady } = usePrivy()
-  const {
-    data: walletClient,
-    promise: walletPendingPromise,
-    status: walletStatus,
-  } = useWalletClient()
+  const { wallets } = useWallets()
+  const { data: walletClient, status: walletStatus } = useWalletClient()
+  const { address: accountAddress, status: accountStatus } = useAccount()
 
-  useEffect(() => {
-    let isMounted = true
+  const walletClientAddress = walletClient?.account.address as `0x${string}` | undefined
+  const privyWalletAddress = wallets.find((wallet) => wallet.address.startsWith('0x'))?.address as
+    | `0x${string}`
+    | undefined
+  const connectedWalletAddress = walletClientAddress ?? accountAddress ?? privyWalletAddress
 
-    const checkWalletClient = async () => {
-      const walletClientAddress = walletClient
-        ? (walletClient.account.address as `0x${string}` | undefined)
-        : undefined
+  const isWalletConnectionPending =
+    walletStatus === 'pending' || accountStatus === 'connecting' || accountStatus === 'reconnecting'
 
-      if (walletStatus === 'pending' || !walletClientAddress) {
-        setIsLoadingAccount(true)
-      }
-
-      let walletClientResolved: WalletClient | null = walletClient ?? null
-
-      try {
-        walletClientResolved = await walletPendingPromise
-      } catch (error) {
-        if ((error as Error).message.startsWith('Connector not connected.')) {
-          // This error is expected when the wallet is not connected, so we can ignore it
-        } else {
-          // eslint-disable-next-line no-console
-          console.error('Error while waiting for wallet client:', {
-            error,
-            errorMessage: (error as Error).message,
-          })
-        }
-      } finally {
-        if (isMounted) {
-          if (walletClientResolved?.account?.address) {
-            setConnectedWalletAddress(
-              walletClientResolved.account.address as `0x${string}` | undefined,
-            )
-            setIsLoadingAccount(false)
-          } else {
-            setConnectedWalletAddress(undefined)
-
-            const shouldKeepLoading =
-              !privyReady || walletStatus === 'pending' || !walletClientResolved?.account?.address
-
-            if (!shouldKeepLoading) {
-              // wallet is not connected
-            }
-
-            setIsLoadingAccount(shouldKeepLoading)
-          }
-        }
-      }
-    }
-
-    checkWalletClient()
-
-    return () => {
-      isMounted = false
-    }
-  }, [privyReady, walletClient, walletPendingPromise, walletStatus])
-
-  useEffect(() => {
-    if (walletClient) {
-      const walletAddress = walletClient.account.address as `0x${string}` | undefined
-
-      setConnectedWalletAddress(walletAddress)
-      setIsLoadingAccount(false)
-    } else {
-      setConnectedWalletAddress(undefined)
-      setIsLoadingAccount(true)
-    }
-  }, [walletClient])
+  const isLoadingAccount = !privyReady || (isWalletConnectionPending && !connectedWalletAddress)
 
   return {
     address: connectedWalletAddress,
-    isLoadingAccount: isLoadingAccount || !privyReady,
+    isLoadingAccount,
   }
 }
 
@@ -155,22 +91,18 @@ export const useEarnProtocolLogin: () => {
 
   const { connectWallet, isModalOpen, ready } = usePrivy()
   const { disconnectAsync } = useDisconnect()
-  const connections = useConnections()
 
-  const handleLogout = useCallback(() => {
-    connections.forEach(async (connection) => {
-      setIsLoading(true)
-      try {
-        await connection.connector.disconnect()
-        await disconnectAsync({ connector: connection.connector })
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error during logout:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    })
-  }, [connections, disconnectAsync])
+  const handleLogout = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      await disconnectAsync()
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error during logout:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [disconnectAsync])
 
   useEffect(() => {
     setIsLoading(isModalOpen)

@@ -24,6 +24,7 @@ export interface SmallBlob {
   tailEndY: number
   hasTail: boolean
   gravityInfluence: number
+  velocity: number
 }
 
 export interface LargeBlob {
@@ -54,4 +55,5 @@ export type DebrisParticle = {
   baseAlpha: number
   phase: number
   color: [number, number, number]
+  flicker: boolean
 }

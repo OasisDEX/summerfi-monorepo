@@ -12,8 +12,8 @@ export const wagmiConfig = createConfig({
       shimDisconnect: false,
     }),
   ],
-  ssr: false,
   chains: supportedChains,
+  syncConnectedChain: true,
   transports: supportedChains.reduce<{
     [key: number]: ReturnType<typeof http>
   }>((acc, chain) => {

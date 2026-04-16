@@ -477,6 +477,7 @@ export const useLandingPageBlobs = ({
                       baseAlpha,
                       phase: rand(0, Math.PI * 2),
                       color: sb.color,
+                      flicker: Math.random() < 0.2,
                     })
                   }
                 }
@@ -507,11 +508,22 @@ export const useLandingPageBlobs = ({
         const lifeT = Math.min(particle.age / particle.lifetime, 1)
         const fade = 1 - lifeT
         const sparkle = 0.45 + 0.55 * Math.abs(Math.sin(particle.age * 22 + particle.phase))
-        const alpha = particle.baseAlpha * fade * sparkle
+        let alpha = particle.baseAlpha * fade * sparkle
+        let [r, g, b] = particle.color
+
+        if (particle.flicker && lifeT > 0.1) {
+          const flickerProgress = (lifeT - 0.1) / 0.7
+          const flicker =
+            flickerProgress * Math.abs(Math.sin(particle.age * 55 + particle.phase * 3))
+
+          r += (1 - r) * flicker
+          g += (1 - g) * flicker
+          b += (1 - b) * flicker
+          alpha = Math.min(alpha * (1 + flicker * 2), 1)
+        }
 
         if (alpha > 0.004) {
           const base = debrisCount * DEBRIS_VSTRIDE
-          const [r, g, b] = particle.color
 
           debrisData[base + 0] = particle.x
           debrisData[base + 1] = particle.y
@@ -572,27 +584,31 @@ export const useLandingPageBlobs = ({
             const perpY = dxT / tLen
             const alpha = envelope * 0.9
             const [r, g, b] = sb.color
+            const whiteness = Math.min(sb.velocity / 8, 1)
+            const finalR = r + (1 - r) * whiteness
+            const finalG = g + (1 - g) * whiteness
+            const finalB = b + (1 - b) * whiteness
             const base = tailCount * 3 * TAIL_VSTRIDE
 
             tailVertData[base + 0] = sb.tailStartX + perpX * currentSize
             tailVertData[base + 1] = sb.tailStartY + perpY * currentSize
-            tailVertData[base + 2] = r
-            tailVertData[base + 3] = g
-            tailVertData[base + 4] = b
+            tailVertData[base + 2] = finalR
+            tailVertData[base + 3] = finalG
+            tailVertData[base + 4] = finalB
             tailVertData[base + 5] = alpha
 
             tailVertData[base + 6] = sb.tailStartX - perpX * currentSize
             tailVertData[base + 7] = sb.tailStartY - perpY * currentSize
-            tailVertData[base + 8] = r
-            tailVertData[base + 9] = g
-            tailVertData[base + 10] = b
+            tailVertData[base + 8] = finalR
+            tailVertData[base + 9] = finalG
+            tailVertData[base + 10] = finalB
             tailVertData[base + 11] = alpha
 
             tailVertData[base + 12] = sb.tailEndX
             tailVertData[base + 13] = sb.tailEndY
-            tailVertData[base + 14] = r
-            tailVertData[base + 15] = g
-            tailVertData[base + 16] = b
+            tailVertData[base + 14] = finalR
+            tailVertData[base + 15] = finalG
+            tailVertData[base + 16] = finalB
             tailVertData[base + 17] = 0
 
             tailCount++
@@ -641,6 +657,10 @@ export const useLandingPageBlobs = ({
           const glowRadius = currentSize * (2.5 + glowIntensity * 4)
           const alpha = envelope * 0.9
           const [r, g, b] = sb.color
+          const whiteness = Math.min(sb.velocity / 5, 1)
+          const finalR = r + (1 - r) * whiteness
+          const finalG = g + (1 - g) * whiteness
+          const finalB = b + (1 - b) * whiteness
           const base = instCount * SMALL_STRIDE
 
           smallInstData[base + 0] = sb.renderX
@@ -648,9 +668,9 @@ export const useLandingPageBlobs = ({
           smallInstData[base + 2] = currentSize
           smallInstData[base + 3] = glowRadius
           smallInstData[base + 4] = alpha
-          smallInstData[base + 5] = r
-          smallInstData[base + 6] = g
-          smallInstData[base + 7] = b
+          smallInstData[base + 5] = finalR
+          smallInstData[base + 6] = finalG
+          smallInstData[base + 7] = finalB
           smallInstData[base + 8] = sb.tailStartX
           smallInstData[base + 9] = sb.tailStartY
           smallInstData[base + 10] = sb.tailEndX - sb.tailStartX

@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useEffect } from 'react'
+import { type FC, useEffect, useRef } from 'react'
 import {
   Button,
   getNavigationItems,
@@ -9,6 +9,7 @@ import {
   NavigationExtraComponents,
   SkeletonLine,
   useCurrentUrl,
+  useEarnProtocolLogin,
   useEarnProtocolWallet,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
@@ -33,11 +34,65 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
   const currentPath = usePathname()
   const path = useCurrentUrl()
   const { address: userWalletAddress } = useEarnProtocolWallet()
+  const { login, isOpen } = useEarnProtocolLogin()
   const { features, setRunningGame, setIsGameByInvite } = useSystemConfig()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const startGame = () => {
     setRunningGame?.(true)
+  }
+
+  const loginResolverRef = useRef<((value: `0x${string}` | undefined) => void) | null>(null)
+  const loginTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    if (!loginResolverRef.current) {
+      return () => {}
+    }
+
+    if (userWalletAddress) {
+      loginResolverRef.current(userWalletAddress)
+      loginResolverRef.current = null
+
+      if (loginTimeoutRef.current) {
+        clearTimeout(loginTimeoutRef.current)
+        loginTimeoutRef.current = null
+      }
+
+      return () => {}
+    }
+
+    if (!isOpen && !loginTimeoutRef.current) {
+      loginTimeoutRef.current = window.setTimeout(() => {
+        if (loginResolverRef.current) {
+          loginResolverRef.current(undefined)
+          loginResolverRef.current = null
+        }
+        loginTimeoutRef.current = null
+      }, 500)
+    }
+
+    return () => {
+      if (loginTimeoutRef.current) {
+        clearTimeout(loginTimeoutRef.current)
+        loginTimeoutRef.current = null
+      }
+    }
+  }, [isOpen, userWalletAddress])
+
+  const handleLogIn = (): Promise<`0x${string}` | undefined> => {
+    if (userWalletAddress) {
+      return Promise.resolve(userWalletAddress)
+    }
+
+    login()
+
+    return new Promise((resolve) => {
+      if (loginResolverRef.current) {
+        loginResolverRef.current(undefined)
+      }
+      loginResolverRef.current = resolve
+    })
   }
 
   const onNavItemClick = ({
@@ -89,6 +144,7 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
         isEarnApp: true,
         features,
         onNavItemClick,
+        logIn: handleLogIn,
       })}
       walletConnectionComponent={!isCampaignPage ? <WalletLabel /> : null}
       mobileWalletConnectionComponents={{

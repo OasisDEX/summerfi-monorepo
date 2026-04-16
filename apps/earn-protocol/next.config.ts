@@ -81,7 +81,7 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
           },
           {
             key: 'Content-Security-Policy',
-            value: 'frame-ancestors "self" https://app.safe.global;',
+            value: 'frame-ancestors "self" https://app.safe.global https://auth.privy.io;',
           },
         ],
       },
