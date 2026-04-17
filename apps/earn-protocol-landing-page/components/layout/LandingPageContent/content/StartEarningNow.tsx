@@ -147,14 +147,7 @@ export const StartEarningNow = ({ id }: { id: string }) => {
                 </div>
               </div>
             ) : (
-              <Button
-                variant="secondarySmall"
-                disabled
-                className={clsx(
-                  startEarningNowStyles.ctaButton,
-                  startEarningNowStyles.ctaButtonDisabled,
-                )}
-              >
+              <Button variant="secondarySmall" disabled>
                 <Text variant="p3semi">Coming soon</Text>
               </Button>
             )
