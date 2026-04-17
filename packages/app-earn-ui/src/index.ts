@@ -209,7 +209,14 @@ export {
 } from './hooks/use-earn-wallet-actions'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
-export { vaultFaqData } from './common/faq/vault-faq'
+export {
+  vaultFaqData,
+  lpCoreFaqData,
+  lpPermissionlessDefiVaultsFaqData,
+  lpRwaFaqData,
+  lpSelfManagedVaultFaqData,
+  lpIntegrationsFaqData,
+} from './common/faq/vault-faq'
 
 export {
   getVaultUrl,

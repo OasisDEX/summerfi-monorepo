@@ -49,7 +49,7 @@ export const LatestNews: (props: LatestNewsProps) => ReactNode | null = ({ news 
       emblaApi.off('reInit', onSelect)
       emblaApi.off('select', onSelect)
     }
-  }, [emblaApi, onSelect])
+  }, [emblaApi, onSelect, news])
 
   return (
     <section className={styles.section}>
@@ -94,8 +94,7 @@ export const LatestNews: (props: LatestNewsProps) => ReactNode | null = ({ news 
 
       {scrollSnaps.length > 1 && (
         <div className={styles.controls}>
-          <Button
-            variant="unstyled"
+          <button
             onClick={() => emblaApi?.scrollPrev()}
             disabled={!canScrollPrev}
             className={clsx(styles.controlButton, !canScrollPrev && styles.controlButtonDisabled)}
@@ -108,7 +107,7 @@ export const LatestNews: (props: LatestNewsProps) => ReactNode | null = ({ news 
                 canScrollPrev ? 'var(--color-text-primary)' : 'var(--color-text-primary-disabled)'
               }
             />
-          </Button>
+          </button>
 
           <div className={styles.dots}>
             {scrollSnaps.map((_, index) => (
@@ -123,8 +122,7 @@ export const LatestNews: (props: LatestNewsProps) => ReactNode | null = ({ news 
             ))}
           </div>
 
-          <Button
-            variant="unstyled"
+          <button
             onClick={() => emblaApi?.scrollNext()}
             disabled={!canScrollNext}
             className={clsx(styles.controlButton, !canScrollNext && styles.controlButtonDisabled)}
@@ -137,9 +135,21 @@ export const LatestNews: (props: LatestNewsProps) => ReactNode | null = ({ news 
                 canScrollNext ? 'var(--color-text-primary)' : 'var(--color-text-primary-disabled)'
               }
             />
-          </Button>
+          </button>
         </div>
       )}
+      <Link
+        href="https://blog.summer.fi/"
+        target="_blank"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          margin: '-12px auto 0',
+          padding: '4px',
+        }}
+      >
+        <Button variant="textPrimarySmall">Go to blog</Button>
+      </Link>
     </section>
   )
 }

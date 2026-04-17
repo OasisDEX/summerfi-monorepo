@@ -10,9 +10,13 @@ declare const styles: {
   readonly "cardSideStacked": string;
   readonly "cardTitle": string;
   readonly "cardsList": string;
+  readonly "carouselContainer": string;
+  readonly "carouselItem": string;
+  readonly "carouselItemActive": string;
+  readonly "carouselItemFadeOut": string;
   readonly "checksGroup": string;
   readonly "empty": string;
-  readonly "integrateViaGrid": string;
+  readonly "integrateViaAnimationWrapper": string;
   readonly "integratorCard": string;
   readonly "integratorMetaGrid": string;
   readonly "learnMoreButton": string;

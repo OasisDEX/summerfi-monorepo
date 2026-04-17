@@ -72,9 +72,18 @@
   object-fit: cover;
 }
 
+.productCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
 .rwaCard::before {
   background:
     radial-gradient(70% 140% at 95% 100%, rgba(178, 19, 45, 0.35) 0%, rgba(178, 19, 45, 0) 68%),
+    linear-gradient(96deg, rgba(219, 112, 165, 0.00) 36.2%, rgba(94, 18, 56, 0.25) 94.88%),
     linear-gradient(115deg, rgba(44, 18, 28, 0.35) 24%, rgba(11, 10, 14, 0.65) 88%);
 }
 
@@ -230,6 +239,7 @@
 
 .partnerLogo {
   height: 50px;
+  max-width: 150px;
   width: auto;
   object-fit: contain;
 }
@@ -270,7 +280,7 @@
 
 .integratorMetaGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 0.3fr 1fr;
   gap: 24px;
   margin-top: 24px;
   margin-bottom: 24px;
@@ -291,12 +301,42 @@
   object-fit: contain;
 }
 
-.integrateViaGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.integrateViaAnimationWrapper {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0;
-  margin-right: -48px;
+  justify-content: center;
+  gap: 16px;
+}
+
+.carouselContainer {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  height: 60px;
+  overflow: hidden;
+}
+
+.carouselItem {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none;
+}
+
+.carouselItemActive {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.carouselItemFadeOut {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
 }
 
 @media (max-width: 1270px) {

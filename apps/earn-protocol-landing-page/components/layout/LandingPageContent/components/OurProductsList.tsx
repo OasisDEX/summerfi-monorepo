@@ -7,10 +7,7 @@ import Image from 'next/image'
 
 import { TagButton } from '@/components/atoms/TagButton'
 import { CheckLine } from '@/components/layout/LandingPageContent/components/CheckLine'
-import {
-  ProtocolIconsWithMore,
-  protocolIconsWithMoreList,
-} from '@/components/molecules/ProtocolIconsWithMore/ProtocolIconsWithMore'
+import { ProtocolIconsWithMore } from '@/components/molecules/ProtocolIconsWithMore/ProtocolIconsWithMore'
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
 import balanceMarketLogo from '@/public/img/landing-page/private-markets/logo_balance.svg'
 import utilaMarketLogo from '@/public/img/landing-page/private-markets/logo_utila.svg'
@@ -21,9 +18,7 @@ import styles from '@/components/layout/LandingPageContent/components/OurProduct
 import integrateWithBalance from '@/public/img/landing-page/integrate-via/balance.png'
 import integrateWithDefiSaver from '@/public/img/landing-page/integrate-via/defi_saver.png'
 import integrateViaEnso from '@/public/img/landing-page/integrate-via/enso.png'
-import integrateViaSecuritize from '@/public/img/landing-page/integrate-via/securitize.png'
 import integrateViaSummer from '@/public/img/landing-page/integrate-via/summer.png'
-import integrateViaSuperstate from '@/public/img/landing-page/integrate-via/superstate.png'
 import integrateWithTargen from '@/public/img/landing-page/integrate-via/targen.png'
 import integrateWithUtila from '@/public/img/landing-page/integrate-via/utila.png'
 import integrateWithVaultsFyi from '@/public/img/landing-page/integrate-via/vault_fyi.png'
@@ -35,7 +30,7 @@ import mapleMarketLogo from '@/public/img/landing-page/private-markets/maple.png
 import securitizeMarketLogo from '@/public/img/landing-page/private-markets/securitize.png'
 // import stacMarketLogo from '@/public/img/landing-page/private-markets/stac.png'
 import superstateMarketLogo from '@/public/img/landing-page/private-markets/superstate.png'
-import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisdomtree.png'
+// import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisdomtree.png'
 import sdkScreenshot from '@/public/img/landing-page/sdk-screenshot.png'
 import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-screenshot.png'
 
@@ -193,13 +188,13 @@ const PermissionlessRwaVaultsCard = () => {
                   height={54}
                   className={styles.partnerLogo}
                 />
-                <Image
+                {/* <Image
                   alt="WisdomTree"
                   src={wisdomTreeMarketLogo}
                   width={172}
                   height={54}
                   className={styles.partnerLogo}
-                />
+                /> */}
                 {/* <Image
                 alt="Stac"
                 src={stacMarketLogo}
@@ -352,7 +347,101 @@ const BuildYourOwnVaultCard = () => {
   )
 }
 
-const IntegrateHighQualityYield = () => {
+const IntegrateViaCarousel = () => {
+  const integrateViaCarouselElements = [
+    {
+      key: 'defi-saver',
+      element: (
+        <Image
+          alt="DeFi Saver"
+          src={integrateWithDefiSaver}
+          width={162}
+          height={39}
+          className={styles.stackLogo}
+        />
+      ),
+    },
+    {
+      key: 'balance',
+      element: (
+        <Image
+          alt="Balance"
+          src={integrateWithBalance}
+          width={149}
+          height={29}
+          className={styles.stackLogo}
+        />
+      ),
+    },
+    {
+      key: 'vaults-fyi',
+      element: (
+        <Image
+          alt="Vaults.fyi"
+          src={integrateWithVaultsFyi}
+          width={141}
+          height={37}
+          className={styles.stackLogo}
+        />
+      ),
+    },
+    {
+      key: 'utila',
+      element: (
+        <Image
+          alt="Utila"
+          src={integrateWithUtila}
+          width={117}
+          height={29}
+          className={styles.stackLogo}
+        />
+      ),
+    },
+    {
+      key: 'targen',
+      element: (
+        <Image
+          alt="Targen"
+          src={integrateWithTargen}
+          width={136}
+          height={25}
+          className={styles.stackLogo}
+        />
+      ),
+    },
+  ]
+
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % integrateViaCarouselElements.length)
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [integrateViaCarouselElements.length])
+
+  return (
+    <div className={styles.carouselContainer}>
+      {integrateViaCarouselElements.map((element, index) => (
+        <div
+          key={element.key}
+          className={clsx(styles.carouselItem, {
+            [styles.carouselItemActive]: index === currentIndex,
+            [styles.carouselItemFadeOut]:
+              index ===
+              (currentIndex - 1 + integrateViaCarouselElements.length) %
+                integrateViaCarouselElements.length,
+          })}
+        >
+          {element.element}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault: number }) => {
   return (
     <Link href="/integrations">
       <article className={`${styles.productCard} ${styles.integratorCard}`}>
@@ -372,7 +461,11 @@ const IntegrateHighQualityYield = () => {
               </Text>
             </div>
             <div className={styles.checksGroup}>
-              <CheckLine text="Offer yield up to integrate via Summer.fi SDK, Yield.xyz or Enso Finance." />
+              <CheckLine
+                text={`Offer yield up to ${formatDecimalAsPercent(maxApyRegularVault, {
+                  precision: 2,
+                })} integrate via Summer.fi SDK, Yield.xyz or Enso Finance.`}
+              />
               <CheckLine text="Join leading custodians and apps such as Utila, Balance Custody, DeFi Saver, Vaults.fyi and more offering the highest quality yield." />
               <CheckLine text="Earn revenue share on all integrated vaults (DeFi and RWA)" />
               <CheckLine text="The Vaults update, meaning you don’t have to - one integration gives unlimited access for your users.  " />
@@ -388,63 +481,31 @@ const IntegrateHighQualityYield = () => {
               </div>
               <div>
                 <Text as="p" variant="p4semi" className={styles.metaLabel}>
-                  Optimized access to
+                  Integrate via
                 </Text>
-                <div className={styles.protocolRow}>
-                  {protocolIconsWithMoreList.slice(0, 5).map((icon) => (
-                    <div key={icon.name} className={styles.protocolIconWrap}>
-                      <Image
-                        alt={icon.name}
-                        src={icon.src}
-                        width={32}
-                        height={32}
-                        className={styles.protocolIcon}
-                      />
-                    </div>
-                  ))}
+                <div className={styles.partnerLogos}>
+                  <Image
+                    alt="Summer.fi"
+                    src={integrateViaSummer}
+                    width={233}
+                    height={70}
+                    className={styles.partnerLogo}
+                  />
+                  <Image
+                    alt="Yield.xyz"
+                    src={integrateViaYieldXyz}
+                    width={203}
+                    height={54}
+                    className={styles.partnerLogo}
+                  />
+                  <Image
+                    alt="Enso"
+                    src={integrateViaEnso}
+                    width={232}
+                    height={54}
+                    className={styles.partnerLogo}
+                  />
                 </div>
-              </div>
-            </div>
-            <div className={styles.metaBlock}>
-              <Text as="p" variant="p4semi" className={styles.metaLabel}>
-                Integrate via
-              </Text>
-              <div className={styles.partnerLogos}>
-                <Image
-                  alt="Summer.fi"
-                  src={integrateViaSummer}
-                  width={233}
-                  height={70}
-                  className={styles.partnerLogo}
-                />
-                <Image
-                  alt="Yield.xyz"
-                  src={integrateViaYieldXyz}
-                  width={203}
-                  height={54}
-                  className={styles.partnerLogo}
-                />
-                <Image
-                  alt="Enso"
-                  src={integrateViaEnso}
-                  width={232}
-                  height={54}
-                  className={styles.partnerLogo}
-                />
-                <Image
-                  alt="Superstate"
-                  src={integrateViaSuperstate}
-                  width={232}
-                  height={54}
-                  className={styles.partnerLogo}
-                />
-                <Image
-                  alt="Securitize"
-                  src={integrateViaSecuritize}
-                  width={232}
-                  height={54}
-                  className={styles.partnerLogo}
-                />
               </div>
             </div>
             <button className={styles.learnMoreButton} type="button">
@@ -464,43 +525,16 @@ const IntegrateHighQualityYield = () => {
               <div className={styles.sdkScreenshotWrapper}>
                 <Image src={sdkScreenshot} alt="SDK screenshot" />
               </div>
-              <div className={styles.integrateViaGrid}>
-                <Image
-                  alt="DeFi Saver"
-                  src={integrateWithDefiSaver}
-                  width={162}
-                  height={39}
-                  className={styles.stackLogo}
-                />
-                <Image
-                  alt="Balance"
-                  src={integrateWithBalance}
-                  width={149}
-                  height={29}
-                  className={styles.stackLogo}
-                />
-                <Image
-                  alt="Vaults.fyi"
-                  src={integrateWithVaultsFyi}
-                  width={141}
-                  height={37}
-                  className={styles.stackLogo}
-                />
-                <div />
-                <Image
-                  alt="Utila"
-                  src={integrateWithUtila}
-                  width={117}
-                  height={29}
-                  className={styles.stackLogo}
-                />
-                <Image
-                  alt="Targen"
-                  src={integrateWithTargen}
-                  width={136}
-                  height={25}
-                  className={styles.stackLogo}
-                />
+              <div className={styles.integrateViaAnimationWrapper}>
+                <Text
+                  variant="p3"
+                  style={{
+                    color: '#64545C',
+                  }}
+                >
+                  Join others who have integrated such as:
+                </Text>
+                <IntegrateViaCarousel />
               </div>
             </aside>
           </div>
@@ -547,7 +581,7 @@ export const OurProductsList = ({
         <BuildYourOwnVaultCard />
       </AnimateHeight>
       <AnimateHeight id="integrate-high-quality-defi-yield" show={showIntegrateHighQualityYield}>
-        <IntegrateHighQualityYield />
+        <IntegrateHighQualityYield maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
       </AnimateHeight>
     </div>
   )

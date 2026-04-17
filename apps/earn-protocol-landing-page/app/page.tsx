@@ -7,7 +7,7 @@ import { LandingPageHero, ProtocolScroller } from '@/components/layout/LandingPa
 import { OurProducts } from '@/components/layout/LandingPageContent/components/OurProducts'
 import { YieldProtocolOpenToAll } from '@/components/layout/LandingPageContent/components/YieldProtocolOpenToAll'
 import { BuildBySummerFiPlain } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
-import { LandingFaqSection } from '@/components/layout/LandingPageContent/content/LandingFaqSection'
+import { LandingCoreFaqSection } from '@/components/layout/LandingPageContent/content/LandingFaqSection'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
@@ -84,7 +84,7 @@ export default function HomePage() {
           width: '100%',
         }}
       >
-        <LandingFaqSection />
+        <LandingCoreFaqSection />
       </div>
     </div>
   )

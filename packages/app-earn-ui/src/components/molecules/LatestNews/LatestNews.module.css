@@ -113,15 +113,14 @@
   height: 24px;
   border-radius: var(--radius-circle);
   background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
   transition:
     opacity 200ms ease,
-    background-color 200ms ease,
-    transform 200ms ease;
+    background-color 200ms ease;
 }
 
 .controlButton:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-1px);
 }
 
 .controlButtonDisabled {
