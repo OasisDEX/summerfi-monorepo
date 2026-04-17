@@ -11,10 +11,6 @@ declare const styles: {
   readonly "icon": string;
   readonly "iconBadge": string;
   readonly "iconColumn": string;
-  readonly "infoGrid": string;
-  readonly "infoGridBullet": string;
-  readonly "infoGridItem": string;
-  readonly "infoGridTitle": string;
   readonly "linesBackground": string;
   readonly "linesBackgroundSecondBlock": string;
   readonly "partnerLogo": string;
