@@ -24,7 +24,7 @@ export const getNavigationItems = ({
 
   const itemsListProducts = [
     {
-      url: `${prefix}/`,
+      url: !isEarnApp ? `/permissionless-vaults` : `${currentOrigin}/permissionless-vaults`,
       id: 'products',
       title: 'Permissionless DeFi Vaults',
       description: "Get automated exposure to DeFi's highest quality yield",
@@ -33,7 +33,7 @@ export const getNavigationItems = ({
       onClick: handleButtonClick('products'),
     },
     {
-      url: `${prefix}/`,
+      url: !isEarnApp ? `/rwa-vaults` : `${currentOrigin}/rwa-vaults`,
       id: 'permissioned-rwa-vaults',
       title: 'Permissioned RWA Vaults',
       description: 'Instant access to a selection of RWA private markets',
@@ -42,7 +42,7 @@ export const getNavigationItems = ({
       onClick: handleButtonClick('permissioned-rwa-vaults'),
     },
     {
-      url: `${prefix}/`,
+      url: !isEarnApp ? `/self-managed-vaults` : `${currentOrigin}/self-managed-vaults`,
       id: 'build-your-own-vault',
       title: 'Build your own Vault',
       description: 'Institutional Vault infrastructure to design your own Vault',
@@ -51,7 +51,7 @@ export const getNavigationItems = ({
       onClick: handleButtonClick('build-your-own-vault'),
     },
     {
-      url: `${prefix}/`,
+      url: !isEarnApp ? `/integrations` : `${currentOrigin}/integrations`,
       id: 'integrate-lazy-summer-protocol',
       title: 'Integrate the Lazy Summer Protocol',
       description: 'Give your users access the best yields, effortlessly',
@@ -123,7 +123,7 @@ export const getNavigationItems = ({
     },
     {
       // `currentOrigin` is special case for institutions - it is always on the main domain (LP)
-      url: `${currentOrigin}/team`,
+      url: !isEarnApp ? `/team` : `${currentOrigin}/team`,
       id: 'team',
       title: 'Team',
       description: 'Leadership that’s helped shape DeFi from day 1',

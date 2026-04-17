@@ -69,7 +69,7 @@
 }
 
 .subLandingPageTextColumnLargeGap {
-  gap: var(--spacing-space-x-large);
+  gap: var(--spacing-space-large);
 }
 
 .subLandingPageHeadingGroup {
@@ -88,6 +88,7 @@
   display: flex;
   width: 100%;
   gap: 24px;
+  align-items: stretch;
 }
 
 .riskManagedCard {
@@ -119,6 +120,7 @@
 .riskManagedCardTitle {
   width: 100%;
   text-align: left;
+  margin: 22px 0;
 }
 
 .iconStroke {

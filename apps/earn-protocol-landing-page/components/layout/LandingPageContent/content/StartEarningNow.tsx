@@ -2,6 +2,7 @@
 import { type ReactNode } from 'react'
 import { Button, Card, Icon, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -9,6 +10,8 @@ import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import startEarningNowStyles from '@/components/layout/LandingPageContent/content/StartEarningNow.module.css'
+
+import supportedProtocolsImage from '@/public/img/landing-page/start-earning-supported-protocols.png'
 
 const StartEarningNowBlock = ({
   id,
@@ -85,7 +88,7 @@ export const StartEarningNow = ({ id }: { id: string }) => {
               rel="noopener noreferrer"
               onClick={handleCtaClick(`lp-start-earning-${id}-sign-up`)}
             >
-              <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
+              <Button variant="secondarySmall">
                 <Text variant="p3semi">Sign up</Text>
               </Button>
             </Link>
@@ -107,15 +110,42 @@ export const StartEarningNow = ({ id }: { id: string }) => {
           ]}
           cta={
             migrationsEnabled ? (
-              <Link
-                href="/earn/migrate/user"
-                prefetch={false}
-                onClick={handleCtaClick(`lp-start-earning-${id}-migrate`)}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
               >
-                <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
-                  <Text variant="p3semi">Migrate</Text>
-                </Button>
-              </Link>
+                <Link
+                  href="/earn/migrate/user"
+                  prefetch={false}
+                  onClick={handleCtaClick(`lp-start-earning-${id}-migrate`)}
+                >
+                  <Button variant="secondarySmall">
+                    <Text variant="p3semi">Migrate</Text>
+                  </Button>
+                </Link>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-end',
+                    gap: '4px',
+                  }}
+                >
+                  <Text
+                    variant="p4semi"
+                    style={{
+                      color: 'var(--color-text-secondary)',
+                    }}
+                  >
+                    Supported protocols
+                  </Text>
+                  <Image src={supportedProtocolsImage} alt="Supported protocols" height={20} />
+                </div>
+              </div>
             ) : (
               <Button
                 variant="secondarySmall"
@@ -154,7 +184,7 @@ export const StartEarningNow = ({ id }: { id: string }) => {
               rel="noopener noreferrer"
               onClick={handleCtaClick(`lp-start-earning-cta-set-up-a-call`)}
             >
-              <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
+              <Button variant="secondarySmall">
                 <Text variant="p3semi">Set up a call</Text>
               </Button>
             </Link>
