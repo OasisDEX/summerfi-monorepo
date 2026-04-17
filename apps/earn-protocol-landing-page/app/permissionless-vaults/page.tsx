@@ -435,7 +435,7 @@ export default function PermissionlessVaults() {
             margin: '0 auto',
           }}
         >
-          <StartEarningNow />
+          <StartEarningNow id="permissionless-vaults" />
         </div>
         <SubLandingPageSection>
           <Audits
