@@ -1,6 +1,15 @@
 'use client'
-import { Button, Emphasis, Icon, LatestNews, Text, UseCasesSlider } from '@summerfi/app-earn-ui'
+import {
+  Audits,
+  Button,
+  Emphasis,
+  Icon,
+  LatestNews,
+  Text,
+  UseCasesSlider,
+} from '@summerfi/app-earn-ui'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 import { TagButton } from '@/components/atoms/TagButton'
 import { HeroWrapper } from '@/components/layout/HeroWrapper/HeroWrapper'
@@ -8,6 +17,10 @@ import { CheckLine } from '@/components/layout/LandingPageContent/components/Che
 import { SubLandingPageSection } from '@/components/layout/SubLandingPageSection/SubLandingPageSection'
 import { FractalGlassBackground } from '@/components/molecules/FractalGlassBackground/FractalGlassBackground'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
+import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
+import sherlockLogo from '@/public/img/landing-page/auditor-logos/sherlock.svg'
 import balanceLogo from '@/public/img/landing-page/private-markets/logo_balance.svg'
 import summerLogo from '@/public/img/landing-page/private-markets/logo_summer.svg'
 import utilaLogo from '@/public/img/landing-page/private-markets/logo_utila.svg'
@@ -26,6 +39,13 @@ import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-sc
 
 export default function RwaVaults() {
   const { landingPageData } = useLandingPageData()
+  const pathname = usePathname()
+  const handleAuditClick = (auditId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-rwa-vaults-audit-${auditId}-learn-more`,
+      page: pathname,
+    })
+  }
 
   return (
     <>
@@ -310,6 +330,15 @@ export default function RwaVaults() {
         </div>
       </SubLandingPageSection>
       <UseCasesSlider />
+      <SubLandingPageSection>
+        <Audits
+          fullWidth
+          chainSecurityLogo={chainSecurityLogo}
+          prototechLabsLogo={prototechLabsLogo}
+          sherlockLogo={sherlockLogo}
+          onAuditClick={handleAuditClick}
+        />
+      </SubLandingPageSection>
       <SubLandingPageSection>
         <LatestNews news={landingPageData?.blogPosts} />
       </SubLandingPageSection>
