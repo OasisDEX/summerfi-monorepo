@@ -8,6 +8,9 @@ import { CheckLine } from '@/components/layout/LandingPageContent/components/Che
 import { SubLandingPageSection } from '@/components/layout/SubLandingPageSection/SubLandingPageSection'
 import { FractalGlassBackground } from '@/components/molecules/FractalGlassBackground/FractalGlassBackground'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import balanceLogo from '@/public/img/landing-page/private-markets/logo_balance.svg'
+import summerLogo from '@/public/img/landing-page/private-markets/logo_summer.svg'
+import utilaLogo from '@/public/img/landing-page/private-markets/logo_utila.svg'
 import m1CapitalLogo from '@/public/img/landing-page/private-markets/m1_capital.svg'
 
 import rwaVaultsStyles from './RwaVaults.module.css'
@@ -252,6 +255,56 @@ export default function RwaVaults() {
                   and there is no access to your funds by Summer.fi or the Vault Manager.
                 </Text>
               </div>
+            </div>
+          </div>
+        </div>
+      </SubLandingPageSection>
+      <SubLandingPageSection className={rwaVaultsStyles.custodySection}>
+        <Text variant="p1semi" className={rwaVaultsStyles.custodySectionLabel}>
+          Institutional grade custody partners
+        </Text>
+        <div className={rwaVaultsStyles.custodyColumns}>
+          <div className={rwaVaultsStyles.custodyColumn}>
+            <div className={rwaVaultsStyles.custodyLogoWrapper}>
+              <Image alt="Utila" src={utilaLogo} className={rwaVaultsStyles.custodyLogo} />
+            </div>
+            <Text variant="p2" className={rwaVaultsStyles.custodyDescription}>
+              An enterprise-grade, non-custodial MPC wallet that empowers institutions to manage
+              digital assets across multiple chains.
+            </Text>
+            <div className={rwaVaultsStyles.custodyChecks}>
+              <CheckLine text="Advanced MPC-CMP cryptography" />
+              <CheckLine text="Streamlined multi-chain asset management" />
+            </div>
+          </div>
+          <div className={rwaVaultsStyles.custodyColumn}>
+            <div className={rwaVaultsStyles.custodyLogoWrapper}>
+              <Image alt="Balance" src={balanceLogo} className={rwaVaultsStyles.custodyLogo} />
+            </div>
+            <Text variant="p2" className={rwaVaultsStyles.custodyDescription}>
+              Regulated operating system for institutions to securely store, manage, and settle both
+              digital assets and fiat.
+            </Text>
+            <div className={rwaVaultsStyles.custodyChecks}>
+              <CheckLine text="Canadian and US qualified custodian" />
+              <CheckLine text="Integrated off-chain settlements and automated compliance" />
+            </div>
+          </div>
+          <div className={rwaVaultsStyles.custodyColumn}>
+            <div className={rwaVaultsStyles.custodyLogoWrapper}>
+              <Image alt="Summer.fi" src={summerLogo} className={rwaVaultsStyles.custodyLogo} />
+            </div>
+            <Text variant="p2" className={rwaVaultsStyles.custodyDescription}>
+              Provided you have an approved wallet address, you will also be able to access the
+              Vault via the{' '}
+              <a href="https://summer.fi" target="_blank" rel="noopener noreferrer">
+                Summer.fi
+              </a>{' '}
+              UI.
+            </Text>
+            <div className={rwaVaultsStyles.custodyChecks}>
+              <CheckLine text="Still fully non-custodial" />
+              <CheckLine text="Book an appointment to get approved access" />
             </div>
           </div>
         </div>

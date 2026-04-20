@@ -96,6 +96,54 @@
   flex-direction: column;
 }
 
+.custodySection {
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+  padding-bottom: var(--spacing-space-x-large);
+}
+
+.custodySectionLabel {
+  color: var(--color-text-secondary);
+}
+
+.custodyColumns {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-space-2x-large);
+  width: 100%;
+  padding-bottom: var(--spacing-space-x-large);
+}
+
+.custodyColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+  flex: 1 0 0;
+  min-width: 0;
+}
+
+.custodyLogoWrapper {
+  height: 54px;
+  display: flex;
+  align-items: center;
+}
+
+.custodyLogo {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+
+.custodyDescription {
+  color: var(--color-text-secondary);
+}
+
+.custodyChecks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-small);
+}
+
 .cardContent {
   display: flex;
   flex-direction: column;

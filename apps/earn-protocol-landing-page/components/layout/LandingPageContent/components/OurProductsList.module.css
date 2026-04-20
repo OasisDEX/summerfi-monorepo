@@ -248,11 +248,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 6px;
+  gap: 26px;
+  margin: 14px 0 14px;
 }
 
 .smallBrandLogo {
   width: auto;
+  max-width: 150px;
   object-fit: contain;
 }
 

@@ -4,6 +4,14 @@ declare const styles: {
   readonly "cardContent": string;
   readonly "cardSection": string;
   readonly "cardSubtitle": string;
+  readonly "custodyChecks": string;
+  readonly "custodyColumn": string;
+  readonly "custodyColumns": string;
+  readonly "custodyDescription": string;
+  readonly "custodyLogo": string;
+  readonly "custodyLogoWrapper": string;
+  readonly "custodySection": string;
+  readonly "custodySectionLabel": string;
   readonly "heroBackground": string;
   readonly "heroContent": string;
   readonly "heroParagraph": string;
