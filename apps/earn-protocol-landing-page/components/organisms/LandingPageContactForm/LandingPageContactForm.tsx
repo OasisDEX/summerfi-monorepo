@@ -58,6 +58,7 @@ export const LandingPageContactForm = ({
   formType?: 'rwa' | 'own-vault'
 }) => {
   const [formValues, setFormValues] = useState<LandingPageContactFormValues>({
+    formType,
     companyName: '',
     personalName: '',
     phoneNumber: '',
@@ -73,6 +74,7 @@ export const LandingPageContactForm = ({
 
   const resetForm = () => {
     setFormValues({
+      formType,
       companyName: '',
       personalName: '',
       phoneNumber: '',
@@ -321,7 +323,6 @@ export const LandingPageContactForm = ({
         <div>
           <CheckboxButton
             checked={formValues.consent}
-            id="consent"
             name="consent"
             label={
               <Text variant="p4" as="p" className={styles.consentText}>
