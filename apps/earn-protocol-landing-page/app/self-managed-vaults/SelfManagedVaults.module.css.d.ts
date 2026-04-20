@@ -6,16 +6,13 @@ declare const styles: {
   readonly "cardSubtitle": string;
   readonly "heroBackground": string;
   readonly "heroWrapper": string;
-  readonly "icon": string;
   readonly "iconBadge": string;
   readonly "iconColumn": string;
   readonly "iconGrid": string;
   readonly "infoGrid": string;
-  readonly "infoGridBullet": string;
-  readonly "infoGridItem": string;
-  readonly "infoGridTitle": string;
   readonly "linesBackground": string;
   readonly "linesBackgroundSecondBlock": string;
+  readonly "selfManagedVaultScreenshotWrapper": string;
   readonly "subLandingPageSection": string;
   readonly "subSectionTextSecondary": string;
 };

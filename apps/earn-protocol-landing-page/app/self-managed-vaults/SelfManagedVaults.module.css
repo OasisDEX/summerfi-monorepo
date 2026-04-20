@@ -13,33 +13,6 @@
   z-index: -1;
 }
 
-.infoGridItem {
-  display: grid;
-  grid-template-columns: min-content 1fr;
-  gap: 8px 16px;
-  align-items: start;
-}
-
-.infoGridBullet {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.infoGridBullet::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #BA5D8B;
-}
-
-.infoGridTitle {
-  color: var(--color-text-secondary);
-}
-
 .subLandingPageSection {
   display: flex;
   flex-direction: row;
@@ -110,15 +83,10 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  padding: 10px;
+  padding: 5px;
   border-radius: 8px;
   border: 1px solid #BA5D8B;
   margin-bottom: var(--spacing-space-small);
-}
-
-.icon {
-  stroke: #BA5D8B;
-  stroke-width: 2px;
 }
 
 .subSectionTextSecondary {
@@ -142,4 +110,9 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--spacing-space-small);
   width: 100%;
+}
+
+.selfManagedVaultScreenshotWrapper {
+  margin-top: var(--spacing-space-2x-large);
+  margin: var(--spacing-space-2x-large) auto -300px;
 }

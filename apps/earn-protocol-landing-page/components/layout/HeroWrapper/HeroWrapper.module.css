@@ -15,6 +15,10 @@
   height: 870px;
 }
 
+.heroWrapper.heroWrapperLarger {
+  height: 990px;
+}
+
 .heroWrapperSpacer {
   position: relative;
   width: 100%;
@@ -41,5 +45,17 @@
 
   @media (max-width: 532px) {
     height: calc(870px - (84px + 56px));
+  }
+}
+
+.heroWrapperSpacer.heroWrapperSpacerLarger {
+  height: calc(990px - (102px + 56px));
+
+  @media (max-width: 1025px) {
+    height: calc(990px - (100px + 56px));
+  }
+
+  @media (max-width: 532px) {
+    height: calc(990px - (84px + 56px));
   }
 }
