@@ -1,5 +1,5 @@
 'use client'
-import { Button, Emphasis, Icon, LatestNews, Text } from '@summerfi/app-earn-ui'
+import { Button, Emphasis, Icon, LatestNews, Text, UseCasesSlider } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 
 import { TagButton } from '@/components/atoms/TagButton'
@@ -309,6 +309,7 @@ export default function RwaVaults() {
           </div>
         </div>
       </SubLandingPageSection>
+      <UseCasesSlider />
       <SubLandingPageSection>
         <LatestNews news={landingPageData?.blogPosts} />
       </SubLandingPageSection>

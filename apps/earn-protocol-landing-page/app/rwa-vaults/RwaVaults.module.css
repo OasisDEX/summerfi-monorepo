@@ -144,6 +144,7 @@
   gap: var(--spacing-space-small);
 }
 
+
 .cardContent {
   display: flex;
   flex-direction: column;
