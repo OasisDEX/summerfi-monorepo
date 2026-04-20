@@ -259,10 +259,21 @@ export const lpRwaFaqData: { title: string; content: React.ReactNode }[] = [
   {
     title: 'How can institutions safely buy and hold tokenized US Treasuries?',
     content: (
-      <Text as="p" variant="p2">
-        Institutions can access tokenized US Treasuries securely through a three-step process in the
-        Institutional DeFi ecosystem:
-        <ul>
+      <>
+        <Text as="p" variant="p2">
+          Institutions can access tokenized US Treasuries securely through a three-step process in
+          the Institutional DeFi ecosystem:
+        </Text>
+        <ul
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            listStyleType: 'disc',
+            paddingLeft: 'var(--general-space-32)',
+            marginTop: 'var(--general-space-12)',
+            gap: 'var(--general-space-8)',
+          }}
+        >
           <li>
             <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               <strong>Onboarding:</strong> Complete KYC/AML with a regulated tokenization provider
@@ -283,7 +294,7 @@ export const lpRwaFaqData: { title: string; content: React.ReactNode }[] = [
             </Text>
           </li>
         </ul>
-      </Text>
+      </>
     ),
   },
   {

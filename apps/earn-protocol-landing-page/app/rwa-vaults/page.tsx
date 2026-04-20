@@ -1,22 +1,15 @@
 'use client'
-import {
-  Audits,
-  Button,
-  Emphasis,
-  Icon,
-  LatestNews,
-  Text,
-  UseCasesSlider,
-} from '@summerfi/app-earn-ui'
+import { Audits, Button, Emphasis, Icon, Text, UseCasesSlider } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 import { TagButton } from '@/components/atoms/TagButton'
 import { HeroWrapper } from '@/components/layout/HeroWrapper/HeroWrapper'
 import { CheckLine } from '@/components/layout/LandingPageContent/components/CheckLine'
+import { LandingRwaFaqSection } from '@/components/layout/LandingPageContent/content/LandingFaqSection'
 import { SubLandingPageSection } from '@/components/layout/SubLandingPageSection/SubLandingPageSection'
 import { FractalGlassBackground } from '@/components/molecules/FractalGlassBackground/FractalGlassBackground'
-import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { LandingPageContactForm } from '@/components/organisms/LandingPageContactForm/LandingPageContactForm'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
@@ -38,7 +31,6 @@ import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisd
 import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-screenshot.png'
 
 export default function RwaVaults() {
-  const { landingPageData } = useLandingPageData()
   const pathname = usePathname()
   const handleAuditClick = (auditId: string) => {
     EarnProtocolEvents.buttonClicked({
@@ -339,9 +331,16 @@ export default function RwaVaults() {
           onAuditClick={handleAuditClick}
         />
       </SubLandingPageSection>
-      <SubLandingPageSection>
-        <LatestNews news={landingPageData?.blogPosts} />
-      </SubLandingPageSection>
+      <LandingPageContactForm formType="rwa" />
+      <div
+        style={{
+          marginTop: 'var(--spacing-space-3x-large)',
+          marginBottom: 'var(--spacing-space-3x-large)',
+          width: '100%',
+        }}
+      >
+        <LandingRwaFaqSection />
+      </div>
     </>
   )
 }
