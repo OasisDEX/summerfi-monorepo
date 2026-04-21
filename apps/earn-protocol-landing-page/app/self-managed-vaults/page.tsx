@@ -44,37 +44,17 @@ export default function SelfManagedVaults() {
 
   return (
     <>
-      <HeroWrapper
-        larger
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      <HeroWrapper larger className={selfManagedVaultsStyles.heroWrapper}>
         <div className={selfManagedVaultsStyles.heroBackground}>
           <FractalGlassBackground skewed />
         </div>
-        <div
-          style={{
-            maxWidth: '1200px',
-            textAlign: 'left',
-            alignItems: 'start',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--spacing-space-small)',
-          }}
-        >
+        <div className={selfManagedVaultsStyles.heroContent}>
           <TagButton>Self Managed Vaults</TagButton>
           <Text variant="h1">
             <Emphasis variant="h1colorful">Unlimited access to DeFi yield,</Emphasis> built for
             forward thinking institutions
           </Text>
-          <Text
-            variant="p1"
-            style={{
-              color: 'var(--color-text-secondary)',
-            }}
-          >
+          <Text variant="p1" className={selfManagedVaultsStyles.heroParagraph}>
             Summer.fi enables institutions to build their own custom vaults. Get unlimited access to
             DeFi and RWA yields from across the Ethereum ecosystem, while meeting every compliance
             and regulatory need.
@@ -87,75 +67,26 @@ export default function SelfManagedVaults() {
         </div>
       </HeroWrapper>
       <SubLandingPageSection>
-        <div
-          style={{
-            display: 'flex',
-            gap: 'var(--spacing-space-medium)',
-          }}
-        >
-          <div
-            style={{
-              position: 'relative',
-              overflow: 'hidden',
-              display: 'flex',
-              width: '100%',
-              flexDirection: 'column',
-              gap: 'var(--spacing-space-x-small)',
-              borderRadius: '32px',
-              border: '1px solid #232323',
-              padding: 'var(--spacing-space-2x-large)',
-            }}
-          >
+        <div className={selfManagedVaultsStyles.introCardsRow}>
+          <div className={selfManagedVaultsStyles.introCard}>
             <SelfManagedVaultsBox1Background />
             <Text variant="h4">Build your own onchain yield vault in weeks not years</Text>
-            <Text
-              variant="p1"
-              style={{
-                color: 'var(--color-text-secondary)',
-                marginBottom: 'var(--spacing-space-large)',
-              }}
-            >
+            <Text variant="p1" className={selfManagedVaultsStyles.introCardParagraph}>
               Bypass years of complex smart contract development and expensive DeFi Teams. Our
               plug-and-play architecture empowers you to launch secure, bespoke yield products for
               your own capital, or on the behalf of your users.
             </Text>
             <BuildOwnOnchainVaultImage />
           </div>
-          <div
-            style={{
-              display: 'flex',
-              position: 'relative',
-              overflow: 'hidden',
-              width: '100%',
-              flexDirection: 'column',
-              gap: 'var(--spacing-space-x-small)',
-              borderRadius: '32px',
-              border: '1px solid #232323',
-              padding: 'var(--spacing-space-2x-large)',
-            }}
-          >
+          <div className={selfManagedVaultsStyles.introCard}>
             <SelfManagedVaultsBox2Background />
             <Text variant="h4">One integration for all of crypto&apos;s onchain yield</Text>
-            <Text
-              variant="p1"
-              style={{
-                color: 'var(--color-text-secondary)',
-                marginBottom: 'var(--spacing-space-large)',
-              }}
-            >
+            <Text variant="p1" className={selfManagedVaultsStyles.introCardParagraph}>
               Eliminate the massive overhead of managing dozens of protocol connections. Simply
               choose your yield sources, set your risk strategy and access policy and Summer.fi does
               the rest.
             </Text>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                marginTop: 'var(--spacing-space-2x-large)',
-                gap: 'var(--spacing-space-2x-large)',
-                justifyItems: 'center',
-              }}
-            >
+            <div className={selfManagedVaultsStyles.marketLogosGrid}>
               <Image alt="Securitize" src={securitizeMarketLogo} width={155} height={26} />
               <Image alt="Maple" src={mapleMarketLogo} width={114} height={36} />
               <Image alt="Superstate" src={superstateMarketLogo} width={163} height={23} />
@@ -294,27 +225,10 @@ export default function SelfManagedVaults() {
       </SubLandingPageSection>
       <UseCasesSlider />
       <SubLandingPageSection>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--spacing-space-3x-large)',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--spacing-space-small)',
-            }}
-          >
+        <div className={selfManagedVaultsStyles.sdkSection}>
+          <div className={selfManagedVaultsStyles.sdkTextColumn}>
             <Text variant="h3">Simple integration into your app or product </Text>
-            <Text
-              variant="p2"
-              style={{
-                color: 'var(--color-text-secondary)',
-              }}
-            >
+            <Text variant="p2" className={selfManagedVaultsStyles.sdkDescription}>
               All custom Vaults come ready supported within the Summer SDK so you can quickly and
               easily add your Vaults to your app or products. The SDK supports the full
               functionality of the Vault, including deposit and withdrawal actions as well as all
@@ -337,13 +251,7 @@ export default function SelfManagedVaults() {
         />
       </SubLandingPageSection>
       <LandingPageContactForm formType="own-vault" />
-      <SubLandingPageSection
-        style={{
-          maxWidth: '1650px',
-          paddingLeft: 0,
-          paddingRight: 0,
-        }}
-      >
+      <SubLandingPageSection className={selfManagedVaultsStyles.buildBySection}>
         <BuildBySummerFiPlain />
       </SubLandingPageSection>
       <LandingSelfManagedVaultFaqSection />

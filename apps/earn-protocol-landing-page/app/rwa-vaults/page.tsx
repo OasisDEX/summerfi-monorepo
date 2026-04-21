@@ -56,12 +56,7 @@ export default function RwaVaults() {
             automated access to the highest quality RWA markets designed exclusively for qualified
             investors.
           </Text>
-          <div
-            style={{
-              display: 'flex',
-              gap: '24px',
-            }}
-          >
+          <div className={rwaVaultsStyles.heroButtons}>
             <Button variant="primaryMedium">View Vault</Button>
             <Button variant="secondaryMedium">Get in touch</Button>
           </div>
@@ -109,7 +104,7 @@ export default function RwaVaults() {
               tokenized funds, target allocations and the onboarding of Custodians and other
               institutions to access the Vault.
             </Text>
-            <Button variant="secondaryMedium" style={{ margin: '0 auto 0 0' }}>
+            <Button variant="secondaryMedium" className={rwaVaultsStyles.buttonAlignStart}>
               Get in touch to know more
             </Button>
           </div>
@@ -121,12 +116,7 @@ export default function RwaVaults() {
       <SubLandingPageSection
         className={`${rwaVaultsStyles.subLandingPageSection} ${rwaVaultsStyles.cardSection}`}
       >
-        <div
-          className={rwaVaultsStyles.card}
-          style={{
-            position: 'relative',
-          }}
-        >
+        <div className={rwaVaultsStyles.card}>
           <Image
             alt="background lines"
             src={ourProductsLinesBackground}
@@ -134,12 +124,7 @@ export default function RwaVaults() {
             className={rwaVaultsStyles.linesBackground}
           />
           <div className={rwaVaultsStyles.backgroundOrb} />
-          <div
-            className={rwaVaultsStyles.cardContent}
-            style={{
-              width: '456px',
-            }}
-          >
+          <div className={`${rwaVaultsStyles.cardContent} ${rwaVaultsStyles.cardContentNarrow}`}>
             <div className={rwaVaultsStyles.iconBadge}>
               <Icon iconName="chart" size={18} className={rwaVaultsStyles.icon} />
             </div>
@@ -157,13 +142,7 @@ export default function RwaVaults() {
               <CheckLine text="Large amounts of capital can be deployed or withdrawn efficiently" />
             </div>
           </div>
-          <div
-            style={{
-              position: 'absolute',
-              right: '-5%',
-              top: '15%',
-            }}
-          >
+          <div className={rwaVaultsStyles.vaultExposurePosition}>
             <Image src={vaultExposureScreenshot} alt="vault exposure screenshot" />
           </div>
         </div>
@@ -190,78 +169,36 @@ export default function RwaVaults() {
               layers to handle permissioned access, the Summer Institutional Vaults enable approved
               depositors to access to a basket of RWA markets.
             </Text>
-            <div
-              style={{
-                display: 'flex',
-                gap: 'var(--spacing-space-2x-large)',
-                marginTop: 'var(--spacing-space-large)',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '24px',
-                  width: '33.33%',
-                }}
-              >
+            <div className={rwaVaultsStyles.infrastructureColumns}>
+              <div className={rwaVaultsStyles.infrastructureColumn}>
                 <Text variant="p1semi">
                   <Text variant="p3colorful">01.</Text>
                   <br />
                   Ring-Fenced Liquidity (Permissioned Access)
                 </Text>
-                <Text
-                  variant="p2"
-                  style={{
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
+                <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
                   Summer.fi&apos;s institutional RWA Vaults are restricted to deposits exclusively
                   from pre-approved addresses.
                 </Text>
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '24px',
-                  width: '33.33%',
-                }}
-              >
+              <div className={rwaVaultsStyles.infrastructureColumn}>
                 <Text variant="p1semi">
                   <Text variant="p3colorful">02.</Text>
                   <br />
                   Independent Management by M1 Capital
                 </Text>
-                <Text
-                  variant="p2"
-                  style={{
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
+                <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
                   M1 Capital are a professional and experienced team with a proven track record.
                   While the Vault infrastructure is designed and developed by Summer.fi.
                 </Text>
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '24px',
-                  width: '33.33%',
-                }}
-              >
+              <div className={rwaVaultsStyles.infrastructureColumn}>
                 <Text variant="p1semi">
                   <Text variant="p3colorful">03.</Text>
                   <br />
                   Self-custodial
                 </Text>
-                <Text
-                  variant="p2"
-                  style={{
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
+                <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
                   The Summer Institutional Vaults are entirley self-custodial, you never give
                   custody of your assets to others. Only you can deposit or withdraw your assets,
                   and there is no access to your funds by Summer.fi or the Vault Manager.
@@ -332,13 +269,7 @@ export default function RwaVaults() {
         />
       </SubLandingPageSection>
       <LandingPageContactForm formType="rwa" />
-      <div
-        style={{
-          marginTop: 'var(--spacing-space-3x-large)',
-          marginBottom: 'var(--spacing-space-3x-large)',
-          width: '100%',
-        }}
-      >
+      <div className={rwaVaultsStyles.faqWrapper}>
         <LandingRwaFaqSection />
       </div>
     </>

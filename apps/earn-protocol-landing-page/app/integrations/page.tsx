@@ -40,12 +40,7 @@ const DefiSaverXSummerFiLogo = () => (
 
 const DefiSaverXSummerFiBlock = () => {
   return (
-    <SubLandingPageSection
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
+    <SubLandingPageSection className={integrationsStyles.defiSaverSection}>
       <div className={integrationsStyles.defiSaverCard}>
         <div className={integrationsStyles.defiSaverTealOrb} />
         <div className={integrationsStyles.defiSaverPurpleOrb} />
@@ -55,20 +50,14 @@ const DefiSaverXSummerFiBlock = () => {
           </div>
         </div>
         <div className={integrationsStyles.defiSaverContent}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-            }}
-          >
+          <div className={integrationsStyles.defiSaverTextGroup}>
             <Text as="p" variant="p3" className={integrationsStyles.featuredLabel}>
               Featured integration
             </Text>
-            <Text as="p" variant="h4" style={{ color: '#fffbfd' }}>
+            <Text as="p" variant="h4" className={integrationsStyles.defiSaverTitle}>
               DeFi Saver x Lazy Summer
             </Text>
-            <Text as="p" variant="p2" style={{ color: 'var(--color-text-secondary)' }}>
+            <Text as="p" variant="p2" className={integrationsStyles.mutedText}>
               See how DeFi Saver seamlessly enhanced their platform by integrating Lazy Summer
               vaults. By leveraging Lazy Summer infrastructure, they successfully deployed a native,
               &ldquo;set-and-forget&rdquo; yield product to their users.
@@ -76,31 +65,20 @@ const DefiSaverXSummerFiBlock = () => {
           </div>
           <div className={integrationsStyles.defiSaverChecklist}>
             <CheckLine
-              text={
-                <span style={{ color: 'var(--color-text-secondary)' }}>
-                  Turnkey product expansion
-                </span>
-              }
+              text={<span className={integrationsStyles.mutedText}>Turnkey product expansion</span>}
             />
             <CheckLine
               text={
-                <span style={{ color: 'var(--color-text-secondary)' }}>
+                <span className={integrationsStyles.mutedText}>
                   Frictionless yield user journeys natively in-app
                 </span>
               }
             />
             <CheckLine
-              text={
-                <span style={{ color: 'var(--color-text-secondary)' }}>Reliability at scale</span>
-              }
+              text={<span className={integrationsStyles.mutedText}>Reliability at scale</span>}
             />
           </div>
-          <Button
-            variant="secondaryMedium"
-            style={{
-              margin: '0 auto 0 0',
-            }}
-          >
+          <Button variant="secondaryMedium" className={integrationsStyles.buttonAlignStart}>
             Learn more
           </Button>
         </div>
@@ -175,14 +153,7 @@ const WaysToIntegrate = () => {
 
   return (
     <div className={integrationsStyles.waysToIntegrate}>
-      <Text
-        variant="h2"
-        style={{
-          display: 'block',
-          margin: '0 auto var(--spacing-space-large)',
-          textAlign: 'center',
-        }}
-      >
+      <Text variant="h2" className={integrationsStyles.waysToIntegrateTitle}>
         3 ways to integrate
       </Text>
       <div className={integrationsStyles.waysToIntegrateGrid}>
@@ -190,15 +161,19 @@ const WaysToIntegrate = () => {
           <div key={title} className={integrationsStyles.waysToIntegrateCard}>
             <div className={integrationsStyles.waysToIntegrateIconBadge}>{icon}</div>
             <div className={integrationsStyles.waysToIntegrateCardBody}>
-              <Text as="p" variant="h5" style={{ color: 'var(--color-text-primary)' }}>
+              <Text as="p" variant="h5" className={integrationsStyles.waysToIntegrateCardTitle}>
                 {title}
               </Text>
-              <Text as="p" variant="p2" style={{ color: '#bab8b9' }}>
+              <Text
+                as="p"
+                variant="p2"
+                className={integrationsStyles.waysToIntegrateCardDescription}
+              >
                 {description}
               </Text>
             </div>
             <a href="#" className={integrationsStyles.waysToIntegrateCta}>
-              <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary)' }}>
+              <Text as="span" variant="p3" className={integrationsStyles.waysToIntegrateCtaLabel}>
                 {cta}
               </Text>
               <span className={integrationsStyles.waysToIntegrateCtaArrow} aria-hidden>
@@ -220,10 +195,10 @@ const HandsOnSupport = () => {
         <div className={integrationsStyles.handsOnSupportGlowBottom} />
         <div className={integrationsStyles.handsOnSupportContent}>
           <div className={integrationsStyles.handsOnSupportText}>
-            <Text as="p" variant="h4" style={{ color: 'var(--color-text-primary)' }}>
+            <Text as="p" variant="h4" className={integrationsStyles.handsOnSupportTitle}>
               Hands on technical support
             </Text>
-            <Text as="p" variant="p2" style={{ color: 'var(--color-text-secondary)' }}>
+            <Text as="p" variant="p2" className={integrationsStyles.mutedText}>
               Our SDK is fully self serve, though our team provides direct, one-on-one support every
               step of the way, should you need it.
             </Text>
@@ -248,56 +223,23 @@ export default function Integrations() {
 
   return (
     <>
-      <HeroWrapper
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-        large
-      >
+      <HeroWrapper className={integrationsStyles.heroWrapper} large>
         <div className={integrationsStyles.heroBackground}>
           <FractalGlassBackground skewed />
         </div>
-        <div
-          style={{
-            maxWidth: '1200px',
-            margin: '0 auto',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 'var(--spacing-space-3x-large)',
-          }}
-        >
-          <div
-            style={{
-              textAlign: 'left',
-              alignItems: 'start',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--spacing-space-small)',
-            }}
-          >
+        <div className={integrationsStyles.heroContent}>
+          <div className={integrationsStyles.heroTextColumn}>
             <TagButton>Integration</TagButton>
             <Text variant="h1">
               <Emphasis variant="h1colorful">One integration</Emphasis> to give your users the best
               of DeFi.
             </Text>
-            <Text
-              variant="p1"
-              style={{
-                color: 'var(--color-text-secondary)',
-              }}
-            >
+            <Text variant="p1" className={integrationsStyles.heroDescription}>
               The Summer.fi institutional Private access RWA vault gives forward thinking
               institutions automated access to DeFi&lsquo;s highest quality yield sources designed
               for qualified investors.
             </Text>
-            <div
-              style={{
-                display: 'flex',
-                gap: '24px',
-              }}
-            >
+            <div className={integrationsStyles.heroButtons}>
               <Button variant="primaryMedium">Launch App</Button>
               <Button variant="secondaryMedium">View Products</Button>
             </div>
@@ -313,12 +255,7 @@ export default function Integrations() {
       <SubLandingPageSection
         className={`${integrationsStyles.subLandingPageSection} ${integrationsStyles.cardSection}`}
       >
-        <div
-          className={integrationsStyles.card}
-          style={{
-            position: 'relative',
-          }}
-        >
+        <div className={integrationsStyles.card}>
           <Image
             alt="background lines"
             src={ourProductsLinesBackground}
@@ -342,10 +279,7 @@ export default function Integrations() {
               driving TVL and keeping your users engaged with minimal effort.
             </Text>
             <div
-              className={integrationsStyles.iconColumn}
-              style={{
-                maxWidth: '900px',
-              }}
+              className={`${integrationsStyles.iconColumn} ${integrationsStyles.cardIconColumnWide}`}
             >
               <CheckLine text="Unrestricted deep liquidity: Seamlessly route user funds into robust, highly liquid protocols, ensuring smooth entry and exit at any scale without heavy slippage." />
               <CheckLine text="Automated risk management: Keep your users protected and profitable with battle-tested strategies that are continuously monitored and optimized for the safest, highest APYs." />
@@ -374,64 +308,24 @@ export default function Integrations() {
               automated infrastructure, you can effortlessly offer the premium, set-and-forget
               earning opportunities your users demand - driving higher TVL and boosting retention.
             </Text>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 'var(--spacing-space-x-large)',
-                marginTop: 'var(--spacing-space-large)',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px',
-                }}
-              >
+            <div className={integrationsStyles.featureGrid}>
+              <div className={integrationsStyles.featureItem}>
                 <Text variant="p1semi">Drive user retention</Text>
-                <Text
-                  variant="p2"
-                  style={{
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
+                <Text variant="p2" className={integrationsStyles.mutedText}>
                   Prevent capital flight. Keep liquidity on your platform by offering competitive,
                   hands-off yield generation.
                 </Text>
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px',
-                }}
-              >
+              <div className={integrationsStyles.featureItem}>
                 <Text variant="p1semi">Frictionless user journeys</Text>
-                <Text
-                  variant="p2"
-                  style={{
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
+                <Text variant="p2" className={integrationsStyles.mutedText}>
                   Eliminate gas headaches and multi-step wallet approvals for your users with
                   seamless, automated deposits.
                 </Text>
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px',
-                }}
-              >
+              <div className={integrationsStyles.featureItem}>
                 <Text variant="p1semi">Minimal ongoing maintenance</Text>
-                <Text
-                  variant="p2"
-                  style={{
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
+                <Text variant="p2" className={integrationsStyles.mutedText}>
                   Summer.fi constantly monitors, upgrades, and optimizes the underlying protocol
                   connections, freeing up your engineering resources.
                 </Text>
@@ -440,43 +334,17 @@ export default function Integrations() {
           </div>
         </div>
       </SubLandingPageSection>
-      <SubLandingPageSection
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--spacing-space-large)',
-        }}
-      >
-        <Text
-          variant="p1semi"
-          style={{
-            color: 'var(--color-text-secondary)',
-          }}
-        >
+      <SubLandingPageSection className={integrationsStyles.additionalBenefitsSection}>
+        <Text variant="p1semi" className={integrationsStyles.additionalBenefitsLabel}>
           Additional benefits
         </Text>
-        <div
-          style={{
-            display: 'flex',
-          }}
-        >
+        <div className={integrationsStyles.additionalBenefitsRow}>
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px',
-              width: '50%',
-              paddingRight: 'var(--spacing-space-2x-large)',
-            }}
+            className={`${integrationsStyles.benefitColumn} ${integrationsStyles.benefitColumnLeft}`}
           >
             <Text variant="p3colorful">01.</Text>
             <Text variant="h4">Quick & Easy Integration</Text>
-            <Text
-              variant="p2"
-              style={{
-                color: 'var(--color-text-secondary)',
-              }}
-            >
+            <Text variant="p2" className={integrationsStyles.mutedText}>
               Skip the steep learning curve, the developer-first SDK are designed for rapid,
               seamless implementation. Enable powerful DeFi yield strategies directly into your
               existing architecture in a fraction of the time, allowing your engineering team to
@@ -485,23 +353,11 @@ export default function Integrations() {
             <CheckLine text="Clean architecture and comprehensive documentation." />
           </div>
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px',
-              width: '50%',
-              borderLeft: '1px solid #232323',
-              paddingLeft: 'var(--spacing-space-2x-large)',
-            }}
+            className={`${integrationsStyles.benefitColumn} ${integrationsStyles.benefitColumnRight}`}
           >
             <Text variant="p3colorful">02.</Text>
             <Text variant="h4">Big ROI: Built-In Revenue Mechanics with compliance</Text>
-            <Text
-              variant="p2"
-              style={{
-                color: 'var(--color-text-secondary)',
-              }}
-            >
+            <Text variant="p2" className={integrationsStyles.mutedText}>
               Turn your platform’s liquidity into a sustainable business model. Lazy Summer
               infrastructure allows you to seamlessly configure fee-sharing mechanics and monetize
               the yield your users generate.{' '}
@@ -526,13 +382,7 @@ export default function Integrations() {
       <SubLandingPageSection>
         <HandsOnSupport />
       </SubLandingPageSection>
-      <div
-        style={{
-          marginTop: 'var(--spacing-space-3x-large)',
-          marginBottom: 'var(--spacing-space-3x-large)',
-          width: '100%',
-        }}
-      >
+      <div className={integrationsStyles.faqWrapper}>
         <LandingIntegrationsFaqSection />
       </div>
     </>

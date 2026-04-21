@@ -13,6 +13,32 @@
   z-index: -1;
 }
 
+.heroContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-space-3x-large);
+}
+
+.heroTextColumn {
+  text-align: left;
+  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-small);
+}
+
+.heroDescription {
+  color: var(--color-text-secondary);
+}
+
+.heroButtons {
+  display: flex;
+  gap: 24px;
+}
+
 .subLandingPageSection {
   display: flex;
   flex-direction: row;
@@ -110,6 +136,11 @@
   gap: var(--spacing-space-large);
 }
 
+.defiSaverSection {
+  display: flex;
+  flex-direction: column;
+}
+
 .defiSaverLogosSection {
   position: relative;
   width: 100%;
@@ -173,6 +204,24 @@
   z-index: 1;
 }
 
+.defiSaverTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.defiSaverTitle {
+  color: #fffbfd;
+}
+
+.mutedText {
+  color: var(--color-text-secondary);
+}
+
+.buttonAlignStart {
+  margin: 0 auto 0 0;
+}
+
 .defiSaverChecklist {
   display: flex;
   flex-direction: column;
@@ -191,6 +240,12 @@
 
 .waysToIntegrate {
   width: 100%;
+}
+
+.waysToIntegrateTitle {
+  display: block;
+  margin: 0 auto var(--spacing-space-large);
+  text-align: center;
 }
 
 .waysToIntegrateGrid {
@@ -224,6 +279,18 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-small);
+}
+
+.waysToIntegrateCardTitle {
+  color: var(--color-text-primary);
+}
+
+.waysToIntegrateCardDescription {
+  color: #bab8b9;
+}
+
+.waysToIntegrateCtaLabel {
+  color: var(--color-text-primary);
 }
 
 .waysToIntegrateCta {
@@ -306,6 +373,63 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-2x-small);
+}
+
+.handsOnSupportTitle {
+  color: var(--color-text-primary);
+}
+
+.additionalBenefitsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+}
+
+.additionalBenefitsLabel {
+  color: var(--color-text-secondary);
+}
+
+.additionalBenefitsRow {
+  display: flex;
+}
+
+.benefitColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 50%;
+}
+
+.benefitColumnLeft {
+  padding-right: var(--spacing-space-2x-large);
+}
+
+.benefitColumnRight {
+  border-left: 1px solid #232323;
+  padding-left: var(--spacing-space-2x-large);
+}
+
+.cardIconColumnWide {
+  max-width: 900px;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-space-x-large);
+  margin-top: var(--spacing-space-large);
+}
+
+.featureItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faqWrapper {
+  margin-top: var(--spacing-space-3x-large);
+  margin-bottom: var(--spacing-space-3x-large);
+  width: 100%;
 }
 
 .handsOnSupportButton {

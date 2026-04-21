@@ -63,22 +63,15 @@ export default function PermissionlessVaults() {
           vaultsInfo={landingPageData?.vaultsInfo}
         />
       </HeroWrapper>
-      <div
-        className={permissionlessVaultsStyles.pageContentWrapper}
-        style={{
-          overflow: 'hidden',
-        }}
-      >
+      <div className={permissionlessVaultsStyles.pageContentWrapper}>
         <SubLandingPageSection className={permissionlessVaultsStyles.subLandingPageSectionFirst}>
           <div className={clsx(permissionlessVaultsStyles.subLandingPageSectionData)}>
             <div
               className={clsx(
                 permissionlessVaultsStyles.subLandingPageTextColumn,
                 permissionlessVaultsStyles.subLandingPageTextColumnLargeGap,
+                permissionlessVaultsStyles.subLandingPageTextColumnWider,
               )}
-              style={{
-                maxWidth: '55%',
-              }}
             >
               <div className={permissionlessVaultsStyles.subLandingPageHeadingGroup}>
                 <Text variant="p3colorful">Consistently outperform benchmark yield</Text>
@@ -103,13 +96,7 @@ export default function PermissionlessVaults() {
           </div>
         </SubLandingPageSection>
         <SubLandingPageSection>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--spacing-space-3x-large)',
-            }}
-          >
+          <div className={permissionlessVaultsStyles.stack3xLarge}>
             <div
               className={clsx(
                 permissionlessVaultsStyles.subLandingPageSectionData,
@@ -127,10 +114,7 @@ export default function PermissionlessVaults() {
                 <Image
                   src={blockAnaliticaPinkFaded}
                   alt="block analitica"
-                  style={{
-                    maxWidth: '190px',
-                    marginTop: 'var(--spacing-space-large)',
-                  }}
+                  className={permissionlessVaultsStyles.blockAnaliticaLogo}
                 />
               </div>
               <div
@@ -191,13 +175,10 @@ export default function PermissionlessVaults() {
                   </Text>
                 </div>
                 <div
-                  className={permissionlessVaultsStyles.iconColumn}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '130px',
-                    justifyContent: 'space-between',
-                  }}
+                  className={clsx(
+                    permissionlessVaultsStyles.iconColumn,
+                    permissionlessVaultsStyles.riskManagedCardChecks,
+                  )}
                 >
                   <CheckLine text="Designed for risk-adjusted outperformance." />
                   <CheckLine text="Block Analitica sets, monitors and informs all vault exposure caps independently." />
@@ -219,13 +200,10 @@ export default function PermissionlessVaults() {
                   </Text>
                 </div>
                 <div
-                  className={permissionlessVaultsStyles.iconColumn}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '130px',
-                    justifyContent: 'space-between',
-                  }}
+                  className={clsx(
+                    permissionlessVaultsStyles.iconColumn,
+                    permissionlessVaultsStyles.riskManagedCardChecks,
+                  )}
                 >
                   <CheckLine text="Designed to dramatically outperform benchmarks." />
                   <CheckLine text="Rigorous protocol categorization helps protect against downside risk." />
@@ -241,12 +219,7 @@ export default function PermissionlessVaults() {
             </div>
           </div>
         </SubLandingPageSection>
-        <SubLandingPageSection
-          style={{
-            flexDirection: 'column',
-            gap: 'var(--spacing-space-large)',
-          }}
-        >
+        <SubLandingPageSection className={permissionlessVaultsStyles.featuresSection}>
           <Text variant="p1semi" className={permissionlessVaultsStyles.subLandingPageSubtext}>
             Features
           </Text>
@@ -261,10 +234,10 @@ export default function PermissionlessVaults() {
               <Text variant="h4">Stop chasing yields with automated rebalancing</Text>
               <Text
                 variant="p1"
-                className={permissionlessVaultsStyles.subLandingPageSubtext}
-                style={{
-                  marginBottom: '18px',
-                }}
+                className={clsx(
+                  permissionlessVaultsStyles.subLandingPageSubtext,
+                  permissionlessVaultsStyles.featureDescription,
+                )}
               >
                 Stop checking dashboards, searching for new protocols and listening to DeFi
                 influencers. Lazy Summer protocol automatically adds new yield sources that are
@@ -280,10 +253,10 @@ export default function PermissionlessVaults() {
               <Text variant="h4">Start earning immediately with auto compounding</Text>
               <Text
                 variant="p1"
-                className={permissionlessVaultsStyles.subLandingPageSubtext}
-                style={{
-                  marginBottom: '18px',
-                }}
+                className={clsx(
+                  permissionlessVaultsStyles.subLandingPageSubtext,
+                  permissionlessVaultsStyles.featureDescription,
+                )}
               >
                 Lazy Summer Protocol continuously sells earned rewards and reinvests proceeds so you
                 never have to time and dump rewards.
@@ -295,82 +268,39 @@ export default function PermissionlessVaults() {
             </div>
           </div>
         </SubLandingPageSection>
-        <SubLandingPageSection
-          style={{
-            paddingLeft: '0',
-            paddingRight: '0',
-            flexDirection: 'column',
-          }}
-        >
+        <SubLandingPageSection className={permissionlessVaultsStyles.powerSection}>
           <Text
             variant="h2"
-            className={permissionlessVaultsStyles.subLandingPageHeadingGroup}
-            style={{
-              margin: '0 auto',
-            }}
+            className={clsx(
+              permissionlessVaultsStyles.subLandingPageHeadingGroup,
+              permissionlessVaultsStyles.powerHeading,
+            )}
           >
             The Power of DeFi, made accessible to everyone.
           </Text>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: 'var(--spacing-space-large)',
-              gap: 'var(--spacing-space-medium)',
-            }}
-          >
+          <div className={permissionlessVaultsStyles.powerCardsRow}>
             <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-                borderRadius: '24px',
-                border: '1px solid #232323',
-                background: '#101010',
-                padding: 'var(--spacing-space-x-large) var(--spacing-space-x-large) 0',
-                overflow: 'hidden',
-                gap: 'var(--spacing-space-2x-small)',
-              }}
+              className={clsx(
+                permissionlessVaultsStyles.powerCard,
+                permissionlessVaultsStyles.powerCardGap,
+              )}
             >
               <Text variant="p3semiColorful">Transparent by Design</Text>
               <Text variant="h5">Never second guess the source of your yield</Text>
-              <Text
-                variant="p2"
-                style={{
-                  color: 'var(--color-text-secondary)',
-                }}
-              >
+              <Text variant="p2" className={permissionlessVaultsStyles.powerCardText}>
                 Summer ensures you never second guess the source of your yield. With our automated
                 rebalances, every decision is fully traceable and optimized transparently.
               </Text>
               <Image
                 src={liquidityImage}
                 alt="liquidity"
-                style={{
-                  marginTop: 'var(--spacing-space-large)',
-                }}
+                className={permissionlessVaultsStyles.liquidityImage}
               />
             </div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-                borderRadius: '24px',
-                border: '1px solid #232323',
-                background: '#101010',
-                padding: 'var(--spacing-space-x-large) var(--spacing-space-x-large) 0',
-                overflow: 'hidden',
-              }}
-            >
+            <div className={permissionlessVaultsStyles.powerCard}>
               <Text variant="p3semiColorful">Instant Liquidity</Text>
               <Text variant="h5">Exit anytime, no lockups or withdrawal delays</Text>
-              <Text
-                variant="p2"
-                style={{
-                  color: 'var(--color-text-secondary)',
-                }}
-              >
+              <Text variant="p2" className={permissionlessVaultsStyles.powerCardText}>
                 With Summer, you can withdraw from your position at anytime as long as the capital
                 is available from the underlying protocols (which is almost always). No queues or
                 waiting for withdrawals to be processed.{' '}
@@ -378,40 +308,19 @@ export default function PermissionlessVaults() {
               <Image
                 src={depositSidePanelImage}
                 alt="deposit side panel"
-                style={{
-                  position: 'relative',
-                  margin: '0 auto',
-                  bottom: '-50px',
-                }}
+                className={permissionlessVaultsStyles.depositImage}
               />
             </div>
             <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-                borderRadius: '24px',
-                border: '1px solid #232323',
-                background: '#101010',
-                padding: 'var(--spacing-space-x-large) var(--spacing-space-x-large) 0',
-                overflow: 'hidden',
-                justifyContent: 'space-between',
-              }}
+              className={clsx(
+                permissionlessVaultsStyles.powerCard,
+                permissionlessVaultsStyles.permissionlessCard,
+              )}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
+              <div className={permissionlessVaultsStyles.permissionlessCardContent}>
                 <Text variant="p3semiColorful">Permissionless</Text>
                 <Text variant="h5">Always Non-Custodial, Always in Your Control</Text>
-                <Text
-                  variant="p2"
-                  style={{
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
+                <Text variant="p2" className={permissionlessVaultsStyles.powerCardText}>
                   Built entirely on-chain, Summer gives you unrestricted access and complete control
                   over your assets—no middle-men and no opaque third parties with control over your
                   capital.
@@ -420,21 +329,12 @@ export default function PermissionlessVaults() {
               <Image
                 src={alwaysNonCustodialImage}
                 alt="always non-custodial"
-                style={{
-                  maxWidth: '75%',
-                  maxHeight: '75%',
-                  margin: '0 auto -10px',
-                }}
+                className={permissionlessVaultsStyles.alwaysNonCustodialImage}
               />
             </div>
           </div>
         </SubLandingPageSection>
-        <div
-          style={{
-            maxWidth: '1400px',
-            margin: '0 auto',
-          }}
-        >
+        <div className={permissionlessVaultsStyles.startEarningWrapper}>
           <StartEarningNow id="permissionless-vaults" />
         </div>
         <SubLandingPageSection>
@@ -447,13 +347,7 @@ export default function PermissionlessVaults() {
           />
         </SubLandingPageSection>
       </div>
-      <div
-        style={{
-          marginTop: 'var(--spacing-space-3x-large)',
-          marginBottom: 'var(--spacing-space-3x-large)',
-          width: '100%',
-        }}
-      >
+      <div className={permissionlessVaultsStyles.faqWrapper}>
         <LandingPermissionlessDefiVaultsFaqSection />
       </div>
     </>

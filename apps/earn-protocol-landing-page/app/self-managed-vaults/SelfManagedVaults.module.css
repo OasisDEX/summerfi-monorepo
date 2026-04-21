@@ -13,6 +13,19 @@
   z-index: -1;
 }
 
+.heroContent {
+  max-width: 1200px;
+  text-align: left;
+  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-small);
+}
+
+.heroParagraph {
+  color: var(--color-text-secondary);
+}
+
 .subLandingPageSection {
   display: flex;
   flex-direction: row;
@@ -93,6 +106,36 @@
   color: var(--color-text-secondary);
 }
 
+.introCardsRow {
+  display: flex;
+  gap: var(--spacing-space-medium);
+}
+
+.introCard {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--spacing-space-x-small);
+  border-radius: 32px;
+  border: 1px solid #232323;
+  padding: var(--spacing-space-2x-large);
+}
+
+.introCardParagraph {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-space-large);
+}
+
+.marketLogosGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: var(--spacing-space-2x-large);
+  gap: var(--spacing-space-2x-large);
+  justify-items: center;
+}
+
 .iconColumn {
   display: flex;
   flex-direction: column;
@@ -115,4 +158,26 @@
 .selfManagedVaultScreenshotWrapper {
   margin-top: var(--spacing-space-2x-large);
   margin: var(--spacing-space-2x-large) auto -300px;
+}
+
+.sdkSection {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-3x-large);
+}
+
+.sdkTextColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-small);
+}
+
+.sdkDescription {
+  color: var(--color-text-secondary);
+}
+
+.buildBySection {
+  max-width: 1650px;
+  padding-left: 0;
+  padding-right: 0;
 }

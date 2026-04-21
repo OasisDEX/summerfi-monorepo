@@ -1,7 +1,9 @@
 declare const styles: {
   readonly "backgroundOrb": string;
+  readonly "buttonAlignStart": string;
   readonly "card": string;
   readonly "cardContent": string;
+  readonly "cardContentNarrow": string;
   readonly "cardSection": string;
   readonly "cardSubtitle": string;
   readonly "custodyChecks": string;
@@ -12,13 +14,17 @@ declare const styles: {
   readonly "custodyLogoWrapper": string;
   readonly "custodySection": string;
   readonly "custodySectionLabel": string;
+  readonly "faqWrapper": string;
   readonly "heroBackground": string;
+  readonly "heroButtons": string;
   readonly "heroContent": string;
   readonly "heroParagraph": string;
   readonly "heroWrapper": string;
   readonly "icon": string;
   readonly "iconBadge": string;
   readonly "iconColumn": string;
+  readonly "infrastructureColumn": string;
+  readonly "infrastructureColumns": string;
   readonly "linesBackground": string;
   readonly "linesBackgroundSecondBlock": string;
   readonly "partnerLogo": string;
@@ -28,6 +34,7 @@ declare const styles: {
   readonly "subSectionColumn": string;
   readonly "subSectionRow": string;
   readonly "subSectionTextSecondary": string;
+  readonly "vaultExposurePosition": string;
 };
 export = styles;
 
