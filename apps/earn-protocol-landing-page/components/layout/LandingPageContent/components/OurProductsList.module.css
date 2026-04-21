@@ -237,6 +237,13 @@
   gap: 24px;
 }
 
+@media (max-width: 1270px) {
+  .partnerLogos {
+    max-width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .partnerLogo {
   height: 50px;
   max-width: 150px;
@@ -278,6 +285,14 @@
   position: relative;
   right: -220px;
   bottom: 0;
+}
+
+@media (max-width: 1270px) {
+  .sdkScreenshotWrapper {
+    width: 100%;
+    overflow: hidden;
+    position: static;
+  }
 }
 
 .integratorMetaGrid {
