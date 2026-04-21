@@ -5,7 +5,7 @@ import styles from './FractalGlassBackground.module.css'
 const BACKGROUND_COLOR = 'rgb(16,16,16)'
 const BLOB_COLORS = ['rgb(255, 73, 164)', 'rgb(176, 73, 255)', 'rgb(244, 63, 94)']
 const BLOB_COUNT = 6
-const MAX_BLOBS = 6
+const MAX_BLOBS = 10
 
 function parseRgba(input: string): [number, number, number, number] {
   const match = input
@@ -42,9 +42,9 @@ function spawnBlob(
   blobIndex?: number,
 ): BlobState {
   return {
-    x: initialX ?? -(180 + Number(Math.random() * 220)),
+    x: initialX ?? -(480 + Number(Math.random() * 420)),
     y: (0.1 + Number(Math.random() * 0.8)) * canvasHeight,
-    speed: (10 + Number(Math.random() * 70)) * (window.devicePixelRatio || 1),
+    speed: Number((10 + Number(Math.random() * 70)) * (window.devicePixelRatio || 1)),
     radius: 0.007 + Number(Math.random() * 0.2),
     color:
       BLOB_COLORS[
@@ -288,7 +288,8 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
       lastTime = now
       const currentTime = (now - startTime) / 1000
 
-      const fadeMargin = Math.max(300, canvas.width * 0.3)
+      const fadeMargin =
+        Math.max(600, canvas.width * 0.5) + (skewed ? Math.abs(skewTan) * canvas.height : 0) // extra space on sides for blobs to fade in/out without pop
 
       // Update blobs and compute alphas
       for (let i = 0; i < blobs.length; i++) {
