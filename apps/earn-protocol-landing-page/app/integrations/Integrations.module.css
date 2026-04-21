@@ -12,3 +12,308 @@
   pointer-events: none;
   z-index: -1;
 }
+
+.subLandingPageSection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-space-2x-large);
+}
+
+.cardSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
+  padding-top: var(--spacing-space-2x-large);
+  padding-bottom: 0;
+}
+
+.card {
+  width: 100%;
+  padding: var(--spacing-space-2x-large);
+  border-radius: 32px;
+  border: 1px solid #232323;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+
+.linesBackground {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  object-fit: cover;
+  width: auto;
+  height: auto;
+}
+
+.linesBackgroundSecondBlock {
+  transform: translate(30%, 10%) scale(1.3);
+}
+
+.backgroundOrb {
+  position: absolute;
+  bottom: 0;
+  right: -25%;
+  width: 350px;
+  height: 350px;
+  border-radius: 100%;
+  background: #5B035D;
+  filter: blur(150px);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-2x-small);
+  position: relative;
+  z-index: 10;
+}
+
+.cardSubtitle {
+  margin-bottom: var(--spacing-space-large);
+}
+
+.iconBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #BA5D8B;
+  margin-bottom: var(--spacing-space-small);
+}
+
+.icon {
+  stroke: #BA5D8B;
+  stroke-width: 2px;
+}
+
+.subSectionTextSecondary {
+  color: var(--color-text-secondary);
+}
+
+.defiSaverCard {
+  width: 100%;
+  padding: var(--spacing-space-2x-large);
+  border-radius: 32px;
+  border: 1px solid #232323;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+}
+
+.defiSaverLogosSection {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.defiSaverTealOrb {
+  position: absolute;
+  top: 30%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 300px;
+  border-radius: 100%;
+  background: #0d6e6e;
+  filter: blur(120px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.defiSaverPurpleOrb {
+  position: absolute;
+  top: 30%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 300px;
+  border-radius: 100%;
+  background: #5b035d;
+  filter: blur(130px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.defiSaverLogos {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.featuredLabel {
+  background: linear-gradient(90deg, #ff49a4 0%, #b049ff 93%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.defiSaverContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+  position: relative;
+  z-index: 1;
+}
+
+.defiSaverChecklist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-small);
+}
+
+.learnMoreButton:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.iconColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-x-small);
+}
+
+.waysToIntegrate {
+  width: 100%;
+}
+
+.waysToIntegrateGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-space-x-small);
+}
+
+.waysToIntegrateCard {
+  border: 1px solid #3d3d3d;
+  border-radius: 18px;
+  padding: var(--spacing-space-x-large);
+  min-height: 292px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium-large);
+}
+
+.waysToIntegrateIconBadge {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ba5d8b;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.waysToIntegrateCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-small);
+}
+
+.waysToIntegrateCta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #3d3d3d;
+  border-radius: var(--radius-circle);
+  padding: 8px var(--spacing-space-medium-large);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  width: fit-content;
+}
+
+.waysToIntegrateCtaArrow {
+  line-height: 1;
+}
+
+@media (max-width: 1024px) {
+  .waysToIntegrateGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .waysToIntegrateCard {
+    min-height: unset;
+  }
+}
+
+.handsOnSupport {
+  width: 100%;
+}
+
+.handsOnSupportCard {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #232323;
+  border-radius: var(--radius-rounder);
+  padding: var(--spacing-space-2x-large);
+}
+
+.handsOnSupportGlowTop {
+  position: absolute;
+  top: -180px;
+  right: -120px;
+  width: 520px;
+  height: 360px;
+  border-radius: 100%;
+  background: #51006d;
+  opacity: 0.5;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.handsOnSupportGlowBottom {
+  position: absolute;
+  bottom: -180px;
+  left: -120px;
+  width: 520px;
+  height: 360px;
+  border-radius: 100%;
+  background: #a03652;
+  opacity: 0.35;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.handsOnSupportContent {
+  position: relative;
+  z-index: 1;
+  max-width: 880px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+}
+
+.handsOnSupportText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-2x-small);
+}
+
+.handsOnSupportButton {
+  width: fit-content;
+}
+
+@media (max-width: 768px) {
+  .handsOnSupportCard {
+    padding: var(--spacing-space-large);
+  }
+}
