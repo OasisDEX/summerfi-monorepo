@@ -1,7 +1,6 @@
 declare const styles: {
-  readonly "blobCanvas": string;
   readonly "container": string;
-  readonly "rect": string;
+  readonly "fadeIn": string;
 };
 export = styles;
 
