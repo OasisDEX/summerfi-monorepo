@@ -22,6 +22,12 @@
   align-items: flex-start;
 }
 
+@media (max-width: 1100px) {
+  .heroContent {
+    padding: 0 16px;
+  }
+}
+
 .heroParagraph {
   color: var(--color-text-secondary);
 }
@@ -45,6 +51,13 @@
   gap: var(--spacing-space-3x-large);
 }
 
+@media (max-width: 1100px) {
+  .subSectionRow {
+    flex-direction: column;
+    gap: var(--spacing-space-x-large);
+  }
+}
+
 .subSectionColumn {
   display: flex;
   flex-direction: column;
@@ -64,6 +77,14 @@
   margin-top: var(--spacing-space-x-large)
 }
 
+@media (max-width: 1100px) {
+  .partnerLogos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 32px;
+  }
+}
+
 .partnerLogo {
   height: 30px;
   width: auto;
@@ -79,6 +100,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 1100px) {
+  .partnerLogoFrame {
+    width: 80%;
+    min-width: 80%;
+    height: 160px;
+  }
 }
 
 .cardSection {
@@ -101,10 +130,22 @@
   flex-direction: column;
 }
 
+@media (max-width: 1100px) {
+  .card {
+    padding: var(--spacing-space-x-large);
+  }
+}
+
 .custodySection {
   flex-direction: column;
   gap: var(--spacing-space-large);
   padding-bottom: var(--spacing-space-x-large);
+}
+
+@media (max-width: 1100px) {
+  .custodySection {
+    margin-top: var(--spacing-space-2x-large);
+  }
 }
 
 .custodySectionLabel {
@@ -117,6 +158,13 @@
   gap: var(--spacing-space-2x-large);
   width: 100%;
   padding-bottom: var(--spacing-space-x-large);
+}
+
+@media (max-width: 1100px) {
+  .custodyColumns {
+    flex-direction: column;
+    gap: var(--spacing-space-x-large);
+  }
 }
 
 .custodyColumn {
@@ -217,16 +265,37 @@
   width: 456px;
 }
 
+@media (max-width: 1100px) {
+  .cardContentNarrow {
+    width: 100%;
+    margin-bottom: var(--spacing-space-large);
+  }
+}
+
 .vaultExposurePosition {
   position: absolute;
   right: -5%;
   top: 15%;
 }
 
+@media (max-width: 1100px) {
+  .vaultExposurePosition {
+    position: static;
+  }
+}
+
 .infrastructureColumns {
   display: flex;
   gap: var(--spacing-space-2x-large);
   margin-top: var(--spacing-space-large);
+}
+
+@media (max-width: 1100px) {
+  .infrastructureColumns {
+    flex-direction: column;
+    gap: var(--spacing-space-x-large);
+    margin-bottom: var(--spacing-space-large);
+  }
 }
 
 .infrastructureColumn {
@@ -236,8 +305,22 @@
   width: 33.33%;
 }
 
+@media (max-width: 1100px) {
+  .infrastructureColumn {
+    width: 100%;
+    gap: 12px;
+  }
+}
+
 .faqWrapper {
   margin-top: var(--spacing-space-3x-large);
   margin-bottom: var(--spacing-space-3x-large);
   width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .faqWrapper {
+    padding: var(--spacing-space-medium);
+    margin-top: var(--spacing-space-x-large);
+  }
 }

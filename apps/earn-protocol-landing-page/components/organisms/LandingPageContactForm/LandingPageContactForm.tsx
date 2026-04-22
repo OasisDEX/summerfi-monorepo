@@ -216,7 +216,7 @@ export const LandingPageContactForm = ({
           <div className={styles.formField}>
             <label htmlFor="phoneNumber">
               <Text variant="p4semi" as="span">
-                Phone Number (include country code) <span className={styles.required}>*</span>
+                Phone Number (incl. country code) <span className={styles.required}>*</span>
               </Text>
             </label>
             <input

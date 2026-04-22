@@ -208,6 +208,11 @@
 }
 
 @media (max-width: 899px) {
+  .useCasesHeader {
+    max-width: 100%;
+    margin: 0 var(--spacing-space-large) var(--spacing-space-large);
+  }
+
   .useCasesCarouselWrapper {
     display: none;
   }
@@ -216,6 +221,8 @@
     border-left: none;
     padding-left: 0;
     margin-right: 0;
+    min-height: fit-content;
+    margin-bottom: var(--spacing-space-2x-large);
   }
 
   .slide {
@@ -226,5 +233,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0 var(--spacing-space-large);
   }
 }

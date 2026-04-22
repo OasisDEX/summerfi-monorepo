@@ -3,9 +3,12 @@ import { z } from 'zod'
 
 import { validateCaptcha } from '@/features/captcha/validate-captcha'
 
-const rwaLandingPageFormServiceUrl = 'https://getform.io/f/byvyrpna'
+// these are getform endpoints (rebranded to forminit)
+const selfManagedVaultsLandingPageFormServiceUrl = 'https://forminit.com/f/qnfscxj37sf'
+const rwaLandingPageFormServiceUrl = 'https://forminit.com/f/duozi3ba205'
 
-const rwaLandingPageSchema = z.object({
+const landingPageSchema = z.object({
+  formType: z.enum(['rwa', 'own-vault']),
   companyName: z
     .string()
     .nonempty('Company name is required')
@@ -48,7 +51,7 @@ export const POST = async (req: Request) => {
     return NextResponse.json({ errors: ['Invalid JSON format'], success: false }, { status: 400 })
   }
 
-  const parsedData = rwaLandingPageSchema.safeParse(awaitedBody)
+  const parsedData = landingPageSchema.safeParse(awaitedBody)
 
   if (!parsedData.success) {
     return NextResponse.json(
@@ -59,6 +62,7 @@ export const POST = async (req: Request) => {
 
   const { token, ...submittedData } = parsedData.data
 
+  const { formType, ...formData } = submittedData
   const recaptchaData = await validateCaptcha(token)
 
   if (!recaptchaData) {
@@ -71,11 +75,14 @@ export const POST = async (req: Request) => {
   try {
     const encodedBody = new URLSearchParams()
 
-    Object.entries(submittedData).forEach(([key, value]) => {
+    Object.entries(formData).forEach(([key, value]) => {
       encodedBody.append(key, String(value))
     })
 
-    const getFormResponse = await fetch(rwaLandingPageFormServiceUrl, {
+    const landingPageFormServiceUrl =
+      formType === 'rwa' ? rwaLandingPageFormServiceUrl : selfManagedVaultsLandingPageFormServiceUrl
+
+    const getFormResponse = await fetch(landingPageFormServiceUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
