@@ -76,7 +76,7 @@ export const POST = async (req: Request) => {
     const encodedBody = new URLSearchParams()
 
     Object.entries(formData).forEach(([key, value]) => {
-      encodedBody.append(key, String(value))
+      encodedBody.append(`fi-text-${key}`, String(value))
     })
 
     const landingPageFormServiceUrl =
@@ -97,7 +97,7 @@ export const POST = async (req: Request) => {
         { status: 500 },
       )
     }
-  } catch {
+  } catch (error) {
     return NextResponse.json(
       { errors: ['Failed to send form data'], success: false },
       { status: 500 },
