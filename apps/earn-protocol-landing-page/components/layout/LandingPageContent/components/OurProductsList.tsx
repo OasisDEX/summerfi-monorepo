@@ -10,6 +10,7 @@ import { CheckLine } from '@/components/layout/LandingPageContent/components/Che
 import { ProtocolIconsWithMore } from '@/components/molecules/ProtocolIconsWithMore/ProtocolIconsWithMore'
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
 import balanceMarketLogo from '@/public/img/landing-page/private-markets/logo_balance.svg'
+import cryptoFinanceMarketLogo from '@/public/img/landing-page/private-markets/logo_crypto_finance.svg'
 import utilaMarketLogo from '@/public/img/landing-page/private-markets/logo_utila.svg'
 import m1CapitalLogo from '@/public/img/landing-page/private-markets/m1_capital.svg'
 
@@ -235,6 +236,13 @@ const PermissionlessRwaVaultsCard = () => {
                 <Image
                   alt="Balance"
                   src={balanceMarketLogo}
+                  width={137}
+                  height={27}
+                  className={styles.smallBrandLogo}
+                />
+                <Image
+                  alt="Crypto Finance"
+                  src={cryptoFinanceMarketLogo}
                   width={137}
                   height={27}
                   className={styles.smallBrandLogo}

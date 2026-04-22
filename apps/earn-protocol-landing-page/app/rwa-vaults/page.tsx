@@ -15,6 +15,7 @@ import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecu
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 import sherlockLogo from '@/public/img/landing-page/auditor-logos/sherlock.svg'
 import balanceLogo from '@/public/img/landing-page/private-markets/logo_balance.svg'
+import cryptoFinanceLogo from '@/public/img/landing-page/private-markets/logo_crypto_finance.svg'
 import summerLogo from '@/public/img/landing-page/private-markets/logo_summer.svg'
 import utilaLogo from '@/public/img/landing-page/private-markets/logo_utila.svg'
 import m1CapitalLogo from '@/public/img/landing-page/private-markets/m1_capital.svg'
@@ -237,6 +238,26 @@ export default function RwaVaults() {
             <div className={rwaVaultsStyles.custodyChecks}>
               <CheckLine text="Canadian and US qualified custodian" />
               <CheckLine text="Integrated off-chain settlements and automated compliance" />
+            </div>
+          </div>
+          <div className={rwaVaultsStyles.custodyColumn}>
+            <div className={rwaVaultsStyles.custodyLogoWrapper}>
+              <Image
+                alt="Summer.fi"
+                src={cryptoFinanceLogo}
+                className={rwaVaultsStyles.custodyLogo}
+                style={{
+                  height: '45px',
+                }}
+              />
+            </div>
+            <Text variant="p2" className={rwaVaultsStyles.custodyDescription}>
+              An attested, client-centric custody platform to securely store, manage, and settle
+              digital assets with complete operational flexibility and peace of mind.
+            </Text>
+            <div className={rwaVaultsStyles.custodyChecks}>
+              <CheckLine text="Backed by Deutsche Börse Group" />
+              <CheckLine text="Secure crypto integration within regulated frameworks" />
             </div>
           </div>
           <div className={rwaVaultsStyles.custodyColumn}>
