@@ -190,7 +190,7 @@
 }
 
 
-@media (max-width: 1023px) {
+@media (max-width: 940px) {
 
   .useCasesFadeLeft,
   .useCasesFadeRight {
@@ -207,7 +207,7 @@
   }
 }
 
-@media (max-width: 899px) {
+@media (max-width: 940px) {
   .useCasesHeader {
     max-width: 100%;
     margin: 0 var(--spacing-space-large) var(--spacing-space-large);

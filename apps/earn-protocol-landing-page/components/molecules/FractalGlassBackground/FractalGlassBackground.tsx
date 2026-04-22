@@ -250,9 +250,9 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
     const colorsGArray = new Float32Array(MAX_BLOBS)
     const colorsBArray = new Float32Array(MAX_BLOBS)
     const colorMultipliersArray = new Float32Array(MAX_BLOBS)
+    const devPixelRatio = window.devicePixelRatio || 1
 
     const resizeCanvas = () => {
-      const devPixelRatio = window.devicePixelRatio || 1
       const displayWidth = Math.round(canvas.clientWidth * devPixelRatio)
       const displayHeight = Math.round(canvas.clientHeight * devPixelRatio)
 
@@ -266,9 +266,12 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
     // Initial resize to get real canvas dimensions for blob spawning
     resizeCanvas()
 
-    const localDisplayWidth = Math.round(canvas.clientWidth * (window.devicePixelRatio || 1))
+    const localPhysicalDisplayWidth = Math.round(canvas.clientWidth)
 
-    const count = Math.min(localDisplayWidth > 1000 ? BLOB_COUNT : BLOB_COUNT / 2, MAX_BLOBS)
+    const count = Math.min(
+      localPhysicalDisplayWidth > 1000 ? BLOB_COUNT : BLOB_COUNT / 2,
+      MAX_BLOBS,
+    )
     const blobs: BlobState[] = Array.from({ length: count }, (_, i) => {
       // Spread initial blobs evenly across canvas width so it's populated on load
       const spreadX = Number((i / count) * (canvas.width + 200)) - 100
@@ -279,7 +282,8 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
     let animationFrameId = 0
     let lastTime = performance.now()
     const startTime = lastTime
-    const panelWidth = 60
+    const panelWidth = localPhysicalDisplayWidth > 1000 ? 60 : 120
+
     const skewTan = skewed ? Math.tan((-30 * Math.PI) / 180) : 0
 
     const render = () => {
@@ -292,7 +296,8 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
       const currentTime = (now - startTime) / 1000
 
       const fadeMargin =
-        Math.max(600, canvas.width * 0.5) + (skewed ? Math.abs(skewTan) * canvas.height : 0) // extra space on sides for blobs to fade in/out without pop
+        Math.max(600, canvas.clientWidth * devPixelRatio * 0.5) +
+        (skewed ? Math.abs(skewTan) * canvas.height : 0) // extra space on sides for blobs to fade in/out without pop
 
       // Update blobs and compute alphas
       for (let i = 0; i < blobs.length; i++) {

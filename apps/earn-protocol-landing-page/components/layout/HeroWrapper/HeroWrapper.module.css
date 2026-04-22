@@ -19,7 +19,13 @@
   height: 990px;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1025px) {
+  .heroWrapper.heroWrapperLarger {
+    height: 900px;
+  }
+}
+
+@media (max-width: 532px) {
   .heroWrapper.heroWrapperLarger {
     height: 700px;
   }
@@ -58,7 +64,7 @@
   height: calc(990px - (102px + 56px));
 
   @media (max-width: 1025px) {
-    height: calc(700px - (100px + 56px));
+    height: calc(900px - (100px + 56px));
   }
 
   @media (max-width: 532px) {

@@ -160,7 +160,12 @@ const PermissionlessRwaVaultsCard = () => {
               <Text as="p" variant="p4semi" className={styles.metaLabel}>
                 Markets and strategies including
               </Text>
-              <div className={styles.partnerLogos}>
+              <div
+                className={styles.partnerLogos}
+                style={{
+                  gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                }}
+              >
                 <Image
                   alt="Securitize"
                   src={securitizeMarketLogo}
