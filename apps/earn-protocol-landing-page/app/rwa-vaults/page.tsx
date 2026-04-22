@@ -200,7 +200,7 @@ export default function RwaVaults() {
                   Self-custodial
                 </Text>
                 <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
-                  The Summer Institutional Vaults are entirley self-custodial, you never give
+                  The Summer Institutional Vaults are entirely self-custodial, you never give
                   custody of your assets to others. Only you can deposit or withdraw your assets,
                   and there is no access to your funds by Summer.fi or the Vault Manager.
                 </Text>
