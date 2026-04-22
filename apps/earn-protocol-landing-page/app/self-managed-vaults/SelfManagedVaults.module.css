@@ -22,6 +22,12 @@
   gap: var(--spacing-space-small);
 }
 
+@media (max-width: 1100px) {
+  .heroContent {
+    padding: 0 16px;
+  }
+}
+
 .heroParagraph {
   color: var(--color-text-secondary);
 }
@@ -41,6 +47,13 @@
   padding-bottom: 0;
 }
 
+@media (max-width: 1100px) {
+  .cardSection {
+    margin-bottom: var(--spacing-space-2x-large);
+  }
+}
+
+
 .card {
   width: 100%;
   padding: var(--spacing-space-2x-large);
@@ -51,6 +64,12 @@
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
+}
+
+@media (max-width: 1100px) {
+  .card {
+    padding: var(--spacing-space-x-large);
+  }
 }
 
 .linesBackground {
@@ -111,6 +130,13 @@
   gap: var(--spacing-space-medium);
 }
 
+@media (max-width: 1100px) {
+  .introCardsRow {
+    margin-top: var(--spacing-space-2x-large);
+    flex-direction: column;
+  }
+}
+
 .introCard {
   position: relative;
   overflow: hidden;
@@ -121,6 +147,12 @@
   border-radius: 32px;
   border: 1px solid #232323;
   padding: var(--spacing-space-2x-large);
+}
+
+@media (max-width: 1100px) {
+  .introCard {
+    padding: var(--spacing-space-x-large);
+  }
 }
 
 .introCardParagraph {
@@ -148,6 +180,15 @@
   gap: var(--spacing-space-small);
 }
 
+@media (max-width: 1100px) {
+  .iconGrid {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--spacing-space-large);
+    gap: var(--spacing-space-x-large);
+  }
+}
+
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -160,10 +201,24 @@
   margin: var(--spacing-space-2x-large) auto -300px;
 }
 
+@media (max-width: 1100px) {
+  .selfManagedVaultScreenshotWrapper {
+    margin-bottom: -200px;
+  }
+}
+
 .sdkSection {
   display: flex;
   align-items: center;
   gap: var(--spacing-space-3x-large);
+}
+
+@media (max-width: 1100px) {
+  .sdkSection {
+    flex-direction: column;
+    gap: var(--spacing-space-x-large);
+    margin-bottom: var(--spacing-space-2x-large);
+  }
 }
 
 .sdkTextColumn {
@@ -180,4 +235,11 @@
   max-width: 1650px;
   padding-left: 0;
   padding-right: 0;
+}
+
+@media (max-width: 1100px) {
+  .faqWrapper {
+    padding: var(--spacing-space-medium);
+    margin-top: var(--spacing-space-x-large);
+  }
 }

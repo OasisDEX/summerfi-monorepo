@@ -5,6 +5,7 @@ declare const styles: {
   readonly "cardContent": string;
   readonly "cardSection": string;
   readonly "cardSubtitle": string;
+  readonly "faqWrapper": string;
   readonly "heroBackground": string;
   readonly "heroContent": string;
   readonly "heroParagraph": string;

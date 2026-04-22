@@ -254,7 +254,9 @@ export default function SelfManagedVaults() {
       <SubLandingPageSection className={selfManagedVaultsStyles.buildBySection}>
         <BuildBySummerFiPlain />
       </SubLandingPageSection>
-      <LandingSelfManagedVaultFaqSection />
+      <div className={selfManagedVaultsStyles.faqWrapper}>
+        <LandingSelfManagedVaultFaqSection />
+      </div>
     </>
   )
 }

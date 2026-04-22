@@ -266,7 +266,9 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
     // Initial resize to get real canvas dimensions for blob spawning
     resizeCanvas()
 
-    const count = Math.min(BLOB_COUNT, MAX_BLOBS)
+    const localDisplayWidth = Math.round(canvas.clientWidth * (window.devicePixelRatio || 1))
+
+    const count = Math.min(localDisplayWidth > 1000 ? BLOB_COUNT : BLOB_COUNT / 2, MAX_BLOBS)
     const blobs: BlobState[] = Array.from({ length: count }, (_, i) => {
       // Spread initial blobs evenly across canvas width so it's populated on load
       const spreadX = Number((i / count) * (canvas.width + 200)) - 100
