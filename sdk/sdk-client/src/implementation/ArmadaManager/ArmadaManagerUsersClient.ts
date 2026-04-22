@@ -510,7 +510,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerUsersClient['getProtocolAddresses']> {
     const addressesMap = {
       8453: {
-        admiralsQuarters: '0xfec27FAAF888Fb4C2Ce6d51547F82E5D05F5D12d',
+        admiralsQuarters: '0x2e4AC08988c3a995A290Da2655664a8dEF92675F',
       },
       42161: {
         admiralsQuarters: '0xc098248Ec73DF55c0fb3f9bEfcF62eE4C45097D1',

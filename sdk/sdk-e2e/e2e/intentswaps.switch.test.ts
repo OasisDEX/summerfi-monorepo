@@ -186,14 +186,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       const withdrawCallData = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
         functionName: 'exitFleetWithPermit2',
-        args: [
-          senderAddressValue,
-          fleetAddressValue,
-          withdrawPermitAmount,
-          referralCode,
-          withdrawPermitData,
-          withdrawSignature,
-        ],
+        args: [senderAddressValue, fleetAddressValue, withdrawPermitData, withdrawSignature],
       })
       const withdrawMultiCallData = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
