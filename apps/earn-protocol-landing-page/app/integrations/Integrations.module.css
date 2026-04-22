@@ -22,6 +22,14 @@
   gap: var(--spacing-space-3x-large);
 }
 
+@media (max-width: 1100px) {
+  .heroContent {
+    padding: 0 16px;
+    flex-direction: column;
+    gap: var(--spacing-space-x-large);
+  }
+}
+
 .heroTextColumn {
   text-align: left;
   align-items: start;
@@ -64,6 +72,12 @@
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
+}
+
+@media (max-width: 1100px) {
+  .card {
+    padding: var(--spacing-space-x-large);
+  }
 }
 
 
@@ -136,6 +150,13 @@
   gap: var(--spacing-space-large);
 }
 
+@media (max-width: 1100px) {
+  .defiSaverCard {
+    padding: var(--spacing-space-x-large);
+  }
+}
+
+
 .defiSaverSection {
   display: flex;
   flex-direction: column;
@@ -149,6 +170,12 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+@media (max-width: 1100px) {
+  .defiSaverLogosSection {
+    min-height: 120px;
+  }
 }
 
 .defiSaverTealOrb {
@@ -385,12 +412,26 @@
   gap: var(--spacing-space-large);
 }
 
+@media (max-width: 1100px) {
+  .additionalBenefitsSection {
+    margin-top: var(--spacing-space-2x-large);
+    margin-bottom: var(--spacing-space-2x-large);
+  }
+}
+
 .additionalBenefitsLabel {
   color: var(--color-text-secondary);
 }
 
 .additionalBenefitsRow {
   display: flex;
+}
+
+@media (max-width: 1100px) {
+  .additionalBenefitsRow {
+    flex-direction: column;
+    gap: var(--spacing-space-2x-large);
+  }
 }
 
 .benefitColumn {
@@ -400,13 +441,32 @@
   width: 50%;
 }
 
+@media (max-width: 1100px) {
+  .benefitColumn {
+    width: 100%;
+  }
+}
+
 .benefitColumnLeft {
   padding-right: var(--spacing-space-2x-large);
+}
+
+@media (max-width: 1100px) {
+  .benefitColumnLeft {
+    padding-right: 0;
+  }
 }
 
 .benefitColumnRight {
   border-left: 1px solid #232323;
   padding-left: var(--spacing-space-2x-large);
+}
+
+@media (max-width: 1100px) {
+  .benefitColumnRight {
+    padding-left: 0;
+    border-left: none;
+  }
 }
 
 .cardIconColumnWide {
@@ -420,6 +480,14 @@
   margin-top: var(--spacing-space-large);
 }
 
+@media (max-width: 1100px) {
+  .featureGrid {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
 .featureItem {
   display: flex;
   flex-direction: column;
@@ -430,6 +498,13 @@
   margin-top: var(--spacing-space-3x-large);
   margin-bottom: var(--spacing-space-3x-large);
   width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .faqWrapper {
+    padding: var(--spacing-space-medium);
+    margin-top: var(--spacing-space-x-large);
+  }
 }
 
 .handsOnSupportButton {
