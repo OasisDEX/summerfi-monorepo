@@ -1,6 +1,7 @@
 'use client'
 import { Audits, Button, Emphasis, Icon, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { TagButton } from '@/components/atoms/TagButton'
@@ -9,6 +10,7 @@ import { CheckLine } from '@/components/layout/LandingPageContent/components/Che
 import { LandingIntegrationsFaqSection } from '@/components/layout/LandingPageContent/content/LandingFaqSection'
 import { SubLandingPageSection } from '@/components/layout/SubLandingPageSection/SubLandingPageSection'
 import { FractalGlassBackground } from '@/components/molecules/FractalGlassBackground/FractalGlassBackground'
+import { LandingPageContactForm } from '@/components/organisms/LandingPageContactForm/LandingPageContactForm'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
@@ -78,9 +80,15 @@ const DefiSaverXSummerFiBlock = () => {
               text={<span className={integrationsStyles.mutedText}>Reliability at scale</span>}
             />
           </div>
-          <Button variant="secondaryMedium" className={integrationsStyles.buttonAlignStart}>
-            Learn more
-          </Button>
+          <Link
+            href="https://blog.summer.fi/automated-exposure-to-defis-highest-quality-yield-now-available-on-defi-saver/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="secondaryMedium" className={integrationsStyles.buttonAlignStart}>
+              Learn more
+            </Button>
+          </Link>
         </div>
       </div>
     </SubLandingPageSection>
@@ -134,30 +142,49 @@ const WaysToIntegrate = () => {
     {
       title: 'Using our SDK',
       description: 'Integrate directly into your app with our flexible SDK',
-      cta: 'Doc',
+      ctas: [
+        {
+          label: 'Doc',
+          url: 'https://summerfi.notion.site/summerfi-sdk-docs',
+        },
+      ],
       icon: <WaysToIntegrateIconSdk />,
     },
     {
       title: 'With Smart contracts',
       description: 'Crypto native apps interact directly with smart contract code',
-      cta: 'Github',
+      ctas: [
+        {
+          label: 'Github',
+          url: 'https://github.com/OasisDEX/summer-earn-protocol',
+        },
+      ],
       icon: <WaysToIntegrateIconContracts />,
     },
     {
       title: '3rd Party SDKs',
       description: 'Fully integrated for teams using their service.',
-      cta: 'View',
+      ctas: [
+        {
+          label: 'Yield.xyz',
+          url: 'https://yield.xyz/',
+        },
+        {
+          label: 'Enso',
+          url: 'https://www.enso.build/',
+        },
+      ],
       icon: <WaysToIntegrateIconThirdParty />,
     },
   ]
 
   return (
-    <div className={integrationsStyles.waysToIntegrate}>
+    <div className={integrationsStyles.waysToIntegrate} id="ways-to-integrate">
       <Text variant="h2" className={integrationsStyles.waysToIntegrateTitle}>
         3 ways to integrate
       </Text>
       <div className={integrationsStyles.waysToIntegrateGrid}>
-        {integrationCards.map(({ title, description, cta, icon }) => (
+        {integrationCards.map(({ title, description, ctas, icon }) => (
           <div key={title} className={integrationsStyles.waysToIntegrateCard}>
             <div className={integrationsStyles.waysToIntegrateIconBadge}>{icon}</div>
             <div className={integrationsStyles.waysToIntegrateCardBody}>
@@ -172,14 +199,33 @@ const WaysToIntegrate = () => {
                 {description}
               </Text>
             </div>
-            <a href="#" className={integrationsStyles.waysToIntegrateCta}>
-              <Text as="span" variant="p3" className={integrationsStyles.waysToIntegrateCtaLabel}>
-                {cta}
-              </Text>
-              <span className={integrationsStyles.waysToIntegrateCtaArrow} aria-hidden>
-                →
-              </span>
-            </a>
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+              }}
+            >
+              {ctas.map(({ label, url }) => (
+                <Link
+                  key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={integrationsStyles.waysToIntegrateCta}
+                >
+                  <Text
+                    as="span"
+                    variant="p3"
+                    className={integrationsStyles.waysToIntegrateCtaLabel}
+                  >
+                    {label}
+                  </Text>
+                  <span className={integrationsStyles.waysToIntegrateCtaArrow} aria-hidden>
+                    →
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
         ))}
       </div>
@@ -188,6 +234,21 @@ const WaysToIntegrate = () => {
 }
 
 const HandsOnSupport = () => {
+  const smoothScrollToId = (id: string) => {
+    const element = document.getElementById(id)
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }
+  const handleScrollToContactForm = () => {
+    smoothScrollToId('contact-form')
+    EarnProtocolEvents.buttonClicked({
+      buttonName: 'lp-view-permissioned-vaults-contact-form',
+      page: '/',
+    })
+  }
+
   return (
     <div className={integrationsStyles.handsOnSupport}>
       <div className={integrationsStyles.handsOnSupportCard}>
@@ -203,8 +264,12 @@ const HandsOnSupport = () => {
               step of the way, should you need it.
             </Text>
           </div>
-          <Button variant="secondaryMedium" className={integrationsStyles.handsOnSupportButton}>
-            Join our technical chat
+          <Button
+            variant="secondaryMedium"
+            className={integrationsStyles.handsOnSupportButton}
+            onClick={handleScrollToContactForm}
+          >
+            Get in touch
           </Button>
         </div>
       </div>
@@ -213,11 +278,33 @@ const HandsOnSupport = () => {
 }
 
 export default function Integrations() {
+  const smoothScrollToId = (id: string) => {
+    const element = document.getElementById(id)
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }
   const pathname = usePathname()
   const handleAuditClick = (auditId: string) => {
     EarnProtocolEvents.buttonClicked({
       buttonName: `lp-integrations-audit-${auditId}-learn-more`,
       page: pathname,
+    })
+  }
+
+  const handleScrollToFormsToIntegrate = () => {
+    smoothScrollToId('ways-to-integrate')
+    EarnProtocolEvents.buttonClicked({
+      buttonName: 'lp-view-permissioned-vaults-contact-form',
+      page: '/',
+    })
+  }
+  const handleScrollToContactForm = () => {
+    smoothScrollToId('contact-form')
+    EarnProtocolEvents.buttonClicked({
+      buttonName: 'lp-view-permissioned-vaults-contact-form',
+      page: '/',
     })
   }
 
@@ -240,8 +327,12 @@ export default function Integrations() {
               for qualified investors.
             </Text>
             <div className={integrationsStyles.heroButtons}>
-              <Button variant="primaryMedium">Launch App</Button>
-              <Button variant="secondaryMedium">View Products</Button>
+              <Button variant="primaryMedium" onClick={handleScrollToFormsToIntegrate}>
+                Integrate now
+              </Button>
+              <Button variant="secondaryMedium" onClick={handleScrollToContactForm}>
+                Get in touch
+              </Button>
             </div>
           </div>
 
@@ -382,6 +473,7 @@ export default function Integrations() {
       <SubLandingPageSection>
         <HandsOnSupport />
       </SubLandingPageSection>
+      <LandingPageContactForm formType="integrations" />
       <div className={integrationsStyles.faqWrapper}>
         <LandingIntegrationsFaqSection />
       </div>

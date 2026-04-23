@@ -32,11 +32,26 @@ import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisd
 import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-screenshot.png'
 
 export default function RwaVaults() {
+  const smoothScrollToId = (id: string) => {
+    const element = document.getElementById(id)
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
   const pathname = usePathname()
   const handleAuditClick = (auditId: string) => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-rwa-vaults-audit-${auditId}-learn-more`,
+      buttonName: `lp-permissioned-vaults-audit-${auditId}-learn-more`,
       page: pathname,
+    })
+  }
+
+  const handleScrollToForm = () => {
+    smoothScrollToId('contact-form')
+    EarnProtocolEvents.buttonClicked({
+      buttonName: 'lp-view-permissioned-vaults-contact-form',
+      page: '/',
     })
   }
 
@@ -58,8 +73,10 @@ export default function RwaVaults() {
             investors.
           </Text>
           <div className={rwaVaultsStyles.heroButtons}>
-            <Button variant="primaryMedium">View Vault</Button>
-            <Button variant="secondaryMedium">Get in touch</Button>
+            {/* <Button variant="primaryMedium">View Vault</Button> */}
+            <Button variant="secondaryMedium" onClick={() => handleScrollToForm()}>
+              Get in touch
+            </Button>
           </div>
         </div>
       </HeroWrapper>
@@ -105,7 +122,11 @@ export default function RwaVaults() {
               tokenized funds, target allocations and the onboarding of Custodians and other
               institutions to access the Vault.
             </Text>
-            <Button variant="secondaryMedium" className={rwaVaultsStyles.buttonAlignStart}>
+            <Button
+              variant="secondaryMedium"
+              className={rwaVaultsStyles.buttonAlignStart}
+              onClick={() => handleScrollToForm()}
+            >
               Get in touch to know more
             </Button>
           </div>

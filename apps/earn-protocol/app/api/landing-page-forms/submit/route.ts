@@ -6,9 +6,10 @@ import { validateCaptcha } from '@/features/captcha/validate-captcha'
 // these are getform endpoints (rebranded to forminit)
 const selfManagedVaultsLandingPageFormServiceUrl = 'https://forminit.com/f/qnfscxj37sf'
 const rwaLandingPageFormServiceUrl = 'https://forminit.com/f/duozi3ba205'
+const integrationsLandingPageFormServiceUrl = 'https://forminit.com/f/swm6lqm2a3d'
 
 const landingPageSchema = z.object({
-  formType: z.enum(['rwa', 'own-vault']),
+  formType: z.enum(['rwa', 'own-vault', 'integrations']),
   companyName: z
     .string()
     .nonempty('Company name is required')
@@ -79,8 +80,15 @@ export const POST = async (req: Request) => {
       encodedBody.append(`fi-text-${key}`, String(value))
     })
 
-    const landingPageFormServiceUrl =
-      formType === 'rwa' ? rwaLandingPageFormServiceUrl : selfManagedVaultsLandingPageFormServiceUrl
+    const landingPageFormServiceUrl = {
+      rwa: rwaLandingPageFormServiceUrl,
+      'own-vault': selfManagedVaultsLandingPageFormServiceUrl,
+      integrations: integrationsLandingPageFormServiceUrl,
+    }[formType]
+
+    if (!landingPageFormServiceUrl) {
+      return NextResponse.json({ errors: ['Invalid form type'], success: false }, { status: 400 })
+    }
 
     const getFormResponse = await fetch(landingPageFormServiceUrl, {
       method: 'POST',

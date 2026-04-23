@@ -33,7 +33,7 @@ export default function PermissionlessVaults() {
   const pathname = usePathname()
   const handleAuditClick = (auditId: string) => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-self-managed-vaults-audit-${auditId}-learn-more`,
+      buttonName: `lp-build-your-own-vault-audit-${auditId}-learn-more`,
       page: pathname,
     })
   }

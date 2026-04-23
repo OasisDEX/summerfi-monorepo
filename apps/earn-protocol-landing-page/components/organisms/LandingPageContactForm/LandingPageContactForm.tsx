@@ -10,7 +10,7 @@ import { z } from 'zod'
 import styles from './LandingPageContactForm.module.css'
 
 const landingPageContactFormFormSchema = z.object({
-  formType: z.enum(['rwa', 'own-vault']),
+  formType: z.enum(['rwa', 'own-vault', 'integrations']),
   companyName: z
     .string()
     .nonempty('Company name is required')
@@ -44,18 +44,10 @@ type LandingPageContactFormErrors = {
 }
 type FormChangeEvent = ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
 
-const primaryInterestOptions = [
-  { label: 'Select', value: '' },
-  { label: 'Private Access RWA Vault', value: 'private-access-rwa-vault' },
-  { label: 'Integration support', value: 'integration-support' },
-  { label: 'Custom allocation / strategy', value: 'custom-allocation-strategy' },
-  { label: 'Other', value: 'other' },
-]
-
 export const LandingPageContactForm = ({
-  formType = 'rwa',
+  formType,
 }: {
-  formType?: 'rwa' | 'own-vault'
+  formType: 'rwa' | 'own-vault' | 'integrations'
 }) => {
   const [formValues, setFormValues] = useState<LandingPageContactFormValues>({
     formType,
@@ -71,6 +63,51 @@ export const LandingPageContactForm = ({
   const [formErrors, setFormErrors] = useState<LandingPageContactFormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+
+  const primaryInterestOptions = {
+    rwa: [
+      { label: 'Select', value: '' },
+      { label: 'Deploying capital into the Vault', value: 'deploying-capital-into-the-vault' },
+      {
+        label: 'Integrating the Vault into our own product',
+        value: 'integrating-the-vault-into-our-own-product',
+      },
+      {
+        label: 'Discussing a new market or tokenised asset',
+        value: 'discussing-a-new-market-or-tokenised-asset',
+      },
+      { label: 'Deploy and manage a similar Vault', value: 'deploy-and-manage-a-similar-vault' },
+    ],
+    'own-vault': [
+      { label: 'Select', value: '' },
+      {
+        label: 'Interested in launching our own Vault',
+        value: 'interested-in-launching-our-own-vault',
+      },
+      {
+        label: 'Integrating an existing custom Vault',
+        value: 'integrating-an-existing-custom-vault',
+      },
+      { label: 'Other', value: 'other' },
+    ],
+    integrations: [
+      { label: 'Select', value: '' },
+      { label: 'Interested in integrating', value: 'interested-in-integrating' },
+      {
+        label: 'Learn more about the revenue share opportunity',
+        value: 'learn-more-about-revenue-share-opportunity',
+      },
+      {
+        label: 'Technical support for new integration',
+        value: 'technical-support-for-new-integration',
+      },
+      {
+        label: 'Technical support for existing integration',
+        value: 'technical-support-for-existing-integration',
+      },
+      { label: 'Other', value: 'other' },
+    ],
+  }[formType]
 
   const resetForm = () => {
     setFormValues({
@@ -145,19 +182,21 @@ export const LandingPageContactForm = ({
     })
   }
 
+  const headerContent = {
+    rwa: <>Want to learn more about Summer.fi&apos;s Private access RWA vaults?</>,
+    'own-vault': <>Want to learn more about building your own vault with Summer.fi ?</>,
+    integrations: <>Want to learn more about intergrating Summer Vaults into your app?</>,
+  }[formType]
+
   return (
-    <section className={styles.wrapper}>
+    <section className={styles.wrapper} id="contact-form">
       <Script
         src={`https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`}
         strategy="lazyOnload"
       />
       <div className={styles.leftColumn}>
         <Text variant="h3" as="h3">
-          {formType === 'rwa' ? (
-            <>Want to learn more about Summer.fi&apos;s Private access RWA vaults?</>
-          ) : (
-            <>Want to learn more about building your own vault with Summer.fi ? </>
-          )}
+          {headerContent}
         </Text>
       </div>
       <form className={styles.formColumn} onSubmit={handleSubmit}>

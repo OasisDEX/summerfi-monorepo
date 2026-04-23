@@ -7,7 +7,7 @@ import {
   BuildOwnOnchainVaultImage,
   SelfManagedVaultsBox1Background,
   SelfManagedVaultsBox2Background,
-} from '@/app/self-managed-vaults/background'
+} from '@/app/build-your-own-vault/background'
 import { TagButton } from '@/components/atoms/TagButton'
 import { HeroWrapper } from '@/components/layout/HeroWrapper/HeroWrapper'
 import { CheckLine } from '@/components/layout/LandingPageContent/components/CheckLine'
@@ -37,7 +37,7 @@ export default function SelfManagedVaults() {
   const pathname = usePathname()
   const handleAuditClick = (auditId: string) => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-self-managed-vaults-audit-${auditId}-learn-more`,
+      buttonName: `lp-build-your-own-vault-audit-${auditId}-learn-more`,
       page: pathname,
     })
   }
@@ -49,7 +49,7 @@ export default function SelfManagedVaults() {
           <FractalGlassBackground skewed />
         </div>
         <div className={selfManagedVaultsStyles.heroContent}>
-          <TagButton>Self Managed Vaults</TagButton>
+          <TagButton>Build Your Own Vault</TagButton>
           <Text variant="h1">
             <Emphasis variant="h1colorful">Unlimited access to DeFi yield,</Emphasis> built for
             forward thinking institutions
@@ -60,7 +60,7 @@ export default function SelfManagedVaults() {
             and regulatory need.
           </Text>
           <Image
-            alt="screenshot of the self managed vaults product"
+            alt="screenshot of the build Your vaults product"
             src={selfManagedVaultScreenshot}
             className={selfManagedVaultsStyles.selfManagedVaultScreenshotWrapper}
           />
@@ -236,7 +236,7 @@ export default function SelfManagedVaults() {
             </Text>
           </div>
           <Image
-            alt="screenshot of the sdk showing a self managed vault integration"
+            alt="screenshot of the sdk showing a build Your vault integration"
             src={sdkScreenshot}
           />
         </div>

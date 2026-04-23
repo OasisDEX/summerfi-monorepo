@@ -89,21 +89,21 @@ export default function SelfManagedVaults() {
 
   const handleSelfManagedVaultsFaqSection = (props: { expanded: boolean; title: string }) => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-self-managed-vaults-faq-section-${slugify(props.title)}-${props.expanded ? 'expand' : 'collapse'}`,
+      buttonName: `lp-build-your-own-vault-faq-section-${slugify(props.title)}-${props.expanded ? 'expand' : 'collapse'}`,
       page: pathname,
     })
   }
 
   const handleAuditClick = (auditId: string) => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-self-managed-vaults-audit-${auditId}-learn-more`,
+      buttonName: `lp-build-your-own-vault-audit-${auditId}-learn-more`,
       page: pathname,
     })
   }
 
   const handleSectionTabChange = (sectionId: string) => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-self-managed-vaults-key-benefits-tabs-${sectionId}`,
+      buttonName: `lp-build-your-own-vault-key-benefits-tabs-${sectionId}`,
       page: pathname,
     })
   }
@@ -128,7 +128,7 @@ export default function SelfManagedVaults() {
           </Text>
           <Button
             variant="primaryLargeColorful"
-            onClick={smoothScrollToId('institutions-self-managed-vaults-contact-form')}
+            onClick={smoothScrollToId('institutions-build-your-own-vault-contact-form')}
           >
             <WithArrow variant="p2semi">Get in touch</WithArrow>
           </Button>
@@ -138,7 +138,7 @@ export default function SelfManagedVaults() {
         className={clsx(institutionsPageStyles.scrollDownButton, {
           [institutionsPageStyles.scrollDownButtonHidden]: !isScrolledToTop,
         })}
-        onClick={smoothScrollToId('institutions-self-managed-vaults-description')}
+        onClick={smoothScrollToId('institutions-build-your-own-vault-description')}
       >
         <Text variant="p3semi">
           Read more <Icon iconName="arrow_forward" size={20} />
@@ -146,7 +146,7 @@ export default function SelfManagedVaults() {
       </div>
       <div
         className={institutionsPageStyles.subpageDescriptionBlock}
-        id="institutions-self-managed-vaults-description"
+        id="institutions-build-your-own-vault-description"
       >
         <div className={institutionsPageStyles.subpageDescriptionText}>
           <Text as="h2" variant="h2">
@@ -163,12 +163,12 @@ export default function SelfManagedVaults() {
         <Image
           src={customVaultsUI}
           alt="Custom vaults UI"
-          id="institutions-self-managed-vaults-ui"
+          id="institutions-build-your-own-vault-ui"
         />
       </BigGradientBox>
       <div
         className={selfManagedVaultsStyles.integrationsBlock}
-        id="institutions-self-managed-vaults-cta"
+        id="institutions-build-your-own-vault-cta"
       >
         <Text as="h2" variant="h2">
           One integration for all of crypto&apos;s onchain yield
@@ -182,7 +182,7 @@ export default function SelfManagedVaults() {
         <Image
           src={selfManagedVaultDiagram}
           alt="Self-managed vaults diagram"
-          id="institutions-self-managed-vaults-diagram"
+          id="institutions-build-your-own-vault-diagram"
           style={{ margin: '64px 0' }}
         />
         <Text as="h2" variant="h2" style={{ textAlign: 'center' }}>
@@ -334,7 +334,7 @@ export default function SelfManagedVaults() {
           additionalOnTabChange={handleSectionTabChange}
         />
       </div>
-      <div id="institutions-self-managed-vaults-contact-form">
+      <div id="institutions-build-your-own-vault-contact-form">
         <InstitutionsContactForm />
       </div>
       <div>

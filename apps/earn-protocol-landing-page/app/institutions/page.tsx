@@ -149,7 +149,7 @@ export default function InstitutionsPage() {
       <div className={institutionsPageStyles.promoBlocks}>
         <InstitutionsPromoBlock
           title="Self managed Vaults"
-          id="self-managed-vaults"
+          id="build-your-own-vault"
           description="Institutional-grade vault infrastructure to access the best of DeFi - fully customizable, inherently composable, and built for future compliance and regulatory needs."
           bestFor="Banks, Hedge funds, Centralized exchanges and Asset managers"
           coreFeatures={[
@@ -161,7 +161,7 @@ export default function InstitutionsPage() {
             'Simple SDK ready integration',
             '24-h exit guarantee',
           ]}
-          ctaUrl="/institutions/self-managed-vaults"
+          ctaUrl="/institutions/build-your-own-vault"
           secondaryCtaUrl={EXTERNAL_LINKS.BD_CONTACT}
           secondaryCtaLabel="Speak with a specialist"
         />

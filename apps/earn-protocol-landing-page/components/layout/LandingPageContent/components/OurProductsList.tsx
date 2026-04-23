@@ -134,7 +134,7 @@ const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVau
 
 const PermissionlessRwaVaultsCard = () => {
   return (
-    <Link href="/rwa-vaults">
+    <Link href="/permissioned-vaults">
       <article className={`${styles.productCard} ${styles.rwaCard}`}>
         <div className={styles.permissionlessRwaVaultsBackgroundOrb} />
         <div className={styles.cardContent}>
@@ -278,7 +278,7 @@ const PermissionlessRwaVaultsCard = () => {
 
 const BuildYourOwnVaultCard = () => {
   return (
-    <Link href="/self-managed-vaults">
+    <Link href="/build-your-own-vault">
       <article className={`${styles.productCard} ${styles.buildCard}`}>
         <Image
           alt="background grid"
@@ -577,7 +577,8 @@ export const OurProductsList = ({
   const showAllProducts = localActiveTab === 'all-products'
   const showPermissionlessDefiVaults =
     showAllProducts || localActiveTab === 'permissionless-defi-vaults'
-  const showPermissionedRwaVaults = showAllProducts || localActiveTab === 'permissioned-rwa-vaults'
+  const showPermissionedRwaVaults =
+    showAllProducts || localActiveTab === 'permissioned-permissioned-vaults'
   const showBuildYourOwnVault = showAllProducts || localActiveTab === 'build-your-own-defi-vault'
   const showIntegrateHighQualityYield =
     showAllProducts || localActiveTab === 'integrate-high-quality-defi-yield'
@@ -587,7 +588,7 @@ export const OurProductsList = ({
       <AnimateHeight id="permissionless-defi-vaults" show={showPermissionlessDefiVaults}>
         <PermissionlessDeFiVaultsCard maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
       </AnimateHeight>
-      <AnimateHeight id="permissioned-rwa-vaults" show={showPermissionedRwaVaults}>
+      <AnimateHeight id="permissioned-permissioned-vaults" show={showPermissionedRwaVaults}>
         <PermissionlessRwaVaultsCard />
       </AnimateHeight>
       <AnimateHeight id="build-your-own-defi-vault" show={showBuildYourOwnVault}>

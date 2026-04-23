@@ -84,7 +84,7 @@ export const Audits = ({
       >
         {chainSecurityLogo && (
           <AuditBlock
-            auditUrl="https://www.chainsecurity.com/smart-contract-audit-reports"
+            auditUrl="https://docs.summer.fi/summer.fi/audits"
             image={chainSecurityLogo}
             description="ChainSecurity works with top-tier DeFi protocols, research institutions, central banks, and large organizations."
             onAuditClick={handleAuditClick('chain-security')}
@@ -92,7 +92,7 @@ export const Audits = ({
         )}
         {prototechLabsLogo && (
           <AuditBlock
-            auditUrl="https://www.prototechlabs.dev/"
+            auditUrl="https://docs.summer.fi/summer.fi/audits"
             image={prototechLabsLogo}
             description="Prototech Labs is a DeFi & Web3 professional services consultancy helping businesses, DAOs, and protocols implement innovative blockchain solutions."
             onAuditClick={handleAuditClick('prototech-labs')}
@@ -100,7 +100,7 @@ export const Audits = ({
         )}
         {sherlockLogo && (
           <AuditBlock
-            auditUrl="https://sherlock.xyz/"
+            auditUrl="https://docs.summer.fi/summer.fi/audits"
             image={sherlockLogo}
             description="Sherlock secures leading Web3 protocols, elite independent security experts, DAOs, and top-tier DeFi projects. "
             onAuditClick={handleAuditClick('sherlock')}
