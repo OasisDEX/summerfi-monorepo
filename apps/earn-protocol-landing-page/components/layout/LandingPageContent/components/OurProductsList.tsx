@@ -577,8 +577,7 @@ export const OurProductsList = ({
   const showAllProducts = localActiveTab === 'all-products'
   const showPermissionlessDefiVaults =
     showAllProducts || localActiveTab === 'permissionless-defi-vaults'
-  const showPermissionedRwaVaults =
-    showAllProducts || localActiveTab === 'permissioned-permissioned-vaults'
+  const showPermissionedRwaVaults = showAllProducts || localActiveTab === 'permissioned-vaults'
   const showBuildYourOwnVault = showAllProducts || localActiveTab === 'build-your-own-defi-vault'
   const showIntegrateHighQualityYield =
     showAllProducts || localActiveTab === 'integrate-high-quality-defi-yield'
@@ -588,7 +587,7 @@ export const OurProductsList = ({
       <AnimateHeight id="permissionless-defi-vaults" show={showPermissionlessDefiVaults}>
         <PermissionlessDeFiVaultsCard maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
       </AnimateHeight>
-      <AnimateHeight id="permissioned-permissioned-vaults" show={showPermissionedRwaVaults}>
+      <AnimateHeight id="permissioned-vaults" show={showPermissionedRwaVaults}>
         <PermissionlessRwaVaultsCard />
       </AnimateHeight>
       <AnimateHeight id="build-your-own-defi-vault" show={showBuildYourOwnVault}>

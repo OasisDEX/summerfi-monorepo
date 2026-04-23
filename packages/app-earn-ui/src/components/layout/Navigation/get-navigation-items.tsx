@@ -34,12 +34,12 @@ export const getNavigationItems = ({
     },
     {
       url: !isEarnApp ? `/permissioned-vaults` : `${currentOrigin}/permissioned-vaults`,
-      id: 'permissioned-permissioned-vaults',
+      id: 'permissioned-vaults',
       title: 'Permissioned RWA Vaults',
       description: 'Instant access to a selection of RWA private markets',
       icon: 'earn_user_activities' as IconNamesList,
       prefetchDisabled: !isEarnApp,
-      onClick: handleButtonClick('permissioned-permissioned-vaults'),
+      onClick: handleButtonClick('permissioned-vaults'),
     },
     {
       url: !isEarnApp ? `/build-your-own-vault` : `${currentOrigin}/build-your-own-vault`,
