@@ -1,1 +1,57 @@
-<svg xmlns="http://www.w3.org/2000/svg" height="206" viewBox="0 0 206 206" width="206"><title style="fill:#000;stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">DeFi Vaults icon</title><desc style="fill:#000;stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">A vault door icon rendered in the Summer.fi pink-to-purple gradient style</desc><defs><linearGradient id="grad_bg" x1="0" x2="1" y1="0" y2="0" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#ff49a4" stop-opacity=".3"/><stop offset=".93" stop-color="#b049ff" stop-opacity=".3"/></linearGradient><linearGradient id="grad_fill" x1="0" x2="1" y1="0" y2="0" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#ff49a4" stop-opacity=".5"/><stop offset=".93" stop-color="#b049ff" stop-opacity=".5"/></linearGradient><linearGradient id="grad_solid" x1="0%" x2="100%" y1="0%" y2="0%"><stop offset="0%" stop-color="#ff49a4"/><stop offset="93%" stop-color="#b049ff"/></linearGradient></defs><circle cx="100" cy="100" r="96" fill="url(#grad_bg)" stroke="url(#grad_solid)" style="color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><rect width="128" height="104" x="36" y="52" fill="url(#grad_fill)" stroke="url(#grad_solid)" stroke-width="1.5" rx="7" style="color:#fff;stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="100" cy="100" r="34" fill="none" stroke="url(#grad_solid)" stroke-width="2" style="fill:none;color:#fff;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="100" cy="100" r="22" fill="url(#grad_fill)" stroke="url(#grad_solid)" stroke-width="1.5" style="color:#fff;stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path stroke="url(#grad_solid)" stroke-linecap="round" stroke-width="1.5" d="M100 68v6" style="fill:#000;color:#fff;stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path stroke="url(#grad_solid)" stroke-linecap="round" stroke-width="1.5" d="M100 126v6" style="fill:#000;color:#fff;stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path stroke="url(#grad_solid)" stroke-linecap="round" stroke-width="1.5" d="M68 100h6" style="fill:#000;color:#fff;stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path stroke="url(#grad_solid)" stroke-linecap="round" stroke-width="1.5" d="M126 100h6" style="fill:#000;color:#fff;stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path stroke="url(#grad_solid)" stroke-linecap="round" stroke-width="1.5" d="m77 77 4.2 4.2" style="fill:#000;color:#fff;stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path stroke="url(#grad_solid)" stroke-linecap="round" stroke-width="1.5" d="m123 77-4.2 4.2" style="fill:#000;color:#fff;stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path stroke="url(#grad_solid)" stroke-linecap="round" stroke-width="1.5" d="m77 123 4.2-4.2" style="fill:#000;color:#fff;stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path stroke="url(#grad_solid)" stroke-linecap="round" stroke-width="1.5" d="m123 123-4.2-4.2" style="fill:#000;color:#fff;stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path stroke="url(#grad_solid)" stroke-linecap="round" stroke-width="2" d="M100 100V82" style="fill:#000;color:#fff;stroke-width:2px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="100" cy="100" r="3.5" fill="url(#grad_solid)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="50" cy="66" r="4" fill="url(#grad_solid)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="150" cy="66" r="4" fill="url(#grad_solid)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="50" cy="142" r="4" fill="url(#grad_solid)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="150" cy="142" r="4" fill="url(#grad_solid)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><rect width="10" height="20" x="118" y="90" fill="url(#grad_solid)" rx="5" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/></svg>
+<svg width="32" height="32" viewBox="0 0 206 206" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>DeFi Vaults icon</title>
+  <desc>A vault door icon rendered in the Summer.fi pink-to-purple gradient style</desc>
+
+  <defs>
+    <linearGradient id="grad_bg" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#FF49A4" stop-opacity="0.3"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.3"/>
+    </linearGradient>
+    <linearGradient id="grad_fill" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#FF49A4" stop-opacity="0.5"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="grad_solid" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF49A4"/>
+      <stop offset="93%" stop-color="#B049FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer circle -->
+  <circle cx="100" cy="100" r="96" fill="#111827"/>
+  <circle cx="100" cy="100" r="96" fill="url(#grad_bg)" fill-opacity="0.3" stroke="url(#grad_solid)" stroke-width="1"/>
+
+  <!-- Vault body -->
+  <rect x="36" y="52" width="128" height="32" rx="7" fill="url(#grad_fill)" stroke="url(#grad_solid)" stroke-width="1.5"/>
+
+  <!-- Outer dial ring -->
+  <circle cx="100" cy="100" r="34" fill="none" stroke="url(#grad_solid)" stroke-width="2"/>
+
+  <!-- Inner dial fill -->
+  <circle cx="100" cy="100" r="22" fill="url(#grad_fill)" stroke="url(#grad_solid)" stroke-width="1.5"/>
+
+  <!-- Dial tick marks -->
+  <line x1="100" y1="68" x2="100" y2="74" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="100" y1="126" x2="100" y2="132" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="68" y1="100" x2="74" y2="100" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="126" y1="100" x2="132" y2="100" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Diagonal ticks -->
+  <line x1="77" y1="77" x2="81.2" y2="81.2" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="123" y1="77" x2="118.8" y2="81.2" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="77" y1="123" x2="81.2" y2="118.8" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="123" y1="123" x2="118.8" y2="118.8" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Dial handle / pointer -->
+  <line x1="100" y1="100" x2="100" y2="82" stroke="url(#grad_solid)" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="100" cy="100" r="3.5" fill="url(#grad_solid)"/>
+
+  <!-- Corner bolts -->
+  <circle cx="50" cy="66" r="4" fill="url(#grad_solid)"/>
+  <circle cx="150" cy="66" r="4" fill="url(#grad_solid)"/>
+  <circle cx="50" cy="142" r="4" fill="url(#grad_solid)"/>
+  <circle cx="150" cy="142" r="4" fill="url(#grad_solid)"/>
+
+  <!-- Handle bar -->
+  <rect x="118" y="90" width="10" height="20" rx="5" fill="url(#grad_solid)"/>
+
+</svg>

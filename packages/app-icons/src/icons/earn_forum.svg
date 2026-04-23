@@ -1,1 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="none" viewBox="0 0 32 32"><title style="fill:none;stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">Forum icon</title><desc style="fill:none;stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">Two speech bubbles indicating a forum/discussion, in the Summer.fi pink-to-purple gradient style</desc><defs><linearGradient id="f0" x1="0" x2="32" y1="16" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#ff49a4" stop-opacity=".5"/><stop offset=".93" stop-color="#b049ff" stop-opacity=".5"/></linearGradient><linearGradient id="f1" x1="0" x2="32" y1="16" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#ff49a4"/><stop offset=".93" stop-color="#b049ff"/></linearGradient><linearGradient id="f2" x1="7" x2="25" y1="16" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#ff49a4"/><stop offset=".93" stop-color="#b049ff"/></linearGradient><linearGradient id="f3" x1="7" x2="25" y1="16" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#ff49a4" stop-opacity=".4"/><stop offset=".93" stop-color="#b049ff" stop-opacity=".4"/></linearGradient></defs><circle cx="16" cy="16" r="16" fill="url(#f0)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="16" cy="16" r="15.5" stroke="url(#f1)" stroke-opacity=".3" style="fill:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path fill="url(#f2)" d="M7 8q0-2 2-2h12q2 0 2 2v7q0 2-2 2h-8l-3 3v-3H9q-2 0-2-2Z" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path fill="url(#f3)" d="M11 17q0-2 2-2h10q2 0 2 2v6q0 2-2 2h-1v2.5L19 25h-6q-2 0-2-2Z" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/></svg>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Forum icon</title>
+  <desc>Two speech bubbles indicating a forum/discussion, in the Summer.fi pink-to-purple gradient style</desc>
+
+  <defs>
+    <linearGradient id="f0" x1="0" y1="16" x2="32" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4" stop-opacity="0.5"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="f1" x1="0" y1="16" x2="32" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4"/>
+      <stop offset="0.93" stop-color="#B049FF"/>
+    </linearGradient>
+    <linearGradient id="f2" x1="7" y1="16" x2="25" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4"/>
+      <stop offset="0.93" stop-color="#B049FF"/>
+    </linearGradient>
+    <linearGradient id="f3" x1="7" y1="16" x2="25" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4" stop-opacity="0.4"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Circle background -->
+  <circle cx="16" cy="16" r="16" fill="#111827"/>
+  <circle cx="16" cy="16" r="16" fill="url(#f0)" fill-opacity="0.3"/>
+  <circle cx="16" cy="16" r="15.5" stroke="url(#f1)" stroke-opacity="0.3"/>
+
+  <!-- Primary speech bubble (top-left) -->
+  <path d="M7 8 Q7 6 9 6 L21 6 Q23 6 23 8 L23 15 Q23 17 21 17 L13 17 L10 20 L10 17 L9 17 Q7 17 7 15 Z" fill="url(#f2)"/>
+
+  <!-- Secondary speech bubble (bottom-right, translucent) -->
+  <path d="M11 17 Q11 15 13 15 L23 15 Q25 15 25 17 L25 23 Q25 25 23 25 L22 25 L22 27.5 L19 25 L13 25 Q11 25 11 23 Z" fill="url(#f3)"/>
+
+</svg>

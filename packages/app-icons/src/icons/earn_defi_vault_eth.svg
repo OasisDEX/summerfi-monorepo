@@ -1,1 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="none" viewBox="0 0 32 32"><title style="fill:none;stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">DeFi Vault with Ethereum icon</title><desc style="fill:none;stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">A vault door with an Ethereum diamond symbol, in the Summer.fi gradient style</desc><defs><linearGradient id="e0" x1="0" x2="32" y1="16" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#ff49a4" stop-opacity=".5"/><stop offset=".93" stop-color="#b049ff" stop-opacity=".5"/></linearGradient><linearGradient id="e1" x1="0" x2="32" y1="16" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#ff49a4"/><stop offset=".93" stop-color="#b049ff"/></linearGradient><linearGradient id="e2" x1="7" x2="25" y1="16" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#ff49a4"/><stop offset=".93" stop-color="#b049ff"/></linearGradient><linearGradient id="e3" x1="7" x2="25" y1="16" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#ff49a4" stop-opacity=".4"/><stop offset=".93" stop-color="#b049ff" stop-opacity=".4"/></linearGradient></defs><circle cx="16" cy="16" r="16" fill="url(#e0)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="16" cy="16" r="15.5" stroke="url(#e1)" stroke-opacity=".3" style="fill:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><rect width="20" height="18" x="6" y="7" fill="url(#e3)" stroke="url(#e2)" stroke-width="1.2" rx="2" style="color:#fff;stroke-width:1.2px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="9" cy="10" r="1.2" fill="url(#e2)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="23" cy="10" r="1.2" fill="url(#e2)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="9" cy="22" r="1.2" fill="url(#e2)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><circle cx="23" cy="22" r="1.2" fill="url(#e2)" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><rect width="1.8" height="4" x="23.5" y="14" fill="url(#e2)" rx=".9" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path fill="url(#e2)" d="m16 8.5 4 6.5-4-2z" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path fill="url(#e2)" d="M16 8.5 12 15l4-2z" opacity=".6" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:.6;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path fill="url(#e2)" d="m16 23.5 4-7.5-4 2z" opacity=".6" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:.6;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path fill="url(#e2)" d="M16 23.5 12 16l4 2z" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/><path fill="url(#e2)" d="m12 15 4-2 4 2-4 3z" opacity=".85" style="stroke:none;color:#fff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:.85;font-family:&quot;Anthropic Sans&quot;,-apple-system,&quot;system-ui&quot;,&quot;Segoe UI&quot;,sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/></svg>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>DeFi Vault with Ethereum icon</title>
+  <desc>A vault door with an Ethereum diamond symbol, in the Summer.fi gradient style</desc>
+
+  <defs>
+    <linearGradient id="e0" x1="0" y1="16" x2="32" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4" stop-opacity="0.5"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="e1" x1="0" y1="16" x2="32" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4"/>
+      <stop offset="0.93" stop-color="#B049FF"/>
+    </linearGradient>
+    <linearGradient id="e2" x1="7" y1="16" x2="25" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4"/>
+      <stop offset="0.93" stop-color="#B049FF"/>
+    </linearGradient>
+    <linearGradient id="e3" x1="7" y1="16" x2="25" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4" stop-opacity="0.4"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer circle -->
+  <circle cx="16" cy="16" r="16" fill="#111827"/>
+  <circle cx="16" cy="16" r="16" fill="url(#e0)" fill-opacity="0.3"/>
+  <circle cx="16" cy="16" r="15.5" stroke="url(#e1)" stroke-opacity="0.3"/>
+
+  <!-- Vault body -->
+  <rect x="6" y="7" width="20" height="18" rx="2" fill="url(#e3)" stroke="url(#e2)" stroke-width="1.2"/>
+
+  <!-- Corner bolts -->
+  <circle cx="9" cy="10" r="1.2" fill="url(#e2)"/>
+  <circle cx="23" cy="10" r="1.2" fill="url(#e2)"/>
+  <circle cx="9" cy="22" r="1.2" fill="url(#e2)"/>
+  <circle cx="23" cy="22" r="1.2" fill="url(#e2)"/>
+
+  <!-- Handle bar -->
+  <rect x="23.5" y="14" width="1.8" height="4" rx="0.9" fill="url(#e2)"/>
+
+  <!-- Ethereum diamond symbol in place of dial -->
+  <!-- Top triangle -->
+  <polygon points="16,8.5 20,15 16,13" fill="url(#e2)"/>
+  <polygon points="16,8.5 12,15 16,13" fill="url(#e2)" opacity="0.6"/>
+  <!-- Bottom triangle -->
+  <polygon points="16,23.5 20,16 16,18" fill="url(#e2)" opacity="0.6"/>
+  <polygon points="16,23.5 12,16 16,18" fill="url(#e2)"/>
+  <!-- Middle band -->
+  <polygon points="12,15 16,13 20,15 16,18" fill="url(#e2)" opacity="0.85"/>
+
+</svg>
