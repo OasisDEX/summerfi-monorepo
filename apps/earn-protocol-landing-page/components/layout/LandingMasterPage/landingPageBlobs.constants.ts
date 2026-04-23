@@ -116,8 +116,11 @@ void main() {
               + g2 * v_alpha * 0.05;
 
   float totalA = clamp(core * v_alpha * 0.9 + glowA, 0.0, 1.0);
+  float noise =
+    (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.03;
+  vec3 noisyColor = clamp(v_color + vec3(noise), 0.0, 1.0);
 
-  fragColor = vec4(v_color * totalA, totalA);
+  fragColor = vec4(noisyColor * totalA, totalA);
 }
 `
 
@@ -152,7 +155,10 @@ out vec4 fragColor;
 
 void main() {
   float a = v_alpha;
-  fragColor = vec4(v_color * a, a);
+  float noise =
+    (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.03;
+  vec3 noisyColor = clamp(v_color + vec3(noise), 0.0, 1.0);
+  fragColor = vec4(noisyColor * a, a);
 }
 `
 
@@ -195,7 +201,10 @@ void main() {
 
   float falloff = smoothstep(1.0, 0.0, d);
   float a = v_alpha * falloff;
-  fragColor = vec4(v_color * a, a);
+  float noise =
+    (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.03;
+  vec3 noisyColor = clamp(v_color + vec3(noise), 0.0, 1.0);
+  fragColor = vec4(noisyColor * a, a);
 }
 `
 
@@ -252,6 +261,9 @@ void main() {
   else                a = mix(a2, a3, (t - 0.75) / 0.25);
 
   float finalA = a * v_alpha;
-  fragColor = vec4(v_color * finalA, finalA);
+  float noise =
+    (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.03;
+  vec3 noisyColor = clamp(v_color + vec3(noise), 0.0, 1.0);
+  fragColor = vec4(noisyColor * finalA, finalA);
 }
 `
