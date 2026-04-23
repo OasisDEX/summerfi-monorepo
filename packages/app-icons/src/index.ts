@@ -181,6 +181,21 @@ export const icons = {
   earn_institution: customLazy(
     () => import('./icons/earn_institution.svg?react'),
   ) as IconExportType,
+  earn_custom_vaults: customLazy(
+    () => import('./icons/earn_custom_vaults.svg?react'),
+  ) as IconExportType,
+  earn_dao_governance: customLazy(
+    () => import('./icons/earn_dao_governance.svg?react'),
+  ) as IconExportType,
+  earn_defi_vault: customLazy(() => import('./icons/earn_defi_vault.svg?react')) as IconExportType,
+  earn_defi_vault_eth: customLazy(
+    () => import('./icons/earn_defi_vault_eth.svg?react'),
+  ) as IconExportType,
+  earn_forum: customLazy(() => import('./icons/earn_forum.svg?react')) as IconExportType,
+  earn_integrations: customLazy(
+    () => import('./icons/earn_integrations.svg?react'),
+  ) as IconExportType,
+  earn_staking: customLazy(() => import('./icons/earn_staking.svg?react')) as IconExportType,
   edit: customLazy(() => import('./icons/edit.svg?react')) as IconExportType,
   ena: customLazy(() => import('./icons/ena.svg?react')) as IconExportType,
   eth_circle_color: customLazy(

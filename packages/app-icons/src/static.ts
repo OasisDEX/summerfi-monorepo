@@ -218,6 +218,23 @@ export const iconsSync = {
   earn_yield_trend: import('./icons/earn_yield_trend.svg?react') as Promise<
     typeof import('*.svg?react')
   >,
+  earn_custom_vaults: import('./icons/earn_custom_vaults.svg?react') as Promise<
+    typeof import('*.svg?react')
+  >,
+  earn_dao_governance: import('./icons/earn_dao_governance.svg?react') as Promise<
+    typeof import('*.svg?react')
+  >,
+  earn_defi_vault: import('./icons/earn_defi_vault.svg?react') as Promise<
+    typeof import('*.svg?react')
+  >,
+  earn_defi_vault_eth: import('./icons/earn_defi_vault_eth.svg?react') as Promise<
+    typeof import('*.svg?react')
+  >,
+  earn_forum: import('./icons/earn_forum.svg?react') as Promise<typeof import('*.svg?react')>,
+  earn_integrations: import('./icons/earn_integrations.svg?react') as Promise<
+    typeof import('*.svg?react')
+  >,
+  earn_staking: import('./icons/earn_staking.svg?react') as Promise<typeof import('*.svg?react')>,
   edit: import('./icons/edit.svg?react') as Promise<typeof import('*.svg?react')>,
   ena: import('./icons/ena.svg?react') as Promise<typeof import('*.svg?react')>,
   eth_circle_color: import('./icons/eth_circle_color.svg?react') as Promise<
