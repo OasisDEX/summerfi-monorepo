@@ -15,8 +15,8 @@ import type TextClassNames from './components/atoms/Text/Text.module.css'
 export { TextClassNames }
 
 export { Modal } from './components/atoms/Modal/Modal'
-export { Icon, type IconNamesList } from './components/atoms/Icon/Icon'
 export { CheckboxButton } from './components/atoms/CheckboxButton/CheckboxButton'
+export { Icon, type IconNamesList } from './components/atoms/Icon/Icon'
 export { Input } from './components/atoms/Input/Input'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
 export { Pill } from './components/atoms/Pill/Pill'
