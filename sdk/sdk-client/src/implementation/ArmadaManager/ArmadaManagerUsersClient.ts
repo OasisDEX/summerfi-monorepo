@@ -513,16 +513,16 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
         admiralsQuarters: '0x2e4AC08988c3a995A290Da2655664a8dEF92675F',
       },
       42161: {
-        admiralsQuarters: '0xc098248Ec73DF55c0fb3f9bEfcF62eE4C45097D1',
+        admiralsQuarters: '0x20aF9545eBb320c80C5736880bAA7a244a75868f',
       },
       1: {
-        admiralsQuarters: '0xf5A69789Bf5e62A43C47E4c8d857b8DAE14d4ab0',
+        admiralsQuarters: '0x09124a25756223Eb7A523A0377cc83Dc8D22e1bE',
       },
       146: {
-        admiralsQuarters: '0x4cEeE1b6289624d381383C1Bb42B118d5f2c3274',
+        admiralsQuarters: '0xAf755eD8D76Fdceab2B1cdC0d4C8C94f4e8eEe54',
       },
       999: {
-        admiralsQuarters: '0x2c93a68Fbe527aD1594ae0B11b50CFEcBBf3255f',
+        admiralsQuarters: '0x13c93bB39F8f6F08310522DD447d18683aB3ca51',
       },
     } as const
     const addresses = addressesMap[params.chainId]
