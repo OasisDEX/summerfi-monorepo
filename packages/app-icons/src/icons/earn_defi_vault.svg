@@ -8,8 +8,8 @@
       <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.3"/>
     </linearGradient>
     <linearGradient id="grad_fill" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
-      <stop offset="0" stop-color="#FF49A4" stop-opacity="0.5"/>
-      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.5"/>
+      <stop offset="0" stop-color="#FF49A4" stop-opacity="0.3"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.3"/>
     </linearGradient>
     <linearGradient id="grad_solid" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#FF49A4"/>
@@ -18,40 +18,21 @@
   </defs>
 
   <!-- Outer circle -->
-  <circle cx="100" cy="100" r="96" fill="#111827"/>
-  <circle cx="100" cy="100" r="96" fill="url(#grad_bg)" fill-opacity="0.3" stroke="url(#grad_solid)" stroke-width="1"/>
+  <circle cx="100" cy="100" r="96" fill="url(#grad_bg)" fill-opacity="0.6" stroke="url(#grad_solid)" stroke-width="4"/>
 
+<g transform="scale(0.8) translate(28,25)">
   <!-- Vault body -->
-  <rect x="36" y="52" width="128" height="32" rx="7" fill="url(#grad_fill)" stroke="url(#grad_solid)" stroke-width="1.5"/>
-
-  <!-- Outer dial ring -->
-  <circle cx="100" cy="100" r="34" fill="none" stroke="url(#grad_solid)" stroke-width="2"/>
+  <rect x="36" y="52" width="128" height="105" rx="7" fill="url(#grad_fill)" stroke="url(#grad_solid)" stroke-width="6"/>
 
   <!-- Inner dial fill -->
-  <circle cx="100" cy="100" r="22" fill="url(#grad_fill)" stroke="url(#grad_solid)" stroke-width="1.5"/>
-
-  <!-- Dial tick marks -->
-  <line x1="100" y1="68" x2="100" y2="74" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="100" y1="126" x2="100" y2="132" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="68" y1="100" x2="74" y2="100" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="126" y1="100" x2="132" y2="100" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
-  <!-- Diagonal ticks -->
-  <line x1="77" y1="77" x2="81.2" y2="81.2" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="123" y1="77" x2="118.8" y2="81.2" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="77" y1="123" x2="81.2" y2="118.8" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="123" y1="123" x2="118.8" y2="118.8" stroke="url(#grad_solid)" stroke-width="1.5" stroke-linecap="round"/>
-
-  <!-- Dial handle / pointer -->
-  <line x1="100" y1="100" x2="100" y2="82" stroke="url(#grad_solid)" stroke-width="2" stroke-linecap="round"/>
-  <circle cx="100" cy="100" r="3.5" fill="url(#grad_solid)"/>
+  <circle cx="100" cy="105" r="22" fill="url(#grad_fill)" stroke="url(#grad_solid)" stroke-width="2"/>
+  <!-- Key hole -->
+  <rect x="96" y="100" width="8" height="12" rx="2" fill="url(#grad_solid)"/>
 
   <!-- Corner bolts -->
-  <circle cx="50" cy="66" r="4" fill="url(#grad_solid)"/>
-  <circle cx="150" cy="66" r="4" fill="url(#grad_solid)"/>
-  <circle cx="50" cy="142" r="4" fill="url(#grad_solid)"/>
-  <circle cx="150" cy="142" r="4" fill="url(#grad_solid)"/>
-
-  <!-- Handle bar -->
-  <rect x="118" y="90" width="10" height="20" rx="5" fill="url(#grad_solid)"/>
+  <circle cx="50" cy="66" r="8" fill="url(#grad_solid)"/>
+  <circle cx="150" cy="66" r="8" fill="url(#grad_solid)"/>
+  <circle cx="50" cy="142" r="8" fill="url(#grad_solid)"/>
+  <circle cx="150" cy="142" r="8" fill="url(#grad_solid)"/></g>
 
 </svg>

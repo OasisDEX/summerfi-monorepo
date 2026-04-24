@@ -18,30 +18,17 @@
   </defs>
 
   <!-- Outer circle background -->
-  <circle cx="16" cy="16" r="16" fill="#111827"/>
   <circle cx="16" cy="16" r="16" fill="url(#s0)" fill-opacity="0.3"/>
   <circle cx="16" cy="16" r="15.5" stroke="url(#s1)" stroke-opacity="0.3"/>
 
   <!-- Summer token coin -->
-  <circle cx="13" cy="13" r="9" fill="url(#s2)"/>
+  <circle cx="16" cy="16" r="9" fill="url(#s2)" fill-opacity="0.5"/>
+  <circle cx="16" cy="16" r="13" fill="url(#s2)" fill-opacity="0.5"/>
 
   <!-- S logo scaled to fill coin -->
-  <g transform="translate(4, 4) scale(0.5625)">
+  <g transform="translate(8, 7) scale(0.5625)">
     <path d="M14.9723 14.4628C17.8486 15.1203 19.6574 16.6148 19.6574 19.0359C19.6574 22.0548 16.9293 23.7585 13.5193 23.7585C10.3761 23.7585 7.85566 22.1145 7.35156 19.3348L11.1767 18.6473C11.3547 19.9326 12.3332 20.5902 13.5193 20.5902C14.7647 20.5902 15.506 20.0223 15.506 19.2451C15.506 18.4082 14.7054 18.0197 13.8751 17.8403L12.096 17.4816C9.36793 16.8241 7.58878 15.2997 7.58878 12.8487C7.58878 9.88965 10.3761 8.21582 13.5193 8.21582C16.6328 8.21582 18.7974 9.88965 19.2422 12.6993L15.417 13.3569C15.2688 12.1613 14.4978 11.4439 13.3117 11.4439C12.3035 11.4439 11.5029 11.9221 11.5029 12.7591C11.5029 13.5661 12.1553 13.9248 13.0152 14.1041L14.9723 14.4628Z" fill="#FFFBFD"/>
     <path d="M22.1781 21.293C20.8134 21.293 19.707 22.4081 19.707 23.7838H24.6491C24.6491 22.4081 23.5428 21.293 22.1781 21.293Z" fill="#FFFBFD"/>
   </g>
-
-  <!-- Lock shackle — white outline, very thin -->
-  <path d="M18.5 22 L18.5 20 Q18.5 17.5 21 17.5 Q23.5 17.5 23.5 20 L23.5 22" fill="none" stroke="#FFFBFD" stroke-width="1.6" stroke-linecap="round"/>
-  <!-- Lock shackle — gradient -->
-  <path d="M18.5 22 L18.5 20 Q18.5 17.5 21 17.5 Q23.5 17.5 23.5 20 L23.5 22" fill="none" stroke="url(#s2)" stroke-width="1" stroke-linecap="round"/>
-
-  <!-- Lock body — white outline -->
-  <rect x="17" y="21.5" width="8" height="6" rx="1.2" fill="#FFFBFD"/>
-  <!-- Lock body — gradient -->
-  <rect x="17.5" y="22" width="7" height="5" rx="0.9" fill="url(#s2)"/>
-
-  <!-- Keyhole -->
-  <circle cx="21" cy="24.2" r="0.9" fill="#FFFBFD" opacity="0.5"/>
 
 </svg>
