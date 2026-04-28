@@ -142,7 +142,6 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
       links={getNavigationItems({
         userWalletAddress,
         isEarnApp: true,
-        features,
         onNavItemClick,
         logIn: handleLogIn,
       })}

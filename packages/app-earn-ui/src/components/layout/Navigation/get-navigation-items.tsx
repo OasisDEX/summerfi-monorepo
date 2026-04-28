@@ -1,22 +1,19 @@
-import { type EarnAppConfigType, type IconNamesList } from '@summerfi/app-types'
+import { type IconNamesList } from '@summerfi/app-types'
 
 import { type EarnNavigationProps } from '@/components/layout/Navigation/Navigation'
 
 export const getNavigationItems = ({
   userWalletAddress,
   isEarnApp = false,
-  features: _features,
   onNavItemClick,
   logIn,
 }: {
   userWalletAddress?: string
   isEarnApp?: boolean
-  features?: EarnAppConfigType['features']
   onNavItemClick?: (params: { buttonName: string; isEarnApp?: boolean }) => void
   logIn?: () => Promise<string | undefined>
 }): EarnNavigationProps['links'] => {
-  const prefix = !isEarnApp ? `/earn` : ``
-  const currentOrigin = typeof window !== 'undefined' ? window.location.origin : ''
+  const prefix = isEarnApp ? `` : `/earn`
 
   const handleButtonClick = (buttonName: string) => () => {
     onNavItemClick?.({ buttonName, isEarnApp })
@@ -24,7 +21,8 @@ export const getNavigationItems = ({
 
   const itemsListProducts = [
     {
-      url: !isEarnApp ? `/permissionless-vaults` : `${currentOrigin}/permissionless-vaults`,
+      // /landing_page set in getNavigationItems for landing page links to make them work (because of stupid basepath handling not being overwriteable in Link component)
+      url: !isEarnApp ? `/permissionless-vaults` : `/landing_page/permissionless-vaults`,
       id: 'products',
       title: 'Permissionless DeFi Vaults',
       description: "Get automated exposure to DeFi's highest quality yield",
@@ -33,7 +31,7 @@ export const getNavigationItems = ({
       onClick: handleButtonClick('products'),
     },
     // {
-    //   url: !isEarnApp ? `/permissioned-vaults` : `${currentOrigin}/permissioned-vaults`,
+    //   url: !isEarnApp ? `/permissioned-vaults` : `/landing_page/permissioned-vaults`,
     //   id: 'permissioned-vaults',
     //   title: 'Permissioned RWA Vaults',
     //   description: 'Instant access to a selection of RWA private markets',
@@ -42,7 +40,7 @@ export const getNavigationItems = ({
     //   onClick: handleButtonClick('permissioned-vaults'),
     // },
     {
-      url: !isEarnApp ? `/build-your-own-vault` : `${currentOrigin}/build-your-own-vault`,
+      url: !isEarnApp ? `/build-your-own-vault` : `/landing_page/build-your-own-vault`,
       id: 'build-your-own-vault',
       title: 'Build your own Vault',
       description: 'Institutional Vault infrastructure to design your own Vault',
@@ -51,7 +49,7 @@ export const getNavigationItems = ({
       onClick: handleButtonClick('build-your-own-vault'),
     },
     {
-      url: !isEarnApp ? `/integrations` : `${currentOrigin}/integrations`,
+      url: !isEarnApp ? `/integrations` : `/landing_page/integrations`,
       id: 'integrate-lazy-summer-protocol',
       title: 'Integrate the Lazy Summer Protocol',
       description: 'Give your users access the best yields, effortlessly',
@@ -123,7 +121,7 @@ export const getNavigationItems = ({
     },
     {
       // `currentOrigin` is special case for institutions - it is always on the main domain (LP)
-      url: !isEarnApp ? `/team` : `${currentOrigin}/team`,
+      url: !isEarnApp ? `/team` : `/landing_page/team`,
       id: 'team',
       title: 'Team',
       description: 'Leadership that’s helped shape DeFi from day 1',
@@ -146,7 +144,7 @@ export const getNavigationItems = ({
       title: 'Institutional sales and support',
       id: 'institutional-sales-and-support',
       description: 'Connect with a member of the Summer.fi institutional team',
-      url: !isEarnApp ? `/institutions` : `${currentOrigin}/institutions`,
+      url: !isEarnApp ? `/institutions` : `/landing_page/institutions`,
       icon: 'earn_institution' as IconNamesList,
       onClick: handleButtonClick('institutional-sales-and-support'),
     },

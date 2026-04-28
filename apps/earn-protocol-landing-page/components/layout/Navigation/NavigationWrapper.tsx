@@ -45,7 +45,7 @@ export const NavigationWrapper: FC = () => {
         currentPath={currentPath}
         logo={isBeachClub ? '/img/branding/logo-beach-club.svg' : '/img/branding/logo-dark.svg'}
         logoSmall="/img/branding/dot-dark.svg"
-        links={getNavigationItems({ features, onNavItemClick })}
+        links={getNavigationItems({ onNavItemClick })}
         walletConnectionComponent={
           <Link
             href="/earn"
