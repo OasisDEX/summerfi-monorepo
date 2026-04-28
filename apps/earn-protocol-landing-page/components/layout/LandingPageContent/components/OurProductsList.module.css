@@ -283,8 +283,14 @@
   width: 660px;
   overflow: hidden;
   position: relative;
-  right: -220px;
+  right: -260px;
   bottom: 0;
+}
+
+@media (min-width: 1370px) {
+  .sdkScreenshotWrapper {
+    right: -210px;
+  }
 }
 
 @media (max-width: 1270px) {
