@@ -2,6 +2,7 @@ import { type ReactNode } from 'react'
 import { type IconNamesList } from '@summerfi/app-types'
 import clsx from 'clsx'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
@@ -24,6 +25,8 @@ export type NavigationItemsProps = {
 }
 
 export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): React.ReactNode => {
+  const { push } = useRouter()
+
   return (
     <div className={navigationItemsStyles.navigationItemsWrapper}>
       {items.map((item) => {
@@ -63,21 +66,16 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): R
             {linkContent} ({item.url})
           </Link>
         ) : (
-          <Link
+          <a
             href={item.url}
-            as={item.url}
             rel="external"
             key={`NavItems_${item.id}`}
             target={item.target}
-            onClick={(e) => {
-              e.preventDefault()
-              item.onClick?.()
-              window.location.href = item.url
-            }}
+            onClick={item.onClick}
             suppressHydrationWarning
           >
             {linkContent} ({item.url})
-          </Link>
+          </a>
         )
       })}
     </div>
