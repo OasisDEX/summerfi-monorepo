@@ -124,7 +124,7 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
         float panelIndex = floor((panelX - offset) / u_panelWidth);
         panelIndex = clamp(panelIndex, 0.0, panelCount - 1.0);
 
-        float wave = sin(panelIndex * 0.8 + 0.4 + (u_time * 0.4)) * 0.5 + 0.5;
+        float wave = sin(panelIndex * 0.4 + 0.4 + (u_time * 0.4)) * 0.5 + 0.5;
         float jitter = sin(panelIndex + (u_time * 0.4)) * 0.1;
         float blurFactor = clamp(wave + jitter, 0.0, 2.0);
         float panelBlur = mix(4.0, 8.0, blurFactor);
