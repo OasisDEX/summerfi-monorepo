@@ -322,9 +322,9 @@ export default function Integrations() {
               of DeFi.
             </Text>
             <Text variant="p1" className={integrationsStyles.heroDescription}>
-              The Summer.fi institutional Private access RWA vault gives forward thinking
-              institutions automated access to DeFi&lsquo;s highest quality yield sources designed
-              for qualified investors.
+              Add support for the Lazy Summer Protocol in just a few hours and start to offer the
+              best yields available while turning on a valuable new revenue stream for your
+              business.
             </Text>
             <div className={integrationsStyles.heroButtons}>
               <Button variant="primaryMedium" onClick={handleScrollToFormsToIntegrate}>
