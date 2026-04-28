@@ -68,7 +68,7 @@ export const NavigationMenuMobile = ({
       <div className={navigationMenuMobileStyles.linksListWrapper}>
         <div className={navigationMenuMobileStyles.linksList}>
           {beachClubEnabled && (
-            <Link href={resolvedBeachClubLink}>
+            <a href={resolvedBeachClubLink}>
               <Button
                 variant="textSecondaryLarge"
                 disabled={false}
@@ -81,7 +81,7 @@ export const NavigationMenuMobile = ({
               >
                 Beach club <Icon iconName="beach_club_icon" size={24} />
               </Button>
-            </Link>
+            </a>
           )}
           {links?.map((link) =>
             link.link ? (
