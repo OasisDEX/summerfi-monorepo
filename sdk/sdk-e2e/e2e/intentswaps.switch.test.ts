@@ -8,6 +8,7 @@ import {
   type TransactionInfo,
 } from '@summerfi/sdk-common'
 import { FleetAddresses, RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
+import { getCowChainName } from './utils/cow-swap'
 import assert from 'assert'
 import { makeSDK, type CowHook } from '@summerfi/sdk-client'
 import {
@@ -18,7 +19,7 @@ import {
 import { encodeFunctionData } from 'viem'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 
-jest.setTimeout(300000)
+jest.setTimeout(600000)
 
 /**
  * @group e2e
@@ -39,15 +40,17 @@ describe('Intent swaps: Swap with Deposit', () => {
     limitPrice?: string
     authorizePermit2?: boolean
     revokePermit2?: boolean
+    slippagePercentage: number
   }[] = [
     {
       chainId: ChainIds.Base,
-      amountValue: '0.0005',
+      amountValue: '0.002',
       fromFleetAddressValue: FleetAddresses.Base.ETH,
       fleetAddressValue: FleetAddresses.Base.USDC,
       sendOrder: true,
-      cancelOrder: true,
+      cancelOrder: false,
       authorizePermit2: true,
+      slippagePercentage: 15,
     },
     // erc20 to erc20
     // {
@@ -82,6 +85,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       cancelOrder,
       authorizePermit2,
       revokePermit2,
+      slippagePercentage,
     } = scenario
 
     const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
@@ -130,6 +134,8 @@ describe('Intent swaps: Swap with Deposit', () => {
         fromAmount: fromAmount,
         toToken,
         limitPrice,
+        receiver: senderAddress,
+        slippagePercentage,
       })
       console.log('Sell Order Quote:', fromAmount.toString(), '=>', sellQuote.toAmount.toString())
 
@@ -159,7 +165,7 @@ describe('Intent swaps: Swap with Deposit', () => {
         assert(revokeTxStatus === 'success', 'Permit2 revoke transaction failed')
       }
 
-      const gasLimit = '5500000'
+      const gasLimit = '1500000'
       const referralCode = '0x'
 
       const withdrawPermitAmount = fromAmount.toSolidityValue()
@@ -236,15 +242,6 @@ describe('Intent swaps: Swap with Deposit', () => {
         },
       ]
 
-      console.log(
-        'Deposit transactions:',
-        postHooks.map((tx) => ({
-          target: tx.target,
-          callData: tx.callData,
-          gasLimit: tx.gasLimit,
-        })),
-      )
-
       if (sendOrder === false) {
         console.log('Skipping sending order')
         return
@@ -263,10 +260,12 @@ describe('Intent swaps: Swap with Deposit', () => {
           order: sellQuote.order,
           preHooks,
           postHooks,
+          slippagePercentage,
         })
         orderId = await _handleOrderPrerequisites({
           orderReturn,
           userSendTxTool,
+          chainId,
         })
       } while (orderId == null)
 
@@ -318,6 +317,7 @@ describe('Intent swaps: Swap with Deposit', () => {
 async function _handleOrderPrerequisites({
   orderReturn,
   userSendTxTool,
+  chainId,
 }: {
   orderReturn:
     | {
@@ -333,6 +333,7 @@ async function _handleOrderPrerequisites({
         orderId: string
       }
   userSendTxTool: ReturnType<typeof createSendTransactionTool>
+  chainId: ChainId
 }): Promise<string | undefined> {
   switch (orderReturn.status) {
     case 'wrap_to_native':
@@ -345,7 +346,10 @@ async function _handleOrderPrerequisites({
       return undefined
     }
     case 'order_sent':
-      console.log('Order sent:', orderReturn.orderId)
+      console.log(
+        'Order sent:',
+        `https://explorer.cow.fi/${getCowChainName(chainId)}/orders/${orderReturn.orderId}`,
+      )
       return orderReturn.orderId
     default:
       throw new Error(`Unknown order status`)

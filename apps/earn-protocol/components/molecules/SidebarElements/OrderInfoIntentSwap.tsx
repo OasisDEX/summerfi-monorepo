@@ -41,7 +41,7 @@ type OrderInfoIntentSwapProps = {
   publicClient: PublicClient
   userWalletAddress: AddressValue
   referralCode?: string
-  slippagePercentage?: number
+  slippagePercentage: number
   onStartAgain: () => void
 }
 
@@ -280,6 +280,7 @@ export const OrderInfoIntentSwap = ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         publicClient: publicClient as any,
         referralCode: (referralCode ?? '0x') as `0x${string}`,
+        slippagePercentage,
       })
 
       setOrderId(result.orderId)

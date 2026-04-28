@@ -111,6 +111,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       preHooks,
       apiKey,
       order,
+      slippagePercentage,
     } = params
     // validate chainId
     this._validateChainId(chainId)
@@ -174,13 +175,12 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       buyTokenDecimals: toToken.decimals,
       sellAmount: fromAmount.toSolidityValue().toString(),
       buyAmount: buyAmount.toSolidityValue().toString(),
-      slippageBps: 100,
+      slippageBps: slippagePercentage ? Math.round(slippagePercentage * 100) : undefined,
       validTo: order.validTo,
     }
     LoggingService.debug('IntentSwapClient: trade parameters', parameters)
 
     const advancedSettings: SwapAdvancedSettings = {
-      quoteRequest: {},
       appData: {
         metadata: {
           hooks: {

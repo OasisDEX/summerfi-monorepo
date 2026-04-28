@@ -8,6 +8,7 @@ import {
   type TransactionInfo,
 } from '@summerfi/sdk-common'
 import { FleetAddresses, RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
+import { getCowChainName } from './utils/cow-swap'
 import assert from 'assert'
 import { makeSDK } from '@summerfi/sdk-client'
 import {
@@ -17,7 +18,7 @@ import {
 } from '@summerfi/testing-utils'
 import { encodeFunctionData } from 'viem'
 
-jest.setTimeout(300000)
+jest.setTimeout(600000)
 
 /**
  * @group e2e
@@ -38,6 +39,7 @@ describe('Intent swaps: Swap with Deposit', () => {
     limitPrice?: string
     authorizePermit2?: boolean
     revokePermit2?: boolean
+    slippagePercentage: number
   }[] = [
     // eth to erc20
     // {
@@ -58,6 +60,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       sendOrder: true,
       cancelOrder: true,
       authorizePermit2: true,
+      slippagePercentage: 5,
     },
     // erc20 to eth
     // {
@@ -82,6 +85,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       cancelOrder,
       authorizePermit2,
       revokePermit2,
+      slippagePercentage,
     } = scenario
 
     const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
@@ -127,6 +131,7 @@ describe('Intent swaps: Swap with Deposit', () => {
         fromAmount: fromAmount,
         toToken,
         limitPrice,
+        slippagePercentage,
       })
       console.log('Sell Order Quote:', fromAmount.toString(), '=>', sellQuote.toAmount.toString())
 
@@ -218,10 +223,12 @@ describe('Intent swaps: Swap with Deposit', () => {
           toToken,
           order: sellQuote.order,
           postHooks: hooks,
+          slippagePercentage,
         })
         orderId = await _handleOrderPrerequisites({
           orderReturn,
           userSendTxTool,
+          chainId,
         })
       } while (orderId == null)
 
@@ -273,6 +280,7 @@ describe('Intent swaps: Swap with Deposit', () => {
 async function _handleOrderPrerequisites({
   orderReturn,
   userSendTxTool,
+  chainId,
 }: {
   orderReturn:
     | {
@@ -288,6 +296,7 @@ async function _handleOrderPrerequisites({
         orderId: string
       }
   userSendTxTool: ReturnType<typeof createSendTransactionTool>
+  chainId: ChainId
 }): Promise<string | undefined> {
   switch (orderReturn.status) {
     case 'wrap_to_native':
@@ -300,7 +309,10 @@ async function _handleOrderPrerequisites({
       return undefined
     }
     case 'order_sent':
-      console.log('Order sent:', orderReturn.orderId)
+      console.log(
+        'Order sent:',
+        `https://explorer.cow.fi/${getCowChainName(chainId)}/orders/${orderReturn.orderId}`,
+      )
       return orderReturn.orderId
     default:
       throw new Error(`Unknown order status`)
