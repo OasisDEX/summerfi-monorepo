@@ -60,7 +60,7 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): R
             onClick={item.onClick}
             suppressHydrationWarning
           >
-            {linkContent}
+            {linkContent} ({item.url})
           </Link>
         ) : (
           <Link
@@ -76,7 +76,7 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): R
             }}
             suppressHydrationWarning
           >
-            {linkContent}
+            {linkContent} ({item.url})
           </Link>
         )
       })}

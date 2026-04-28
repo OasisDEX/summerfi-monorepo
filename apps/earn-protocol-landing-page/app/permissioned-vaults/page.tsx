@@ -1,4 +1,5 @@
 'use client'
+import { useEffect } from 'react'
 import { Audits, Button, Emphasis, Icon, Text, UseCasesSlider } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -55,8 +56,13 @@ export default function RwaVaults() {
     })
   }
 
+  useEffect(() => {
+    window.location.replace('/') // hide
+  }, [])
+
   return (
-    <>
+    <div style={{ display: 'none' }}>
+      {/* hide */}
       <HeroWrapper className={rwaVaultsStyles.heroWrapper}>
         <div className={rwaVaultsStyles.heroBackground}>
           <FractalGlassBackground />
@@ -314,6 +320,6 @@ export default function RwaVaults() {
       <div className={rwaVaultsStyles.faqWrapper}>
         <LandingRwaFaqSection />
       </div>
-    </>
+    </div>
   )
 }
