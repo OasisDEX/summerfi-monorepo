@@ -138,6 +138,7 @@ export const getNavigationItems = ({
       description: 'For all general purpose support questions',
       url: 'mailto:support@summer.fi',
       icon: 'sumr' as IconNamesList,
+      prefetchDisabled: !isEarnApp,
       onClick: handleButtonClick('email-support'),
     },
     {
@@ -146,6 +147,7 @@ export const getNavigationItems = ({
       description: 'Connect with a member of the Summer.fi institutional team',
       url: !isEarnApp ? `/institutions` : `/landing_page/institutions`,
       icon: 'earn_institution' as IconNamesList,
+      prefetchDisabled: !isEarnApp,
       onClick: handleButtonClick('institutional-sales-and-support'),
     },
     {
@@ -155,6 +157,7 @@ export const getNavigationItems = ({
       url: 'https://chat.summer.fi',
       target: '_blank',
       icon: 'earn_rebalance_activities' as IconNamesList,
+      prefetchDisabled: !isEarnApp,
       onClick: handleButtonClick('join-discord-community'),
     },
   ]
