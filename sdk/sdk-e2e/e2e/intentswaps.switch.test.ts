@@ -17,7 +17,7 @@ import {
   getWalletClientForChain,
 } from '@summerfi/testing-utils'
 import { encodeFunctionData } from 'viem'
-import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
+import { AdmiralsQuartersAbi, FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 
 jest.setTimeout(600000)
 
@@ -108,7 +108,7 @@ describe('Intent swaps: Swap with Deposit', () => {
 
       const senderAddress = Address.createFromEthereum({ value: senderAddressValue })
 
-      const [fromToken, toToken] = await Promise.all([
+      const [fromVaultInfo, toVaultInfo] = await Promise.all([
         sdk.armada.users.getVaultInfo({
           vaultId: ArmadaVaultId.createFrom({
             chainInfo: getChainInfoByChainId(chainId),
@@ -121,29 +121,36 @@ describe('Intent swaps: Swap with Deposit', () => {
             fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
           }),
         }),
-      ]).then(async (vaults) => vaults.map((vault) => vault.assetToken))
+      ])
 
       const fromAmount = TokenAmount.createFrom({
         amount: amountValue,
-        token: fromToken,
+        token: fromVaultInfo.assetToken,
       })
 
       // get sell order quote
       const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
         sender: senderAddress,
         fromAmount: fromAmount,
-        toToken,
+        toToken: toVaultInfo.assetToken,
         limitPrice,
         receiver: senderAddress,
         slippagePercentage,
       })
       console.log('Sell Order Quote:', fromAmount.toString(), '=>', sellQuote.toAmount.toString())
 
-      // check permit2 allowance
+      // call previewWithdraw on the fromFleetAddressValue to get the exact amount that will be withdrawn in vault shares
+      const vaultSharesToRedeem = await publicClient.readContract({
+        address: fromFleetAddressValue,
+        abi: FleetCommanderAbi,
+        functionName: 'previewWithdraw',
+        args: [fromAmount.toSolidityValue()],
+      })
+      const vaultSharesToken = fromVaultInfo.token
       const isPermit2AuthNeeded = await sdk.intentSwaps.isPermit2AuthorizationNeeded({
         ownerAddress: senderAddress,
-        tokenAddress: sellQuote.toAmount.token.address,
-        amount: sellQuote.toAmount.toSolidityValue(),
+        tokenAddress: vaultSharesToken.address,
+        amount: vaultSharesToRedeem,
         publicClient,
       })
       console.log('Is Permit2 Authorization Needed?', isPermit2AuthNeeded)
@@ -151,14 +158,14 @@ describe('Intent swaps: Swap with Deposit', () => {
       // send permit2 approval first otherwise deposit will fail
       if (isPermit2AuthNeeded && authorizePermit2) {
         const permit2AuthorizationTxInfo = await sdk.intentSwaps.getPermit2AuthorizationTx({
-          tokenAddress: sellQuote.toAmount.token.address,
+          tokenAddress: vaultSharesToken.address,
         })
         console.log('Sending Permit2 authorization transaction...')
         const [permit2TxStatus] = await userSendTxTool(permit2AuthorizationTxInfo)
         assert(permit2TxStatus === 'success', 'Permit2 authorization transaction failed')
       } else if (revokePermit2) {
         const permit2RevokeTxInfo = await sdk.intentSwaps.getPermit2RevokeTx({
-          tokenAddress: sellQuote.toAmount.token.address,
+          tokenAddress: vaultSharesToken.address,
         })
         console.log('Sending Permit2 revoke transaction...')
         const [revokeTxStatus] = await userSendTxTool(permit2RevokeTxInfo)
@@ -168,8 +175,8 @@ describe('Intent swaps: Swap with Deposit', () => {
       const gasLimit = '1500000'
       const referralCode = '0x'
 
-      const withdrawPermitAmount = fromAmount.toSolidityValue()
-      const withdrawPermitTokenAddress = fromAmount.token.address.toSolidityValue()
+      const withdrawPermitAmount = vaultSharesToRedeem
+      const withdrawPermitTokenAddress = vaultSharesToken.address.toSolidityValue()
       const depositPermitAmount = sellQuote.toAmount.toSolidityValue()
       const depositPermitTokenAddress = sellQuote.toAmount.token.address.toSolidityValue()
 
@@ -192,7 +199,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       const withdrawCallData = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
         functionName: 'exitFleetWithPermit2',
-        args: [senderAddressValue, fleetAddressValue, withdrawPermitData, withdrawSignature],
+        args: [senderAddressValue, fromFleetAddressValue, withdrawPermitData, withdrawSignature],
       })
       const withdrawMultiCallData = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
@@ -256,7 +263,7 @@ describe('Intent swaps: Swap with Deposit', () => {
           publicClient: publicClient,
           fromAmount: sellQuote.fromAmount,
           limitPrice: sellQuote.limitPrice,
-          toToken,
+          toToken: sellQuote.toAmount.token,
           order: sellQuote.order,
           preHooks,
           postHooks,
