@@ -119,7 +119,7 @@ export const useTransaction = ({
   const {
     getDepositTx: getDepositTX,
     getWithdrawTx: getWithdrawTX,
-    getVaultSwitchTx,
+    getVaultSwitchEnsoTx: getVaultSwitchTx,
     getIntentSwapsSellOrderQuote,
     getPermit2AuthorizationTx,
     isPermit2AuthorizationNeeded,

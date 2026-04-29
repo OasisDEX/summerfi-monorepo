@@ -55,6 +55,7 @@ import { getSummerTokenHandler } from '../handlers/getSummerTokenHandler'
 import { getBridgeTxHandler } from '../handlers/getBridgeTxHandler'
 import { getMigrateTxHandler } from '../handlers/getMigrateTxHandler'
 import { getVaultSwitchTXHandler } from '../handlers/getVaultSwitchTxHandler'
+import { getVaultSwitchEnsoTxHandler } from '../handlers/getVaultSwitchEnsoTxHandler'
 import { getMigratablePositionsHandler } from '../handlers/getMigratablePositionsHandler'
 import { getMigratablePositionsHandlerApy } from '../handlers/getMigratablePositionsHandlerApy'
 import { getSpotPriceHandler } from '../handlers/getSpotPriceHandler'
@@ -214,6 +215,7 @@ export const useSDK = (params: UseSdk) => {
   const getSummerToken = useMemo(() => getSummerTokenHandler(sdk), [sdk])
   const getMigrateTx = useMemo(() => getMigrateTxHandler(sdk), [sdk])
   const getVaultSwitchTx = useMemo(() => getVaultSwitchTXHandler(sdk), [sdk])
+  const getVaultSwitchEnsoTx = useMemo(() => getVaultSwitchEnsoTxHandler(sdk), [sdk])
   const getMigratablePositions = useMemo(() => getMigratablePositionsHandler(sdk), [sdk])
   const getMigratablePositionsApy = useMemo(() => getMigratablePositionsHandlerApy(sdk), [sdk])
   const getAuthorizeAsMerklRewardsOperatorTx = useMemo(
@@ -353,6 +355,7 @@ export const useSDK = (params: UseSdk) => {
       getSummerPrice,
       getMigrateTx,
       getVaultSwitchTx,
+      getVaultSwitchEnsoTx,
       getMigratablePositions,
       getMigratablePositionsApy,
       getSpotPrice,
@@ -450,6 +453,7 @@ export const useSDK = (params: UseSdk) => {
       getSummerPrice,
       getMigrateTx,
       getVaultSwitchTx,
+      getVaultSwitchEnsoTx,
       getMigratablePositions,
       getMigratablePositionsApy,
       getSpotPrice,

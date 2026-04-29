@@ -76,7 +76,7 @@ import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
-import { useTransaction } from '@/hooks/use-transaction'
+import { useTransaction } from '@/hooks/use-transactions-with-cow'
 
 import { VaultOpenViewDetails } from './VaultOpenViewDetails'
 
