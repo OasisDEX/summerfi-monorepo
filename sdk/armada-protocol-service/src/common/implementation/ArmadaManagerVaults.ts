@@ -613,9 +613,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       userFleetShares.toSolidityValue() >= previewWithdrawShares.toSolidityValue()
 
     if (!walletSharesSufficient && userStakedShares.toSolidityValue() > 0) {
-      throw new Error(
-        "User doesn't have enough vault shares in the wallet to perform vault switch. Unstake the necessary staked vault shares first.",
-      )
+      throw new Error('Your vault shares are staked. Please unstake your vault shares first.')
     }
 
     const sourceChainId = sourceVaultId.chainInfo.chainId
