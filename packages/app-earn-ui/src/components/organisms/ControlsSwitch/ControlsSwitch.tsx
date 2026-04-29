@@ -9,7 +9,11 @@ import {
   type TokenSymbolsList,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  humanReadableChainToLabelMap,
+} from '@summerfi/app-utils'
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
@@ -181,7 +185,9 @@ export const ControlsSwitch = ({
     return potentialVaults.filter((vault) => vault.inputToken.symbol === filterByToken)
   }, [filterByToken, potentialVaults])
 
-  if (chainId === NetworkIds.HYPERLIQUID) {
+  if ([NetworkIds.HYPERLIQUID, NetworkIds.ARBITRUMMAINNET].includes(chainId)) {
+    const networkName = humanReadableChainToLabelMap[chainId]
+
     return (
       <div>
         <div className={controlsSwitchStyles.positionAndVaultsListWrapper}>
@@ -193,7 +199,7 @@ export const ControlsSwitch = ({
               margin: '30px 30px 0',
             }}
           >
-            Vault switching is not available on Hyperliquid
+            Vault switching is not available on {networkName}
             <br />
             at the moment.
           </Text>
