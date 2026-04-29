@@ -427,6 +427,12 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getVaultSwitchTx.query(params)
   }
 
+  async getVaultSwitchEnsoTx(
+    params: Parameters<IArmadaManagerUsersClient['getVaultSwitchEnsoTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getVaultSwitchEnsoTx']> {
+    return this.rpcClient.armada.users.getVaultSwitchEnsoTx.query(params)
+  }
+
   /** @see IArmadaManagerUsersClient.getUserMerklRewards */
   async getUserMerklRewards(
     params: Parameters<IArmadaManagerUsersClient['getUserMerklRewards']>[0],
