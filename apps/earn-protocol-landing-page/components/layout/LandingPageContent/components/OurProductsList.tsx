@@ -16,13 +16,14 @@ import m1CapitalLogo from '@/public/img/landing-page/private-markets/m1_capital.
 
 import styles from '@/components/layout/LandingPageContent/components/OurProductsList.module.css'
 
-import integrateWithBalance from '@/public/img/landing-page/integrate-via/balance.png'
-import integrateWithDefiSaver from '@/public/img/landing-page/integrate-via/defi_saver.png'
+// import integrateViaBalance from '@/public/img/landing-page/integrate-via/balance.png'
+import integrateViaDefiSaver from '@/public/img/landing-page/integrate-via/defi_saver.png'
 import integrateViaEnso from '@/public/img/landing-page/integrate-via/enso.png'
+import integrateViaFranklin from '@/public/img/landing-page/integrate-via/franklin.png'
 import integrateViaSummer from '@/public/img/landing-page/integrate-via/summer.png'
-import integrateWithTargen from '@/public/img/landing-page/integrate-via/targen.png'
-import integrateWithUtila from '@/public/img/landing-page/integrate-via/utila.png'
-import integrateWithVaultsFyi from '@/public/img/landing-page/integrate-via/vault_fyi.png'
+import integrateViaTargen from '@/public/img/landing-page/integrate-via/targen.png'
+import integrateViaUtila from '@/public/img/landing-page/integrate-via/utila.png'
+import integrateViaVaultsFyi from '@/public/img/landing-page/integrate-via/vault_fyi.png'
 import integrateViaYieldXyz from '@/public/img/landing-page/integrate-via/yield_xyz.png'
 import ourProductsGridBackground from '@/public/img/landing-page/our-products-grid-bg.png'
 import ourProductsLinesBackground from '@/public/img/landing-page/our-products-lines-bg.png'
@@ -367,7 +368,7 @@ const IntegrateViaCarousel = () => {
       element: (
         <Image
           alt="DeFi Saver"
-          src={integrateWithDefiSaver}
+          src={integrateViaDefiSaver}
           width={162}
           height={39}
           className={styles.stackLogo}
@@ -375,23 +376,35 @@ const IntegrateViaCarousel = () => {
       ),
     },
     {
-      key: 'balance',
+      key: 'franklin',
       element: (
         <Image
-          alt="Balance"
-          src={integrateWithBalance}
-          width={149}
-          height={29}
+          alt="Franklin"
+          src={integrateViaFranklin}
+          width={162}
+          height={39}
           className={styles.stackLogo}
         />
       ),
     },
+    // {
+    //   key: 'balance',
+    //   element: (
+    //     <Image
+    //       alt="Balance"
+    //       src={integrateViaBalance}
+    //       width={149}
+    //       height={29}
+    //       className={styles.stackLogo}
+    //     />
+    //   ),
+    // },
     {
       key: 'vaults-fyi',
       element: (
         <Image
           alt="Vaults.fyi"
-          src={integrateWithVaultsFyi}
+          src={integrateViaVaultsFyi}
           width={141}
           height={37}
           className={styles.stackLogo}
@@ -403,7 +416,7 @@ const IntegrateViaCarousel = () => {
       element: (
         <Image
           alt="Utila"
-          src={integrateWithUtila}
+          src={integrateViaUtila}
           width={117}
           height={29}
           className={styles.stackLogo}
@@ -415,7 +428,7 @@ const IntegrateViaCarousel = () => {
       element: (
         <Image
           alt="Targen"
-          src={integrateWithTargen}
+          src={integrateViaTargen}
           width={136}
           height={25}
           className={styles.stackLogo}
@@ -475,9 +488,9 @@ const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault:
             </div>
             <div className={styles.checksGroup}>
               <CheckLine
-                text={`Offer yield up to ${formatDecimalAsPercent(maxApyRegularVault, {
+                text={`Offer yields up to ${formatDecimalAsPercent(maxApyRegularVault, {
                   precision: 2,
-                })} integrate via Summer.fi SDK, Yield.xyz or Enso Finance.`}
+                })} when you integrate via Summer.fi SDK, Yield.xyz or Enso Finance.`}
               />
               <CheckLine text="Join leading custodians and apps such as Utila, Balance Custody, DeFi Saver, Vaults.fyi and more offering the highest quality yield." />
               <CheckLine text="Earn revenue share on all integrated vaults (DeFi and RWA)" />
