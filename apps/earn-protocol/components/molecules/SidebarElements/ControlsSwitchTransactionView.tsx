@@ -446,7 +446,7 @@ export const ControlsSwitchTransactionView = ({
                   ({formatDecimalAsPercent(priceImpactPercentage)})
                 </Text>
               ) : (
-                'n/a'
+                ''
               )}
             </Text>
           }

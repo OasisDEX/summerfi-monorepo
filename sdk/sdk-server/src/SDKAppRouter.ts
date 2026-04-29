@@ -103,6 +103,7 @@ import { intentSwapsSendOrder } from './handlers/intentSwapsSendOrder'
 import { intentSwapsCancelOrder } from './handlers/intentSwapsCancelOrder'
 import { intentSwapsCheckOrder } from './handlers/intentSwapsCheckOrder'
 import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitchTx'
+import { getVaultSwitchEnsoTx } from './armada-protocol-handlers/users/getVaultSwitchEnsoTx'
 import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
 import { getProtocolRevenue } from './armada-protocol-handlers/users/getProtocolRevenue'
 import { getProtocolTvl } from './armada-protocol-handlers/users/getProtocolTvl'
@@ -244,6 +245,7 @@ export const sdkAppRouter = router({
       getMigratablePositionsApy: getMigratablePositionsApy,
       getMigrationTx: getMigrationTX,
       getVaultSwitchTx: getVaultSwitchTx,
+      getVaultSwitchEnsoTx: getVaultSwitchEnsoTx,
       getUserMerklRewards: getUserMerklRewards,
       getUserMerklClaimTx: getUserMerklClaimTx,
       getClaimStakingV2UserRewardsTx: getClaimStakingV2UserRewardsTx,

@@ -26,6 +26,7 @@ import {
   type DepositTransactionInfo,
   type ApproveTransactionInfo,
   type WithdrawTransactionInfo,
+  type VaultSwitchTransactionInfo,
   type IArmadaVaultInfo,
   ArmadaVaultInfo,
   ArmadaVaultId,
@@ -566,6 +567,164 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     }
 
     LoggingService.debug('transactions', {
+      transactions: transactions.map(({ description, type, transaction }) => ({
+        description,
+        type,
+        transactionValue: transaction.value,
+      })),
+    })
+
+    return transactions
+  }
+
+  /**
+   * @see IArmadaManagerVaults.getVaultSwitchEnsoTx
+   */
+  async getVaultSwitchEnsoTx(
+    params: Parameters<IArmadaManagerVaults['getVaultSwitchEnsoTx']>[0],
+  ): ReturnType<IArmadaManagerVaults['getVaultSwitchEnsoTx']> {
+    const { sourceVaultId, destinationVaultId, amount, user, slippage } = params
+
+    if (sourceVaultId.chainInfo.chainId !== destinationVaultId.chainInfo.chainId) {
+      throw new Error('Vaults must be on the same chain for Enso vault switch')
+    }
+
+    const withdrawAmount = amount
+    if (withdrawAmount.toSolidityValue() <= 0) {
+      throw new Error('Cannot switch 0 or negative amounts')
+    }
+
+    const [userFleetShares, userStakedShares, previewWithdrawShares] = await Promise.all([
+      this._utils.getFleetShares({
+        vaultId: sourceVaultId,
+        user,
+      }),
+      this._utils.getStakedShares({
+        vaultId: sourceVaultId,
+        user,
+      }),
+      this._previewWithdraw({
+        vaultId: sourceVaultId,
+        assets: withdrawAmount,
+      }),
+    ])
+
+    const walletSharesSufficient =
+      userFleetShares.toSolidityValue() >= previewWithdrawShares.toSolidityValue()
+
+    if (!walletSharesSufficient && userStakedShares.toSolidityValue() > 0) {
+      throw new Error(
+        "User doesn't have enough vault shares in the wallet to perform vault switch. Unstake the necessary staked vault shares first.",
+      )
+    }
+
+    const chainId = sourceVaultId.chainInfo.chainId
+    const senderAddressValue = user.wallet.address.toSolidityValue()
+    const receiverAddressValue = senderAddressValue // for now we will keep the receiver the same as sender, but in the future we can allow different receiver
+
+    // Get fleet on destination chain
+    const destinationFleetCommander = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: destinationVaultId.chainInfo,
+      address: destinationVaultId.fleetAddress,
+    })
+    const tokenOut = await destinationFleetCommander.asErc20().getToken()
+    const tokenOutAddressValue = tokenOut.address.toSolidityValue()
+
+    /**
+     * If the requested withdraw amount represents 99.9% or more of the user's total fleet shares,
+     * we use `beforeFleetShares` directly as the input amount instead of the preview-calculated
+     * shares. This avoids dust rounding errors where a near-full withdrawal leaves a tiny residual
+     * that can cause the transaction to fail (e.g. vault share dust that cannot be redeemed).
+     */
+    const NEAR_FULL_WITHDRAWAL_THRESHOLD = 0.999
+    const totalSharesValue = userFleetShares.toSolidityValue()
+    const isNearFullWithdrawal =
+      totalSharesValue > 0n &&
+      previewWithdrawShares.toSolidityValue() >=
+        (totalSharesValue * BigInt(Math.round(NEAR_FULL_WITHDRAWAL_THRESHOLD * 1000))) / 1000n
+
+    // Convert asset amount to shares needed for redeem
+    const amountIn = isNearFullWithdrawal ? userFleetShares : previewWithdrawShares
+    const tokenIn = amountIn.token
+
+    const slippageBps = Math.floor(parseFloat(slippage.value.toString()) * 100)
+
+    const routeParams: RouteParams = {
+      fromAddress: senderAddressValue,
+      receiver: receiverAddressValue,
+      chainId,
+      amountIn: [amountIn.toSolidityValue().toString()],
+      tokenIn: [tokenIn.address.toSolidityValue()],
+      destinationChainId: chainId,
+      tokenOut: [tokenOutAddressValue],
+      slippage: slippageBps,
+      routingStrategy: 'router',
+    }
+
+    // Build Enso bundle actions
+    const routeData = await EnsoClient.getClient().getRouteData(routeParams)
+
+    const tokenOutAmount = routeData.amountOut
+
+    const amountOut = TokenAmount.createFromBaseUnit({
+      token: tokenOut,
+      amount: tokenOutAmount?.toString() ?? '0',
+    })
+
+    const priceImpact: TransactionPriceImpact = {
+      impact: Percentage.createFrom({
+        value: parseFloat(routeData.priceImpact?.toString() || '0') / 100,
+      }),
+      price: Price.createFromAmountsRatio({
+        numerator: withdrawAmount,
+        denominator: amountOut,
+      }),
+    }
+    const depositAmount = await this._previewRedeem({
+      vaultId: destinationVaultId,
+      shares: amountOut,
+    })
+
+    LoggingService.debug('Vault switch Enso bundle data', {
+      chainId,
+      from: tokenIn.symbol,
+      fromAddress: tokenIn.address.toSolidityValue(),
+      withdrawAmount: withdrawAmount.toString(),
+      fromAmount: amountIn.toString(),
+      to: tokenOut.symbol,
+      toAddress: tokenOutAddressValue,
+      toAmount: amountOut.toString(),
+    })
+
+    const vaultSwitchTransaction = createVaultSwitchTransaction({
+      target: Address.createFromEthereum({ value: routeData.tx.to }),
+      calldata: routeData.tx.data as HexData,
+      description: `Vault switch via Enso from ${tokenIn.name} to ${tokenOut.name} on chain ${chainId}`,
+      metadata: {
+        fromAmount: withdrawAmount,
+        toAmount: depositAmount,
+        fromVault: sourceVaultId,
+        toVault: destinationVaultId,
+        slippage: slippage,
+        priceImpact,
+      },
+    })
+
+    // Approval for source vault share tokens (so Enso can redeem them)
+    const approveTransaction = await this._allowanceManager.getApproval({
+      chainInfo: sourceVaultId.chainInfo,
+      spender: Address.createFromEthereum({ value: routeData.tx.to }),
+      amount: amountIn,
+      owner: Address.createFromEthereum({ value: senderAddressValue }),
+    })
+
+    const transactions:
+      | [VaultSwitchTransactionInfo]
+      | [ApproveTransactionInfo, VaultSwitchTransactionInfo] = approveTransaction
+      ? [approveTransaction, vaultSwitchTransaction]
+      : [vaultSwitchTransaction]
+
+    LoggingService.debug('Vault switch Enso transactions', {
       transactions: transactions.map(({ description, type, transaction }) => ({
         description,
         type,
@@ -2221,36 +2380,42 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     amount: ITokenAmount
     slippage: IPercentage
   }): ReturnType<IArmadaManagerVaults['getCrossChainDepositTx']> {
-    const sourceChainId = params.fromChainId
-    const destinationChainId = params.vaultId.chainInfo.chainId
-    const senderAddressValue = params.senderAddressValue
-    const receiverAddressValue = params.receiverAddressValue ?? params.senderAddressValue
+    const {
+      fromChainId,
+      vaultId,
+      senderAddressValue,
+      receiverAddressValue: _receiverAddressValue,
+      amount,
+      slippage,
+    } = params
+
+    const sourceChainId = fromChainId
+    const destinationChainId = vaultId.chainInfo.chainId
+    const receiverAddressValue = _receiverAddressValue ?? senderAddressValue
 
     // Get source and destination tokens
-    const sourceToken = params.amount.token
-    const tokenInSymbol = sourceToken.symbol
-    const tokenInAddress = sourceToken.address.toSolidityValue()
-    const amountIn = params.amount
+    const amountIn = amount
+    const tokenIn = amount.token
 
     // Get the fleet asset token on destination chain
     const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
+      chainInfo: vaultId.chainInfo,
+      address: vaultId.fleetAddress,
     })
     const [tokenOut] = await Promise.all([fleetCommander.asErc20().getToken()])
-    const tokenOutAddress = tokenOut.address.toSolidityValue()
+    const tokenOutAddressValue = tokenOut.address.toSolidityValue()
 
     // Convert slippage from percentage to basis points
-    const slippageBps = Math.floor(parseFloat(params.slippage.value.toString()) * 100)
+    const slippageBps = Math.floor(parseFloat(slippage.value.toString()) * 100)
 
     const routeParams: RouteParams = {
       fromAddress: senderAddressValue,
       receiver: receiverAddressValue,
       chainId: sourceChainId,
       amountIn: [amountIn.toSolidityValue().toString()],
-      tokenIn: [tokenInAddress],
+      tokenIn: [tokenIn.address.toSolidityValue()],
       destinationChainId: destinationChainId,
-      tokenOut: [tokenOutAddress],
+      tokenOut: [tokenOutAddressValue],
       slippage: slippageBps,
       routingStrategy: 'router',
     }
@@ -2264,6 +2429,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       token: tokenOut,
       amount: tokenOutAmount.toString(),
     })
+
     const priceImpact: TransactionPriceImpact = {
       impact: Percentage.createFrom({
         value: parseFloat(routeData.priceImpact?.toString() || '0') / 100,
@@ -2274,17 +2440,17 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       }),
     }
 
-    const isNative = tokenInAddress === NATIVE_CURRENCY_ADDRESS_LOWERCASE
+    const isNative = tokenIn.address.toSolidityValue() === NATIVE_CURRENCY_ADDRESS_LOWERCASE
 
     LoggingService.debug('Cross-chain deposit Enso bundle data', {
       isNative,
       sourceChainId,
-      from: tokenInSymbol,
-      fromAddress: tokenInAddress,
+      from: tokenIn.symbol,
+      fromAddress: tokenIn.address.toSolidityValue(),
       fromAmount: amountIn.toString(),
       destinationChainId,
       to: tokenOut.symbol,
-      toAddress: tokenOutAddress,
+      toAddress: tokenOutAddressValue,
       toAmount: amountOut.toString(),
       priceImpact: {
         rawPriceImpact: routeData.priceImpact?.toString(),
@@ -2302,7 +2468,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       metadata: {
         fromAmount: amountIn,
         toAmount: amountOut,
-        slippage: params.slippage,
+        slippage: slippage,
         priceImpact: priceImpact,
       },
     })

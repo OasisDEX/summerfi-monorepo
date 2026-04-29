@@ -37,6 +37,7 @@ export const getIntentSwapsSendDepositOrderHandler =
     referralCode = '0x',
     apiKey,
     signTypedData,
+    slippagePercentage,
   }: {
     chainId: ChainId
     fleetAddressValue: AddressValue
@@ -49,6 +50,7 @@ export const getIntentSwapsSendDepositOrderHandler =
     publicClient: PublicClient
     referralCode?: `0x${string}`
     apiKey?: string
+    slippagePercentage: number
     signTypedData: (params: SignTypedDataParameters) => Promise<`0x${string}`>
   }) => {
     const permitAmount = toAmount.toSolidityValue()
@@ -96,6 +98,7 @@ export const getIntentSwapsSendDepositOrderHandler =
       publicClient,
       postHooks: hooks,
       apiKey,
+      slippagePercentage,
     })
   }
 

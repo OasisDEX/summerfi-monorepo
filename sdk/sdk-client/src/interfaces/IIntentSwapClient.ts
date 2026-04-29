@@ -93,6 +93,10 @@ export interface IIntentSwapClient {
    * @param publicClient The public client to use for sending the transaction
    * @param preHooks Pre-interaction hooks to execute before the swap
    * @param postHooks Post-interaction hooks to execute after the swap
+   * @param apiKey Optional API key for the swap provider from the client side, which can be used for enhanced rate limits and analytics
+   * @param slippagePercentage The maximum slippage used for the quote
+   * @returns The result of sending the order, which can be one of:
+   * - 'order_sent': if the order has been successfully sent, along with the order ID
    */
   sendHookOrder(params: {
     fromAmount: ITokenAmount
@@ -107,6 +111,7 @@ export interface IIntentSwapClient {
     preHooks?: CowHook[]
     postHooks?: CowHook[]
     apiKey?: string
+    slippagePercentage: number
   }): Promise<{ status: 'order_sent'; orderId: string }>
 
   /**

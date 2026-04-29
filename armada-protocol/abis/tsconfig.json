@@ -3,8 +3,9 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "module": "esnext"
   },
-  "include": ["src/**/*.ts", "e2e/**/*.ts"],
+  "include": ["src/**/*.ts", "e2e/**/*.ts", "src/**/*.json"],
   "exclude": ["node_modules","dist"]
 }

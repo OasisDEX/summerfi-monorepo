@@ -958,6 +958,27 @@ export interface IArmadaManagerUsersClient {
   >
 
   /**
+   * @name getVaultSwitchEnsoTx
+   * @description Returns the transactions needed to switch from one vault to another using Enso routing.
+   *              Source and destination vaults must be on the same chain.
+   *
+   * @param sourceVaultId ID of the source pool
+   * @param destinationVaultId ID of the destination pool (must be same chain as source)
+   * @param user Address of the user that is trying to switch
+   * @param amount Token amount (in source vault's underlying asset) to be switched
+   * @param slippage Maximum slippage allowed for the operation
+   *
+   * @returns An array of transactions that must be executed
+   */
+  getVaultSwitchEnsoTx(params: {
+    sourceVaultId: IArmadaVaultId
+    destinationVaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+    slippage: IPercentage
+  }): Promise<[VaultSwitchTransactionInfo] | [ApproveTransactionInfo, VaultSwitchTransactionInfo]>
+
+  /**
    * @name getUserMerklRewards
    * @description Gets Merkl rewards for a user across specified chains
    * @param params.address The user's address
