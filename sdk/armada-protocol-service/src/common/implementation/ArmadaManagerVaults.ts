@@ -594,6 +594,30 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       throw new Error('Cannot switch 0 or negative amounts')
     }
 
+    const [beforeFleetShares, beforeStakedShares, previewWithdrawSharesAmount] = await Promise.all([
+      this._utils.getFleetShares({
+        vaultId: sourceVaultId,
+        user,
+      }),
+      this._utils.getStakedShares({
+        vaultId: sourceVaultId,
+        user,
+      }),
+      this._previewWithdraw({
+        vaultId: sourceVaultId,
+        assets: withdrawAmount,
+      }),
+    ])
+
+    const walletSharesSufficient =
+      beforeFleetShares.toSolidityValue() >= previewWithdrawSharesAmount.toSolidityValue()
+
+    if (!walletSharesSufficient && beforeStakedShares.toSolidityValue() > 0) {
+      throw new Error(
+        "User doesn't have enough vault shares in the wallet to perform vault switch. Unstake the necessary staked vault shares first.",
+      )
+    }
+
     const chainId = sourceVaultId.chainInfo.chainId
     const senderAddressValue = user.wallet.address.toSolidityValue()
     const receiverAddressValue = senderAddressValue // for now we will keep the receiver the same as sender, but in the future we can allow different receiver
@@ -607,10 +631,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     const tokenOutAddressValue = tokenOut.address.toSolidityValue()
 
     // Convert asset amount to shares needed for redeem
-    const amountIn = await this._previewWithdraw({
-      vaultId: sourceVaultId,
-      assets: withdrawAmount,
-    })
+    const amountIn = previewWithdrawSharesAmount
     const tokenIn = amountIn.token
 
     const slippageBps = Math.floor(parseFloat(slippage.value.toString()) * 100)

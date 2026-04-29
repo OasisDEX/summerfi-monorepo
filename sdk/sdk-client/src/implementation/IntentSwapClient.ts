@@ -175,7 +175,8 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       buyTokenDecimals: toToken.decimals,
       sellAmount: fromAmount.toSolidityValue().toString(),
       buyAmount: buyAmount.toSolidityValue().toString(),
-      slippageBps: slippagePercentage ? Math.round(slippagePercentage * 100) : undefined,
+      slippageBps:
+        slippagePercentage !== undefined ? Math.round(slippagePercentage * 100) : undefined,
       validTo: order.validTo,
     }
     LoggingService.debug('IntentSwapClient: trade parameters', parameters)
