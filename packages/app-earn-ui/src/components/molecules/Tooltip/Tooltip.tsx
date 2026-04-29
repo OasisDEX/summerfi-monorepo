@@ -75,6 +75,7 @@ interface TooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
   isOpen: boolean
   showAbove: boolean
   cardVariant?: keyof typeof CardVariants
+  cardStyle?: HTMLAttributes<HTMLDivElement>['style']
   generatedId: string
 }
 
@@ -82,6 +83,7 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({
   children,
   isOpen,
   style,
+  cardStyle,
   showAbove,
   cardVariant = 'cardSecondary',
   generatedId,
@@ -108,6 +110,7 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({
           fontWeight: 400,
           fontSize: '14px',
           lineHeight: '22px',
+          ...cardStyle,
         }}
       >
         {children}
@@ -122,6 +125,7 @@ interface StatefulTooltipProps {
   tooltip?: ReactNode | ChildrenCallback
   children: ReactNode | ChildrenCallback
   tooltipWrapperStyles?: HTMLAttributes<HTMLDivElement>['style']
+  tooltipCardStyles?: HTMLAttributes<HTMLDivElement>['style']
   tooltipCardVariant?: keyof typeof CardVariants
   style?: HTMLAttributes<HTMLDivElement>['style']
   showAbove?: boolean
@@ -147,6 +151,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   children,
   style,
   tooltipWrapperStyles,
+  tooltipCardStyles,
   tooltipCardVariant,
   showAbove = false,
   triggerOnClick = false,
@@ -307,6 +312,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
     <TooltipWrapper
       isOpen={tooltipOpen}
       style={tooltipWrapperStyles}
+      cardStyle={tooltipCardStyles}
       showAbove={showAbove}
       cardVariant={tooltipCardVariant}
       generatedId={generatedId}

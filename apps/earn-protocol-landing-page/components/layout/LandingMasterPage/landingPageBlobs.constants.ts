@@ -17,7 +17,7 @@ export const GRAVITY_MOUSE_RADIUS = 0.4
 export const GRAVITY_LERP_SPEED = 1.2
 export const GRAVITY_RADIUS_GROW_SPEED = 180
 export const GRAVITY_RADIUS_SHRINK_SPEED = 150
-export const BLACKHOLE_PULL_SPEED = 1.6
+export const BLACKHOLE_PULL_SPEED = 1.8
 export const BLACKHOLE_DEATH_RADIUS = 100
 export const BLACKHOLE_DEATH_FADE = 1
 export const FRAME_RATE = 60
@@ -30,13 +30,13 @@ export const LARGE_BLOB_ACTIVE_SCALE_BOOST = -0.22
 export const LARGE_BLOB_RESPONSE_LERP_SPEED = 0.4
 export const COMET_DEBRIS_MIN = 10
 export const COMET_DEBRIS_MAX = 60
-export const COMET_DEBRIS_SIZE_MIN = 0.1
-export const COMET_DEBRIS_SIZE_MAX = 0.7
-export const COMET_DEBRIS_SPREAD = 1.5
-export const COMET_DEBRIS_LIFETIME_MIN = 0.01
-export const COMET_DEBRIS_LIFETIME_MAX = 1.5
-export const COMET_DEBRIS_DRAG = 0.05
-export const COMET_DEBRIS_CAP_MULTIPLIER = 50
+export const COMET_DEBRIS_SIZE_MIN = 0.01
+export const COMET_DEBRIS_SIZE_MAX = 0.5
+export const COMET_DEBRIS_SPREAD = 1.3
+export const COMET_DEBRIS_LIFETIME_MIN = 0.001
+export const COMET_DEBRIS_LIFETIME_MAX = 4
+export const COMET_DEBRIS_DRAG = 0.1
+export const COMET_DEBRIS_CAP_MULTIPLIER = 200
 export const GRAVITY_DEBRIS_THRESHOLD = 90
 
 export const SMALL_VERT = `#version 300 es
@@ -116,8 +116,11 @@ void main() {
               + g2 * v_alpha * 0.05;
 
   float totalA = clamp(core * v_alpha * 0.9 + glowA, 0.0, 1.0);
+  float noise =
+    (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.03;
+  vec3 noisyColor = clamp(v_color + vec3(noise), 0.0, 1.0);
 
-  fragColor = vec4(v_color * totalA, totalA);
+  fragColor = vec4(noisyColor * totalA, totalA);
 }
 `
 
@@ -152,7 +155,10 @@ out vec4 fragColor;
 
 void main() {
   float a = v_alpha;
-  fragColor = vec4(v_color * a, a);
+  float noise =
+    (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.03;
+  vec3 noisyColor = clamp(v_color + vec3(noise), 0.0, 1.0);
+  fragColor = vec4(noisyColor * a, a);
 }
 `
 
@@ -195,7 +201,10 @@ void main() {
 
   float falloff = smoothstep(1.0, 0.0, d);
   float a = v_alpha * falloff;
-  fragColor = vec4(v_color * a, a);
+  float noise =
+    (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.03;
+  vec3 noisyColor = clamp(v_color + vec3(noise), 0.0, 1.0);
+  fragColor = vec4(noisyColor * a, a);
 }
 `
 
@@ -252,6 +261,9 @@ void main() {
   else                a = mix(a2, a3, (t - 0.75) / 0.25);
 
   float finalA = a * v_alpha;
-  fragColor = vec4(v_color * finalA, finalA);
+  float noise =
+    (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.03;
+  vec3 noisyColor = clamp(v_color + vec3(noise), 0.0, 1.0);
+  fragColor = vec4(noisyColor * finalA, finalA);
 }
 `

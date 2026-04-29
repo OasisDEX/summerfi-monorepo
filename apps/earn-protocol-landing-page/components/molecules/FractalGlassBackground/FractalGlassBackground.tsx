@@ -1,361 +1,409 @@
 'use client'
-
-import { memo, type RefObject, useEffect, useMemo, useRef, useState } from 'react'
-import { throttle } from 'lodash-es'
+import { useEffect, useRef } from 'react'
 
 import styles from './FractalGlassBackground.module.css'
 
-const RECT_WIDTH = 60
-const MIN_BLUR_PX = 20
-const MAX_BLUR_PX = 400
-const COMPONENT_HEIGHT = 450
-const HALF_RECT_WIDTH = RECT_WIDTH / 2
-const RECT_CENTER_Y = COMPONENT_HEIGHT / 2
+const BACKGROUND_COLOR = 'rgb(16,16,16)'
+const BLOB_COLORS = ['rgb(255, 73, 164)', 'rgb(176, 73, 255)', 'rgb(244, 63, 94)']
+const BLOB_COUNT = 6
+const MAX_BLOBS = 10
 
-const BLOB_COLORS = ['#FF49A4', '#B049FF', '#9333EA', '#F43F5E']
-const MIN_VISIBLE_BLOBS = 4
-const MAX_BLOBS = 12
-const INITIAL_BLOB_COUNT = 4
-const BLOB_MIN_RADIUS = 350
-const BLOB_MAX_RADIUS = 600
-const BLOB_MIN_SPEED = 20
-const BLOB_MAX_SPEED = 100
-const SIN30 = 0.5
-const COS30 = 0.8660254037844387
+function parseRgba(input: string): [number, number, number, number] {
+  const match = input
+    .replace(/\s+/gu, '')
+    .match(/^rgba?\((\d{1,3}),(\d{1,3}),(\d{1,3})(?:,(\d*\.?\d+))?\)$/iu)
 
-type CanvasBlob = {
-  id: number
-  x: number
-  y: number
-  radius: number
-  color: string
-  speed: number
-}
-
-let nextBlobId = 0
-
-const clamp = (value: number, min: number, max: number): number =>
-  Math.min(Math.max(value, min), max)
-
-function randomBetween(min: number, max: number): number {
-  return min + Number(Math.random() * (max - min))
-}
-
-function getRectGradient(index: number, total: number): string {
-  const t = total > 1 ? index / (total - 1) : 0
-  const wave = 0.18 * Math.sin(t * Math.PI)
-  const opacity = 0.08 + wave
-
-  return `linear-gradient(to right, rgba(20,20,20,${opacity.toFixed(3)}) 0%, rgba(0,0,0,0.1) 50%, rgba(10,10,10,${opacity.toFixed(3)}) 100%)`
-}
-
-function hexToRgba(hex: string, alpha: number): string {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
-function createBlob(containerWidth: number, isSkewed: boolean, placeInView: boolean): CanvasBlob {
-  const radius = randomBetween(BLOB_MIN_RADIUS, BLOB_MAX_RADIUS)
-  const color = BLOB_COLORS[Math.floor(Math.random() * BLOB_COLORS.length)]
-  const speed = randomBetween(BLOB_MIN_SPEED, BLOB_MAX_SPEED)
-
-  let x: number
-  let y: number
-
-  if (placeInView) {
-    x = randomBetween(radius, containerWidth - radius)
-    y = randomBetween(radius * 0.3, COMPONENT_HEIGHT - Number(radius * 0.3))
-  } else if (!isSkewed) {
-    x = -(radius * 2)
-    y = randomBetween(-(radius * 0.3), COMPONENT_HEIGHT + Number(radius * 0.3))
-  } else {
-    x = randomBetween(-(radius * 2), containerWidth * 0.6)
-    y = COMPONENT_HEIGHT + Number(radius * 2)
+  if (!match) {
+    return [1, 1, 1, 1]
   }
 
-  return { id: nextBlobId++, x, y, radius, color, speed }
+  const r = Math.min(255, Number(match[1])) / 255
+  const g = Math.min(255, Number(match[2])) / 255
+  const b = Math.min(255, Number(match[3])) / 255
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const a = match[4] !== undefined ? Math.max(0, Math.min(1, Number(match[4]))) : 1
+
+  return [r, g, b, a]
 }
 
-function isBlobVisible(blob: CanvasBlob, containerWidth: number): boolean {
-  return (
-    blob.x + blob.radius > 0 &&
-    blob.x - blob.radius < containerWidth &&
-    blob.y + blob.radius > 0 &&
-    blob.y - blob.radius < COMPONENT_HEIGHT
-  )
+interface BlobState {
+  x: number // physical pixels
+  y: number // physical pixels
+  speed: number // physical pixels per second
+  radius: number // normalized (fraction of canvas height)
+  color: string // blob color
+  colorMultiplier: number // brightness multiplier for the blob color
 }
 
-function isBlobNearExit(blob: CanvasBlob, containerWidth: number, isSkewed: boolean): boolean {
-  if (!isSkewed) {
-    return blob.x + blob.radius > containerWidth * 0.5
-  }
-
-  return blob.y - blob.radius < COMPONENT_HEIGHT * 0.2
-}
-
-function isBlobOffScreen(blob: CanvasBlob, containerWidth: number, isSkewed: boolean): boolean {
-  if (!isSkewed) {
-    return blob.x - Number(blob.radius * 2) > containerWidth
-  }
-
-  return blob.y + Number(blob.radius * 2) < 0
-}
-
-function drawBlobs(
-  ctx: CanvasRenderingContext2D,
-  blobs: CanvasBlob[],
-  width: number,
-  height: number,
-): void {
-  ctx.clearRect(0, 0, width, height)
-
-  for (const blob of blobs) {
-    ctx.save()
-
-    const grad = ctx.createRadialGradient(blob.x, blob.y, 0, blob.x, blob.y, blob.radius)
-
-    grad.addColorStop(0, hexToRgba(blob.color, 0.4))
-    grad.addColorStop(0.6, hexToRgba(blob.color, 0.02))
-    grad.addColorStop(1, hexToRgba(blob.color, 0.01))
-
-    ctx.fillStyle = grad
-    ctx.beginPath()
-    ctx.arc(blob.x, blob.y, blob.radius, 0, Math.PI * 2)
-    ctx.fill()
-    ctx.restore()
+function spawnBlob(
+  _canvasWidth: number,
+  canvasHeight: number,
+  initialX?: number,
+  blobIndex?: number,
+): BlobState {
+  return {
+    x: initialX ?? -(480 + Number(Math.random() * 420)),
+    y: (0.1 + Number(Math.random() * 0.8)) * canvasHeight,
+    speed: Number((10 + Number(Math.random() * 70)) * (window.devicePixelRatio || 1)),
+    radius: 0.007 + Number(Math.random() * 0.2),
+    color:
+      BLOB_COLORS[
+        blobIndex !== undefined
+          ? blobIndex % BLOB_COLORS.length
+          : Math.floor(Math.random() * BLOB_COLORS.length)
+      ],
+    colorMultiplier: 0.5 + Number(Number(Math.random() * 2) * 1.5),
   }
 }
 
-const FractalGlassPanels = memo(
-  ({
-    count,
-    skewed,
-    rectElemsRef,
-  }: {
-    count: number
-    skewed: boolean
-    rectElemsRef: RefObject<(HTMLDivElement | null)[]>
-  }) => {
-    const rectGradients = useMemo(
-      () => Array.from({ length: count }, (_, i) => getRectGradient(i, count)),
-      [count],
-    )
+export function FractalGlassBackground({ skewed = false }: { skewed?: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const containerRef = useRef<HTMLElement | null>(null)
 
-    return (
-      <>
-        {Array.from({ length: count }, (_, i) => (
-          <div
-            key={i}
-            ref={(el) => {
-              // Store refs to rect elements for direct DOM writes in the rAF loop
-              // (style updates for blur based on blob proximity)
-              rectElemsRef.current[i] = el
-            }}
-            className={styles.rect}
-            style={{
-              transform: skewed ? 'skewX(-30deg)' : undefined,
-              left: `${Number(i * RECT_WIDTH) - (skewed ? Math.tan((30 * Math.PI) / 180) * Number(RECT_WIDTH * 6) : 0)}px`,
-              background: rectGradients[i],
-            }}
-          />
-        ))}
-      </>
-    )
-  },
-)
-
-export const FractalGlassBackground = ({ skewed = false }: { skewed?: boolean }) => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [count, setCount] = useState(0)
-
-  const rafIdRef = useRef<number | null>(null)
-  const skewedRef = useRef(skewed)
-  const containerWidthRef = useRef(0)
-  const blobsRef = useRef<CanvasBlob[]>([])
-  const lastSpawnRef = useRef(0)
-  const lastFrameRef = useRef(0)
-
-  const rectElemsRef = useRef<(HTMLDivElement | null)[]>([])
-
-  useEffect(() => {
-    skewedRef.current = skewed
-  }, [skewed])
-
-  // Initialize canvas and blobs
   useEffect(() => {
     const canvas = canvasRef.current
-    const container = containerRef.current
 
-    if (!canvas || !container) return
+    if (!canvas) {
+      return
+    }
 
-    const width = container.offsetWidth
+    const gl = canvas.getContext('webgl')
 
-    containerWidthRef.current = width
+    if (!gl) {
+      // eslint-disable-next-line no-console
+      console.error('WebGL not supported')
 
-    const dpr = window.devicePixelRatio || 1
+      return
+    }
 
-    canvas.width = width * dpr
-    canvas.height = COMPONENT_HEIGHT * dpr
+    const vertexShaderSource = `
+      attribute vec2 a_position;
+      varying vec2 v_uv;
+      void main() {
+        v_uv = a_position * 0.5 + 0.5;
+        gl_Position = vec4(a_position, 0.0, 1.0);
+      }
+    `
 
-    blobsRef.current = Array.from({ length: INITIAL_BLOB_COUNT }, () =>
-      createBlob(width, skewed, true),
+    const fragmentShaderSource = `
+      precision mediump float;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+      uniform float u_panelWidth;
+      uniform float u_skewTan;
+      uniform vec4 u_bgColor;
+      uniform float u_blobCount;
+      uniform vec2 u_blobPositions[${MAX_BLOBS}];
+      uniform float u_blobAlphas[${MAX_BLOBS}];
+      uniform float u_blobRadii[${MAX_BLOBS}];
+      uniform float u_blobColorsR[${MAX_BLOBS}];
+      uniform float u_blobColorsG[${MAX_BLOBS}];
+      uniform float u_blobColorsB[${MAX_BLOBS}];
+      uniform float u_blobColorMultipliers[${MAX_BLOBS}];
+      varying vec2 v_uv;
+
+      float Cir(vec2 uv, float r, float blurFactor) {
+        float a = blurFactor > 0.0 ? 0.01 : 0.0;
+        float b = blurFactor > 0.0 ? 0.13 * mix(0.8, 1.4, blurFactor) : 5.0 / u_resolution.y;
+        return smoothstep(a, b, length(uv) - r);
+      }
+
+      void main() {
+        vec2 fragCoord = v_uv * u_resolution;
+
+        // Shear panel-space X by Y so vertical bands become skewed while preserving fill.
+        float skewOffset = (fragCoord.y - u_resolution.y * 0.5) * u_skewTan;
+        float panelX = fragCoord.x + skewOffset;
+        float shearPadding = abs(u_skewTan) * u_resolution.y * 0.5;
+        float skewedWidth = u_resolution.x + shearPadding * 2.0;
+
+        float panelCount = max(1.0, ceil(skewedWidth / u_panelWidth));
+        float totalWidth = panelCount * u_panelWidth;
+        float offset = -shearPadding + (skewedWidth - totalWidth) * 0.5;
+        float panelIndex = floor((panelX - offset) / u_panelWidth);
+        panelIndex = clamp(panelIndex, 0.0, panelCount - 1.0);
+
+        float wave = sin(panelIndex * 0.4 + 0.4 + (u_time * 0.4)) * 0.5 + 0.5;
+        float jitter = sin(panelIndex + (u_time * 0.4)) * 0.1;
+        float blurFactor = clamp(wave + jitter, 0.0, 2.0);
+        float panelBlur = mix(4.0, 8.0, blurFactor);
+
+        float localX = mod(panelX - offset, u_panelWidth);
+        float panelGradient = abs((localX / u_panelWidth) * 1.5 - 1.5);
+        panelGradient = clamp(panelGradient, 0.0, 1.0);
+
+        vec3 col = u_bgColor.rgb;
+        // add noise
+        float noise = (fract(sin(dot(fragCoord.xy ,vec2(12.9898,78.233))) * 43758.5453) - 0.5) * panelBlur * 0.005;
+        col += noise;
+
+        // Subtle glass tile edge highlight with faint edges and transparent middle
+        col += vec3(1.0) * panelGradient * (jitter * 0.5 + 0.5) * 0.05 / (panelBlur * 0.3);
+
+        for (int i = 0; i < ${MAX_BLOBS}; i++) {
+          if (float(i) >= u_blobCount) { break; }
+
+          vec2 blobUv = (fragCoord - u_blobPositions[i]) / u_resolution.y;
+          float cirMask = Cir(blobUv, u_blobRadii[i], panelBlur);
+
+          // Per-blob color from uniforms with brightness multiplier
+          vec3 blobColor = vec3(u_blobColorsR[i] * u_blobColorMultipliers[i], u_blobColorsG[i] * u_blobColorMultipliers[i], u_blobColorsB[i] * u_blobColorMultipliers[i]);
+          
+          // Additive blob glow — only brightens, never darkens background
+          col += blobColor * (1.0 - cirMask) * u_blobAlphas[i] * 0.1;
+        }
+
+        gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+      }
+    `
+
+    const compileShader = (type: number, source: string) => {
+      const shader = gl.createShader(type)
+
+      if (!shader) return null
+      gl.shaderSource(shader, source)
+      gl.compileShader(shader)
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        // eslint-disable-next-line no-console
+        console.error(gl.getShaderInfoLog(shader))
+        gl.deleteShader(shader)
+
+        return null
+      }
+
+      return shader
+    }
+
+    const vertexShader = compileShader(gl.VERTEX_SHADER, vertexShaderSource)
+    const fragmentShader = compileShader(gl.FRAGMENT_SHADER, fragmentShaderSource)
+
+    if (!vertexShader || !fragmentShader) {
+      return
+    }
+
+    const program = gl.createProgram()
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!program) {
+      return
+    }
+    gl.attachShader(program, vertexShader)
+    gl.attachShader(program, fragmentShader)
+    gl.linkProgram(program)
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      // eslint-disable-next-line no-console
+      console.error(gl.getProgramInfoLog(program))
+
+      return
+    }
+
+    const positionLocation = gl.getAttribLocation(program, 'a_position')
+    const timeLocation = gl.getUniformLocation(program, 'u_time')
+    const resolutionLocation = gl.getUniformLocation(program, 'u_resolution')
+    const panelWidthLocation = gl.getUniformLocation(program, 'u_panelWidth')
+    const skewTanLocation = gl.getUniformLocation(program, 'u_skewTan')
+    const bgColorLocation = gl.getUniformLocation(program, 'u_bgColor')
+    const blobCountLocation = gl.getUniformLocation(program, 'u_blobCount')
+    const blobPositionsLocation = gl.getUniformLocation(program, 'u_blobPositions')
+    const blobAlphasLocation = gl.getUniformLocation(program, 'u_blobAlphas')
+    const blobRadiiLocation = gl.getUniformLocation(program, 'u_blobRadii')
+    const blobColorsRLocation = gl.getUniformLocation(program, 'u_blobColorsR')
+    const blobColorsGLocation = gl.getUniformLocation(program, 'u_blobColorsG')
+    const blobColorsBLocation = gl.getUniformLocation(program, 'u_blobColorsB')
+    const blobColorMultipliersLocation = gl.getUniformLocation(program, 'u_blobColorMultipliers')
+
+    const positionBuffer = gl.createBuffer()
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+      gl.STATIC_DRAW,
     )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
-  // Animation loop
-  useEffect(() => {
-    const loop = (now: number) => {
-      rafIdRef.current = requestAnimationFrame(loop)
+    const canvasBackgroundColor = parseRgba(BACKGROUND_COLOR)
 
-      const canvas = canvasRef.current
+    gl.viewport(0, 0, canvas.width, canvas.height)
+    gl.clearColor(...canvasBackgroundColor)
 
-      if (!canvas) return
-
-      const ctx = canvas.getContext('2d')
-
-      if (!ctx) return
-
-      const dt = lastFrameRef.current ? (now - lastFrameRef.current) / 1000 : 0
-
-      lastFrameRef.current = now
-
-      const isSkewed = skewedRef.current
-      const containerWidth = containerWidthRef.current || window.innerWidth
-      const blobs = blobsRef.current
-
-      // Update positions
-      for (const blob of blobs) {
-        if (!isSkewed) {
-          blob.x += blob.speed * dt
-        } else {
-          blob.x += Number(blob.speed * SIN30 * dt)
-          blob.y -= Number(blob.speed * COS30 * dt)
-        }
-      }
-
-      // Remove off-screen blobs
-      blobsRef.current = blobs.filter((b) => !isBlobOffScreen(b, containerWidth, isSkewed))
-
-      // Spawn new blobs preemptively — count blobs near the exit edge
-      // as leaving so replacements enter while old ones are still visible
-      const visibleBlobs = blobsRef.current.filter((b) => isBlobVisible(b, containerWidth))
-      const nearExitCount = visibleBlobs.filter((b) =>
-        isBlobNearExit(b, containerWidth, isSkewed),
-      ).length
-      const effectiveVisible = visibleBlobs.length - nearExitCount
-
-      if (effectiveVisible < MIN_VISIBLE_BLOBS && blobsRef.current.length < MAX_BLOBS) {
-        blobsRef.current.push(createBlob(containerWidth, isSkewed, false))
-        lastSpawnRef.current = now
-      }
-
-      // Draw blobs on canvas
-      const dpr = window.devicePixelRatio || 1
-
-      ctx.save()
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      drawBlobs(ctx, blobsRef.current, containerWidth, COMPONENT_HEIGHT)
-      ctx.restore()
-
-      // Update rect panel blur based on blob proximity
-      const currentBlobs = blobsRef.current
-      const rectElems = rectElemsRef.current
-      const rectCount = rectElems.length
-
-      for (let i = 0; i < rectCount; i++) {
-        const el = rectElems[i]
-
-        // eslint-disable-next-line no-continue
-        if (!el) continue
-
-        if (i === rectCount - 1) {
-          el.style.backdropFilter = 'unset'
-          // eslint-disable-next-line no-continue
-          continue
-        }
-
-        const rectCenterX = Number(i * RECT_WIDTH) + HALF_RECT_WIDTH
-
-        let closestNorm = Infinity
-
-        for (const blob of currentBlobs) {
-          const dx = rectCenterX - blob.x
-          const dy = RECT_CENTER_Y - blob.y
-          const dist = Math.sqrt(Number(dx * dx) + Number(dy * dy))
-          const norm = dist / blob.radius
-
-          if (norm < closestNorm) closestNorm = norm
-        }
-
-        const distanceFactor = clamp(closestNorm, 0, 1)
-        const blurPx = MIN_BLUR_PX + Number(distanceFactor * (MAX_BLUR_PX - MIN_BLUR_PX))
-        const blurStr = `blur(${blurPx.toFixed(1)}px)`
-
-        if (el.style.backdropFilter !== blurStr) {
-          el.style.backdropFilter = blurStr
-        }
-      }
-    }
-
-    rafIdRef.current = requestAnimationFrame(loop)
-
-    return () => {
-      if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current)
-    }
-  }, [])
-
-  // Resize handler
-  useEffect(() => {
-    const el = containerRef.current
-    const resizeObserverHandler = throttle(() => {
-      if (el) {
-        const width = el.offsetWidth
-
-        containerWidthRef.current = width
-
-        const canvas = canvasRef.current
-
-        if (canvas) {
-          const dpr = window.devicePixelRatio || 1
-
-          canvas.width = width * dpr
-          canvas.height = COMPONENT_HEIGHT * dpr
-        }
-
-        const newCount = skewed
-          ? Math.ceil(width / (RECT_WIDTH * 0.8))
-          : Math.ceil(width / RECT_WIDTH)
-
-        setCount(newCount)
-      }
-    }, 1000)
-    const ro = new ResizeObserver(resizeObserverHandler)
-
-    if (el) {
-      containerWidthRef.current = el.offsetWidth
-      setCount(
-        skewed
-          ? Math.ceil(el.offsetWidth / (RECT_WIDTH * 0.5))
-          : Math.ceil(el.offsetWidth / RECT_WIDTH),
+    gl.useProgram(program)
+    if (bgColorLocation) {
+      gl.uniform4f(
+        bgColorLocation,
+        canvasBackgroundColor[0],
+        canvasBackgroundColor[1],
+        canvasBackgroundColor[2],
+        canvasBackgroundColor[3],
       )
-      ro.observe(el)
+    }
+    gl.enableVertexAttribArray(positionLocation)
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
+
+    // Pre-allocate typed arrays for blob uniforms
+    const positionsArray = new Float32Array(MAX_BLOBS * 2)
+    const alphasArray = new Float32Array(MAX_BLOBS)
+    const radiiArray = new Float32Array(MAX_BLOBS)
+    const colorsRArray = new Float32Array(MAX_BLOBS)
+    const colorsGArray = new Float32Array(MAX_BLOBS)
+    const colorsBArray = new Float32Array(MAX_BLOBS)
+    const colorMultipliersArray = new Float32Array(MAX_BLOBS)
+    const devPixelRatio = window.devicePixelRatio || 1
+
+    const resizeCanvas = () => {
+      const displayWidth = Math.round(canvas.clientWidth * devPixelRatio)
+      const displayHeight = Math.round(canvas.clientHeight * devPixelRatio)
+
+      if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+        canvas.width = displayWidth
+        canvas.height = displayHeight
+        gl.viewport(0, 0, displayWidth, displayHeight)
+      }
     }
 
+    // Initial resize to get real canvas dimensions for blob spawning
+    resizeCanvas()
+
+    const localPhysicalDisplayWidth = Math.round(canvas.clientWidth)
+
+    const count = Math.min(
+      localPhysicalDisplayWidth > 1000 ? BLOB_COUNT : BLOB_COUNT / 2,
+      MAX_BLOBS,
+    )
+    const blobs: BlobState[] = Array.from({ length: count }, (_, i) => {
+      // Spread initial blobs evenly across canvas width so it's populated on load
+      const spreadX = Number((i / count) * (canvas.width + 200)) - 100
+
+      return spawnBlob(canvas.width, canvas.height, spreadX, i)
+    })
+
+    let animationFrameId = 0
+    let lastTime = performance.now()
+    const startTime = lastTime
+    const panelWidth = localPhysicalDisplayWidth > 1000 ? 60 : 120
+
+    const skewTan = skewed ? Math.tan((-30 * Math.PI) / 180) : 0
+
+    const render = () => {
+      resizeCanvas()
+
+      const now = performance.now()
+      const dt = Math.min((now - lastTime) / 1000, 0.1) // cap delta to avoid jumps
+
+      lastTime = now
+      const currentTime = (now - startTime) / 1000
+
+      const fadeMargin =
+        Math.max(600, canvas.clientWidth * devPixelRatio * 0.5) +
+        (skewed ? Math.abs(skewTan) * canvas.height : 0) // extra space on sides for blobs to fade in/out without pop
+
+      // Update blobs and compute alphas
+      for (let i = 0; i < blobs.length; i++) {
+        const blob = blobs[i]
+
+        blob.x += blob.speed * dt
+
+        // Respawn off the right edge
+        if (blob.x > canvas.width + fadeMargin) {
+          blobs[i] = spawnBlob(canvas.width, canvas.height, undefined, i)
+        }
+
+        // Alpha: fade in from left, fully visible on canvas, fade out to right
+        // Calculate per-blob fade distance based on its radius to prevent pop-in
+        const blobPixelRadius = blob.radius * canvas.height
+        const effectiveFadeMargin = Math.max(fadeMargin, blobPixelRadius * 3)
+
+        let alpha: number
+
+        if (blob.x < 0) {
+          alpha = Math.max(0, (blob.x + effectiveFadeMargin) / effectiveFadeMargin)
+        } else if (blob.x > canvas.width) {
+          alpha = Math.max(0, 1 - Number((blob.x - canvas.width) / effectiveFadeMargin))
+        } else {
+          alpha = 1
+        }
+
+        // Parse blob color from CSS string
+        const [r, g, b] = parseRgba(blob.color)
+
+        const iterationIndex = i * 2
+
+        positionsArray[iterationIndex] = blob.x
+        positionsArray[iterationIndex + 1] = blob.y
+        alphasArray[i] = alpha
+        radiiArray[i] = blob.radius
+        colorsRArray[i] = r
+        colorsGArray[i] = g
+        colorsBArray[i] = b
+        colorMultipliersArray[i] = blob.colorMultiplier
+      }
+
+      gl.clear(gl.COLOR_BUFFER_BIT)
+      gl.uniform1f(timeLocation, currentTime)
+      if (resolutionLocation) {
+        gl.uniform2f(resolutionLocation, canvas.width, canvas.height)
+      }
+      if (panelWidthLocation) {
+        gl.uniform1f(panelWidthLocation, panelWidth)
+      }
+      if (skewTanLocation) {
+        gl.uniform1f(skewTanLocation, skewTan)
+      }
+      if (blobCountLocation) {
+        gl.uniform1f(blobCountLocation, blobs.length)
+      }
+      if (blobPositionsLocation) {
+        gl.uniform2fv(blobPositionsLocation, positionsArray)
+      }
+      if (blobAlphasLocation) {
+        gl.uniform1fv(blobAlphasLocation, alphasArray)
+      }
+      if (blobRadiiLocation) {
+        gl.uniform1fv(blobRadiiLocation, radiiArray)
+      }
+      if (blobColorsRLocation) {
+        gl.uniform1fv(blobColorsRLocation, colorsRArray)
+      }
+      if (blobColorsGLocation) {
+        gl.uniform1fv(blobColorsGLocation, colorsGArray)
+      }
+      if (blobColorsBLocation) {
+        gl.uniform1fv(blobColorsBLocation, colorsBArray)
+      }
+      if (blobColorMultipliersLocation) {
+        gl.uniform1fv(blobColorMultipliersLocation, colorMultipliersArray)
+      }
+
+      gl.drawArrays(gl.TRIANGLES, 0, 6)
+      animationFrameId = requestAnimationFrame(render)
+    }
+
+    const observer = new ResizeObserver(() => {
+      resizeCanvas()
+    })
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current)
+    }
+
+    render()
+
+    // eslint-disable-next-line consistent-return
     return () => {
-      ro.disconnect()
-      resizeObserverHandler.cancel()
+      cancelAnimationFrame(animationFrameId)
+      observer.disconnect()
+      gl.deleteBuffer(positionBuffer)
+      gl.deleteProgram(program)
+      gl.deleteShader(vertexShader)
+      gl.deleteShader(fragmentShader)
     }
   }, [skewed])
 
   return (
-    <div ref={containerRef} className={styles.container}>
-      <canvas ref={canvasRef} className={styles.blobCanvas} />
-      <FractalGlassPanels count={count} skewed={skewed} rectElemsRef={rectElemsRef} />
-    </div>
+    <section className={styles.container} ref={containerRef}>
+      <canvas ref={canvasRef} />
+    </section>
   )
 }

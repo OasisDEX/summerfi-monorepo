@@ -1,0 +1,44 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Custom Vaults pencil icon</title>
+  <desc>A centred pencil icon in the Summer.fi pink-to-purple gradient style</desc>
+
+  <defs>
+    <linearGradient id="r0" x1="0" y1="16" x2="32" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4" stop-opacity="0.5"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="r1" x1="0" y1="16" x2="32" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4"/>
+      <stop offset="0.93" stop-color="#B049FF"/>
+    </linearGradient>
+    <linearGradient id="r2" x1="0" y1="16" x2="32" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4"/>
+      <stop offset="0.93" stop-color="#B049FF"/>
+    </linearGradient>
+    <linearGradient id="r3" x1="0" y1="16" x2="32" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF49A4" stop-opacity="0.4"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Circle background -->
+  <circle cx="16" cy="16" r="16" fill="url(#r0)" fill-opacity="0.3"/>
+  <circle cx="16" cy="16" r="15.5" stroke="url(#r1)" stroke-opacity="0.3"/>
+
+<g transform="scale(0.8) translate(4,4)">
+  <!-- Body (translucent fill) -->
+  <path d="M20.6 8.6 L23.4 11.4 L11.4 23.4 L8.6 20.6 Z" fill="url(#r3)"/>
+  <!-- Body overlay -->
+  <path d="M20.6 8.6 L23.4 11.4 L11.4 23.4 L8.6 20.6 Z" fill="url(#r2)" opacity="0.45"/>
+
+  <!-- Eraser cap (top-right) -->
+  <path d="M20.6 8.6 L22 7.2 L24.8 10 L23.4 11.4 Z" fill="url(#r2)"/>
+
+  <!-- Tip triangle (bottom-left) -->
+  <path d="M8.6 20.6 L11.4 23.4 L7 25 Z" fill="url(#r2)"/>
+
+  <!-- Centre spine line -->
+  <line x1="9.8" y1="22" x2="22" y2="9.8" stroke="url(#r2)" stroke-width="0.6" stroke-linecap="round" opacity="0.6"/>
+</g>
+
+</svg>

@@ -28,7 +28,10 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType): Reac
             {(link.itemsList ?? link.dropdownContent) ? (
               <span
                 className={clsx({
-                  [navigationMenuStyles.active]: link.link === currentPath,
+                  [navigationMenuStyles.active]:
+                    currentPath &&
+                    (link.link?.includes(currentPath) ??
+                      link.itemsList?.some((item) => item.url.includes(currentPath))),
                 })}
                 style={link.style}
               >
@@ -43,7 +46,7 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType): Reac
               <Link
                 href={link.disabled ? '' : (link.link ?? '/')}
                 className={clsx({
-                  [navigationMenuStyles.active]: link.link === currentPath,
+                  [navigationMenuStyles.active]: currentPath && link.link?.includes(currentPath),
                 })}
                 prefetch={!(link.disabled ?? link.prefetchDisabled)}
                 onClick={link.onClick}

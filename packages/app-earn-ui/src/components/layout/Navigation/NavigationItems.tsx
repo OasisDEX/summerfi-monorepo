@@ -51,28 +51,28 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): R
           </div>
         )
 
-        return item.url.startsWith('/') ? (
-          <Link
-            href={item.url}
+        return item.url.startsWith('/landing_page') ? (
+          <a
+            href={item.url.replace('/landing_page', '')} // replace what we set in getNavigationItems for landing page links to make them work (because of stupid basepath handling not being overwriteable in Link component)
+            rel="external"
             key={`NavItems_${item.id}`}
-            prefetch={!item.prefetchDisabled}
+            data-testid={`NavItems_Landing_Page_${item.id}`}
             target={item.target}
-            onClick={item.onClick}
-            suppressHydrationWarning
+            onClick={() => {
+              item.onClick?.()
+            }}
           >
             {linkContent}
-          </Link>
+          </a>
         ) : (
           <Link
             href={item.url}
-            as={item.url}
-            rel="external"
             key={`NavItems_${item.id}`}
+            data-testid={`NavItems_${item.id}`}
+            prefetch={!item.prefetchDisabled}
             target={item.target}
-            onClick={(e) => {
-              e.preventDefault()
+            onClick={() => {
               item.onClick?.()
-              window.location.href = item.url
             }}
             suppressHydrationWarning
           >

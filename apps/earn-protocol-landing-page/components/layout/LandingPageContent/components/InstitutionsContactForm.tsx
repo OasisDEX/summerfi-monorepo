@@ -312,7 +312,7 @@ export const InstitutionsContactForm = () => {
         strategy="lazyOnload"
       />
       <Text variant="h3" as="h3">
-        Want to learn more about Summer.fi&apos;s Self Managed Vaults?
+        Want to learn more about Summer.fi&apos;s Institutional products?
       </Text>
       <div className={institutionsContactFormStyles.formDescription}>
         <Text variant="p2semi" as="p">

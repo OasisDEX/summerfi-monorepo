@@ -55,18 +55,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
     {
-      url: 'https://summer.fi/institutions/self-managed-vaults',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.5,
-    },
-    {
-      url: 'https://summer.fi/institutions/public-access-vaults',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.5,
-    },
-    {
       url: 'https://summer.fi/team',
       lastModified: new Date(),
       changeFrequency: 'weekly',

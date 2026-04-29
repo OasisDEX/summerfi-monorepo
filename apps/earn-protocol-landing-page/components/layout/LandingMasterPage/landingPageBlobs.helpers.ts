@@ -91,9 +91,9 @@ export const spawnSmallBlob = (width: number, height: number, preAge?: number): 
     fromBottom,
     age: preAge ?? 0,
     lifetime: rand(20, 200),
-    size: rand(1, 3),
+    size: rand(0.2, 2.5),
     swayAmp: rand(1, 5),
-    swayFreq: rand(0.1, 0.5),
+    swayFreq: rand(0.1, 1),
     speed: rand(1, 25),
     direction,
     phase: rand(0, Math.PI * 2),
@@ -111,6 +111,7 @@ export const spawnSmallBlob = (width: number, height: number, preAge?: number): 
     tailEndY: 0,
     hasTail: false,
     gravityInfluence: 0,
+    velocity: 0,
   }
 }
 
@@ -159,6 +160,8 @@ export const updateSmallBlob = (
     const vY = blob.renderY - prevRenderY
     const velocity = Math.sqrt(vX * vX + vY * vY)
 
+    blob.velocity = velocity
+
     if (velocity > 0.001) {
       const dirX = vX / velocity
       const dirY = vY / velocity
@@ -173,6 +176,7 @@ export const updateSmallBlob = (
       blob.hasTail = false
     }
   } else {
+    blob.velocity = 0
     blob.hasTail = false
   }
 

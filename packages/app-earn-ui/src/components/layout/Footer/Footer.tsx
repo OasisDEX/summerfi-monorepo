@@ -91,7 +91,11 @@ export const Footer: FC<FooterProps> = ({
   const isAltPressed = useHoldAlt()
 
   useEffect(() => {
-    consoleInfo()
+    const timeout = setTimeout(() => {
+      consoleInfo()
+    }, 3000)
+
+    return () => clearTimeout(timeout)
   }, [])
 
   return (
@@ -115,7 +119,7 @@ export const Footer: FC<FooterProps> = ({
           </li>
           <li>
             <Link
-              href="https://discord.com/invite/summerfi"
+              href="https://chat.summer.fi"
               target="_blank"
               rel="noreferrer"
               onClick={() => onFooterItemClick?.({ buttonName: 'discord' })}

@@ -7,7 +7,7 @@ export const fontInter = localFont({
     },
   ],
   weight: '400 700',
-  display: 'swap',
   variable: '--font-inter',
+  display: 'swap',
   preload: true,
 })

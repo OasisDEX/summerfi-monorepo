@@ -1,6 +1,4 @@
 declare const styles: {
-  readonly "ctaButton": string;
-  readonly "ctaButtonDisabled": string;
   readonly "ctaWrapper": string;
   readonly "individualTag": string;
   readonly "institutionsTag": string;

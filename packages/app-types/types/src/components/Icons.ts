@@ -355,6 +355,13 @@ export declare const IconsList: {
   earn_rebalance_activities: IconExportType
   earn_user_activities: IconExportType
   earn_yield_trend: IconExportType
+  earn_custom_vaults: IconExportType
+  earn_dao_governance: IconExportType
+  earn_defi_vault: IconExportType
+  earn_defi_vault_eth: IconExportType
+  earn_forum: IconExportType
+  earn_integrations: IconExportType
+  earn_staking: IconExportType
   brand_icon_discord: IconExportType
   brand_icon_github: IconExportType
   brand_icon_twitter: IconExportType

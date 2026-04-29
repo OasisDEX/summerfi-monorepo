@@ -15,8 +15,8 @@ import type TextClassNames from './components/atoms/Text/Text.module.css'
 export { TextClassNames }
 
 export { Modal } from './components/atoms/Modal/Modal'
-export { Icon, type IconNamesList } from './components/atoms/Icon/Icon'
 export { CheckboxButton } from './components/atoms/CheckboxButton/CheckboxButton'
+export { Icon, type IconNamesList } from './components/atoms/Icon/Icon'
 export { Input } from './components/atoms/Input/Input'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
 export { Pill } from './components/atoms/Pill/Pill'
@@ -145,6 +145,7 @@ export {
 export { ZoomableImage } from './components/molecules/ZoomableImage/ZoomableImage'
 export { AllocationBar } from './components/molecules/AllocationBar/AllocationBar'
 export { DateRangePicker } from './components/molecules/DateRangePicker/DateRangePicker.tsx'
+export { UseCasesSlider } from './components/molecules/UseCasesSlider/UseCasesSlider.tsx'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
@@ -209,7 +210,14 @@ export {
 } from './hooks/use-earn-wallet-actions'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
-export { vaultFaqData } from './common/faq/vault-faq'
+export {
+  vaultFaqData,
+  lpCoreFaqData,
+  lpPermissionlessDefiVaultsFaqData,
+  lpRwaFaqData,
+  lpSelfManagedVaultFaqData,
+  lpIntegrationsFaqData,
+} from './common/faq/vault-faq'
 
 export {
   getVaultUrl,

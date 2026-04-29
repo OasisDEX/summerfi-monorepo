@@ -36,6 +36,7 @@
   flex-direction: column;
   align-items: center;
   gap: 24px;
+  overflow: hidden;
 }
 
 @media (min-width: 1100px) {
@@ -69,7 +70,18 @@
 }
 
 .subLandingPageTextColumnLargeGap {
-  gap: var(--spacing-space-x-large);
+  gap: var(--spacing-space-large);
+}
+
+.subLandingPageTextColumnWider {
+  max-width: 55%;
+}
+
+@media (max-width: 1100px) {
+  .subLandingPageTextColumnWider {
+    margin-top: var(--spacing-space-x-large);
+    max-width: 90%;
+  }
 }
 
 .subLandingPageHeadingGroup {
@@ -88,6 +100,7 @@
   display: flex;
   width: 100%;
   gap: 24px;
+  align-items: stretch;
 }
 
 .riskManagedCard {
@@ -116,9 +129,23 @@
   flex-direction: column;
 }
 
+.riskManagedCardChecks {
+  display: flex;
+  flex-direction: column;
+  height: 130px;
+  justify-content: space-between;
+}
+
+@media (max-width: 1100px) {
+  .riskManagedCardChecks {
+    height: auto;
+  }
+}
+
 .riskManagedCardTitle {
   width: 100%;
   text-align: left;
+  margin: 22px 0;
 }
 
 .iconStroke {
@@ -133,6 +160,117 @@
 
 .subLandingPageSubtext {
   color: var(--color-text-secondary);
+}
+
+.stack3xLarge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-3x-large);
+}
+
+.blockAnaliticaLogo {
+  max-width: 190px;
+  margin-top: var(--spacing-space-large);
+}
+
+.featuresSection {
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+}
+
+.featureDescription {
+  margin-bottom: 18px;
+}
+
+.powerSection {
+  padding-left: 0;
+  padding-right: 0;
+  flex-direction: column;
+}
+
+.powerHeading {
+  margin: 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .powerHeading {
+    margin: 32px;
+  }
+}
+
+.powerCardsRow {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-space-large);
+  gap: var(--spacing-space-medium);
+}
+
+@media (max-width: 1100px) {
+  .powerCardsRow {
+    flex-direction: column;
+  }
+}
+
+.powerCard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 24px;
+  border: 1px solid #232323;
+  background: #101010;
+  padding: var(--spacing-space-x-large) var(--spacing-space-x-large) 0;
+  overflow: hidden;
+}
+
+.powerCardGap {
+  gap: var(--spacing-space-2x-small);
+}
+
+.powerCardText {
+  color: var(--color-text-secondary);
+}
+
+.liquidityImage {
+  margin-top: var(--spacing-space-large);
+}
+
+.depositImage {
+  position: relative;
+  margin: 0 auto;
+  bottom: -50px;
+}
+
+.permissionlessCard {
+  justify-content: space-between;
+}
+
+.permissionlessCardContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.alwaysNonCustodialImage {
+  max-width: 75%;
+  max-height: 75%;
+  margin: 0 auto -10px;
+}
+
+.startEarningWrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.faqWrapper {
+  margin-top: var(--spacing-space-3x-large);
+  margin-bottom: var(--spacing-space-3x-large);
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .faqWrapper {
+    padding: var(--spacing-space-medium);
+    margin-top: var(--spacing-space-x-large);
+  }
 }
 
 .vaultExposureScreenshotWrapper {

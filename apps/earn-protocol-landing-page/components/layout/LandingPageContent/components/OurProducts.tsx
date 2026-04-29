@@ -14,9 +14,9 @@ import { getManagementFee } from '@/helpers/get-management-fee'
 import tabStyles from '@/components/layout/LandingPageContent/components/OurProductsTabs.module.css'
 
 const tabs = [
-  { id: 'all-vaults', label: 'All Vaults' },
+  { id: 'all-products', label: 'All Products' },
   { id: 'permissionless-defi-vaults', label: 'Permissionless DeFi Vaults' },
-  { id: 'permissioned-rwa-vaults', label: 'Permissioned RWA Vaults' },
+  // { id: 'permissioned-vaults', label: 'Permissioned RWA Vaults' },
   { id: 'build-your-own-defi-vault', label: 'Build your own DeFi Vault' },
   { id: 'integrate-high-quality-defi-yield', label: 'Integrate high quality DeFi yield' },
 ]

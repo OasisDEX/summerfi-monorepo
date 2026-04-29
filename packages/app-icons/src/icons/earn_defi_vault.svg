@@ -1,0 +1,38 @@
+<svg width="32" height="32" viewBox="0 0 206 206" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>DeFi Vaults icon</title>
+  <desc>A vault door icon rendered in the Summer.fi pink-to-purple gradient style</desc>
+
+  <defs>
+    <linearGradient id="grad_bg" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#FF49A4" stop-opacity="0.3"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.3"/>
+    </linearGradient>
+    <linearGradient id="grad_fill" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#FF49A4" stop-opacity="0.3"/>
+      <stop offset="0.93" stop-color="#B049FF" stop-opacity="0.3"/>
+    </linearGradient>
+    <linearGradient id="grad_solid" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF49A4"/>
+      <stop offset="93%" stop-color="#B049FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer circle -->
+  <circle cx="100" cy="100" r="96" fill="url(#grad_bg)" fill-opacity="0.6" stroke="url(#grad_solid)" stroke-width="4"/>
+
+<g transform="scale(0.8) translate(28,25)">
+  <!-- Vault body -->
+  <rect x="36" y="52" width="128" height="105" rx="7" fill="url(#grad_fill)" stroke="url(#grad_solid)" stroke-width="6"/>
+
+  <!-- Inner dial fill -->
+  <circle cx="100" cy="105" r="22" fill="url(#grad_fill)" stroke="url(#grad_solid)" stroke-width="2"/>
+  <!-- Key hole -->
+  <rect x="96" y="100" width="8" height="12" rx="2" fill="url(#grad_solid)"/>
+
+  <!-- Corner bolts -->
+  <circle cx="50" cy="66" r="8" fill="url(#grad_solid)"/>
+  <circle cx="150" cy="66" r="8" fill="url(#grad_solid)"/>
+  <circle cx="50" cy="142" r="8" fill="url(#grad_solid)"/>
+  <circle cx="150" cy="142" r="8" fill="url(#grad_solid)"/></g>
+
+</svg>

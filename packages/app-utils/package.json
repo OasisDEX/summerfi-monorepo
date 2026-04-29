@@ -46,10 +46,10 @@
   },
   "peerDependencies": {
     "bignumber.js": "^9.3.0",
-    "dayjs": "^1.11.12",
+    "dayjs": "1.11.20",
     "jose": "^6.0.10",
     "lodash-es": "^4.17.1",
-    "next": "16.2.3",
+    "next": "16.2.4",
     "viem": "2.47.1"
   },
   "dependencies": {
