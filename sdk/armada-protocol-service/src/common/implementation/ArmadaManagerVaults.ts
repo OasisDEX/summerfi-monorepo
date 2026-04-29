@@ -594,7 +594,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       throw new Error('Cannot switch 0 or negative amounts')
     }
 
-    const [beforeFleetShares, beforeStakedShares, previewWithdrawSharesAmount] = await Promise.all([
+    const [userFleetShares, userStakedShares, previewWithdrawShares] = await Promise.all([
       this._utils.getFleetShares({
         vaultId: sourceVaultId,
         user,
@@ -610,9 +610,9 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     ])
 
     const walletSharesSufficient =
-      beforeFleetShares.toSolidityValue() >= previewWithdrawSharesAmount.toSolidityValue()
+      userFleetShares.toSolidityValue() >= previewWithdrawShares.toSolidityValue()
 
-    if (!walletSharesSufficient && beforeStakedShares.toSolidityValue() > 0) {
+    if (!walletSharesSufficient && userStakedShares.toSolidityValue() > 0) {
       throw new Error(
         "User doesn't have enough vault shares in the wallet to perform vault switch. Unstake the necessary staked vault shares first.",
       )
@@ -630,8 +630,21 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     const tokenOut = await destinationFleetCommander.asErc20().getToken()
     const tokenOutAddressValue = tokenOut.address.toSolidityValue()
 
+    /**
+     * If the requested withdraw amount represents 99.9% or more of the user's total fleet shares,
+     * we use `beforeFleetShares` directly as the input amount instead of the preview-calculated
+     * shares. This avoids dust rounding errors where a near-full withdrawal leaves a tiny residual
+     * that can cause the transaction to fail (e.g. vault share dust that cannot be redeemed).
+     */
+    const NEAR_FULL_WITHDRAWAL_THRESHOLD = 0.999
+    const totalSharesValue = userFleetShares.toSolidityValue()
+    const isNearFullWithdrawal =
+      totalSharesValue > 0n &&
+      previewWithdrawShares.toSolidityValue() >=
+        (totalSharesValue * BigInt(Math.round(NEAR_FULL_WITHDRAWAL_THRESHOLD * 1000))) / 1000n
+
     // Convert asset amount to shares needed for redeem
-    const amountIn = previewWithdrawSharesAmount
+    const amountIn = isNearFullWithdrawal ? userFleetShares : previewWithdrawShares
     const tokenIn = amountIn.token
 
     const slippageBps = Math.floor(parseFloat(slippage.value.toString()) * 100)
