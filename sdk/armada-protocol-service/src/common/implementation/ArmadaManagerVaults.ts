@@ -585,29 +585,29 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
   ): ReturnType<IArmadaManagerVaults['getVaultSwitchEnsoTx']> {
     const { sourceVaultId, destinationVaultId, amount, user, slippage } = params
 
-    if (sourceVaultId.chainInfo.chainId !== destinationVaultId.chainInfo.chainId) {
-      throw new Error('Vaults must be on the same chain for Enso vault switch')
-    }
-
     const withdrawAmount = amount
     if (withdrawAmount.toSolidityValue() <= 0) {
       throw new Error('Cannot switch 0 or negative amounts')
     }
 
-    const [userFleetShares, userStakedShares, previewWithdrawShares] = await Promise.all([
-      this._utils.getFleetShares({
-        vaultId: sourceVaultId,
-        user,
-      }),
-      this._utils.getStakedShares({
-        vaultId: sourceVaultId,
-        user,
-      }),
-      this._previewWithdraw({
-        vaultId: sourceVaultId,
-        assets: withdrawAmount,
-      }),
-    ])
+    const [userFleetShares, userStakedShares, previewWithdrawShares, destinationVaultInfo] =
+      await Promise.all([
+        this._utils.getFleetShares({
+          vaultId: sourceVaultId,
+          user,
+        }),
+        this._utils.getStakedShares({
+          vaultId: sourceVaultId,
+          user,
+        }),
+        this._previewWithdraw({
+          vaultId: sourceVaultId,
+          assets: withdrawAmount,
+        }),
+        this.getVaultInfo({
+          vaultId: destinationVaultId,
+        }),
+      ])
 
     const walletSharesSufficient =
       userFleetShares.toSolidityValue() >= previewWithdrawShares.toSolidityValue()
@@ -618,17 +618,14 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       )
     }
 
-    const chainId = sourceVaultId.chainInfo.chainId
+    const sourceChainId = sourceVaultId.chainInfo.chainId
+    const destinationChainId = destinationVaultId.chainInfo.chainId
     const senderAddressValue = user.wallet.address.toSolidityValue()
     const receiverAddressValue = senderAddressValue // for now we will keep the receiver the same as sender, but in the future we can allow different receiver
 
-    // Get fleet on destination chain
-    const destinationFleetCommander = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: destinationVaultId.chainInfo,
-      address: destinationVaultId.fleetAddress,
-    })
-    const tokenOut = await destinationFleetCommander.asErc20().getToken()
+    const tokenOut = destinationVaultInfo.token
     const tokenOutAddressValue = tokenOut.address.toSolidityValue()
+    const { depositCap } = destinationVaultInfo
 
     /**
      * If the requested withdraw amount represents 99.9% or more of the user's total fleet shares,
@@ -652,10 +649,10 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     const routeParams: RouteParams = {
       fromAddress: senderAddressValue,
       receiver: receiverAddressValue,
-      chainId,
+      chainId: sourceChainId,
       amountIn: [amountIn.toSolidityValue().toString()],
       tokenIn: [tokenIn.address.toSolidityValue()],
-      destinationChainId: chainId,
+      destinationChainId: destinationChainId,
       tokenOut: [tokenOutAddressValue],
       slippage: slippageBps,
       routingStrategy: 'router',
@@ -665,19 +662,24 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     const routeData = await EnsoClient.getClient().getRouteData(routeParams)
 
     const tokenOutAmount = routeData.amountOut
-
     const amountOut = TokenAmount.createFromBaseUnit({
       token: tokenOut,
       amount: tokenOutAmount?.toString() ?? '0',
     })
+
+    if (depositCap.toSolidityValue() < amountOut.toSolidityValue()) {
+      throw new Error(
+        `Destination vault deposit cap (${depositCap.toString()}) is lower than the amount to deposit (${amountOut.toString()})`,
+      )
+    }
 
     const priceImpact: TransactionPriceImpact = {
       impact: Percentage.createFrom({
         value: parseFloat(routeData.priceImpact?.toString() || '0') / 100,
       }),
       price: Price.createFromAmountsRatio({
-        numerator: withdrawAmount,
-        denominator: amountOut,
+        numerator: amountOut,
+        denominator: withdrawAmount,
       }),
     }
     const depositAmount = await this._previewRedeem({
@@ -686,7 +688,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     })
 
     LoggingService.debug('Vault switch Enso bundle data', {
-      chainId,
+      chainId: sourceChainId,
       from: tokenIn.symbol,
       fromAddress: tokenIn.address.toSolidityValue(),
       withdrawAmount: withdrawAmount.toString(),
@@ -699,7 +701,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     const vaultSwitchTransaction = createVaultSwitchTransaction({
       target: Address.createFromEthereum({ value: routeData.tx.to }),
       calldata: routeData.tx.data as HexData,
-      description: `Vault switch via Enso from ${tokenIn.name} to ${tokenOut.name} on chain ${chainId}`,
+      description: `Vault switch via Enso from ${tokenIn.name} to ${tokenOut.name} on chain ${sourceChainId}`,
       metadata: {
         fromAmount: withdrawAmount,
         toAmount: depositAmount,
