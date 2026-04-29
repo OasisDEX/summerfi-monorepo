@@ -609,6 +609,11 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
         }),
       ])
 
+    const { depositCap } = destinationVaultInfo
+    if (depositCap.toSolidityValue() === 0n) {
+      throw new Error(`Destination vault deposit cap is zero, cannot deposit to this vault.`)
+    }
+
     const walletSharesSufficient =
       userFleetShares.toSolidityValue() >= previewWithdrawShares.toSolidityValue()
 
@@ -623,7 +628,6 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
 
     const tokenOut = destinationVaultInfo.token
     const tokenOutAddressValue = tokenOut.address.toSolidityValue()
-    const { depositCap } = destinationVaultInfo
 
     /**
      * If the requested withdraw amount represents 99.9% or more of the user's total fleet shares,
@@ -665,6 +669,10 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       amount: tokenOutAmount?.toString() ?? '0',
     })
 
+    console.log('destinationVaultInfo', {
+      depositCap: depositCap.toString(),
+      amountOut: amountOut.toString(),
+    })
     if (depositCap.toSolidityValue() < amountOut.toSolidityValue()) {
       throw new Error(
         `Destination vault deposit cap (${depositCap.toString()}) is lower than the amount to deposit (${amountOut.toString()})`,

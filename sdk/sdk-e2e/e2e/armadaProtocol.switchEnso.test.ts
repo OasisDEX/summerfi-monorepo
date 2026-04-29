@@ -33,7 +33,7 @@ describe('Armada Protocol - Switch Enso', () => {
       amountValue: '0.0005',
       chainId: ChainIds.Mainnet,
       sourceFleetAddress: FleetAddresses.Mainnet.ETHHighRisk,
-      destinationFleetAddress: FleetAddresses.Mainnet.USDCHighRisk,
+      destinationFleetAddress: FleetAddresses.Mainnet.ETHDao,
       simulateOnly: true,
     },
     // {
