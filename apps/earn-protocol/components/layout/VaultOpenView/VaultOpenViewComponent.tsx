@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ControlsDepositWithdraw,
   getDisplayToken,
-  getMigrationLandingPageUrl,
+  // getMigrationLandingPageUrl,
   ProjectedEarningsCombined,
   Sidebar,
   SidebarFootnote,
@@ -30,20 +30,20 @@ import {
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
-  SupportedNetworkIds,
+  // SupportedNetworkIds,
   TOSStatus,
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { slugify, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import {
-  getChainInfoByChainId,
+  // getChainInfoByChainId,
   type IArmadaVaultInfo,
   type IToken,
   TransactionType,
 } from '@summerfi/sdk-common'
 
-import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
+// import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
@@ -55,10 +55,10 @@ import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/t
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { BeachClubReferralForm } from '@/features/beach-club/components/BeachClubReferralForm/BeachClubReferralForm'
-import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
-import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
-import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
-import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
+// import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
+// import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
+// import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
+// import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -127,7 +127,7 @@ export const VaultOpenViewComponent = ({
 
   const { features } = useSystemConfig()
 
-  const migrationsEnabled = !!features?.Migrations
+  // const migrationsEnabled = !!features?.Migrations
 
   const { address: userWalletAddress } = useEarnProtocolWallet()
 
@@ -139,9 +139,9 @@ export const VaultOpenViewComponent = ({
   const sdk = useAppSDK()
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [migratablePositions, setMigratablePositions] = useState<MigratablePosition[]>([])
-  const [migrationBestVaultApy, setMigrationBestVaultApy] =
-    useState<MigrationEarningsDataByChainId>()
+  // const [migratablePositions, setMigratablePositions] = useState<MigratablePosition[]>([])
+  // const [migrationBestVaultApy, setMigrationBestVaultApy] =
+  //   useState<MigrationEarningsDataByChainId>()
 
   const [referralCodeError, setReferralCodeError] = useState<string | null>(null)
   const [referralCode, setReferralCode] = useState<string>(referralCodeFromCookie ?? '')
@@ -160,56 +160,56 @@ export const VaultOpenViewComponent = ({
   }, [])
 
   useEffect(() => {
-    const fetchMigratablePositions = async (walletAddress: string) => {
-      const promises = Object.values(SupportedNetworkIds)
-        .filter((networkId): networkId is number => typeof networkId === 'number')
-        .map(async (chainId) => {
-          const chainInfo = getChainInfoByChainId(Number(chainId))
+    // const fetchMigratablePositions = async (walletAddress: string) => {
+    //   const promises = Object.values(SupportedNetworkIds)
+    //     .filter((networkId): networkId is number => typeof networkId === 'number')
+    //     .map(async (chainId) => {
+    //       const chainInfo = getChainInfoByChainId(Number(chainId))
 
-          let positionsData
-          let apyData
+    //       let positionsData
+    //       let apyData
 
-          try {
-            positionsData = await sdk.getMigratablePositions({ walletAddress, chainInfo })
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
-            positionsData = {
-              chainInfo,
-              positions: [],
-            }
-          }
+    //       try {
+    //         positionsData = await sdk.getMigratablePositions({ walletAddress, chainInfo })
+    //       } catch (error) {
+    //         // eslint-disable-next-line no-console
+    //         console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
+    //         positionsData = {
+    //           chainInfo,
+    //           positions: [],
+    //         }
+    //       }
 
-          try {
-            apyData = await sdk.getMigratablePositionsApy({
-              chainInfo,
-              positionIds: positionsData.positions.map((p) => p.id),
-            })
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
-            apyData = {
-              chainInfo,
-              apyByPositionId: {},
-            }
-          }
+    //       try {
+    //         apyData = await sdk.getMigratablePositionsApy({
+    //           chainInfo,
+    //           positionIds: positionsData.positions.map((p) => p.id),
+    //         })
+    //       } catch (error) {
+    //         // eslint-disable-next-line no-console
+    //         console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
+    //         apyData = {
+    //           chainInfo,
+    //           apyByPositionId: {},
+    //         }
+    //       }
 
-          return { positionsData, apyData }
-        })
+    //       return { positionsData, apyData }
+    //     })
 
-      const positions = await Promise.all(promises)
+    //   const positions = await Promise.all(promises)
 
-      const mappedPositions = mapMigrationResponse(positions)
+    //   const mappedPositions = mapMigrationResponse(positions)
 
-      const mappedBestVaultApy = getMigrationBestVaultApy({
-        migratablePositions: mappedPositions,
-        vaultsWithConfig: vaults,
-        vaultsApyByNetworkMap: vaultsApyRaw,
-      })
+    //   const mappedBestVaultApy = getMigrationBestVaultApy({
+    //     migratablePositions: mappedPositions,
+    //     vaultsWithConfig: vaults,
+    //     vaultsApyByNetworkMap: vaultsApyRaw,
+    //   })
 
-      setMigratablePositions(mappedPositions)
-      setMigrationBestVaultApy(mappedBestVaultApy)
-    }
+    //   setMigratablePositions(mappedPositions)
+    //   setMigrationBestVaultApy(mappedBestVaultApy)
+    // }
 
     const fetchIfUserHasPositions = async (walletAddress: string) => {
       try {
@@ -238,18 +238,18 @@ export const VaultOpenViewComponent = ({
     }
 
     if (userWalletAddress) {
-      fetchMigratablePositions(userWalletAddress)
+      // fetchMigratablePositions(userWalletAddress)
       fetchIfUserHasPositions(userWalletAddress)
     }
   }, [userWalletAddress, sdk, vaults, vaultsApyRaw])
 
-  const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
-    migratablePositions[0]?.id,
-  )
+  // const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
+  //   migratablePositions[0]?.id,
+  // )
 
-  const handleSelectPosition = (id: string) => {
-    setSelectedPosition(id)
-  }
+  // const handleSelectPosition = (id: string) => {
+  //   setSelectedPosition(id)
+  // }
 
   const { handleTokenSelectionChange, setSelectedTokenOption, selectedTokenOption, tokenOptions } =
     useTokenSelector({
@@ -573,25 +573,25 @@ export const VaultOpenViewComponent = ({
             )}
           </>
         }
-        rightExtraContent={
-          migrationsEnabled &&
-          migratablePositions.length > 0 &&
-          migrationBestVaultApy && (
-            <MigrationBox
-              migratablePositions={migratablePositions}
-              selectedPosition={selectedPosition}
-              onSelectPosition={handleSelectPosition}
-              cta={{
-                link: getMigrationLandingPageUrl({
-                  walletAddress: userWalletAddress,
-                  selectedPosition,
-                }),
-                disabled: !selectedPosition,
-              }}
-              migrationBestVaultApy={migrationBestVaultApy}
-            />
-          )
-        }
+        // rightExtraContent={
+        //   migrationsEnabled &&
+        //   migratablePositions.length > 0 &&
+        //   migrationBestVaultApy && (
+        //     <MigrationBox
+        //       migratablePositions={migratablePositions}
+        //       selectedPosition={selectedPosition}
+        //       onSelectPosition={handleSelectPosition}
+        //       cta={{
+        //         link: getMigrationLandingPageUrl({
+        //           walletAddress: userWalletAddress,
+        //           selectedPosition,
+        //         }),
+        //         disabled: !selectedPosition,
+        //       }}
+        //       migrationBestVaultApy={migrationBestVaultApy}
+        //     />
+        //   )
+        // }
       />
     </>
   )

@@ -4,7 +4,6 @@ import {
   ControlsDepositWithdraw,
   ControlsSwitch,
   getDisplayToken,
-  getMigrationLandingPageUrl,
   getPositionValues,
   Icon,
   NonOwnerPositionBanner,
@@ -57,7 +56,7 @@ import {
 import { TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
-import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
+// import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
@@ -70,9 +69,9 @@ import { PendingTransactionsList } from '@/components/molecules/PendingTransacti
 import { OrderInfoIntentSwap } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
-import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
-import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
+// import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+// import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
+// import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { UnstakeVaultToken } from '@/features/unstake-vault-token/components/UnstakeVaultToken/UnstakeVaultToken'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -152,8 +151,8 @@ export const VaultManageViewComponent = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultsApyByNetworkMap,
-  migratablePositions,
-  migrationBestVaultApy,
+  // migratablePositions,
+  // migrationBestVaultApy,
   systemConfig,
   rewardTokenPrices,
   rewardTokensClaimableNow,
@@ -171,8 +170,8 @@ export const VaultManageViewComponent = ({
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: InterestRates
   vaultsApyByNetworkMap: GetVaultsApyResponse
-  migratablePositions: MigratablePosition[]
-  migrationBestVaultApy: MigrationEarningsDataByChainId
+  // migratablePositions: MigratablePosition[]
+  // migrationBestVaultApy: MigrationEarningsDataByChainId
   systemConfig: Partial<EarnAppConfigType>
   rewardTokenPrices: RewardTokenPrices
   rewardTokensClaimableNow: {
@@ -203,18 +202,18 @@ export const VaultManageViewComponent = ({
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 
-  const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
-    migratablePositions[0]?.id,
-  )
+  // const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
+  //   migratablePositions[0]?.id,
+  // )
 
   const vaultApyData =
     vaultsApyByNetworkMap[
       `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
     ] ?? {}
 
-  const handleSelectPosition = (id: string) => {
-    setSelectedPosition(id)
-  }
+  // const handleSelectPosition = (id: string) => {
+  //   setSelectedPosition(id)
+  // }
 
   const {
     handleTokenSelectionChange,
@@ -364,9 +363,9 @@ export const VaultManageViewComponent = ({
     state: { slippageConfig },
   } = useLocalConfig()
 
-  const { features } = useSystemConfig()
+  // const { features } = useSystemConfig()
 
-  const migrationsEnabled = !!features?.Migrations
+  // const migrationsEnabled = !!features?.Migrations
 
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
@@ -895,7 +894,7 @@ export const VaultManageViewComponent = ({
               rewardTokenPrices={rewardTokenPrices}
               viewWalletAddress={viewWalletAddress}
             />
-            {migrationsEnabled && migratablePositions.length > 0 && (
+            {/* {migrationsEnabled && migratablePositions.length > 0 && (
               <MigrationBox
                 migratablePositions={migratablePositions}
                 selectedPosition={selectedPosition}
@@ -909,7 +908,7 @@ export const VaultManageViewComponent = ({
                 }}
                 migrationBestVaultApy={migrationBestVaultApy}
               />
-            )}
+            )} */}
             <UnstakeVaultToken vault={vault} walletAddress={viewWalletAddress} />
           </>
         }

@@ -12,7 +12,7 @@ import {
   ToggleButton,
   useLocalStorage,
   useMobileCheck,
-  WithArrow,
+  // WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
   type BlogPosts,
@@ -31,14 +31,14 @@ import {
 } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
+// import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+// import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
-import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
+// import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
-import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSummerPro/PortfolioSummerPro'
+// import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSummerPro/PortfolioSummerPro'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
@@ -59,9 +59,9 @@ type PortfolioOverviewProps = {
     [key: string]: SingleSourceChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
-  migratablePositions: MigratablePosition[]
-  viewWalletAddress: string
-  migrationBestVaultApy: MigrationEarningsDataByChainId
+  // migratablePositions: MigratablePosition[]
+  // viewWalletAddress: string
+  // migrationBestVaultApy: MigrationEarningsDataByChainId
   blogPosts: BlogPosts
   rewardTokenPrices: RewardTokenPrices
 }
@@ -72,9 +72,9 @@ export const PortfolioOverview = ({
   rewardsData,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
-  migratablePositions,
-  viewWalletAddress,
-  migrationBestVaultApy,
+  // migratablePositions,
+  // viewWalletAddress,
+  // migrationBestVaultApy,
   blogPosts,
   rewardTokenPrices,
 }: PortfolioOverviewProps) => {
@@ -126,9 +126,9 @@ export const PortfolioOverview = ({
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
 
-  const { features } = useSystemConfig()
+  // const { features } = useSystemConfig()
 
-  const migrationsEnabled = !!features?.Migrations
+  // const migrationsEnabled = !!features?.Migrations
 
   const totalSummerPortfolioUSD = sortedPositions.reduce(
     (acc, position) => acc + getPositionValues(position).netValueUSD.toNumber(),
@@ -138,10 +138,10 @@ export const PortfolioOverview = ({
 
   const overallSumr = calculateOverallSumr(rewardsData)
 
-  const availableToMigrate = migratablePositions.reduce(
-    (acc, position) => acc + Number(position.usdValue.amount),
-    0,
-  )
+  // const availableToMigrate = migratablePositions.reduce(
+  //   (acc, position) => acc + Number(position.usdValue.amount),
+  //   0,
+  // )
 
   const handleButtonClick = useCallback(
     (buttonName: string) => () => {
@@ -170,41 +170,41 @@ export const PortfolioOverview = ({
         title: '$SUMR Token Rewards',
         value: `${formatCryptoBalance(overallSumr)} $SUMR`,
       },
-      ...(migrationsEnabled
-        ? [
-            {
-              title: 'Available to Migrate',
-              value: `$${formatFiatBalance(availableToMigrate)}`,
-              subValue: (
-                <Link
-                  href={`/migrate/user/${viewWalletAddress}`}
-                  onClick={handleButtonClick('migrate')}
-                >
-                  <WithArrow
-                    as="p"
-                    variant="p3semi"
-                    style={{ color: 'var(--earn-protocol-primary-100)' }}
-                  >
-                    Migrate
-                  </WithArrow>
-                </Link>
-              ),
-            },
-          ]
-        : [
-            {
-              title: 'Available to Migrate',
-              value: `Coming Soon`,
-            },
-          ]),
+      // ...(migrationsEnabled
+      //   ? [
+      //       {
+      //         title: 'Available to Migrate',
+      //         value: `$${formatFiatBalance(availableToMigrate)}`,
+      //         subValue: (
+      //           <Link
+      //             href={`/migrate/user/${viewWalletAddress}`}
+      //             onClick={handleButtonClick('migrate')}
+      //           >
+      //             <WithArrow
+      //               as="p"
+      //               variant="p3semi"
+      //               style={{ color: 'var(--earn-protocol-primary-100)' }}
+      //             >
+      //               Migrate
+      //             </WithArrow>
+      //           </Link>
+      //         ),
+      //       },
+      //     ]
+      //   : [
+      //       {
+      //         title: 'Available to Migrate',
+      //         value: `Coming Soon`,
+      //       },
+      //     ]),
     ]
   }, [
-    availableToMigrate,
-    handleButtonClick,
-    migrationsEnabled,
+    // availableToMigrate,
+    // handleButtonClick,
+    // migrationsEnabled,
     overallSumr,
     totalSummerPortfolioUSD,
-    viewWalletAddress,
+    // viewWalletAddress,
   ])
 
   return (
@@ -221,7 +221,7 @@ export const PortfolioOverview = ({
               titleStyle={{ color: item.titleColor }}
               value={item.value}
               valueSize="large"
-              subValue={item.subValue}
+              // subValue={item.subValue}
             />
           </Card>
         ))}
@@ -292,14 +292,14 @@ export const PortfolioOverview = ({
             rewardTokenPrices={rewardTokenPrices}
           />
         </Card>
-        {migrationsEnabled && (
+        {/* {migrationsEnabled && (
           <PortfolioSummerPro
             viewWalletAddress={viewWalletAddress}
             migratablePositions={migratablePositions}
             migrationBestVaultApy={migrationBestVaultApy}
             carouselId="portfolio-overview-migrate-carousel"
           />
-        )}
+        )} */}
         <NewsAndUpdates blogPosts={blogPosts} />
       </div>
     </div>

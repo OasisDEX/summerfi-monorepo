@@ -38,14 +38,14 @@ import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsBenchmark } from '@/app/server-handlers/cached/get-vaults-benchmark'
 import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
+// import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
 import { getCachedRewardTokenPrice } from '@/app/server-handlers/reward-token-price'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
-import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
+// import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
 import {
@@ -154,7 +154,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultInterestRates,
     positionHistory,
     positionForecastResponse,
-    migratablePositionsData,
+    // migratablePositionsData,
     rewardTokenPrices,
     claimableWSTETHMerkleRewards,
   ] = await Promise.all([
@@ -194,9 +194,9 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       chainId: Number(parsedNetworkId),
       amount: Number(netValue.toFixed(position.amount.token.decimals)),
     }),
-    getCachedMigratablePositions({
-      walletAddress,
-    }),
+    // getCachedMigratablePositions({
+    //   walletAddress,
+    // }),
     getCachedRewardTokenPrice(),
     getCachedClaimableWSTETHMerkleRewards(walletAddress),
   ])
@@ -230,7 +230,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
 
-  const migratablePositions = parseServerResponseToClient(migratablePositionsData)
+  // const migratablePositions = parseServerResponseToClient(migratablePositionsData)
 
   const performanceChartData = getPositionPerformanceData({
     vault: vaultWithConfig,
@@ -246,11 +246,11 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultBenchmark,
   })
 
-  const migrationBestVaultApy = getMigrationBestVaultApy({
-    migratablePositions,
-    vaultsWithConfig: allVaultsWithConfig,
-    vaultsApyByNetworkMap,
-  })
+  // const migrationBestVaultApy = getMigrationBestVaultApy({
+  //   migratablePositions,
+  //   vaultsWithConfig: allVaultsWithConfig,
+  //   vaultsApyByNetworkMap,
+  // })
   const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
 
   const rewardTokenVisibilityMap = {
@@ -291,8 +291,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       performanceChartData={performanceChartData}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={latestArkInterestRatesMap}
-      migratablePositions={migratablePositions}
-      migrationBestVaultApy={migrationBestVaultApy}
+      // migratablePositions={migratablePositions}
+      // migrationBestVaultApy={migrationBestVaultApy}
       vaultInfo={vaultInfoParsed}
       noOfDeposits={positionHistory.noOfDeposits}
       rewardTokenPrices={rewardTokenPrices}
