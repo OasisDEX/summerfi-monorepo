@@ -9,21 +9,11 @@ import {
   type ISpotPriceInfo,
   type IToken,
   type ITokenAmount,
-  type QuoteData,
   TokenAmount,
 } from '@summerfi/sdk-common'
-import { BigNumber } from 'bignumber.js'
 import { type Chain, formatEther } from 'viem'
 
 import { useAppSDK } from '@/hooks/use-app-sdk'
-
-// Mapping for USDC token symbols by chain ID
-const USDC_SYMBOL_BY_CHAIN_ID: { [key: number]: string } = {
-  [SupportedNetworkIds.SonicMainnet]: 'USDC.e',
-  [SupportedNetworkIds.Mainnet]: 'USDC',
-  [SupportedNetworkIds.ArbitrumOne]: 'USDC',
-  [SupportedNetworkIds.Base]: 'USDC',
-}
 
 // Mapping for native gas tokens by chain ID
 const NATIVE_GAS_TOKEN_BY_CHAIN_ID: { [key: number]: string } = {
@@ -56,52 +46,25 @@ const getTokenSymbolForChain = (
 
 /**
  * Helper function to get the USD value of a LayerZero fee
- * @param chainId The chain ID
  * @param lzFee The LayerZero fee in ETH
  * @param nativeGasToken The native gas token
- * @param usdcToken The USDC token
- * @param getSwapQuote Function to get swap quote
  * @param getSpotPrice Function to get spot price
  * @returns The USD value of the LayerZero fee
  */
 const getLzFeeUsdValue = async (
-  chainId: number,
   lzFee: ITokenAmount,
   nativeGasToken: IToken,
-  usdcToken: IToken,
-  getSwapQuote: (params: {
-    fromAmount: string
-    fromToken: IToken
-    toToken: IToken
-    slippage: number
-  }) => Promise<QuoteData>,
   getSpotPrice: (params: {
     baseToken: IToken
     denomination?: Denomination
   }) => Promise<ISpotPriceInfo>,
 ): Promise<string> => {
-  // For Sonic chain, we use getSpotPrice to get the ETH/USDC price
-  if (chainId === SupportedNetworkIds.SonicMainnet) {
-    const spotPrice = await getSpotPrice({
-      baseToken: nativeGasToken,
-    })
-    const nativeGasAmount = formatEther(
-      lzFee.toSolidityValue({ decimals: nativeGasToken.decimals }),
-    )
-
-    return new BigNumber(nativeGasAmount).times(spotPrice.price.value).toString()
-  }
-
-  // For other chains, we get the swap quote
-  const quote = await getSwapQuote({
-    fromAmount: formatEther(lzFee.toSolidityValue({ decimals: nativeGasToken.decimals })),
-    fromToken: nativeGasToken,
-    toToken: usdcToken,
-    // FIXME: Use actual slippage value from slippage config
-    slippage: 0.1,
+  const spotPrice = await getSpotPrice({
+    baseToken: nativeGasToken,
   })
+  const nativeAmount = formatEther(lzFee.toSolidityValue({ decimals: nativeGasToken.decimals }))
 
-  return quote.toTokenAmount.amount
+  return spotPrice.price.multiply(nativeAmount).value.toString()
 }
 
 /**
@@ -170,7 +133,7 @@ export function useBridgeTransaction({
   onSuccess,
   onError,
 }: BridgeTransactionParams): BridgeTransactionDetails {
-  const { getSwapQuote, getTokenBySymbol, getSpotPrice } = useAppSDK()
+  const { getTokenBySymbol, getSpotPrice } = useAppSDK()
   const [isLoading, setIsLoading] = useState(false)
   const [isEstimating, setIsEstimating] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -216,7 +179,7 @@ export function useBridgeTransaction({
           throw new Error('Bridge transaction is undefined')
         }
 
-        const [nativeGasToken, usdcToken] = await Promise.all([
+        const [nativeGasToken] = await Promise.all([
           getTokenBySymbol({
             chainId: sourceChainInfo.chainId,
             symbol: getTokenSymbolForChain(
@@ -225,22 +188,11 @@ export function useBridgeTransaction({
               'native gas token',
             ),
           }),
-          getTokenBySymbol({
-            chainId: sourceChainInfo.chainId,
-            symbol: getTokenSymbolForChain(
-              sourceChainInfo.chainId,
-              USDC_SYMBOL_BY_CHAIN_ID,
-              'USDC',
-            ),
-          }),
         ])
 
         const lzFeeUsd = await getLzFeeUsdValue(
-          sourceChainInfo.chainId,
           bridgeTx.metadata.lzFee,
           nativeGasToken,
-          usdcToken,
-          getSwapQuote,
           getSpotPrice,
         )
 
@@ -268,7 +220,6 @@ export function useBridgeTransaction({
       recipient,
       amount,
       getTokenBySymbol,
-      getSwapQuote,
       getSpotPrice,
     ],
   )
