@@ -160,7 +160,7 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
       onLogoClick={() => {
         onNavItemClick({ buttonName: 'logo', isEarnApp: true })
         // because router will use base path...
-        window.location.replace('/')
+        window.location.replace('/earn')
       }}
       startTheGame={features?.Game ? startGame : undefined}
       featuresConfig={features}

@@ -18,13 +18,15 @@
     "generate-module-types-watch": "tcm -p './+(components|features|app)/**/*.module.css' -w -s"
   },
   "dependencies": {
+    "@account-kit/infra": "4.88.1",
+    "@account-kit/react": "4.88.1",
     "@layerzerolabs/scan-client": "^0.0.8",
     "@loadable/component": "^5.16.4",
     "@number-flow/react": "^0.5.10",
-    "@privy-io/react-auth": "3.17.0",
-    "@privy-io/wagmi": "4.0.2",
-    "@safe-global/safe-apps-sdk": "9.1.0",
+    "@privy-io/react-auth": "3.22.2",
+    "@privy-io/wagmi": "4.0.6",
     "@safe-global/safe-apps-provider": "0.18.6",
+    "@safe-global/safe-apps-sdk": "9.1.0",
     "@summerfi/app-earn-ui": "workspace:*",
     "@summerfi/app-icons": "workspace:*",
     "@summerfi/app-risk": "workspace:*",

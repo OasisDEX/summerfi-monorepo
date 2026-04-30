@@ -1,0 +1,180 @@
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--general-space-32) var(--general-space-16);
+  min-height: 60vh;
+}
+
+.contentCard {
+  width: 100%;
+  max-width: 680px;
+  background: var(--color-background-subtle, #1a1a1f);
+  border: 1px solid var(--color-border-default, #2e2e38);
+  border-radius: var(--radius-large, 16px);
+  padding: var(--general-space-32);
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-24);
+}
+
+.pageTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary, #fff);
+  margin: 0;
+}
+
+.pageIntro {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text-secondary, #9c9caa);
+  margin: 0;
+}
+
+.disclaimer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  padding: var(--general-space-20);
+  border: 1px solid var(--color-warning-border, #4d3e00);
+  border-radius: var(--radius-medium, 12px);
+  background: var(--color-warning-surface, #1f1a00);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-warning-text, #f0c060);
+}
+
+.loginStep,
+.exportStep {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+}
+
+.stepTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text-primary, #fff);
+  margin: 0;
+}
+
+.stepDescription {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-secondary, #9c9caa);
+  margin: 0;
+}
+
+.primaryButton {
+  padding: var(--general-space-12) var(--general-space-24);
+  background: var(--color-action-primary, #ff49a4);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-medium, 12px);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: opacity 0.15s ease;
+}
+
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.primaryButton:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.warningBox {
+  padding: var(--general-space-16);
+  background: var(--color-warning-surface, #1f1a00);
+  border: 1px solid var(--color-warning-border, #4d3e00);
+  border-radius: var(--radius-medium, 12px);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-warning-text, #f0c060);
+}
+
+.errorText {
+  font-size: 13px;
+  color: var(--color-negative, #f05050);
+  margin: 0;
+}
+
+.iframeContainer {
+  width: 100%;
+  min-height: 120px;
+  border-radius: var(--radius-medium, 12px);
+  overflow: hidden;
+}
+
+.importGuides {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  margin-top: var(--general-space-8);
+}
+
+.guidesTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary, #fff);
+  margin: 0;
+}
+
+.guideCard {
+  padding: var(--general-space-16);
+  border: 1px solid var(--color-border-default, #2e2e38);
+  border-radius: var(--radius-medium, 12px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-8);
+}
+
+.guideName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary, #fff);
+  margin: 0;
+}
+
+.guideSteps {
+  margin: 0;
+  padding-left: var(--general-space-20);
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--color-text-secondary, #9c9caa);
+}
+
+.guideLink {
+  font-size: 13px;
+  color: var(--color-action-primary, #ff49a4);
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.guideLink:hover {
+  text-decoration: underline;
+}
+
+.doneBox {
+  padding: var(--general-space-16);
+  background: var(--color-positive-surface, #001f10);
+  border: 1px solid var(--color-positive-border, #005030);
+  border-radius: var(--radius-medium, 12px);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-positive-text, #60c090);
+}
+
+.inlineLink {
+  color: var(--color-action-primary, #ff49a4);
+  text-decoration: none;
+}
+
+.inlineLink:hover {
+  text-decoration: underline;
+}
