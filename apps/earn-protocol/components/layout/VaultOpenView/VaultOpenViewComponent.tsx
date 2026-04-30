@@ -241,7 +241,8 @@ export const VaultOpenViewComponent = ({
       // fetchMigratablePositions(userWalletAddress)
       fetchIfUserHasPositions(userWalletAddress)
     }
-  }, [userWalletAddress, sdk, vaults, vaultsApyRaw])
+    // }, [userWalletAddress, sdk, vaults, vaultsApyRaw])
+  }, [userWalletAddress])
 
   // const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
   //   migratablePositions[0]?.id,
