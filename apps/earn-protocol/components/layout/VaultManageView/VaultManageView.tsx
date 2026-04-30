@@ -15,13 +15,13 @@ import {
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 
-import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
+// import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { VaultManageViewComponent } from '@/components/layout/VaultManageView/VaultManageViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
-import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
+// import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 
 export const VaultManageView = ({
   vault,
@@ -36,8 +36,8 @@ export const VaultManageView = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultsApyByNetworkMap,
-  migratablePositions,
-  migrationBestVaultApy,
+  // migratablePositions,
+  // migrationBestVaultApy,
   systemConfig,
   noOfDeposits,
   rewardTokenPrices,
@@ -55,8 +55,8 @@ export const VaultManageView = ({
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: InterestRates
   vaultsApyByNetworkMap: GetVaultsApyResponse
-  migratablePositions: MigratablePosition[]
-  migrationBestVaultApy: MigrationEarningsDataByChainId
+  // migratablePositions: MigratablePosition[]
+  // migrationBestVaultApy: MigrationEarningsDataByChainId
   systemConfig: Partial<EarnAppConfigType>
   noOfDeposits: number
   rewardTokenPrices: RewardTokenPrices
@@ -83,8 +83,8 @@ export const VaultManageView = ({
         performanceChartData={performanceChartData}
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}
-        migratablePositions={migratablePositions}
-        migrationBestVaultApy={migrationBestVaultApy}
+        // migratablePositions={migratablePositions}
+        // migrationBestVaultApy={migrationBestVaultApy}
         noOfDeposits={noOfDeposits}
         rewardTokenPrices={rewardTokenPrices}
         rewardTokensClaimableNow={rewardTokensClaimableNow}

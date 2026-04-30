@@ -46,7 +46,7 @@ import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedWalletAssets } from '@/app/server-handlers/cached/get-wallet-assets'
-import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
+// import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
 import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
 import {
   getCachedRewardTokenPrice,
@@ -55,7 +55,7 @@ import {
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
-import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
+// import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { mergePositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { type ClaimableRewards } from '@/features/portfolio/types'
 import { type GetPositionHistoryQuery } from '@/graphql/clients/position-history/client'
@@ -87,7 +87,7 @@ const portfolioCallsHandler = async ({
     userPositions,
     vaultsList,
     systemConfig,
-    migratablePositionsData,
+    // migratablePositionsData,
     latestActivity,
     beachClubData,
     positionsActivePeriods,
@@ -105,7 +105,7 @@ const portfolioCallsHandler = async ({
     getCachedUserPositions({ walletAddress }),
     getCachedVaultsList(),
     getCachedConfig(),
-    getCachedMigratablePositions({ walletAddress }),
+    // getCachedMigratablePositions({ walletAddress }),
     getCachedPaginatedLatestActivity({
       walletAddress,
       page: 1,
@@ -130,7 +130,7 @@ const portfolioCallsHandler = async ({
     userPositions,
     vaultsList,
     systemConfig,
-    migratablePositionsData,
+    // migratablePositionsData,
     latestActivity,
     beachClubData,
     positionsActivePeriods,
@@ -198,7 +198,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     userPositions,
     vaultsList,
     systemConfig,
-    migratablePositionsData,
+    // migratablePositionsData,
     latestActivity,
     beachClubData,
     positionsActivePeriods,
@@ -213,7 +213,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
 
-  const migratablePositions = parseServerResponseToClient(migratablePositionsData)
+  // const migratablePositions = parseServerResponseToClient(migratablePositionsData)
 
   const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaultsList.vaults)
 
@@ -287,11 +287,11 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     {},
   )
 
-  const migrationBestVaultApy = getMigrationBestVaultApy({
-    migratablePositions,
-    vaultsWithConfig,
-    vaultsApyByNetworkMap,
-  })
+  // const migrationBestVaultApy = getMigrationBestVaultApy({
+  //   migratablePositions,
+  //   vaultsWithConfig,
+  //   vaultsApyByNetworkMap,
+  // })
 
   const claimableMerklRewardsData = claimableMerklRewards.perChain[SupportedNetworkIds.Base]
 
@@ -328,8 +328,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       latestActivity={latestActivity}
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-      migratablePositions={migratablePositions}
-      migrationBestVaultApy={migrationBestVaultApy}
+      // migratablePositions={migratablePositions}
+      // migrationBestVaultApy={migrationBestVaultApy}
       rebalanceActivity={rebalanceActivity}
       beachClubData={beachClubData}
       claimableRewards={claimableRewards}
