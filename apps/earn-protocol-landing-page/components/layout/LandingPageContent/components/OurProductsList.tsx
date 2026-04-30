@@ -492,7 +492,7 @@ const IntegrateHighQualityYield = ({ maxApyRegularVault }: { maxApyRegularVault:
                   precision: 2,
                 })} when you integrate via Summer.fi SDK, Yield.xyz or Enso Finance.`}
               />
-              <CheckLine text="Join leading custodians and apps such as Utila, Balance Custody, DeFi Saver, Vaults.fyi and more offering the highest quality yield." />
+              <CheckLine text="Join leading custodians and apps such as Utila, Franklin, DeFi Saver, Vaults.fyi and more offering the highest quality yield." />
               <CheckLine text="Earn revenue share on all integrated vaults (DeFi and RWA)" />
               <CheckLine text="The Vaults update, meaning you don’t have to - one integration gives unlimited access for your users.  " />
             </div>
