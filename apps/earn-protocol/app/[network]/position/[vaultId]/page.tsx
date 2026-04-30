@@ -209,7 +209,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={latestArkInterestRatesMap}
       vaultApyData={vaultApyData}
-      vaultsApyRaw={vaultsApyRaw}
+      // vaultsApyRaw={vaultsApyRaw}
       referralCode={referralCode}
       vaultInfo={vaultInfoParsed}
       rewardTokenPrices={rewardTokenPrices}

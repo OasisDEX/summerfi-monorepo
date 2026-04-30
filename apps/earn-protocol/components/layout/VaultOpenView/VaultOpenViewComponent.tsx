@@ -24,7 +24,6 @@ import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
   type DropdownRawOption,
-  type GetVaultsApyResponse,
   type InterestRates,
   type RewardTokenPrices,
   type SDKVaultishType,
@@ -91,7 +90,7 @@ type VaultOpenViewComponentProps = {
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
-  vaultsApyRaw: GetVaultsApyResponse
+  // vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
   rewardTokenPrices: RewardTokenPrices
 }
@@ -107,7 +106,7 @@ export const VaultOpenViewComponent = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultApyData,
-  vaultsApyRaw,
+  // vaultsApyRaw,
   referralCode: referralCodeFromCookie,
   rewardTokenPrices,
 }: VaultOpenViewComponentProps) => {

@@ -2,7 +2,6 @@
 
 import {
   type ArksHistoricalChartData,
-  type GetVaultsApyResponse,
   type InterestRates,
   type RewardTokenPrices,
   type SDKVaultishType,
@@ -30,7 +29,7 @@ export const VaultOpenView = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultApyData,
-  vaultsApyRaw,
+  // vaultsApyRaw,
   referralCode,
   rewardTokenPrices,
 }: {
@@ -44,7 +43,7 @@ export const VaultOpenView = ({
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
-  vaultsApyRaw: GetVaultsApyResponse
+  // vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
   rewardTokenPrices: RewardTokenPrices
 }) => {
@@ -61,7 +60,7 @@ export const VaultOpenView = ({
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}
         vaultApyData={vaultApyData}
-        vaultsApyRaw={vaultsApyRaw}
+        // vaultsApyRaw={vaultsApyRaw}
         referralCode={referralCode}
         rewardTokenPrices={rewardTokenPrices}
       />
