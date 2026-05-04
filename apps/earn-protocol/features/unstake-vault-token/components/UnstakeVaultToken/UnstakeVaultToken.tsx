@@ -11,7 +11,11 @@ import {
   useEarnProtocolChain,
   useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType, type TokenSymbolsList } from '@summerfi/app-types'
+import {
+  type SDKVaultishType,
+  type SupportedNetworkIds,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
@@ -58,10 +62,13 @@ export const UnstakeVaultToken: FC<UnstakeVaultTokenProps> = ({ vault, walletAdd
 
   const { unstakeVaultTokensTransaction, balance } = useUnstakeVaultTokens({
     onSuccess: () => {
-      setTimeout(() => {
-        dispatch({ type: 'update-step', payload: UnstakeVaultTokenStep.COMPLETED })
-        toast.success('Withdrawal successful', SUCCESS_TOAST_CONFIG)
-      }, delayPerNetwork[chain.id])
+      setTimeout(
+        () => {
+          dispatch({ type: 'update-step', payload: UnstakeVaultTokenStep.COMPLETED })
+          toast.success('Withdrawal successful', SUCCESS_TOAST_CONFIG)
+        },
+        delayPerNetwork[chain.id as SupportedNetworkIds],
+      )
     },
     onError: () => {
       dispatch({ type: 'update-step', payload: UnstakeVaultTokenStep.ERROR })
