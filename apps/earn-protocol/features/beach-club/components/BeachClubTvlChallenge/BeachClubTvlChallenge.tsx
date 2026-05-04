@@ -10,7 +10,6 @@ import {
   SUCCESS_TOAST_CONFIG,
   Text,
   Tooltip,
-  useClientChainId,
   useEarnProtocolChain,
   useEarnProtocolWallet,
   useMobileCheck,
@@ -61,11 +60,10 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const handleInputEvent = useHandleInputChangeEvent()
 
-  const { clientChainId } = useClientChainId()
+  const { setChain, isSettingChain, chain } = useEarnProtocolChain()
   const { publicClient } = useNetworkAlignedClient({
-    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
+    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(chain.id)),
   })
-  const { setChain, isSettingChain } = useEarnProtocolChain()
   const merklIsAuthorizedOnBase = state.merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
   const isOwner = userWalletAddress?.toLowerCase() === state.walletAddress.toLowerCase()
@@ -81,39 +79,45 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
 
   const { merklOptInTransaction } = useMerklOptInTransaction({
     onSuccess: () => {
-      setTimeout(() => {
-        dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
-        dispatch({
-          type: 'update-merkl-is-authorized-per-chain',
-          payload: {
-            ...merklIsAuthorizedPerChain,
-            [clientChainId]: true,
-          },
-        })
-        toast.success('Merkl approval successful', SUCCESS_TOAST_CONFIG)
-        handleOptInOpenClose()
-      }, delayPerNetwork[clientChainId])
+      setTimeout(
+        () => {
+          dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
+          dispatch({
+            type: 'update-merkl-is-authorized-per-chain',
+            payload: {
+              ...merklIsAuthorizedPerChain,
+              [chain.id]: true,
+            },
+          })
+          toast.success('Merkl approval successful', SUCCESS_TOAST_CONFIG)
+          handleOptInOpenClose()
+        },
+        delayPerNetwork[chain.id as SupportedNetworkIds],
+      )
     },
     onError: () => {
       dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.FAILED })
       toast.error('Merkl approval failed', ERROR_TOAST_CONFIG)
     },
-    network: chainIdToSDKNetwork(clientChainId),
+    network: chainIdToSDKNetwork(chain.id),
     publicClient,
   })
 
   const { claimMerkleRewardsTransaction } = useClaimMerkleRewardsTransaction({
     onSuccess: () => {
-      setTimeout(() => {
-        dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
-        toast.success('Fees claimed successfully', SUCCESS_TOAST_CONFIG)
-        dispatch({ type: 'update-fees-claimed', payload: true })
-      }, delayPerNetwork[clientChainId])
+      setTimeout(
+        () => {
+          dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
+          toast.success('Fees claimed successfully', SUCCESS_TOAST_CONFIG)
+          dispatch({ type: 'update-fees-claimed', payload: true })
+        },
+        delayPerNetwork[chain.id as SupportedNetworkIds],
+      )
     },
     onError: () => {
       toast.error('Failed to claim fees', ERROR_TOAST_CONFIG)
     },
-    network: chainIdToSDKNetwork(clientChainId),
+    network: chainIdToSDKNetwork(chain.id),
     publicClient,
   })
 
@@ -137,7 +141,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
 
   // chainId for now will always be Base as we support Merkl on base only
   const handleMerklOptInAccept = (chainId: SupportedNetworkIds) => {
-    if (Number(clientChainId) !== Number(chainId)) {
+    if (Number(chain.id) !== Number(chainId)) {
       setChain({ chain: chainId })
 
       return

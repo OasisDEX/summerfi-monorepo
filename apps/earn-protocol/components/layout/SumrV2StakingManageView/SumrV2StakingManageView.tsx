@@ -19,7 +19,6 @@ import {
   Text,
   Tooltip,
   useAmount,
-  useClientChainId,
   useEarnProtocolChain,
   useEarnProtocolWallet,
   WithArrow,
@@ -1552,8 +1551,7 @@ const SumrV2StakingIntermediary = ({ sumrPriceUsd }: { sumrPriceUsd: number }) =
   const [stakeStatus, setStakeStatus] = useState<UiTransactionStatuses | null>(null)
   const [shouldAutoStakeAfterApproval, setShouldAutoStakeAfterApproval] = useState(false)
 
-  const { setChain, isSettingChain } = useEarnProtocolChain()
-  const { clientChainId } = useClientChainId()
+  const { setChain, isSettingChain, chain } = useEarnProtocolChain()
 
   const { stakeSumrTransaction, approveSumrTransaction, prepareTxs, isLoading } =
     useStakeSumrTransactionV2({
@@ -1605,7 +1603,7 @@ const SumrV2StakingIntermediary = ({ sumrPriceUsd }: { sumrPriceUsd: number }) =
   useEffect(() => {
     if (
       shouldAutoStakeAfterApproval &&
-      clientChainId === ChainIds.Base &&
+      chain.id === ChainIds.Base &&
       !isSettingChain &&
       !approveStatus &&
       !stakeStatus &&
@@ -1645,7 +1643,7 @@ const SumrV2StakingIntermediary = ({ sumrPriceUsd }: { sumrPriceUsd: number }) =
     }
   }, [
     shouldAutoStakeAfterApproval,
-    clientChainId,
+    chain.id,
     isSettingChain,
     approveStatus,
     stakeStatus,
@@ -1690,7 +1688,7 @@ const SumrV2StakingIntermediary = ({ sumrPriceUsd }: { sumrPriceUsd: number }) =
     })
 
     // Check if we need to switch to Base network
-    if (clientChainId !== ChainIds.Base) {
+    if (chain.id !== ChainIds.Base) {
       setShouldAutoStakeAfterApproval(true)
       setChain({ chain: ChainIds.Base })
 

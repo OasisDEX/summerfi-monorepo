@@ -4,7 +4,7 @@ import {
   Card,
   getEarnProtocolChainById,
   Text,
-  useClientChainId,
+  useEarnProtocolChain,
   useEarnProtocolWallet,
   useIsIframe,
   useMobileCheck,
@@ -45,19 +45,19 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   const { isMobile } = useMobileCheck(deviceType)
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { activeParagraph, paragraphRefs } = useVisibleParagraph()
-  const { clientChainId } = useClientChainId()
+  const { chain } = useEarnProtocolChain()
 
   const signTosMessage = useTermsOfServiceSigner()
   const isIframe = useIsIframe()
 
   const { publicClient } = usePublicClient({
-    chain: getEarnProtocolChainById(clientChainId as SupportedNetworkIds),
+    chain: getEarnProtocolChainById(chain.id as SupportedNetworkIds),
   })
 
   const tosState = useTermsOfService({
     publicClient,
     signMessage: signTosMessage,
-    chainId: clientChainId,
+    chainId: chain.id,
     walletAddress: userWalletAddress,
     version: TermsOfServiceVersion.SUMR_CLAIM_TOKEN_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,

@@ -8,7 +8,6 @@ import {
   Icon,
   SUCCESS_TOAST_CONFIG,
   Text,
-  useClientChainId,
   useEarnProtocolChain,
   useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
@@ -56,14 +55,13 @@ export const UnstakeVaultToken: FC<UnstakeVaultTokenProps> = ({ vault, walletAdd
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { publicClient } = useNetworkAlignedClient()
   const { chain, setChain } = useEarnProtocolChain()
-  const { clientChainId } = useClientChainId()
 
   const { unstakeVaultTokensTransaction, balance } = useUnstakeVaultTokens({
     onSuccess: () => {
       setTimeout(() => {
         dispatch({ type: 'update-step', payload: UnstakeVaultTokenStep.COMPLETED })
         toast.success('Withdrawal successful', SUCCESS_TOAST_CONFIG)
-      }, delayPerNetwork[clientChainId])
+      }, delayPerNetwork[chain.id])
     },
     onError: () => {
       dispatch({ type: 'update-step', payload: UnstakeVaultTokenStep.ERROR })

@@ -9,7 +9,6 @@ import {
   Input,
   SUCCESS_TOAST_CONFIG,
   Text,
-  useClientChainId,
   useEarnProtocolChain,
   useEarnProtocolWallet,
   WithArrow,
@@ -80,9 +79,8 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const { walletAddress } = useParams()
   const [delegates, setDelegates] = useState<TallyDelegate[]>(externalData.tallyDelegates)
   const [action, setAction] = useState<ClaimDelegateAction>()
-  const { setChain } = useEarnProtocolChain()
+  const { setChain, chain } = useEarnProtocolChain()
   const { push } = useRouter()
-  const { clientChainId } = useClientChainId()
   const [sortBy, setSortBy] = useState<DropdownRawOption>(
     getDelegateSortOptions(DelegateSortOptions.HIGHEST_VOTE_AMOUNT)[0],
   )
@@ -183,7 +181,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const hasStake = Number(externalData.sumrStakeDelegate.stakedAmount) > 0
 
-  const isBase = clientChainId === SupportedNetworkIds.Base
+  const isBase = chain.id === SupportedNetworkIds.Base
 
   const handleDelegate = async (updateDelegatee?: string) => {
     const isDelegateUnchanged =

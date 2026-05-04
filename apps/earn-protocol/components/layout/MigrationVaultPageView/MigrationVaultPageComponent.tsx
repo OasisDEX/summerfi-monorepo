@@ -9,7 +9,6 @@ import {
   SidebarMobileHeader,
   type SidebarProps,
   useAmountWithSwap,
-  useClientChainId,
   useEarnProtocolChain,
   useEarnProtocolWallet,
   useForecast,
@@ -94,13 +93,11 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const { push } = useRouter()
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
-  const { setChain, isSettingChain } = useEarnProtocolChain()
+  const { setChain, isSettingChain, chain } = useEarnProtocolChain()
 
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const dropdownChangeHandler = useHandleDropdownChangeEvent()
-
-  const { clientChainId } = useClientChainId()
 
   const pathname = usePathname()
 
@@ -213,7 +210,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   const isPrimaryButtonDisabled =
     isPrimaryButtonLoading || userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()
 
-  const isCorrectNetwork = clientChainId === vaultChainId
+  const isCorrectNetwork = chain.id === vaultChainId
 
   const handlePrimaryButtonClick = () => {
     if (!isCorrectNetwork) {

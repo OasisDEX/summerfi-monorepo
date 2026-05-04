@@ -7,7 +7,6 @@ import {
   Sidebar,
   type SidebarProps,
   useAmount,
-  useClientChainId,
   useEarnProtocolChain,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
@@ -82,9 +81,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
 
   const isMobileOrTablet = isMobile || isTablet
 
-  const { clientChainId } = useClientChainId()
-
-  const { setChain } = useEarnProtocolChain()
+  const { setChain, chain } = useEarnProtocolChain()
 
   const dropdownOptions = walletDataAssetsSortedByUsdValue
     .filter((item) =>
@@ -185,7 +182,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
     !isOwner ||
     hasInsufficientBalance
 
-  const isCorrectChain = clientChainId === state.tokenDropdown.chainId
+  const isCorrectChain = chain.id === state.tokenDropdown.chainId
 
   const sidebarProps: SidebarProps = {
     title: getSendSidebarTitle({ state }),

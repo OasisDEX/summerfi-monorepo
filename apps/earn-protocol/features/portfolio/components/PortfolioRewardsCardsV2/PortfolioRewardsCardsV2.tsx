@@ -11,7 +11,6 @@ import {
   SUCCESS_TOAST_CONFIG,
   Text,
   Tooltip,
-  useClientChainId,
   useEarnProtocolChain,
   useEarnProtocolLogin,
   useEarnProtocolWallet,
@@ -349,12 +348,11 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
   const revalidateUser = useRevalidateUser()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
-  const { clientChainId } = useClientChainId()
-  const { setChain, isSettingChain } = useEarnProtocolChain()
+  const { setChain, isSettingChain, chain } = useEarnProtocolChain()
   const { publicClient } = useNetworkAlignedClient({
-    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
+    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(chain.id)),
   })
-  const isProperChain = Number(clientChainId) === Number(NetworkIds.BASEMAINNET)
+  const isProperChain = Number(chain.id) === Number(NetworkIds.BASEMAINNET)
 
   const handleOptInOpenClose = () => setIsOptInOpen((prev) => !prev)
 
@@ -366,51 +364,57 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
 
   const { claimMerkleRewardsTransaction } = useClaimMerkleRewardsTransaction({
     onSuccess: () => {
-      setTimeout(() => {
-        dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.COMPLETED })
-        toast.success(
-          'Rewards claimed successfully, token values can take up to several minutes to update',
-          SUCCESS_TOAST_CONFIG,
-        )
-        dispatch({ type: 'update-fees-claimed', payload: true })
-        if (isOwner) {
-          revalidateUser(userWalletAddress)
-        }
-      }, delayPerNetwork[clientChainId])
+      setTimeout(
+        () => {
+          dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.COMPLETED })
+          toast.success(
+            'Rewards claimed successfully, token values can take up to several minutes to update',
+            SUCCESS_TOAST_CONFIG,
+          )
+          dispatch({ type: 'update-fees-claimed', payload: true })
+          if (isOwner) {
+            revalidateUser(userWalletAddress)
+          }
+        },
+        delayPerNetwork[chain.id as SupportedNetworkIds],
+      )
     },
     onError: () => {
       dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.FAILED })
       toast.error('Failed to claim fees', ERROR_TOAST_CONFIG)
     },
-    network: chainIdToSDKNetwork(clientChainId),
+    network: chainIdToSDKNetwork(chain.id),
     publicClient,
   })
 
   const { merklOptInTransaction } = useMerklOptInTransaction({
     onSuccess: () => {
-      setTimeout(() => {
-        dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
-        dispatch({
-          type: 'update-merkl-is-authorized-per-chain',
-          payload: {
-            ...merklIsAuthorizedPerChain,
-            [clientChainId]: true,
-          },
-        })
-        toast.success('Merkl approval successful', SUCCESS_TOAST_CONFIG)
-        handleOptInOpenClose()
-      }, delayPerNetwork[clientChainId])
+      setTimeout(
+        () => {
+          dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
+          dispatch({
+            type: 'update-merkl-is-authorized-per-chain',
+            payload: {
+              ...merklIsAuthorizedPerChain,
+              [chain.id]: true,
+            },
+          })
+          toast.success('Merkl approval successful', SUCCESS_TOAST_CONFIG)
+          handleOptInOpenClose()
+        },
+        delayPerNetwork[chain.id as SupportedNetworkIds],
+      )
     },
     onError: () => {
       dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.FAILED })
       toast.error('Merkl approval failed', ERROR_TOAST_CONFIG)
     },
-    network: chainIdToSDKNetwork(clientChainId),
+    network: chainIdToSDKNetwork(chain.id),
     publicClient,
   })
 
   const handleMerklOptInAccept = (chainId: SupportedNetworkIds) => {
-    if (Number(clientChainId) !== Number(chainId)) {
+    if (Number(chain.id) !== Number(chainId)) {
       setChain({ chain: chainId })
 
       return

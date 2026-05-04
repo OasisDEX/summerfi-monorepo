@@ -11,7 +11,7 @@ import {
   Text,
   type TextClassNames,
   Tooltip,
-  useClientChainId,
+  useEarnProtocolChain,
   useEarnProtocolLogin,
   useEarnProtocolWallet,
   useIsIframe,
@@ -193,9 +193,9 @@ export default function WalletLabel({
   const { connectSafe } = useSafeAutoConnect()
   const [addressCopied, setAddressCopied] = useState(false)
   const { address: userWalletAddress } = useEarnProtocolWallet()
-  const { clientChainId } = useClientChainId()
+  const { chain } = useEarnProtocolChain()
 
-  const chainName = sdkChainIdToHumanNetwork(clientChainId)
+  const chainName = sdkChainIdToHumanNetwork(chain.id)
 
   const { login, logout, isOpen: isAuthmodalLoading } = useEarnProtocolLogin()
   const { isOpen: isAuthModalOpen } = useModalStatus()
@@ -254,7 +254,7 @@ export default function WalletLabel({
           >
             <WalletAvatar
               address={userWalletAddress}
-              chainId={clientChainId}
+              chainId={chain.id}
               size={16}
               iconSize={8}
               hideNetworkIcon={hideNetworkIcon}
@@ -304,7 +304,7 @@ export default function WalletLabel({
           <Button variant="secondarySmall" className={walletLabelStyles.mainButtonWrapper}>
             <WalletAvatar
               address={userWalletAddress}
-              chainId={clientChainId}
+              chainId={chain.id}
               size={24}
               iconSize={12}
               hideNetworkIcon={hideNetworkIcon}

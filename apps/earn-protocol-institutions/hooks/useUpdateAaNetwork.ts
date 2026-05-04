@@ -1,10 +1,6 @@
 'use client'
 import { useEffect } from 'react'
-import {
-  getEarnProtocolChainById,
-  useClientChainId,
-  useEarnProtocolChain,
-} from '@summerfi/app-earn-ui'
+import { getEarnProtocolChainById, useEarnProtocolChain } from '@summerfi/app-earn-ui'
 import {
   humanNetworktoSDKNetwork,
   subgraphNetworkToId,
@@ -26,13 +22,12 @@ import { useParams } from 'next/navigation'
  * the `useParams()` hook.
  */
 export const useUpdateAANetwork = (overrideNetwork?: string) => {
-  const { clientChainId } = useClientChainId()
   const params = useParams()
 
   // Use the passed in network, if provided, otherwise fall back to URL params.
   const network = overrideNetwork ?? params.network
 
-  const { setChain } = useEarnProtocolChain()
+  const { setChain, chain } = useEarnProtocolChain()
 
   const sdkNetwork = humanNetworktoSDKNetwork(network as string)
   const appChainId = supportedSDKNetworkId(subgraphNetworkToId(supportedSDKNetwork(sdkNetwork)))
@@ -40,12 +35,12 @@ export const useUpdateAANetwork = (overrideNetwork?: string) => {
   const appChain = getEarnProtocolChainById(appChainId)
 
   useEffect(() => {
-    if (clientChainId === appChainId) {
+    if (chain.id === appChainId) {
       setChain({ chain: appChain })
       // eslint-disable-next-line no-console
       console.info(`Updated app network to: ${appChain.id}`)
     }
-  }, [appChain, setChain, clientChainId, appChainId])
+  }, [appChain, setChain, chain.id, appChainId])
 
-  return { clientChainId, appChainId, appChain }
+  return { clientChainId: chain.id, appChainId, appChain }
 }

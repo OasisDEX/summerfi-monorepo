@@ -6,10 +6,10 @@ import {
   ERROR_TOAST_CONFIG,
   SUCCESS_TOAST_CONFIG,
   Text,
-  useClientChainId,
+  useEarnProtocolChain,
   useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
-import { type RewardTokenPrices } from '@summerfi/app-types'
+import { type RewardTokenPrices, type SupportedNetworkIds } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   formatCryptoBalance,
@@ -34,14 +34,14 @@ const RewardTokenClaimButton = ({
   viewWalletAddress: string
 }) => {
   const [isClaiming, setIsClaiming] = useState(false)
-  const { clientChainId } = useClientChainId()
+  const { chain } = useEarnProtocolChain()
   const { publicClient } = useNetworkAlignedClient({
-    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
+    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(chain.id)),
   })
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { revalidateTags } = useRevalidateTags()
 
-  const isProperChainSelected = clientChainId === vaultChainId
+  const isProperChainSelected = chain.id === vaultChainId
   const isOwner = userWalletAddress?.toLowerCase() === viewWalletAddress.toLowerCase()
 
   const { claimVaultMerkleRewardsTransaction, error, isLoading } =
@@ -55,21 +55,24 @@ const RewardTokenClaimButton = ({
           },
         )
 
-        setTimeout(() => {
-          setIsClaiming(false)
-          if (userWalletAddress) {
-            revalidateTags({
-              tags: [getMerkleRewardsTag(userWalletAddress)],
-            })
-          }
-          toast.dismiss(toastId)
-        }, delayPerNetwork[clientChainId])
+        setTimeout(
+          () => {
+            setIsClaiming(false)
+            if (userWalletAddress) {
+              revalidateTags({
+                tags: [getMerkleRewardsTag(userWalletAddress)],
+              })
+            }
+            toast.dismiss(toastId)
+          },
+          delayPerNetwork[chain.id as SupportedNetworkIds],
+        )
       },
       onError: () => {
         setIsClaiming(false)
         toast.error('Failed to claim rewards', ERROR_TOAST_CONFIG)
       },
-      network: chainIdToSDKNetwork(clientChainId),
+      network: chainIdToSDKNetwork(chain.id),
       publicClient,
       rewardTokenAddress,
     })

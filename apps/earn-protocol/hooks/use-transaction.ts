@@ -15,7 +15,6 @@ import {
   getSafeTxHash,
   getVaultPositionUrl,
   getVaultUrl,
-  useClientChainId,
   useEarnProtocolChain,
   useEarnProtocolLogin,
   useEarnProtocolSendUserOperation,
@@ -114,8 +113,7 @@ export const useTransaction = ({
   const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
   const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
-  const { setChain, isSettingChain } = useEarnProtocolChain()
-  const { clientChainId } = useClientChainId()
+  const { setChain, isSettingChain, chain } = useEarnProtocolChain()
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
@@ -129,7 +127,7 @@ export const useTransaction = ({
   const isIframe = useIsIframe()
   const revalidatePositionData = useRevalidatePositionData()
 
-  const isProperChainSelected = clientChainId === vaultChainId
+  const isProperChainSelected = chain.id === vaultChainId
   const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
   const isDeposit = sidebarTransactionType === TransactionAction.DEPOSIT
   const isSwitch = sidebarTransactionType === TransactionAction.SWITCH

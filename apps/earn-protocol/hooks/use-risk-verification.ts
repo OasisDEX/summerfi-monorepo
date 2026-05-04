@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import {
-  useClientChainId,
+  useEarnProtocolChain,
   useEarnProtocolLogin,
   useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
@@ -23,11 +23,11 @@ export const useRiskVerification = ({
 }) => {
   const { logout } = useEarnProtocolLogin()
   const { address: userWalletAddress } = useEarnProtocolWallet()
-  const { clientChainId } = useClientChainId()
+  const { chain } = useEarnProtocolChain()
 
   const checkRisk = useCallback(async () => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!userWalletAddress || !clientChainId) {
+    if (!userWalletAddress || !chain.id) {
       // eslint-disable-next-line no-console
       console.error('Missing required parameters for risk check')
 
@@ -36,7 +36,7 @@ export const useRiskVerification = ({
 
     try {
       const risk = await fetchRisk({
-        chainId: clientChainId,
+        chainId: chain.id,
         walletAddress: userWalletAddress,
         cookiePrefix,
         host: '/earn',
@@ -57,7 +57,7 @@ export const useRiskVerification = ({
 
       return { isRisky: false }
     }
-  }, [clientChainId, cookiePrefix, logout, userWalletAddress])
+  }, [chain.id, cookiePrefix, logout, userWalletAddress])
 
   return { checkRisk }
 }

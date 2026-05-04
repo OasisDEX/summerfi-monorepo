@@ -5,7 +5,6 @@ import {
   MobileDrawer,
   Modal,
   SUCCESS_TOAST_CONFIG,
-  useClientChainId,
   useEarnProtocolChain,
   useEarnProtocolWallet,
   useMobileCheck,
@@ -97,10 +96,9 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
   })
 
-  const { setChain, isSettingChain } = useEarnProtocolChain()
-  const { clientChainId } = useClientChainId()
+  const { setChain, isSettingChain, chain } = useEarnProtocolChain()
   const { publicClient } = useNetworkAlignedClient({
-    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
+    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(chain.id)),
   })
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const revalidateUser = useRevalidateUser()
@@ -124,69 +122,75 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
   const { merklOptInTransaction } = useMerklOptInTransaction({
     onSuccess: () => {
-      setTimeout(() => {
-        dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
-        dispatch({
-          type: 'update-merkl-is-authorized-per-chain',
-          payload: {
-            ...state.merklIsAuthorizedPerChain,
-            [clientChainId]: true,
-          },
-        })
-        toast.success('Merkl approval successful', SUCCESS_TOAST_CONFIG)
-        setIsOptInOpen(false)
-        revalidateUser(resolvedWalletAddress)
-      }, delayPerNetwork[clientChainId])
+      setTimeout(
+        () => {
+          dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
+          dispatch({
+            type: 'update-merkl-is-authorized-per-chain',
+            payload: {
+              ...state.merklIsAuthorizedPerChain,
+              [chain.id]: true,
+            },
+          })
+          toast.success('Merkl approval successful', SUCCESS_TOAST_CONFIG)
+          setIsOptInOpen(false)
+          revalidateUser(resolvedWalletAddress)
+        },
+        delayPerNetwork[chain.id as SupportedNetworkIds],
+      )
     },
     onError: () => {
       dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.FAILED })
       toast.error('Merkl approval failed', ERROR_TOAST_CONFIG)
     },
-    network: chainIdToSDKNetwork(clientChainId),
+    network: chainIdToSDKNetwork(chain.id),
     publicClient,
   })
 
   const { claimSumrTransaction } = useClaimSumrTransaction({
     onSuccess: () => {
-      setTimeout(() => {
-        // Get the network name for the current chain
-        const humanNetwork = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId))
+      setTimeout(
+        () => {
+          // Get the network name for the current chain
+          const humanNetwork = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(chain.id))
 
-        if (!isSupportedHumanNetwork(humanNetwork)) {
-          throw new Error(`Unsupported network: ${humanNetwork}`)
-        }
+          if (!isSupportedHumanNetwork(humanNetwork)) {
+            throw new Error(`Unsupported network: ${humanNetwork}`)
+          }
 
-        // Update claimable balances - set the claimed amount to 0
-        dispatch({
-          type: 'update-claimable-balances',
-          payload: {
-            ...state.claimableBalances,
-            [clientChainId]: 0,
-          },
-        })
+          // Update claimable balances - set the claimed amount to 0
+          dispatch({
+            type: 'update-claimable-balances',
+            payload: {
+              ...state.claimableBalances,
+              [chain.id]: 0,
+            },
+          })
 
-        // Update wallet balances - add claimed amount to the existing balance
-        const claimedAmount =
-          initialExternalData.sumrToClaim.aggregatedRewards.perChain[clientChainId] || 0
+          // Update wallet balances - add claimed amount to the existing balance
+          const claimedAmount =
+            initialExternalData.sumrToClaim.aggregatedRewards.perChain[chain.id] || 0
 
-        dispatch({
-          type: 'update-wallet-balances',
-          payload: {
-            ...state.walletBalances,
-            [humanNetwork]: Number(state.walletBalances[humanNetwork]) + claimedAmount,
-          },
-        })
+          dispatch({
+            type: 'update-wallet-balances',
+            payload: {
+              ...state.walletBalances,
+              [humanNetwork]: Number(state.walletBalances[humanNetwork]) + claimedAmount,
+            },
+          })
 
-        dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.COMPLETED })
-        toast.success('Claimed $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
-        revalidateUser(resolvedWalletAddress)
-      }, delayPerNetwork[clientChainId])
+          dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.COMPLETED })
+          toast.success('Claimed $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+          revalidateUser(resolvedWalletAddress)
+        },
+        delayPerNetwork[chain.id as SupportedNetworkIds],
+      )
     },
     onError: () => {
       revalidateUser(resolvedWalletAddress)
       handleClaimError()
     },
-    network: chainIdToSDKNetwork(clientChainId),
+    network: chainIdToSDKNetwork(chain.id),
     publicClient,
   })
 
@@ -195,29 +199,32 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     isLoading: approveStakingRewardsCallerTransactionLoading,
   } = useApproveStakingRewardsCallerTransaction({
     onSuccess: () => {
-      setTimeout(() => {
-        // Get the network name for the current chain
-        const humanNetwork = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId))
+      setTimeout(
+        () => {
+          // Get the network name for the current chain
+          const humanNetwork = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(chain.id))
 
-        if (!isSupportedHumanNetwork(humanNetwork)) {
-          throw new Error(`Unsupported network: ${humanNetwork}`)
-        }
+          if (!isSupportedHumanNetwork(humanNetwork)) {
+            throw new Error(`Unsupported network: ${humanNetwork}`)
+          }
 
-        // Update staking rewards caller status
-        dispatch({
-          type: 'update-staking-rewards-caller-status',
-          payload: AuthorizedStakingRewardsCallerBaseStatus.AUTHORIZED,
-        })
+          // Update staking rewards caller status
+          dispatch({
+            type: 'update-staking-rewards-caller-status',
+            payload: AuthorizedStakingRewardsCallerBaseStatus.AUTHORIZED,
+          })
 
-        toast.success('Successfully approved staking rewards', SUCCESS_TOAST_CONFIG)
-        revalidateUser(resolvedWalletAddress)
-      }, delayPerNetwork[clientChainId])
+          toast.success('Successfully approved staking rewards', SUCCESS_TOAST_CONFIG)
+          revalidateUser(resolvedWalletAddress)
+        },
+        delayPerNetwork[chain.id as SupportedNetworkIds],
+      )
     },
     onError: () => {
       revalidateUser(resolvedWalletAddress)
       handleStakingRewardsCallerTransactionError()
     },
-    network: chainIdToSDKNetwork(clientChainId),
+    network: chainIdToSDKNetwork(chain.id),
     publicClient,
   })
 
@@ -246,7 +253,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
     if (
       state.pendingClaimChainId &&
-      clientChainId === state.pendingClaimChainId &&
+      chain.id === state.pendingClaimChainId &&
       !isSettingChain &&
       !state.claimStatus
     ) {
@@ -267,7 +274,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       isMounted = false
     }
   }, [
-    clientChainId,
+    chain.id,
     state.pendingClaimChainId,
     isSettingChain,
     handleClaim,
@@ -296,7 +303,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       return
     }
 
-    if (Number(clientChainId) !== Number(chainId)) {
+    if (Number(chain.id) !== Number(chainId)) {
       setChain({ chain: chainId })
 
       return
@@ -338,7 +345,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     return <ClaimDelegateNoBalances onContinue={handleAccept} />
   }
 
-  if (!isSupportedHumanNetwork(sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)))) {
+  if (!isSupportedHumanNetwork(sdkNetworkToHumanNetwork(chainIdToSDKNetwork(chain.id)))) {
     const handleBackToPortfolio = () => {
       redirect(`/earn/portfolio/${resolvedWalletAddress}`)
     }
@@ -352,7 +359,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
   // chainId for now will always be Base as we support Merkl on base only
   const handleMerklOptInAccept = (chainId: SupportedNetworkIds) => {
-    if (Number(clientChainId) !== Number(chainId)) {
+    if (Number(chain.id) !== Number(chainId)) {
       setChain({ chain: chainId })
 
       return
@@ -378,7 +385,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
       {/* Base network card */}
       <ClaimDelegateNetworkCard
         chainId={SupportedNetworkIds.Base}
-        clientChainId={clientChainId}
+        clientChainId={chain.id}
         claimableAmount={state.claimableBalances[SupportedNetworkIds.Base] || 0}
         balance={state.walletBalances.base || 0}
         sumrPriceUsd={sumrPriceUsd}
@@ -400,7 +407,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         walletAddress={resolvedWalletAddress}
         merklIsAuthorizedOnBase={merklIsAuthorizedOnBase}
         onClaim={() => {
-          if (Number(clientChainId) !== Number(SupportedNetworkIds.Base)) {
+          if (Number(chain.id) !== Number(SupportedNetworkIds.Base)) {
             setChain({ chain: SupportedNetworkIds.Base })
 
             return
@@ -425,7 +432,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         isLoading={
           (state.claimStatus === UiTransactionStatuses.PENDING &&
             (state.pendingClaimChainId === SupportedNetworkIds.Base ||
-              clientChainId === SupportedNetworkIds.Base)) ||
+              chain.id === SupportedNetworkIds.Base)) ||
           state.stakingApproveStatus === UiTransactionStatuses.PENDING ||
           approveStakingRewardsCallerTransactionLoading ||
           state.merklStatus === UiTransactionStatuses.PENDING
@@ -447,13 +454,13 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
           <ClaimDelegateNetworkCard
             key={item.chainId}
             chainId={item.chainId}
-            clientChainId={clientChainId}
+            clientChainId={chain.id}
             claimableAmount={state.claimableBalances[item.chainId] || 0}
             balance={state.walletBalances[network] || 0}
             sumrPriceUsd={sumrPriceUsd}
             walletAddress={resolvedWalletAddress}
             onClaim={() => {
-              if (Number(clientChainId) !== Number(item.chainId)) {
+              if (Number(chain.id) !== Number(item.chainId)) {
                 dispatch({ type: 'set-pending-claim', payload: item.chainId })
                 setChain({ chain: item.chainId })
 
@@ -463,7 +470,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
             }}
             isLoading={
               state.claimStatus === UiTransactionStatuses.PENDING &&
-              (state.pendingClaimChainId === item.chainId || clientChainId === item.chainId)
+              (state.pendingClaimChainId === item.chainId || chain.id === item.chainId)
             }
             isChangingNetwork={isSettingChain && state.pendingClaimChainId === item.chainId}
             isChangingNetworkTo={state.pendingClaimChainId}

@@ -12,7 +12,6 @@ import {
   TabBar,
   Text,
   useAmount,
-  useClientChainId,
   useEarnProtocolChain,
   useEarnProtocolWallet,
   useMobileCheck,
@@ -118,8 +117,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
   ) as string
 
-  const { setChain } = useEarnProtocolChain()
-  const { clientChainId } = useClientChainId()
+  const { setChain, chain } = useEarnProtocolChain()
 
   const { publicClient } = usePublicClient({ chain: base })
   const {
@@ -212,7 +210,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     },
   })
 
-  const isBase = clientChainId === SupportedNetworkIds.Base
+  const isBase = chain.id === SupportedNetworkIds.Base
 
   const handleStake = async () => {
     // staking is only supported on base
