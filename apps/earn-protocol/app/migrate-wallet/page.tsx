@@ -1,6 +1,15 @@
 import { type Metadata } from 'next'
+import dynamic from 'next/dynamic'
 
-import { WalletMigratePageView } from '@/components/layout/WalletMigratePageView/WalletMigratePageView'
+// Loaded client-side only — account-kit creates its own wagmi config internally
+// (via @wagmi/core createConfig) and calling it during SSR corrupts Privy/wagmi state.
+const WalletMigratePageView = dynamic(
+  () =>
+    import('@/components/layout/WalletMigratePageView/WalletMigratePageView').then(
+      (m) => m.WalletMigratePageView,
+    ),
+  { ssr: false },
+)
 
 export const metadata: Metadata = {
   title: 'Recover your wallet | Summer.fi',
