@@ -16,10 +16,13 @@ import {
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
 import {
   type ActiveDotProps,
   ComposedChart,
   Line,
+  type MouseHandlerDataParam,
+  ReferenceDot,
   ResponsiveContainer,
   Tooltip,
   useActiveTooltipDataPoints,
@@ -40,6 +43,8 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 
 import historicalChartStyles from './Historical.module.css'
+
+dayjs.extend(duration)
 
 type HistoricalChartProps = {
   data?: ChartDataPoints[]
@@ -132,6 +137,37 @@ export const HistoricalChart = ({
   }
 
   const [highlightedData, setHighlightedData] = useState<LegendData>(legendBaseData)
+  const [basePoint, setBasePoint] = useState<{
+    basePointTimestamp: string
+    netValue: number
+    timestamp: string
+  } | null>(null)
+
+  const handleChartClick = (nextState: MouseHandlerDataParam) => {
+    const { activeTooltipIndex } = nextState
+
+    if (
+      activeTooltipIndex !== null &&
+      activeTooltipIndex !== undefined &&
+      !Number.isNaN(activeTooltipIndex) &&
+      data
+    ) {
+      const point = data[activeTooltipIndex as number]
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (point) {
+        if (basePoint) {
+          setBasePoint(null)
+        } else {
+          setBasePoint({
+            basePointTimestamp: String(point.timestampParsed),
+            netValue: Number(point.netValue),
+            timestamp: String(point.timestampParsed),
+          })
+        }
+      }
+    }
+  }
 
   const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART[timeframe]
 
@@ -146,9 +182,52 @@ export const HistoricalChart = ({
         : CHART_TIMESTAMP_FORMAT_SHORT,
     )
 
+    if (basePoint && highlightedData.netValueRaw !== undefined) {
+      const currentValue = Number(highlightedData.netValueRaw)
+      const timestamp = basePoint.basePointTimestamp
+      const timeDifference = dayjs(label).diff(dayjs(timestamp))
+      const timeDifferenceLabel = `${timeDifference < 0 ? '-' : ''}${dayjs
+        .duration(Math.abs(timeDifference))
+        .humanize(true)
+        .replace('in ', '')
+        .replace(' ago', '')}`
+
+      const diff = currentValue - basePoint.netValue
+      const diffPct = basePoint.netValue !== 0 ? (diff / basePoint.netValue) * 100 : 0
+      const sign = diff >= 0 ? '+' : ''
+      const diffColor = diff >= 0 ? '#4CAF50' : '#F44336'
+
+      return (
+        <div>
+          <div>
+            {formattedDate} ({timeDifferenceLabel})
+          </div>
+          <div style={{ color: diffColor, marginTop: '4px' }}>
+            {sign}
+            {formatCryptoBalance(diff)} {positionToken} ({sign}
+            {diffPct.toFixed(2)}%)
+          </div>
+          <div style={{ color: 'var(--color-text-secondary)', fontSize: '11px', marginTop: '2px' }}>
+            click to reset
+          </div>
+        </div>
+      )
+    }
+
     if (isAltPressed) {
       return (
         <NetValueTooltip formattedDate={formattedDate} netValue={highlightedData.netValueRaw} />
+      )
+    }
+
+    if (!basePoint) {
+      return (
+        <div>
+          <div>{formattedDate}</div>
+          <div style={{ color: 'var(--color-text-secondary)', fontSize: '11px', marginTop: '2px' }}>
+            click to set base
+          </div>
+        </div>
       )
     }
 
@@ -180,6 +259,8 @@ export const HistoricalChart = ({
         >
           <ComposedChart
             data={data}
+            onClick={handleChartClick}
+            style={{ cursor: basePoint ? 'crosshair' : 'default' }}
             margin={{
               top: chartHidden ? 0 : 20,
               right: 0,
@@ -260,6 +341,16 @@ export const HistoricalChart = ({
               legendBaseData={legendBaseData}
               positionToken={positionToken}
             />
+            {basePoint && (
+              <ReferenceDot
+                x={basePoint.timestamp}
+                y={basePoint.netValue}
+                r={8}
+                fill="#FF80BF"
+                stroke="#FFFBFD"
+                strokeWidth={2}
+              />
+            )}
           </ComposedChart>
         </ResponsiveContainer>
       </RechartResponsiveWrapper>
