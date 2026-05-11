@@ -9,7 +9,7 @@ export const INTERNAL_LINKS = {
   privacy: '/privacy',
   cookie: '/cookie',
   terms: '/terms',
-  sumr: '/sumr',
+  sumr: '/earn/sumr',
 }
 
 export const EXTERNAL_LINKS = {

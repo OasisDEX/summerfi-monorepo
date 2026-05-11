@@ -19,76 +19,75 @@ interface FooterProps {
   onFooterItemClick?: (params: { buttonName: string; isEarnApp?: boolean }) => void
 }
 
-const linksList = [
-  {
-    title: 'About',
-    links: [
-      {
-        label: 'Team',
-        url: INTERNAL_LINKS.about,
-      },
-      {
-        label: 'Contact',
-        url: EXTERNAL_LINKS.KB.CONTACT,
-      },
-      {
-        label: 'Privacy',
-        url: INTERNAL_LINKS.privacy,
-      },
-      {
-        label: 'Cookie Policy',
-        url: INTERNAL_LINKS.cookie,
-      },
-      {
-        label: 'Terms',
-        url: INTERNAL_LINKS.terms,
-      },
-    ],
-  },
-  {
-    title: 'Resources',
-    links: [
-      {
-        label: 'Blog',
-        url: EXTERNAL_LINKS.BLOG.MAIN,
-      },
-      {
-        label: 'Knowledge base',
-        url: EXTERNAL_LINKS.KB.HELP,
-      },
-      {
-        label: 'Bug bounty',
-        url: EXTERNAL_LINKS.BUG_BOUNTY,
-      },
-      {
-        label: '$SUMR Governance',
-        url: EXTERNAL_LINKS.EARN.GOVERNANCE,
-      },
-      {
-        label: 'Forum',
-        url: EXTERNAL_LINKS.EARN.FORUM,
-      },
-    ],
-  },
-  {
-    title: 'Products',
-    links: [
-      {
-        label: '$SUMR',
-        url: INTERNAL_LINKS.sumr,
-      },
-    ],
-  },
-]
-
 export const Footer: FC<FooterProps> = ({
   logo,
   newsletter,
   languageSwitcher,
   onFooterItemClick,
 }) => {
-  // listen to holding ALT button
   const isAltPressed = useHoldAlt()
+
+  const linksList = [
+    {
+      title: 'About',
+      links: [
+        {
+          label: 'Team',
+          url: '/landing_page/about',
+        },
+        {
+          label: 'Contact',
+          url: EXTERNAL_LINKS.KB.CONTACT,
+        },
+        {
+          label: 'Privacy',
+          url: '/landing_page/privacy',
+        },
+        {
+          label: 'Cookie Policy',
+          url: '/landing_page/cookie',
+        },
+        {
+          label: 'Terms',
+          url: '/landing_page/terms',
+        },
+      ],
+    },
+    {
+      title: 'Resources',
+      links: [
+        {
+          label: 'Blog',
+          url: EXTERNAL_LINKS.BLOG.MAIN,
+        },
+        {
+          label: 'Knowledge base',
+          url: EXTERNAL_LINKS.KB.HELP,
+        },
+        {
+          label: 'Bug bounty',
+          url: EXTERNAL_LINKS.BUG_BOUNTY,
+        },
+        {
+          label: '$SUMR Governance',
+          url: EXTERNAL_LINKS.EARN.GOVERNANCE,
+        },
+        {
+          label: 'Forum',
+          url: EXTERNAL_LINKS.EARN.FORUM,
+        },
+      ],
+    },
+    {
+      title: 'Products',
+      links: [
+        {
+          label: '$SUMR',
+          url: INTERNAL_LINKS.sumr,
+        },
+      ],
+    },
+  ]
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -170,24 +169,38 @@ export const Footer: FC<FooterProps> = ({
           </Text>
           <ul className={footerStyles.linksList}>
             {links.map(({ label, url }, j) => {
-              const isOutsideLink = url.startsWith('http')
+              const isLandingPageLink = url.startsWith('/landing_page')
+              const isInternalEarnAppLink = url.startsWith('/earn') && !isLandingPageLink
+
+              const isOutsideLink = url.startsWith('http') || isInternalEarnAppLink
+              const resolvedUrl = isLandingPageLink ? url.replace('/landing_page', '') : url
+
+              const textNode = (
+                <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                  {label}
+                </Text>
+              )
 
               return (
                 <li key={j}>
-                  <Link
-                    prefetch={!isOutsideLink}
-                    href={url}
-                    target={isOutsideLink ? '_blank' : undefined}
-                    onClick={() =>
-                      onFooterItemClick?.({
-                        buttonName: slugify(label),
-                      })
-                    }
-                  >
-                    <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                      {label}
-                    </Text>
-                  </Link>
+                  {isLandingPageLink || isOutsideLink ? (
+                    <a
+                      href={resolvedUrl}
+                      target={isOutsideLink ? '_blank' : undefined}
+                      rel="noreferrer"
+                      onClick={() => onFooterItemClick?.({ buttonName: slugify(label) })}
+                    >
+                      {textNode}
+                    </a>
+                  ) : (
+                    <Link
+                      prefetch
+                      href={resolvedUrl}
+                      onClick={() => onFooterItemClick?.({ buttonName: slugify(label) })}
+                    >
+                      {textNode}
+                    </Link>
+                  )}
                 </li>
               )
             })}

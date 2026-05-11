@@ -81,6 +81,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
         }}
       >
         <Footer
+          isEarnApp
           logo="/earn/img/branding/logo-light.svg"
           onFooterItemClick={onFooterItemClick}
           newsletter={
