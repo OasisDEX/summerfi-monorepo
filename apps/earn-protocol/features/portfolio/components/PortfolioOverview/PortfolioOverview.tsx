@@ -16,7 +16,6 @@ import {
   // WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
-  type BlogPosts,
   type GetVaultsApyResponse,
   type RewardTokenPrices,
   type SDKVaultsListType,
@@ -61,7 +60,6 @@ type PortfolioOverviewProps = {
     [key: string]: SingleSourceChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
-  blogPosts: BlogPosts
   rewardTokenPrices: RewardTokenPrices
 }
 
@@ -72,7 +70,6 @@ export const PortfolioOverview = ({
   isRewardsDataPending,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
-  blogPosts,
   rewardTokenPrices,
 }: PortfolioOverviewProps) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
@@ -258,7 +255,7 @@ export const PortfolioOverview = ({
             carouselId="portfolio-overview-migrate-carousel"
           />
         )} */}
-        <NewsAndUpdates blogPosts={blogPosts} />
+        <NewsAndUpdates />
       </div>
     </div>
   )

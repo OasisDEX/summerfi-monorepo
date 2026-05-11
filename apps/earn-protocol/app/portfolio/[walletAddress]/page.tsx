@@ -18,7 +18,6 @@ import { type Metadata } from 'next'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { getCachedBlogPosts } from '@/app/server-handlers/cached/blog-posts'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedUserPositions } from '@/app/server-handlers/cached/get-user-positions'
@@ -40,25 +39,7 @@ type PortfolioPageProps = {
   }>
 }
 
-const pagePortfolioCallsHandler = async ({ walletAddress }: { walletAddress: string }) => {
-  const [userPositions, vaultsList, systemConfig, blogPosts, vaultsInfo] = await Promise.all([
-    getCachedUserPositions({ walletAddress }),
-    getCachedVaultsList(),
-    getCachedConfig(),
-    getCachedBlogPosts(),
-    getCachedVaultsInfo(),
-  ])
-
-  return {
-    userPositions,
-    vaultsList,
-    systemConfig,
-    blogPosts,
-    vaultsInfo,
-  }
-}
-
-const metadataPortfolioCallsHandler = async ({ walletAddress }: { walletAddress: string }) => {
+const portfolioCallsHandler = async ({ walletAddress }: { walletAddress: string }) => {
   const [userPositions, vaultsList, systemConfig, vaultsInfo] = await Promise.all([
     getCachedUserPositions({ walletAddress }),
     getCachedVaultsList(),
@@ -98,8 +79,9 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     redirect('/not-found')
   }
 
-  const { userPositions, vaultsList, systemConfig, blogPosts, vaultsInfo } =
-    await pagePortfolioCallsHandler({ walletAddress })
+  const { userPositions, vaultsList, systemConfig, vaultsInfo } = await portfolioCallsHandler({
+    walletAddress,
+  })
 
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
@@ -163,7 +145,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       vaultsList={vaultsWithConfig}
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-      blogPosts={blogPosts}
       rewardTokenPrices={rewardTokenPrices}
     />
   )
@@ -182,10 +163,9 @@ export async function generateMetadata({
   const baseUrl = new URL(`https://${prodHost}`)
 
   const walletAddress = walletAddressRaw.toLowerCase()
-  const { userPositions, vaultsList, systemConfig, vaultsInfo } =
-    await metadataPortfolioCallsHandler({
-      walletAddress,
-    })
+  const { userPositions, vaultsList, systemConfig, vaultsInfo } = await portfolioCallsHandler({
+    walletAddress,
+  })
 
   const vaultsInfoParsed = parseServerResponseToClient(vaultsInfo)
 

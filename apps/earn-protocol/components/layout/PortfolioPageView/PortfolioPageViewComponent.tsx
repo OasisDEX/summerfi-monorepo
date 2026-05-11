@@ -1,7 +1,6 @@
 'use client'
 import { type FC } from 'react'
 import {
-  type BlogPosts,
   type GetVaultsApyResponse,
   type RewardTokenPrices,
   type SDKVaultishType,
@@ -22,7 +21,6 @@ interface PortfolioPageViewComponentProps {
     [key: string]: SingleSourceChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
-  blogPosts: BlogPosts
   rewardTokenPrices: RewardTokenPrices
 }
 
@@ -32,7 +30,6 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   positions,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
-  blogPosts,
   rewardTokenPrices,
 }) => {
   return (
@@ -43,7 +40,6 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         vaultsList={vaultsList}
         positionsHistoricalChartMap={positionsHistoricalChartMap}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-        blogPosts={blogPosts}
         rewardTokenPrices={rewardTokenPrices}
       />
     </SDKContextProvider>

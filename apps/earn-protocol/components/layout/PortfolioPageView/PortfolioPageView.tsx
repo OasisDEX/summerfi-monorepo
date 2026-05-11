@@ -10,7 +10,6 @@ import {
   useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import {
-  type BlogPosts,
   type GetVaultsApyResponse,
   type RewardTokenPrices,
   type SDKVaultishType,
@@ -53,7 +52,6 @@ interface PortfolioPageViewProps {
     [key: string]: SingleSourceChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
-  blogPosts: BlogPosts
   rewardTokenPrices: RewardTokenPrices
 }
 
@@ -63,7 +61,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   positions,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
-  blogPosts,
   rewardTokenPrices,
 }) => {
   const { features } = useSystemConfig()
@@ -135,7 +132,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           isRewardsDataPending={isRewardsDataPending}
           positionsHistoricalChartMap={positionsHistoricalChartMap}
           vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-          blogPosts={blogPosts}
           rewardTokenPrices={rewardTokenPrices}
         />
       ),

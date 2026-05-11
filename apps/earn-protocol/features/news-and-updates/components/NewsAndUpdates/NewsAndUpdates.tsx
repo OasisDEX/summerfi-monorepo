@@ -1,16 +1,26 @@
-import { type FC } from 'react'
 import { Card, Text } from '@summerfi/app-earn-ui'
-import { type BlogPosts } from '@summerfi/app-types'
 
+import { usePortfolioBlogPostsQuery } from '@/features/news-and-updates/api/get-portfolio-blog-posts'
 import { NewsAndUpdatesList } from '@/features/news-and-updates/components/NewsAndUpdatesList/NewsAndUpdatesList'
 
 import classNames from './NewsAndUpdates.module.css'
 
-interface NewsAndUpdatesProps {
-  blogPosts: BlogPosts
-}
+export const NewsAndUpdates = () => {
+  const { data, isError, isPending } = usePortfolioBlogPostsQuery()
+  const blogPosts = data?.blogPosts
 
-export const NewsAndUpdates: FC<NewsAndUpdatesProps> = ({ blogPosts }) => {
+  if (isPending) {
+    return null
+  }
+
+  if (isError || !blogPosts) {
+    return (
+      <Text as="p" variant="p3">
+        News and updates are temporarily unavailable.
+      </Text>
+    )
+  }
+
   // hide news and updates if empty response
   if (blogPosts.news.length === 0) {
     return null
