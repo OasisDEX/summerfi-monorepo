@@ -149,6 +149,7 @@ export const Footer: FC<FooterProps> = ({
         {isAltPressed && (
           <Text variant="p3semiColorful">
             <Link
+              target="_blank"
               href={
                 process.env.NEXT_PUBLIC_SHA
                   ? `https://github.com/OasisDEX/summerfi-monorepo/commit/${process.env.NEXT_PUBLIC_SHA}`
@@ -174,7 +175,7 @@ export const Footer: FC<FooterProps> = ({
               return (
                 <li key={j}>
                   <Link
-                    prefetch={false}
+                    prefetch={!isOutsideLink}
                     href={url}
                     target={isOutsideLink ? '_blank' : undefined}
                     onClick={() =>
