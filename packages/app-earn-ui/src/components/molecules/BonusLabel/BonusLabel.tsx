@@ -67,36 +67,38 @@ export const BonusLabelTooltip = ({
       )}
       {totalAnnualRewardsPerToken &&
         Object.keys(totalAnnualRewardsPerToken).length > 0 &&
-        Object.keys(totalAnnualRewardsPerToken).map((tokenSymbol) => (
-          <div
-            key={tokenSymbol}
-            style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}
-          >
-            <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
-              {tokenSymbol === 'SUMR' ? `$SUMR` : tokenSymbol}&nbsp;Token&nbsp;Rewards:
-            </Text>
-            <Icon
-              iconName={tokenSymbol === 'SUMR' ? 'stars_colorful' : 'stars'}
-              size={20}
-              color={
-                {
-                  WSTETH: '#00a4ff',
-                }[tokenSymbol.toUpperCase()]
-              }
-            />
-            <Text
-              as="p"
-              variant="p1semiColorful"
-              style={{
-                backgroundImage: {
-                  WSTETH: 'linear-gradient(90deg, #00a4ff 0%, #89d4ff 100%)',
-                }[tokenSymbol.toUpperCase()],
-              }}
+        Object.keys(totalAnnualRewardsPerToken).map((tokenSymbol) =>
+          totalAnnualRewardsPerToken[tokenSymbol] > 0.001 ? (
+            <div
+              key={tokenSymbol}
+              style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}
             >
-              {formatDecimalAsPercent(totalAnnualRewardsPerToken[tokenSymbol], { precision: 2 })}
-            </Text>
-          </div>
-        ))}
+              <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
+                {tokenSymbol === 'SUMR' ? `$SUMR` : tokenSymbol}&nbsp;Token&nbsp;Rewards:
+              </Text>
+              <Icon
+                iconName={tokenSymbol === 'SUMR' ? 'stars_colorful' : 'stars'}
+                size={20}
+                color={
+                  {
+                    WSTETH: '#00a4ff',
+                  }[tokenSymbol.toUpperCase()]
+                }
+              />
+              <Text
+                as="p"
+                variant="p1semiColorful"
+                style={{
+                  backgroundImage: {
+                    WSTETH: 'linear-gradient(90deg, #00a4ff 0%, #89d4ff 100%)',
+                  }[tokenSymbol.toUpperCase()],
+                }}
+              >
+                {formatDecimalAsPercent(totalAnnualRewardsPerToken[tokenSymbol], { precision: 2 })}
+              </Text>
+            </div>
+          ) : null,
+        )}
       {managementFee && (
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}>
           <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
