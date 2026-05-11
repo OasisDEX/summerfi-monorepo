@@ -33,7 +33,7 @@ export const Footer: FC<FooterProps> = ({
       links: [
         {
           label: 'Team',
-          url: '/landing_page/about',
+          url: '/landing_page/team',
         },
         {
           label: 'Contact',
