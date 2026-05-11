@@ -198,19 +198,21 @@ export const HistoricalChart = ({
       const diffColor = diff >= 0 ? '#4CAF50' : '#F44336'
 
       return (
-        <div>
-          <div>
+        <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <span>
             {formattedDate} ({timeDifferenceLabel})
-          </div>
-          <div style={{ color: diffColor, marginTop: '4px' }}>
+          </span>
+          <span style={{ color: diffColor, marginTop: '4px' }}>
             {sign}
             {formatCryptoBalance(diff)} {positionToken} ({sign}
             {diffPct.toFixed(2)}%)
-          </div>
-          <div style={{ color: 'var(--color-text-secondary)', fontSize: '11px', marginTop: '2px' }}>
+          </span>
+          <span
+            style={{ color: 'var(--color-text-secondary)', fontSize: '11px', marginTop: '2px' }}
+          >
             click to reset
-          </div>
-        </div>
+          </span>
+        </span>
       )
     }
 
@@ -222,12 +224,14 @@ export const HistoricalChart = ({
 
     if (!basePoint) {
       return (
-        <div>
-          <div>{formattedDate}</div>
-          <div style={{ color: 'var(--color-text-secondary)', fontSize: '11px', marginTop: '2px' }}>
+        <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <span>{formattedDate}</span>
+          <span
+            style={{ color: 'var(--color-text-secondary)', fontSize: '11px', marginTop: '2px' }}
+          >
             click to set base
-          </div>
-        </div>
+          </span>
+        </span>
       )
     }
 
