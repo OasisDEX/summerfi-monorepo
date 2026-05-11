@@ -23,20 +23,10 @@ export const PortfolioBeachClub: FC<PortfolioBeachClubProps> = ({
   state,
   dispatch,
 }) => {
-  const { data: beachClubData, isPending, isError } = useBeachClubUserDataQuery(viewWalletAddress)
-
-  if (isPending) {
-    return (
-      <div className={classNames.beachClubWrapper}>
-        <Text as="h3" variant="h3" style={{ marginTop: 'var(--general-space-16)' }}>
-          Loading Beach Club data...
-        </Text>
-      </div>
-    )
-  }
+  const { data: beachClubData, isError } = useBeachClubUserDataQuery(viewWalletAddress)
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (isError || !beachClubData) {
+  if (isError) {
     return (
       <div className={classNames.beachClubWrapper}>
         <Text as="h3" variant="h3" style={{ marginTop: 'var(--general-space-16)' }}>

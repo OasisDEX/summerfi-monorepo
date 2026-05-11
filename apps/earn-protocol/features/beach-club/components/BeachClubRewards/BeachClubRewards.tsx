@@ -1,5 +1,5 @@
 import { type Dispatch, type FC, useMemo } from 'react'
-import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
+import { Card, Icon, SkeletonLine, TabBar, Text } from '@summerfi/app-earn-ui'
 import { slugify } from '@summerfi/app-utils'
 
 import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
@@ -17,7 +17,7 @@ enum ReferAndEarnTab {
 }
 
 interface BeachClubRewardsProps {
-  beachClubData: BeachClubData
+  beachClubData?: BeachClubData
   viewWalletAddress: string
   merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
   state: BeachClubState
@@ -36,24 +36,28 @@ export const BeachClubRewards: FC<BeachClubRewardsProps> = ({
       {
         label: 'TVL Challenges',
         id: ReferAndEarnTab.TVL_CHALLENGES,
-        content: (
+        content: beachClubData ? (
           <BeachClubTvlChallenge
             beachClubData={beachClubData}
             merklIsAuthorizedPerChain={merklIsAuthorizedPerChain}
             state={state}
             dispatch={dispatch}
           />
+        ) : (
+          <SkeletonLine height={650} width="100%" />
         ),
         activeColor: 'var(--beach-club-tab-underline)',
       },
       {
         label: 'Beach Boat Challenge',
         id: ReferAndEarnTab.BEACH_BOAT_CHALLENGE,
-        content: (
+        content: beachClubData ? (
           <BeachClubBoatChallenge
             beachClubData={beachClubData}
             viewWalletAddress={viewWalletAddress}
           />
+        ) : (
+          <SkeletonLine height={650} width="100%" />
         ),
         activeColor: 'var(--beach-club-tab-underline)',
       },

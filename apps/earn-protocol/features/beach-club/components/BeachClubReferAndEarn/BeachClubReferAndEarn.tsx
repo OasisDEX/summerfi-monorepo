@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react'
-import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
+import { Card, Icon, SkeletonLine, TabBar, Text } from '@summerfi/app-earn-ui'
 import { slugify } from '@summerfi/app-utils'
 
 import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
@@ -18,7 +18,7 @@ enum ReferAndEarnTab {
 
 interface BeachClubReferAndEarnProps {
   viewWalletAddress: string
-  beachClubData: BeachClubData
+  beachClubData?: BeachClubData
 }
 
 export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
@@ -30,24 +30,34 @@ export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
       {
         label: 'How it works',
         id: ReferAndEarnTab.HOW_IT_WORKS,
-        content: (
+        content: beachClubData ? (
           <BeachClubHowItWorks
             viewWalletAddress={viewWalletAddress}
             beachClubData={beachClubData}
           />
+        ) : (
+          <SkeletonLine height={650} width="100%" />
         ),
         activeColor: 'var(--beach-club-tab-underline)',
       },
       {
         label: 'Referral activity',
         id: ReferAndEarnTab.REFERRAL_ACTIVITY,
-        content: <BeachClubReferralActivity beachClubData={beachClubData} />,
+        content: beachClubData ? (
+          <BeachClubReferralActivity beachClubData={beachClubData} />
+        ) : (
+          <SkeletonLine height={650} width="100%" />
+        ),
         activeColor: 'var(--beach-club-tab-underline)',
       },
       {
         label: 'Your referrals',
         id: ReferAndEarnTab.YOUR_REFERRALS,
-        content: <BeachClubTrackReferrals beachClubData={beachClubData} />,
+        content: beachClubData ? (
+          <BeachClubTrackReferrals beachClubData={beachClubData} />
+        ) : (
+          <SkeletonLine height={650} width="100%" />
+        ),
         activeColor: 'var(--beach-club-tab-underline)',
       },
     ],
