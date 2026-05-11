@@ -15,7 +15,6 @@ const SimplePortfolioSkeleton = (
     <div style={{ display: 'flex', gap: '2%' }}>
       <SkeletonLine height={140} radius="var(--radius-roundish)" />
       <SkeletonLine height={140} radius="var(--radius-roundish)" />
-      <SkeletonLine height={140} radius="var(--radius-roundish)" />
     </div>
     <SkeletonLine height={340} radius="var(--radius-roundish)" />
     <SkeletonLine height={340} radius="var(--radius-roundish)" />

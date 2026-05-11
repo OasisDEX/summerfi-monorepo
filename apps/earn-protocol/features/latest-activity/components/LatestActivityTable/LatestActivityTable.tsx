@@ -60,7 +60,7 @@ export const LatestActivityTable: FC<LatestActivityTableProps> = ({
         isLoading={isLoading}
         skeletonLines={skeletonLines}
       />
-      {rows.length === 0 && (
+      {rows.length === 0 && !isLoading && (
         <Text
           as="p"
           variant="p3semi"

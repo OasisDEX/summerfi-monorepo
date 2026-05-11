@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useReducer } from 'react'
+import { type FC, useEffect, useReducer } from 'react'
 import {
   getPositionValues,
   Icon,
@@ -17,18 +17,18 @@ import {
   type SingleSourceChartData,
 } from '@summerfi/app-types'
 
-import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
-import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
-// import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { type PortfolioSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
-import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
-import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
+import {
+  emptyClaimableRewards,
+  emptyPortfolioSumrStakingV2Data,
+  emptyRewardsData,
+  emptyWalletData,
+} from '@/components/layout/PortfolioPageView/constants'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { BeachClubPalmBackground } from '@/features/beach-club/components/BeachClubPalmBackground/BeachClubPalmBackground'
 import { beachClubDefaultState, beachClubReducer } from '@/features/beach-club/state'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
-import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
-// import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
+import { usePortfolioRewardsDataQuery } from '@/features/portfolio/api/get-portfolio-rewards-data'
+import { usePortfolioWalletDataQuery } from '@/features/portfolio/api/get-portfolio-wallet-data'
 import { PortfolioBeachClub } from '@/features/portfolio/components/PortfolioBeachClub/PortfolioBeachClub'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
@@ -38,7 +38,7 @@ import { PortfolioRewardsV2 } from '@/features/portfolio/components/PortfolioRew
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
 import { PortfolioYourActivity } from '@/features/portfolio/components/PortfolioYourActivity/PotfolioYourActivity'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
-import { type ClaimableRewards, PortfolioTabs } from '@/features/portfolio/types'
+import { PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
@@ -47,42 +47,24 @@ import classNames from './PortfolioPageView.module.css'
 
 interface PortfolioPageViewProps {
   viewWalletAddress: string
-  walletData: PortfolioAssetsResponse
-  rewardsData: ClaimDelegateExternalData
   vaultsList: SDKVaultishType[]
   positions: PositionWithVault[]
-  rebalanceActivity: RebalanceActivityPagination
-  latestActivity: LatestActivityPagination
   positionsHistoricalChartMap: {
     [key: string]: SingleSourceChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
-  // migratablePositions: MigratablePosition[]
-  // migrationBestVaultApy: MigrationEarningsDataByChainId
-  beachClubData: BeachClubData
   blogPosts: BlogPosts
-  portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   rewardTokenPrices: RewardTokenPrices
-  claimableRewards: ClaimableRewards
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   viewWalletAddress,
-  walletData,
-  rewardsData,
   vaultsList,
   positions,
-  rebalanceActivity,
-  latestActivity,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
-  // migratablePositions,
-  // migrationBestVaultApy,
-  beachClubData,
   blogPosts,
-  portfolioSumrStakingV2Data,
   rewardTokenPrices,
-  claimableRewards,
 }) => {
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
@@ -92,18 +74,44 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     tabs: PortfolioTabs,
     defaultTab: PortfolioTabs.OVERVIEW,
   })
+  const {
+    data: portfolioRewardsData,
+    isError: isRewardsDataError,
+    isPending: isRewardsDataPending,
+  } = usePortfolioRewardsDataQuery(viewWalletAddress)
+  const { data: portfolioWalletData, isError: isWalletDataError } =
+    usePortfolioWalletDataQuery(viewWalletAddress)
+
+  const rewardsData = portfolioRewardsData?.rewardsData ?? emptyRewardsData
+  const portfolioSumrStakingV2Data =
+    portfolioRewardsData?.portfolioSumrStakingV2Data ?? emptyPortfolioSumrStakingV2Data
+  const claimableRewards = portfolioRewardsData?.claimableRewards ?? emptyClaimableRewards
+  const walletData = portfolioWalletData?.walletData ?? emptyWalletData
+
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
-    delegatee: rewardsData.sumrStakeDelegate.delegatedToV2,
     walletAddress: viewWalletAddress,
-    merklIsAuthorizedPerChain: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
   })
 
   const [beachClubState, beachClubDispatch] = useReducer(beachClubReducer, {
     ...beachClubDefaultState,
     walletAddress: viewWalletAddress,
-    merklIsAuthorizedPerChain: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
   })
+
+  useEffect(() => {
+    dispatch({
+      type: 'update-delegatee',
+      payload: rewardsData.sumrStakeDelegate.delegatedToV2,
+    })
+    dispatch({
+      type: 'update-merkl-is-authorized-per-chain',
+      payload: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
+    })
+    beachClubDispatch({
+      type: 'update-merkl-is-authorized-per-chain',
+      payload: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
+    })
+  }, [rewardsData])
 
   const beachClubEnabled = !!features?.BeachClub
   const stakingV2Enabled = !!features?.StakingV2
@@ -124,11 +132,9 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           positions={positions}
           vaultsList={vaultsList}
           rewardsData={rewardsData}
+          isRewardsDataPending={isRewardsDataPending}
           positionsHistoricalChartMap={positionsHistoricalChartMap}
           vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-          // migratablePositions={migratablePositions}
-          // viewWalletAddress={viewWalletAddress}
-          // migrationBestVaultApy={migrationBestVaultApy}
           blogPosts={blogPosts}
           rewardTokenPrices={rewardTokenPrices}
         />
@@ -151,7 +157,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       label: 'Your Activity',
       content: (
         <PortfolioYourActivity
-          latestActivity={latestActivity}
           viewWalletAddress={viewWalletAddress}
           vaultsList={vaultsList}
           positions={positions}
@@ -163,7 +168,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       label: 'Rebalance Activity',
       content: (
         <PortfolioRebalanceActivity
-          rebalanceActivity={rebalanceActivity}
           viewWalletAddress={viewWalletAddress}
           positions={positions}
           vaultsList={vaultsList}
@@ -218,7 +222,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             content: (
               <PortfolioBeachClub
                 viewWalletAddress={viewWalletAddress}
-                beachClubData={beachClubData}
                 merklIsAuthorizedPerChain={rewardsData.sumrToClaim.merklIsAuthorizedPerChain}
                 state={beachClubState}
                 dispatch={beachClubDispatch}
@@ -241,6 +244,16 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     <>
       <NonOwnerPortfolioBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
       <div className={classNames.portfolioPageViewWrapper}>
+        {isRewardsDataError && (
+          <Text as="p" variant="p3" style={{ marginBottom: 'var(--general-space-8)' }}>
+            Some rewards data is temporarily unavailable.
+          </Text>
+        )}
+        {isWalletDataError && (
+          <Text as="p" variant="p3" style={{ marginBottom: 'var(--general-space-8)' }}>
+            Wallet assets are temporarily unavailable.
+          </Text>
+        )}
         <PortfolioHeader
           viewWalletAddress={viewWalletAddress}
           totalSumr={overallSumr}

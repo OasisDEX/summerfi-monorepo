@@ -7,6 +7,7 @@ import {
   getUniqueVaultId,
   Icon,
   LoadingSpinner,
+  SkeletonLine,
   Text,
   Tooltip,
   useMobileCheck,
@@ -20,7 +21,6 @@ import {
   slugify,
 } from '@summerfi/app-utils'
 
-import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { useRebalanceActivityInfiniteQuery } from '@/features/rebalance-activity/api/get-rebalance-activity'
@@ -31,14 +31,12 @@ import { useHandleDropdownChangeEvent, useHandleTooltipOpenEvent } from '@/hooks
 import classNames from './PortfolioRebalanceActivity.module.css'
 
 interface PortfolioRebalanceActivityProps {
-  rebalanceActivity: RebalanceActivityPagination
   viewWalletAddress: string
   positions: PositionWithVault[]
   vaultsList: SDKVaultsListType
 }
 
 export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = ({
-  rebalanceActivity,
   viewWalletAddress,
   positions,
   vaultsList,
@@ -48,18 +46,10 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
   const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
 
-  const { totalItems } = rebalanceActivity.pagination
-
   // Portfolio-specific state for filters
   const [strategyFilter, setStrategyFilter] = useState<string[]>([])
   const [tokenFilter, setTokenFilter] = useState<string[]>([])
   const [protocolFilter, setProtocolFilter] = useState<string[]>([])
-
-  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
-  const savedGasCost = useMemo(
-    () => getRebalanceSavedGasCost(rebalanceActivity.totalItemsPerStrategyId),
-    [rebalanceActivity.totalItemsPerStrategyId],
-  )
 
   const resolvedVaultsList = useMemo(() => {
     const userVaults = positions.map(({ vault }) => getUniqueVaultId(vault))
@@ -78,12 +68,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
     [positions],
   )
 
-  // For portfolio component, hydrate from server only when no filters are applied
-  // since this component uses local state instead of URL params
-  const shouldHydrateFromServer =
-    strategyFilter.length === 0 && tokenFilter.length === 0 && protocolFilter.length === 0
-
-  const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage } =
+  const { data, isPending, isError, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useRebalanceActivityInfiniteQuery({
       tokens: tokenFilter,
       strategies: strategyFilter.length > 0 ? strategyFilter : userVaultStrategies,
@@ -91,12 +76,16 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       sortBy: 'timestamp',
       orderBy: 'desc',
       userAddress: viewWalletAddress,
-      initialData: shouldHydrateFromServer ? rebalanceActivity : undefined,
     })
 
-  const currentlyLoadedList = useMemo(
-    () => (data ? data.pages.flatMap((p) => p.data) : rebalanceActivity.data),
-    [data, rebalanceActivity.data],
+  const currentlyLoadedList = useMemo(() => (data ? data.pages.flatMap((p) => p.data) : []), [data])
+
+  const summarySource = data?.pages[0]
+  const totalItems = summarySource?.pagination.totalItems ?? currentlyLoadedList.length
+  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
+  const savedGasCost = useMemo(
+    () => getRebalanceSavedGasCost(summarySource?.totalItemsPerStrategyId ?? []),
+    [summarySource?.totalItemsPerStrategyId],
   )
 
   const genericMultiSelectFilters = [
@@ -145,10 +134,16 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
 
   const blocks = [
     {
+      id: 'rebalance-actions',
       title: 'Rebalance actions',
-      value: formatWithSeparators(totalItems),
+      value: isPending ? (
+        <SkeletonLine width={160} height={40} />
+      ) : (
+        formatWithSeparators(totalItems)
+      ),
     },
     {
+      id: 'user-saved-time',
       title: (
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
           User saved time
@@ -162,9 +157,14 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           </Tooltip>
         </div>
       ),
-      value: `${formatWithSeparators(savedTimeInHours)} hours`,
+      value: isPending ? (
+        <SkeletonLine width={160} height={40} />
+      ) : (
+        `${formatWithSeparators(savedTimeInHours)} hours`
+      ),
     },
     {
+      id: 'gas-cost-savings',
       title: (
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
           Gas cost savings
@@ -178,7 +178,11 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           </Tooltip>
         </div>
       ),
-      value: `$${formatFiatBalance(savedGasCost)}`,
+      value: isPending ? (
+        <SkeletonLine width={160} height={40} />
+      ) : (
+        `$${formatFiatBalance(savedGasCost)}`
+      ),
     },
   ]
 
@@ -189,9 +193,9 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       </Text>
       <div className={classNames.cardsWrapper}>
         {blocks.map((block) => (
-          <Card key={block.value} className={classNames.card}>
+          <Card key={block.id} className={classNames.card}>
             <DataBlock
-              key={block.value}
+              key={block.id}
               title={block.title}
               value={block.value}
               titleSize="large"
@@ -224,6 +228,12 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           ) : undefined
         }
       >
+        {isError && (
+          <Text as="p" variant="p3" style={{ marginBottom: 'var(--spacing-space-small)' }}>
+            Rebalance activity is temporarily unavailable. You can keep using the rest of the
+            portfolio.
+          </Text>
+        )}
         <RebalanceActivityTable
           rebalanceActivityList={currentlyLoadedList}
           isLoading={isPending}

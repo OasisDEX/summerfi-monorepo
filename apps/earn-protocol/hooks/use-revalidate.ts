@@ -1,4 +1,5 @@
 'use client'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 
 import { CACHE_TAGS } from '@/constants/revalidation'
@@ -22,8 +23,13 @@ const fetchRevalidate = async ({
 
 export const useRevalidateTags = () => {
   const { refresh: refreshView } = useRouter()
+  const queryClient = useQueryClient()
 
   const revalidateTags = ({ tags }: { tags: string[] }) => {
+    queryClient.refetchQueries({
+      queryKey: tags.filter(Boolean),
+      type: 'all',
+    })
     fetchRevalidate({ tags: tags.filter(Boolean) }).then(() => {
       refreshView()
     })
@@ -36,9 +42,15 @@ export const useRevalidateTags = () => {
 
 export const useRevalidateUser = () => {
   const { refresh: refreshView } = useRouter()
+  const queryClient = useQueryClient()
 
   return (walletAddress?: string) => {
     if (!walletAddress) return
+
+    queryClient.refetchQueries({
+      queryKey: [getUserDataCacheHandler(walletAddress)].filter(Boolean),
+      type: 'all',
+    })
 
     fetchRevalidate({
       tags: [getUserDataCacheHandler(walletAddress)].filter(Boolean),
@@ -50,8 +62,14 @@ export const useRevalidateUser = () => {
 
 export const useRevalidateVaultsListData = () => {
   const { refresh: refreshView } = useRouter()
+  const queryClient = useQueryClient()
 
   return () => {
+    queryClient.refetchQueries({
+      queryKey: [CACHE_TAGS.VAULTS_LIST, CACHE_TAGS.INTEREST_RATES],
+      type: 'all',
+    })
+
     fetchRevalidate({
       tags: [CACHE_TAGS.VAULTS_LIST, CACHE_TAGS.INTEREST_RATES].filter(Boolean),
     }).then(() => {
@@ -62,6 +80,7 @@ export const useRevalidateVaultsListData = () => {
 
 export const useRevalidatePositionData = () => {
   const { refresh: refreshView } = useRouter()
+  const queryClient = useQueryClient()
 
   return ({
     chainName,
@@ -79,16 +98,21 @@ export const useRevalidatePositionData = () => {
         ? 'ETH'
         : 'USD'
       : undefined
+    const tags = [
+      CACHE_TAGS.VAULTS_LIST,
+      CACHE_TAGS.INTEREST_RATES,
+      chainName && vaultPerformanceAsset
+        ? `${CACHE_TAGS.VAULT_PERFORMANCE}-${chainName.toLowerCase()}-${vaultPerformanceAsset.toLowerCase()}`
+        : undefined,
+      walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
+    ].filter(Boolean)
 
+    queryClient.refetchQueries({
+      queryKey: tags,
+      type: 'all',
+    })
     fetchRevalidate({
-      tags: [
-        CACHE_TAGS.VAULTS_LIST,
-        CACHE_TAGS.INTEREST_RATES,
-        chainName && vaultPerformanceAsset
-          ? `${CACHE_TAGS.VAULT_PERFORMANCE}-${chainName.toLowerCase()}-${vaultPerformanceAsset.toLowerCase()}`
-          : undefined,
-        walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
-      ].filter(Boolean),
+      tags,
       paths: (chainName && vaultId
         ? [`/earn/${chainName}/position/${vaultId}${walletAddress ? `/${walletAddress}` : ''}`]
         : []
@@ -101,8 +125,17 @@ export const useRevalidatePositionData = () => {
 
 export const useRevalidateMigrationData = () => {
   const { refresh: refreshView } = useRouter()
+  const queryClient = useQueryClient()
 
   return ({ walletAddress }: { walletAddress?: string }) => {
+    queryClient.refetchQueries({
+      queryKey: [
+        CACHE_TAGS.MIGRATION_DATA,
+        walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
+      ].filter(Boolean),
+      type: 'all',
+    })
+
     fetchRevalidate({
       tags: [
         CACHE_TAGS.MIGRATION_DATA,

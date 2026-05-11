@@ -7,6 +7,7 @@ import {
   getPositionValues,
   getUniqueVaultId,
   PortfolioPosition,
+  SkeletonLine,
   Text,
   Timeframes,
   ToggleButton,
@@ -55,13 +56,11 @@ type PortfolioOverviewProps = {
   vaultsList: SDKVaultsListType
   positions: PositionWithVault[] | []
   rewardsData: ClaimDelegateExternalData
+  isRewardsDataPending: boolean
   positionsHistoricalChartMap: {
     [key: string]: SingleSourceChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
-  // migratablePositions: MigratablePosition[]
-  // viewWalletAddress: string
-  // migrationBestVaultApy: MigrationEarningsDataByChainId
   blogPosts: BlogPosts
   rewardTokenPrices: RewardTokenPrices
 }
@@ -70,11 +69,9 @@ export const PortfolioOverview = ({
   vaultsList,
   positions,
   rewardsData,
+  isRewardsDataPending,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
-  // migratablePositions,
-  // viewWalletAddress,
-  // migrationBestVaultApy,
   blogPosts,
   rewardTokenPrices,
 }: PortfolioOverviewProps) => {
@@ -126,10 +123,6 @@ export const PortfolioOverview = ({
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
 
-  // const { features } = useSystemConfig()
-
-  // const migrationsEnabled = !!features?.Migrations
-
   const totalSummerPortfolioUSD = sortedPositions.reduce(
     (acc, position) => acc + getPositionValues(position).netValueUSD.toNumber(),
 
@@ -137,11 +130,6 @@ export const PortfolioOverview = ({
   )
 
   const overallSumr = calculateOverallSumr(rewardsData)
-
-  // const availableToMigrate = migratablePositions.reduce(
-  //   (acc, position) => acc + Number(position.usdValue.amount),
-  //   0,
-  // )
 
   const handleButtonClick = useCallback(
     (buttonName: string) => () => {
@@ -168,44 +156,14 @@ export const PortfolioOverview = ({
       },
       {
         title: '$SUMR Token Rewards',
-        value: `${formatCryptoBalance(overallSumr)} $SUMR`,
+        value: isRewardsDataPending ? (
+          <SkeletonLine height={40} width={150} style={{ marginTop: '6px' }} />
+        ) : (
+          `${formatCryptoBalance(overallSumr)} $SUMR`
+        ),
       },
-      // ...(migrationsEnabled
-      //   ? [
-      //       {
-      //         title: 'Available to Migrate',
-      //         value: `$${formatFiatBalance(availableToMigrate)}`,
-      //         subValue: (
-      //           <Link
-      //             href={`/migrate/user/${viewWalletAddress}`}
-      //             onClick={handleButtonClick('migrate')}
-      //           >
-      //             <WithArrow
-      //               as="p"
-      //               variant="p3semi"
-      //               style={{ color: 'var(--earn-protocol-primary-100)' }}
-      //             >
-      //               Migrate
-      //             </WithArrow>
-      //           </Link>
-      //         ),
-      //       },
-      //     ]
-      //   : [
-      //       {
-      //         title: 'Available to Migrate',
-      //         value: `Coming Soon`,
-      //       },
-      //     ]),
     ]
-  }, [
-    // availableToMigrate,
-    // handleButtonClick,
-    // migrationsEnabled,
-    overallSumr,
-    totalSummerPortfolioUSD,
-    // viewWalletAddress,
-  ])
+  }, [overallSumr, totalSummerPortfolioUSD, isRewardsDataPending])
 
   return (
     <div>

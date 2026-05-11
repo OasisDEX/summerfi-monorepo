@@ -1,7 +1,7 @@
 import { type Dispatch, type FC } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 
-import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
+import { useBeachClubUserDataQuery } from '@/features/beach-club/api/get-beach-club-user-data'
 import { BeachClubBigBanner } from '@/features/beach-club/components/BeachClubBigBannner/BeachClubBigBanner'
 import { BeachClubReferAndEarn } from '@/features/beach-club/components/BeachClubReferAndEarn/BeachClubReferAndEarn'
 import { BeachClubRewards } from '@/features/beach-club/components/BeachClubRewards/BeachClubRewards'
@@ -12,7 +12,6 @@ import classNames from './PortfolioBeachClub.module.css'
 
 interface PortfolioBeachClubProps {
   viewWalletAddress: string
-  beachClubData: BeachClubData
   merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
   state: BeachClubState
   dispatch: Dispatch<BeachClubReducerAction>
@@ -20,11 +19,36 @@ interface PortfolioBeachClubProps {
 
 export const PortfolioBeachClub: FC<PortfolioBeachClubProps> = ({
   viewWalletAddress,
-  beachClubData,
   merklIsAuthorizedPerChain,
   state,
   dispatch,
 }) => {
+  const { data: beachClubData, isPending, isError } = useBeachClubUserDataQuery(viewWalletAddress)
+
+  if (isPending) {
+    return (
+      <div className={classNames.beachClubWrapper}>
+        <Text as="h3" variant="h3" style={{ marginTop: 'var(--general-space-16)' }}>
+          Loading Beach Club data...
+        </Text>
+      </div>
+    )
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (isError || !beachClubData) {
+    return (
+      <div className={classNames.beachClubWrapper}>
+        <Text as="h3" variant="h3" style={{ marginTop: 'var(--general-space-16)' }}>
+          Beach Club data is temporarily unavailable.
+        </Text>
+        <Text as="p" variant="p2" style={{ marginTop: 'var(--general-space-8)' }}>
+          The rest of your portfolio is still available.
+        </Text>
+      </div>
+    )
+  }
+
   return (
     <div className={classNames.beachClubWrapper}>
       <Text as="h3" variant="h3" style={{ marginTop: 'var(--general-space-16)' }}>

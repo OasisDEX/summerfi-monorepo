@@ -12,7 +12,6 @@ import {
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { slugify } from '@summerfi/app-utils'
 
-import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useLatestActivityInfiniteQuery } from '@/features/latest-activity/api/get-latest-activity'
 import { LatestActivityTable } from '@/features/latest-activity/components/LatestActivityTable/LatestActivityTable'
@@ -23,14 +22,12 @@ import { useHandleDropdownChangeEvent } from '@/hooks/use-mixpanel-event'
 import classNames from './PortfolioYourActivity.module.css'
 
 interface PortfolioYourActivityProps {
-  latestActivity: LatestActivityPagination
   viewWalletAddress: string
   vaultsList: SDKVaultsListType
   positions: PositionWithVault[]
 }
 
 export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
-  latestActivity,
   viewWalletAddress,
   vaultsList,
   positions,
@@ -100,25 +97,16 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
     </div>
   )
 
-  // For portfolio component, hydrate from server only when no filters are applied
-  // since this component uses local state instead of URL params
-  const shouldHydrateFromServer =
-    strategyFilter.length === 0 && tokenFilter.length === 0 && sortBy?.key === ''
-
-  const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage } =
+  const { data, isPending, isError, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useLatestActivityInfiniteQuery({
       strategies: strategyFilter,
       tokens: tokenFilter,
       sortBy: sortBy?.key,
       orderBy: sortBy?.direction,
-      initialData: shouldHydrateFromServer ? latestActivity : undefined,
       usersAddresses: viewWalletAddress ? [viewWalletAddress] : undefined,
     })
 
-  const currentlyLoadedList = useMemo(
-    () => (data ? data.pages.flatMap((p) => p.data) : latestActivity.data),
-    [data, latestActivity.data],
-  )
+  const currentlyLoadedList = useMemo(() => (data ? data.pages.flatMap((p) => p.data) : []), [data])
 
   const handleLoadMore = () => {
     if (isFetchingNextPage || !hasNextPage) return
@@ -143,6 +131,11 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
         }
       >
         {filters}
+        {isError && (
+          <Text as="p" variant="p3" style={{ marginBottom: 'var(--spacing-space-small)' }}>
+            Failed to load activity right now. You can keep using the rest of the portfolio.
+          </Text>
+        )}
         <LatestActivityTable
           latestActivityList={currentlyLoadedList}
           hiddenColumns={['strategy']}
