@@ -13,10 +13,9 @@ import { getCachedFleetTokenSharePrice } from '@/app/server-handlers/cached/get-
 import { getCachedSumrBalances } from '@/app/server-handlers/cached/get-sumr-balances'
 import { getCachedSumrDelegateStake } from '@/app/server-handlers/cached/get-sumr-delegate-stake'
 import { getCachedSumrStakingInfo } from '@/app/server-handlers/cached/get-sumr-staking-info'
-import { getCachedSumrStakingRewards } from '@/app/server-handlers/cached/get-sumr-staking-rewards'
 import { getCachedSumrToClaim } from '@/app/server-handlers/cached/get-sumr-to-claim'
 import { getCachedTokenPrice } from '@/app/server-handlers/cached/get-token-price'
-import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
+import { getTallyDelegateByAddress } from '@/app/server-handlers/raw-calls/tally'
 import { getCachedSumrPrice } from '@/app/server-handlers/reward-token-price'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { type ClaimableRewards } from '@/features/portfolio/types'
@@ -132,7 +131,6 @@ export async function GET(
     sumrBalancesResult,
     sumrStakingInfoResult,
     sumrToClaimResult,
-    sumrStakingRewardsResult,
     portfolioSumrStakingV2DataResult,
     claimableMerklRewardsResult,
   ] = await Promise.allSettled([
@@ -140,7 +138,6 @@ export async function GET(
     getCachedSumrBalances({ walletAddress }),
     getCachedSumrStakingInfo({ walletAddress }),
     getCachedSumrToClaim(walletAddress),
-    getCachedSumrStakingRewards({ walletAddress, sumrPriceUsd }),
     getCachedPortfolioSumrStakingV2Data({ walletAddress, sumrPriceUsd }),
     getCachedClaimableSUMRLVUSDCMerkleRewards(walletAddress),
   ])
@@ -161,13 +158,6 @@ export async function GET(
     sumrToClaimResult.status === 'fulfilled'
       ? sumrToClaimResult.value
       : emptyRewardsData.sumrToClaim
-  const sumrStakingRewards =
-    sumrStakingRewardsResult.status === 'fulfilled'
-      ? sumrStakingRewardsResult.value
-      : {
-          sumrRewardApy: 0,
-          sumrRewardAmount: 0,
-        }
   const portfolioSumrStakingV2Data =
     portfolioSumrStakingV2DataResult.status === 'fulfilled'
       ? portfolioSumrStakingV2DataResult.value
@@ -177,10 +167,12 @@ export async function GET(
       ? claimableMerklRewardsResult.value
       : { perChain: {} }
 
-  const tallyDelegates =
+  const currentDelegate =
     sumrStakeDelegate.delegatedToV2 !== emptyRewardsData.sumrStakeDelegate.delegatedToV2
-      ? await getTallyDelegates(sumrStakeDelegate.delegatedToV2).catch(() => [])
-      : []
+      ? await getTallyDelegateByAddress(sumrStakeDelegate.delegatedToV2).catch(() => undefined)
+      : undefined
+
+  const tallyDelegates = currentDelegate ? [currentDelegate] : []
 
   const rewardsData: ClaimDelegateExternalData = {
     sumrToClaim,
@@ -188,8 +180,8 @@ export async function GET(
     sumrStakeDelegate,
     sumrStakingInfo,
     tallyDelegates,
-    sumrRewardApy: sumrStakingRewards.sumrRewardApy,
-    sumrRewardAmount: sumrStakingRewards.sumrRewardAmount,
+    sumrRewardApy: 0,
+    sumrRewardAmount: 0,
     authorizedStakingRewardsCallerBase: false,
   }
 
@@ -221,17 +213,5 @@ export async function GET(
     rewardsData,
     portfolioSumrStakingV2Data,
     claimableRewards,
-    errors: {
-      sumrStakeDelegate: sumrStakeDelegateResult.status === 'rejected',
-      sumrBalances: sumrBalancesResult.status === 'rejected',
-      sumrStakingInfo: sumrStakingInfoResult.status === 'rejected',
-      sumrToClaim: sumrToClaimResult.status === 'rejected',
-      sumrStakingRewards: sumrStakingRewardsResult.status === 'rejected',
-      portfolioSumrStakingV2Data: portfolioSumrStakingV2DataResult.status === 'rejected',
-      claimableMerklRewards: claimableMerklRewardsResult.status === 'rejected',
-      tallyDelegates:
-        sumrStakeDelegate.delegatedToV2 !== emptyRewardsData.sumrStakeDelegate.delegatedToV2 &&
-        tallyDelegates.length === 0,
-    },
   })
 }

@@ -143,3 +143,104 @@ export const getTallyDelegates = async (currentDelegate?: string): Promise<Tally
     }
   }
 }
+
+export const getTallyDelegateByAddress = async (
+  delegateAddress: string,
+): Promise<TallyDelegate | undefined> => {
+  const { EARN_PROTOCOL_DB_CONNECTION_STRING } = process.env
+
+  if (!EARN_PROTOCOL_DB_CONNECTION_STRING) {
+    throw new Error('EARN_PROTOCOL_DB_CONNECTION_STRING is not set')
+  }
+
+  let database
+
+  try {
+    database = await getSummerProtocolDB({
+      connectionString: EARN_PROTOCOL_DB_CONNECTION_STRING,
+    })
+
+    const normalizedDelegateAddress = delegateAddress.toLowerCase()
+
+    const [v1Delegate, v2Delegate] = await Promise.all([
+      database.db
+        .selectFrom('tallyDelegates')
+        .selectAll()
+        .where('userAddress', '=', normalizedDelegateAddress)
+        .executeTakeFirst(),
+      database.db
+        .selectFrom('tallyDelegatesV2')
+        .selectAll()
+        .where('userAddress', '=', normalizedDelegateAddress)
+        .executeTakeFirst(),
+    ])
+
+    if (!v1Delegate && !v2Delegate) {
+      return undefined
+    }
+
+    if (v1Delegate && v2Delegate) {
+      return {
+        bio: v2Delegate.bio,
+        delegatorsCountV1: v1Delegate.delegatorsCount,
+        delegatorsCountV2: v2Delegate.delegatorsCount,
+        displayName: v2Delegate.displayName,
+        ens: v2Delegate.ens,
+        photo: v2Delegate.photo,
+        updatedAt: v2Delegate.updatedAt,
+        userAddress: v2Delegate.userAddress,
+        votePowerV1: v1Delegate.votePower,
+        votesCountV1: v1Delegate.votesCount,
+        votesCountNormalizedV1: v1Delegate.votesCountNormalized,
+        votePowerV2: v2Delegate.votePower,
+        votesCountV2: v2Delegate.votesCount,
+        votesCountNormalizedV2: v2Delegate.votesCountNormalized,
+        x: v2Delegate.x,
+        forumUrl: v2Delegate.forumUrl,
+        customTitle: v2Delegate.customTitle,
+        customBio: v2Delegate.customBio,
+      }
+    }
+
+    if (v2Delegate) {
+      return {
+        bio: v2Delegate.bio,
+        delegatorsCountV1: '',
+        delegatorsCountV2: v2Delegate.delegatorsCount,
+        displayName: v2Delegate.displayName,
+        ens: v2Delegate.ens,
+        photo: v2Delegate.photo,
+        updatedAt: v2Delegate.updatedAt,
+        userAddress: v2Delegate.userAddress,
+        votePowerV1: '',
+        votesCountV1: '',
+        votesCountNormalizedV1: '',
+        votePowerV2: v2Delegate.votePower,
+        votesCountV2: v2Delegate.votesCount,
+        votesCountNormalizedV2: v2Delegate.votesCountNormalized,
+        x: v2Delegate.x,
+        forumUrl: v2Delegate.forumUrl,
+        customTitle: v2Delegate.customTitle,
+        customBio: v2Delegate.customBio,
+      }
+    }
+
+    return {
+      ...v1Delegate,
+      delegatorsCountV1: v1Delegate?.delegatorsCount,
+      delegatorsCountV2: '',
+      votePowerV1: v1Delegate?.votePower,
+      votesCountV1: v1Delegate?.votesCount,
+      votesCountNormalizedV1: v1Delegate?.votesCountNormalized,
+      votePowerV2: '',
+      votesCountV2: '',
+      votesCountNormalizedV2: '',
+    } as TallyDelegate
+  } catch (error) {
+    throw new Error('Failed to connect to database', { cause: error })
+  } finally {
+    if (database) {
+      await database.db.destroy()
+    }
+  }
+}

@@ -9,7 +9,6 @@ type PortfolioRewardsResponse = {
   rewardsData: ClaimDelegateExternalData
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   claimableRewards: ClaimableRewards
-  errors: { [key: string]: boolean }
 }
 
 export const getPortfolioRewardsData = async (
