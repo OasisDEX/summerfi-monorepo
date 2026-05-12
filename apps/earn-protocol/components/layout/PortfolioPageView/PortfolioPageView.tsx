@@ -2,7 +2,6 @@
 
 import { type FC, useEffect, useReducer } from 'react'
 import {
-  getPositionValues,
   Icon,
   NonOwnerPortfolioBanner,
   TabBar,
@@ -20,14 +19,12 @@ import {
   emptyClaimableRewards,
   emptyPortfolioSumrStakingV2Data,
   emptyRewardsData,
-  emptyWalletData,
 } from '@/components/layout/PortfolioPageView/constants'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { BeachClubPalmBackground } from '@/features/beach-club/components/BeachClubPalmBackground/BeachClubPalmBackground'
 import { beachClubDefaultState, beachClubReducer } from '@/features/beach-club/state'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { usePortfolioRewardsDataQuery } from '@/features/portfolio/api/get-portfolio-rewards-data'
-import { usePortfolioWalletDataQuery } from '@/features/portfolio/api/get-portfolio-wallet-data'
 import { PortfolioBeachClub } from '@/features/portfolio/components/PortfolioBeachClub/PortfolioBeachClub'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
@@ -76,14 +73,11 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     isError: isRewardsDataError,
     isPending: isRewardsDataPending,
   } = usePortfolioRewardsDataQuery(viewWalletAddress)
-  const { data: portfolioWalletData, isError: isWalletDataError } =
-    usePortfolioWalletDataQuery(viewWalletAddress)
 
   const rewardsData = portfolioRewardsData?.rewardsData ?? emptyRewardsData
   const portfolioSumrStakingV2Data =
     portfolioRewardsData?.portfolioSumrStakingV2Data ?? emptyPortfolioSumrStakingV2Data
   const claimableRewards = portfolioRewardsData?.claimableRewards ?? emptyClaimableRewards
-  const walletData = portfolioWalletData?.walletData ?? emptyWalletData
 
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
@@ -141,10 +135,10 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       label: 'Wallet',
       content: (
         <PortfolioWallet
-          walletData={walletData}
           vaultsList={vaultsList}
           vaultsApyByNetworkMap={vaultsApyByNetworkMap}
           rewardTokenPrices={rewardTokenPrices}
+          viewWalletAddress={viewWalletAddress}
         />
       ),
     },
@@ -230,13 +224,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       : []),
   ]
 
-  const totalWalletValue =
-    positions.reduce(
-      (acc, position) => acc + getPositionValues(position).netEarningsUSD.toNumber(),
-
-      0,
-    ) + walletData.totalAssetsUsdValue
-
   return (
     <>
       <NonOwnerPortfolioBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
@@ -246,16 +233,9 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             Some rewards data is temporarily unavailable.
           </Text>
         )}
-        {isWalletDataError && (
-          <Text as="p" variant="p3" style={{ marginBottom: 'var(--general-space-8)' }}>
-            Wallet assets are temporarily unavailable.
-          </Text>
-        )}
         <PortfolioHeader
           viewWalletAddress={viewWalletAddress}
           totalSumr={overallSumr}
-          totalWalletValue={totalWalletValue}
-          walletData={walletData}
           isOwner={ownerView}
         />
         <TabBar

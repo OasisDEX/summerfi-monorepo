@@ -5,28 +5,27 @@ import {
   type SDKVaultsListType,
 } from '@summerfi/app-types'
 
-import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
 import { PortfolioAssets } from '@/features/portfolio/components/PortfolioAssets/PortfolioAssets'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 
 import classNames from './PorftolioWallet.module.css'
 
 interface PortfolioWalletProps {
-  walletData: PortfolioAssetsResponse
   vaultsList: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
+  viewWalletAddress: string
 }
 
 export const PortfolioWallet: FC<PortfolioWalletProps> = ({
-  walletData,
   vaultsList,
   vaultsApyByNetworkMap,
   rewardTokenPrices,
+  viewWalletAddress,
 }) => {
   return (
     <div className={classNames.wrapper}>
-      <PortfolioAssets walletData={walletData} />
+      <PortfolioAssets viewWalletAddress={viewWalletAddress} />
       {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
       <PortfolioVaultsCarousel
         className={classNames.vaultCarousel}

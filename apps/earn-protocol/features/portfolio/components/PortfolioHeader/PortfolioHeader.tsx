@@ -10,16 +10,10 @@ import {
   useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
-import {
-  formatAddress,
-  formatCryptoBalance,
-  formatFiatBalance,
-  safeBTOA,
-} from '@summerfi/app-utils'
+import { formatAddress, formatCryptoBalance, safeBTOA } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { SendWidget } from '@/features/send/components/SendWidget/SendWidget'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
@@ -55,18 +49,14 @@ const TransakTrigger = ({
 interface PortfolioHeaderProps {
   viewWalletAddress: string
   totalSumr?: number
-  totalWalletValue?: number
   isLoading?: boolean
-  walletData?: PortfolioAssetsResponse
   isOwner?: boolean
 }
 
 export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   viewWalletAddress,
   totalSumr,
-  totalWalletValue,
   isLoading = false,
-  walletData,
   isOwner,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -113,10 +103,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             <Button
               variant="secondaryMedium"
               style={{ minWidth: 'unset' }}
-              disabled={
-                userWallet?.toLowerCase() !== viewWalletAddress.toLowerCase() ||
-                (walletData && walletData.assets.length === 0)
-              }
+              disabled={userWallet?.toLowerCase() !== viewWalletAddress.toLowerCase()}
               onClick={() => {
                 setIsSendOpen(true)
               }}
@@ -196,13 +183,6 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             valueSize="large"
             valueStyle={{ textAlign: 'right' }}
           />
-          <DataBlock
-            title="Total Wallet Value"
-            value={totalWalletValue ? `$${formatFiatBalance(totalWalletValue)}` : '-'}
-            titleSize="large"
-            valueSize="large"
-            valueStyle={{ textAlign: 'right' }}
-          />
         </div>
       </div>
       {userWallet && transakNetwork && (
@@ -218,12 +198,11 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
         />
       )}
 
-      {walletData && walletData.assets.length > 0 && sendEnabled && (
+      {sendEnabled && (
         <SendWidget
           walletAddress={viewWalletAddress}
           isOpen={isSendOpen}
           onClose={() => setIsSendOpen(false)}
-          walletData={walletData}
           isOwner={isOwner}
         />
       )}

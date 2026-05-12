@@ -27,6 +27,7 @@ import { isAddress } from 'viem'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { usePortfolioWalletDataQuery } from '@/features/portfolio/api/get-portfolio-wallet-data'
 import { SendFormContent } from '@/features/send/components/SendFormContent/SendFormContent'
 import { getSendPrimaryBtnLabel } from '@/features/send/helpers/get-send-primary-btn-label'
 import { getSendSidebarTitle } from '@/features/send/helpers/get-send-sidebar-title'
@@ -43,17 +44,16 @@ interface SendWidgetProps {
   walletAddress: string
   isOpen: boolean
   onClose: () => void
-  walletData: PortfolioAssetsResponse
   isOwner?: boolean
 }
 
-export const SendWidget: FC<SendWidgetProps> = ({
+const SendWidgetInternals = ({
   walletAddress,
   isOpen,
   onClose,
-  walletData,
   isOwner,
-}) => {
+  walletData,
+}: SendWidgetProps & { walletData: PortfolioAssetsResponse }) => {
   const { deviceType } = useDeviceType()
   const inputChangeHandler = useHandleInputChangeEvent()
   const revalidateUser = useRevalidateUser()
@@ -280,5 +280,36 @@ export const SendWidget: FC<SendWidgetProps> = ({
     <Modal openModal={isOpen} closeModal={onClose}>
       <Sidebar {...sidebarProps} />
     </Modal>
+  )
+}
+
+export const SendWidget: FC<SendWidgetProps> = ({ walletAddress, isOpen, onClose, isOwner }) => {
+  const {
+    data: portfolioWalletData,
+    isError: isWalletDataError,
+    isPending: isWalletDataPending,
+  } = usePortfolioWalletDataQuery(walletAddress, isOpen)
+
+  if (isWalletDataError) {
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <p>Failed to load wallet data. Please try again later.</p>
+      </div>
+    )
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (isWalletDataPending || !portfolioWalletData) {
+    return null
+  }
+
+  return (
+    <SendWidgetInternals
+      walletData={portfolioWalletData.walletData}
+      walletAddress={walletAddress}
+      isOpen={isOpen}
+      onClose={onClose}
+      isOwner={isOwner}
+    />
   )
 }

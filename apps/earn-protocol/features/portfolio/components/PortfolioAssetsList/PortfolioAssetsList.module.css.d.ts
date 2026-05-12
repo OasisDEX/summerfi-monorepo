@@ -4,6 +4,7 @@ declare const styles: {
   readonly "assetsWrapperAnimatedHeight": string;
   readonly "dataBlockWrapper": string;
   readonly "linkWrapper": string;
+  readonly "skeletonWrapper": string;
   readonly "tokenBlockWrapper": string;
   readonly "wrapper": string;
 };

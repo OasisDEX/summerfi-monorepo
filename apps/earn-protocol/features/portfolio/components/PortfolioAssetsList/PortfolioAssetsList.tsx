@@ -6,6 +6,7 @@ import {
   DataBlock,
   getDisplayToken,
   Icon,
+  SkeletonLine,
   Text,
   VaultTitle,
 } from '@summerfi/app-earn-ui'
@@ -57,7 +58,8 @@ const AssetPriceChangeTrend: FC<AssetPriceChangeTrendProps> = ({ change }) => {
 }
 
 interface PortfolioAssetsListProps {
-  walletAssets: PortfolioWalletAsset[]
+  walletAssets?: PortfolioWalletAsset[]
+  isWalletDataPending?: boolean
 }
 
 const mapAssetCardItem = (item: PortfolioWalletAsset) => (
@@ -93,46 +95,63 @@ const mapAssetCardItem = (item: PortfolioWalletAsset) => (
   </Card>
 )
 
-export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({ walletAssets }) => {
+const mapAssetLoadingCardItem = (_: unknown, index: number) => (
+  <Card key={index} variant="cardSecondary" className={classNames.assetWrapper}>
+    <div className={classNames.skeletonWrapper}>
+      <SkeletonLine width="30%" height={30} style={{ margin: '18px auto' }} />
+    </div>
+  </Card>
+)
+
+export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({
+  walletAssets,
+  isWalletDataPending,
+}) => {
   const [isSeeAll, setIsSeeAll] = useState(false)
   const buttonClickEventHandler = useHandleButtonClickEvent()
 
   return (
     <div className={classNames.wrapper}>
       <div className={classNames.assetsWrapper}>
-        {walletAssets.slice(0, 3).map(mapAssetCardItem)}
+        {isWalletDataPending ? <>{[...Array(3)].map(mapAssetLoadingCardItem)}</> : null}
+        {!isWalletDataPending && walletAssets?.slice(0, 3).map(mapAssetCardItem)}
         <AnimateHeight
           id="portfolio-all-assets"
           show={isSeeAll}
           fade={false}
           className={classNames.assetsWrapperAnimatedHeight}
         >
-          {walletAssets.slice(3).map(mapAssetCardItem)}
+          {walletAssets?.slice(3).map(mapAssetCardItem)}
         </AnimateHeight>
       </div>
-      {walletAssets.length === 0 && (
+      {walletAssets?.length === 0 && !isWalletDataPending && (
         <Text as="p" variant="p1">
           No assets available to display
         </Text>
       )}
-      {walletAssets.length > 3 && (
-        <div
-          onClick={() => {
+      <div
+        onClick={() => {
+          if ((walletAssets?.length ?? 0) > 3 && !isWalletDataPending) {
             buttonClickEventHandler(`portfolio-wallet-see-all-${isSeeAll ? 'hide' : 'show'}`)
             setIsSeeAll((prev) => !prev)
-          }}
-          className={classNames.linkWrapper}
-        >
-          <Text as="p" variant="p3semi">
-            {isSeeAll ? 'Hide' : 'See'} all assets
-          </Text>
-          <Icon
-            iconName={isSeeAll ? 'chevron_up' : 'chevron_down'}
-            variant="xs"
-            color="rgba(255, 73, 164, 1)"
-          />
-        </div>
-      )}
+          }
+        }}
+        className={classNames.linkWrapper}
+        style={{
+          cursor: (walletAssets?.length ?? 0) > 3 && !isWalletDataPending ? 'pointer' : 'default',
+          opacity: (walletAssets?.length ?? 0) > 3 && !isWalletDataPending ? 1 : 0.5,
+          pointerEvents: (walletAssets?.length ?? 0) > 3 && !isWalletDataPending ? 'auto' : 'none',
+        }}
+      >
+        <Text as="p" variant="p3semi">
+          {isSeeAll ? 'Hide' : 'See'} all assets
+        </Text>
+        <Icon
+          iconName={isSeeAll ? 'chevron_up' : 'chevron_down'}
+          variant="xs"
+          color="rgba(255, 73, 164, 1)"
+        />
+      </div>
     </div>
   )
 }

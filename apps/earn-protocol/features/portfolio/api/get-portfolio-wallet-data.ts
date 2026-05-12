@@ -20,7 +20,7 @@ export const getPortfolioWalletData = async (
   return response.json() as Promise<PortfolioWalletResponse>
 }
 
-export const usePortfolioWalletDataQuery = (walletAddress: string) => {
+export const usePortfolioWalletDataQuery = (walletAddress: string, enabled: boolean = true) => {
   return useQuery({
     queryKey: [
       'portfolio-wallet-data',
@@ -28,7 +28,7 @@ export const usePortfolioWalletDataQuery = (walletAddress: string) => {
       getUserDataCacheHandler(walletAddress),
     ],
     queryFn: () => getPortfolioWalletData(walletAddress),
-    enabled: Boolean(walletAddress),
+    enabled: Boolean(walletAddress) && enabled,
     staleTime: 60_000,
     gcTime: 5 * 60_000,
     retry: 1,
