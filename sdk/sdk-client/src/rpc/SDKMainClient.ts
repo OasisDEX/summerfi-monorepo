@@ -4,6 +4,8 @@ import { createTRPCClient, httpBatchLink, loggerLink, splitLink } from '@trpc/cl
 
 export type RPCMainClientType = ReturnType<typeof createTRPCClient<SDKAppRouter>>
 
+const MAX_URL_LENGTH = 3000
+
 export function createMainRPCClient(params: {
   apiURL: string
   clientId?: string
@@ -12,7 +14,7 @@ export function createMainRPCClient(params: {
   const getBatchLink = httpBatchLink({
     url: params.apiURL,
     transformer: SerializationService.getTransformer(),
-    maxURLLength: 5000,
+    maxURLLength: MAX_URL_LENGTH,
     maxItems: 5,
     fetch: (url, opts) => fetch(url, { ...opts, credentials: 'omit' }),
     headers() {
@@ -44,9 +46,11 @@ export function createMainRPCClient(params: {
           const encodedInput = SerializationService.stringify(opts.input)
           const estimatedUrlLength =
             params.apiURL.length + opts.path.length + encodedInput.length + 64
-          const method = opts.type === 'query' && estimatedUrlLength <= 5000 ? 'GET' : 'POST'
+          const method =
+            opts.type === 'query' && estimatedUrlLength <= MAX_URL_LENGTH ? 'GET' : 'POST'
 
-          LoggingService.log(`SDK call (${method} ${apiUrlBase})`)
+          LoggingService.log(`[SDK] ${method}: ${apiUrlBase}`)
+          LoggingService.log(`[SDK] ${estimatedUrlLength}`)
         },
       }),
       splitLink({
@@ -58,7 +62,8 @@ export function createMainRPCClient(params: {
           const encodedInput = SerializationService.stringify(op.input)
           const estimatedUrlLength =
             params.apiURL.length + op.path.length + encodedInput.length + 64
-          return estimatedUrlLength > 5000
+          LoggingService.log(`[SDK condition] ${estimatedUrlLength}`)
+          return estimatedUrlLength > MAX_URL_LENGTH
         },
         true: postBatchLink,
         false: getBatchLink,

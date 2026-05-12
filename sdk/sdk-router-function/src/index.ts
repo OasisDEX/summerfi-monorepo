@@ -5,6 +5,7 @@ export const baseHandler = awsLambdaRequestHandler({
   router: sdkAppRouter,
   createContext: createSDKContext,
   maxBatchSize: 5,
+  allowMethodOverride: true,
 })
 
 export const handler = baseHandler
