@@ -23,7 +23,6 @@ export type PortfolioSumrStakingV2Data = {
   circulatingSupply: number
   averageLockDuration: number
   userStakes: RecursiveObjectWithNumberInsteadOfBigInt<UserStakeV2[]>
-  allStakes: RecursiveObjectWithNumberInsteadOfBigInt<StakingStake[]>
   bucketInfo: RecursiveObjectWithNumberInsteadOfBigInt<StakingBucketInfo[]>
   penaltyPercentages: { value: number; index: number }[]
   penaltyAmounts: { value: number; index: number }[]
@@ -32,6 +31,13 @@ export type PortfolioSumrStakingV2Data = {
   userUsdcRealYield: number
   usdcEarnedOnSumrAmount: number
 }
+
+export type SumrStakingV2AllStakesData = RecursiveObjectWithNumberInsteadOfBigInt<StakingStake[]>
+
+export type SumrStakingV2AllStakesSlimData = Pick<
+  SumrStakingV2AllStakesData[number],
+  'owner' | 'index' | 'amount' | 'lockupPeriod' | 'lockupEndTime'
+>[]
 
 export type LandingPageStakingV2Data = {
   maxApy: string

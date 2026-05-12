@@ -57,7 +57,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
     totalSumrStaked,
     circulatingSupply,
     averageLockDuration,
-    allStakes,
     bucketInfo,
   } = sumrStakingV2LandingPageData
 
@@ -482,7 +481,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
         <div className={sumrV2PageStyles.stakingTabBarWrapper}>
           <LockedSumrInfoTabBarV2
             bucketInfo={bucketInfo}
-            allStakes={allStakes}
             isLoading={isLoading}
             userWalletAddress={userWalletAddress}
             refetchStakingData={fetchUserStakingData}

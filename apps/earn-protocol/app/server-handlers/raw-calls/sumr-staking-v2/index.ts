@@ -6,6 +6,7 @@ import {
   type LandingPageStakingV2Data,
   type LandingPageStakingV2UserData,
   type PortfolioSumrStakingV2Data,
+  type SumrStakingV2AllStakesData,
 } from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
@@ -25,6 +26,8 @@ type GetLandingPageStakingV2UserDataFuncType = (args: {
   sumrPriceUsd?: number
 }) => Promise<LandingPageStakingV2UserData>
 
+type GetSumrStakingV2AllStakesDataFuncType = () => Promise<SumrStakingV2AllStakesData>
+
 export const getPortfolioSumrStakingV2Data: GetPortfolioSumrStakingV2DataFuncType = async ({
   walletAddress,
   sumrPriceUsd,
@@ -38,7 +41,6 @@ export const getPortfolioSumrStakingV2Data: GetPortfolioSumrStakingV2DataFuncTyp
     userStaked,
     userStakesData,
     userBlendedYieldBoost,
-    allStakesData,
     bucketsInfo,
   ] = await Promise.all([
     backendSDK.armada.users.getUserBalance({ user }),
@@ -47,7 +49,6 @@ export const getPortfolioSumrStakingV2Data: GetPortfolioSumrStakingV2DataFuncTyp
     backendSDK.armada.users.getUserStakingSumrStaked({ user }),
     backendSDK.armada.users.getUserStakesV2({ user }),
     backendSDK.armada.users.getUserBlendedYieldBoost({ user }),
-    backendSDK.armada.users.getStakingStakesV2({}),
     backendSDK.armada.users.getStakingBucketsInfoV2(),
   ])
 
@@ -66,7 +67,6 @@ export const getPortfolioSumrStakingV2Data: GetPortfolioSumrStakingV2DataFuncTyp
         ? Number(stakingStats.averageLockupPeriod)
         : 0,
       userStakes: [],
-      allStakes: parseJsonSafelyWithBigInt(allStakesData),
       bucketInfo: parseJsonSafelyWithBigInt(bucketsInfo),
       penaltyPercentages: [],
       penaltyAmounts: [],
@@ -133,7 +133,6 @@ export const getPortfolioSumrStakingV2Data: GetPortfolioSumrStakingV2DataFuncTyp
       ? Number(stakingStats.averageLockupPeriod)
       : 0,
     userStakes: parseJsonSafelyWithBigInt(userStakesData),
-    allStakes: parseJsonSafelyWithBigInt(allStakesData),
     bucketInfo: parseJsonSafelyWithBigInt(bucketsInfo),
     penaltyPercentages: penaltyCalculationPercentage.map((percentage, idx) => ({
       value: percentage.value,
@@ -148,6 +147,12 @@ export const getPortfolioSumrStakingV2Data: GetPortfolioSumrStakingV2DataFuncTyp
     userUsdcRealYield,
     usdcEarnedOnSumrAmount,
   }
+}
+
+export const getSumrStakingV2AllStakesData: GetSumrStakingV2AllStakesDataFuncType = async () => {
+  const allStakesData = await backendSDK.armada.users.getStakingStakesV2({})
+
+  return parseJsonSafelyWithBigInt(allStakesData)
 }
 
 export const getLandingPageSumrStakingV2Data: GetLandingPageStakingV2DataFuncType = async ({

@@ -23,12 +23,14 @@ interface PortfolioRewardsV2Props {
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   viewWalletAddress: string
   sumrPriceUsd: number
+  isRewardsDataPending: boolean
   claimableRewards: ClaimableRewards
 }
 
 export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   rewardsData,
   state,
+  isRewardsDataPending,
   dispatch,
   portfolioSumrStakingV2Data,
   viewWalletAddress,
@@ -48,7 +50,6 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     circulatingSupply,
     averageLockDuration,
     userStakes,
-    allStakes,
     bucketInfo,
     penaltyPercentages,
     penaltyAmounts,
@@ -114,6 +115,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
       />
       <LockedSumrInfoTabBarV2
         stakes={userStakes}
+        isLoading={isRewardsDataPending}
         userWalletAddress={userWalletAddress as AddressValue}
         viewWalletAddress={viewWalletAddress}
         refetchStakingData={refetchStakingData}
@@ -123,7 +125,6 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         userBlendedYieldBoost={userBlendedYieldBoost}
         userSumrStaked={sumrStakedV2}
         totalSumrStaked={totalSumrStaked}
-        allStakes={allStakes}
         averageLockDuration={averageLockDuration}
         circulatingSupply={circulatingSupply}
         bucketInfo={bucketInfo}

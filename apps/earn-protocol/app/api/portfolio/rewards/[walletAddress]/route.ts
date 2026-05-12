@@ -85,7 +85,6 @@ const emptyPortfolioSumrStakingV2Data = {
   circulatingSupply: 0,
   averageLockDuration: 0,
   userStakes: [],
-  allStakes: [],
   bucketInfo: [],
   penaltyPercentages: [],
   penaltyAmounts: [],

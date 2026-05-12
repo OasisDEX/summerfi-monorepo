@@ -37,6 +37,7 @@ import {
 } from '@/components/molecules/LockedSumrInfoTabBarV2/types'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
+import { useSumrStakingV2AllStakesDataQuery } from '@/features/portfolio/api/get-sumr-staking-v2-all-stakes-data'
 import { formatStakeLockupPeriod } from '@/helpers/format-stake-lockup-period'
 
 import lockedSumrInfoTabBarV2Styles from './LockedSumrInfoTabBarV2.module.css'
@@ -481,18 +482,20 @@ const AllLockedSumrPositionsCards: FC<AllLockedSumrPositionsCardsProps> = ({
 }
 
 interface AllLockedSumrPositionsTableProps {
-  stakes?: PortfolioSumrStakingV2Data['allStakes']
   isLoading?: boolean
   totalSumrStaked: number
   // earningsEstimation: StakingEarningsEstimationForStakesV2 | null
 }
 
 const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
-  stakes,
   isLoading,
   totalSumrStaked,
   // earningsEstimation,
 }) => {
+  const showSumrPositionsPerPage = 25
+  const [simplePaginationPage, setSimplePaginationPage] = useState(1)
+  const { data: allStakesData, isLoading: isLoadingAllStakes } =
+    useSumrStakingV2AllStakesDataQuery()
   const [sortConfig, setSortConfig] = useState<
     TableSortedColumn<AllLockedSumrPositionsTableColumns>
   >({
@@ -500,7 +503,11 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
     key: 'staked',
   })
 
-  if (isLoading) {
+  const stakes = allStakesData?.allStakes ?? []
+
+  const isTableLoading = (isLoading ?? false) || isLoadingAllStakes
+
+  if (isTableLoading) {
     return (
       <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
         <Table<AllLockedSumrPositionsTableColumns>
@@ -529,7 +536,7 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
   }
 
   const rowsData: TableRow<AllLockedSumrPositionsTableColumns>[] | undefined = stakes
-    ?.filter((stake) => stake.amount > 0n)
+    .filter((stake) => stake.amount > 0n)
     .sort((a, b) => {
       const aAmountValue = new BigNumber(a.amount.toString()).shiftedBy(-SUMR_DECIMALS).toNumber()
       const bAmountValue = new BigNumber(b.amount.toString()).shiftedBy(-SUMR_DECIMALS).toNumber()
@@ -565,13 +572,6 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
 
       // Format owner address
       const ownerDisplay = `${stake.owner.slice(0, 6)}...${stake.owner.slice(-4)}`
-
-      // Find the corresponding earnings data by stake index (array index matches stake index)
-      const allStakesIndex = stakes.findIndex((s) => s.id === stake.id)
-
-      if (allStakesIndex === -1) {
-        throw new Error('Earnings data not found for stake, should not happen')
-      }
       // const stakeEarnings = earningsEstimation?.stakes[allStakesIndex]
       // const usdEarnings = stakeEarnings?.usdEarningsAmount ?? null
 
@@ -594,22 +594,33 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
         },
       }
     })
+    .slice(0, simplePaginationPage * showSumrPositionsPerPage)
 
   return (
     <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
       <Table<AllLockedSumrPositionsTableColumns>
         columns={allLockedSumrPositionsTableColumns}
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         rows={rowsData ?? []}
         handleSort={(config) => {
           setSortConfig({ key: config.key, direction: config.direction })
         }}
       />
+      <Button
+        variant="textPrimarySmall"
+        style={{ margin: '16px auto 0', display: 'block' }}
+        onClick={() => setSimplePaginationPage((prev) => prev + 1)}
+        disabled={stakes.length <= simplePaginationPage * showSumrPositionsPerPage}
+      >
+        {showSumrPositionsPerPage * simplePaginationPage >= stakes.length
+          ? 'No more positions to show'
+          : `Show ${showSumrPositionsPerPage} more`}
+      </Button>
     </div>
   )
 }
 
 interface AllLockedSumrPositionsDataProps {
-  stakes?: PortfolioSumrStakingV2Data['allStakes']
   isLoading?: boolean
   totalSumrStaked: number
   bucketInfo: PortfolioSumrStakingV2Data['bucketInfo']
@@ -618,7 +629,6 @@ interface AllLockedSumrPositionsDataProps {
 }
 
 const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
-  stakes,
   isLoading,
   totalSumrStaked,
   bucketInfo,
@@ -758,7 +768,6 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
       )}
       <Text variant="h5">All Locked SUMR Positions</Text>
       <AllLockedSumrPositionsTable
-        stakes={stakes}
         isLoading={isLoading}
         totalSumrStaked={totalSumrStaked}
         // earningsEstimation={earningsEstimation}
@@ -768,7 +777,6 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
 }
 
 interface AllLockedSumrPositionsProps {
-  stakes?: PortfolioSumrStakingV2Data['allStakes']
   isLoading?: boolean
   totalSumrStaked: number
   averageLockDuration: number
@@ -779,7 +787,6 @@ interface AllLockedSumrPositionsProps {
 }
 
 const AllLockedSumrPositions: FC<AllLockedSumrPositionsProps> = ({
-  stakes,
   isLoading,
   totalSumrStaked,
   averageLockDuration,
@@ -797,7 +804,6 @@ const AllLockedSumrPositions: FC<AllLockedSumrPositionsProps> = ({
         isLoading={isLoading}
       />
       <AllLockedSumrPositionsData
-        stakes={stakes}
         isLoading={isLoading}
         totalSumrStaked={totalSumrStaked}
         bucketInfo={bucketInfo}
@@ -819,8 +825,6 @@ interface LockedSumrInfoTabBarV2Props {
   userBlendedYieldBoost?: number
   userSumrStaked?: number
   totalSumrStaked: number
-  allStakes?: PortfolioSumrStakingV2Data['allStakes']
-  isLoadingAllStakes?: boolean
   averageLockDuration: number
   circulatingSupply: number
   bucketInfo: PortfolioSumrStakingV2Data['bucketInfo']
@@ -840,8 +844,6 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
   userBlendedYieldBoost,
   userSumrStaked,
   totalSumrStaked,
-  allStakes,
-  isLoadingAllStakes,
   averageLockDuration,
   circulatingSupply,
   bucketInfo,
@@ -894,8 +896,7 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
     label: 'All Locked SUMR Positions',
     content: (
       <AllLockedSumrPositions
-        stakes={allStakes}
-        isLoading={isLoadingAllStakes}
+        isLoading={isLoading}
         totalSumrStaked={totalSumrStaked}
         averageLockDuration={averageLockDuration}
         circulatingSupply={circulatingSupply}

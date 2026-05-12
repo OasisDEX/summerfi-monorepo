@@ -185,6 +185,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             content: (
               <PortfolioRewardsV2
                 rewardsData={rewardsData}
+                isRewardsDataPending={isRewardsDataPending}
                 viewWalletAddress={viewWalletAddress}
                 state={state}
                 dispatch={dispatch}
