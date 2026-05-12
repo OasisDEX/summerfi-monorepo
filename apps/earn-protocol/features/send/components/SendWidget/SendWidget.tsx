@@ -299,7 +299,7 @@ export const SendWidget: FC<SendWidgetProps> = ({ walletAddress, isOpen, onClose
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (isWalletDataPending || !portfolioWalletData) {
+  if (isWalletDataPending || !portfolioWalletData?.walletData.assets.length) {
     return null
   }
 
