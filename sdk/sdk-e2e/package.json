@@ -61,7 +61,8 @@
     "e2e:swapQuote": "jest --roots e2e -- ./e2e/swapQuote.test.ts",
     "e2e:transfer": "jest --roots e2e -- ./e2e/armadaProtocol.erc20Transfer.test.ts",
     "e2e:vaulthistoricalrates": "jest --roots e2e -- ./e2e/armadaProtocol.vaultsHistoricalRates.test.ts",
-    "e2e:protocoltvl": "jest --roots e2e -- ./e2e/armadaProtocol.getProtocolTvl.test.ts"
+    "e2e:protocoltvl": "jest --roots e2e -- ./e2e/armadaProtocol.getProtocolTvl.test.ts",
+    "e2e:dca:orders": "jest --roots e2e -- ./e2e/armadaProtocol.dcaOrders.test.ts"
   },
   "devDependencies": {
     "@summerfi/armada-protocol-abis": "workspace:*",

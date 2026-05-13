@@ -133,6 +133,10 @@ import { isWhitelistedAQ } from './armada-protocol-handlers/access-control/isWhi
 import { setWhitelistedAQ } from './armada-protocol-handlers/access-control/setWhitelistedAQ'
 import { setWhitelistedBatchAQ } from './armada-protocol-handlers/access-control/setWhitelistedBatchAQ'
 import { getAllRoles } from './armada-protocol-handlers/access-control/getAllRoles'
+import { createAndSaveBuyOrder } from './armada-protocol-handlers/dca/createAndSaveBuyOrder'
+import { getBuyOrder } from './armada-protocol-handlers/dca/getBuyOrder'
+import { getBuyOrders } from './armada-protocol-handlers/dca/getBuyOrders'
+import { cancelBuyOrder } from './armada-protocol-handlers/dca/cancelBuyOrder'
 
 /**
  * Server
@@ -293,6 +297,12 @@ export const sdkAppRouter = router({
       setWhitelistedAQ: setWhitelistedAQ,
       setWhitelistedBatchAQ: setWhitelistedBatchAQ,
       getAllRoles: getAllRoles,
+    },
+    dca: {
+      createAndSaveBuyOrder: createAndSaveBuyOrder,
+      getBuyOrder: getBuyOrder,
+      getBuyOrders: getBuyOrders,
+      cancelBuyOrder: cancelBuyOrder,
     },
   },
 })

@@ -61,6 +61,7 @@ export type { IArmadaManagerUtils } from './common/interfaces/IArmadaManagerUtil
 export type { IArmadaManagerPositions } from './common/interfaces/IArmadaManagerPositions'
 export type { IArmadaManagerAdmin } from './common/interfaces/IArmadaManagerAdmin'
 export type { IArmadaManagerAccessControl } from './common/interfaces/IArmadaManagerAccessControl'
+export type { IArmadaManagerDCA } from './common/interfaces/IArmadaManagerDCA'
 export {
   setTestDeployment,
   isTestDeployment,
@@ -73,6 +74,7 @@ export {
   getDeploymentsJsonConfig,
 } from './deployments/index'
 export type { IArmadaManagerMerklRewards } from './common/interfaces/IArmadaManagerMerklRewards'
+export type { ArmadaDcaOrder, ArmadaDcaOrderStatus } from './common/types/ArmadaDcaOrder'
 export type {
   MerklReward,
   MerklRewardBreakdown,

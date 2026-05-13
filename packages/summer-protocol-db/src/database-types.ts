@@ -35,6 +35,30 @@ export interface Campaigns {
   userAddress: string;
 }
 
+export interface ArmadaDcaOrders {
+  allowedVaultsRoot: string;
+  amount: string;
+  cancelledAt: Int8 | null;
+  chainId: number;
+  createdAt: Int8;
+  deadline: string;
+  ensoRouterAddress: string;
+  fromVault: string;
+  fromVaultProof: Json;
+  id: string;
+  intervalSeconds: number;
+  nextExecutionAt: Int8;
+  signature: string;
+  slippage: string;
+  status: string;
+  swapCalldata: string;
+  toVault: string;
+  toVaultProof: Json;
+  updatedAt: Int8;
+  userAddress: string;
+  verifyingContractAddress: string;
+}
+
 export interface DailyFleetInterestRate {
   averageRate: Numeric;
   date: Int8;
@@ -290,6 +314,7 @@ export interface YieldRaceLeaderboard {
 }
 
 export interface Database {
+  armadaDcaOrders: ArmadaDcaOrders;
   campaigns: Campaigns;
   dailyFleetInterestRate: DailyFleetInterestRate;
   dailyRewardRate: DailyRewardRate;

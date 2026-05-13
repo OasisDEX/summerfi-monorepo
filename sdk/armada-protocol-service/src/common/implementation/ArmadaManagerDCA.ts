@@ -1,0 +1,360 @@
+import type {
+  ArmadaDcaOrder,
+  ArmadaDcaOrderStatus,
+  IArmadaManagerDCA,
+} from '@summerfi/armada-protocol-common'
+import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
+import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
+import {
+  type AddressValue,
+  type ChainId,
+  type HexData,
+  createTimeoutSignal,
+} from '@summerfi/sdk-common'
+import { encodePacked, keccak256, type Address, type Hex } from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
+import { getDb } from './dca/getDb'
+import { ArmadaManagerShared } from './ArmadaManagerShared'
+
+type DbOrderRow = {
+  id: string
+  userAddress: string
+  chainId: number
+  fromVault: string
+  toVault: string
+  amount: string
+  slippage: string
+  intervalSeconds: number
+  nextExecutionAt: string
+  deadline: string
+  allowedVaultsRoot: string
+  fromVaultProof: unknown
+  toVaultProof: unknown
+  swapCalldata: string
+  signature: string
+  ensoRouterAddress: string
+  verifyingContractAddress: string
+  status: string
+  createdAt: string
+  updatedAt: string
+  cancelledAt: string | null
+}
+
+/**
+ * @name ArmadaManagerDCA
+ * @description Handles creation and persistence of recurring DCA buy orders.
+ */
+export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaManagerDCA {
+  private _configProvider: IConfigurationProvider
+  private _deploymentProvider: IDeploymentProvider
+
+  constructor(params: {
+    clientId?: string
+    configProvider: IConfigurationProvider
+    deploymentProvider: IDeploymentProvider
+  }) {
+    super({ clientId: params.clientId })
+    this._configProvider = params.configProvider
+    this._deploymentProvider = params.deploymentProvider
+  }
+
+  async createAndSaveBuyOrder(
+    params: Parameters<IArmadaManagerDCA['createAndSaveBuyOrder']>[0],
+  ): ReturnType<IArmadaManagerDCA['createAndSaveBuyOrder']> {
+    const now = Math.floor(Date.now() / 1000)
+    const deadline = params.deadline ?? String(now + 60 * 60 * 24 * 30)
+    const nextExecutionAt = params.nextExecutionAt ?? now + params.intervalSeconds
+    const orderId = crypto.randomUUID()
+
+    const { allowedVaultsRoot, fromVaultProof, toVaultProof } = this._generateMerkleProofs({
+      fromVault: params.fromVault.value,
+      toVault: params.toVault.value,
+    })
+
+    const verifyingContract = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'admiralsQuarters',
+      chainId: params.chainInfo.chainId,
+    })
+
+    const signature = await this._signRebalanceAuthorization({
+      chainId: params.chainInfo.chainId,
+      verifyingContract: verifyingContract.value,
+      allowedVaultsRoot,
+      deadline,
+    })
+
+    const swapCalldata = await this._fetchEnsoSwapCalldata({
+      chainId: params.chainInfo.chainId,
+      fromAddress: verifyingContract.value,
+      ensoRouterAddress: params.ensoRouterAddress.value,
+      tokenIn: params.fromVault.value,
+      tokenOut: params.toVault.value,
+      amountIn: params.amount,
+      slippage: params.slippage,
+    })
+
+    const order: ArmadaDcaOrder = {
+      id: orderId,
+      userAddress: params.user.wallet.address.value,
+      chainId: params.chainInfo.chainId,
+      fromVault: params.fromVault.value,
+      toVault: params.toVault.value,
+      amount: params.amount,
+      slippage: params.slippage,
+      intervalSeconds: params.intervalSeconds,
+      nextExecutionAt,
+      deadline,
+      allowedVaultsRoot,
+      fromVaultProof,
+      toVaultProof,
+      swapCalldata,
+      signature,
+      ensoRouterAddress: params.ensoRouterAddress.value,
+      verifyingContractAddress: verifyingContract.value,
+      status: 'active',
+      createdAt: now,
+      updatedAt: now,
+    }
+
+    const db = await getDb()
+    await db
+      .insertInto('armadaDcaOrders')
+      .values({
+        id: order.id,
+        userAddress: order.userAddress,
+        chainId: order.chainId,
+        fromVault: order.fromVault,
+        toVault: order.toVault,
+        amount: order.amount,
+        slippage: order.slippage,
+        intervalSeconds: order.intervalSeconds,
+        nextExecutionAt: String(order.nextExecutionAt),
+        deadline: order.deadline,
+        allowedVaultsRoot: order.allowedVaultsRoot,
+        fromVaultProof: order.fromVaultProof,
+        toVaultProof: order.toVaultProof,
+        swapCalldata: order.swapCalldata,
+        signature: order.signature,
+        ensoRouterAddress: order.ensoRouterAddress,
+        verifyingContractAddress: order.verifyingContractAddress,
+        status: order.status,
+        createdAt: String(order.createdAt),
+        updatedAt: String(order.updatedAt),
+      })
+      .executeTakeFirstOrThrow()
+
+    return order
+  }
+
+  async getBuyOrder(
+    params: Parameters<IArmadaManagerDCA['getBuyOrder']>[0],
+  ): ReturnType<IArmadaManagerDCA['getBuyOrder']> {
+    const db = await getDb()
+    const row = await db
+      .selectFrom('armadaDcaOrders')
+      .selectAll()
+      .where('id', '=', params.orderId)
+      .where('userAddress', '=', params.user.wallet.address.value)
+      .executeTakeFirst()
+
+    if (!row) {
+      return undefined
+    }
+
+    return this._mapDbOrderToOrder(row as DbOrderRow)
+  }
+
+  async getBuyOrders(
+    params: Parameters<IArmadaManagerDCA['getBuyOrders']>[0],
+  ): ReturnType<IArmadaManagerDCA['getBuyOrders']> {
+    const db = await getDb()
+    let query = db
+      .selectFrom('armadaDcaOrders')
+      .selectAll()
+      .where('userAddress', '=', params.user.wallet.address.value)
+
+    if (params.chainInfo) {
+      query = query.where('chainId', '=', params.chainInfo.chainId)
+    }
+
+    if (params.status) {
+      query = query.where('status', '=', params.status)
+    }
+
+    const rows = await query.orderBy('createdAt desc').execute()
+
+    return rows.map((row: unknown) => this._mapDbOrderToOrder(row as DbOrderRow))
+  }
+
+  async cancelBuyOrder(
+    params: Parameters<IArmadaManagerDCA['cancelBuyOrder']>[0],
+  ): ReturnType<IArmadaManagerDCA['cancelBuyOrder']> {
+    const existingOrder = await this.getBuyOrder(params)
+
+    if (!existingOrder) {
+      throw new Error(`DCA order not found: ${params.orderId}`)
+    }
+
+    const now = Math.floor(Date.now() / 1000)
+    const db = await getDb()
+
+    await db
+      .updateTable('armadaDcaOrders')
+      .set({
+        status: 'cancelled',
+        updatedAt: String(now),
+        cancelledAt: String(now),
+      })
+      .where('id', '=', params.orderId)
+      .where('userAddress', '=', params.user.wallet.address.value)
+      .executeTakeFirstOrThrow()
+
+    return {
+      ...existingOrder,
+      status: 'cancelled',
+      updatedAt: now,
+      cancelledAt: now,
+    }
+  }
+
+  private _generateMerkleProofs(params: { fromVault: AddressValue; toVault: AddressValue }): {
+    allowedVaultsRoot: HexData
+    fromVaultProof: HexData[]
+    toVaultProof: HexData[]
+  } {
+    const leaves = [params.fromVault, params.toVault].map((addressValue) =>
+      keccak256(encodePacked(['address'], [addressValue as Address])),
+    )
+    const [fromLeaf, toLeaf] = leaves
+    const [left, right] =
+      fromLeaf.toLowerCase() < toLeaf.toLowerCase() ? [fromLeaf, toLeaf] : [toLeaf, fromLeaf]
+    const allowedVaultsRoot = keccak256(encodePacked(['bytes32', 'bytes32'], [left, right]))
+
+    return {
+      allowedVaultsRoot: allowedVaultsRoot as HexData,
+      fromVaultProof: [toLeaf as HexData],
+      toVaultProof: [fromLeaf as HexData],
+    }
+  }
+
+  private async _signRebalanceAuthorization(params: {
+    chainId: number
+    verifyingContract: AddressValue
+    allowedVaultsRoot: HexData
+    deadline: string
+  }): Promise<HexData> {
+    const signerPrivateKey = this._configProvider.getConfigurationItem({
+      name: 'ARMADA_DCA_SIGNER_PRIVATE_KEY',
+    }) as Hex
+
+    if (!signerPrivateKey) {
+      throw new Error('ARMADA_DCA_SIGNER_PRIVATE_KEY is not configured')
+    }
+
+    const account = privateKeyToAccount(signerPrivateKey)
+
+    return account.signTypedData({
+      domain: {
+        name: 'AdmiralsQuarters',
+        version: '1',
+        chainId: params.chainId,
+        verifyingContract: params.verifyingContract as Address,
+      },
+      types: {
+        RebalanceAuthorization: [
+          { name: 'allowedVaultsRoot', type: 'bytes32' },
+          { name: 'deadline', type: 'uint256' },
+        ],
+      },
+      primaryType: 'RebalanceAuthorization',
+      message: {
+        allowedVaultsRoot: params.allowedVaultsRoot,
+        deadline: BigInt(params.deadline),
+      },
+    }) as Promise<HexData>
+  }
+
+  private async _fetchEnsoSwapCalldata(params: {
+    chainId: number
+    fromAddress: AddressValue
+    ensoRouterAddress: AddressValue
+    tokenIn: AddressValue
+    tokenOut: AddressValue
+    amountIn: string
+    slippage: string
+  }): Promise<HexData> {
+    const ensoApiKey = this._configProvider.getConfigurationItem({
+      name: 'ENSO_API_KEY',
+    })
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    }
+
+    if (ensoApiKey) {
+      headers.Authorization = `Bearer ${ensoApiKey}`
+    }
+
+    const query = new URLSearchParams({
+      chainId: String(params.chainId),
+      fromAddress: params.fromAddress,
+      receiver: params.fromAddress,
+      tokenIn: params.tokenIn,
+      tokenOut: params.tokenOut,
+      amountIn: params.amountIn,
+      slippage: params.slippage,
+      routingStrategy: 'router',
+      router: params.ensoRouterAddress,
+    })
+
+    const response = await fetch(
+      `https://api.enso.finance/api/v1/shortcuts/route?${query.toString()}`,
+      {
+        headers,
+        signal: createTimeoutSignal(),
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error(`Enso API error ${response.status}: ${await response.text()}`)
+    }
+
+    const json = (await response.json()) as { tx?: { data?: string } }
+    const calldata = json.tx?.data
+
+    if (!calldata) {
+      throw new Error('Enso API did not return tx.data')
+    }
+
+    return calldata as HexData
+  }
+
+  private _mapDbOrderToOrder(row: DbOrderRow): ArmadaDcaOrder {
+    const fromVaultProof = Array.isArray(row.fromVaultProof) ? row.fromVaultProof : []
+    const toVaultProof = Array.isArray(row.toVaultProof) ? row.toVaultProof : []
+
+    return {
+      id: row.id,
+      userAddress: row.userAddress as AddressValue,
+      chainId: row.chainId as ChainId,
+      fromVault: row.fromVault as AddressValue,
+      toVault: row.toVault as AddressValue,
+      amount: row.amount,
+      slippage: row.slippage,
+      intervalSeconds: row.intervalSeconds,
+      nextExecutionAt: Number(row.nextExecutionAt),
+      deadline: row.deadline,
+      allowedVaultsRoot: row.allowedVaultsRoot as HexData,
+      fromVaultProof: fromVaultProof as HexData[],
+      toVaultProof: toVaultProof as HexData[],
+      swapCalldata: row.swapCalldata as HexData,
+      signature: row.signature as HexData,
+      ensoRouterAddress: row.ensoRouterAddress as AddressValue,
+      verifyingContractAddress: row.verifyingContractAddress as AddressValue,
+      status: row.status as ArmadaDcaOrderStatus,
+      createdAt: Number(row.createdAt),
+      updatedAt: Number(row.updatedAt),
+      cancelledAt: row.cancelledAt ? Number(row.cancelledAt) : undefined,
+    }
+  }
+}

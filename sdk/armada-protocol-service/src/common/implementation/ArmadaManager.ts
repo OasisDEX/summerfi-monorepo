@@ -12,6 +12,7 @@ import {
   type IArmadaManagerMerklRewards,
   type IArmadaManagerAdmin,
   type IArmadaManagerAccessControl,
+  type IArmadaManagerDCA,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -31,6 +32,7 @@ import { ArmadaManagerPositions } from './ArmadaManagerPositions'
 import { ArmadaManagerMerklRewards } from './ArmadaManagerMerklRewards'
 import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
 import { ArmadaManagerAccessControl } from './ArmadaManagerAccessControl'
+import { ArmadaManagerDCA } from './ArmadaManagerDCA'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 
 /**
@@ -48,6 +50,7 @@ export class ArmadaManager implements IArmadaManager {
   merklRewards: IArmadaManagerMerklRewards
   admin: IArmadaManagerAdmin
   accessControl: IArmadaManagerAccessControl
+  dca: IArmadaManagerDCA
 
   private _supportedChains: IChainInfo[]
   private _rewardsRedeemerAddress: IAddress
@@ -179,6 +182,11 @@ export class ArmadaManager implements IArmadaManager {
       blockchainClientProvider: this._blockchainClientProvider,
       deploymentProvider: this._deploymentProvider,
       subgraphManager: this._subgraphManager,
+    })
+    this.dca = new ArmadaManagerDCA({
+      clientId: this._clientId,
+      configProvider: this._configProvider,
+      deploymentProvider: this._deploymentProvider,
     })
   }
 }

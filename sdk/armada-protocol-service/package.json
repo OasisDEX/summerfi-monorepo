@@ -35,6 +35,7 @@
     "@summerfi/subgraph-manager-service": "workspace:*",
     "@summerfi/swap-common": "workspace:*",
     "@summerfi/swap-service": "workspace:*",
+    "@summerfi/summer-protocol-db": "workspace:*",
     "@summerfi/tokens-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0"
