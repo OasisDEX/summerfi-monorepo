@@ -392,7 +392,16 @@ export class ReferralProcessor {
               periodStart,
               periodEnd,
             )
-            if (latestSnapshot) {
+
+            // Self-healing mechanism: If we are processing the current/latest chunk and the position
+            // has 0 balance on-chain, but no snapshot was emitted in this chunk (because it was closed in the past
+            // and the script missed that specific snapshot), we force a sync to 0 to fix the stale DB record.
+            const nowRounded = new Date()
+            nowRounded.setMinutes(0, 0, 0) // The script always processes up to the rounded hour
+            const isLatestChunk = periodEnd.getTime() >= nowRounded.getTime()
+            const isCurrentBalanceZero = Number(position.inputTokenBalanceNormalizedInUSD) === 0
+
+            if (latestSnapshot || (isLatestChunk && isCurrentBalanceZero && !latestSnapshot)) {
               const maybeReferralType = userToReferralTypeMap.get(account.id)
 
               if (!maybeReferralType) {
@@ -413,8 +422,13 @@ export class ReferralProcessor {
               const feeConfig = this.FEE_CONFIG[volatility]
               const typeConfig = feeConfig[referralType]
 
-              const depositUsd = Number(latestSnapshot.inputTokenBalanceNormalizedInUSD || 0)
-              const depositAsset = Number(latestSnapshot.inputTokenBalanceNormalized || 0)
+              const depositUsd = latestSnapshot
+                ? Number(latestSnapshot.inputTokenBalanceNormalizedInUSD)
+                : Number(position.inputTokenBalanceNormalizedInUSD)
+
+              const depositAsset = latestSnapshot
+                ? Number(latestSnapshot.inputTokenBalanceNormalized)
+                : Number(position.inputTokenBalanceNormalized)
 
               const dailyReferrerFeesUsd = (depositUsd * typeConfig.referrerRate) / 365
               const dailyOwnerFeesUsd = (depositUsd * typeConfig.ownerRate) / 365
