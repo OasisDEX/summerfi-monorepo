@@ -432,7 +432,7 @@ const SumrV2PageViewComponent = ({
                     <Button variant="primarySmall">Go to Governance</Button>
                   </Link>
                   <WithArrow variant="p3semi" style={{ marginLeft: '20px', alignSelf: 'center' }}>
-                    <Link href={`/claim/${userWalletAddress}`}>
+                    <Link href={userWalletAddress ? `/claim/${userWalletAddress}` : '/portfolio'}>
                       <Text variant="p3semi">Claim $SUMR</Text>
                     </Link>
                   </WithArrow>
