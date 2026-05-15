@@ -338,7 +338,7 @@ export class ReferralProcessor {
 
       // Step 6: Update daily rates and accumulate points
       this.logger.info('💰 Updating points and daily rates...')
-      await this.db.updateDailyRatesAndPointsInTransaction(trx)
+      await this.db.updateDailyRatesAndPointsInTransaction(trx, periodEnd)
 
       // if day has passed, update daily stats for historical tracking
       if (periodEnd.getDate() !== periodStart.getDate()) {

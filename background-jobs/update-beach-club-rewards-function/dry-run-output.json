@@ -1,0 +1,4880 @@
+{
+  "simulatedAt": "2026-05-15T12:28:13.646Z",
+  "periodStart": "2026-05-13T12:00:00.000Z",
+  "periodEnd": "2026-05-15T12:00:00.000Z",
+  "config": {
+    "activeUserThresholdUsd": 1,
+    "pointsFormulaBase": 0.00005,
+    "pointsFormulaLogMultiplier": 0.0005
+  },
+  "sumrPrice": 0.00218066,
+  "sumrTierSet": "post-March-2026",
+  "totalReferralCodes": 256,
+  "totalActiveUsers": 0,
+  "results": [
+    {
+      "referralCodeId": "2000044",
+      "inputs": {
+        "totalDepositUsd": 147716.6,
+        "activeUsersCount": 25
+      },
+      "hourly": {
+        "points": 10.334304,
+        "sumr": 4.639685,
+        "fees_USD₮0": 0.00386,
+        "fees_usd": 0.008668
+      },
+      "daily": {
+        "points": 248.023301,
+        "sumr": 111.352438,
+        "fees_USD₮0": 0.092633,
+        "fees_usd": 0.208036
+      }
+    },
+    {
+      "referralCodeId": "2001214",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000353",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDT": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDT": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000131",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000120",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "101",
+      "inputs": {
+        "totalDepositUsd": 5427.28,
+        "activeUsersCount": 2
+      },
+      "hourly": {
+        "points": 0.135525,
+        "sumr": 0.056823,
+        "fees_USDC": 0.000173,
+        "fees_usd": 0.000329
+      },
+      "daily": {
+        "points": 3.252605,
+        "sumr": 1.363741,
+        "fees_USDC": 0.004155,
+        "fees_usd": 0.007886
+      }
+    },
+    {
+      "referralCodeId": "2000537",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001061",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000872",
+      "inputs": {
+        "totalDepositUsd": 14067.73,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.232454,
+        "sumr": 0.294572,
+        "fees_USDC.E": 0.000616,
+        "fees_usd": 0.00093
+      },
+      "daily": {
+        "points": 5.57889,
+        "sumr": 7.069735,
+        "fees_USDC.E": 0.014787,
+        "fees_usd": 0.022314
+      }
+    },
+    {
+      "referralCodeId": "2000709",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000051",
+      "inputs": {
+        "totalDepositUsd": 0.35,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0.000001,
+        "fees_usd": 0.000001
+      }
+    },
+    {
+      "referralCodeId": "2000071",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000010",
+      "inputs": {
+        "totalDepositUsd": 117.53,
+        "activeUsersCount": 3
+      },
+      "hourly": {
+        "points": 0.003639,
+        "sumr": 0.001231,
+        "fees_EURC": 0.000008,
+        "fees_usd": 0.000009
+      },
+      "daily": {
+        "points": 0.087344,
+        "sumr": 0.029533,
+        "fees_EURC": 0.000182,
+        "fees_usd": 0.000219
+      }
+    },
+    {
+      "referralCodeId": "2000062",
+      "inputs": {
+        "totalDepositUsd": 157.08,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.002596,
+        "sumr": 0.001645,
+        "fees_USDC": 0.000013,
+        "fees_usd": 0.000013
+      },
+      "daily": {
+        "points": 0.062293,
+        "sumr": 0.03947,
+        "fees_USDC": 0.000322,
+        "fees_usd": 0.000323
+      }
+    },
+    {
+      "referralCodeId": "2001001",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000598",
+      "inputs": {
+        "totalDepositUsd": 1.21,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0.000002,
+        "fees_usd": 0.000002
+      }
+    },
+    {
+      "referralCodeId": "2000040",
+      "inputs": {
+        "totalDepositUsd": 0.68,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0.000001,
+        "fees_usd": 0.000001
+      }
+    },
+    {
+      "referralCodeId": "2000794",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000320",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000922",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000807",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000169",
+      "inputs": {
+        "totalDepositUsd": 227158.08,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 3.753537,
+        "sumr": 7.134892,
+        "fees_USD₮0": 0.000005,
+        "fees_usd": 0.010373
+      },
+      "daily": {
+        "points": 90.084896,
+        "sumr": 171.237398,
+        "fees_USD₮0": 0.00011,
+        "fees_usd": 0.24894
+      }
+    },
+    {
+      "referralCodeId": "2000211",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000563",
+      "inputs": {
+        "totalDepositUsd": 2330.75,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.038513,
+        "sumr": 0.024402,
+        "fees_USD₮0": 0.0002,
+        "fees_usd": 0.0002
+      },
+      "daily": {
+        "points": 0.924314,
+        "sumr": 0.585659,
+        "fees_USD₮0": 0.00479,
+        "fees_usd": 0.004789
+      }
+    },
+    {
+      "referralCodeId": "2000208",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000151",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000218",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000224",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000295",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDT": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDT": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000567",
+      "inputs": {
+        "totalDepositUsd": 0.01,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000186",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000569",
+      "inputs": {
+        "totalDepositUsd": 131750.64,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 2.177034,
+        "sumr": 4.138204,
+        "fees_USDC": 0.011283,
+        "fees_usd": 0.01128
+      },
+      "daily": {
+        "points": 52.248823,
+        "sumr": 99.316899,
+        "fees_USDC": 0.270801,
+        "fees_usd": 0.27072
+      }
+    },
+    {
+      "referralCodeId": "2001403",
+      "inputs": {
+        "totalDepositUsd": 1.36,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000022,
+        "sumr": 0.000014,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0.00054,
+        "sumr": 0.000342,
+        "fees_WETH": 0,
+        "fees_usd": 0.000001
+      }
+    },
+    {
+      "referralCodeId": "2000855",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000085",
+      "inputs": {
+        "totalDepositUsd": 846367.06,
+        "activeUsersCount": 3
+      },
+      "hourly": {
+        "points": 26.207304,
+        "sumr": 44.306423,
+        "fees_WETH": 0.016074,
+        "fees_usd": 0.046142
+      },
+      "daily": {
+        "points": 628.975291,
+        "sumr": 1063.354145,
+        "fees_WETH": 0.385775,
+        "fees_usd": 1.107397
+      }
+    },
+    {
+      "referralCodeId": "2001317",
+      "inputs": {
+        "totalDepositUsd": 97.43,
+        "activeUsersCount": 10
+      },
+      "hourly": {
+        "points": 0.00507,
+        "sumr": 0.00102,
+        "fees_USDC": 0.000006,
+        "fees_usd": 0.000008
+      },
+      "daily": {
+        "points": 0.121681,
+        "sumr": 0.024481,
+        "fees_USDC": 0.000153,
+        "fees_usd": 0.000181
+      }
+    },
+    {
+      "referralCodeId": "2000333",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDT": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDT": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000844",
+      "inputs": {
+        "totalDepositUsd": 37171.6,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.61422,
+        "sumr": 0.778358,
+        "fees_EURC": 0.002733,
+        "fees_usd": 0.003183
+      },
+      "daily": {
+        "points": 14.741275,
+        "sumr": 18.680583,
+        "fees_EURC": 0.065582,
+        "fees_usd": 0.07638
+      }
+    },
+    {
+      "referralCodeId": "2000087",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000801",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000201",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001494",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000677",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000056",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001079",
+      "inputs": {
+        "totalDepositUsd": 6336.55,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.104705,
+        "sumr": 0.066342,
+        "fees_USDC.E": 0.000298,
+        "fees_usd": 0.000451
+      },
+      "daily": {
+        "points": 2.512909,
+        "sumr": 1.592216,
+        "fees_USDC.E": 0.00716,
+        "fees_usd": 0.010835
+      }
+    },
+    {
+      "referralCodeId": "2000251",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000689",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDT": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDT": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000217",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDT": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDT": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000564",
+      "inputs": {
+        "totalDepositUsd": 0.04,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001106",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000337",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000363",
+      "inputs": {
+        "totalDepositUsd": 9.13,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000151,
+        "sumr": 0.000096,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0.003622,
+        "sumr": 0.002295,
+        "fees_WETH": 0,
+        "fees_usd": 0.00001
+      }
+    },
+    {
+      "referralCodeId": "2001176",
+      "inputs": {
+        "totalDepositUsd": 8553.99,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.141345,
+        "sumr": 0.089558,
+        "fees_EURC": 0.000733,
+        "fees_usd": 0.000732
+      },
+      "daily": {
+        "points": 3.392286,
+        "sumr": 2.149403,
+        "fees_EURC": 0.017582,
+        "fees_usd": 0.017577
+      }
+    },
+    {
+      "referralCodeId": "2000152",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000740",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001277",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000680",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000574",
+      "inputs": {
+        "totalDepositUsd": 2134.32,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.035267,
+        "sumr": 0.022346,
+        "fees_USDC.E": 0.000183,
+        "fees_usd": 0.000183
+      },
+      "daily": {
+        "points": 0.846414,
+        "sumr": 0.5363,
+        "fees_USDC.E": 0.004387,
+        "fees_usd": 0.004386
+      }
+    },
+    {
+      "referralCodeId": "107",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000042",
+      "inputs": {
+        "totalDepositUsd": 0.01,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000668",
+      "inputs": {
+        "totalDepositUsd": 1069.45,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.017671,
+        "sumr": 0.011197,
+        "fees_USDC": 0,
+        "fees_usd": 0.000049
+      },
+      "daily": {
+        "points": 0.424114,
+        "sumr": 0.268725,
+        "fees_USDC": 0.000001,
+        "fees_usd": 0.001172
+      }
+    },
+    {
+      "referralCodeId": "2000875",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000627",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000618",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001193",
+      "inputs": {
+        "totalDepositUsd": 100695.93,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 1.663889,
+        "sumr": 3.162795,
+        "fees_WETH": 0.000002,
+        "fees_usd": 0.004598
+      },
+      "daily": {
+        "points": 39.933345,
+        "sumr": 75.907089,
+        "fees_WETH": 0.000049,
+        "fees_usd": 0.110352
+      }
+    },
+    {
+      "referralCodeId": "2000156",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000629",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000046",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000192",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "112",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000871",
+      "inputs": {
+        "totalDepositUsd": 4564.03,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.075416,
+        "sumr": 0.047784,
+        "fees_WETH": 0,
+        "fees_usd": 0.000208
+      },
+      "daily": {
+        "points": 1.809973,
+        "sumr": 1.146826,
+        "fees_WETH": 0.000002,
+        "fees_usd": 0.005002
+      }
+    },
+    {
+      "referralCodeId": "2000088",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000708",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001327",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000278",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000187",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000369",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000167",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001330",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000170",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001017",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001081",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000698",
+      "inputs": {
+        "totalDepositUsd": 11.74,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000194,
+        "sumr": 0.000123,
+        "fees_USDC": 0.000001,
+        "fees_usd": 0.000001
+      },
+      "daily": {
+        "points": 0.004657,
+        "sumr": 0.002951,
+        "fees_USDC": 0.000024,
+        "fees_usd": 0.000024
+      }
+    },
+    {
+      "referralCodeId": "2000787",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000112",
+      "inputs": {
+        "totalDepositUsd": 0.01,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001391",
+      "inputs": {
+        "totalDepositUsd": 3021.02,
+        "activeUsersCount": 2
+      },
+      "hourly": {
+        "points": 0.075438,
+        "sumr": 0.031629,
+        "fees_USDC": 0.000259,
+        "fees_usd": 0.000259
+      },
+      "daily": {
+        "points": 1.810515,
+        "sumr": 0.759106,
+        "fees_USDC": 0.006209,
+        "fees_usd": 0.006208
+      }
+    },
+    {
+      "referralCodeId": "2000654",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000258",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "78",
+      "inputs": {
+        "totalDepositUsd": 3.96,
+        "activeUsersCount": 2
+      },
+      "hourly": {
+        "points": 0.000099,
+        "sumr": 0.000041,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0.002376,
+        "sumr": 0.000996,
+        "fees_USDC.E": 0.000007,
+        "fees_usd": 0.000008
+      }
+    },
+    {
+      "referralCodeId": "2000809",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001057",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001365",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000837",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000160",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000233",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000166",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000686",
+      "inputs": {
+        "totalDepositUsd": 6153.17,
+        "activeUsersCount": 3
+      },
+      "hourly": {
+        "points": 0.19053,
+        "sumr": 0.064422,
+        "fees_USDC": 0.000527,
+        "fees_usd": 0.000527
+      },
+      "daily": {
+        "points": 4.572711,
+        "sumr": 1.546138,
+        "fees_USDC": 0.012644,
+        "fees_usd": 0.012644
+      }
+    },
+    {
+      "referralCodeId": "104",
+      "inputs": {
+        "totalDepositUsd": 7.44,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000123,
+        "sumr": 0.000078,
+        "fees_USDC.E": 0.000001,
+        "fees_usd": 0.000001
+      },
+      "daily": {
+        "points": 0.002951,
+        "sumr": 0.00187,
+        "fees_USDC.E": 0.000015,
+        "fees_usd": 0.000015
+      }
+    },
+    {
+      "referralCodeId": "2000964",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000089",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001296",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001144",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000909",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000996",
+      "inputs": {
+        "totalDepositUsd": 0.12,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001186",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000054",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000536",
+      "inputs": {
+        "totalDepositUsd": 501.31,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.008284,
+        "sumr": 0.005249,
+        "fees_WETH": 0.00001,
+        "fees_usd": 0.000027
+      },
+      "daily": {
+        "points": 0.198806,
+        "sumr": 0.125967,
+        "fees_WETH": 0.00023,
+        "fees_usd": 0.000657
+      }
+    },
+    {
+      "referralCodeId": "2000896",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000312",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000732",
+      "inputs": {
+        "totalDepositUsd": 1920.94,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.031741,
+        "sumr": 0.020112,
+        "fees_USDC": 0.000165,
+        "fees_usd": 0.000164
+      },
+      "daily": {
+        "points": 0.761794,
+        "sumr": 0.482684,
+        "fees_USDC": 0.003948,
+        "fees_usd": 0.003947
+      }
+    },
+    {
+      "referralCodeId": "2000999",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001302",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000717",
+      "inputs": {
+        "totalDepositUsd": 1.41,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000023,
+        "sumr": 0.000015,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0.000558,
+        "sumr": 0.000354,
+        "fees_USDC": 0.000003,
+        "fees_usd": 0.000003
+      }
+    },
+    {
+      "referralCodeId": "2000105",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000916",
+      "inputs": {
+        "totalDepositUsd": 3716.12,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.061405,
+        "sumr": 0.038907,
+        "fees_WETH": 0,
+        "fees_usd": 0.00017
+      },
+      "daily": {
+        "points": 1.473715,
+        "sumr": 0.933767,
+        "fees_WETH": 0.000002,
+        "fees_usd": 0.004073
+      }
+    },
+    {
+      "referralCodeId": "2000554",
+      "inputs": {
+        "totalDepositUsd": 11571.63,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.191208,
+        "sumr": 0.242305,
+        "fees_EURC": 0.000851,
+        "fees_usd": 0.000991
+      },
+      "daily": {
+        "points": 4.589001,
+        "sumr": 5.815319,
+        "fees_EURC": 0.020416,
+        "fees_usd": 0.023777
+      }
+    },
+    {
+      "referralCodeId": "2000138",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001033",
+      "inputs": {
+        "totalDepositUsd": 14.61,
+        "activeUsersCount": 2
+      },
+      "hourly": {
+        "points": 0.000365,
+        "sumr": 0.000153,
+        "fees_USDC.E": 0.000001,
+        "fees_usd": 0.000001
+      },
+      "daily": {
+        "points": 0.008758,
+        "sumr": 0.003672,
+        "fees_USDC.E": 0.00003,
+        "fees_usd": 0.00003
+      }
+    },
+    {
+      "referralCodeId": "2001287",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000303",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001357",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000121",
+      "inputs": {
+        "totalDepositUsd": 160.91,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.002659,
+        "sumr": 0.001685,
+        "fees_USDC.E": 0,
+        "fees_usd": 0.000007
+      },
+      "daily": {
+        "points": 0.063814,
+        "sumr": 0.040433,
+        "fees_USDC.E": 0,
+        "fees_usd": 0.000176
+      }
+    },
+    {
+      "referralCodeId": "2000309",
+      "inputs": {
+        "totalDepositUsd": 6.26,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000103,
+        "sumr": 0.000066,
+        "fees_USDC": 0.000001,
+        "fees_usd": 0.000001
+      },
+      "daily": {
+        "points": 0.002482,
+        "sumr": 0.001573,
+        "fees_USDC": 0.000013,
+        "fees_usd": 0.000013
+      }
+    },
+    {
+      "referralCodeId": "2000106",
+      "inputs": {
+        "totalDepositUsd": 6.15,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000102,
+        "sumr": 0.000064,
+        "fees_USDC": 0.000001,
+        "fees_usd": 0.000001
+      },
+      "daily": {
+        "points": 0.002438,
+        "sumr": 0.001545,
+        "fees_USDC": 0.000013,
+        "fees_usd": 0.000013
+      }
+    },
+    {
+      "referralCodeId": "2000830",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000133",
+      "inputs": {
+        "totalDepositUsd": 0.14,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000307",
+      "inputs": {
+        "totalDepositUsd": 0.06,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000905",
+      "inputs": {
+        "totalDepositUsd": 0.65,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0.000001,
+        "fees_usd": 0.000001
+      }
+    },
+    {
+      "referralCodeId": "2000292",
+      "inputs": {
+        "totalDepositUsd": 1.01,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0.000002,
+        "fees_usd": 0.000002
+      }
+    },
+    {
+      "referralCodeId": "2000533",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000172",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000812",
+      "inputs": {
+        "totalDepositUsd": 1.22,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.00002,
+        "sumr": 0.000013,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0.000484,
+        "sumr": 0.000306,
+        "fees_USDC.E": 0.000003,
+        "fees_usd": 0.000003
+      }
+    },
+    {
+      "referralCodeId": "2000674",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001147",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000972",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000879",
+      "inputs": {
+        "totalDepositUsd": 0.26,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0.000001,
+        "fees_usd": 0.000001
+      }
+    },
+    {
+      "referralCodeId": "2000833",
+      "inputs": {
+        "totalDepositUsd": 16.11,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000266,
+        "sumr": 0.000169,
+        "fees_USDC": 0.000001,
+        "fees_usd": 0.000001
+      },
+      "daily": {
+        "points": 0.006387,
+        "sumr": 0.004047,
+        "fees_USDC": 0.000033,
+        "fees_usd": 0.000033
+      }
+    },
+    {
+      "referralCodeId": "2000246",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000260",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000885",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000963",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000127",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001465",
+      "inputs": {
+        "totalDepositUsd": 429.11,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.007091,
+        "sumr": 0.004493,
+        "fees_USDC": 0.000037,
+        "fees_usd": 0.000037
+      },
+      "daily": {
+        "points": 0.170174,
+        "sumr": 0.107825,
+        "fees_USDC": 0.000882,
+        "fees_usd": 0.000882
+      }
+    },
+    {
+      "referralCodeId": "2001295",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000069",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001399",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000178",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000036",
+      "inputs": {
+        "totalDepositUsd": 1.95,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000032,
+        "sumr": 0.00002,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0.000772,
+        "sumr": 0.000489,
+        "fees_EURC": 0.000004,
+        "fees_usd": 0.000004
+      }
+    },
+    {
+      "referralCodeId": "2001286",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000345",
+      "inputs": {
+        "totalDepositUsd": 0.01,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000073",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000350",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000713",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001406",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000681",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000180",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000841",
+      "inputs": {
+        "totalDepositUsd": 0.12,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000913",
+      "inputs": {
+        "totalDepositUsd": 0.03,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001274",
+      "inputs": {
+        "totalDepositUsd": 3034.39,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.05014,
+        "sumr": 0.031769,
+        "fees_USDC": 0.00026,
+        "fees_usd": 0.00026
+      },
+      "daily": {
+        "points": 1.20336,
+        "sumr": 0.762467,
+        "fees_USDC": 0.006237,
+        "fees_usd": 0.006235
+      }
+    },
+    {
+      "referralCodeId": "2000287",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000652",
+      "inputs": {
+        "totalDepositUsd": 3.56,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000059,
+        "sumr": 0.000037,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0.001412,
+        "sumr": 0.000895,
+        "fees_USDC": 0.000007,
+        "fees_usd": 0.000007
+      }
+    },
+    {
+      "referralCodeId": "2000851",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001178",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000619",
+      "inputs": {
+        "totalDepositUsd": 0.17,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000992",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001134",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000622",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000624",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000820",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000196",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000939",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000101",
+      "inputs": {
+        "totalDepositUsd": 5101.96,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.084304,
+        "sumr": 0.053416,
+        "fees_USDC.E": 0.000437,
+        "fees_usd": 0.000437
+      },
+      "daily": {
+        "points": 2.023303,
+        "sumr": 1.281995,
+        "fees_USDC.E": 0.010484,
+        "fees_usd": 0.010483
+      }
+    },
+    {
+      "referralCodeId": "2000017",
+      "inputs": {
+        "totalDepositUsd": 1.16,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0.000001,
+        "fees_usd": 0.000002
+      }
+    },
+    {
+      "referralCodeId": "2001150",
+      "inputs": {
+        "totalDepositUsd": 228.5,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.003776,
+        "sumr": 0.002392,
+        "fees_WETH": 0,
+        "fees_usd": 0.00001
+      },
+      "daily": {
+        "points": 0.090616,
+        "sumr": 0.057415,
+        "fees_WETH": 0,
+        "fees_usd": 0.00025
+      }
+    },
+    {
+      "referralCodeId": "2001209",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000016",
+      "inputs": {
+        "totalDepositUsd": 2.25,
+        "activeUsersCount": 2
+      },
+      "hourly": {
+        "points": 0.000056,
+        "sumr": 0.000024,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0.001351,
+        "sumr": 0.000567,
+        "fees_USD₮0": 0.000004,
+        "fees_usd": 0.000004
+      }
+    },
+    {
+      "referralCodeId": "2000594",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000551",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000577",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001155",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001325",
+      "inputs": {
+        "totalDepositUsd": 872,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.014409,
+        "sumr": 0.00913,
+        "fees_USD₮0": 0.000075,
+        "fees_usd": 0.000075
+      },
+      "daily": {
+        "points": 0.345811,
+        "sumr": 0.219111,
+        "fees_USD₮0": 0.001792,
+        "fees_usd": 0.001792
+      }
+    },
+    {
+      "referralCodeId": "2000581",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000057",
+      "inputs": {
+        "totalDepositUsd": 11386.89,
+        "activeUsersCount": 2
+      },
+      "hourly": {
+        "points": 0.284343,
+        "sumr": 0.238437,
+        "fees_USDC.E": 0.000837,
+        "fees_usd": 0.000975
+      },
+      "daily": {
+        "points": 6.824235,
+        "sumr": 5.722481,
+        "fees_USDC.E": 0.02009,
+        "fees_usd": 0.023398
+      }
+    },
+    {
+      "referralCodeId": "2000904",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000661",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000324",
+      "inputs": {
+        "totalDepositUsd": 0.03,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000988",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000685",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000605",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000552",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001128",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001309",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000961",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000993",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000119",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001005",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000748",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000323",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000519",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000078",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001300",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001055",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000370",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000877",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001064",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001008",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000330",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000528",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001109",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000341",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001468",
+      "inputs": {
+        "totalDepositUsd": 1.37,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000023,
+        "sumr": 0.000014,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0.000543,
+        "sumr": 0.000344,
+        "fees_EURC": 0.000002,
+        "fees_usd": 0.000003
+      }
+    },
+    {
+      "referralCodeId": "2000783",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001015",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000690",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000836",
+      "inputs": {
+        "totalDepositUsd": 0.08,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000007",
+      "inputs": {
+        "totalDepositUsd": 3.15,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.000052,
+        "sumr": 0.000033,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0.001248,
+        "sumr": 0.000791,
+        "fees_USDC": 0.000006,
+        "fees_usd": 0.000006
+      }
+    },
+    {
+      "referralCodeId": "2000243",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001421",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001108",
+      "inputs": {
+        "totalDepositUsd": 10181.23,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.168234,
+        "sumr": 0.213191,
+        "fees_USDC": 0.000872,
+        "fees_usd": 0.000872
+      },
+      "daily": {
+        "points": 4.037606,
+        "sumr": 5.116575,
+        "fees_USDC": 0.020921,
+        "fees_usd": 0.02092
+      }
+    },
+    {
+      "referralCodeId": "2001129",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000242",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000633",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000331",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000587",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000721",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000650",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001184",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000299",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000779",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001373",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000207",
+      "inputs": {
+        "totalDepositUsd": 5002.1,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.082654,
+        "sumr": 0.052371,
+        "fees_USD₮0": 0.000428,
+        "fees_usd": 0.000428
+      },
+      "daily": {
+        "points": 1.983701,
+        "sumr": 1.256903,
+        "fees_USD₮0": 0.010281,
+        "fees_usd": 0.010278
+      }
+    },
+    {
+      "referralCodeId": "2000971",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000522",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000541",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000284",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000306",
+      "inputs": {
+        "totalDepositUsd": 488.94,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.008079,
+        "sumr": 0.005119,
+        "fees_WETH": 0,
+        "fees_usd": 0.000022
+      },
+      "daily": {
+        "points": 0.193901,
+        "sumr": 0.122859,
+        "fees_WETH": 0,
+        "fees_usd": 0.000536
+      }
+    },
+    {
+      "referralCodeId": "2001169",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000583",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_EURC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000340",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000899",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000634",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001312",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_WETH": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000760",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000205",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000214",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000695",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC.E": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001334",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001381",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001344",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001355",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001352",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USDC": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001428",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001340",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2000586",
+      "inputs": {
+        "totalDepositUsd": 4708.39,
+        "activeUsersCount": 1
+      },
+      "hourly": {
+        "points": 0.077801,
+        "sumr": 0.049296,
+        "fees_USDC": 0.000403,
+        "fees_usd": 0.000403
+      },
+      "daily": {
+        "points": 1.867223,
+        "sumr": 1.1831,
+        "fees_USDC": 0.009678,
+        "fees_usd": 0.009675
+      }
+    },
+    {
+      "referralCodeId": "2001339",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    },
+    {
+      "referralCodeId": "2001343",
+      "inputs": {
+        "totalDepositUsd": 0,
+        "activeUsersCount": 0
+      },
+      "hourly": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      },
+      "daily": {
+        "points": 0,
+        "sumr": 0,
+        "fees_USD₮0": 0,
+        "fees_usd": 0
+      }
+    }
+  ]
+}

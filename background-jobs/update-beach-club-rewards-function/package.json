@@ -13,7 +13,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "execute": "tsx src/entry-point.ts",
-    "run": "tsx src/entry-point.ts"
+    "run": "tsx src/entry-point.ts",
+    "dry-run": "tsx src/dry-run.ts"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.0.2",
