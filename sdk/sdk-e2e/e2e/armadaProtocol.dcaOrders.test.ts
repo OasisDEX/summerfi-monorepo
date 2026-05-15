@@ -1,6 +1,7 @@
 import assert from 'assert'
 import { TestConfigAccounts, TestConfigs as TestConfigFleets } from './utils/testConfig'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
+import { privateKeyToAccount } from 'viem/accounts'
 
 jest.setTimeout(300000)
 
@@ -46,9 +47,17 @@ describe('Armada Protocol - DCA Orders', () => {
 
     assert(activeOrders.find((activeOrder) => activeOrder.id === order.id))
 
+    const signedMessage = `I want to cancel ${order.id}.`
+    const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
+    const signature = await account.signMessage({
+      message: signedMessage,
+    })
+
     const cancelledOrder = await sdk.armada.dca.cancelBuyOrder({
       orderId: order.id,
       userAddress: userAddress,
+      signedMessage,
+      signature,
     })
 
     assert.strictEqual(cancelledOrder.status, 'cancelled')

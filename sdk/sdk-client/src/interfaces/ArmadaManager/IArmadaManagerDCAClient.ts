@@ -1,5 +1,5 @@
 import type { ArmadaDcaOrder, ArmadaDcaOrderStatus } from '@summerfi/armada-protocol-common'
-import type { AddressValue, ChainId } from '@summerfi/sdk-common'
+import type { AddressValue, ChainId, HexData } from '@summerfi/sdk-common'
 
 /**
  * @name IArmadaManagerDCAClient
@@ -33,5 +33,10 @@ export interface IArmadaManagerDCAClient {
     status?: ArmadaDcaOrderStatus
   }): Promise<ArmadaDcaOrder[]>
 
-  cancelBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<ArmadaDcaOrder>
+  cancelBuyOrder(params: {
+    orderId: string
+    userAddress: AddressValue
+    signedMessage: string
+    signature: HexData
+  }): Promise<ArmadaDcaOrder>
 }

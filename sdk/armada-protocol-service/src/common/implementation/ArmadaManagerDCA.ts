@@ -12,7 +12,7 @@ import {
   createTimeoutSignal,
   isAddressValue,
 } from '@summerfi/sdk-common'
-import { encodePacked, keccak256, type Address, type Hex } from 'viem'
+import { encodePacked, keccak256, recoverMessageAddress, type Address, type Hex } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { getDb } from './dca/getDb'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
@@ -197,6 +197,20 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async cancelBuyOrder(
     params: Parameters<IArmadaManagerDCA['cancelBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['cancelBuyOrder']> {
+    const expectedSignedMessage = `I want to cancel ${params.orderId}.`
+    if (params.signedMessage !== expectedSignedMessage) {
+      throw new Error('Invalid cancellation message')
+    }
+
+    const recoveredAddress = await recoverMessageAddress({
+      message: params.signedMessage,
+      signature: params.signature,
+    })
+
+    if (recoveredAddress.toLowerCase() !== params.userAddress.toLowerCase()) {
+      throw new Error('Cancellation signature does not match userAddress')
+    }
+
     const existingOrder = await this.getBuyOrder({
       orderId: params.orderId,
       userAddress: params.userAddress,
