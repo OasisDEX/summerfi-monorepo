@@ -1,5 +1,5 @@
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
-import { SharedConfig } from './utils/testConfig'
+import { TestConfigAccounts } from './utils/testConfig'
 import { formatSumr } from './utils/stringifiers'
 import { SECONDS_PER_DAY } from './utils/constants'
 import { ChainIds, User, type AddressValue } from '@summerfi/sdk-common'
@@ -15,7 +15,7 @@ describe('Armada Protocol Gov V2 Staking Earnings Estimation', () => {
   const scenarios: { chainId: number; userAddressValue: AddressValue }[] = [
     {
       chainId: ChainIds.Base,
-      userAddressValue: SharedConfig.testUserAddressValue,
+      userAddressValue: TestConfigAccounts.testUserAddressValue,
     },
   ]
 

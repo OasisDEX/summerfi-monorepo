@@ -63,8 +63,8 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     params: Parameters<IArmadaManagerDCA['createAndSaveBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['createAndSaveBuyOrder']> {
     const now = Math.floor(Date.now() / 1000)
-    const deadline = params.deadline ?? String(now + 60 * 60 * 24 * 30)
-    const nextExecutionAt = params.nextExecutionAt ?? now + params.intervalSeconds
+    const deadline = params.deadlineUnixTimestamp
+    const nextExecutionAt = params.nextExecutionAtUnixTimestamp
     const orderId = crypto.randomUUID()
 
     const { allowedVaultsRoot, fromVaultProof, toVaultProof } = this._generateMerkleProofs({
@@ -110,8 +110,8 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       amount: params.amount,
       slippage: params.slippagePercentage,
       intervalSeconds: params.intervalSeconds,
-      nextExecutionAt,
-      deadline,
+      nextExecutionAtUnixTimestamp: nextExecutionAt,
+      deadlineUnixTimestamp: deadline,
       allowedVaultsRoot,
       fromVaultProof,
       toVaultProof,
@@ -136,8 +136,8 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         amount: order.amount,
         slippage: order.slippage,
         intervalSeconds: order.intervalSeconds,
-        nextExecutionAt: String(order.nextExecutionAt),
-        deadline: order.deadline,
+        nextExecutionAt: String(order.nextExecutionAtUnixTimestamp),
+        deadline: String(order.deadlineUnixTimestamp),
         allowedVaultsRoot: order.allowedVaultsRoot,
         fromVaultProof: order.fromVaultProof,
         toVaultProof: order.toVaultProof,
@@ -252,7 +252,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     chainId: number
     verifyingContract: AddressValue
     allowedVaultsRoot: HexData
-    deadline: string
+    deadline: number
   }): Promise<HexData> {
     const signerPrivateKey = this._configProvider.getConfigurationItem({
       name: 'ARMADA_DCA_SIGNER_PRIVATE_KEY',
@@ -353,8 +353,8 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       amount: row.amount,
       slippage: row.slippage,
       intervalSeconds: row.intervalSeconds,
-      nextExecutionAt: Number(row.nextExecutionAt),
-      deadline: row.deadline,
+      nextExecutionAtUnixTimestamp: Number(row.nextExecutionAt),
+      deadlineUnixTimestamp: Number(row.deadline),
       allowedVaultsRoot: row.allowedVaultsRoot as HexData,
       fromVaultProof: fromVaultProof as HexData[],
       toVaultProof: toVaultProof as HexData[],

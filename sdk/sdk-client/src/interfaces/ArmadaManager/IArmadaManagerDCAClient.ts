@@ -16,8 +16,10 @@ export interface IArmadaManagerDCAClient {
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number
-    nextExecutionAt?: number
-    deadline?: string
+    /** Unix timestamp of the next scheduled execution */
+    nextExecutionAtUnixTimestamp: number
+    /** Unix timestamp after which the order expires */
+    deadlineUnixTimestamp: number
   }): Promise<ArmadaDcaOrder>
 
   getBuyOrder(params: {

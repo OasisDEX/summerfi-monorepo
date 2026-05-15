@@ -1,11 +1,11 @@
 import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
-import { SharedConfig } from './utils/testConfig'
+import { TestConfigAccounts } from './utils/testConfig'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 import { formatToken } from './utils/stringifiers'
 
 const simulateOnly = true
-const signerPrivateKey = SharedConfig.testUserPrivateKey
+const signerPrivateKey = TestConfigAccounts.testUserPrivateKey
 
 const scenarios: { userAddress: AddressValue }[] = [
   { userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' },

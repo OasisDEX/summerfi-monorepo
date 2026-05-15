@@ -12,11 +12,8 @@ export const createAndSaveBuyOrder = publicProcedure
       amount: z.string(),
       slippagePercentage: z.string(),
       intervalSeconds: z.number().int().positive(),
-      nextExecutionAt: z.number().int().positive().optional(),
-      deadline: z
-        .string()
-        .regex(/^\d+$/, { message: 'deadline must be a Unix timestamp string' })
-        .optional(),
+      nextExecutionAtUnixTimestamp: z.number().int().positive(),
+      deadlineUnixTimestamp: z.number().int().positive(),
     }),
   )
   .query(async (opts) => {

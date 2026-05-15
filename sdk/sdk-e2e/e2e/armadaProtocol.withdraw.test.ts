@@ -8,7 +8,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { TestConfigs, SharedConfig, type ChainConfig } from './utils/testConfig'
+import { TestConfigs, TestConfigAccounts, type ChainConfig } from './utils/testConfig'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
@@ -22,8 +22,8 @@ const simulateOnly = false
  */
 describe('Armada Protocol - Withdraw', () => {
   const sdk = createTestSdkInstance()
-  const privateKey = SharedConfig.testUserPrivateKey
-  const userAddressValue = SharedConfig.testUserAddressValue
+  const privateKey = TestConfigAccounts.testUserPrivateKey
+  const userAddressValue = TestConfigAccounts.testUserAddressValue
 
   // Configure test scenarios here
   const withdrawScenarios: {

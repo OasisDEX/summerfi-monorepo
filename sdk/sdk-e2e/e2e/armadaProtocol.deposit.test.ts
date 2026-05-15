@@ -10,7 +10,12 @@ import {
 } from '@summerfi/sdk-common'
 
 import { createSendTransactionTool } from '@summerfi/testing-utils'
-import { SharedConfig, type ChainConfig, InstiTestConfigs, TestClientIds } from './utils/testConfig'
+import {
+  TestConfigAccounts,
+  type ChainConfig,
+  InstiTestConfigs,
+  TestClientIds,
+} from './utils/testConfig'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 
@@ -44,8 +49,8 @@ describe('Armada Protocol - Deposit', () => {
     {
       chainConfig: InstiTestConfigs[TestClientIds.ACME],
       amountValue: '1',
-      senderAddressValue: SharedConfig.e2eUserAddressValue,
-      signerPrivateKey: SharedConfig.e2eUserPrivateKey,
+      senderAddressValue: TestConfigAccounts.e2eUserAddressValue,
+      signerPrivateKey: TestConfigAccounts.e2eUserPrivateKey,
       simulateOnly: true,
     },
   ]
@@ -59,8 +64,8 @@ describe('Armada Protocol - Deposit', () => {
         swapToSymbol,
         stake = false,
         referralCode,
-        senderAddressValue = SharedConfig.testUserAddressValue,
-        signerPrivateKey = SharedConfig.testUserPrivateKey,
+        senderAddressValue = TestConfigAccounts.testUserAddressValue,
+        signerPrivateKey = TestConfigAccounts.testUserPrivateKey,
         simulateOnly = true,
       }) => {
         const { rpcUrl, chainId, fleetAddressValue, symbol } = chainConfig

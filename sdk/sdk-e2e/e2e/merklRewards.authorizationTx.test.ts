@@ -1,7 +1,7 @@
 import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 import { makeSDK } from '@summerfi/sdk-client'
-import { SDKApiUrl, RpcUrls, SharedConfig } from './utils/testConfig'
+import { SDKApiUrl, RpcUrls, TestConfigAccounts } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -34,7 +34,7 @@ describe('Merkl Rewards - Authorization Transaction', () => {
       chainId,
       rpcUrl: RpcUrls[chainId as keyof typeof RpcUrls],
       senderAddressValue: userAddress,
-      signerPrivateKey: SharedConfig.testUserPrivateKey,
+      signerPrivateKey: TestConfigAccounts.testUserPrivateKey,
       simulateOnly: false,
     })
 

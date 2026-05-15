@@ -6,7 +6,7 @@ import {
   type ChainId,
 } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, SharedConfig } from './utils/testConfig'
+import { SDKApiUrl, TestConfigAccounts } from './utils/testConfig'
 import { makeSDK } from '@summerfi/sdk-client'
 
 jest.setTimeout(300000)

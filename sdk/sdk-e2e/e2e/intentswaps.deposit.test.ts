@@ -7,7 +7,7 @@ import {
   type ChainId,
   type TransactionInfo,
 } from '@summerfi/sdk-common'
-import { FleetAddresses, RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
+import { FleetAddresses, RpcUrls, SDKApiUrl, TestConfigAccounts } from './utils/testConfig'
 import { getCowChainName } from './utils/cow-swap'
 import assert from 'assert'
 import { makeSDK } from '@summerfi/sdk-client'
@@ -24,8 +24,8 @@ jest.setTimeout(600000)
  * @group e2e
  */
 describe('Intent swaps: Swap with Deposit', () => {
-  const signerPrivateKey = SharedConfig.testUserPrivateKey
-  const senderAddressValue = SharedConfig.testUserAddressValue
+  const signerPrivateKey = TestConfigAccounts.testUserPrivateKey
+  const senderAddressValue = TestConfigAccounts.testUserAddressValue
   const spenderAddressValue = '0x066bA278928cF2f502318C7f689b769F72d67809' // AQ
 
   // Configure test scenarios here

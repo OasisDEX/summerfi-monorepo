@@ -5,7 +5,7 @@ import {
   type ChainId,
   type TransactionInfo,
 } from '@summerfi/sdk-common'
-import { RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
+import { RpcUrls, SDKApiUrl, TestConfigAccounts } from './utils/testConfig'
 import assert from 'assert'
 import { makeSDK } from '@summerfi/sdk-client'
 import {
@@ -20,8 +20,8 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Intent swaps: Swap', () => {
-  const signerPrivateKey = SharedConfig.testUserPrivateKey
-  const senderAddressValue = SharedConfig.testUserAddressValue
+  const signerPrivateKey = TestConfigAccounts.testUserPrivateKey
+  const senderAddressValue = TestConfigAccounts.testUserAddressValue
 
   // Configure test scenarios here
   const intentSwapScenarios: {

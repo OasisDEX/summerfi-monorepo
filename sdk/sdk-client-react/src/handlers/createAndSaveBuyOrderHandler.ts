@@ -11,8 +11,8 @@ export const createAndSaveBuyOrderHandler =
     amount,
     slippagePercentage,
     intervalSeconds,
-    nextExecutionAt,
-    deadline,
+    nextExecutionAtUnixTimestamp,
+    deadlineUnixTimestamp,
   }: {
     userAddress: AddressValue
     chainId: ChainId
@@ -23,8 +23,10 @@ export const createAndSaveBuyOrderHandler =
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number
-    nextExecutionAt?: number
-    deadline?: string
+    /** Unix timestamp of the next scheduled execution */
+    nextExecutionAtUnixTimestamp: number
+    /** Unix timestamp after which the order expires */
+    deadlineUnixTimestamp: number
   }) => {
     return sdk.armada.dca.createAndSaveBuyOrder({
       userAddress,
@@ -34,7 +36,7 @@ export const createAndSaveBuyOrderHandler =
       amount,
       slippagePercentage,
       intervalSeconds,
-      nextExecutionAt,
-      deadline,
+      nextExecutionAtUnixTimestamp,
+      deadlineUnixTimestamp,
     })
   }

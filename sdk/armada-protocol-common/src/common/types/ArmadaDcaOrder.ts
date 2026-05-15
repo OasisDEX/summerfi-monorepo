@@ -11,8 +11,8 @@ export interface ArmadaDcaOrder {
   amount: string
   slippage: string
   intervalSeconds: number
-  nextExecutionAt: number
-  deadline: string
+  nextExecutionAtUnixTimestamp: number
+  deadlineUnixTimestamp: number
   allowedVaultsRoot: HexData
   fromVaultProof: HexData[]
   toVaultProof: HexData[]
