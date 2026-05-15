@@ -11,7 +11,7 @@ const ADMIRALS_QUARTERS = '0x3333333333333333333333333333333333333333' as Addres
 const ENSO_ROUTER = '0x4444444444444444444444444444444444444444' as AddressValue
 
 const TEST_SIGNER_PRIVATE_KEY =
-  '0x59c6995e998f97a5a0044966f0945382d0f0f8b8f9871d460f81158f4ad5f13d' as HexData
+  '0x0000000000000000000000000000000000000000000000000000000000000000' as HexData
 
 type DbOrderRow = {
   id: string
@@ -85,7 +85,9 @@ describe('ArmadaManagerDCA', () => {
       _fetchEnsoSwapCalldata: (params: unknown) => Promise<HexData>
     }
 
-    jest.spyOn(managerInternals, '_signRebalanceAuthorization').mockResolvedValue('0x1234' as HexData)
+    jest
+      .spyOn(managerInternals, '_signRebalanceAuthorization')
+      .mockResolvedValue('0x1234' as HexData)
     jest.spyOn(managerInternals, '_fetchEnsoSwapCalldata').mockResolvedValue('0xabcd' as HexData)
 
     const account = privateKeyToAccount(TEST_SIGNER_PRIVATE_KEY)

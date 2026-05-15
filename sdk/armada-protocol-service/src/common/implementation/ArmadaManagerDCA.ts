@@ -14,7 +14,7 @@ import {
 } from '@summerfi/sdk-common'
 import { encodePacked, keccak256, recoverMessageAddress, type Address, type Hex } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { getDb, type SummerProtocolDb, type SummerProtocolDbProvider } from './dca/getDb'
+import type { SummerProtocolDb, SummerProtocolDbProvider } from './dca/getDb'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 
 type DbOrderRow = {
@@ -48,7 +48,7 @@ type DbOrderRow = {
 export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaManagerDCA {
   private _configProvider: IConfigurationProvider
   private _deploymentProvider: IDeploymentProvider
-  private _summerProtocolDbProvider: SummerProtocolDbProvider
+  private _summerProtocolDbProvider?: SummerProtocolDbProvider
 
   constructor(params: {
     clientId?: string
@@ -59,7 +59,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     super({ clientId: params.clientId })
     this._configProvider = params.configProvider
     this._deploymentProvider = params.deploymentProvider
-    this._summerProtocolDbProvider = params.summerProtocolDbProvider ?? getDb
+    this._summerProtocolDbProvider = params.summerProtocolDbProvider
   }
 
   async createAndSaveBuyOrder(
@@ -265,8 +265,13 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     }
   }
 
-  private _getDb(): Promise<SummerProtocolDb> {
-    return this._summerProtocolDbProvider()
+  private async _getDb(): Promise<SummerProtocolDb> {
+    if (this._summerProtocolDbProvider) {
+      return this._summerProtocolDbProvider()
+    }
+
+    const { getDb } = await import('./dca/getDb')
+    return getDb()
   }
 
   private async _signRebalanceAuthorization(params: {

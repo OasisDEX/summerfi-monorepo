@@ -10,7 +10,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest tests/ --passWithNoTests",
+    "test": "jest --passWithNoTests",
     "e2e": "jest e2e/",
     "testw": "jest --watch",
     "build": "tsc -b --preserveWatchOutput tsconfig.build.json",
