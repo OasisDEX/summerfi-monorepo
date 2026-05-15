@@ -14,7 +14,7 @@ import {
 } from '@summerfi/sdk-common'
 import { encodePacked, keccak256, recoverMessageAddress, type Address, type Hex } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { getDb } from './dca/getDb'
+import { getDb, type SummerProtocolDb, type SummerProtocolDbProvider } from './dca/getDb'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 
 type DbOrderRow = {
@@ -48,15 +48,18 @@ type DbOrderRow = {
 export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaManagerDCA {
   private _configProvider: IConfigurationProvider
   private _deploymentProvider: IDeploymentProvider
+  private _summerProtocolDbProvider: SummerProtocolDbProvider
 
   constructor(params: {
     clientId?: string
     configProvider: IConfigurationProvider
     deploymentProvider: IDeploymentProvider
+    summerProtocolDbProvider?: SummerProtocolDbProvider
   }) {
     super({ clientId: params.clientId })
     this._configProvider = params.configProvider
     this._deploymentProvider = params.deploymentProvider
+    this._summerProtocolDbProvider = params.summerProtocolDbProvider ?? getDb
   }
 
   async createAndSaveBuyOrder(
@@ -124,7 +127,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       updatedAt: now,
     }
 
-    const db = await getDb()
+    const db = await this._getDb()
     await db
       .insertInto('armadaDcaOrders')
       .values({
@@ -157,7 +160,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async getBuyOrder(
     params: Parameters<IArmadaManagerDCA['getBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['getBuyOrder']> {
-    const db = await getDb()
+    const db = await this._getDb()
     const row = await db
       .selectFrom('armadaDcaOrders')
       .selectAll()
@@ -175,7 +178,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async getBuyOrders(
     params: Parameters<IArmadaManagerDCA['getBuyOrders']>[0],
   ): ReturnType<IArmadaManagerDCA['getBuyOrders']> {
-    const db = await getDb()
+    const db = await this._getDb()
     let query = db
       .selectFrom('armadaDcaOrders')
       .selectAll()
@@ -221,7 +224,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     }
 
     const now = Math.floor(Date.now() / 1000)
-    const db = await getDb()
+    const db = await this._getDb()
 
     await db
       .updateTable('armadaDcaOrders')
@@ -260,6 +263,10 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       fromVaultProof: [toLeaf as HexData],
       toVaultProof: [fromLeaf as HexData],
     }
+  }
+
+  private _getDb(): Promise<SummerProtocolDb> {
+    return this._summerProtocolDbProvider()
   }
 
   private async _signRebalanceAuthorization(params: {

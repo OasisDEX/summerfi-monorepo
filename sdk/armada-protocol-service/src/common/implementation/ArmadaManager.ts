@@ -34,6 +34,7 @@ import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
 import { ArmadaManagerAccessControl } from './ArmadaManagerAccessControl'
 import { ArmadaManagerDCA } from './ArmadaManagerDCA'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
+import type { SummerProtocolDbProvider } from './dca/getDb'
 
 /**
  * @name ArmadaManager
@@ -80,6 +81,7 @@ export class ArmadaManager implements IArmadaManager {
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
     clientId?: string
+    summerProtocolDbProvider?: SummerProtocolDbProvider
   }) {
     this._configProvider = params.configProvider
     this._deploymentProvider = params.deploymentProvider
@@ -187,6 +189,7 @@ export class ArmadaManager implements IArmadaManager {
       clientId: this._clientId,
       configProvider: this._configProvider,
       deploymentProvider: this._deploymentProvider,
+      summerProtocolDbProvider: params.summerProtocolDbProvider,
     })
   }
 }

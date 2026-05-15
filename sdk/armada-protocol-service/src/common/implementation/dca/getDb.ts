@@ -6,7 +6,10 @@ import { getSummerProtocolDB, type SummerProtocolDB } from '@summerfi/summer-pro
  */
 let dbInstance: SummerProtocolDB | null = null
 
-export async function getDb(): Promise<SummerProtocolDB['db']> {
+export type SummerProtocolDb = SummerProtocolDB['db']
+export type SummerProtocolDbProvider = () => Promise<SummerProtocolDb>
+
+export async function getDb(): Promise<SummerProtocolDb> {
   if (!dbInstance) {
     const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
 
