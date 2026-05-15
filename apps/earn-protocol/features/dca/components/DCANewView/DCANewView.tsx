@@ -20,6 +20,7 @@ interface DCANewViewProps {
 
 export const DCANewView: FC<DCANewViewProps> = ({ sourceVaults, targetVaults, pairs }) => {
   const [phase, setPhase] = useState<DCAPhase>('wizard')
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const [submitted, setSubmitted] = useState<{
     config: DCAConfig
     pair: DCAResolvedPair
