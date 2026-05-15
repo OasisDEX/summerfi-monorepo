@@ -14,13 +14,11 @@ import {
   GradientBox,
   Icon,
   InputWithDropdown,
-  riskColors,
   SkeletonLine,
   Text,
 } from '@summerfi/app-earn-ui'
 import {
   type SDKVaultishType,
-  type SupportedNetworkIds,
   type TokenSymbolsList,
   type TransactionWithStatus,
   type VaultApyData,
@@ -35,81 +33,10 @@ import {
 } from '@summerfi/app-utils'
 import { TransactionType, type VaultSwitchTransactionInfo } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import clsx from 'clsx'
-import { capitalize } from 'lodash-es'
 
-import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
+import { VaultSwitchBox } from '@/components/molecules/SidebarElements/VaultSwitchBox'
 
 import controlsSwitchTransactionViewStyles from './ControlsSwitchTransactionView.module.css'
-
-const VaultBoxContent = ({
-  title,
-  tokenName,
-  chainId,
-  risk,
-  isDaoManaged,
-  apy,
-  isLoading,
-  amount,
-}: {
-  title: string
-  tokenName: TokenSymbolsList
-  chainId: SupportedNetworkIds
-  risk: string
-  apy?: number
-  amount?: string
-  isLoading?: boolean
-  isDaoManaged?: boolean
-}) => (
-  <>
-    <Text variant="p4semi" className={controlsSwitchTransactionViewStyles.vaultBoxFromTo}>
-      {title}
-    </Text>
-    <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-      <Icon tokenName={tokenName} size={44} />
-      <div style={{ position: 'absolute', top: '-3px', left: '-3px' }} data-testid="vault-network">
-        {networkSDKChainIdIconMap(chainId)}
-      </div>
-    </div>
-    <Text variant="h5" style={{ color: 'var(--color-text-primary)' }}>
-      {tokenName}
-    </Text>
-    <Text variant="p4semi" style={{ color: riskColors[risk as keyof typeof riskColors] }}>
-      {capitalize(risk)} Risk
-    </Text>
-    <Text
-      variant="p4semi"
-      style={{ color: 'var(--color-text-primary-disabled)', textAlign: 'center' }}
-    >
-      {isDaoManaged ? (
-        <>
-          DAO Risk-Managed
-          <br />
-          <br />
-        </>
-      ) : (
-        <>
-          Risk-Managed
-          <br />
-          by Block Analitica
-        </>
-      )}
-    </Text>
-    <div className={controlsSwitchTransactionViewStyles.divider} />
-    {!!apy && (
-      <Text variant="p4semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
-        Live&nbsp;APY:&nbsp;{formatDecimalAsPercent(apy)}
-      </Text>
-    )}
-    {isLoading && !amount ? (
-      <SkeletonLine width={100} height={14} style={{ margin: '5px 0' }} />
-    ) : (
-      <Text variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
-        {amount ? `${formatCryptoBalance(amount)} ${tokenName}` : 'n/a'}
-      </Text>
-    )}
-  </>
-)
 
 const ChangeBox = ({
   title,
@@ -306,44 +233,31 @@ export const ControlsSwitchTransactionView = ({
   return (
     <div className={controlsSwitchTransactionViewStyles.controlsSwitchTransactionView}>
       <div className={controlsSwitchTransactionViewStyles.vaultsWrapper}>
-        <div
-          className={clsx(
-            controlsSwitchTransactionViewStyles.vaultBox,
-            controlsSwitchTransactionViewStyles.vaultBoxCurrent,
-          )}
-          style={{
-            width: '50%',
-          }}
-        >
-          <VaultBoxContent
-            title="From"
-            chainId={vaultChainId}
-            tokenName={currentToken}
-            risk={
-              currentVault.isDaoManaged ? 'higher' : (currentVault.customFields?.risk ?? 'lower')
-            }
-            isDaoManaged={currentVault.isDaoManaged}
-            apy={currentLiveApy}
-            amount={currentAmount}
-            isLoading={isLoading}
-          />
-        </div>
+        <VaultSwitchBox
+          title="From"
+          chainId={vaultChainId}
+          tokenName={currentToken}
+          risk={currentVault.isDaoManaged ? 'higher' : (currentVault.customFields?.risk ?? 'lower')}
+          isDaoManaged={currentVault.isDaoManaged}
+          apy={currentLiveApy}
+          amount={currentAmount}
+          isLoading={isLoading}
+          isCurrent
+        />
         <div className={controlsSwitchTransactionViewStyles.arrowBox}>
           <Icon iconName="arrow_forward" size={20} />
         </div>
         <GradientBox selected style={{ cursor: 'initial', width: '50%' }}>
-          <div className={clsx(controlsSwitchTransactionViewStyles.vaultBox)}>
-            <VaultBoxContent
-              title="To"
-              chainId={vaultChainId}
-              tokenName={nextToken}
-              risk={nextVault.isDaoManaged ? 'higher' : (nextVault.customFields?.risk ?? 'lower')}
-              apy={nextLiveApy}
-              isDaoManaged={nextVault.isDaoManaged}
-              amount={nextAmount}
-              isLoading={isLoading}
-            />
-          </div>
+          <VaultSwitchBox
+            title="To"
+            chainId={vaultChainId}
+            tokenName={nextToken}
+            risk={nextVault.isDaoManaged ? 'higher' : (nextVault.customFields?.risk ?? 'lower')}
+            apy={nextLiveApy}
+            isDaoManaged={nextVault.isDaoManaged}
+            amount={nextAmount}
+            isLoading={isLoading}
+          />
         </GradientBox>
       </div>
       <GradientBox selected style={{ cursor: 'initial' }}>
