@@ -2,6 +2,8 @@ import type { ColumnType } from "kysely";
 
 export type ActionType = "deposit" | "withdraw";
 
+export type ArmadaDcaOrderStatus = "active" | "paused" | "cancelled" | "executed";
+
 export type CampaignType = "okx";
 
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
@@ -50,13 +52,14 @@ export interface ArmadaDcaOrders {
   nextExecutionAt: Int8;
   signature: string;
   slippage: string;
-  status: string;
+  status: ArmadaDcaOrderStatus;
   swapCalldata: string;
   toVault: string;
   toVaultProof: Json;
   updatedAt: Int8;
   userAddress: string;
   verifyingContractAddress: string;
+  priceLimit?: string;
 }
 
 export interface DailyFleetInterestRate {
