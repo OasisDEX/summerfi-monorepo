@@ -2,7 +2,7 @@ import type { ColumnType } from "kysely";
 
 export type ActionType = "deposit" | "withdraw";
 
-export type ArmadaDcaOrderStatus = "active" | "paused" | "cancelled" | "executed";
+export type ArmadaDcaOrderStatus = "active" | "paused" | "cancelled" | "completed";
 
 export type CampaignType = "okx";
 
