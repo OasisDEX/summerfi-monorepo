@@ -1,5 +1,5 @@
 import type { ArmadaDcaOrder, ArmadaDcaOrderStatus } from '@summerfi/armada-protocol-common'
-import type { IAddress, IChainInfo, IUser } from '@summerfi/sdk-common'
+import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 /**
  * @name IArmadaManagerDCAClient
@@ -7,25 +7,29 @@ import type { IAddress, IChainInfo, IUser } from '@summerfi/sdk-common'
  */
 export interface IArmadaManagerDCAClient {
   createAndSaveBuyOrder(params: {
-    user: IUser
-    chainInfo: IChainInfo
-    fromVault: IAddress
-    toVault: IAddress
+    userAddress: AddressValue
+    chainId: ChainId
+    fromVault: AddressValue
+    toVault: AddressValue
+    /** Full token amount (e.g. "1.5" for 1.5 USDC, not raw units) */
     amount: string
-    slippage: string
+    /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
+    slippagePercentage: string
     intervalSeconds: number
-    ensoRouterAddress: IAddress
     nextExecutionAt?: number
     deadline?: string
   }): Promise<ArmadaDcaOrder>
 
-  getBuyOrder(params: { orderId: string; user: IUser }): Promise<ArmadaDcaOrder | undefined>
+  getBuyOrder(params: {
+    orderId: string
+    userAddress: AddressValue
+  }): Promise<ArmadaDcaOrder | undefined>
 
   getBuyOrders(params: {
-    user: IUser
-    chainInfo?: IChainInfo
+    userAddress: AddressValue
+    chainId?: ChainId
     status?: ArmadaDcaOrderStatus
   }): Promise<ArmadaDcaOrder[]>
 
-  cancelBuyOrder(params: { orderId: string; user: IUser }): Promise<ArmadaDcaOrder>
+  cancelBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<ArmadaDcaOrder>
 }

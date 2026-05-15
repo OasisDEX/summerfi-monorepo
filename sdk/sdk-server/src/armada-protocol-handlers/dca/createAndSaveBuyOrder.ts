@@ -1,27 +1,22 @@
-import {
-  isAddress,
-  isChainInfo,
-  isUser,
-  type IAddress,
-  type IChainInfo,
-  type IUser,
-} from '@summerfi/sdk-common'
+import { isAddressValue, isChainId, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
 export const createAndSaveBuyOrder = publicProcedure
   .input(
     z.object({
-      user: z.custom<IUser>(isUser),
-      chainInfo: z.custom<IChainInfo>(isChainInfo),
-      fromVault: z.custom<IAddress>(isAddress),
-      toVault: z.custom<IAddress>(isAddress),
+      userAddress: z.custom<AddressValue>(isAddressValue),
+      chainId: z.custom<ChainId>(isChainId),
+      fromVault: z.custom<AddressValue>(isAddressValue),
+      toVault: z.custom<AddressValue>(isAddressValue),
       amount: z.string(),
-      slippage: z.string(),
+      slippagePercentage: z.string(),
       intervalSeconds: z.number().int().positive(),
-      ensoRouterAddress: z.custom<IAddress>(isAddress),
       nextExecutionAt: z.number().int().positive().optional(),
-      deadline: z.string().optional(),
+      deadline: z
+        .string()
+        .regex(/^\d+$/, { message: 'deadline must be a Unix timestamp string' })
+        .optional(),
     }),
   )
   .query(async (opts) => {

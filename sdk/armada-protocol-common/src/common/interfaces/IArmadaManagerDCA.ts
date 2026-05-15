@@ -1,4 +1,4 @@
-import type { IAddress, IChainInfo, IUser } from '@summerfi/sdk-common'
+import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 import type { ArmadaDcaOrder, ArmadaDcaOrderStatus } from '../types/ArmadaDcaOrder'
 
 /**
@@ -11,14 +11,15 @@ export interface IArmadaManagerDCA {
    * @description Creates a signed DCA buy order payload and persists it in the database
    */
   createAndSaveBuyOrder(params: {
-    user: IUser
-    chainInfo: IChainInfo
-    fromVault: IAddress
-    toVault: IAddress
+    userAddress: AddressValue
+    chainId: ChainId
+    fromVault: AddressValue
+    toVault: AddressValue
+    /** Full token amount (e.g. "1.5" for 1.5 USDC, not raw units) */
     amount: string
-    slippage: string
+    /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
+    slippagePercentage: string
     intervalSeconds: number
-    ensoRouterAddress: IAddress
     nextExecutionAt?: number
     deadline?: string
   }): Promise<ArmadaDcaOrder>
@@ -27,15 +28,18 @@ export interface IArmadaManagerDCA {
    * @name getBuyOrder
    * @description Gets a single DCA buy order owned by a user
    */
-  getBuyOrder(params: { orderId: string; user: IUser }): Promise<ArmadaDcaOrder | undefined>
+  getBuyOrder(params: {
+    orderId: string
+    userAddress: AddressValue
+  }): Promise<ArmadaDcaOrder | undefined>
 
   /**
    * @name getBuyOrders
    * @description Gets DCA buy orders for a user
    */
   getBuyOrders(params: {
-    user: IUser
-    chainInfo?: IChainInfo
+    userAddress: AddressValue
+    chainId?: ChainId
     status?: ArmadaDcaOrderStatus
   }): Promise<ArmadaDcaOrder[]>
 
@@ -43,5 +47,5 @@ export interface IArmadaManagerDCA {
    * @name cancelBuyOrder
    * @description Marks a DCA buy order as cancelled
    */
-  cancelBuyOrder(params: { orderId: string; user: IUser }): Promise<ArmadaDcaOrder>
+  cancelBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<ArmadaDcaOrder>
 }

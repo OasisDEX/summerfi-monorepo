@@ -1,11 +1,5 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import {
-  Address,
-  type AddressValue,
-  getChainInfoByChainId,
-  type ChainId,
-  User,
-} from '@summerfi/sdk-common'
+import { type AddressValue, type ChainId } from '@summerfi/sdk-common'
 
 export const createAndSaveBuyOrderHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
@@ -15,9 +9,8 @@ export const createAndSaveBuyOrderHandler =
     fromVaultAddress,
     toVaultAddress,
     amount,
-    slippage,
+    slippagePercentage,
     intervalSeconds,
-    ensoRouterAddress,
     nextExecutionAt,
     deadline,
   }: {
@@ -25,25 +18,22 @@ export const createAndSaveBuyOrderHandler =
     chainId: ChainId
     fromVaultAddress: AddressValue
     toVaultAddress: AddressValue
+    /** Full token amount (e.g. "1.5" for 1.5 USDC, not raw units) */
     amount: string
-    slippage: string
+    /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
+    slippagePercentage: string
     intervalSeconds: number
-    ensoRouterAddress: AddressValue
     nextExecutionAt?: number
     deadline?: string
   }) => {
-    const user = User.createFromEthereum(chainId, userAddress)
-    const chainInfo = getChainInfoByChainId(chainId)
-
     return sdk.armada.dca.createAndSaveBuyOrder({
-      user,
-      chainInfo,
-      fromVault: Address.createFromEthereum({ value: fromVaultAddress }),
-      toVault: Address.createFromEthereum({ value: toVaultAddress }),
+      userAddress,
+      chainId,
+      fromVault: fromVaultAddress,
+      toVault: toVaultAddress,
       amount,
-      slippage,
+      slippagePercentage,
       intervalSeconds,
-      ensoRouterAddress: Address.createFromEthereum({ value: ensoRouterAddress }),
       nextExecutionAt,
       deadline,
     })

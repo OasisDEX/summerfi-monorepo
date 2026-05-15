@@ -10,6 +10,7 @@ import {
   type ChainId,
   type HexData,
   createTimeoutSignal,
+  isAddressValue,
 } from '@summerfi/sdk-common'
 import { encodePacked, keccak256, type Address, type Hex } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
@@ -67,40 +68,47 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     const orderId = crypto.randomUUID()
 
     const { allowedVaultsRoot, fromVaultProof, toVaultProof } = this._generateMerkleProofs({
-      fromVault: params.fromVault.value,
-      toVault: params.toVault.value,
+      fromVault: params.fromVault,
+      toVault: params.toVault,
     })
 
     const verifyingContract = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'admiralsQuarters',
-      chainId: params.chainInfo.chainId,
+      chainId: params.chainId,
     })
 
     const signature = await this._signRebalanceAuthorization({
-      chainId: params.chainInfo.chainId,
+      chainId: params.chainId,
       verifyingContract: verifyingContract.value,
       allowedVaultsRoot,
       deadline,
     })
 
+    const ensoRouterAddress = this._configProvider.getConfigurationItem({
+      name: 'ENSO_ROUTER_ADDRESS',
+    })
+    if (!ensoRouterAddress || !isAddressValue(ensoRouterAddress)) {
+      throw new Error('ENSO_ROUTER_ADDRESS is not configured or invalid')
+    }
+
     const swapCalldata = await this._fetchEnsoSwapCalldata({
-      chainId: params.chainInfo.chainId,
+      chainId: params.chainId,
       fromAddress: verifyingContract.value,
-      ensoRouterAddress: params.ensoRouterAddress.value,
-      tokenIn: params.fromVault.value,
-      tokenOut: params.toVault.value,
+      ensoRouterAddress,
+      tokenIn: params.fromVault,
+      tokenOut: params.toVault,
       amountIn: params.amount,
-      slippage: params.slippage,
+      slippage: String(Number(params.slippagePercentage) * 100),
     })
 
     const order: ArmadaDcaOrder = {
       id: orderId,
-      userAddress: params.user.wallet.address.value,
-      chainId: params.chainInfo.chainId,
-      fromVault: params.fromVault.value,
-      toVault: params.toVault.value,
+      userAddress: params.userAddress,
+      chainId: params.chainId,
+      fromVault: params.fromVault,
+      toVault: params.toVault,
       amount: params.amount,
-      slippage: params.slippage,
+      slippage: params.slippagePercentage,
       intervalSeconds: params.intervalSeconds,
       nextExecutionAt,
       deadline,
@@ -109,7 +117,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       toVaultProof,
       swapCalldata,
       signature,
-      ensoRouterAddress: params.ensoRouterAddress.value,
+      ensoRouterAddress,
       verifyingContractAddress: verifyingContract.value,
       status: 'active',
       createdAt: now,
@@ -154,7 +162,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       .selectFrom('armadaDcaOrders')
       .selectAll()
       .where('id', '=', params.orderId)
-      .where('userAddress', '=', params.user.wallet.address.value)
+      .where('userAddress', '=', params.userAddress)
       .executeTakeFirst()
 
     if (!row) {
@@ -171,10 +179,10 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     let query = db
       .selectFrom('armadaDcaOrders')
       .selectAll()
-      .where('userAddress', '=', params.user.wallet.address.value)
+      .where('userAddress', '=', params.userAddress)
 
-    if (params.chainInfo) {
-      query = query.where('chainId', '=', params.chainInfo.chainId)
+    if (params.chainId) {
+      query = query.where('chainId', '=', params.chainId)
     }
 
     if (params.status) {
@@ -189,7 +197,10 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async cancelBuyOrder(
     params: Parameters<IArmadaManagerDCA['cancelBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['cancelBuyOrder']> {
-    const existingOrder = await this.getBuyOrder(params)
+    const existingOrder = await this.getBuyOrder({
+      orderId: params.orderId,
+      userAddress: params.userAddress,
+    })
 
     if (!existingOrder) {
       throw new Error(`DCA order not found: ${params.orderId}`)
@@ -206,7 +217,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         cancelledAt: String(now),
       })
       .where('id', '=', params.orderId)
-      .where('userAddress', '=', params.user.wallet.address.value)
+      .where('userAddress', '=', params.userAddress)
       .executeTakeFirstOrThrow()
 
     return {

@@ -1,12 +1,12 @@
-import { isChainInfo, isUser, type IChainInfo, type IUser } from '@summerfi/sdk-common'
+import { isAddressValue, isChainId, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
 export const getBuyOrders = publicProcedure
   .input(
     z.object({
-      user: z.custom<IUser>(isUser),
-      chainInfo: z.custom<IChainInfo>(isChainInfo).optional(),
+      userAddress: z.custom<AddressValue>(isAddressValue),
+      chainId: z.custom<ChainId>(isChainId).optional(),
       status: z.enum(['active', 'cancelled']).optional(),
     }),
   )
