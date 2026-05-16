@@ -137,6 +137,8 @@ import { createAndSaveBuyOrder } from './armada-protocol-handlers/dca/createAndS
 import { getBuyOrder } from './armada-protocol-handlers/dca/getBuyOrder'
 import { getBuyOrders } from './armada-protocol-handlers/dca/getBuyOrders'
 import { cancelBuyOrder } from './armada-protocol-handlers/dca/cancelBuyOrder'
+import { pauseBuyOrder } from './armada-protocol-handlers/dca/pauseBuyOrder'
+import { resumeBuyOrder } from './armada-protocol-handlers/dca/resumeBuyOrder'
 
 /**
  * Server
@@ -303,6 +305,8 @@ export const sdkAppRouter = router({
       getBuyOrder: getBuyOrder,
       getBuyOrders: getBuyOrders,
       cancelBuyOrder: cancelBuyOrder,
+      pauseBuyOrder: pauseBuyOrder,
+      resumeBuyOrder: resumeBuyOrder,
     },
   },
 })

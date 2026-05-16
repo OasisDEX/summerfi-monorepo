@@ -1,6 +1,6 @@
 import type { AddressValue, ChainId, HexData } from '@summerfi/sdk-common'
 
-export type ArmadaDcaOrderStatus = 'active' | 'cancelled'
+export type ArmadaDcaOrderStatus = 'active' | 'paused' | 'cancelled' | 'completed'
 
 export interface ArmadaDcaOrder {
   id: string
@@ -11,8 +11,12 @@ export interface ArmadaDcaOrder {
   amount: string
   slippage: string
   intervalSeconds: number
+  /** Unix timestamp of the next scheduled execution */
   nextExecutionAtUnixTimestamp: number
-  deadlineUnixTimestamp: number
+  /** Unix timestamp after which the order stops executing (optional — absent means run until maxTrades is reached) */
+  deadlineUnixTimestamp?: number
+  /** Maximum number of trades to execute before the order completes */
+  maxTrades: number
   allowedVaultsRoot: HexData
   fromVaultProof: HexData[]
   toVaultProof: HexData[]
@@ -24,4 +28,5 @@ export interface ArmadaDcaOrder {
   createdAt: number
   updatedAt: number
   cancelledAt?: number
+  pausedAt?: number
 }

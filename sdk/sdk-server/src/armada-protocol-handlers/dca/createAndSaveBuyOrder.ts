@@ -12,8 +12,9 @@ export const createAndSaveBuyOrder = publicProcedure
       amount: z.string(),
       slippagePercentage: z.string(),
       intervalSeconds: z.number().int().positive(),
-      nextExecutionAtUnixTimestamp: z.number().int().positive(),
-      deadlineUnixTimestamp: z.number().int().positive(),
+      firstExecutionUnixTimestamp: z.number().int().positive(),
+      deadlineUnixTimestamp: z.number().int().positive().optional(),
+      maxTrades: z.number().int().positive(),
     }),
   )
   .query(async (opts) => {

@@ -32,6 +32,18 @@ export class ArmadaManagerDCAClient extends IRPCClient implements IArmadaManager
   async cancelBuyOrder(
     params: Parameters<IArmadaManagerDCAClient['cancelBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCAClient['cancelBuyOrder']> {
-    return this.rpcClient.armada.dca.cancelBuyOrder.query(params)
+    return this.rpcClient.armada.dca.cancelBuyOrder.mutate(params)
+  }
+
+  async pauseBuyOrder(
+    params: Parameters<IArmadaManagerDCAClient['pauseBuyOrder']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['pauseBuyOrder']> {
+    return this.rpcClient.armada.dca.pauseBuyOrder.mutate(params)
+  }
+
+  async resumeBuyOrder(
+    params: Parameters<IArmadaManagerDCAClient['resumeBuyOrder']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['resumeBuyOrder']> {
+    return this.rpcClient.armada.dca.resumeBuyOrder.mutate(params)
   }
 }

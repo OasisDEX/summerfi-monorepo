@@ -20,10 +20,12 @@ export interface IArmadaManagerDCA {
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number
-    /** Unix timestamp of the next scheduled execution */
-    nextExecutionAtUnixTimestamp: number
-    /** Unix timestamp after which the order expires */
-    deadlineUnixTimestamp: number
+    /** Unix timestamp of the first scheduled execution */
+    firstExecutionUnixTimestamp: number
+    /** Unix timestamp after which the order stops executing (optional — absent means run until maxTrades is reached) */
+    deadlineUnixTimestamp?: number
+    /** Maximum number of trades to execute before the order completes (required) */
+    maxTrades: number
   }): Promise<ArmadaDcaOrder>
 
   /**
@@ -50,6 +52,28 @@ export interface IArmadaManagerDCA {
    * @description Marks a DCA buy order as cancelled
    */
   cancelBuyOrder(params: {
+    orderId: string
+    userAddress: AddressValue
+    signedMessage: string
+    signature: HexData
+  }): Promise<ArmadaDcaOrder>
+
+  /**
+   * @name pauseBuyOrder
+   * @description Pauses an active DCA buy order. Requires a signed message: "I want to pause <orderId>."
+   */
+  pauseBuyOrder(params: {
+    orderId: string
+    userAddress: AddressValue
+    signedMessage: string
+    signature: HexData
+  }): Promise<ArmadaDcaOrder>
+
+  /**
+   * @name resumeBuyOrder
+   * @description Resumes a paused DCA buy order. Requires a signed message: "I want to resume <orderId>."
+   */
+  resumeBuyOrder(params: {
     orderId: string
     userAddress: AddressValue
     signedMessage: string

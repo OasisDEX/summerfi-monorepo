@@ -5,17 +5,34 @@ import type {
 } from '@summerfi/armada-protocol-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
+import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import {
   type AddressValue,
   type ChainId,
   type HexData,
   createTimeoutSignal,
+  getChainInfoByChainId,
   isAddressValue,
 } from '@summerfi/sdk-common'
-import { encodePacked, keccak256, recoverMessageAddress, type Address, type Hex } from 'viem'
+import {
+  encodePacked,
+  keccak256,
+  parseAbi,
+  recoverMessageAddress,
+  type Address,
+  type Hex,
+} from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import type { SummerProtocolDb, SummerProtocolDbProvider } from './dca/getDb'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
+
+const MIN_INTERVAL_SECONDS = 3600 // 1 hour
+const MAX_INTERVAL_SECONDS = 31536000 // 1 year
+const DEFAULT_DEADLINE_SECONDS = 315360000 // ~10 years
+
+const HARBOR_COMMAND_ABI = parseAbi([
+  'function getActiveFleetCommanders() view returns (address[])',
+])
 
 type DbOrderRow = {
   id: string
@@ -26,8 +43,9 @@ type DbOrderRow = {
   amount: string
   slippage: string
   intervalSeconds: number
-  nextExecutionAt: string
-  deadline: string
+  nextExecutionAt: string | null
+  deadline: string | null
+  maxTrades: number
   allowedVaultsRoot: string
   fromVaultProof: unknown
   toVaultProof: unknown
@@ -39,6 +57,7 @@ type DbOrderRow = {
   createdAt: string
   updatedAt: string
   cancelledAt: string | null
+  pausedAt: string | null
 }
 
 /**
@@ -49,17 +68,20 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   private _configProvider: IConfigurationProvider
   private _deploymentProvider: IDeploymentProvider
   private _summerProtocolDbProvider?: SummerProtocolDbProvider
+  private _blockchainClientProvider?: IBlockchainClientProvider
 
   constructor(params: {
     clientId?: string
     configProvider: IConfigurationProvider
     deploymentProvider: IDeploymentProvider
     summerProtocolDbProvider?: SummerProtocolDbProvider
+    blockchainClientProvider?: IBlockchainClientProvider
   }) {
     super({ clientId: params.clientId })
     this._configProvider = params.configProvider
     this._deploymentProvider = params.deploymentProvider
     this._summerProtocolDbProvider = params.summerProtocolDbProvider
+    this._blockchainClientProvider = params.blockchainClientProvider
   }
 
   async createAndSaveBuyOrder(
@@ -67,8 +89,34 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   ): ReturnType<IArmadaManagerDCA['createAndSaveBuyOrder']> {
     const now = Math.floor(Date.now() / 1000)
     const deadline = params.deadlineUnixTimestamp
-    const nextExecutionAt = params.nextExecutionAtUnixTimestamp
+    const firstExecutionAt = params.firstExecutionUnixTimestamp
     const orderId = crypto.randomUUID()
+
+    // Validate amount is a positive decimal string
+    const amountNumber = Number(params.amount)
+    if (isNaN(amountNumber) || amountNumber <= 0) {
+      throw new Error('amount must be a positive number string')
+    }
+
+    // Validate interval bounds
+    if (params.intervalSeconds < MIN_INTERVAL_SECONDS) {
+      throw new Error(`intervalSeconds must be at least ${MIN_INTERVAL_SECONDS} (1 hour)`)
+    }
+    if (params.intervalSeconds > MAX_INTERVAL_SECONDS) {
+      throw new Error(`intervalSeconds must be at most ${MAX_INTERVAL_SECONDS} (1 year)`)
+    }
+
+    // Validate deadline is in the future if provided
+    if (deadline !== undefined && deadline <= now) {
+      throw new Error('deadlineUnixTimestamp must be in the future')
+    }
+
+    // Validate vault allowlist via HarborCommand on-chain read
+    await this._validateVaultAllowlist({
+      chainId: params.chainId,
+      fromVault: params.fromVault,
+      toVault: params.toVault,
+    })
 
     const { allowedVaultsRoot, fromVaultProof, toVaultProof } = this._generateMerkleProofs({
       fromVault: params.fromVault,
@@ -80,11 +128,13 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       chainId: params.chainId,
     })
 
+    const signatureDeadline = deadline ?? now + DEFAULT_DEADLINE_SECONDS
+
     const signature = await this._signRebalanceAuthorization({
       chainId: params.chainId,
       verifyingContract: verifyingContract.value,
       allowedVaultsRoot,
-      deadline,
+      deadline: signatureDeadline,
     })
 
     const ensoRouterAddress = this._configProvider.getConfigurationItem({
@@ -113,8 +163,9 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       amount: params.amount,
       slippage: params.slippagePercentage,
       intervalSeconds: params.intervalSeconds,
-      nextExecutionAtUnixTimestamp: nextExecutionAt,
+      nextExecutionAtUnixTimestamp: firstExecutionAt,
       deadlineUnixTimestamp: deadline,
+      maxTrades: params.maxTrades,
       allowedVaultsRoot,
       fromVaultProof,
       toVaultProof,
@@ -139,8 +190,9 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         amount: order.amount,
         slippage: order.slippage,
         intervalSeconds: order.intervalSeconds,
-        nextExecutionAt: String(order.nextExecutionAtUnixTimestamp),
-        deadline: String(order.deadlineUnixTimestamp),
+        nextExecutionAt: BigInt(order.nextExecutionAtUnixTimestamp),
+        deadline: deadline !== undefined ? String(deadline) : null,
+        maxTrades: order.maxTrades,
         allowedVaultsRoot: order.allowedVaultsRoot,
         fromVaultProof: order.fromVaultProof,
         toVaultProof: order.toVaultProof,
@@ -172,7 +224,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       return undefined
     }
 
-    return this._mapDbOrderToOrder(row as DbOrderRow)
+    return this._mapDbOrderToOrder(row)
   }
 
   async getBuyOrders(
@@ -194,34 +246,15 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
 
     const rows = await query.orderBy('createdAt desc').execute()
 
-    return rows.map((row: unknown) => this._mapDbOrderToOrder(row as DbOrderRow))
+    return rows.map((row) => this._mapDbOrderToOrder(row))
   }
 
   async cancelBuyOrder(
     params: Parameters<IArmadaManagerDCA['cancelBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['cancelBuyOrder']> {
-    const expectedSignedMessage = `I want to cancel ${params.orderId}.`
-    if (params.signedMessage !== expectedSignedMessage) {
-      throw new Error('Invalid cancellation message')
-    }
+    await this._verifyOrderSignature({ action: 'cancel', ...params })
 
-    const recoveredAddress = await recoverMessageAddress({
-      message: params.signedMessage,
-      signature: params.signature,
-    })
-
-    if (recoveredAddress.toLowerCase() !== params.userAddress.toLowerCase()) {
-      throw new Error('Cancellation signature does not match userAddress')
-    }
-
-    const existingOrder = await this.getBuyOrder({
-      orderId: params.orderId,
-      userAddress: params.userAddress,
-    })
-
-    if (!existingOrder) {
-      throw new Error(`DCA order not found: ${params.orderId}`)
-    }
+    const existingOrder = await this._getExistingOrderOrThrow(params)
 
     const now = Math.floor(Date.now() / 1000)
     const db = await this._getDb()
@@ -242,6 +275,147 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       status: 'cancelled',
       updatedAt: now,
       cancelledAt: now,
+    }
+  }
+
+  async pauseBuyOrder(
+    params: Parameters<IArmadaManagerDCA['pauseBuyOrder']>[0],
+  ): ReturnType<IArmadaManagerDCA['pauseBuyOrder']> {
+    await this._verifyOrderSignature({ action: 'pause', ...params })
+
+    const existingOrder = await this._getExistingOrderOrThrow(params)
+
+    if (existingOrder.status !== 'active') {
+      throw new Error(
+        `Cannot pause an order that is not active (current status: ${existingOrder.status})`,
+      )
+    }
+
+    const now = Math.floor(Date.now() / 1000)
+    const db = await this._getDb()
+
+    await db
+      .updateTable('armadaDcaOrders')
+      .set({
+        status: 'paused',
+        updatedAt: String(now),
+        pausedAt: String(now),
+      })
+      .where('id', '=', params.orderId)
+      .where('userAddress', '=', params.userAddress)
+      .executeTakeFirstOrThrow()
+
+    return {
+      ...existingOrder,
+      status: 'paused',
+      updatedAt: now,
+      pausedAt: now,
+    }
+  }
+
+  async resumeBuyOrder(
+    params: Parameters<IArmadaManagerDCA['resumeBuyOrder']>[0],
+  ): ReturnType<IArmadaManagerDCA['resumeBuyOrder']> {
+    await this._verifyOrderSignature({ action: 'resume', ...params })
+
+    const existingOrder = await this._getExistingOrderOrThrow(params)
+
+    if (existingOrder.status !== 'paused') {
+      throw new Error(
+        `Cannot resume an order that is not paused (current status: ${existingOrder.status})`,
+      )
+    }
+
+    const now = Math.floor(Date.now() / 1000)
+    const db = await this._getDb()
+
+    await db
+      .updateTable('armadaDcaOrders')
+      .set({
+        status: 'active',
+        updatedAt: String(now),
+        pausedAt: null,
+      })
+      .where('id', '=', params.orderId)
+      .where('userAddress', '=', params.userAddress)
+      .executeTakeFirstOrThrow()
+
+    return {
+      ...existingOrder,
+      status: 'active',
+      updatedAt: now,
+      pausedAt: undefined,
+    }
+  }
+
+  private async _getExistingOrderOrThrow(params: {
+    orderId: string
+    userAddress: AddressValue
+  }): Promise<ArmadaDcaOrder> {
+    const order = await this.getBuyOrder(params)
+    if (!order) {
+      throw new Error(`DCA order not found: ${params.orderId}`)
+    }
+    return order
+  }
+
+  private async _verifyOrderSignature(params: {
+    action: 'cancel' | 'pause' | 'resume'
+    orderId: string
+    userAddress: string
+    signedMessage: string
+    signature: `0x${string}`
+  }): Promise<void> {
+    const expectedSignedMessage = `I want to ${params.action} ${params.orderId}.`
+    if (params.signedMessage !== expectedSignedMessage) {
+      throw new Error(`Invalid ${params.action} message`)
+    }
+
+    const recoveredAddress = await recoverMessageAddress({
+      message: params.signedMessage,
+      signature: params.signature,
+    })
+
+    if (recoveredAddress.toLowerCase() !== params.userAddress.toLowerCase()) {
+      throw new Error(`${params.action} signature does not match userAddress`)
+    }
+  }
+
+  private async _validateVaultAllowlist(params: {
+    chainId: ChainId
+    fromVault: AddressValue
+    toVault: AddressValue
+  }): Promise<void> {
+    if (!this._blockchainClientProvider) {
+      return
+    }
+
+    const harborCommandAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'harborCommand',
+      chainId: params.chainId,
+    })
+
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+    const client = this._blockchainClientProvider.getBlockchainClient({ chainInfo })
+
+    const activeCommanders = (await client.readContract({
+      abi: HARBOR_COMMAND_ABI,
+      address: harborCommandAddress.value,
+      functionName: 'getActiveFleetCommanders',
+    })) as Address[]
+
+    const normalizedCommanders = activeCommanders.map((a) => a.toLowerCase())
+
+    if (!normalizedCommanders.includes(params.fromVault.toLowerCase())) {
+      throw new Error(
+        `fromVault ${params.fromVault} is not an active fleet commander on chain ${params.chainId}`,
+      )
+    }
+
+    if (!normalizedCommanders.includes(params.toVault.toLowerCase())) {
+      throw new Error(
+        `toVault ${params.toVault} is not an active fleet commander on chain ${params.chainId}`,
+      )
     }
   }
 
@@ -379,8 +553,9 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       amount: row.amount,
       slippage: row.slippage,
       intervalSeconds: row.intervalSeconds,
-      nextExecutionAtUnixTimestamp: Number(row.nextExecutionAt),
-      deadlineUnixTimestamp: Number(row.deadline),
+      nextExecutionAtUnixTimestamp: Number(row.nextExecutionAt ?? 0),
+      deadlineUnixTimestamp: row.deadline !== null ? Number(row.deadline) : undefined,
+      maxTrades: row.maxTrades,
       allowedVaultsRoot: row.allowedVaultsRoot as HexData,
       fromVaultProof: fromVaultProof as HexData[],
       toVaultProof: toVaultProof as HexData[],
@@ -392,6 +567,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       createdAt: Number(row.createdAt),
       updatedAt: Number(row.updatedAt),
       cancelledAt: row.cancelledAt ? Number(row.cancelledAt) : undefined,
+      pausedAt: row.pausedAt ? Number(row.pausedAt) : undefined,
     }
   }
 }

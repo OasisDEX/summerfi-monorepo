@@ -43,19 +43,25 @@ export interface ArmadaDcaOrders {
   cancelledAt: Int8 | null;
   chainId: number;
   createdAt: Int8;
-  deadline: string;
+  /** User-specified deadline; null means run until maxTrades is reached */
+  deadline: string | null;
   ensoRouterAddress: string;
   fromVault: string;
   fromVaultProof: Json;
   id: string;
   intervalSeconds: number;
-  nextExecutionAt: Int8;
+  /** Maximum number of trades before the order completes */
+  maxTrades: number;
+  /** Keeper-mutable: next scheduled execution time */
+  nextExecutionAt: Int8 | null;
+  pausedAt: Int8 | null;
   signature: string;
   slippage: string;
   status: ArmadaDcaOrderStatus;
   swapCalldata: string;
   toVault: string;
   toVaultProof: Json;
+  tradesExecuted: Generated<number>;
   updatedAt: Int8;
   userAddress: string;
   verifyingContractAddress: string;

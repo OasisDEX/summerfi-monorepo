@@ -189,6 +189,7 @@ export class ArmadaManager implements IArmadaManager {
       clientId: this._clientId,
       configProvider: this._configProvider,
       deploymentProvider: this._deploymentProvider,
+      blockchainClientProvider: this._blockchainClientProvider,
       summerProtocolDbProvider: params.summerProtocolDbProvider,
     })
   }

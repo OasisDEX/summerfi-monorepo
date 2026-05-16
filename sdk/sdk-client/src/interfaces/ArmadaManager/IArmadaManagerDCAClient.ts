@@ -16,10 +16,12 @@ export interface IArmadaManagerDCAClient {
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number
-    /** Unix timestamp of the next scheduled execution */
-    nextExecutionAtUnixTimestamp: number
-    /** Unix timestamp after which the order expires */
-    deadlineUnixTimestamp: number
+    /** Unix timestamp of the first scheduled execution */
+    firstExecutionUnixTimestamp: number
+    /** Unix timestamp after which the order stops executing (optional) */
+    deadlineUnixTimestamp?: number
+    /** Maximum number of trades to execute before the order completes */
+    maxTrades: number
   }): Promise<ArmadaDcaOrder>
 
   getBuyOrder(params: {
@@ -34,6 +36,20 @@ export interface IArmadaManagerDCAClient {
   }): Promise<ArmadaDcaOrder[]>
 
   cancelBuyOrder(params: {
+    orderId: string
+    userAddress: AddressValue
+    signedMessage: string
+    signature: HexData
+  }): Promise<ArmadaDcaOrder>
+
+  pauseBuyOrder(params: {
+    orderId: string
+    userAddress: AddressValue
+    signedMessage: string
+    signature: HexData
+  }): Promise<ArmadaDcaOrder>
+
+  resumeBuyOrder(params: {
     orderId: string
     userAddress: AddressValue
     signedMessage: string
