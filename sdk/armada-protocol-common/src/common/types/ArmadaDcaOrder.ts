@@ -29,4 +29,8 @@ export interface ArmadaDcaOrder {
   updatedAt: number
   cancelledAt?: number
   pausedAt?: number
+  /** Price ceiling — skip execution if the fromVault token price is above this value */
+  neverBuyAbove?: string
+  /** Price floor — skip execution if the toVault token price is below this value */
+  neverSellBelow?: string
 }

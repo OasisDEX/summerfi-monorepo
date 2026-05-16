@@ -54,9 +54,14 @@ export interface ArmadaDcaOrders {
   maxTrades: number;
   /** Keeper-mutable: next scheduled execution time */
   nextExecutionAt: Int8 | null;
+  /** Price ceiling — skip execution if token price is above this value */
+  neverBuyAbove: string | null;
+  /** Price floor — skip execution if token price is below this value */
+  neverSellBelow: string | null;
   pausedAt: Int8 | null;
   signature: string;
   slippage: string;
+  /** Keeper-mutable: order status */
   status: ArmadaDcaOrderStatus;
   swapCalldata: string;
   toVault: string;

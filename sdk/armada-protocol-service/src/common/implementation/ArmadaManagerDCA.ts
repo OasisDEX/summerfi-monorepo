@@ -6,10 +6,13 @@ import type {
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import type { IOracleManager } from '@summerfi/oracle-common'
 import {
   type AddressValue,
   type ChainId,
   type HexData,
+  Address,
+  Token,
   createTimeoutSignal,
   getChainInfoByChainId,
   isAddressValue,
@@ -19,7 +22,7 @@ import {
   keccak256,
   parseAbi,
   recoverMessageAddress,
-  type Address,
+  type Address as ViemAddress,
   type Hex,
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
@@ -29,9 +32,16 @@ import { ArmadaManagerShared } from './ArmadaManagerShared'
 const MIN_INTERVAL_SECONDS = 3600 // 1 hour
 const MAX_INTERVAL_SECONDS = 31536000 // 1 year
 const DEFAULT_DEADLINE_SECONDS = 315360000 // ~10 years
+const DUST_THRESHOLD_USD = 5 // minimum order amount in USD
 
 const HARBOR_COMMAND_ABI = parseAbi([
   'function getActiveFleetCommanders() view returns (address[])',
+])
+
+const ERC4626_ASSET_ABI = parseAbi(['function asset() view returns (address)'])
+const ERC20_METADATA_ABI = parseAbi([
+  'function decimals() view returns (uint8)',
+  'function symbol() view returns (string)',
 ])
 
 type DbOrderRow = {
@@ -58,6 +68,8 @@ type DbOrderRow = {
   updatedAt: string
   cancelledAt: string | null
   pausedAt: string | null
+  neverBuyAbove: string | null
+  neverSellBelow: string | null
 }
 
 /**
@@ -67,21 +79,24 @@ type DbOrderRow = {
 export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaManagerDCA {
   private _configProvider: IConfigurationProvider
   private _deploymentProvider: IDeploymentProvider
-  private _summerProtocolDbProvider?: SummerProtocolDbProvider
-  private _blockchainClientProvider?: IBlockchainClientProvider
+  private _summerProtocolDbProvider: SummerProtocolDbProvider
+  private _blockchainClientProvider: IBlockchainClientProvider
+  private _oracleManager: IOracleManager
 
   constructor(params: {
     clientId?: string
     configProvider: IConfigurationProvider
     deploymentProvider: IDeploymentProvider
-    summerProtocolDbProvider?: SummerProtocolDbProvider
-    blockchainClientProvider?: IBlockchainClientProvider
+    summerProtocolDbProvider: SummerProtocolDbProvider
+    blockchainClientProvider: IBlockchainClientProvider
+    oracleManager: IOracleManager
   }) {
     super({ clientId: params.clientId })
     this._configProvider = params.configProvider
     this._deploymentProvider = params.deploymentProvider
     this._summerProtocolDbProvider = params.summerProtocolDbProvider
     this._blockchainClientProvider = params.blockchainClientProvider
+    this._oracleManager = params.oracleManager
   }
 
   async createAndSaveBuyOrder(
@@ -96,6 +111,16 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     const amountNumber = Number(params.amount)
     if (isNaN(amountNumber) || amountNumber <= 0) {
       throw new Error('amount must be a positive number string')
+    }
+
+    // Validate amount is above dust threshold in USD
+    const amountUsd = await this._getUnderlyingAssetUsdValue({
+      chainId: params.chainId,
+      vaultAddress: params.fromVault,
+      amount: params.amount,
+    })
+    if (amountUsd < DUST_THRESHOLD_USD) {
+      throw new Error(`amount must be worth at least ${DUST_THRESHOLD_USD} USD`)
     }
 
     // Validate interval bounds
@@ -166,6 +191,8 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       nextExecutionAtUnixTimestamp: firstExecutionAt,
       deadlineUnixTimestamp: deadline,
       maxTrades: params.maxTrades,
+      neverBuyAbove: params.neverBuyAbove,
+      neverSellBelow: params.neverSellBelow,
       allowedVaultsRoot,
       fromVaultProof,
       toVaultProof,
@@ -193,6 +220,8 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         nextExecutionAt: BigInt(order.nextExecutionAtUnixTimestamp),
         deadline: deadline !== undefined ? String(deadline) : null,
         maxTrades: order.maxTrades,
+        neverBuyAbove: order.neverBuyAbove ?? null,
+        neverSellBelow: order.neverSellBelow ?? null,
         allowedVaultsRoot: order.allowedVaultsRoot,
         fromVaultProof: order.fromVaultProof,
         toVaultProof: order.toVaultProof,
@@ -359,6 +388,47 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     return order
   }
 
+  private async _getUnderlyingAssetUsdValue(params: {
+    chainId: ChainId
+    vaultAddress: AddressValue
+    amount: string
+  }): Promise<number> {
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+    const client = this._blockchainClientProvider.getBlockchainClient({ chainInfo })
+
+    const assetAddress = (await client.readContract({
+      abi: ERC4626_ASSET_ABI,
+      address: params.vaultAddress,
+      functionName: 'asset',
+    })) as `0x${string}`
+
+    const [decimals, symbol] = await Promise.all([
+      client.readContract({
+        abi: ERC20_METADATA_ABI,
+        address: assetAddress as AddressValue,
+        functionName: 'decimals',
+      }) as Promise<number>,
+      client.readContract({
+        abi: ERC20_METADATA_ABI,
+        address: assetAddress as AddressValue,
+        functionName: 'symbol',
+      }) as Promise<string>,
+    ])
+
+    const token = Token.createFrom({
+      chainInfo,
+      address: Address.createFromEthereum({ value: assetAddress }),
+      symbol,
+      name: symbol,
+      decimals,
+    })
+
+    const spotPriceInfo = await this._oracleManager.getSpotPrice({ baseToken: token })
+    const priceUsd = Number(spotPriceInfo.price.value)
+
+    return Number(params.amount) * priceUsd
+  }
+
   private async _verifyOrderSignature(params: {
     action: 'cancel' | 'pause' | 'resume'
     orderId: string
@@ -386,10 +456,6 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     fromVault: AddressValue
     toVault: AddressValue
   }): Promise<void> {
-    if (!this._blockchainClientProvider) {
-      return
-    }
-
     const harborCommandAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'harborCommand',
       chainId: params.chainId,
@@ -402,7 +468,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       abi: HARBOR_COMMAND_ABI,
       address: harborCommandAddress.value,
       functionName: 'getActiveFleetCommanders',
-    })) as Address[]
+    })) as ViemAddress[]
 
     const normalizedCommanders = activeCommanders.map((a) => a.toLowerCase())
 
@@ -425,7 +491,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     toVaultProof: HexData[]
   } {
     const leaves = [params.fromVault, params.toVault].map((addressValue) =>
-      keccak256(encodePacked(['address'], [addressValue as Address])),
+      keccak256(encodePacked(['address'], [addressValue as ViemAddress])),
     )
     const [fromLeaf, toLeaf] = leaves
     const [left, right] =
@@ -469,7 +535,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         name: 'AdmiralsQuarters',
         version: '1',
         chainId: params.chainId,
-        verifyingContract: params.verifyingContract as Address,
+        verifyingContract: params.verifyingContract as ViemAddress,
       },
       types: {
         RebalanceAuthorization: [
@@ -568,6 +634,8 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       updatedAt: Number(row.updatedAt),
       cancelledAt: row.cancelledAt ? Number(row.cancelledAt) : undefined,
       pausedAt: row.pausedAt ? Number(row.pausedAt) : undefined,
+      neverBuyAbove: row.neverBuyAbove ?? undefined,
+      neverSellBelow: row.neverSellBelow ?? undefined,
     }
   }
 }

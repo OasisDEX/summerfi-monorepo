@@ -14,6 +14,8 @@ export const createAndSaveBuyOrderHandler =
     firstExecutionUnixTimestamp,
     deadlineUnixTimestamp,
     maxTrades,
+    neverBuyAbove,
+    neverSellBelow,
   }: {
     userAddress: AddressValue
     chainId: ChainId
@@ -30,6 +32,10 @@ export const createAndSaveBuyOrderHandler =
     deadlineUnixTimestamp?: number
     /** Maximum number of trades to execute before the order completes */
     maxTrades: number
+    /** Price ceiling — skip execution if the fromVault token price is above this value (optional) */
+    neverBuyAbove?: string
+    /** Price floor — skip execution if the toVault token price is below this value (optional) */
+    neverSellBelow?: string
   }) => {
     return sdk.armada.dca.createAndSaveBuyOrder({
       userAddress,
@@ -42,5 +48,7 @@ export const createAndSaveBuyOrderHandler =
       firstExecutionUnixTimestamp,
       deadlineUnixTimestamp,
       maxTrades,
+      neverBuyAbove,
+      neverSellBelow,
     })
   }

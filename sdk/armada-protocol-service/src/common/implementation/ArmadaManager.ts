@@ -190,6 +190,7 @@ export class ArmadaManager implements IArmadaManager {
       configProvider: this._configProvider,
       deploymentProvider: this._deploymentProvider,
       blockchainClientProvider: this._blockchainClientProvider,
+      oracleManager: this._oracleManager,
       summerProtocolDbProvider: params.summerProtocolDbProvider,
     })
   }

@@ -15,6 +15,8 @@ export const createAndSaveBuyOrder = publicProcedure
       firstExecutionUnixTimestamp: z.number().int().positive(),
       deadlineUnixTimestamp: z.number().int().positive().optional(),
       maxTrades: z.number().int().positive(),
+      neverBuyAbove: z.string().optional(),
+      neverSellBelow: z.string().optional(),
     }),
   )
   .query(async (opts) => {
