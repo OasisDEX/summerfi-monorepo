@@ -1,4 +1,6 @@
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
+import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import type { IOracleManager } from '@summerfi/oracle-common'
 import type { AddressValue, ChainId, HexData } from '@summerfi/sdk-common'
 import { privateKeyToAccount } from 'viem/accounts'
 import { ArmadaManagerDCA } from '../src/common/implementation/ArmadaManagerDCA'
@@ -11,7 +13,9 @@ const ADMIRALS_QUARTERS = '0x3333333333333333333333333333333333333333' as Addres
 const ENSO_ROUTER = '0x4444444444444444444444444444444444444444' as AddressValue
 
 const TEST_SIGNER_PRIVATE_KEY =
-  '0x0000000000000000000000000000000000000000000000000000000000000000' as HexData
+  '0x0000000000000000000000000000000000000000000000000000000000000001' as HexData
+
+const UNDERLYING_ASSET = '0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' as AddressValue
 
 type DbOrderRow = {
   id: string
@@ -24,6 +28,8 @@ type DbOrderRow = {
   intervalSeconds: number
   nextExecutionAt: string
   deadline: string
+  maxTrades: number
+  tradesExecuted: number
   allowedVaultsRoot: string
   fromVaultProof: unknown
   toVaultProof: unknown
@@ -35,6 +41,35 @@ type DbOrderRow = {
   createdAt: string
   updatedAt: string
   cancelledAt: string | null
+  pausedAt: string | null
+  neverBuyAbove: string | null
+  neverSellBelow: string | null
+}
+
+function createBlockchainClientProviderMock(): IBlockchainClientProvider {
+  const readContract = jest.fn(({ functionName }: { functionName: string }) => {
+    switch (functionName) {
+      case 'getActiveFleetCommanders':
+        return [FROM_VAULT, TO_VAULT]
+      case 'asset':
+        return UNDERLYING_ASSET
+      case 'decimals':
+        return 6
+      case 'symbol':
+        return 'USDC'
+      default:
+        return null
+    }
+  })
+  return {
+    getBlockchainClient: jest.fn(() => ({ readContract })),
+  } as unknown as IBlockchainClientProvider
+}
+
+function createOracleManagerMock(): IOracleManager {
+  return {
+    getSpotPrice: jest.fn().mockResolvedValue({ price: { value: '10' } }),
+  } as unknown as IOracleManager
 }
 
 function createConfigProviderMock(): IConfigurationProvider {
@@ -60,6 +95,8 @@ function createManager(params: {
       getDeployedContractAddress: jest.fn(() => ({ value: ADMIRALS_QUARTERS })),
     } as never,
     summerProtocolDbProvider: params.summerProtocolDbProvider,
+    blockchainClientProvider: createBlockchainClientProviderMock(),
+    oracleManager: createOracleManagerMock(),
   })
 }
 
@@ -99,8 +136,9 @@ describe('ArmadaManagerDCA', () => {
       amount: '1',
       slippagePercentage: '0.5',
       intervalSeconds: 3600,
-      nextExecutionAtUnixTimestamp: 1_700_000_000,
+      firstExecutionUnixTimestamp: 1_700_000_000,
       deadlineUnixTimestamp: 1_700_003_600,
+      maxTrades: 10,
     })
 
     expect(order.id).toBeDefined()
@@ -160,6 +198,11 @@ describe('ArmadaManagerDCA', () => {
         createdAt: '1700000000',
         updatedAt: '1700000000',
         cancelledAt: null,
+        pausedAt: null,
+        maxTrades: 10,
+        tradesExecuted: 0,
+        neverBuyAbove: null,
+        neverSellBelow: null,
       },
     ]
 
@@ -222,6 +265,11 @@ describe('ArmadaManagerDCA', () => {
       createdAt: '1700000000',
       updatedAt: '1700000000',
       cancelledAt: null,
+      pausedAt: null,
+      maxTrades: 10,
+      tradesExecuted: 0,
+      neverBuyAbove: null,
+      neverSellBelow: null,
     }
 
     const selectQuery = {
