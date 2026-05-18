@@ -73,6 +73,7 @@ const EarnAllVaultsPage = async ({
     systemConfig,
     vaults,
     daoManagedVaultsList,
+    vaultsApyByNetworkMap,
   })
 
   const filteredWalletAssetsVaults = walletAddress

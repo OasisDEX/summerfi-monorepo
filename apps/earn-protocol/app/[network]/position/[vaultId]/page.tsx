@@ -137,12 +137,6 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     )
   }
 
-  const allVaultsWithConfig = decorateVaultsWithConfig({
-    vaults,
-    systemConfig,
-    daoManagedVaultsList,
-  })
-
   const [
     { apy30d: vaultBenchmarkApy30d, chartData: vaultBenchmark },
     fullArkInterestRatesMap,
@@ -173,12 +167,19 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       })),
     }),
     getCachedVaultsApy({
-      fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
+      fleets: vaults.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
   ])
+
+  const allVaultsWithConfig = decorateVaultsWithConfig({
+    vaults,
+    systemConfig,
+    daoManagedVaultsList,
+    vaultsApyByNetworkMap: vaultsApyRaw,
+  })
 
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: vaultWithConfig,

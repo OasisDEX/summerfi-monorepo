@@ -208,18 +208,19 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     daoManagedVaultsList,
   })
 
+  // Fetch APY data for all vaults
+  const vaultsApyByNetworkMap = await getCachedVaultsApy({
+    fleets: vaults.map(({ id, protocol: { network } }) => ({
+      fleetAddress: id,
+      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
+    })),
+  })
+
   const allVaultsWithConfig = decorateVaultsWithConfig({
     vaults,
     systemConfig,
     daoManagedVaultsList,
-  })
-
-  // Fetch APY data for all vaults
-  const vaultsApyByNetworkMap = await getCachedVaultsApy({
-    fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
-      fleetAddress: id,
-      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-    })),
+    vaultsApyByNetworkMap,
   })
 
   if (!positionForecastResponse.ok) {
