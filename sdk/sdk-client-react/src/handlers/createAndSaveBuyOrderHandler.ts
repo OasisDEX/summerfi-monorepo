@@ -1,5 +1,5 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import { type AddressValue, type ChainId } from '@summerfi/sdk-common'
+import { type AddressValue, type ChainId, type ITokenAmount } from '@summerfi/sdk-common'
 
 export const createAndSaveBuyOrderHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
@@ -22,7 +22,7 @@ export const createAndSaveBuyOrderHandler =
     fromVaultAddress: AddressValue
     toVaultAddress: AddressValue
     /** Full token amount (e.g. "1.5" for 1.5 USDC, not raw units) */
-    amount: string
+    amount: ITokenAmount
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number

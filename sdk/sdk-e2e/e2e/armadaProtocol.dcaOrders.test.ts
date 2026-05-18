@@ -8,6 +8,7 @@ import {
   Address,
   getChainInfoByChainId,
   type AddressValue,
+  ArmadaDcaOrderStatusEnum,
 } from '@summerfi/sdk-common'
 
 jest.setTimeout(300000)
@@ -43,8 +44,8 @@ describe('Armada Protocol - DCA Orders', () => {
       amount: amount,
       slippagePercentage: '0.5',
       intervalSeconds: 3600,
-      nextExecutionAtUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
-      deadlineUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
+      firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
+      maxTrades: 10,
     })
 
     assert(order.id, 'Expected order id to be defined')
@@ -60,7 +61,7 @@ describe('Armada Protocol - DCA Orders', () => {
     const activeOrders = await sdk.armada.dca.getBuyOrders({
       userAddress: userAddress,
       chainId,
-      status: 'active',
+      status: ArmadaDcaOrderStatusEnum.Active,
     })
 
     assert(activeOrders.find((activeOrder) => activeOrder.id === order.id))
@@ -78,6 +79,6 @@ describe('Armada Protocol - DCA Orders', () => {
       signature,
     })
 
-    assert.strictEqual(cancelledOrder.status, 'cancelled')
+    assert.strictEqual(cancelledOrder.status, ArmadaDcaOrderStatusEnum.Cancelled)
   })
 })
