@@ -2,6 +2,9 @@
   "name": "@summerfi/jest-config",
   "version": "0.0.1",
   "private": true,
+  "bin": {
+    "jest": "./bin/jest.cjs"
+  },
   "peerDependencies": {
     "@summerfi/typescript-config": "workspace:*"
   },
