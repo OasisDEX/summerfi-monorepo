@@ -47,7 +47,9 @@ export default {
 
         const { VPC_ID, SECURITY_GROUP_ID } = process.env
         if (!VPC_ID || !SECURITY_GROUP_ID) {
-          throw new Error('VPC_ID and SECURITY_GROUP_ID must be set for staging/production SDK deploys')
+          throw new Error(
+            'VPC_ID and SECURITY_GROUP_ID must be set for staging/production SDK deploys',
+          )
         }
 
         return {
