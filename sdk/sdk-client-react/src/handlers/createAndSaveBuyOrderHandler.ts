@@ -1,5 +1,6 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import { type AddressValue, type ChainId, type ITokenAmount } from '@summerfi/sdk-common'
+import type { Account, SignTypedDataParameters } from 'viem'
 
 export const createAndSaveBuyOrderHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
@@ -8,6 +9,8 @@ export const createAndSaveBuyOrderHandler =
     chainId,
     fromVaultAddress,
     toVaultAddress,
+    viemAccount,
+    signTypedData,
     amount,
     slippagePercentage,
     intervalSeconds,
@@ -21,6 +24,8 @@ export const createAndSaveBuyOrderHandler =
     chainId: ChainId
     fromVaultAddress: AddressValue
     toVaultAddress: AddressValue
+    viemAccount?: Account
+    signTypedData: (params: SignTypedDataParameters) => Promise<`0x${string}`>
     /** Full token amount (e.g. "1.5" for 1.5 USDC, not raw units) */
     amount: ITokenAmount
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
@@ -42,6 +47,8 @@ export const createAndSaveBuyOrderHandler =
       chainId,
       fromVault: fromVaultAddress,
       toVault: toVaultAddress,
+      viemAccount,
+      signTypedData,
       amount,
       slippagePercentage,
       intervalSeconds,

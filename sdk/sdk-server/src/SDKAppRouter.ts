@@ -139,6 +139,7 @@ import { getBuyOrders } from './armada-protocol-handlers/dca/getBuyOrders'
 import { cancelBuyOrder } from './armada-protocol-handlers/dca/cancelBuyOrder'
 import { pauseBuyOrder } from './armada-protocol-handlers/dca/pauseBuyOrder'
 import { resumeBuyOrder } from './armada-protocol-handlers/dca/resumeBuyOrder'
+import { getProtocolAddresses } from './armada-protocol-handlers/users/getProtocolAddresses'
 
 /**
  * Server
@@ -261,6 +262,7 @@ export const sdkAppRouter = router({
       getVaultRewardsMerklClaimTx: getVaultRewardsMerklClaimTx,
       getAuthorizeAsMerklRewardsOperatorTx: getAuthorizeAsMerklRewardsOperatorTx,
       getIsAuthorizedAsMerklRewardsOperator: getIsAuthorizedAsMerklRewardsOperator,
+      getProtocolAddresses: getProtocolAddresses,
     },
     admin: {
       rebalance: rebalance,

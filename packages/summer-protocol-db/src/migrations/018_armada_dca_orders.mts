@@ -12,7 +12,8 @@ export async function up(db: Kysely<never>): Promise<void> {
     .addColumn('slippage', 'varchar', (col) => col.notNull())
     .addColumn('interval_seconds', 'integer', (col) => col.notNull())
     .addColumn('next_execution_at', 'bigint', (col) => col.notNull())
-    .addColumn('deadline', 'varchar', (col) => col.notNull())
+    .addColumn('deadline', 'varchar')
+    .addColumn('max_trades', 'integer', (col) => col.notNull())
     .addColumn('allowed_vaults_root', 'varchar', (col) => col.notNull())
     .addColumn('from_vault_proof', 'jsonb', (col) => col.notNull())
     .addColumn('to_vault_proof', 'jsonb', (col) => col.notNull())
@@ -24,6 +25,10 @@ export async function up(db: Kysely<never>): Promise<void> {
     .addColumn('created_at', 'bigint', (col) => col.notNull())
     .addColumn('updated_at', 'bigint', (col) => col.notNull())
     .addColumn('cancelled_at', 'bigint')
+    .addColumn('paused_at', 'bigint')
+    .addColumn('trades_executed', 'integer', (col) => col.notNull().defaultTo(0))
+    .addColumn('never_buy_above', 'varchar')
+    .addColumn('never_sell_below', 'varchar')
     .execute()
 
   await db.schema

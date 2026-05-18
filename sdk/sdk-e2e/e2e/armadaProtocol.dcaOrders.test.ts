@@ -34,13 +34,16 @@ describe('Armada Protocol - DCA Orders', () => {
       name: 'USD Coin',
       decimals: 6,
     })
-    const amount = TokenAmount.createFrom({ token: usdcToken, amount: '1' })
+    const amount = TokenAmount.createFrom({ token: usdcToken, amount: '6' })
+    const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
 
     const order = await sdk.armada.dca.createAndSaveBuyOrder({
       userAddress: userAddress,
       chainId,
       fromVault: fromVault.fleetAddressValue,
       toVault: toVault.fleetAddressValue,
+      viemAccount: account,
+      signTypedData: account.signTypedData,
       amount: amount,
       slippagePercentage: '0.5',
       intervalSeconds: 3600,
@@ -67,7 +70,6 @@ describe('Armada Protocol - DCA Orders', () => {
     assert(activeOrders.find((activeOrder) => activeOrder.id === order.id))
 
     const signedMessage = `I want to cancel ${order.id}.`
-    const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
     const signature = await account.signMessage({
       message: signedMessage,
     })

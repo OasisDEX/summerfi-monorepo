@@ -21,15 +21,12 @@ import {
   parseAbi,
   recoverMessageAddress,
   type Address as ViemAddress,
-  type Hex,
 } from 'viem'
-import { privateKeyToAccount } from 'viem/accounts'
 import type { SummerProtocolDb, SummerProtocolDbProvider } from './dca/getDb'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 
 const MIN_INTERVAL_SECONDS = 3600 // 1 hour
 const MAX_INTERVAL_SECONDS = 31536000 // 1 year
-const DEFAULT_DEADLINE_SECONDS = 315360000 // ~10 years
 const DUST_THRESHOLD_USD = 5 // minimum order amount in USD
 
 const HARBOR_COMMAND_ABI = parseAbi([
@@ -54,6 +51,7 @@ type DbOrderRow = {
   nextExecutionAt: string | null
   deadline: string | null
   maxTrades: number
+  tradesExecuted: number
   allowedVaultsRoot: string
   fromVaultProof: unknown
   toVaultProof: unknown
@@ -151,21 +149,14 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       chainId: params.chainId,
     })
 
-    const signatureDeadline = deadline ?? now + DEFAULT_DEADLINE_SECONDS
-
-    const signature = await this._signRebalanceAuthorization({
-      chainId: params.chainId,
-      verifyingContract: verifyingContract.value,
-      allowedVaultsRoot,
-      deadline: signatureDeadline,
-    })
-
     const ensoRouterAddress = this._configProvider.getConfigurationItem({
       name: 'ENSO_ROUTER_ADDRESS',
     })
     if (!ensoRouterAddress || !isAddressValue(ensoRouterAddress)) {
       throw new Error('ENSO_ROUTER_ADDRESS is not configured or invalid')
     }
+
+    console.log('Fetching Enso swap calldata...')
 
     const swapCalldata = await this._fetchEnsoSwapCalldata({
       chainId: params.chainId,
@@ -189,13 +180,14 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       nextExecutionAtUnixTimestamp: firstExecutionAt,
       deadlineUnixTimestamp: deadline,
       maxTrades: params.maxTrades,
+      tradesExecuted: 0,
       neverBuyAbove: params.neverBuyAbove,
       neverSellBelow: params.neverSellBelow,
       allowedVaultsRoot,
       fromVaultProof,
       toVaultProof,
       swapCalldata,
-      signature,
+      signature: params.rebalanceAuthorizationSignature,
       ensoRouterAddress,
       verifyingContractAddress: verifyingContract.value,
       status: ArmadaDcaOrderStatusEnum.Active,
@@ -218,11 +210,12 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         nextExecutionAt: BigInt(order.nextExecutionAtUnixTimestamp),
         deadline: deadline !== undefined ? String(deadline) : null,
         maxTrades: order.maxTrades,
+        tradesExecuted: 0,
         neverBuyAbove: order.neverBuyAbove ?? null,
         neverSellBelow: order.neverSellBelow ?? null,
         allowedVaultsRoot: order.allowedVaultsRoot,
-        fromVaultProof: order.fromVaultProof,
-        toVaultProof: order.toVaultProof,
+        fromVaultProof: JSON.stringify(order.fromVaultProof),
+        toVaultProof: JSON.stringify(order.toVaultProof),
         swapCalldata: order.swapCalldata,
         signature: order.signature,
         ensoRouterAddress: order.ensoRouterAddress,
@@ -516,43 +509,6 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     return getDb()
   }
 
-  private async _signRebalanceAuthorization(params: {
-    chainId: number
-    verifyingContract: AddressValue
-    allowedVaultsRoot: HexData
-    deadline: number
-  }): Promise<HexData> {
-    const signerPrivateKey = this._configProvider.getConfigurationItem({
-      name: 'ARMADA_DCA_SIGNER_PRIVATE_KEY',
-    }) as Hex
-
-    if (!signerPrivateKey) {
-      throw new Error('ARMADA_DCA_SIGNER_PRIVATE_KEY is not configured')
-    }
-
-    const account = privateKeyToAccount(signerPrivateKey)
-
-    return account.signTypedData({
-      domain: {
-        name: 'AdmiralsQuarters',
-        version: '1',
-        chainId: params.chainId,
-        verifyingContract: params.verifyingContract as ViemAddress,
-      },
-      types: {
-        RebalanceAuthorization: [
-          { name: 'allowedVaultsRoot', type: 'bytes32' },
-          { name: 'deadline', type: 'uint256' },
-        ],
-      },
-      primaryType: 'RebalanceAuthorization',
-      message: {
-        allowedVaultsRoot: params.allowedVaultsRoot,
-        deadline: BigInt(params.deadline),
-      },
-    }) as Promise<HexData>
-  }
-
   private async _fetchEnsoSwapCalldata(params: {
     chainId: number
     fromAddress: AddressValue
@@ -609,8 +565,21 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   }
 
   private _mapDbOrderToOrder(row: DbOrderRow): IArmadaDcaOrder {
-    const fromVaultProof = Array.isArray(row.fromVaultProof) ? row.fromVaultProof : []
-    const toVaultProof = Array.isArray(row.toVaultProof) ? row.toVaultProof : []
+    const parseProof = (proof: unknown): unknown[] => {
+      if (typeof proof === 'string') {
+        try {
+          const parsed = JSON.parse(proof)
+          return Array.isArray(parsed) ? parsed : []
+        } catch {
+          return []
+        }
+      }
+
+      return Array.isArray(proof) ? proof : []
+    }
+
+    const fromVaultProof = parseProof(row.fromVaultProof)
+    const toVaultProof = parseProof(row.toVaultProof)
 
     return {
       id: row.id,
@@ -624,6 +593,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       nextExecutionAtUnixTimestamp: Number(row.nextExecutionAt ?? 0),
       deadlineUnixTimestamp: row.deadline !== null ? Number(row.deadline) : undefined,
       maxTrades: row.maxTrades,
+      tradesExecuted: row.tradesExecuted,
       allowedVaultsRoot: row.allowedVaultsRoot as HexData,
       fromVaultProof: fromVaultProof as HexData[],
       toVaultProof: toVaultProof as HexData[],

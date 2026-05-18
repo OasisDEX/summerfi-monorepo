@@ -18,6 +18,8 @@ export interface IArmadaDcaOrder {
   deadlineUnixTimestamp?: number
   /** Maximum number of trades to execute before the order completes */
   maxTrades: number
+  /** Number of trades that have been executed so far */
+  tradesExecuted: number
   allowedVaultsRoot: HexData
   fromVaultProof: HexData[]
   toVaultProof: HexData[]

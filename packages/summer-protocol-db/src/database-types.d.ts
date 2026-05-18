@@ -28,19 +28,24 @@ export interface ArmadaDcaOrders {
   cancelledAt: Int8 | null
   chainId: number
   createdAt: Int8
-  deadline: string
+  deadline: string | null
   ensoRouterAddress: string
   fromVault: string
   fromVaultProof: Json
   id: string
   intervalSeconds: number
+  maxTrades: number
+  neverBuyAbove: string | null
+  neverSellBelow: string | null
   nextExecutionAt: Int8
+  pausedAt: Int8 | null
   signature: string
   slippage: string
   status: string
   swapCalldata: string
   toVault: string
   toVaultProof: Json
+  tradesExecuted: Generated<number>
   updatedAt: Int8
   userAddress: string
   verifyingContractAddress: string

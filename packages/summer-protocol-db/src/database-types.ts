@@ -2,8 +2,6 @@ import type { ColumnType } from "kysely";
 
 export type ActionType = "deposit" | "withdraw";
 
-export type ArmadaDcaOrderStatus = "active" | "paused" | "cancelled" | "completed";
-
 export type CampaignType = "okx";
 
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
@@ -30,39 +28,26 @@ export type Numeric = ColumnType<string, number | string, number | string>;
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-export interface Campaigns {
-  campaign: CampaignType;
-  id: Generated<number>;
-  timestamp: Int8;
-  userAddress: string;
-}
-
 export interface ArmadaDcaOrders {
   allowedVaultsRoot: string;
   amount: string;
   cancelledAt: Int8 | null;
   chainId: number;
   createdAt: Int8;
-  /** User-specified deadline; null means run until maxTrades is reached */
   deadline: string | null;
   ensoRouterAddress: string;
   fromVault: string;
   fromVaultProof: Json;
   id: string;
   intervalSeconds: number;
-  /** Maximum number of trades before the order completes */
   maxTrades: number;
-  /** Keeper-mutable: next scheduled execution time */
-  nextExecutionAt: Int8 | null;
-  /** Price ceiling — skip execution if token price is above this value */
   neverBuyAbove: string | null;
-  /** Price floor — skip execution if token price is below this value */
   neverSellBelow: string | null;
+  nextExecutionAt: Int8;
   pausedAt: Int8 | null;
   signature: string;
   slippage: string;
-  /** Keeper-mutable: order status */
-  status: ArmadaDcaOrderStatus;
+  status: Generated<string>;
   swapCalldata: string;
   toVault: string;
   toVaultProof: Json;
@@ -70,7 +55,13 @@ export interface ArmadaDcaOrders {
   updatedAt: Int8;
   userAddress: string;
   verifyingContractAddress: string;
-  priceLimit?: string;
+}
+
+export interface Campaigns {
+  campaign: CampaignType;
+  id: Generated<number>;
+  timestamp: Int8;
+  userAddress: string;
 }
 
 export interface DailyFleetInterestRate {

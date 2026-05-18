@@ -6,6 +6,7 @@ import type {
   IArmadaDcaOrder,
   ITokenAmount,
 } from '@summerfi/sdk-common'
+import type { Account, SignTypedDataParameters } from 'viem'
 
 /**
  * @name IArmadaManagerDCAClient
@@ -17,6 +18,8 @@ export interface IArmadaManagerDCAClient {
     chainId: ChainId
     fromVault: AddressValue
     toVault: AddressValue
+    viemAccount?: Account
+    signTypedData: (params: SignTypedDataParameters) => Promise<`0x${string}`>
     amount: ITokenAmount
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string

@@ -45,7 +45,7 @@ type DbOrderRow = {
   slippage: string
   intervalSeconds: number
   nextExecutionAt: string
-  deadline: string
+  deadline: string | null
   maxTrades: number
   tradesExecuted: number
   allowedVaultsRoot: string
@@ -96,9 +96,6 @@ function createConfigProviderMock(): IConfigurationProvider {
       if (name === 'ENSO_ROUTER_ADDRESS') {
         return ENSO_ROUTER
       }
-      if (name === 'ARMADA_DCA_SIGNER_PRIVATE_KEY') {
-        return TEST_SIGNER_PRIVATE_KEY
-      }
       return undefined
     },
   } as IConfigurationProvider
@@ -136,13 +133,9 @@ describe('ArmadaManagerDCA', () => {
       summerProtocolDbProvider: dbProvider as unknown as () => Promise<SummerProtocolDb>,
     })
     const managerInternals = manager as unknown as {
-      _signRebalanceAuthorization: (params: unknown) => Promise<HexData>
       _fetchEnsoSwapCalldata: (params: unknown) => Promise<HexData>
     }
 
-    jest
-      .spyOn(managerInternals, '_signRebalanceAuthorization')
-      .mockResolvedValue('0x1234' as HexData)
     jest.spyOn(managerInternals, '_fetchEnsoSwapCalldata').mockResolvedValue('0xabcd' as HexData)
 
     const account = privateKeyToAccount(TEST_SIGNER_PRIVATE_KEY)
@@ -151,6 +144,7 @@ describe('ArmadaManagerDCA', () => {
       chainId: DEFAULT_CHAIN_ID,
       fromVault: FROM_VAULT,
       toVault: TO_VAULT,
+      rebalanceAuthorizationSignature: '0x1234' as HexData,
       amount: TEST_AMOUNT,
       slippagePercentage: '0.5',
       intervalSeconds: 3600,

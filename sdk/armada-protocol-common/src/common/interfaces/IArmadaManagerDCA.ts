@@ -21,6 +21,7 @@ export interface IArmadaManagerDCA {
     chainId: ChainId
     fromVault: AddressValue
     toVault: AddressValue
+    rebalanceAuthorizationSignature: HexData
     amount: ITokenAmount
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
