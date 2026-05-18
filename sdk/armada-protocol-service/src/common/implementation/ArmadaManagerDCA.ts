@@ -283,6 +283,10 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
 
     const existingOrder = await this._getExistingOrderOrThrow(params)
 
+    if (existingOrder.status === ArmadaDcaOrderStatusEnum.Cancelled) {
+      throw new Error('Order is already cancelled')
+    }
+
     const now = Math.floor(Date.now() / 1000)
     const db = await this._getDb()
 
