@@ -32,6 +32,8 @@ const SumrPage = async () => {
       const isEthVault = vault.assetToken.symbol === 'ETH' || vault.assetToken.symbol === 'WETH'
       const apy = Number(vault.apy?.value.toString() ?? '0')
 
+      if (apy < 0.0001 || apy > 100) return ranges
+
       if (isEthVault) {
         ranges.eth.minApy = Math.min(ranges.eth.minApy === 0 ? apy : ranges.eth.minApy, apy)
         ranges.eth.maxApy = Math.max(ranges.eth.maxApy, apy)

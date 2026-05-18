@@ -142,7 +142,7 @@ export const ACCOUNTS_WITH_HOURLY_SNAPSHOTS_QUERY = gql`
         amountOfReferred
       }
       referralTimestamp
-      positions(first: 50, orderBy: createdTimestamp) {
+      positions(first: 1000, orderBy: createdTimestamp) {
         id
         account {
           id
@@ -154,6 +154,8 @@ export const ACCOUNTS_WITH_HOURLY_SNAPSHOTS_QUERY = gql`
           }
         }
         createdTimestamp
+        inputTokenBalanceNormalizedInUSD
+        inputTokenBalanceNormalized
         referralData {
           id
           amountOfReferred
