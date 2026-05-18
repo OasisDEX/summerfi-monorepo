@@ -40,6 +40,10 @@ export const decorateVaultsWithConfig = ({
           `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
         ]
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (!vaultApyData) {
+        return true
+      }
       // filter out vaults with APY close to 0, as they are likely to be inactive or have incorrect data
       if (vaultApyData.apy > 0.0000001) {
         return true
