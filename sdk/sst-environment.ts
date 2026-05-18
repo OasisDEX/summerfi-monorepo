@@ -25,6 +25,7 @@ const envSchema = z.object({
   SUMMER_DEPLOYMENT_CONFIG: z.string().nonempty(),
   FUNCTIONS_API_URL: z.string().nonempty(),
   PARTNERS_API_URL: z.string().nonempty(),
+  EARN_PROTOCOL_DB_CONNECTION_STRING: z.string().nonempty(),
   SDK_RPC_GATEWAY: z.string().nonempty(),
   SDK_SUBGRAPH_CONFIG: z.json(),
   SDK_SUBGRAPH_CONFIG_INSTI: z.json(),
