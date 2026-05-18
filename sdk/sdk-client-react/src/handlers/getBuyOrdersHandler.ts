@@ -1,5 +1,5 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import { getChainInfoByChainId, type AddressValue, type ChainId, User } from '@summerfi/sdk-common'
+import type { ArmadaDcaOrderStatusEnum, ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import { type AddressValue, type ChainId } from '@summerfi/sdk-common'
 
 export const getBuyOrdersHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
@@ -10,13 +10,11 @@ export const getBuyOrdersHandler =
   }: {
     userAddress: AddressValue
     chainId: ChainId
-    status?: 'active' | 'cancelled'
+    status?: ArmadaDcaOrderStatusEnum
   }) => {
-    const user = User.createFromEthereum(chainId, userAddress)
-
     return sdk.armada.dca.getBuyOrders({
-      user,
-      chainInfo: getChainInfoByChainId(chainId),
+      chainId,
+      userAddress,
       status,
     })
   }

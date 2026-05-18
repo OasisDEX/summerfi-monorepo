@@ -18,6 +18,7 @@ import type { SummerProtocolDbProvider } from './dca/getDb'
  */
 export class ArmadaManagerFactory {
   public static newArmadaManager(params: {
+    clientId?: string
     configProvider: IConfigurationProvider
     deploymentProvider: IDeploymentProvider
     allowanceManager: IAllowanceManager
@@ -28,7 +29,6 @@ export class ArmadaManagerFactory {
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
-    clientId?: string
     summerProtocolDbProvider?: SummerProtocolDbProvider
   }): ArmadaManager {
     return new ArmadaManager(params)

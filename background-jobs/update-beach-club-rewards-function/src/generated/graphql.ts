@@ -328,6 +328,14 @@ export enum AdminAction {
   VaultTipRateChanged = 'VAULT_TIP_RATE_CHANGED'
 }
 
+/** Indicates whether the current, partially filled bucket should be included in the response. Defaults to `exclude` */
+export enum Aggregation_Current {
+  /** Exclude the current, partially filled bucket from the response */
+  Exclude = 'exclude',
+  /** Include the current, partially filled bucket in the response */
+  Include = 'include'
+}
+
 export enum Aggregation_Interval {
   Day = 'day',
   Hour = 'hour'
@@ -1173,16 +1181,12 @@ export type Ark_Filter = {
   requiresKeeperData_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokens?: InputMaybe<Array<Scalars['String']['input']>>;
   rewardTokens_?: InputMaybe<RewardToken_Filter>;
   rewardTokens_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -3131,28 +3135,20 @@ export type GovernanceStaking_Filter = {
   or?: InputMaybe<Array<InputMaybe<GovernanceStaking_Filter>>>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmountsPerOutputToken_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmountsPerOutputToken_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsFinish_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsFinish_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokens?: InputMaybe<Array<Scalars['String']['input']>>;
   rewardTokens_?: InputMaybe<Token_Filter>;
   rewardTokens_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -8586,16 +8582,12 @@ export type VaultDailySnapshot_Filter = {
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   stakedOutputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -9122,16 +9114,12 @@ export type VaultHourlySnapshot_Filter = {
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   stakedOutputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -9439,16 +9427,12 @@ export type VaultWeeklySnapshot_Filter = {
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   stakedOutputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -9645,10 +9629,8 @@ export type Vault_Filter = {
   apr365d_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   aprValues?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   aprValues_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  aprValues_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   aprValues_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   aprValues_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  aprValues_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   arksArray?: InputMaybe<Array<Scalars['String']['input']>>;
   arksArray_?: InputMaybe<Ark_Filter>;
   arksArray_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -9950,28 +9932,20 @@ export type Vault_Filter = {
   rebalances_?: InputMaybe<Rebalance_Filter>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmountsPerOutputToken_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmountsPerOutputToken_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsFinish_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsFinish_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokens?: InputMaybe<Array<Scalars['String']['input']>>;
   rewardTokens_?: InputMaybe<RewardToken_Filter>;
   rewardTokens_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -11091,7 +11065,7 @@ export type GetAccountsWithHourlySnapshotsQueryVariables = Exact<{
 }>;
 
 
-export type GetAccountsWithHourlySnapshotsQuery = { __typename?: 'Query', accounts: Array<{ __typename?: 'Account', id: string, referralTimestamp?: any | null, referralData?: { __typename?: 'ReferralData', id: string, amountOfReferred: any } | null, positions: Array<{ __typename?: 'Position', id: string, createdTimestamp: any, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', symbol: string } }, referralData?: { __typename?: 'ReferralData', id: string, amountOfReferred: any } | null, hourlySnapshots: Array<{ __typename?: 'PositionHourlySnapshot', id: string, timestamp: any, inputTokenBalanceNormalizedInUSD: any, inputTokenBalanceNormalized: any }> }> }> };
+export type GetAccountsWithHourlySnapshotsQuery = { __typename?: 'Query', accounts: Array<{ __typename?: 'Account', id: string, referralTimestamp?: any | null, referralData?: { __typename?: 'ReferralData', id: string, amountOfReferred: any } | null, positions: Array<{ __typename?: 'Position', id: string, createdTimestamp: any, inputTokenBalanceNormalizedInUSD: any, inputTokenBalanceNormalized: any, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', symbol: string } }, referralData?: { __typename?: 'ReferralData', id: string, amountOfReferred: any } | null, hourlySnapshots: Array<{ __typename?: 'PositionHourlySnapshot', id: string, timestamp: any, inputTokenBalanceNormalizedInUSD: any, inputTokenBalanceNormalized: any }> }> }> };
 
 export type GetPositionHourlySnapshotsQueryVariables = Exact<{
   timestampGt: Scalars['BigInt']['input'];

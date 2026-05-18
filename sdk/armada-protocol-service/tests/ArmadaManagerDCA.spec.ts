@@ -1,7 +1,12 @@
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
-import type { AddressValue, ChainId, HexData } from '@summerfi/sdk-common'
+import {
+  ArmadaDcaOrderStatusEnum,
+  type AddressValue,
+  type ChainId,
+  type HexData,
+} from '@summerfi/sdk-common'
 import { privateKeyToAccount } from 'viem/accounts'
 import { ArmadaManagerDCA } from '../src/common/implementation/ArmadaManagerDCA'
 import type { SummerProtocolDb } from '../src/common/implementation/dca/getDb'
@@ -136,8 +141,8 @@ describe('ArmadaManagerDCA', () => {
       amount: '1',
       slippagePercentage: '0.5',
       intervalSeconds: 3600,
-      firstExecutionUnixTimestamp: 1_700_000_000,
-      deadlineUnixTimestamp: 1_700_003_600,
+      firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
+      deadlineUnixTimestamp: Math.floor(Date.now() / 1000) + 7200,
       maxTrades: 10,
     })
 
@@ -227,7 +232,7 @@ describe('ArmadaManagerDCA', () => {
     const result = await manager.getBuyOrders({
       userAddress: rows[0].userAddress as AddressValue,
       chainId: DEFAULT_CHAIN_ID,
-      status: 'active',
+      status: ArmadaDcaOrderStatusEnum.Active,
     })
 
     expect(result).toHaveLength(1)
@@ -304,7 +309,7 @@ describe('ArmadaManagerDCA', () => {
       signature: signature as HexData,
     })
 
-    expect(result.status).toBe('cancelled')
+    expect(result.status).toBe(ArmadaDcaOrderStatusEnum.Cancelled)
     expect(updateQuery.set).toHaveBeenCalledTimes(1)
     expect(updateQuery.executeTakeFirstOrThrow).toHaveBeenCalledTimes(1)
   })
@@ -321,6 +326,6 @@ describe('ArmadaManagerDCA', () => {
         signedMessage: 'wrong-message',
         signature: '0x1234' as HexData,
       }),
-    ).rejects.toThrow('Invalid cancellation message')
+    ).rejects.toThrow('Invalid cancel message')
   })
 })

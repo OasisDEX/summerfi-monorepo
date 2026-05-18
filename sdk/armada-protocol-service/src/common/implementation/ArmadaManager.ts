@@ -70,6 +70,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** CONSTRUCTOR */
   constructor(params: {
+    clientId?: string
     configProvider: IConfigurationProvider
     deploymentProvider: IDeploymentProvider
     allowanceManager: IAllowanceManager
@@ -80,9 +81,9 @@ export class ArmadaManager implements IArmadaManager {
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
-    clientId?: string
     summerProtocolDbProvider?: SummerProtocolDbProvider
   }) {
+    this._clientId = params.clientId
     this._configProvider = params.configProvider
     this._deploymentProvider = params.deploymentProvider
     this._allowanceManager = params.allowanceManager
@@ -92,7 +93,6 @@ export class ArmadaManager implements IArmadaManager {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
-    this._clientId = params.clientId
 
     this._supportedChains = params.supportedChains
     const _hubChainId = this._configProvider.getConfigurationItem({

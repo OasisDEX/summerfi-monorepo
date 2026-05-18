@@ -1,8 +1,9 @@
-import type { AddressValue, ChainId, HexData } from '@summerfi/sdk-common'
+import type { ArmadaDcaOrderStatusEnum } from '../enums/ArmadaDcaOrderStatus'
+import type { AddressValue } from '../types/AddressValue'
+import type { ChainId } from '../types/ChainId'
+import type { HexData } from '../types/HexData'
 
-export type ArmadaDcaOrderStatus = 'active' | 'paused' | 'cancelled' | 'completed'
-
-export interface ArmadaDcaOrder {
+export interface IArmadaDcaOrder {
   id: string
   userAddress: AddressValue
   chainId: ChainId
@@ -24,7 +25,7 @@ export interface ArmadaDcaOrder {
   signature: HexData
   ensoRouterAddress: AddressValue
   verifyingContractAddress: AddressValue
-  status: ArmadaDcaOrderStatus
+  status: ArmadaDcaOrderStatusEnum
   createdAt: number
   updatedAt: number
   cancelledAt?: number

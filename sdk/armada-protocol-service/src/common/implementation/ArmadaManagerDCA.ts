@@ -1,8 +1,4 @@
-import type {
-  ArmadaDcaOrder,
-  ArmadaDcaOrderStatus,
-  IArmadaManagerDCA,
-} from '@summerfi/armada-protocol-common'
+import type { IArmadaManagerDCA } from '@summerfi/armada-protocol-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -11,7 +7,9 @@ import {
   type AddressValue,
   type ChainId,
   type HexData,
+  type IArmadaDcaOrder,
   Address,
+  ArmadaDcaOrderStatusEnum,
   Token,
   createTimeoutSignal,
   getChainInfoByChainId,
@@ -79,7 +77,7 @@ type DbOrderRow = {
 export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaManagerDCA {
   private _configProvider: IConfigurationProvider
   private _deploymentProvider: IDeploymentProvider
-  private _summerProtocolDbProvider: SummerProtocolDbProvider
+  private _summerProtocolDbProvider?: SummerProtocolDbProvider
   private _blockchainClientProvider: IBlockchainClientProvider
   private _oracleManager: IOracleManager
 
@@ -87,16 +85,16 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     clientId?: string
     configProvider: IConfigurationProvider
     deploymentProvider: IDeploymentProvider
-    summerProtocolDbProvider: SummerProtocolDbProvider
+    summerProtocolDbProvider?: SummerProtocolDbProvider
     blockchainClientProvider: IBlockchainClientProvider
     oracleManager: IOracleManager
   }) {
     super({ clientId: params.clientId })
     this._configProvider = params.configProvider
     this._deploymentProvider = params.deploymentProvider
-    this._summerProtocolDbProvider = params.summerProtocolDbProvider
     this._blockchainClientProvider = params.blockchainClientProvider
     this._oracleManager = params.oracleManager
+    this._summerProtocolDbProvider = params.summerProtocolDbProvider
   }
 
   async createAndSaveBuyOrder(
@@ -179,7 +177,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       slippage: String(Number(params.slippagePercentage) * 100),
     })
 
-    const order: ArmadaDcaOrder = {
+    const order: IArmadaDcaOrder = {
       id: orderId,
       userAddress: params.userAddress,
       chainId: params.chainId,
@@ -200,7 +198,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       signature,
       ensoRouterAddress,
       verifyingContractAddress: verifyingContract.value,
-      status: 'active',
+      status: ArmadaDcaOrderStatusEnum.Active,
       createdAt: now,
       updatedAt: now,
     }
@@ -291,7 +289,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     await db
       .updateTable('armadaDcaOrders')
       .set({
-        status: 'cancelled',
+        status: ArmadaDcaOrderStatusEnum.Cancelled,
         updatedAt: String(now),
         cancelledAt: String(now),
       })
@@ -301,7 +299,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
 
     return {
       ...existingOrder,
-      status: 'cancelled',
+      status: ArmadaDcaOrderStatusEnum.Cancelled,
       updatedAt: now,
       cancelledAt: now,
     }
@@ -326,7 +324,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     await db
       .updateTable('armadaDcaOrders')
       .set({
-        status: 'paused',
+        status: ArmadaDcaOrderStatusEnum.Paused,
         updatedAt: String(now),
         pausedAt: String(now),
       })
@@ -336,7 +334,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
 
     return {
       ...existingOrder,
-      status: 'paused',
+      status: ArmadaDcaOrderStatusEnum.Paused,
       updatedAt: now,
       pausedAt: now,
     }
@@ -361,7 +359,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     await db
       .updateTable('armadaDcaOrders')
       .set({
-        status: 'active',
+        status: ArmadaDcaOrderStatusEnum.Active,
         updatedAt: String(now),
         pausedAt: null,
       })
@@ -371,7 +369,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
 
     return {
       ...existingOrder,
-      status: 'active',
+      status: ArmadaDcaOrderStatusEnum.Active,
       updatedAt: now,
       pausedAt: undefined,
     }
@@ -380,7 +378,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   private async _getExistingOrderOrThrow(params: {
     orderId: string
     userAddress: AddressValue
-  }): Promise<ArmadaDcaOrder> {
+  }): Promise<IArmadaDcaOrder> {
     const order = await this.getBuyOrder(params)
     if (!order) {
       throw new Error(`DCA order not found: ${params.orderId}`)
@@ -606,7 +604,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     return calldata as HexData
   }
 
-  private _mapDbOrderToOrder(row: DbOrderRow): ArmadaDcaOrder {
+  private _mapDbOrderToOrder(row: DbOrderRow): IArmadaDcaOrder {
     const fromVaultProof = Array.isArray(row.fromVaultProof) ? row.fromVaultProof : []
     const toVaultProof = Array.isArray(row.toVaultProof) ? row.toVaultProof : []
 
@@ -629,7 +627,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       signature: row.signature as HexData,
       ensoRouterAddress: row.ensoRouterAddress as AddressValue,
       verifyingContractAddress: row.verifyingContractAddress as AddressValue,
-      status: row.status as ArmadaDcaOrderStatus,
+      status: row.status as ArmadaDcaOrderStatusEnum,
       createdAt: Number(row.createdAt),
       updatedAt: Number(row.updatedAt),
       cancelledAt: row.cancelledAt ? Number(row.cancelledAt) : undefined,

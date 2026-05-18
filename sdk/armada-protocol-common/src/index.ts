@@ -74,7 +74,6 @@ export {
   getDeploymentsJsonConfig,
 } from './deployments/index'
 export type { IArmadaManagerMerklRewards } from './common/interfaces/IArmadaManagerMerklRewards'
-export type { ArmadaDcaOrder, ArmadaDcaOrderStatus } from './common/types/ArmadaDcaOrder'
 export type {
   MerklReward,
   MerklRewardBreakdown,

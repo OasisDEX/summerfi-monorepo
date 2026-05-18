@@ -1,5 +1,10 @@
-import type { ArmadaDcaOrder, ArmadaDcaOrderStatus } from '@summerfi/armada-protocol-common'
-import type { AddressValue, ChainId, HexData } from '@summerfi/sdk-common'
+import type {
+  AddressValue,
+  ArmadaDcaOrderStatusEnum,
+  ChainId,
+  HexData,
+  IArmadaDcaOrder,
+} from '@summerfi/sdk-common'
 
 /**
  * @name IArmadaManagerDCAClient
@@ -26,37 +31,37 @@ export interface IArmadaManagerDCAClient {
     neverBuyAbove?: string
     /** Price floor — skip execution if the toVault token price is below this value (optional) */
     neverSellBelow?: string
-  }): Promise<ArmadaDcaOrder>
+  }): Promise<IArmadaDcaOrder>
 
   getBuyOrder(params: {
     orderId: string
     userAddress: AddressValue
-  }): Promise<ArmadaDcaOrder | undefined>
+  }): Promise<IArmadaDcaOrder | undefined>
 
   getBuyOrders(params: {
     userAddress: AddressValue
     chainId?: ChainId
-    status?: ArmadaDcaOrderStatus
-  }): Promise<ArmadaDcaOrder[]>
+    status?: ArmadaDcaOrderStatusEnum
+  }): Promise<IArmadaDcaOrder[]>
 
   cancelBuyOrder(params: {
     orderId: string
     userAddress: AddressValue
     signedMessage: string
     signature: HexData
-  }): Promise<ArmadaDcaOrder>
+  }): Promise<IArmadaDcaOrder>
 
   pauseBuyOrder(params: {
     orderId: string
     userAddress: AddressValue
     signedMessage: string
     signature: HexData
-  }): Promise<ArmadaDcaOrder>
+  }): Promise<IArmadaDcaOrder>
 
   resumeBuyOrder(params: {
     orderId: string
     userAddress: AddressValue
     signedMessage: string
     signature: HexData
-  }): Promise<ArmadaDcaOrder>
+  }): Promise<IArmadaDcaOrder>
 }

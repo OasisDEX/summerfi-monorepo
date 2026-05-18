@@ -1,4 +1,10 @@
-import { isAddressValue, isChainId, type AddressValue, type ChainId } from '@summerfi/sdk-common'
+import {
+  isAddressValue,
+  isChainId,
+  ArmadaDcaOrderStatusEnum,
+  type AddressValue,
+  type ChainId,
+} from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
@@ -7,7 +13,7 @@ export const getBuyOrders = publicProcedure
     z.object({
       userAddress: z.custom<AddressValue>(isAddressValue),
       chainId: z.custom<ChainId>(isChainId).optional(),
-      status: z.enum(['active', 'cancelled']).optional(),
+      status: z.nativeEnum(ArmadaDcaOrderStatusEnum).optional(),
     }),
   )
   .query(async (opts) => {
