@@ -48,29 +48,29 @@ export const decorateWithFleetConfig = (
           }
     })
     .filter(({ inputTokenBalance, depositCap, customFields, id }) => {
-      // Check if user has a position in this vault
       const hasUserPosition = userPositions?.some(
+        // Check if user has a position in this vault
         (position) => position.pool.id.fleetAddress.value.toLowerCase() === id.toLowerCase(),
       )
 
-      // Don't filter out vaults if user has a position
       if (hasUserPosition) {
+        // Don't filter out vaults if user has a position
         return true
       }
 
-      // Filter zero token vaults if feature is enabled
       if (systemConfig.features?.FilterZeroTokenVaults && inputTokenBalance <= 0) {
+        // Filter zero token vaults if feature is enabled
         return false
       }
 
-      // Filter zero deposit cap vaults
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (depositCap !== undefined && depositCap <= 0) {
+        // Filter zero deposit cap vaults
         return false
       }
 
-      // Filter disabled vaults
       if (customFields?.disabled) {
+        // Filter disabled vaults
         return false
       }
 
