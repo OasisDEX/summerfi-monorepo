@@ -60,7 +60,7 @@ jobs:
       EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }}
       VPC_ID: ${{ secrets.NEW_VPC_ID }}
       SECURITY_GROUP_ID: ${{ secrets.NEW_SECURITY_GROUP_ID }}
-      ENSO_ROUTER_ADDRESS: ${{ secrets.ENSO_ROUTER_ADDRESS }}
+      ENSO_ROUTER_ADDRESS: ${{ vars.ENSO_ROUTER_ADDRESS }}
 
     steps:
       - name: Send start notification to Discord
