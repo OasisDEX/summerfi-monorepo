@@ -21,6 +21,9 @@
       ],
       "@summerfi/blockchain-client-provider": [
         "node_modules/@summerfi/blockchain-client-provider/src/index.ts"
+      ],
+      "@summerfi/protocol-plugins-common": [
+        "node_modules/@summerfi/protocol-plugins-common/src/index.ts"
       ]
     }
   },

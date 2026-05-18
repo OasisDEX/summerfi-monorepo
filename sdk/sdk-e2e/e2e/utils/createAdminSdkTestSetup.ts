@@ -1,6 +1,6 @@
 import { makeAdminSDK } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
-import { SDKApiUrl, SharedConfig, TestClientIds, InstiTestConfigs } from './testConfig'
+import { SDKApiUrl, TestConfigAccounts, TestClientIds, InstiTestConfigs } from './testConfig'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 
 /**
@@ -33,7 +33,7 @@ export function createAdminSdkTestSetup(clientId: TestClientIds) {
     chainId: chainId,
     rpcUrl,
     senderAddressValue: userAddress.value,
-    signerPrivateKey: SharedConfig.testUserPrivateKey,
+    signerPrivateKey: TestConfigAccounts.testUserPrivateKey,
     simulateOnly: true,
   })
 
@@ -41,7 +41,7 @@ export function createAdminSdkTestSetup(clientId: TestClientIds) {
     chainId: chainId,
     rpcUrl,
     senderAddressValue: governorAddress.value,
-    signerPrivateKey: SharedConfig.testUserPrivateKey,
+    signerPrivateKey: TestConfigAccounts.testUserPrivateKey,
     simulateOnly: true,
   })
 

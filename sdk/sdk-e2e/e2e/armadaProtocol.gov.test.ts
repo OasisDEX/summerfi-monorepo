@@ -4,12 +4,12 @@ import assert from 'assert'
 
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { SharedConfig, TestConfigs, type TestConfigKey } from './utils/testConfig'
+import { TestConfigAccounts, TestConfigs, type TestConfigKey } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
 const simulateOnly = true
-const privateKey = SharedConfig.testUserPrivateKey
+const privateKey = TestConfigAccounts.testUserPrivateKey
 
 describe.skip('Armada Protocol Gov', () => {
   const sdk = createTestSdkInstance()
@@ -27,7 +27,9 @@ describe.skip('Armada Protocol Gov', () => {
       const chainConfig = TestConfigs[chainConfigKey]
       const chainInfo = getChainInfoByChainId(chainConfig.chainId)
       const rpcUrl = chainConfig.rpcUrl
-      const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
+      const userAddress = Address.createFromEthereum({
+        value: TestConfigAccounts.testUserAddressValue,
+      })
 
       if (!rpcUrl) {
         throw new Error('Missing fork url')
@@ -50,7 +52,9 @@ describe.skip('Armada Protocol Gov', () => {
     it('should check SUMR staked balance', async () => {
       const chainConfig = TestConfigs[chainConfigKey]
       const chainInfo = getChainInfoByChainId(chainConfig.chainId)
-      const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
+      const userAddress = Address.createFromEthereum({
+        value: TestConfigAccounts.testUserAddressValue,
+      })
 
       const user = User.createFrom({
         chainInfo,
@@ -69,7 +73,9 @@ describe.skip('Armada Protocol Gov', () => {
     it('should check SUMR delegate', async () => {
       const chainConfig = TestConfigs[chainConfigKey]
       const chainInfo = getChainInfoByChainId(chainConfig.chainId)
-      const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
+      const userAddress = Address.createFromEthereum({
+        value: TestConfigAccounts.testUserAddressValue,
+      })
 
       const user = User.createFrom({
         chainInfo,
@@ -88,7 +94,9 @@ describe.skip('Armada Protocol Gov', () => {
     it('should check SUMR votes', async () => {
       const chainConfig = TestConfigs[chainConfigKey]
       const chainInfo = getChainInfoByChainId(chainConfig.chainId)
-      const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
+      const userAddress = Address.createFromEthereum({
+        value: TestConfigAccounts.testUserAddressValue,
+      })
 
       const user = User.createFrom({
         chainInfo,
@@ -107,7 +115,9 @@ describe.skip('Armada Protocol Gov', () => {
     it('should check SUMR earned rewards', async () => {
       const chainConfig = TestConfigs[chainConfigKey]
       const chainInfo = getChainInfoByChainId(chainConfig.chainId)
-      const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
+      const userAddress = Address.createFromEthereum({
+        value: TestConfigAccounts.testUserAddressValue,
+      })
 
       const user = User.createFrom({
         chainInfo,
@@ -127,7 +137,9 @@ describe.skip('Armada Protocol Gov', () => {
       const chainConfig = TestConfigs[chainConfigKey]
       const chainInfo = getChainInfoByChainId(chainConfig.chainId)
       const rpcUrl = chainConfig.rpcUrl
-      const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
+      const userAddress = Address.createFromEthereum({
+        value: TestConfigAccounts.testUserAddressValue,
+      })
 
       const user = User.createFrom({
         chainInfo,
@@ -171,7 +183,9 @@ describe.skip('Armada Protocol Gov', () => {
       const chainConfig = TestConfigs[chainConfigKey]
       const chainInfo = getChainInfoByChainId(chainConfig.chainId)
       const rpcUrl = chainConfig.rpcUrl
-      const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
+      const userAddress = Address.createFromEthereum({
+        value: TestConfigAccounts.testUserAddressValue,
+      })
 
       const user = User.createFrom({
         chainInfo,
@@ -220,7 +234,9 @@ describe.skip('Armada Protocol Gov', () => {
       const chainConfig = TestConfigs[chainConfigKey]
       const chainInfo = getChainInfoByChainId(chainConfig.chainId)
       const rpcUrl = chainConfig.rpcUrl
-      const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
+      const userAddress = Address.createFromEthereum({
+        value: TestConfigAccounts.testUserAddressValue,
+      })
 
       const user = User.createFrom({
         chainInfo,
@@ -273,7 +289,9 @@ describe.skip('Armada Protocol Gov', () => {
       const chainConfig = TestConfigs[chainConfigKey]
       const chainInfo = getChainInfoByChainId(chainConfig.chainId)
       const rpcUrl = chainConfig.rpcUrl
-      const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
+      const userAddress = Address.createFromEthereum({
+        value: TestConfigAccounts.testUserAddressValue,
+      })
 
       const user = User.createFrom({
         chainInfo,

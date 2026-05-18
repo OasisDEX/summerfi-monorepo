@@ -10,6 +10,7 @@ import { ArmadaManager } from './ArmadaManager'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { IChainInfo } from '@summerfi/sdk-common'
+import type { SummerProtocolDbProvider } from './dca/getDb'
 
 /**
  * @name ArmadaManagerFactory
@@ -17,6 +18,7 @@ import type { IChainInfo } from '@summerfi/sdk-common'
  */
 export class ArmadaManagerFactory {
   public static newArmadaManager(params: {
+    clientId?: string
     configProvider: IConfigurationProvider
     deploymentProvider: IDeploymentProvider
     allowanceManager: IAllowanceManager
@@ -27,7 +29,7 @@ export class ArmadaManagerFactory {
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
-    clientId?: string
+    summerProtocolDbProvider?: SummerProtocolDbProvider
   }): ArmadaManager {
     return new ArmadaManager(params)
   }

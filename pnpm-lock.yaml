@@ -2578,6 +2578,9 @@ importers:
       '@summerfi/subgraph-manager-service':
         specifier: workspace:*
         version: link:../subgraph-manager-service
+      '@summerfi/summer-protocol-db':
+        specifier: workspace:*
+        version: link:../../packages/summer-protocol-db
       '@summerfi/swap-common':
         specifier: workspace:*
         version: link:../swap-common

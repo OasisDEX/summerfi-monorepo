@@ -1,6 +1,7 @@
 import { Function, type Api, type Bucket, type Stack } from 'sst/constructs'
 import { environmentVariables } from './sst-environment'
 import { LoggingFormat } from 'aws-cdk-lib/aws-lambda'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
 
 export const createBackend = ({
   stack,
@@ -9,6 +10,7 @@ export const createBackend = ({
   deployedVersion,
   sdkGateway,
   sdkBucket,
+  vpc,
 }: {
   stack: Stack
   production: boolean
@@ -16,6 +18,10 @@ export const createBackend = ({
   deployedVersion: string
   sdkGateway: Api
   sdkBucket: Bucket
+  vpc?: {
+    vpc: ec2.IVpc
+    securityGroup: ec2.ISecurityGroup
+  } | null
 }) => {
   // check with regexp if version is in format X.Y.Z
   if (!/^\d+\.\d+\.\d+$/.test(deployedVersion)) {
@@ -41,10 +47,17 @@ export const createBackend = ({
     currentVersionOptions: {
       provisionedConcurrentExecutions: production ? 10 : undefined,
     },
+    ...(vpc && {
+      vpc: vpc.vpc,
+      vpcSubnets: {
+        subnets: [...vpc.vpc.privateSubnets],
+      },
+      securityGroups: [vpc.securityGroup],
+    }),
   })
   sdkBackend.bind([sdkBucket])
 
-  // Create a separate Lambda for OPTIONS
+  // OPTIONS only serves CORS preflight and doesn't need DB/VPC access.
   const optionsHandler = new Function(stack, `SdkOptionsHandlerV${nameSuffix}`, {
     handler: 'sdk-router-function/src/options.handler',
     runtime: 'nodejs22.x',

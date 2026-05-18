@@ -12,7 +12,7 @@ import {
 
 import assert from 'assert'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
-import { FleetAddresses, RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
+import { FleetAddresses, RpcUrls, SDKApiUrl, TestConfigAccounts } from './utils/testConfig'
 import { makeSDK } from '@summerfi/sdk-client'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 
@@ -53,19 +53,19 @@ describe('Armada Protocol - Switch Enso', () => {
         apiDomainUrl: SDKApiUrl,
       })
       const userAddress = Address.createFromEthereum({
-        value: SharedConfig.testUserAddressValue,
+        value: TestConfigAccounts.testUserAddressValue,
       })
 
       const userSendTxTool = createSendTransactionTool({
         chainId: chainId,
         rpcUrl: RpcUrls[chainId],
         senderAddressValue: userAddress.value,
-        signerPrivateKey: SharedConfig.testUserPrivateKey,
+        signerPrivateKey: TestConfigAccounts.testUserPrivateKey,
         simulateOnly,
       })
 
       const chainInfo = getChainInfoByChainId(chainId)
-      const user = User.createFromEthereum(chainId, SharedConfig.testUserAddressValue)
+      const user = User.createFromEthereum(chainId, TestConfigAccounts.testUserAddressValue)
 
       const sourceVaultId = ArmadaVaultId.createFrom({
         chainInfo,
@@ -78,7 +78,7 @@ describe('Armada Protocol - Switch Enso', () => {
 
       console.log(
         `[Vault Switch Enso] ${sourceFleetAddress} => ${destinationFleetAddress} on chain ${chainId}\n` +
-          `User: ${SharedConfig.testUserAddressValue}`,
+          `User: ${TestConfigAccounts.testUserAddressValue}`,
       )
 
       // Get source position to determine switch amount

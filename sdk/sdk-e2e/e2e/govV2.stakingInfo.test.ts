@@ -1,7 +1,7 @@
 import { User, Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
-import { SharedConfig, TestConfigs, type TestConfigKey } from './utils/testConfig'
+import { TestConfigAccounts, TestConfigs, type TestConfigKey } from './utils/testConfig'
 import { formatSumr } from './utils/stringifiers'
 import { SECONDS_PER_DAY } from './utils/constants'
 
@@ -21,7 +21,9 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
     const { testConfigKey: chainConfigKey } = scenario
     const chainConfig = TestConfigs[chainConfigKey]
     const chainInfo = getChainInfoByChainId(chainConfig.chainId)
-    const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
+    const userAddress = Address.createFromEthereum({
+      value: TestConfigAccounts.testUserAddressValue,
+    })
     const user = User.createFromEthereum(chainInfo.chainId, userAddress.value)
 
     it('should get staking buckets info', async () => {

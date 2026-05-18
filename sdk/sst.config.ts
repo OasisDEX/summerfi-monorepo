@@ -5,6 +5,7 @@ import { version as clientPkgVersion } from './sdk-client/bundle/package.json'
 import { createBackend } from './create-backend'
 import { Api, Bucket } from 'sst/constructs'
 import { RemovalPolicy } from 'aws-cdk-lib'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import { config } from '@dotenvx/dotenvx'
 
 config({ path: ['../.env', '.env'], override: true, debug: false, ignore: ['MISSING_ENV_FILE'] })
@@ -37,6 +38,25 @@ export default {
       // helpers
       const persistent = isPersistentStage(app.stage)
       const production = isProductionStage(app.stage)
+      const attachDbVpc = app.stage === 'staging' || app.stage === 'production'
+
+      const vpc = (() => {
+        if (!attachDbVpc) {
+          return null
+        }
+
+        const { VPC_ID, SECURITY_GROUP_ID } = process.env
+        if (!VPC_ID || !SECURITY_GROUP_ID) {
+          throw new Error(
+            'VPC_ID and SECURITY_GROUP_ID must be set for staging/production SDK deploys',
+          )
+        }
+
+        return {
+          vpc: ec2.Vpc.fromLookup(stack, 'VPC', { vpcId: VPC_ID }),
+          securityGroup: ec2.SecurityGroup.fromSecurityGroupId(stack, 'SG', SECURITY_GROUP_ID),
+        }
+      })()
 
       const deployedVersions = Object.values(sdkDeployedVersionsMap)
 
@@ -72,6 +92,7 @@ export default {
             persistent,
             sdkGateway,
             sdkBucket,
+            vpc,
           })
           deployedPaths.push(url)
         } catch (error) {
