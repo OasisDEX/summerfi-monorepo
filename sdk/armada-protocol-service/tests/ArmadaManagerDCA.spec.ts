@@ -6,6 +6,10 @@ import {
   type AddressValue,
   type ChainId,
   type HexData,
+  Token,
+  TokenAmount,
+  Address,
+  getChainInfoByChainId,
 } from '@summerfi/sdk-common'
 import { privateKeyToAccount } from 'viem/accounts'
 import { ArmadaManagerDCA } from '../src/common/implementation/ArmadaManagerDCA'
@@ -21,6 +25,15 @@ const TEST_SIGNER_PRIVATE_KEY =
   '0x0000000000000000000000000000000000000000000000000000000000000001' as HexData
 
 const UNDERLYING_ASSET = '0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' as AddressValue
+
+const USDC_TOKEN = Token.createFrom({
+  chainInfo: getChainInfoByChainId(DEFAULT_CHAIN_ID),
+  address: Address.createFromEthereum({ value: UNDERLYING_ASSET }),
+  symbol: 'USDC',
+  name: 'USD Coin',
+  decimals: 6,
+})
+const TEST_AMOUNT = TokenAmount.createFrom({ token: USDC_TOKEN, amount: '1' })
 
 type DbOrderRow = {
   id: string
@@ -138,11 +151,10 @@ describe('ArmadaManagerDCA', () => {
       chainId: DEFAULT_CHAIN_ID,
       fromVault: FROM_VAULT,
       toVault: TO_VAULT,
-      amount: '1',
+      amount: TEST_AMOUNT,
       slippagePercentage: '0.5',
       intervalSeconds: 3600,
       firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
-      deadlineUnixTimestamp: Math.floor(Date.now() / 1000) + 7200,
       maxTrades: 10,
     })
 

@@ -106,16 +106,16 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     const orderId = crypto.randomUUID()
 
     // Validate amount is a positive decimal string
-    const amountNumber = Number(params.amount)
-    if (isNaN(amountNumber) || amountNumber <= 0) {
-      throw new Error('amount must be a positive number string')
+    const amountRaw = params.amount.toSolidityValue()
+    if (amountRaw <= 0) {
+      throw new Error('amount must be a positive number')
     }
 
     // Validate amount is above dust threshold in USD
     const amountUsd = await this._getUnderlyingAssetUsdValue({
       chainId: params.chainId,
       vaultAddress: params.fromVault,
-      amount: params.amount,
+      amount: params.amount.amount,
     })
     if (amountUsd < DUST_THRESHOLD_USD) {
       throw new Error(`amount must be worth at least ${DUST_THRESHOLD_USD} USD`)
@@ -173,7 +173,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       ensoRouterAddress,
       tokenIn: params.fromVault,
       tokenOut: params.toVault,
-      amountIn: params.amount,
+      amountIn: amountRaw,
       slippage: String(Number(params.slippagePercentage) * 100),
     })
 
@@ -183,7 +183,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       chainId: params.chainId,
       fromVault: params.fromVault,
       toVault: params.toVault,
-      amount: params.amount,
+      amount: amountRaw.toString(),
       slippage: params.slippagePercentage,
       intervalSeconds: params.intervalSeconds,
       nextExecutionAtUnixTimestamp: firstExecutionAt,
@@ -559,7 +559,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     ensoRouterAddress: AddressValue
     tokenIn: AddressValue
     tokenOut: AddressValue
-    amountIn: string
+    amountIn: bigint
     slippage: string
   }): Promise<HexData> {
     const ensoApiKey = this._configProvider.getConfigurationItem({
@@ -580,7 +580,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       receiver: params.fromAddress,
       tokenIn: params.tokenIn,
       tokenOut: params.tokenOut,
-      amountIn: params.amountIn,
+      amountIn: params.amountIn.toString(),
       slippage: params.slippage,
       routingStrategy: 'router',
       router: params.ensoRouterAddress,

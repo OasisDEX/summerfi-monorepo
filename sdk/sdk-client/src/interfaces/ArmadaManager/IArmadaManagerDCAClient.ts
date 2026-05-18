@@ -4,6 +4,7 @@ import type {
   ChainId,
   HexData,
   IArmadaDcaOrder,
+  ITokenAmount,
 } from '@summerfi/sdk-common'
 
 /**
@@ -16,8 +17,7 @@ export interface IArmadaManagerDCAClient {
     chainId: ChainId
     fromVault: AddressValue
     toVault: AddressValue
-    /** Full token amount (e.g. "1.5" for 1.5 USDC, not raw units) */
-    amount: string
+    amount: ITokenAmount
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number

@@ -2,6 +2,13 @@ import assert from 'assert'
 import { TestConfigAccounts, TestConfigs as TestConfigFleets } from './utils/testConfig'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { privateKeyToAccount } from 'viem/accounts'
+import {
+  Token,
+  TokenAmount,
+  Address,
+  getChainInfoByChainId,
+  type AddressValue,
+} from '@summerfi/sdk-common'
 
 jest.setTimeout(300000)
 
@@ -17,12 +24,23 @@ describe('Armada Protocol - DCA Orders', () => {
     const toVault = TestConfigFleets.BaseWETH
     const userAddress = TestConfigAccounts.testUserAddressValue
 
+    const usdcToken = Token.createFrom({
+      chainInfo: getChainInfoByChainId(chainId),
+      address: Address.createFromEthereum({
+        value: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as AddressValue,
+      }),
+      symbol: 'USDC',
+      name: 'USD Coin',
+      decimals: 6,
+    })
+    const amount = TokenAmount.createFrom({ token: usdcToken, amount: '1' })
+
     const order = await sdk.armada.dca.createAndSaveBuyOrder({
       userAddress: userAddress,
       chainId,
       fromVault: fromVault.fleetAddressValue,
       toVault: toVault.fleetAddressValue,
-      amount: '1',
+      amount: amount,
       slippagePercentage: '0.5',
       intervalSeconds: 3600,
       nextExecutionAtUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
