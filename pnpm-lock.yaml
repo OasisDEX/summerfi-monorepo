@@ -2337,8 +2337,8 @@ importers:
         specifier: 2.48.5
         version: 2.48.5(typescript@5.9.3)
       viem:
-        specifier: 2.43.5
-        version: 2.43.5(typescript@5.9.3)(zod@3.25.61)
+        specifier: 2.47.1
+        version: 2.47.1(typescript@5.9.3)(zod@3.25.61)
       zod:
         specifier: 3.25.61
         version: 3.25.61

@@ -14,6 +14,7 @@ import {
   type SDKVaultishType,
   type SingleSourceChartData,
 } from '@summerfi/app-types'
+import { type IArmadaDcaOrder } from '@summerfi/sdk-common'
 
 import {
   emptyClaimableRewards,
@@ -50,6 +51,7 @@ interface PortfolioPageViewProps {
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
+  dcaOrders: IArmadaDcaOrder[]
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -59,7 +61,11 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
   rewardTokenPrices,
+  dcaOrders,
 }) => {
+  // eslint-disable-next-line no-console
+  console.log('dcaOrders', dcaOrders)
+
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
   const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()

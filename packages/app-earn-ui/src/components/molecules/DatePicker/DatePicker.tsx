@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, useEffect, useId, useRef, useState } from 'react'
-import { type DateRange, DayPicker, type DayPickerProps } from 'react-day-picker'
+import { DayPicker } from 'react-day-picker'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 
@@ -11,23 +11,23 @@ dayjs.extend(customParseFormat)
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Input } from '@/components/atoms/Input/Input'
-import { Text } from '@/components/atoms/Text/Text'
 import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer'
 
-import styles from './DateRangePicker.module.css'
+import styles from './DatePicker.module.css'
 
-type DateRangePickerProps = DayPickerProps & {
+type DatePickerProps = {
   isMobile: boolean
-  onChange: (date: DateRange) => void
+  onChange: (date: Date | undefined) => void
+  value?: Date
 }
 
-export const DateRangePicker: FC<DateRangePickerProps> = ({ isMobile, onChange }) => {
+export const DatePicker: FC<DatePickerProps> = ({ isMobile, onChange, value }) => {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const dialogId = useId()
   const headerId = useId()
 
   const [month, setMonth] = useState(new Date())
-  const [selectedDate, setSelectedDate] = useState<DateRange | undefined>(undefined)
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [inputValue, setInputValue] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -40,108 +40,89 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({ isMobile, onChange }
       }
     }
 
-    if (!dialogRef.current) return
-    if (isDialogOpen) {
-      // Don't use showModal() to allow click outside to close
-      dialogRef.current.show()
-      document.addEventListener('mousedown', handleClickOutside)
-    } else {
-      dialogRef.current.close()
+    if (dialogRef.current) {
+      if (isDialogOpen) {
+        dialogRef.current.show()
+        document.addEventListener('mousedown', handleClickOutside)
+      } else {
+        dialogRef.current.close()
+      }
     }
 
-    // eslint-disable-next-line consistent-return
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isDialogOpen])
 
-  const handleDayPickerSelect = (date: DateRange | undefined) => {
+  useEffect(() => {
+    setSelectedDate(value)
+    setInputValue(value ? dayjs(value).format('DD/MM/YYYY') : '')
+  }, [value])
+
+  const handleDayPickerSelect = (date: Date | undefined) => {
     if (!date) {
       setInputValue('')
       setSelectedDate(undefined)
+      onChange(undefined)
 
       return
     }
 
-    // Handle range mode
     setSelectedDate(date)
     onChange(date)
-    const formattedFrom = dayjs(date.from).format('DD/MM/YYYY')
-    const formattedTo = dayjs(date.to).format('DD/MM/YYYY')
-    const rangeText =
-      formattedFrom === formattedTo ? formattedFrom : `${formattedFrom} - ${formattedTo}`
-
-    setInputValue(rangeText)
+    setInputValue(dayjs(date).format('DD/MM/YYYY'))
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
 
-    // Only allow digits (0-9), forward slashes (/), spaces, and hyphens (-)
-    const allowedPattern = /^[0-9/\s-]*$/u
-
-    if (!allowedPattern.test(newValue)) {
+    if (!/^[0-9/]*$/u.test(newValue)) {
       return
     }
 
     setInputValue(newValue)
 
-    // Check if it's a range (contains " - ")
-    if (newValue.includes(' - ')) {
-      const [fromStr, toStr] = newValue.split(' - ')
-      const parsedFrom = dayjs(fromStr, 'DD/MM/YYYY')
-      const parsedTo = dayjs(toStr, 'DD/MM/YYYY')
+    if (newValue === '') {
+      setSelectedDate(undefined)
+      onChange(undefined)
 
-      if (parsedFrom.isValid() && parsedTo.isValid()) {
-        const dateRange = { from: parsedFrom.toDate(), to: parsedTo.toDate() }
-
-        setSelectedDate(dateRange)
-        onChange(dateRange)
-        setMonth(parsedFrom.toDate())
-      } else {
-        setSelectedDate(undefined)
-      }
-    } else {
-      // Single date
-      const parsedDate = dayjs(newValue, 'DD/MM/YYYY')
-
-      if (parsedDate.isValid()) {
-        const dateRange = { from: parsedDate.toDate(), to: parsedDate.toDate() }
-
-        setSelectedDate(dateRange)
-        onChange(dateRange)
-        setMonth(parsedDate.toDate())
-      } else {
-        setSelectedDate(undefined)
-      }
+      return
     }
+
+    const parsedDate = dayjs(newValue, 'DD/MM/YYYY')
+
+    if (parsedDate.isValid()) {
+      const date = parsedDate.toDate()
+
+      setSelectedDate(date)
+      onChange(date)
+      setMonth(date)
+
+      return
+    }
+
+    setSelectedDate(undefined)
   }
 
   return (
     <div className={styles.datePickerContainer}>
-      <label htmlFor="date-input">
-        <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-neutral-40)' }}>
-          Pick a date:
-        </Text>
-      </label>
       <div className={styles.datePickerInputContainer}>
         <Input
           style={{ fontSize: 'inherit' }}
           id="date-input"
           type="text"
           value={inputValue}
-          placeholder="DD/MM/YYYY - DD/MM/YYYY"
+          placeholder="DD/MM/YYYY"
           onChange={handleInputChange}
-          variant="withBorder"
-          className={styles.datePickerInput}
-        />{' '}
+          variant="dark"
+        />
         <button
           style={{ fontSize: 'inherit' }}
           onClick={toggleDialog}
           aria-controls="dialog"
           aria-haspopup="dialog"
           aria-expanded={isDialogOpen}
-          aria-label="Open calendar to choose booking date"
+          aria-label="Open calendar to choose date"
           className={styles.datePickerButton}
         >
           <Icon
@@ -161,7 +142,7 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({ isMobile, onChange }
               month={month}
               onMonthChange={setMonth}
               autoFocus
-              mode="range"
+              mode="single"
               selected={selectedDate}
               onSelect={handleDayPickerSelect}
               className={styles.datePicker}
@@ -183,7 +164,7 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({ isMobile, onChange }
             month={month}
             onMonthChange={setMonth}
             autoFocus
-            mode="range"
+            mode="single"
             selected={selectedDate}
             onSelect={handleDayPickerSelect}
             className={styles.datePicker}

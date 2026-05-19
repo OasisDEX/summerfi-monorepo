@@ -24,6 +24,7 @@ interface DropdownProps {
   asPill?: boolean
   asSmallPill?: boolean
   asCard?: boolean
+  noArrow?: boolean
   withSearch?: boolean
   inputPlaceholder?: string
   isDisabled?: boolean
@@ -44,6 +45,7 @@ export const Dropdown: FC<DropdownProps> = ({
   asPill,
   asSmallPill,
   asCard,
+  noArrow,
   withSearch,
   inputPlaceholder,
   isDisabled,
@@ -155,7 +157,7 @@ export const Dropdown: FC<DropdownProps> = ({
         onMouseLeave={() => setIsHover(false)}
       >
         {trigger ? trigger({ isOpen, isDisabled, dropdownValue }) : children}
-        {!trigger && hasMultipleOptions && !asSmallPill && (
+        {!trigger && hasMultipleOptions && !asSmallPill && !noArrow && (
           <Icon
             iconName={isOpen ? 'chevron_up' : 'chevron_down'}
             size={12}
