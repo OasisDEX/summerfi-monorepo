@@ -24,6 +24,7 @@ jobs:
               - 'apps/earn-protocol-institutions/**'
               - 'packages/app-types/**'
               - 'packages/app-earn-ui/**'
+              - 'packages/app-utils/**'
               - 'packages/app-icons/**'
               - 'packages/app-server-handlers/**'
               - '.github/workflows/deploy-earn-protocol-institutions-app-staging.yaml'

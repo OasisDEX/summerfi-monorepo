@@ -7,16 +7,16 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { RpcUrls, SharedConfig } from './utils/testConfig'
+import { RpcUrls, TestConfigAccounts } from './utils/testConfig'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
 
 jest.setTimeout(300000)
 const simulateOnly = true
-const privateKey = SharedConfig.testUserPrivateKey
+const privateKey = TestConfigAccounts.testUserPrivateKey
 
 describe('Armada Protocol - ERC20 Token Transfer', () => {
   const sdk = createTestSdkInstance()
-  const userAddress = SharedConfig.testUserAddressValue
+  const userAddress = TestConfigAccounts.testUserAddressValue
 
   const testConfigs = [
     {

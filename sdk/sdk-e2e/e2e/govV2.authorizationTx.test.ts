@@ -1,7 +1,7 @@
 import { Address, ChainIds, User, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { makeSDK } from '@summerfi/sdk-client'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
-import { SDKApiUrl, RpcUrls, SharedConfig } from './utils/testConfig'
+import { SDKApiUrl, RpcUrls, TestConfigAccounts } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -31,7 +31,7 @@ describe('Armada Protocol - Gov V2 Authorization', () => {
       chainId,
       rpcUrl: RpcUrls[chainId as keyof typeof RpcUrls],
       senderAddressValue: userAddress,
-      signerPrivateKey: SharedConfig.testUserPrivateKey,
+      signerPrivateKey: TestConfigAccounts.testUserPrivateKey,
       simulateOnly: false,
     })
 

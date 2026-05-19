@@ -16,7 +16,7 @@ export class ConfigurationProvider implements IConfigurationProvider {
   public getConfigurationItem<ReturnType = ConfigItem>(params: { name: ConfigKey }): ReturnType {
     if (this._config[params.name] == null) {
       throw new Error(
-        `Missing env variable: ${params.name}. Please add it to the stack configuration.`,
+        `Missing env variable: ${params.name}. Please add it to the stack configuration in sst-environment and turbo.json.`,
       )
     }
     return this._config[params.name] as ReturnType

@@ -47,19 +47,32 @@ export const decorateWithFleetConfig = (
             isDaoManaged,
           }
     })
-    .filter(({ inputTokenBalance }) => {
-      if (systemConfig.features?.FilterZeroTokenVaults) {
-        return inputTokenBalance > 0
-      }
-
-      return true
-    })
-    .filter(({ customFields, id }) => {
-      // we dont want to filter out vaults that user has a position in
+    .filter(({ inputTokenBalance, depositCap, customFields, id }) => {
       const hasUserPosition = userPositions?.some(
+        // Check if user has a position in this vault
         (position) => position.pool.id.fleetAddress.value.toLowerCase() === id.toLowerCase(),
       )
 
-      // filter disabled (with config) vaults
-      return !hasUserPosition && customFields?.disabled ? !customFields.disabled : true
+      if (hasUserPosition) {
+        // Don't filter out vaults if user has a position
+        return true
+      }
+
+      if (systemConfig.features?.FilterZeroTokenVaults && inputTokenBalance <= 0) {
+        // Filter zero token vaults if feature is enabled
+        return false
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (depositCap !== undefined && depositCap <= 0) {
+        // Filter zero deposit cap vaults
+        return false
+      }
+
+      if (customFields?.disabled) {
+        // Filter disabled vaults
+        return false
+      }
+
+      return true
     })

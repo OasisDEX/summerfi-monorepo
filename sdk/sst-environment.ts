@@ -25,6 +25,7 @@ const envSchema = z.object({
   SUMMER_DEPLOYMENT_CONFIG: z.string().nonempty(),
   FUNCTIONS_API_URL: z.string().nonempty(),
   PARTNERS_API_URL: z.string().nonempty(),
+  EARN_PROTOCOL_DB_CONNECTION_STRING: z.string().nonempty(),
   SDK_RPC_GATEWAY: z.string().nonempty(),
   SDK_SUBGRAPH_CONFIG: z.json(),
   SDK_SUBGRAPH_CONFIG_INSTI: z.json(),
@@ -37,6 +38,7 @@ const envSchema = z.object({
   SDK_FORK_CONFIG: z.string().default(''),
   SDK_DEPLOYED_VERSIONS_MAP: z.string().nonempty(),
   ENSO_API_KEY: z.string().nonempty(),
+  ENSO_ROUTER_ADDRESS: z.string().nonempty(),
   COW_SWAP_API_KEY: z.string().nonempty(),
 })
 

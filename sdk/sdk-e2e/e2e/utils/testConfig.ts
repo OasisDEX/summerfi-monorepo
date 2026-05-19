@@ -69,7 +69,7 @@ export const FleetAddresses = {
 
 export const SDKApiUrl = process.env.E2E_SDK_API_URL
 
-export const SharedConfig = {
+export const TestConfigAccounts = {
   testUserAddressValue: process.env.TEST_USER_ADDRESS as AddressValue,
   testUserPrivateKey: process.env.TEST_USER_PRIVATE_KEY as HexData,
   e2eUserAddressValue: process.env.E2E_USER_ADDRESS as AddressValue,
@@ -149,7 +149,7 @@ export const InstiTestConfigs = {
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses.Base.AcmeUSDC,
     aqAddressValue: '0x477285d524628faa3ed62d8086be56810a34795e',
-    userAddressValue: SharedConfig.testUserAddressValue,
+    userAddressValue: TestConfigAccounts.testUserAddressValue,
     symbol: 'ETH',
   },
   [TestClientIds.Targen]: {

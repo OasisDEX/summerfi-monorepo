@@ -1,0 +1,25 @@
+import { ChainId } from '@summerfi/serverless-shared'
+const dbNetworkToChainId = {
+  arbitrum: ChainId.ARBITRUM,
+  optimism: ChainId.OPTIMISM,
+  base: ChainId.BASE,
+  mainnet: ChainId.MAINNET,
+  sonic: ChainId.SONIC,
+  hyperliquid: ChainId.HYPERLIQUID,
+}
+export function mapDbNetworkToChainId(network) {
+  if (!dbNetworkToChainId[network]) {
+    throw new Error(`No matching chainId found for network: ${network}`)
+  }
+  return dbNetworkToChainId[network]
+}
+export function mapChainIdToDbNetwork(chainId) {
+  const network = Object.entries(dbNetworkToChainId).find(([_, value]) => {
+    return Number(value) === Number(chainId)
+  })?.[0]
+  if (!network) {
+    throw new Error(`No matching database network found for chainId: ${chainId}`)
+  }
+  return network
+}
+//# sourceMappingURL=helpers.js.map

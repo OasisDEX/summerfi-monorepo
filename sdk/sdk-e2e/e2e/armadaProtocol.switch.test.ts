@@ -15,7 +15,7 @@ import { createSendTransactionTool } from '@summerfi/testing-utils'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
-import { SharedConfig, FleetAddresses, RpcUrls } from './utils/testConfig'
+import { TestConfigAccounts, FleetAddresses, RpcUrls } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -42,8 +42,8 @@ describe('Armada Protocol - Switch', () => {
       rpcUrl: RpcUrls.Mainnet,
       sourceFleetAddress: FleetAddresses.Mainnet.ETHHighRisk,
       destinationFleetAddress: FleetAddresses.Mainnet.USDCHighRisk,
-      signerAddressValue: SharedConfig.testUserAddressValue,
-      signerPrivateKey: SharedConfig.testUserPrivateKey,
+      signerAddressValue: TestConfigAccounts.testUserAddressValue,
+      signerPrivateKey: TestConfigAccounts.testUserPrivateKey,
       simulateOnly: true,
     },
     // {
@@ -76,8 +76,8 @@ describe('Armada Protocol - Switch', () => {
         rpcUrl,
         amountValue,
         shouldStake = false,
-        signerAddressValue = SharedConfig.testUserAddressValue,
-        signerPrivateKey = SharedConfig.testUserPrivateKey,
+        signerAddressValue = TestConfigAccounts.testUserAddressValue,
+        signerPrivateKey = TestConfigAccounts.testUserPrivateKey,
         simulateOnly = true,
       }) => {
         const chainInfo = getChainInfoByChainId(chainId)

@@ -183,4 +183,14 @@ export interface IArmadaManagerUtils {
     recipientAddress: IAddress
     amount: ITokenAmount
   }): Promise<Erc20TransferTransactionInfo[]>
+
+  /**
+   * @name getProtocolAddresses
+   * @description Returns the deployed contract addresses for the Armada protocol on a given chain
+   * @param params.chainId The chain ID to retrieve addresses for
+   * @returns Promise with a record containing the admiralsQuarters contract address
+   */
+  getProtocolAddresses(params: {
+    chainId: ChainId
+  }): Promise<Record<'admiralsQuarters', AddressValue>>
 }
