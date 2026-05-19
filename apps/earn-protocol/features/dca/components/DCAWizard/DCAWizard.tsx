@@ -1,10 +1,11 @@
 'use client'
 
 import { type FC, useMemo } from 'react'
-import { Card, getDisplayToken, Text } from '@summerfi/app-earn-ui'
+import { Button, Card, getDisplayToken, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
 
+import { DCASidebar } from '@/features/dca/components/DCASidebar/DCASidebar'
 import { StepAdvancedConfig } from '@/features/dca/components/DCAWizard/StepAdvancedConfig'
 import { StepAmountFrequency } from '@/features/dca/components/DCAWizard/StepAmountFrequency'
 import { StepNetworkSelector } from '@/features/dca/components/DCAWizard/StepNetworkSelector'
@@ -24,6 +25,7 @@ import {
   type FrequencyOptionId,
   MAX_FREQUENCY_DAYS,
 } from '@/features/dca/lib/dca-wizard-constants'
+import { type DCAConfig, type DCAResolvedPair } from '@/features/dca/lib/types'
 
 import classNames from '@/features/dca/components/dca.module.css'
 
@@ -31,6 +33,9 @@ interface DCAWizardProps {
   sourceVaults: SDKVaultsListType
   targetVaults: SDKVaultsListType
   pairs: { fromVaultId: string; toVaultId: string }[]
+  onSubmit: (config: DCAConfig, pair: DCAResolvedPair) => void
+  config?: DCAConfig
+  pair?: DCAResolvedPair
 }
 
 interface DCAWizardInnerProps extends DCAWizardProps {
@@ -44,9 +49,12 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
   pairs,
   defaultSourceVault,
   defaultTargetVault,
+  config: initialConfig,
+  pair: initialPair,
+  onSubmit,
 }) => {
   const { config, sourceVault, targetVault, setSourceVault, setTargetVault, patchConfig } =
-    useDCAConfig({ defaultSourceVault, defaultTargetVault })
+    useDCAConfig({ defaultSourceVault, defaultTargetVault, initialConfig, initialPair })
 
   const {
     hasEligiblePair,
@@ -96,6 +104,9 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
   return (
     <div className={classNames.layout}>
       <div className={classNames.wizardColumn}>
+        <Text as="h3" variant="h4">
+          Create DCA Strategy
+        </Text>
         <StepNetworkSelector
           selectedNetwork={config.selectedNetwork}
           onSelectNetwork={(selectedNetwork) => patchConfig({ selectedNetwork })}
@@ -145,15 +156,44 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
                 : 0
           }
         />
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'space-between',
+            gap: 'var(--general-space-12)',
+          }}
+        >
+          <Button variant="secondaryLarge" disabled>
+            Back
+          </Button>
+          <Button
+            variant="primaryLarge"
+            onClick={() => onSubmit(config, pair)}
+            disabled={!hasEligiblePair || !!pairError}
+          >
+            Preview DCA Strategy
+          </Button>
+        </div>
       </div>
-      <Card variant="cardSecondary" className={classNames.faqCard}>
-        FAQ
-      </Card>
+      <div className={classNames.sidebarColumn}>
+        <Text as="h3" variant="h4">
+          &nbsp;
+        </Text>
+        <DCASidebar />
+      </div>
     </div>
   )
 }
 
-export const DCAWizard: FC<DCAWizardProps> = ({ sourceVaults, targetVaults, pairs }) => {
+export const DCAWizard: FC<DCAWizardProps> = ({
+  sourceVaults,
+  targetVaults,
+  pairs,
+  onSubmit,
+  config,
+  pair,
+}) => {
   const { defaultSourceVault, defaultTargetVault } = useMemo(() => {
     const vaultsForDefaultNetwork = dedupeVaults([...sourceVaults, ...targetVaults]).filter(
       (vault) =>
@@ -191,6 +231,9 @@ export const DCAWizard: FC<DCAWizardProps> = ({ sourceVaults, targetVaults, pair
       pairs={pairs}
       defaultSourceVault={defaultSourceVault}
       defaultTargetVault={defaultTargetVault}
+      config={config}
+      pair={pair}
+      onSubmit={onSubmit}
     />
   )
 }

@@ -1,10 +1,23 @@
 'use client'
 
-import { type FC, useEffect } from 'react'
-import { Button, Card, Icon, Text } from '@summerfi/app-earn-ui'
+import { type FC, useCallback, useMemo, useState } from 'react'
+import { Button, getDisplayToken, Icon, Text, TextNumberAnimated } from '@summerfi/app-earn-ui'
+import { type TokenSymbolsList } from '@summerfi/app-types'
+import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
+import {
+  Address,
+  type AddressValue,
+  getChainInfoByChainId,
+  Token,
+  TokenAmount,
+} from '@summerfi/sdk-common'
+import { useWalletClient } from 'wagmi'
 
-import { useDCAApproval } from '@/features/dca/hooks/useDCAApproval'
+import { VaultSwitchBox } from '@/components/molecules/SidebarElements/VaultSwitchBox'
+import { DCASidebar } from '@/features/dca/components/DCASidebar/DCASidebar'
+import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
 import { type DCAConfig, type DCAResolvedPair } from '@/features/dca/lib/types'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 
 import classNames from '@/features/dca/components/dca.module.css'
 
@@ -16,178 +29,288 @@ interface DCAApprovalFlowProps {
 }
 
 export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComplete, onBack }) => {
-  const { steps, activeIndex, isComplete, runStep } = useDCAApproval()
+  const { data: walletClient } = useWalletClient()
+  const { createAndSaveBuyOrder } = useAppSDK()
+  const [isCreating, setIsCreating] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (isComplete) {
-      const timeout = setTimeout(onComplete, 800)
+  const chainId = useMemo(
+    () => subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network)),
+    [pair.fromVault.protocol.network],
+  )
 
-      return () => clearTimeout(timeout)
+  const sourceSymbol = getDisplayToken(pair.fromVault.inputToken.symbol)
+  const targetSymbol = getDisplayToken(pair.toVault.inputToken.symbol)
+  const frequencyDays = Number.isFinite(config.frequency)
+    ? Math.max(1, Math.round(config.frequency))
+    : 1
+
+  const isTargetEthVault = targetSymbol === 'ETH'
+  const isSourceEthVault = sourceSymbol === 'ETH'
+  const thresholdLabel = isTargetEthVault
+    ? 'Never buy above'
+    : isSourceEthVault
+      ? 'Never sell below'
+      : null
+  const thresholdValue = isTargetEthVault ? config.neverBuyAbove : config.neverSellBelow
+  const thresholdDescription = isTargetEthVault
+    ? `Skip executions when ${targetSymbol} trades above this price.`
+    : isSourceEthVault
+      ? `Skip executions when ${sourceSymbol} trades below this price.`
+      : null
+
+  const handleCreateDca = useCallback(async () => {
+    const accountAddress = walletClient?.account.address
+
+    if (!accountAddress) {
+      setErrorMessage('Connect your wallet before creating a DCA strategy.')
+
+      return
     }
 
-    return undefined
-  }, [isComplete, onComplete])
+    setIsCreating(true)
+    setErrorMessage(null)
+
+    const nowUnix = Math.floor(Date.now() / 1000)
+    const intervalSeconds = Math.max(1, Math.round(config.frequency * 24 * 60 * 60))
+    const firstExecutionUnixTimestamp = nowUnix + intervalSeconds
+    const parsedDeadline = config.deadline
+      ? Math.floor(new Date(config.deadline).getTime() / 1000)
+      : undefined
+    const deadlineUnixTimestamp =
+      parsedDeadline && Number.isFinite(parsedDeadline) ? parsedDeadline : undefined
+
+    try {
+      const sourceToken = Token.createFrom({
+        chainInfo: getChainInfoByChainId(chainId),
+        address: Address.createFromEthereum({
+          value: pair.fromVault.inputToken.id as AddressValue,
+        }),
+        name: pair.fromVault.inputToken.name,
+        symbol: pair.fromVault.inputToken.symbol,
+        decimals: pair.fromVault.inputToken.decimals,
+      })
+
+      const tokenAmount = TokenAmount.createFrom({
+        token: sourceToken,
+        amount: config.amount.toString(),
+      })
+
+      await createAndSaveBuyOrder({
+        userAddress: accountAddress as `0x${string}`,
+        chainId,
+        toVaultAddress: pair.fromVault.id as AddressValue,
+        fromVaultAddress: pair.toVault.id as AddressValue,
+        signTypedData: walletClient.signTypedData,
+        amount: tokenAmount,
+        slippagePercentage: '0.5',
+        intervalSeconds,
+        firstExecutionUnixTimestamp,
+        deadlineUnixTimestamp,
+        maxTrades: config.maxTrades ?? 365,
+        neverBuyAbove: config.neverBuyAbove?.toString(),
+        neverSellBelow: config.neverSellBelow?.toString(),
+      })
+
+      onComplete()
+    } catch (error) {
+      const isRejected = error instanceof Error && /rejected|denied/iu.test(error.message)
+
+      setErrorMessage(
+        isRejected
+          ? 'Signature rejected. Please confirm in your wallet to continue.'
+          : error instanceof Error
+            ? error.message
+            : 'Failed to create DCA strategy.',
+      )
+    } finally {
+      setIsCreating(false)
+    }
+  }, [
+    chainId,
+    config.amount,
+    config.deadline,
+    config.frequency,
+    config.maxTrades,
+    config.neverBuyAbove,
+    config.neverSellBelow,
+    createAndSaveBuyOrder,
+    onComplete,
+    pair.fromVault,
+    pair.toVault,
+    walletClient,
+  ])
 
   return (
     <div className={classNames.layout}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--general-space-16)' }}>
-        <Card variant="cardPrimary">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--general-space-16)' }}>
-            <div>
-              <Text as="h3" variant="h4">
-                Authorize your DCA strategy
-              </Text>
-              <Text
-                as="p"
-                variant="p3"
-                style={{ color: 'var(--earn-protocol-secondary-100)', opacity: 0.7 }}
-              >
-                Three signatures, one strategy. Funds remain in your wallet between executions.
-              </Text>
-            </div>
+      <div className={classNames.wizardColumn}>
+        <Text as="h3" variant="h4">
+          Review your DCA strategy
+        </Text>
 
-            {steps.map((step, index) => {
-              const isActive = index === activeIndex && !isComplete
-              const isDone = step.status === 'done'
-
-              return (
-                <div
-                  key={step.id}
-                  className={`${classNames.approvalStep} ${
-                    isActive ? classNames.approvalStepActive : ''
-                  }`}
-                >
-                  <div
-                    className={`${classNames.approvalCircle} ${
-                      isActive ? classNames.approvalCircleActive : ''
-                    } ${isDone ? classNames.approvalCircleDone : ''}`}
-                  >
-                    {isDone ? '✓' : index + 1}
-                  </div>
-
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 'var(--general-space-8)',
-                      flex: 1,
-                    }}
-                  >
-                    <Text as="h4" variant="p1semi">
-                      {step.title}
-                    </Text>
-                    <Text as="p" variant="p3" style={{ opacity: 0.7 }}>
-                      {step.description}
-                    </Text>
-                    {step.errorMessage ? (
-                      <Text
-                        as="p"
-                        variant="p3"
-                        style={{ color: 'var(--earn-protocol-critical-100)' }}
-                      >
-                        {step.errorMessage}
-                      </Text>
-                    ) : null}
-
-                    <div style={{ display: 'flex', gap: 'var(--general-space-8)' }}>
-                      <Button
-                        variant="primaryMedium"
-                        disabled={!isActive || step.status === 'pending'}
-                        onClick={() => runStep(index)}
-                        style={{ minWidth: 'unset' }}
-                      >
-                        {step.status === 'pending'
-                          ? 'Waiting…'
-                          : isDone
-                            ? 'Signed'
-                            : index === 0
-                              ? 'Approve'
-                              : index === 1
-                                ? 'Sign'
-                                : 'Create strategy'}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-
+        <DCAWizardStepCard title="Your selected vaults">
+          <div className={classNames.vaultSelectorRow}>
             <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                gap: 'var(--general-space-12)',
-              }}
+              className={`${classNames.vaultSelectorContent} ${classNames.vaultSelectorContentSource}`}
             >
-              <Button variant="secondaryLarge" onClick={onBack} style={{ minWidth: 'unset' }}>
-                Back to wizard
-              </Button>
+              <div className={classNames.vaultSelectorCard}>
+                <VaultSwitchBox
+                  title="From"
+                  chainId={chainId}
+                  tokenName={pair.fromVault.inputToken.symbol as TokenSymbolsList}
+                  risk={
+                    pair.fromVault.isDaoManaged
+                      ? 'higher'
+                      : (pair.fromVault.customFields?.risk ?? 'lower')
+                  }
+                  wrapperStyle={{ background: 'transparent', width: '100%' }}
+                  isDaoManaged={pair.fromVault.isDaoManaged}
+                />
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className={classNames.vaultSelectorBridge}
+              style={{
+                pointerEvents: 'none',
+                cursor: 'default',
+              }}
+              aria-label="Vault pair"
+              title="Vault pair"
+              tabIndex={-1}
+            >
+              <Icon iconName="arrow_forward" size={20} />
+            </button>
+
+            <div className={classNames.vaultSelectorContent}>
+              <div className={classNames.vaultSelectorCard}>
+                <VaultSwitchBox
+                  title="To"
+                  chainId={chainId}
+                  tokenName={pair.toVault.inputToken.symbol as TokenSymbolsList}
+                  risk={
+                    pair.toVault.isDaoManaged
+                      ? 'higher'
+                      : (pair.toVault.customFields?.risk ?? 'lower')
+                  }
+                  wrapperStyle={{ background: 'transparent', width: '100%' }}
+                  isDaoManaged={pair.toVault.isDaoManaged}
+                />
+              </div>
             </div>
           </div>
-        </Card>
-      </div>
+        </DCAWizardStepCard>
 
-      <Card variant="cardSecondary">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--general-space-16)' }}>
-          <Text as="h4" variant="h5">
-            What you&apos;re signing
-          </Text>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--general-space-8)',
-              padding: 'var(--general-space-12)',
-              borderRadius: 8,
-              background: 'var(--earn-protocol-primary-100)',
-            }}
-          >
-            <Icon tokenName={pair.fromVault.inputToken.symbol as never} size={24} />
-            <Text as="span" variant="p2semi" style={{ opacity: 0.7 }}>
-              →
-            </Text>
-            <Icon tokenName={pair.toVault.inputToken.symbol as never} size={24} />
-            <Text as="span" variant="p3semi" style={{ marginLeft: 'auto' }}>
-              {pair.fromVault.inputToken.symbol} → {pair.toVault.inputToken.symbol}
-            </Text>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {[
-              {
-                label: 'Amount per run',
-                value: `${config.amount} ${pair.fromVault.inputToken.symbol}`,
-              },
-              {
-                label: 'Frequency',
-                value: `${config.frequency} day${config.frequency === 1 ? '' : 's'}`,
-              },
-              {
-                label: 'Signatures progress',
-                value: `${steps.filter((step) => step.status === 'done').length} / ${steps.length}`,
-              },
-            ].map((row) => (
-              <div
-                key={row.label}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  padding: 'var(--general-space-8) 0',
-                  borderBottom: '1px solid var(--earn-protocol-secondary-60)',
-                }}
-              >
-                <Text as="span" variant="p4" style={{ opacity: 0.7 }}>
-                  {row.label}
+        <DCAWizardStepCard title="Amount and frequency">
+          <div className={classNames.step3Row}>
+            <div className={classNames.step3InputsColumn}>
+              <div className={classNames.pricePreviewBlock}>
+                <Text as="p" variant="p3" className={classNames.mutedText}>
+                  Amount per run
                 </Text>
-                <Text as="span" variant="p3semi">
-                  {row.value}
+                <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
+                  <TextNumberAnimated value={config.amount} variant="h5" /> {sourceSymbol}
                 </Text>
               </div>
-            ))}
+            </div>
+            <div className={classNames.step3InputsColumn}>
+              <div className={classNames.pricePreviewBlock}>
+                <Text as="p" variant="p3" className={classNames.mutedText}>
+                  Frequency
+                </Text>
+                <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
+                  Every {frequencyDays} {frequencyDays === 1 ? 'day' : 'days'}
+                </Text>
+              </div>
+            </div>
           </div>
+        </DCAWizardStepCard>
+
+        <DCAWizardStepCard title="Step 4 - Advanced configuration">
+          <div className={classNames.conditionsStack}>
+            {thresholdLabel && thresholdDescription ? (
+              <div className={classNames.conditionCardContent}>
+                <div className={classNames.conditionHeader}>
+                  <div>
+                    <Text as="h4" variant="p2semi">
+                      {thresholdLabel}
+                    </Text>
+                  </div>
+                </div>
+                <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
+                  {thresholdValue ?? 'Not set'}
+                </Text>
+                <Text as="p" variant="p4" className={classNames.mutedText}>
+                  {thresholdDescription}
+                </Text>
+              </div>
+            ) : null}
+
+            <div className={classNames.conditionCardContent}>
+              <div className={classNames.conditionHeader}>
+                <div>
+                  <Text as="h4" variant="p2semi">
+                    Maximum Number of Trades
+                  </Text>
+                </div>
+              </div>
+              <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
+                {config.maxTrades ?? 365}
+              </Text>
+              <Text as="p" variant="p4" className={classNames.mutedText}>
+                Stop the strategy after this many successful trades.
+              </Text>
+            </div>
+
+            <div className={classNames.conditionCardContent}>
+              <div className={classNames.conditionHeader}>
+                <div>
+                  <Text as="h4" variant="p2semi">
+                    Only trade until
+                  </Text>
+                </div>
+              </div>
+              <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
+                {config.deadline
+                  ? new Date(config.deadline).toLocaleDateString('en-GB')
+                  : 'Not set'}
+              </Text>
+              <Text as="p" variant="p4" className={classNames.mutedText}>
+                Stop the strategy once this date is reached.
+              </Text>
+            </div>
+          </div>
+
+          {errorMessage ? (
+            <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-critical-100)' }}>
+              {errorMessage}
+            </Text>
+          ) : null}
+        </DCAWizardStepCard>
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'space-between',
+            gap: 'var(--general-space-12)',
+          }}
+        >
+          <Button variant="secondaryLarge" onClick={onBack} disabled={isCreating}>
+            Back
+          </Button>
+          <Button variant="primaryLarge" onClick={handleCreateDca} disabled={isCreating}>
+            {isCreating ? 'Creating…' : 'Create DCA'}
+          </Button>
         </div>
-      </Card>
+      </div>
+
+      <div className={classNames.sidebarColumn} style={{ position: 'sticky', top: 0 }}>
+        <Text as="h3" variant="h4">
+          &nbsp;
+        </Text>
+        <DCASidebar />
+      </div>
     </div>
   )
 }

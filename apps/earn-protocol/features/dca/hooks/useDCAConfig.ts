@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react'
 import { NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
 
-import { type DCAConfig } from '@/features/dca/lib/types'
+import { type DCAConfig, type DCAResolvedPair } from '@/features/dca/lib/types'
 
 const DEFAULT_CONFIG: DCAConfig = {
   selectedNetwork: NetworkNames.ethereumMainnet,
@@ -19,6 +19,7 @@ interface UseDCAConfigArgs {
   defaultSourceVault: SDKVaultishType
   defaultTargetVault: SDKVaultishType
   initialConfig?: Partial<DCAConfig>
+  initialPair?: DCAResolvedPair
 }
 
 interface UseDCAConfigReturn {
@@ -39,10 +40,15 @@ export const useDCAConfig = ({
   defaultSourceVault,
   defaultTargetVault,
   initialConfig,
+  initialPair,
 }: UseDCAConfigArgs): UseDCAConfigReturn => {
   const [config, setConfig] = useState<DCAConfig>({ ...DEFAULT_CONFIG, ...initialConfig })
-  const [sourceVault, setSourceVault] = useState<SDKVaultishType>(defaultSourceVault)
-  const [targetVault, setTargetVault] = useState<SDKVaultishType>(defaultTargetVault)
+  const [sourceVault, setSourceVault] = useState<SDKVaultishType>(
+    initialPair?.fromVault ?? defaultSourceVault,
+  )
+  const [targetVault, setTargetVault] = useState<SDKVaultishType>(
+    initialPair?.toVault ?? defaultTargetVault,
+  )
 
   const patchConfig = useCallback((patch: Partial<DCAConfig>) => {
     setConfig((current) => ({ ...current, ...patch }))
@@ -50,9 +56,9 @@ export const useDCAConfig = ({
 
   const reset = useCallback(() => {
     setConfig({ ...DEFAULT_CONFIG, ...initialConfig })
-    setSourceVault(defaultSourceVault)
-    setTargetVault(defaultTargetVault)
-  }, [defaultSourceVault, defaultTargetVault, initialConfig])
+    setSourceVault(initialPair?.fromVault ?? defaultSourceVault)
+    setTargetVault(initialPair?.toVault ?? defaultTargetVault)
+  }, [defaultSourceVault, defaultTargetVault, initialConfig, initialPair])
 
   return {
     config,

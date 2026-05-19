@@ -36,6 +36,7 @@ declare const styles: {
   readonly "reviewList": string;
   readonly "reviewRow": string;
   readonly "reviewTokenValue": string;
+  readonly "sidebarColumn": string;
   readonly "statsGrid": string;
   readonly "step3InputsColumn": string;
   readonly "step3Row": string;
@@ -65,7 +66,6 @@ declare const styles: {
   readonly "vaultSelectorRow": string;
   readonly "wizardCardContent": string;
   readonly "wizardColumn": string;
-  readonly "wizardHeaderBlock": string;
   readonly "wizardSectionCardContent": string;
   readonly "wizardSectionStack": string;
 };
