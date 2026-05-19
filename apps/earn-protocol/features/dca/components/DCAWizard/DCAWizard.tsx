@@ -82,7 +82,13 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
     : 1
 
   const { periodSummaries, canPreviewPrevious, canPreviewNext, previewPrevious, previewNext } =
-    usePeriodSummaries({ frequencyDays, amount: config.amount, estimatedTargetAmount })
+    usePeriodSummaries({
+      frequencyDays,
+      amount: config.amount,
+      estimatedTargetAmount,
+      maxTrades: config.maxTrades,
+      deadline: config.deadline,
+    })
 
   const selectedFrequencyOption: FrequencyOptionId =
     FREQUENCY_OPTIONS.find((option) => option.days === frequencyDays)?.id ?? 'custom'
