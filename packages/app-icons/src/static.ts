@@ -90,6 +90,7 @@ export const iconsSync = {
     typeof import('*.svg?react')
   >,
   bug: import('./icons/bug.svg?react') as Promise<typeof import('*.svg?react')>,
+  calendar: import('./icons/calendar.svg?react') as Promise<typeof import('*.svg?react')>,
   cbbtc_circle_color: import('./icons/cbbtc_circle_color.svg?react') as Promise<
     typeof import('*.svg?react')
   >,

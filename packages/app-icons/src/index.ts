@@ -79,6 +79,7 @@ export const icons = {
   ) as IconExportType,
   btc_circle_mono: customLazy(() => import('./icons/btc_circle_mono.svg?react')) as IconExportType,
   bug: customLazy(() => import('./icons/bug.svg?react')) as IconExportType,
+  calendar: customLazy(() => import('./icons/calendar.svg?react')) as IconExportType,
   cbeth_circle_color: customLazy(
     () => import('./icons/cbeth_circle_color.svg?react'),
   ) as IconExportType,

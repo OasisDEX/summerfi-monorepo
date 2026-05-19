@@ -9,9 +9,10 @@ const DEFAULT_CONFIG: DCAConfig = {
   selectedNetwork: NetworkNames.ethereumMainnet,
   amount: 250,
   frequency: 1,
-  budget: 0,
-  priceCeiling: 0,
-  stopAtTarget: 0,
+  neverBuyAbove: undefined,
+  neverSellBelow: undefined,
+  maxTrades: undefined,
+  deadline: undefined,
 }
 
 interface UseDCAConfigArgs {

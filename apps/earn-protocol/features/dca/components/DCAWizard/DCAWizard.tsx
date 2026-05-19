@@ -128,7 +128,16 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
           config={config}
           sourceSymbol={sourceSymbol}
           targetSymbol={targetSymbol}
+          isSourceEthVault={isEthVault(pair.fromVault)}
+          isTargetEthVault={isEthVault(pair.toVault)}
           patchConfig={patchConfig}
+          ethPrice={
+            targetSymbol === 'ETH'
+              ? targetTokenPrice
+              : sourceSymbol === 'ETH'
+                ? sourceTokenPrice
+                : 0
+          }
         />
       </div>
       <Card variant="cardSecondary" className={classNames.faqCard}>

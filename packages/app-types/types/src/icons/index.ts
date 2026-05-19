@@ -24,6 +24,7 @@ export type IconNamesList =
   | 'bsdeth_circle_color'
   | 'btc_circle_color'
   | 'btc_circle_mono'
+  | 'calendar'
   | 'cbeth_circle_color'
   | 'cbeth_eth'
   | 'cbeth_usdc'

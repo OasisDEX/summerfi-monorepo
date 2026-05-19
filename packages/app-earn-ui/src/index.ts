@@ -144,6 +144,7 @@ export {
 } from './components/molecules/CookieBanner/config'
 export { ZoomableImage } from './components/molecules/ZoomableImage/ZoomableImage'
 export { AllocationBar } from './components/molecules/AllocationBar/AllocationBar'
+export { DatePicker } from './components/molecules/DatePicker/DatePicker.tsx'
 export { DateRangePicker } from './components/molecules/DateRangePicker/DateRangePicker.tsx'
 export { UseCasesSlider } from './components/molecules/UseCasesSlider/UseCasesSlider.tsx'
 

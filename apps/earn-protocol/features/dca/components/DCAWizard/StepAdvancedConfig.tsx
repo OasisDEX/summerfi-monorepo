@@ -1,5 +1,5 @@
-import { type FC } from 'react'
-import { Card, Input, Text } from '@summerfi/app-earn-ui'
+import { type FC, useEffect, useState } from 'react'
+import { DatePicker, Input, Text } from '@summerfi/app-earn-ui'
 
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
 import { type DCAConfig } from '@/features/dca/lib/types'
@@ -10,6 +10,9 @@ interface StepAdvancedConfigProps {
   config: DCAConfig
   sourceSymbol: string
   targetSymbol: string
+  isSourceEthVault: boolean
+  isTargetEthVault: boolean
+  ethPrice: number
   patchConfig: (patch: Partial<DCAConfig>) => void
 }
 
@@ -17,78 +20,141 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
   config,
   sourceSymbol,
   targetSymbol,
+  isSourceEthVault,
+  isTargetEthVault,
+  ethPrice,
   patchConfig,
 }) => {
-  const conditions = [
-    {
-      title: 'Total budget',
-      description: `Stop the strategy once you've spent this much ${sourceSymbol} in total.`,
-      enabled: config.budget > 0,
-      onToggle: () => patchConfig({ budget: config.budget > 0 ? 0 : config.amount * 30 }),
-      value: config.budget,
-      onChange: (value: number) => patchConfig({ budget: value }),
-    },
-    {
-      title: 'Price ceiling',
-      description: `Skip executions when ${targetSymbol} trades above this price.`,
-      enabled: config.priceCeiling > 0,
-      onToggle: () => patchConfig({ priceCeiling: config.priceCeiling > 0 ? 0 : 3500 }),
-      value: config.priceCeiling,
-      onChange: (value: number) => patchConfig({ priceCeiling: value }),
-    },
-    {
-      title: `Stop at ${targetSymbol} amount`,
-      description: `Stop the strategy once you've accumulated this much ${targetSymbol}.`,
-      enabled: config.stopAtTarget > 0,
-      onToggle: () => patchConfig({ stopAtTarget: config.stopAtTarget > 0 ? 0 : 1 }),
-      value: config.stopAtTarget,
-      onChange: (value: number) => patchConfig({ stopAtTarget: value }),
-    },
-  ]
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 960px)')
+    const onChange = (mediaQueryEvent: MediaQueryListEvent) => setIsMobile(mediaQueryEvent.matches)
+
+    setIsMobile(mediaQuery.matches)
+    mediaQuery.addEventListener('change', onChange)
+
+    return () => mediaQuery.removeEventListener('change', onChange)
+  }, [])
+
+  const isNeverBuyAbove = isTargetEthVault
+  const isNeverSellBelow = !isNeverBuyAbove && isSourceEthVault
+
+  const thresholdTitle = isNeverBuyAbove
+    ? 'Never buy above'
+    : isNeverSellBelow
+      ? 'Never sell below'
+      : null
+  const thresholdDescription = isNeverBuyAbove
+    ? `Skip executions when ${targetSymbol} trades above this price.`
+    : isNeverSellBelow
+      ? `Skip executions when ${sourceSymbol} trades below this price.`
+      : null
+  const currentEthPriceLabel = `Current ETH price: $${ethPrice.toLocaleString()}`
+  const thresholdValue = isNeverBuyAbove ? config.neverBuyAbove : config.neverSellBelow
+
+  const handleThresholdChange = (value: number | undefined) => {
+    if (isNeverBuyAbove) {
+      patchConfig({ neverBuyAbove: value })
+
+      return
+    }
+
+    if (isNeverSellBelow) {
+      patchConfig({ neverSellBelow: value })
+    }
+  }
+
+  const handleDeadlineChange = (date: Date | undefined) => {
+    patchConfig({ deadline: date ? date.toISOString() : undefined })
+  }
 
   return (
     <DCAWizardStepCard title="Step 4 - Advanced configuration">
       <div className={classNames.conditionsStack}>
-        {conditions.map((condition) => (
-          <Card key={condition.title} variant="cardSecondary">
-            <div className={classNames.conditionCardContent}>
-              <div className={classNames.conditionHeader}>
-                <div>
-                  <Text as="h4" variant="p1semi">
-                    {condition.title}
-                  </Text>
-                  <Text as="p" variant="p3" className={classNames.mutedText}>
-                    {condition.description}
-                  </Text>
-                </div>
-                <button
-                  type="button"
-                  onClick={condition.onToggle}
-                  className={`${classNames.toggle} ${
-                    condition.enabled ? classNames.toggleActive : ''
-                  }`}
-                  aria-pressed={condition.enabled}
-                >
-                  <span
-                    className={`${classNames.toggleHandle} ${
-                      condition.enabled ? classNames.toggleHandleActive : ''
-                    }`}
-                  />
-                </button>
+        {thresholdTitle && thresholdDescription ? (
+          <div className={classNames.conditionCardContent}>
+            <div className={classNames.conditionHeader}>
+              <div>
+                <Text as="h4" variant="p2semi">
+                  {thresholdTitle}
+                </Text>
               </div>
-              {condition.enabled ? (
-                <Input
-                  variant="dark"
-                  type="number"
-                  min={0}
-                  step="any"
-                  value={condition.value || ''}
-                  onChange={(ev) => condition.onChange(Number(ev.target.value))}
-                />
-              ) : null}
             </div>
-          </Card>
-        ))}
+            <Input
+              variant="dark"
+              type="number"
+              min={0}
+              step="any"
+              value={thresholdValue ?? ''}
+              onChange={(ev) => {
+                const nextValue = ev.target.value
+
+                if (nextValue === '') {
+                  handleThresholdChange(undefined)
+
+                  return
+                }
+
+                handleThresholdChange(Number(nextValue))
+              }}
+            />
+            <Text as="p" variant="p4" className={classNames.mutedText}>
+              {thresholdDescription}
+              <br />
+              {currentEthPriceLabel}
+            </Text>
+          </div>
+        ) : null}
+
+        <div className={classNames.conditionCardContent}>
+          <div className={classNames.conditionHeader}>
+            <div>
+              <Text as="h4" variant="p2semi">
+                Maximum Number of Trades
+              </Text>
+            </div>
+          </div>
+          <Input
+            variant="dark"
+            type="number"
+            min={1}
+            step={1}
+            value={config.maxTrades ?? ''}
+            onChange={(ev) => {
+              const nextValue = ev.target.value
+
+              if (nextValue === '') {
+                patchConfig({ maxTrades: undefined })
+
+                return
+              }
+
+              patchConfig({ maxTrades: Number(nextValue) })
+            }}
+          />
+          <Text as="p" variant="p4" className={classNames.mutedText}>
+            Stop the strategy after this many successful trades.
+          </Text>
+        </div>
+
+        <div className={classNames.conditionCardContent}>
+          <div className={classNames.conditionHeader}>
+            <div>
+              <Text as="h4" variant="p2semi">
+                Only trade until
+              </Text>
+            </div>
+          </div>
+          <DatePicker
+            isMobile={isMobile}
+            onChange={handleDeadlineChange}
+            value={config.deadline ? new Date(config.deadline) : undefined}
+          />
+          <Text as="p" variant="p4" className={classNames.mutedText}>
+            Stop the strategy once this date is reached.
+          </Text>
+        </div>
       </div>
     </DCAWizardStepCard>
   )

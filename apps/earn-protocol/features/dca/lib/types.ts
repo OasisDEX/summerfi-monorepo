@@ -4,9 +4,10 @@ export interface DCAConfig {
   selectedNetwork: NetworkNames
   amount: number
   frequency: number
-  budget: number
-  priceCeiling: number
-  stopAtTarget: number
+  neverBuyAbove?: number
+  neverSellBelow?: number
+  maxTrades?: number
+  deadline?: string
 }
 
 export type DCAPhase = 'wizard' | 'approval' | 'position'

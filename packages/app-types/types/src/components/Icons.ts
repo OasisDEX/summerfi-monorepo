@@ -49,6 +49,7 @@ export declare const IconsList: {
   bsdeth_circle_color: IconExportType
   btc_circle_color: IconExportType
   btc_circle_mono: IconExportType
+  calendar: IconExportType
   bug: IconExportType
   cbeth_circle_color: IconExportType
   cbeth_eth: IconExportType
