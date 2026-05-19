@@ -51,6 +51,7 @@ describe('Armada Protocol - DCA Orders', () => {
     })
 
     assert(order.id, 'Expected order id to be defined')
+    console.log('Created DCA order with ID:', order.id)
 
     const fetchedOrder = await sdk.armada.dca.getBuyOrder({
       orderId: order.id,
@@ -59,6 +60,7 @@ describe('Armada Protocol - DCA Orders', () => {
 
     assert(fetchedOrder, 'Expected created order to be retrievable')
     assert.strictEqual(fetchedOrder.id, order.id)
+    console.log('Fetched DCA order with ID:', fetchedOrder.id)
 
     const activeOrders = await sdk.armada.dca.getBuyOrders({
       userAddress: userAddress,
@@ -67,6 +69,7 @@ describe('Armada Protocol - DCA Orders', () => {
     })
 
     assert(activeOrders.find((activeOrder) => activeOrder.id === order.id))
+    console.log('Active DCA orders include order with ID:', order.id)
 
     const signedMessage = `I want to cancel ${order.id}.`
     const signature = await account.signMessage({
@@ -81,5 +84,6 @@ describe('Armada Protocol - DCA Orders', () => {
     })
 
     assert.strictEqual(cancelledOrder.status, ArmadaDcaOrderStatusEnum.Cancelled)
+    console.log('Cancelled DCA order with ID:', order.id)
   })
 })
