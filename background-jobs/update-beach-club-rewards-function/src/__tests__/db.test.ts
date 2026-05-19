@@ -221,14 +221,16 @@ describe('DatabaseService', () => {
   describe('updateDailyRatesAndPoints', () => {
     it('should update daily rates and points successfully', async () => {
       const mockTrx = mockKysely
-      await db.updateDailyRatesAndPointsInTransaction(mockTrx)
+      const mockDate = new Date('2026-03-05')
+      await db.updateDailyRatesAndPointsInTransaction(mockTrx, mockDate)
 
       expect(mockKysely.executeQuery).toHaveBeenCalled()
     })
 
     it('should handle rewards distributions', async () => {
       const mockTrx = mockKysely
-      await db.updateDailyRatesAndPointsInTransaction(mockTrx)
+      const mockDate = new Date('2026-03-05')
+      await db.updateDailyRatesAndPointsInTransaction(mockTrx, mockDate)
 
       expect(mockKysely.executeQuery).toHaveBeenCalled()
     })

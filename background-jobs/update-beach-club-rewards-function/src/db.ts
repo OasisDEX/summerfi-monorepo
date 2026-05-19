@@ -209,7 +209,7 @@ WHERE u.id = ANY(${userIds});
 
     // 2. Calculate and distribute SUMR rewards for all referral codes with active users
     const sumrTiers =
-      new Date() >= this.MARCH_1_2026
+      periodEnd >= this.MARCH_1_2026
         ? this.SUMR_REWARD_TIERS_POST_MARCH_2026
         : this.SUMR_REWARD_TIERS_PRE_MARCH_2026
     const sumrCaseStatement = sumrTiers.map((tier) => {
