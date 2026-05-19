@@ -4,9 +4,11 @@ import { type FC, useCallback, useMemo, useState } from 'react'
 import {
   Button,
   getDisplayToken,
+  getEarnProtocolChainById,
   Icon,
   Text,
   TextNumberAnimated,
+  useEarnProtocolChain,
   useEarnProtocolLogin,
   useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
@@ -38,6 +40,7 @@ interface DCAApprovalFlowProps {
 export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComplete, onBack }) => {
   const { login } = useEarnProtocolLogin()
   const { walletClient, address } = useEarnProtocolWallet()
+  const { chain, setChain, isSettingChain } = useEarnProtocolChain()
   const { createAndSaveBuyOrder } = useAppSDK()
   const [isCreating, setIsCreating] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -46,6 +49,9 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
     () => subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network)),
     [pair.fromVault.protocol.network],
   )
+
+  const isProperChainSelected = chain.id === chainId
+  const targetChain = getEarnProtocolChainById(chainId)
 
   const sourceSymbol = getDisplayToken(pair.fromVault.inputToken.symbol)
   const targetSymbol = getDisplayToken(pair.toVault.inputToken.symbol)
@@ -146,6 +152,34 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
     pair.toVault,
     walletClient,
     address,
+  ])
+
+  const primaryButton = useMemo(() => {
+    if (!address) {
+      return { label: 'Connect Wallet', action: login, disabled: false }
+    }
+    if (!isProperChainSelected) {
+      return {
+        label: `Switch network to ${targetChain.name}`,
+        action: () => setChain({ chain: targetChain }),
+        disabled: isSettingChain,
+      }
+    }
+
+    return {
+      label: isCreating ? 'Creating…' : 'Create DCA',
+      action: handleCreateDca,
+      disabled: isCreating,
+    }
+  }, [
+    address,
+    handleCreateDca,
+    isCreating,
+    isProperChainSelected,
+    isSettingChain,
+    login,
+    setChain,
+    targetChain,
   ])
 
   return (
@@ -308,10 +342,10 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
           </Button>
           <Button
             variant="primaryLarge"
-            onClick={!address ? login : handleCreateDca}
-            disabled={isCreating}
+            onClick={primaryButton.action}
+            disabled={primaryButton.disabled}
           >
-            {!address ? 'Connect Wallet' : isCreating ? 'Creating…' : 'Create DCA'}
+            {primaryButton.label}
           </Button>
         </div>
       </div>

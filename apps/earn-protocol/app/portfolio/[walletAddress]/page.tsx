@@ -20,6 +20,7 @@ import { redirect } from 'next/navigation'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
+import { getCachedUserDcaOrders } from '@/app/server-handlers/cached/get-user-dca-orders'
 import { getCachedUserPositions } from '@/app/server-handlers/cached/get-user-positions'
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
@@ -40,8 +41,9 @@ type PortfolioPageProps = {
 }
 
 const portfolioCallsHandler = async ({ walletAddress }: { walletAddress: string }) => {
-  const [userPositions, vaultsList, systemConfig, vaultsInfo] = await Promise.all([
+  const [userPositions, userDcaOrders, vaultsList, systemConfig, vaultsInfo] = await Promise.all([
     getCachedUserPositions({ walletAddress }),
+    getCachedUserDcaOrders({ walletAddress }),
     getCachedVaultsList(),
     getCachedConfig(),
     getCachedVaultsInfo(),
@@ -49,6 +51,7 @@ const portfolioCallsHandler = async ({ walletAddress }: { walletAddress: string 
 
   return {
     userPositions,
+    userDcaOrders,
     vaultsList,
     systemConfig,
     vaultsInfo,
@@ -79,9 +82,10 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     redirect('/not-found')
   }
 
-  const { userPositions, vaultsList, systemConfig, vaultsInfo } = await portfolioCallsHandler({
-    walletAddress,
-  })
+  const { userPositions, userDcaOrders, vaultsList, systemConfig, vaultsInfo } =
+    await portfolioCallsHandler({
+      walletAddress,
+    })
 
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
@@ -146,6 +150,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       rewardTokenPrices={rewardTokenPrices}
+      dcaOrders={userDcaOrders}
     />
   )
 }
