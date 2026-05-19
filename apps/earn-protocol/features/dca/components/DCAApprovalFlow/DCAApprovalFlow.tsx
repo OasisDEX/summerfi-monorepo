@@ -1,7 +1,15 @@
 'use client'
 
 import { type FC, useCallback, useMemo, useState } from 'react'
-import { Button, getDisplayToken, Icon, Text, TextNumberAnimated } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  getDisplayToken,
+  Icon,
+  Text,
+  TextNumberAnimated,
+  useEarnProtocolLogin,
+  useEarnProtocolWallet,
+} from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import {
@@ -11,7 +19,6 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common'
-import { useWalletClient } from 'wagmi'
 
 import { VaultSwitchBox } from '@/components/molecules/SidebarElements/VaultSwitchBox'
 import { DCASidebar } from '@/features/dca/components/DCASidebar/DCASidebar'
@@ -29,7 +36,8 @@ interface DCAApprovalFlowProps {
 }
 
 export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComplete, onBack }) => {
-  const { data: walletClient } = useWalletClient()
+  const { login } = useEarnProtocolLogin()
+  const { walletClient, address } = useEarnProtocolWallet()
   const { createAndSaveBuyOrder } = useAppSDK()
   const [isCreating, setIsCreating] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -60,9 +68,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
       : null
 
   const handleCreateDca = useCallback(async () => {
-    const accountAddress = walletClient?.account.address
-
-    if (!accountAddress) {
+    if (!address || !walletClient) {
       setErrorMessage('Connect your wallet before creating a DCA strategy.')
 
       return
@@ -97,10 +103,10 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
       })
 
       await createAndSaveBuyOrder({
-        userAddress: accountAddress as `0x${string}`,
+        userAddress: address as `0x${string}`,
         chainId,
-        toVaultAddress: pair.fromVault.id as AddressValue,
-        fromVaultAddress: pair.toVault.id as AddressValue,
+        toVaultAddress: pair.toVault.id as AddressValue,
+        fromVaultAddress: pair.fromVault.id as AddressValue,
         signTypedData: walletClient.signTypedData,
         amount: tokenAmount,
         slippagePercentage: '0.5',
@@ -139,6 +145,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
     pair.fromVault,
     pair.toVault,
     walletClient,
+    address,
   ])
 
   return (
@@ -299,8 +306,12 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
           <Button variant="secondaryLarge" onClick={onBack} disabled={isCreating}>
             Back
           </Button>
-          <Button variant="primaryLarge" onClick={handleCreateDca} disabled={isCreating}>
-            {isCreating ? 'Creating…' : 'Create DCA'}
+          <Button
+            variant="primaryLarge"
+            onClick={!address ? login : handleCreateDca}
+            disabled={isCreating}
+          >
+            {!address ? 'Connect Wallet' : isCreating ? 'Creating…' : 'Create DCA'}
           </Button>
         </div>
       </div>

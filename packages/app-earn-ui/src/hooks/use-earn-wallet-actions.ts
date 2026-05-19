@@ -37,6 +37,7 @@ export const getEarnProtocolChainById = (chainId?: number): Chain => {
 export const useEarnProtocolWallet = (): {
   address?: `0x${string}`
   isLoadingAccount: boolean
+  walletClient?: WalletClient
 } => {
   const { ready: privyReady } = usePrivy()
   const { wallets } = useWallets()
@@ -57,6 +58,7 @@ export const useEarnProtocolWallet = (): {
   return {
     address: connectedWalletAddress,
     isLoadingAccount,
+    walletClient,
   }
 }
 
