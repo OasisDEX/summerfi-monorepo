@@ -42,7 +42,6 @@ describe('Armada Protocol - DCA Orders', () => {
       chainId,
       fromVault: fromVault.fleetAddressValue,
       toVault: toVault.fleetAddressValue,
-      viemAccount: account,
       signTypedData: account.signTypedData,
       amount: amount,
       slippagePercentage: '0.5',

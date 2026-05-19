@@ -9,7 +9,6 @@ export const createAndSaveBuyOrderHandler =
     chainId,
     fromVaultAddress,
     toVaultAddress,
-    viemAccount,
     signTypedData,
     amount,
     slippagePercentage,
@@ -24,7 +23,6 @@ export const createAndSaveBuyOrderHandler =
     chainId: ChainId
     fromVaultAddress: AddressValue
     toVaultAddress: AddressValue
-    viemAccount?: Account
     signTypedData: (params: SignTypedDataParameters) => Promise<`0x${string}`>
     /** Full token amount (e.g. "1.5" for 1.5 USDC, not raw units) */
     amount: ITokenAmount
@@ -47,7 +45,6 @@ export const createAndSaveBuyOrderHandler =
       chainId,
       fromVault: fromVaultAddress,
       toVault: toVaultAddress,
-      viemAccount,
       signTypedData,
       amount,
       slippagePercentage,
