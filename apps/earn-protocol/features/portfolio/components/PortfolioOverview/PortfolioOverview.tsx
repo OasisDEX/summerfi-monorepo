@@ -77,6 +77,7 @@ const PositionsListView = ({
   isMobile,
   isTablet,
   handleButtonClick,
+  dcaOrders,
 }: {
   sortedPositions: PositionWithVault[]
   positionsHistoricalChartMap: {
@@ -90,7 +91,25 @@ const PositionsListView = ({
   isMobile: boolean
   isTablet: boolean
   handleButtonClick: (event: string) => void
+  dcaOrders: IArmadaDcaOrder[]
 }) => {
+  const getDcaOrderForVault = (
+    vaultId: string,
+  ): { id: string; type: 'from' | 'to' } | undefined => {
+    const normalizedId = vaultId.toLowerCase()
+
+    const order = dcaOrders.find(
+      (o) => o.fromVault.toLowerCase() === normalizedId || o.toVault.toLowerCase() === normalizedId,
+    )
+
+    if (!order) return undefined
+
+    const type =
+      order.fromVault.toLowerCase() === normalizedId ? ('from' as const) : ('to' as const)
+
+    return { id: order.id, type }
+  }
+
   return sortedPositions.length ? (
     sortedPositions.map((position) => (
       <PortfolioPosition
@@ -99,6 +118,8 @@ const PositionsListView = ({
         portfolioPosition={position}
         buttonClickEventHandler={buttonClickEventHandler}
         tooltipEventHandler={tooltipEventHandler}
+        dcaOrderId={getDcaOrderForVault(position.vault.id)?.id}
+        dcaOrderType={getDcaOrderForVault(position.vault.id)?.type}
         positionGraph={
           <PositionHistoricalChart
             chartData={positionsHistoricalChartMap[getUniqueVaultId(position.vault)]}
@@ -362,6 +383,7 @@ export const PortfolioOverview = ({
               isMobile={isMobile}
               isTablet={isTablet}
               handleButtonClick={handleButtonClick}
+              dcaOrders={dcaOrders}
             />
           ) : null}
           {positionsTab === 'dca-strategies' ? (
