@@ -9,6 +9,7 @@ import { createSendTransactionTool } from '@summerfi/testing-utils'
 export function createSdkTestSetup(testConfigKey: TestConfigKey = 'BaseUSDC') {
   const sdk = makeSDK({
     apiDomainUrl: SDKApiUrl,
+    logging: process.env.SDK_LOGGING_ENABLED === 'true',
   })
 
   const { chainId, rpcUrl, fleetAddressValue } = TestConfigs[testConfigKey]

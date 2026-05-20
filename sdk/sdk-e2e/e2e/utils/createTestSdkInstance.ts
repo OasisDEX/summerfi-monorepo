@@ -13,10 +13,12 @@ export function createTestSdkInstance(
       apiDomainUrl: SDKApiUrl,
       clientId,
       // version: 'v1',
+      logging: process.env.SDK_LOGGING_ENABLED === 'true',
     })
   }
 
   return makeSDK({
     apiDomainUrl: SDKApiUrl,
+    logging: process.env.SDK_LOGGING_ENABLED === 'true',
   })
 }

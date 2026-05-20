@@ -10,6 +10,7 @@ export function createAdminSdkTestSetup(clientId: TestClientIds) {
   const sdk = makeAdminSDK({
     clientId,
     apiDomainUrl: SDKApiUrl,
+    logging: process.env.SDK_LOGGING_ENABLED === 'true',
   })
 
   const { chainId, rpcUrl, fleetAddressValue, userAddressValue, aqAddressValue } =
