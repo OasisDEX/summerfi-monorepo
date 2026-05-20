@@ -2,11 +2,11 @@ import { type FC } from 'react'
 import { type Metadata } from 'next'
 
 interface DCAPositionPageProps {
-  params: Promise<{ positionId: string }>
+  params: Promise<{ orderId: string }>
 }
 
 const DCAPositionPage: FC<DCAPositionPageProps> = async ({ params }) => {
-  const { positionId } = await params
+  const { orderId } = await params
 
   return (
     <div
@@ -17,7 +17,7 @@ const DCAPositionPage: FC<DCAPositionPageProps> = async ({ params }) => {
         padding: 'var(--general-space-32) var(--general-space-16)',
       }}
     >
-      Reserved for DCA Position {positionId}
+      Reserved for DCA Position {orderId}
     </div>
   )
 }
