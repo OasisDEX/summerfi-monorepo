@@ -22,7 +22,7 @@ import {
   recoverMessageAddress,
   type Address as ViemAddress,
 } from 'viem'
-import type { SummerProtocolDb, SummerProtocolDbProvider } from './dca/getDb'
+import type { SummerProtocolDb, SummerProtocolDbProvider } from '../../db-provider/getDb'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 
 const MIN_INTERVAL_SECONDS = 3600 // 1 hour
@@ -194,6 +194,9 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       createdAt: now,
       updatedAt: now,
     }
+
+    // check if approval is set for the order amount before saving the order, throw if not approved
+    // use approvals provider to check approval status
 
     const db = await this._getDb()
     await db
@@ -505,7 +508,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       return this._summerProtocolDbProvider()
     }
 
-    const { getDb } = await import('./dca/getDb')
+    const { getDb } = await import('../../db-provider/getDb')
     return getDb()
   }
 

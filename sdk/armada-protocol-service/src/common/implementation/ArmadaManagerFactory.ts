@@ -10,7 +10,7 @@ import { ArmadaManager } from './ArmadaManager'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { IChainInfo } from '@summerfi/sdk-common'
-import type { SummerProtocolDbProvider } from './dca/getDb'
+import type { SummerProtocolDbProvider } from '../../db-provider/getDb'
 
 /**
  * @name ArmadaManagerFactory

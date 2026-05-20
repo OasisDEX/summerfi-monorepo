@@ -15,10 +15,6 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest tests/unit --coverage=true --silent=false",
-    "testw": "jest tests/unit --watch",
-    "test:integration": "jest tests/integration --coverage=true --silent=false",
-    "testw:integration": "jest tests/integration --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",

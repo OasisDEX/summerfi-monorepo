@@ -34,7 +34,7 @@ import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
 import { ArmadaManagerAccessControl } from './ArmadaManagerAccessControl'
 import { ArmadaManagerDCA } from './ArmadaManagerDCA'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
-import type { SummerProtocolDbProvider } from './dca/getDb'
+import type { SummerProtocolDbProvider } from '../../db-provider/getDb'
 
 /**
  * @name ArmadaManager

@@ -13,7 +13,7 @@ import {
 } from '@summerfi/sdk-common'
 import { privateKeyToAccount } from 'viem/accounts'
 import { ArmadaManagerDCA } from '../src/common/implementation/ArmadaManagerDCA'
-import type { SummerProtocolDb } from '../src/common/implementation/dca/getDb'
+import type { SummerProtocolDb } from '../src/db-provider/getDb'
 
 const DEFAULT_CHAIN_ID = 8453 as ChainId
 const FROM_VAULT = '0x1111111111111111111111111111111111111111' as AddressValue
