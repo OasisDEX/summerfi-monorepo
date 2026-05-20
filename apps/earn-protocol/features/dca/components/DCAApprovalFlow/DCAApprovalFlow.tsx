@@ -67,21 +67,24 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
     : isSourceEthVault
       ? 'Never sell below'
       : null
-  const thresholdValue = isTargetEthVault ? (
-    <>
-      {config.neverBuyAbove?.toFixed(4)}{' '}
-      <Text as="span" variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
-        {targetSymbol}/{sourceSymbol}
-      </Text>
-    </>
-  ) : isSourceEthVault ? (
-    <>
-      {config.neverSellBelow?.toFixed(4)}{' '}
-      <Text as="span" variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
-        {sourceSymbol}/{targetSymbol}
-      </Text>
-    </>
-  ) : null
+  const thresholdValue =
+    isTargetEthVault && config.neverBuyAbove ? (
+      <>
+        {config.neverBuyAbove.toFixed(4)}{' '}
+        <Text as="span" variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
+          {targetSymbol}/{sourceSymbol}
+        </Text>
+      </>
+    ) : isSourceEthVault && config.neverSellBelow ? (
+      <>
+        {config.neverSellBelow.toFixed(4)}{' '}
+        <Text as="span" variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
+          {sourceSymbol}/{targetSymbol}
+        </Text>
+      </>
+    ) : (
+      'Not set'
+    )
   const thresholdDescription = isTargetEthVault
     ? `Skip executions when ${targetSymbol} trades above this price.`
     : isSourceEthVault
@@ -311,7 +314,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
                   }
                 >
                   <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
-                    {thresholdValue ?? 'Not set'}
+                    {thresholdValue}
                   </Text>
                 </Tooltip>
                 <Text as="p" variant="p4" className={classNames.mutedText}>
