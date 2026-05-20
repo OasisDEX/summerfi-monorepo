@@ -1,6 +1,6 @@
 import type { ChainId, AddressValue } from '@summerfi/sdk-common'
 
-export type DeploymentProviderConfig = {
+export type DeploymentProviderConfigPublic = {
   chainId: ChainId
   active: boolean
   contracts: {
@@ -8,6 +8,17 @@ export type DeploymentProviderConfig = {
     admiralsQuarters: AddressValue
     configurationManager: AddressValue
     protocolAccessManager: AddressValue
-    dcaStrategyManager: AddressValue
+    dcaStrategyManager?: AddressValue
+  }
+}
+
+export type DeploymentProviderConfigInsti = {
+  chainId: ChainId
+  active: boolean
+  contracts: {
+    harborCommand: AddressValue
+    admiralsQuarters: AddressValue
+    configurationManager: AddressValue
+    protocolAccessManager: AddressValue
   }
 }
