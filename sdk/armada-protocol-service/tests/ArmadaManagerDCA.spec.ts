@@ -6,13 +6,17 @@ import {
   type AddressValue,
   type ChainId,
   type HexData,
+  type IArmadaDcaStrategyConfig,
+  TransactionType,
   Token,
   TokenAmount,
   Address,
   getChainInfoByChainId,
 } from '@summerfi/sdk-common'
+import { encodeFunctionData } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { ArmadaManagerDCA } from '../src/common/implementation/ArmadaManagerDCA'
+import { DCAStrategyManagerAbi } from '../src/common/implementation/abi/DCAStrategyManagerAbi'
 import type { SummerProtocolDb } from '../src/db-provider/getDb'
 
 const DEFAULT_CHAIN_ID = 8453 as ChainId
@@ -20,6 +24,7 @@ const FROM_VAULT = '0x1111111111111111111111111111111111111111' as AddressValue
 const TO_VAULT = '0x2222222222222222222222222222222222222222' as AddressValue
 const ADMIRALS_QUARTERS = '0x3333333333333333333333333333333333333333' as AddressValue
 const ENSO_ROUTER = '0x4444444444444444444444444444444444444444' as AddressValue
+const STRATEGY_MANAGER = '0x5555555555555555555555555555555555555555' as AddressValue
 
 const TEST_SIGNER_PRIVATE_KEY =
   '0x0000000000000000000000000000000000000000000000000000000000000001' as HexData
@@ -34,6 +39,23 @@ const USDC_TOKEN = Token.createFrom({
   decimals: 6,
 })
 const TEST_AMOUNT = TokenAmount.createFrom({ token: USDC_TOKEN, amount: '1' })
+const TEST_STRATEGY_CONFIG: IArmadaDcaStrategyConfig = {
+  strategyId: '1',
+  owner: '0x6666666666666666666666666666666666666666' as AddressValue,
+  sourceVault: FROM_VAULT,
+  targetVault: TO_VAULT,
+  inAsset: UNDERLYING_ASSET,
+  outAsset: '0xBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB' as AddressValue,
+  inAssetFeed: '0xCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC' as AddressValue,
+  outAssetFeed: '0xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD' as AddressValue,
+  tradeAmount: '1000000',
+  interval: '3600',
+  slippageBps: '50',
+  maxPrice: '200000000',
+  minPrice: '100000000',
+  endDate: '1800000000',
+  maxTrades: '10',
+}
 
 type DbOrderRow = {
   id: string
@@ -333,5 +355,117 @@ describe('ArmadaManagerDCA', () => {
         signature: '0x1234' as HexData,
       }),
     ).rejects.toThrow('Invalid cancel message')
+  })
+
+  it('should build strategy config transactions', async () => {
+    const manager = createManager({
+      summerProtocolDbProvider: async () => ({}) as SummerProtocolDb,
+    })
+
+    const expectedConfig = {
+      strategyId: 1n,
+      owner: TEST_STRATEGY_CONFIG.owner,
+      sourceVault: TEST_STRATEGY_CONFIG.sourceVault,
+      targetVault: TEST_STRATEGY_CONFIG.targetVault,
+      inAsset: TEST_STRATEGY_CONFIG.inAsset,
+      outAsset: TEST_STRATEGY_CONFIG.outAsset,
+      inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
+      outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
+      tradeAmount: 1000000n,
+      interval: 3600n,
+      slippageBps: 50n,
+      maxPrice: 200000000n,
+      minPrice: 100000000n,
+      endDate: 1800000000n,
+      maxTrades: 10n,
+    }
+
+    const createTx = await manager.createStrategyTx({
+      strategyManagerAddress: STRATEGY_MANAGER,
+      strategyConfig: TEST_STRATEGY_CONFIG,
+    })
+    const editTx = await manager.editStrategyTx({
+      strategyManagerAddress: STRATEGY_MANAGER,
+      strategyConfig: TEST_STRATEGY_CONFIG,
+    })
+    const resumeTx = await manager.resumeStrategyTx({
+      strategyManagerAddress: STRATEGY_MANAGER,
+      strategyConfig: TEST_STRATEGY_CONFIG,
+    })
+    const executeTx = await manager.executeDCATx({
+      strategyManagerAddress: STRATEGY_MANAGER,
+      strategyConfig: TEST_STRATEGY_CONFIG,
+      ensoData: '0x1234' as HexData,
+    })
+
+    expect(createTx.type).toBe(TransactionType.CreateStrategy)
+    expect(createTx.transaction.target.value).toBe(STRATEGY_MANAGER)
+    expect(createTx.transaction.calldata).toBe(
+      encodeFunctionData({
+        abi: DCAStrategyManagerAbi,
+        functionName: 'createStrategy',
+        args: [expectedConfig],
+      }),
+    )
+
+    expect(editTx.type).toBe(TransactionType.EditStrategy)
+    expect(editTx.transaction.calldata).toBe(
+      encodeFunctionData({
+        abi: DCAStrategyManagerAbi,
+        functionName: 'editStrategy',
+        args: [expectedConfig],
+      }),
+    )
+
+    expect(resumeTx.type).toBe(TransactionType.ResumeStrategy)
+    expect(resumeTx.transaction.calldata).toBe(
+      encodeFunctionData({
+        abi: DCAStrategyManagerAbi,
+        functionName: 'resumeStrategy',
+        args: [expectedConfig],
+      }),
+    )
+
+    expect(executeTx.type).toBe(TransactionType.ExecuteDCA)
+    expect(executeTx.transaction.calldata).toBe(
+      encodeFunctionData({
+        abi: DCAStrategyManagerAbi,
+        functionName: 'executeDCA',
+        args: [expectedConfig, '0x1234'],
+      }),
+    )
+  })
+
+  it('should build strategy id transactions', async () => {
+    const manager = createManager({
+      summerProtocolDbProvider: async () => ({}) as SummerProtocolDb,
+    })
+
+    const pauseTx = await manager.pauseStrategyTx({
+      strategyManagerAddress: STRATEGY_MANAGER,
+      strategyId: '42',
+    })
+    const cancelTx = await manager.cancelStrategyTx({
+      strategyManagerAddress: STRATEGY_MANAGER,
+      strategyId: '42',
+    })
+
+    expect(pauseTx.type).toBe(TransactionType.PauseStrategy)
+    expect(pauseTx.transaction.calldata).toBe(
+      encodeFunctionData({
+        abi: DCAStrategyManagerAbi,
+        functionName: 'pauseStrategy',
+        args: [42n],
+      }),
+    )
+
+    expect(cancelTx.type).toBe(TransactionType.CancelStrategy)
+    expect(cancelTx.transaction.calldata).toBe(
+      encodeFunctionData({
+        abi: DCAStrategyManagerAbi,
+        functionName: 'cancelStrategy',
+        args: [42n],
+      }),
+    )
   })
 })

@@ -26,6 +26,12 @@ export enum TransactionType {
   ToggleAQasMerklRewardsOperator = 'ToggleAQasMerklRewardsOperator',
   Permit2Authorization = 'Permit2Authorization',
   Permit2Revoke = 'Permit2Revoke',
+  CreateStrategy = 'CreateStrategy',
+  EditStrategy = 'EditStrategy',
+  PauseStrategy = 'PauseStrategy',
+  ResumeStrategy = 'ResumeStrategy',
+  CancelStrategy = 'CancelStrategy',
+  ExecuteDCA = 'ExecuteDCA',
 }
 
 export type TransactionPriceImpact = {
@@ -141,4 +147,28 @@ export type Permit2AuthorizationTransactionInfo = TransactionInfo & {
 
 export type Permit2RevokeTransactionInfo = TransactionInfo & {
   type: TransactionType.Permit2Revoke
+}
+
+export type CreateDcaStrategyTransactionInfo = TransactionInfo & {
+  type: TransactionType.CreateStrategy
+}
+
+export type EditDcaStrategyTransactionInfo = TransactionInfo & {
+  type: TransactionType.EditStrategy
+}
+
+export type PauseDcaStrategyTransactionInfo = TransactionInfo & {
+  type: TransactionType.PauseStrategy
+}
+
+export type ResumeDcaStrategyTransactionInfo = TransactionInfo & {
+  type: TransactionType.ResumeStrategy
+}
+
+export type CancelDcaStrategyTransactionInfo = TransactionInfo & {
+  type: TransactionType.CancelStrategy
+}
+
+export type ExecuteDcaTransactionInfo = TransactionInfo & {
+  type: TransactionType.ExecuteDCA
 }

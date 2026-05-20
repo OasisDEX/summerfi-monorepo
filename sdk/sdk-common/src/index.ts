@@ -215,6 +215,7 @@ export {
 } from './common/interfaces/IArmadaWithdrawal'
 export type { IArmadaWithdrawal } from './common/interfaces/IArmadaWithdrawal'
 export type { IArmadaDcaOrder } from './common/interfaces/IArmadaDcaOrder'
+export type { IArmadaDcaStrategyConfig } from './common/interfaces/IArmadaDcaStrategyConfig'
 export { getViemChain, hyperliquid } from './common/utils/getViemChain'
 export {
   newEmptyPositionFromPool,
@@ -339,6 +340,12 @@ export type {
   Erc20TransferTransactionInfo,
   Permit2AuthorizationTransactionInfo,
   Permit2RevokeTransactionInfo,
+  CreateDcaStrategyTransactionInfo,
+  EditDcaStrategyTransactionInfo,
+  PauseDcaStrategyTransactionInfo,
+  ResumeDcaStrategyTransactionInfo,
+  CancelDcaStrategyTransactionInfo,
+  ExecuteDcaTransactionInfo,
 } from './orders/common/types/ExtendedTransactionInfo'
 export type { Order } from './orders/common/types/Order'
 export type { TransactionInfo } from './orders/common/types/TransactionInfo'

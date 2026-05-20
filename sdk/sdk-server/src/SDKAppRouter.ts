@@ -134,10 +134,16 @@ import { setWhitelistedAQ } from './armada-protocol-handlers/access-control/setW
 import { setWhitelistedBatchAQ } from './armada-protocol-handlers/access-control/setWhitelistedBatchAQ'
 import { getAllRoles } from './armada-protocol-handlers/access-control/getAllRoles'
 import { createAndSaveBuyOrder } from './armada-protocol-handlers/dca/createAndSaveBuyOrder'
+import { createStrategyTx } from './armada-protocol-handlers/dca/createStrategyTx'
 import { getBuyOrder } from './armada-protocol-handlers/dca/getBuyOrder'
 import { getBuyOrders } from './armada-protocol-handlers/dca/getBuyOrders'
 import { cancelBuyOrder } from './armada-protocol-handlers/dca/cancelBuyOrder'
+import { cancelStrategyTx } from './armada-protocol-handlers/dca/cancelStrategyTx'
+import { editStrategyTx } from './armada-protocol-handlers/dca/editStrategyTx'
+import { executeDCATx } from './armada-protocol-handlers/dca/executeDCATx'
+import { pauseStrategyTx } from './armada-protocol-handlers/dca/pauseStrategyTx'
 import { pauseBuyOrder } from './armada-protocol-handlers/dca/pauseBuyOrder'
+import { resumeStrategyTx } from './armada-protocol-handlers/dca/resumeStrategyTx'
 import { resumeBuyOrder } from './armada-protocol-handlers/dca/resumeBuyOrder'
 import { getProtocolAddresses } from './armada-protocol-handlers/users/getProtocolAddresses'
 
@@ -303,6 +309,12 @@ export const sdkAppRouter = router({
       getAllRoles: getAllRoles,
     },
     dca: {
+      createStrategyTx: createStrategyTx,
+      editStrategyTx: editStrategyTx,
+      pauseStrategyTx: pauseStrategyTx,
+      resumeStrategyTx: resumeStrategyTx,
+      cancelStrategyTx: cancelStrategyTx,
+      executeDCATx: executeDCATx,
       createAndSaveBuyOrder: createAndSaveBuyOrder,
       getBuyOrder: getBuyOrder,
       getBuyOrders: getBuyOrders,

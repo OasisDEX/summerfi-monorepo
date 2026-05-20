@@ -8,14 +8,22 @@ import {
   type ChainId,
   type HexData,
   type IArmadaDcaOrder,
+  type IArmadaDcaStrategyConfig,
   Address,
   ArmadaDcaOrderStatusEnum,
   Token,
+  TransactionType,
+  type CreateDcaStrategyTransactionInfo,
+  type EditDcaStrategyTransactionInfo,
+  type PauseDcaStrategyTransactionInfo,
+  type ResumeDcaStrategyTransactionInfo,
+  type CancelDcaStrategyTransactionInfo,
   createTimeoutSignal,
   getChainInfoByChainId,
   isAddressValue,
 } from '@summerfi/sdk-common'
 import {
+  encodeFunctionData,
   encodePacked,
   keccak256,
   parseAbi,
@@ -24,6 +32,7 @@ import {
 } from 'viem'
 import type { SummerProtocolDb, SummerProtocolDbProvider } from '../../db-provider/getDb'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
+import { DCAStrategyManagerAbi } from './abi/DCAStrategyManagerAbi'
 
 const MIN_INTERVAL_SECONDS = 3600 // 1 hour
 const MAX_INTERVAL_SECONDS = 31536000 // 1 year
@@ -93,6 +102,109 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     this._blockchainClientProvider = params.blockchainClientProvider
     this._oracleManager = params.oracleManager
     this._summerProtocolDbProvider = params.summerProtocolDbProvider
+  }
+
+  async createStrategyTx(
+    params: Parameters<IArmadaManagerDCA['createStrategyTx']>[0],
+  ): ReturnType<IArmadaManagerDCA['createStrategyTx']> {
+    const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'dcaStrategyManager',
+      chainId: params.chainId,
+    }).value
+    return this._buildStrategyConfigTransaction({
+      strategyManagerAddress,
+      strategyConfig: params.strategyConfig,
+      functionName: 'createStrategy',
+      description: 'Create DCA strategy',
+      type: TransactionType.CreateStrategy,
+    }) as CreateDcaStrategyTransactionInfo
+  }
+
+  async editStrategyTx(
+    params: Parameters<IArmadaManagerDCA['editStrategyTx']>[0],
+  ): ReturnType<IArmadaManagerDCA['editStrategyTx']> {
+    const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'dcaStrategyManager',
+      chainId: params.chainId,
+    }).value
+    return this._buildStrategyConfigTransaction({
+      strategyManagerAddress,
+      strategyConfig: params.strategyConfig,
+      functionName: 'editStrategy',
+      description: 'Edit DCA strategy',
+      type: TransactionType.EditStrategy,
+    }) as EditDcaStrategyTransactionInfo
+  }
+
+  async pauseStrategyTx(
+    params: Parameters<IArmadaManagerDCA['pauseStrategyTx']>[0],
+  ): ReturnType<IArmadaManagerDCA['pauseStrategyTx']> {
+    const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'dcaStrategyManager',
+      chainId: params.chainId,
+    }).value
+    return this._buildStrategyIdTransaction({
+      strategyManagerAddress,
+      strategyId: params.strategyId,
+      functionName: 'pauseStrategy',
+      description: 'Pause DCA strategy',
+      type: TransactionType.PauseStrategy,
+    }) as PauseDcaStrategyTransactionInfo
+  }
+
+  async resumeStrategyTx(
+    params: Parameters<IArmadaManagerDCA['resumeStrategyTx']>[0],
+  ): ReturnType<IArmadaManagerDCA['resumeStrategyTx']> {
+    const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'dcaStrategyManager',
+      chainId: params.chainId,
+    }).value
+    return this._buildStrategyConfigTransaction({
+      strategyManagerAddress,
+      strategyConfig: params.strategyConfig,
+      functionName: 'resumeStrategy',
+      description: 'Resume DCA strategy',
+      type: TransactionType.ResumeStrategy,
+    }) as ResumeDcaStrategyTransactionInfo
+  }
+
+  async cancelStrategyTx(
+    params: Parameters<IArmadaManagerDCA['cancelStrategyTx']>[0],
+  ): ReturnType<IArmadaManagerDCA['cancelStrategyTx']> {
+    const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'dcaStrategyManager',
+      chainId: params.chainId,
+    }).value
+    return this._buildStrategyIdTransaction({
+      strategyManagerAddress,
+      strategyId: params.strategyId,
+      functionName: 'cancelStrategy',
+      description: 'Cancel DCA strategy',
+      type: TransactionType.CancelStrategy,
+    }) as CancelDcaStrategyTransactionInfo
+  }
+
+  async executeDCATx(
+    params: Parameters<IArmadaManagerDCA['executeDCATx']>[0],
+  ): ReturnType<IArmadaManagerDCA['executeDCATx']> {
+    const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'dcaStrategyManager',
+      chainId: params.chainId,
+    }).value
+    const calldata = encodeFunctionData({
+      abi: DCAStrategyManagerAbi,
+      functionName: 'executeDCA',
+      args: [this._toViemStrategyConfig(params.strategyConfig), params.ensoData],
+    }) as HexData
+
+    return {
+      type: TransactionType.ExecuteDCA,
+      description: 'Execute DCA strategy',
+      transaction: this._buildTransaction({
+        target: strategyManagerAddress,
+        calldata,
+      }),
+    }
   }
 
   async createAndSaveBuyOrder(
@@ -425,6 +537,86 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     const priceUsd = Number(spotPriceInfo.price.value)
 
     return Number(params.amount) * priceUsd
+  }
+
+  private _buildStrategyConfigTransaction(params: {
+    strategyManagerAddress: AddressValue
+    strategyConfig: IArmadaDcaStrategyConfig
+    functionName: 'createStrategy' | 'editStrategy' | 'resumeStrategy'
+    description: string
+    type:
+      | TransactionType.CreateStrategy
+      | TransactionType.EditStrategy
+      | TransactionType.ResumeStrategy
+  }):
+    | CreateDcaStrategyTransactionInfo
+    | EditDcaStrategyTransactionInfo
+    | ResumeDcaStrategyTransactionInfo {
+    const calldata = encodeFunctionData({
+      abi: DCAStrategyManagerAbi,
+      functionName: params.functionName,
+      args: [this._toViemStrategyConfig(params.strategyConfig)],
+    }) as HexData
+
+    return {
+      type: params.type,
+      description: params.description,
+      transaction: this._buildTransaction({
+        target: params.strategyManagerAddress,
+        calldata,
+      }),
+    }
+  }
+
+  private _buildStrategyIdTransaction(params: {
+    strategyManagerAddress: AddressValue
+    strategyId: string
+    functionName: 'pauseStrategy' | 'cancelStrategy'
+    description: string
+    type: TransactionType.PauseStrategy | TransactionType.CancelStrategy
+  }): PauseDcaStrategyTransactionInfo | CancelDcaStrategyTransactionInfo {
+    const calldata = encodeFunctionData({
+      abi: DCAStrategyManagerAbi,
+      functionName: params.functionName,
+      args: [BigInt(params.strategyId)],
+    }) as HexData
+
+    return {
+      type: params.type,
+      description: params.description,
+      transaction: this._buildTransaction({
+        target: params.strategyManagerAddress,
+        calldata,
+      }),
+    }
+  }
+
+  private _buildTransaction(params: { target: AddressValue; calldata: HexData }) {
+    return {
+      target: Address.createFromEthereum({ value: params.target }),
+      calldata: params.calldata,
+      value: '0',
+    }
+  }
+
+  private _toViemStrategyConfig(config: IArmadaDcaStrategyConfig) {
+    return {
+      strategyId: BigInt(config.strategyId),
+      owner: config.owner,
+      sourceVault: config.sourceVault,
+      targetVault: config.targetVault,
+      inAsset: config.inAsset,
+      outAsset: config.outAsset,
+      inAssetFeed: config.inAssetFeed,
+      outAssetFeed: config.outAssetFeed,
+      tradeAmount: BigInt(config.tradeAmount),
+      interval: BigInt(config.interval),
+      slippageBps: BigInt(config.slippageBps),
+      maxPrice: BigInt(config.maxPrice),
+      minPrice: BigInt(config.minPrice),
+      endDate: BigInt(config.endDate),
+      maxTrades: BigInt(config.maxTrades),
+    }
   }
 
   private async _verifyOrderSignature(params: {

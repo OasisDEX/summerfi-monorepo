@@ -1,10 +1,17 @@
 import type {
   AddressValue,
   IArmadaDcaOrder,
+  IArmadaDcaStrategyConfig,
   ChainId,
   HexData,
   ArmadaDcaOrderStatusEnum,
   ITokenAmount,
+  CreateDcaStrategyTransactionInfo,
+  EditDcaStrategyTransactionInfo,
+  PauseDcaStrategyTransactionInfo,
+  ResumeDcaStrategyTransactionInfo,
+  CancelDcaStrategyTransactionInfo,
+  ExecuteDcaTransactionInfo,
 } from '@summerfi/sdk-common'
 
 /**
@@ -12,6 +19,37 @@ import type {
  * @description Interface for creating and managing Armada recurring DCA buy orders
  */
 export interface IArmadaManagerDCA {
+  createStrategyTx(params: {
+    chainId: ChainId
+    strategyConfig: IArmadaDcaStrategyConfig
+  }): Promise<CreateDcaStrategyTransactionInfo>
+
+  editStrategyTx(params: {
+    chainId: ChainId
+    strategyConfig: IArmadaDcaStrategyConfig
+  }): Promise<EditDcaStrategyTransactionInfo>
+
+  pauseStrategyTx(params: {
+    chainId: ChainId
+    strategyId: string
+  }): Promise<PauseDcaStrategyTransactionInfo>
+
+  resumeStrategyTx(params: {
+    chainId: ChainId
+    strategyConfig: IArmadaDcaStrategyConfig
+  }): Promise<ResumeDcaStrategyTransactionInfo>
+
+  cancelStrategyTx(params: {
+    chainId: ChainId
+    strategyId: string
+  }): Promise<CancelDcaStrategyTransactionInfo>
+
+  executeDCATx(params: {
+    chainId: ChainId
+    strategyConfig: IArmadaDcaStrategyConfig
+    ensoData: HexData
+  }): Promise<ExecuteDcaTransactionInfo>
+
   /**
    * @name createAndSaveBuyOrder
    * @description Creates a signed DCA buy order payload and persists it in the database

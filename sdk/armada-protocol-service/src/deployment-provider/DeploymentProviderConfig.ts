@@ -8,5 +8,6 @@ export type DeploymentProviderConfig = {
     admiralsQuarters: AddressValue
     configurationManager: AddressValue
     protocolAccessManager: AddressValue
+    dcaStrategyManager: AddressValue
   }
 }

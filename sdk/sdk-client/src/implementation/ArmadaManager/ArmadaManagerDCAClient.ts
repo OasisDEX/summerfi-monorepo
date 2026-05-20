@@ -29,6 +29,42 @@ export class ArmadaManagerDCAClient extends IRPCClient implements IArmadaManager
     super(params)
   }
 
+  async createStrategyTx(
+    params: Parameters<IArmadaManagerDCAClient['createStrategyTx']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['createStrategyTx']> {
+    return this.rpcClient.armada.dca.createStrategyTx.query(params)
+  }
+
+  async editStrategyTx(
+    params: Parameters<IArmadaManagerDCAClient['editStrategyTx']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['editStrategyTx']> {
+    return this.rpcClient.armada.dca.editStrategyTx.query(params)
+  }
+
+  async pauseStrategyTx(
+    params: Parameters<IArmadaManagerDCAClient['pauseStrategyTx']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['pauseStrategyTx']> {
+    return this.rpcClient.armada.dca.pauseStrategyTx.query(params)
+  }
+
+  async resumeStrategyTx(
+    params: Parameters<IArmadaManagerDCAClient['resumeStrategyTx']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['resumeStrategyTx']> {
+    return this.rpcClient.armada.dca.resumeStrategyTx.query(params)
+  }
+
+  async cancelStrategyTx(
+    params: Parameters<IArmadaManagerDCAClient['cancelStrategyTx']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['cancelStrategyTx']> {
+    return this.rpcClient.armada.dca.cancelStrategyTx.query(params)
+  }
+
+  async executeDCATx(
+    params: Parameters<IArmadaManagerDCAClient['executeDCATx']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['executeDCATx']> {
+    return this.rpcClient.armada.dca.executeDCATx.query(params)
+  }
+
   async createAndSaveBuyOrder(
     params: Parameters<IArmadaManagerDCAClient['createAndSaveBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCAClient['createAndSaveBuyOrder']> {

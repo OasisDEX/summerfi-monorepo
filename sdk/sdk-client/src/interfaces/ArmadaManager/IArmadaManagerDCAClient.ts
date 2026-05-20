@@ -4,7 +4,14 @@ import type {
   ChainId,
   HexData,
   IArmadaDcaOrder,
+  IArmadaDcaStrategyConfig,
   ITokenAmount,
+  CreateDcaStrategyTransactionInfo,
+  EditDcaStrategyTransactionInfo,
+  PauseDcaStrategyTransactionInfo,
+  ResumeDcaStrategyTransactionInfo,
+  CancelDcaStrategyTransactionInfo,
+  ExecuteDcaTransactionInfo,
 } from '@summerfi/sdk-common'
 import type { Account, SignTypedDataParameters } from 'viem'
 
@@ -13,6 +20,37 @@ import type { Account, SignTypedDataParameters } from 'viem'
  * @description Client interface for Armada DCA order management
  */
 export interface IArmadaManagerDCAClient {
+  createStrategyTx(params: {
+    chainId: ChainId
+    strategyConfig: IArmadaDcaStrategyConfig
+  }): Promise<CreateDcaStrategyTransactionInfo>
+
+  editStrategyTx(params: {
+    chainId: ChainId
+    strategyConfig: IArmadaDcaStrategyConfig
+  }): Promise<EditDcaStrategyTransactionInfo>
+
+  pauseStrategyTx(params: {
+    chainId: ChainId
+    strategyId: string
+  }): Promise<PauseDcaStrategyTransactionInfo>
+
+  resumeStrategyTx(params: {
+    chainId: ChainId
+    strategyConfig: IArmadaDcaStrategyConfig
+  }): Promise<ResumeDcaStrategyTransactionInfo>
+
+  cancelStrategyTx(params: {
+    chainId: ChainId
+    strategyId: string
+  }): Promise<CancelDcaStrategyTransactionInfo>
+
+  executeDCATx(params: {
+    chainId: ChainId
+    strategyConfig: IArmadaDcaStrategyConfig
+    ensoData: HexData
+  }): Promise<ExecuteDcaTransactionInfo>
+
   createAndSaveBuyOrder(params: {
     userAddress: AddressValue
     chainId: ChainId
