@@ -8,6 +8,7 @@ import {
   Icon,
   Text,
   TextNumberAnimated,
+  Tooltip,
   useEarnProtocolChain,
   useEarnProtocolLogin,
   useEarnProtocolWallet,
@@ -66,7 +67,21 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
     : isSourceEthVault
       ? 'Never sell below'
       : null
-  const thresholdValue = isTargetEthVault ? config.neverBuyAbove : config.neverSellBelow
+  const thresholdValue = isTargetEthVault ? (
+    <>
+      {config.neverBuyAbove?.toFixed(4)}{' '}
+      <Text as="span" variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
+        {targetSymbol}/{sourceSymbol}
+      </Text>
+    </>
+  ) : isSourceEthVault ? (
+    <>
+      {config.neverSellBelow?.toFixed(4)}{' '}
+      <Text as="span" variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
+        {sourceSymbol}/{targetSymbol}
+      </Text>
+    </>
+  ) : null
   const thresholdDescription = isTargetEthVault
     ? `Skip executions when ${targetSymbol} trades above this price.`
     : isSourceEthVault
@@ -119,7 +134,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
         intervalSeconds,
         firstExecutionUnixTimestamp,
         deadlineUnixTimestamp,
-        maxTrades: config.maxTrades ?? 365,
+        maxTrades: config.maxTrades ?? 0,
         neverBuyAbove: config.neverBuyAbove?.toString(),
         neverSellBelow: config.neverSellBelow?.toString(),
       })
@@ -128,12 +143,15 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
     } catch (error) {
       const isRejected = error instanceof Error && /rejected|denied/iu.test(error.message)
 
+      if (!isRejected) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to create DCA strategy:', error)
+      }
+
       setErrorMessage(
         isRejected
           ? 'Signature rejected. Please confirm in your wallet to continue.'
-          : error instanceof Error
-            ? error.message
-            : 'Failed to create DCA strategy.',
+          : 'Failed to create DCA strategy.',
       )
     } finally {
       setIsCreating(false)
@@ -279,9 +297,23 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
                     </Text>
                   </div>
                 </div>
-                <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
-                  {thresholdValue ?? 'Not set'}
-                </Text>
+                <Tooltip
+                  tooltipWrapperStyles={{ minWidth: '230px' }}
+                  tooltip={
+                    <div>
+                      The strategy will skip any execution where the price of {targetSymbol} would
+                      be {isTargetEthVault ? 'above' : 'below'}{' '}
+                      {isTargetEthVault
+                        ? config.neverBuyAbove?.toFixed(4)
+                        : config.neverSellBelow?.toFixed(4)}
+                      .
+                    </div>
+                  }
+                >
+                  <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
+                    {thresholdValue ?? 'Not set'}
+                  </Text>
+                </Tooltip>
                 <Text as="p" variant="p4" className={classNames.mutedText}>
                   {thresholdDescription}
                 </Text>
@@ -297,7 +329,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
                 </div>
               </div>
               <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
-                {config.maxTrades ?? 365}
+                {config.maxTrades ?? 'Not set'}
               </Text>
               <Text as="p" variant="p4" className={classNames.mutedText}>
                 Stop the strategy after this many successful trades.

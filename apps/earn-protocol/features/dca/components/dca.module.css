@@ -426,7 +426,6 @@
 
 .amountUnit {
   color: var(--color-text-primary-disabled);
-  padding-right: var(--general-space-12);
   white-space: nowrap;
 }
 

@@ -81,6 +81,9 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
   const targetSymbol = getDisplayToken(pair.toVault.inputToken.symbol)
   const sourceTokenPrice = Number(pair.fromVault.inputTokenPriceUSD ?? 0)
   const targetTokenPrice = Number(pair.toVault.inputTokenPriceUSD ?? 0)
+  const isSourceEthVault = isEthVault(pair.fromVault)
+  const isTargetEthVault = isEthVault(pair.toVault)
+  const ethPrice = isTargetEthVault ? targetTokenPrice : isSourceEthVault ? sourceTokenPrice : 0
   const sourceToTargetRate =
     sourceTokenPrice > 0 && targetTokenPrice > 0 ? sourceTokenPrice / targetTokenPrice : null
   const estimatedTargetAmount =
@@ -100,6 +103,33 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
 
   const selectedFrequencyOption: FrequencyOptionId =
     FREQUENCY_OPTIONS.find((option) => option.days === frequencyDays)?.id ?? 'custom'
+
+  const thresholdError =
+    isTargetEthVault &&
+    config.neverBuyAbove !== undefined &&
+    ethPrice > 0 &&
+    config.neverBuyAbove < ethPrice
+      ? `Never buy above must be at least current ETH price ($${ethPrice.toLocaleString()}).`
+      : isSourceEthVault &&
+          config.neverSellBelow !== undefined &&
+          ethPrice > 0 &&
+          config.neverSellBelow > ethPrice
+        ? `Never sell below must be at most current ETH price ($${ethPrice.toLocaleString()}).`
+        : null
+
+  const handleSwapVaultsWithAmount = () => {
+    const nextAmount = config.amount
+
+    if (estimatedTargetAmount && estimatedTargetAmount > 0) {
+      patchConfig({ amount: estimatedTargetAmount })
+      handleSwapVaults()
+
+      return
+    }
+
+    patchConfig({ amount: nextAmount })
+    handleSwapVaults()
+  }
 
   return (
     <div className={classNames.layout}>
@@ -121,12 +151,13 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
           selectedTarget={selectedTarget}
           pairError={pairError}
           onSelectVault={handleVaultSelection}
-          onSwapVaults={handleSwapVaults}
+          onSwapVaults={handleSwapVaultsWithAmount}
         />
         <StepAmountFrequency
           amount={config.amount}
           frequencyDays={frequencyDays}
           selectedFrequencyOption={selectedFrequencyOption}
+          sourceTokenDecimals={pair.fromVault.inputToken.decimals}
           sourceSymbol={sourceSymbol}
           targetSymbol={targetSymbol}
           estimatedTargetAmount={estimatedTargetAmount}
@@ -145,16 +176,11 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
           config={config}
           sourceSymbol={sourceSymbol}
           targetSymbol={targetSymbol}
-          isSourceEthVault={isEthVault(pair.fromVault)}
-          isTargetEthVault={isEthVault(pair.toVault)}
+          isSourceEthVault={isSourceEthVault}
+          isTargetEthVault={isTargetEthVault}
           patchConfig={patchConfig}
-          ethPrice={
-            targetSymbol === 'ETH'
-              ? targetTokenPrice
-              : sourceSymbol === 'ETH'
-                ? sourceTokenPrice
-                : 0
-          }
+          ethPrice={ethPrice}
+          thresholdError={thresholdError}
         />
         <div
           style={{
@@ -170,7 +196,7 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
           <Button
             variant="primaryLarge"
             onClick={() => onSubmit(config, pair)}
-            disabled={!hasEligiblePair || !!pairError}
+            disabled={!hasEligiblePair || !!pairError || !!thresholdError}
           >
             Preview DCA Strategy
           </Button>

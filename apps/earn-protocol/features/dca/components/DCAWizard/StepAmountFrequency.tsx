@@ -1,5 +1,6 @@
-import { type FC } from 'react'
-import { Icon, Input, Text, TextNumberAnimated } from '@summerfi/app-earn-ui'
+import { type ChangeEvent, type FC, useEffect, useRef, useState } from 'react'
+import { Icon, Input, Text, TextNumberAnimated, useAmount } from '@summerfi/app-earn-ui'
+import { type IToken } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
@@ -16,6 +17,7 @@ interface StepAmountFrequencyProps {
   amount: number
   frequencyDays: number
   selectedFrequencyOption: FrequencyOptionId
+  sourceTokenDecimals: number
   sourceSymbol: string
   targetSymbol: string
   estimatedTargetAmount: number | null
@@ -33,6 +35,7 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
   amount,
   frequencyDays,
   selectedFrequencyOption,
+  sourceTokenDecimals,
   sourceSymbol,
   targetSymbol,
   estimatedTargetAmount,
@@ -45,6 +48,59 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
   onAmountChange,
   onFrequencyChange,
 }) => {
+  const [isAmountFocused, setIsAmountFocused] = useState(false)
+
+  const {
+    amountRaw,
+    amountDisplay,
+    handleAmountChange,
+    manualSetAmount,
+    onBlur: defaultOnBlur,
+    onFocus: defaultOnFocus,
+  } = useAmount({
+    tokenDecimals: sourceTokenDecimals,
+    selectedToken: {
+      decimals: sourceTokenDecimals,
+      symbol: sourceSymbol,
+    } as IToken,
+    initialAmount: amount.toString(),
+    inputChangeHandler: ({ value }) => {
+      onAmountChange(Number(value.split(' ')[0] ?? 0))
+    },
+    inputName: 'dca-amount',
+  })
+
+  const manualSetAmountRef = useRef(manualSetAmount)
+
+  useEffect(() => {
+    manualSetAmountRef.current = manualSetAmount
+  }, [manualSetAmount])
+
+  useEffect(() => {
+    if (isAmountFocused) {
+      return
+    }
+
+    const nextAmount = amount.toString()
+
+    if (amountRaw === nextAmount) {
+      return
+    }
+
+    manualSetAmountRef.current(nextAmount)
+  }, [amount, amountRaw, isAmountFocused])
+
+  const onAmountInputChange = (ev: ChangeEvent<HTMLInputElement>) => {
+    if (ev.target.value === '') {
+      manualSetAmount(undefined)
+      onAmountChange(0)
+
+      return
+    }
+
+    handleAmountChange(ev)
+  }
+
   return (
     <DCAWizardStepCard title="Step 3 - Set up your amount and frequency">
       <div className={classNames.frequencyCardGrid}>
@@ -82,12 +138,18 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
         <div className={classNames.step3InputsColumn}>
           <Input
             variant="dark"
-            type="number"
-            min={0}
-            step="any"
-            value={Number.isFinite(amount) ? amount : ''}
+            inputMode="decimal"
+            value={amountDisplay}
             inputWrapperStyles={{ border: '1px solid var(--earn-protocol-neutral-80)' }}
-            onChange={(ev) => onAmountChange(Number(ev.target.value))}
+            onChange={onAmountInputChange}
+            onFocus={() => {
+              setIsAmountFocused(true)
+              defaultOnFocus()
+            }}
+            onBlur={() => {
+              setIsAmountFocused(false)
+              defaultOnBlur()
+            }}
             button={
               <Text as="span" variant="p2semi" className={classNames.amountUnit}>
                 {sourceSymbol}

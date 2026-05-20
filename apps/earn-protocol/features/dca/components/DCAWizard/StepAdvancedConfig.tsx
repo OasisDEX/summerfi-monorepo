@@ -1,10 +1,13 @@
-import { type FC, useEffect, useState } from 'react'
-import { DatePicker, Input, Text } from '@summerfi/app-earn-ui'
+import { type ChangeEvent, type FC, useEffect, useRef, useState } from 'react'
+import { DatePicker, Input, Text, useAmount } from '@summerfi/app-earn-ui'
+import { type IToken } from '@summerfi/app-types'
 
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
 import { type DCAConfig } from '@/features/dca/lib/types'
 
 import classNames from '@/features/dca/components/dca.module.css'
+
+const THRESHOLD_DECIMALS = 8
 
 interface StepAdvancedConfigProps {
   config: DCAConfig
@@ -13,6 +16,7 @@ interface StepAdvancedConfigProps {
   isSourceEthVault: boolean
   isTargetEthVault: boolean
   ethPrice: number
+  thresholdError: string | null
   patchConfig: (patch: Partial<DCAConfig>) => void
 }
 
@@ -23,9 +27,11 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
   isSourceEthVault,
   isTargetEthVault,
   ethPrice,
+  thresholdError,
   patchConfig,
 }) => {
   const [isMobile, setIsMobile] = useState(false)
+  const [isThresholdFocused, setIsThresholdFocused] = useState(false)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 960px)')
@@ -65,8 +71,61 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
     }
   }
 
+  const {
+    amountRaw: thresholdRaw,
+    amountDisplay: thresholdDisplay,
+    handleAmountChange: handleThresholdAmountChange,
+    manualSetAmount: manualSetThreshold,
+    onBlur: defaultThresholdOnBlur,
+    onFocus: defaultThresholdOnFocus,
+  } = useAmount({
+    tokenDecimals: THRESHOLD_DECIMALS,
+    selectedToken: {
+      decimals: THRESHOLD_DECIMALS,
+      symbol: 'USD',
+    } as IToken,
+    initialAmount: thresholdValue?.toString(),
+    inputChangeHandler: ({ value }) => {
+      const parsedValue = Number(value.split(' ')[0] ?? 0)
+
+      handleThresholdChange(Number.isFinite(parsedValue) ? parsedValue : undefined)
+    },
+    inputName: 'dca-threshold',
+  })
+
+  const manualSetThresholdRef = useRef(manualSetThreshold)
+
+  useEffect(() => {
+    manualSetThresholdRef.current = manualSetThreshold
+  }, [manualSetThreshold])
+
+  useEffect(() => {
+    if (isThresholdFocused) {
+      return
+    }
+
+    const nextThreshold = thresholdValue?.toString()
+
+    if (thresholdRaw === nextThreshold) {
+      return
+    }
+
+    manualSetThresholdRef.current(nextThreshold)
+  }, [isThresholdFocused, thresholdRaw, thresholdValue])
+
   const handleDeadlineChange = (date: Date | undefined) => {
     patchConfig({ deadline: date ? date.toISOString() : undefined })
+  }
+
+  const onThresholdInputChange = (ev: ChangeEvent<HTMLInputElement>) => {
+    if (ev.target.value === '') {
+      manualSetThreshold(undefined)
+      handleThresholdChange(undefined)
+
+      return
+    }
+
+    handleThresholdAmountChange(ev)
   }
 
   return (
@@ -83,27 +142,35 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
             </div>
             <Input
               variant="dark"
-              type="number"
-              min={0}
-              step="any"
-              value={thresholdValue ?? ''}
-              onChange={(ev) => {
-                const nextValue = ev.target.value
-
-                if (nextValue === '') {
-                  handleThresholdChange(undefined)
-
-                  return
-                }
-
-                handleThresholdChange(Number(nextValue))
+              inputMode="decimal"
+              value={thresholdDisplay}
+              onChange={onThresholdInputChange}
+              onFocus={() => {
+                setIsThresholdFocused(true)
+                defaultThresholdOnFocus()
               }}
+              onBlur={() => {
+                setIsThresholdFocused(false)
+                defaultThresholdOnBlur()
+              }}
+              button={
+                <Text as="span" variant="p2semi" className={classNames.amountUnit}>
+                  {isTargetEthVault
+                    ? `${targetSymbol}/${sourceSymbol}`
+                    : `${sourceSymbol}/${targetSymbol}`}
+                </Text>
+              }
             />
             <Text as="p" variant="p4" className={classNames.mutedText}>
               {thresholdDescription}
               <br />
               {currentEthPriceLabel}
             </Text>
+            {thresholdError ? (
+              <Text as="p" variant="p4" style={{ color: 'var(--earn-protocol-critical-100)' }}>
+                {thresholdError}
+              </Text>
+            ) : null}
           </div>
         ) : null}
 
