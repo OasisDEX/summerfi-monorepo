@@ -151,9 +151,11 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
               defaultOnBlur()
             }}
             button={
-              <Text as="span" variant="p2semi" className={classNames.amountUnit}>
-                {sourceSymbol}
-              </Text>
+              isAmountFocused ? null : (
+                <Text as="span" variant="p2semi" className={classNames.amountUnit}>
+                  {sourceSymbol}
+                </Text>
+              )
             }
           />
           <Input

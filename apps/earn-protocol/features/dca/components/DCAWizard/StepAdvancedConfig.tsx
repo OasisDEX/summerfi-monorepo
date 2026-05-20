@@ -154,11 +154,13 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
                 defaultThresholdOnBlur()
               }}
               button={
-                <Text as="span" variant="p2semi" className={classNames.amountUnit}>
-                  {isTargetEthVault
-                    ? `${targetSymbol}/${sourceSymbol}`
-                    : `${sourceSymbol}/${targetSymbol}`}
-                </Text>
+                isThresholdFocused ? null : (
+                  <Text as="span" variant="p2semi" className={classNames.amountUnit}>
+                    {isTargetEthVault
+                      ? `${targetSymbol}/${sourceSymbol}`
+                      : `${sourceSymbol}/${targetSymbol}`}
+                  </Text>
+                )
               }
             />
             <Text as="p" variant="p4" className={classNames.mutedText}>
