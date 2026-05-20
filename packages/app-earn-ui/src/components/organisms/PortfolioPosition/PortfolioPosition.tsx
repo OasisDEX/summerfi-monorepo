@@ -126,7 +126,7 @@ export const PortfolioPosition = ({
   )
 
   const dcaButton = dcaOrderId ? (
-    <Link href={`/dca/position/${dcaOrderId}`}>
+    <Link href={`/dca/position/${walletAddress}/${dcaOrderId}`}>
       <Button variant="secondarySmall" style={{ width: 'fit-content', margin: '0 auto' }}>
         DCA&nbsp;{dcaOrderType === 'from' ? 'source' : 'target'}&nbsp;
         <Icon iconName="stars_colorful" size={18} style={{ marginLeft: '-4px' }} />

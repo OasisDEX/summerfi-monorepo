@@ -185,7 +185,10 @@ export const PortfolioDcaPosition = ({
       </div>
 
       <div className={classNames.footerRow}>
-        <Link href={`/dca/position/${order.id}`} className={classNames.viewLink}>
+        <Link
+          href={`/dca/position/${order.userAddress}/${order.id}`}
+          className={classNames.viewLink}
+        >
           <Button variant="primaryMedium">View position</Button>
         </Link>
       </div>

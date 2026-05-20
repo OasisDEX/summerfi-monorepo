@@ -143,7 +143,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
         neverSellBelow: config.neverSellBelow?.toString(),
       })
 
-      push(`/dca/position/${dcaPositionData.id}`)
+      push(`/dca/position/${address}/${dcaPositionData.id}`)
     } catch (error) {
       const isRejected = error instanceof Error && /rejected|denied/iu.test(error.message)
 
