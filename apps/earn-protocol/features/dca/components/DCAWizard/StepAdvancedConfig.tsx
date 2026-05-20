@@ -201,7 +201,7 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
               }
 
               patchConfig({
-                maxTrades: Number(Math.max(1, Math.min(MAX_FREQUENCY_DAYS, nextValue))),
+                maxTrades: Number(Math.max(1, Math.min(MAX_FREQUENCY_DAYS, Number(nextValue)))),
               })
             }}
           />
