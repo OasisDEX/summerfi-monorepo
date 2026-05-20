@@ -3,6 +3,7 @@ import { DatePicker, Input, Text, useAmount } from '@summerfi/app-earn-ui'
 import { type IToken } from '@summerfi/app-types'
 
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
+import { MAX_FREQUENCY_DAYS } from '@/features/dca/lib/dca-wizard-constants'
 import { type DCAConfig } from '@/features/dca/lib/types'
 
 import classNames from '@/features/dca/components/dca.module.css'
@@ -199,7 +200,9 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
                 return
               }
 
-              patchConfig({ maxTrades: Number(nextValue) })
+              patchConfig({
+                maxTrades: Number(Math.max(1, Math.min(MAX_FREQUENCY_DAYS, nextValue))),
+              })
             }}
           />
           <Text as="p" variant="p4" className={classNames.mutedText}>

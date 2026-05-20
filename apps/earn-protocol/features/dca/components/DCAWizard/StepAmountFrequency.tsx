@@ -5,11 +5,7 @@ import { formatCryptoBalance } from '@summerfi/app-utils'
 
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
 import { type PeriodSummary } from '@/features/dca/hooks/usePeriodSummaries'
-import {
-  FREQUENCY_OPTIONS,
-  type FrequencyOptionId,
-  MAX_FREQUENCY_DAYS,
-} from '@/features/dca/lib/dca-wizard-constants'
+import { FREQUENCY_OPTIONS, type FrequencyOptionId } from '@/features/dca/lib/dca-wizard-constants'
 
 import classNames from '@/features/dca/components/dca.module.css'
 
@@ -163,13 +159,11 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
             id="dca-frequency-days-input"
             type="number"
             min={1}
-            max={MAX_FREQUENCY_DAYS}
+            max={90}
             step="1"
             value={frequencyDays}
             inputWrapperStyles={{ border: '1px solid var(--earn-protocol-neutral-80)' }}
-            onChange={(ev) =>
-              onFrequencyChange(Math.max(1, Math.min(MAX_FREQUENCY_DAYS, Number(ev.target.value))))
-            }
+            onChange={(ev) => onFrequencyChange(Math.max(1, Math.min(90, Number(ev.target.value))))}
             button={
               <Text as="span" variant="p2semi" className={classNames.amountUnit}>
                 Days

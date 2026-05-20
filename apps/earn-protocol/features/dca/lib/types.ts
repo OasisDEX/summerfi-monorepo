@@ -10,7 +10,7 @@ export interface DCAConfig {
   deadline?: string
 }
 
-export type DCAPhase = 'wizard' | 'approval' | 'position'
+export type DCAPhase = 'wizard' | 'approval'
 
 /**
  * Allowed source/target vault pair for the DCA flow.

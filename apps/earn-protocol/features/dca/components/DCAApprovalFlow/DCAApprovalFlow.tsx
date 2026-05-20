@@ -34,11 +34,10 @@ import classNames from '@/features/dca/components/dca.module.css'
 interface DCAApprovalFlowProps {
   config: DCAConfig
   pair: DCAResolvedPair
-  onComplete: () => void
   onBack: () => void
 }
 
-export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComplete, onBack }) => {
+export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack }) => {
   const { login } = useEarnProtocolLogin()
   const { walletClient, address } = useEarnProtocolWallet()
   const { chain, setChain, isSettingChain } = useEarnProtocolChain()
@@ -126,7 +125,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
         amount: config.amount.toString(),
       })
 
-      await createAndSaveBuyOrder({
+      const dcaPositionData = await createAndSaveBuyOrder({
         userAddress: address as `0x${string}`,
         chainId,
         toVaultAddress: pair.toVault.id as AddressValue,
@@ -137,12 +136,12 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
         intervalSeconds,
         firstExecutionUnixTimestamp,
         deadlineUnixTimestamp,
-        maxTrades: config.maxTrades ?? 0,
+        maxTrades: config.maxTrades ?? 1000,
         neverBuyAbove: config.neverBuyAbove?.toString(),
         neverSellBelow: config.neverSellBelow?.toString(),
       })
 
-      onComplete()
+      push(`/dca/position/${dcaPositionData.id}`)
     } catch (error) {
       const isRejected = error instanceof Error && /rejected|denied/iu.test(error.message)
 
@@ -168,7 +167,6 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
     config.neverBuyAbove,
     config.neverSellBelow,
     createAndSaveBuyOrder,
-    onComplete,
     pair.fromVault,
     pair.toVault,
     walletClient,
@@ -332,7 +330,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onComp
                 </div>
               </div>
               <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
-                {config.maxTrades ?? 'Not set'}
+                {config.maxTrades === 1000 ? '1000 (maximum)' : (config.maxTrades ?? 'Not set')}
               </Text>
               <Text as="p" variant="p4" className={classNames.mutedText}>
                 Stop the strategy after this many successful trades.

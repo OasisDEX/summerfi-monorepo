@@ -1,7 +1,6 @@
 'use client'
 
 import { type FC, useState } from 'react'
-import { Card, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
@@ -20,7 +19,6 @@ interface DCANewViewProps {
 
 export const DCANewView: FC<DCANewViewProps> = ({ sourceVaults, targetVaults, pairs }) => {
   const [phase, setPhase] = useState<DCAPhase>('wizard')
-  // eslint-disable-next-line unused-imports/no-unused-vars
   const [submitted, setSubmitted] = useState<{
     config: DCAConfig
     pair: DCAResolvedPair
@@ -47,18 +45,9 @@ export const DCANewView: FC<DCANewViewProps> = ({ sourceVaults, targetVaults, pa
           <DCAApprovalFlow
             config={submitted.config}
             pair={submitted.pair}
-            onComplete={() => setPhase('position')}
             onBack={() => setPhase('wizard')}
           />
         </SDKContextProvider>
-      ) : null}
-
-      {phase === 'position' && submitted ? (
-        <Card variant="cardWarning">
-          <Text as="p" variant="p3">
-            Position created.
-          </Text>
-        </Card>
       ) : null}
     </div>
   )
