@@ -1,10 +1,11 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import { type AddressValue, type ChainId, type ITokenAmount } from '@summerfi/sdk-common'
-import type { Account, SignTypedDataParameters } from 'viem'
+import type { SignTypedDataParameters } from 'viem'
 
 export const createAndSaveBuyOrderHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
+    id,
     userAddress,
     chainId,
     fromVaultAddress,
@@ -19,6 +20,7 @@ export const createAndSaveBuyOrderHandler =
     neverBuyAbove,
     neverSellBelow,
   }: {
+    id: string
     userAddress: AddressValue
     chainId: ChainId
     fromVaultAddress: AddressValue
@@ -41,6 +43,7 @@ export const createAndSaveBuyOrderHandler =
     neverSellBelow?: string
   }) => {
     return sdk.armada.dca.createAndSaveBuyOrder({
+      id,
       userAddress,
       chainId,
       fromVault: fromVaultAddress,

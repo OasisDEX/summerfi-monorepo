@@ -1,7 +1,6 @@
 import type {
   AddressValue,
   IArmadaDcaOrder,
-  IArmadaDcaStrategyConfig,
   ChainId,
   HexData,
   ArmadaDcaOrderStatusEnum,
@@ -21,12 +20,17 @@ import type {
 export interface IArmadaManagerDCA {
   createStrategyTx(params: {
     chainId: ChainId
-    strategyConfig: IArmadaDcaStrategyConfig
+    order: IArmadaDcaOrder
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
   }): Promise<CreateDcaStrategyTransactionInfo>
 
   editStrategyTx(params: {
     chainId: ChainId
-    strategyConfig: IArmadaDcaStrategyConfig
+    order: IArmadaDcaOrder
+    strategyId: string
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
   }): Promise<EditDcaStrategyTransactionInfo>
 
   pauseStrategyTx(params: {
@@ -36,7 +40,10 @@ export interface IArmadaManagerDCA {
 
   resumeStrategyTx(params: {
     chainId: ChainId
-    strategyConfig: IArmadaDcaStrategyConfig
+    order: IArmadaDcaOrder
+    strategyId: string
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
   }): Promise<ResumeDcaStrategyTransactionInfo>
 
   cancelStrategyTx(params: {
@@ -46,8 +53,10 @@ export interface IArmadaManagerDCA {
 
   executeDCATx(params: {
     chainId: ChainId
-    strategyConfig: IArmadaDcaStrategyConfig
-    ensoData: HexData
+    order: IArmadaDcaOrder
+    strategyId: string
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
   }): Promise<ExecuteDcaTransactionInfo>
 
   /**
@@ -55,6 +64,7 @@ export interface IArmadaManagerDCA {
    * @description Creates a signed DCA buy order payload and persists it in the database
    */
   createAndSaveBuyOrder(params: {
+    id: string
     userAddress: AddressValue
     chainId: ChainId
     fromVault: AddressValue

@@ -4,7 +4,6 @@ import type {
   ChainId,
   HexData,
   IArmadaDcaOrder,
-  IArmadaDcaStrategyConfig,
   ITokenAmount,
   CreateDcaStrategyTransactionInfo,
   EditDcaStrategyTransactionInfo,
@@ -13,7 +12,7 @@ import type {
   CancelDcaStrategyTransactionInfo,
   ExecuteDcaTransactionInfo,
 } from '@summerfi/sdk-common'
-import type { Account, SignTypedDataParameters } from 'viem'
+import type { SignTypedDataParameters } from 'viem'
 
 /**
  * @name IArmadaManagerDCAClient
@@ -22,12 +21,17 @@ import type { Account, SignTypedDataParameters } from 'viem'
 export interface IArmadaManagerDCAClient {
   createStrategyTx(params: {
     chainId: ChainId
-    strategyConfig: IArmadaDcaStrategyConfig
+    order: IArmadaDcaOrder
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
   }): Promise<CreateDcaStrategyTransactionInfo>
 
   editStrategyTx(params: {
     chainId: ChainId
-    strategyConfig: IArmadaDcaStrategyConfig
+    order: IArmadaDcaOrder
+    strategyId: string
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
   }): Promise<EditDcaStrategyTransactionInfo>
 
   pauseStrategyTx(params: {
@@ -37,7 +41,10 @@ export interface IArmadaManagerDCAClient {
 
   resumeStrategyTx(params: {
     chainId: ChainId
-    strategyConfig: IArmadaDcaStrategyConfig
+    order: IArmadaDcaOrder
+    strategyId: string
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
   }): Promise<ResumeDcaStrategyTransactionInfo>
 
   cancelStrategyTx(params: {
@@ -47,11 +54,14 @@ export interface IArmadaManagerDCAClient {
 
   executeDCATx(params: {
     chainId: ChainId
-    strategyConfig: IArmadaDcaStrategyConfig
-    ensoData: HexData
+    order: IArmadaDcaOrder
+    strategyId: string
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
   }): Promise<ExecuteDcaTransactionInfo>
 
   createAndSaveBuyOrder(params: {
+    id: string
     userAddress: AddressValue
     chainId: ChainId
     fromVault: AddressValue

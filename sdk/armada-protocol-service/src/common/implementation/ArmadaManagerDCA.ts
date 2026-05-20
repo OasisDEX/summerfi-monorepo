@@ -111,12 +111,19 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
+    const strategyConfig = this._orderToStrategyConfig({
+      order: params.order,
+      strategyId: '0',
+      inAssetFeed: params.inAssetFeed,
+      outAssetFeed: params.outAssetFeed,
+    })
     return this._buildStrategyConfigTransaction({
       strategyManagerAddress,
-      strategyConfig: params.strategyConfig,
+      strategyConfig,
       functionName: 'createStrategy',
       description: 'Create DCA strategy',
       type: TransactionType.CreateStrategy,
+      metadata: { order: params.order },
     }) as CreateDcaStrategyTransactionInfo
   }
 
@@ -127,12 +134,19 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
+    const strategyConfig = this._orderToStrategyConfig({
+      order: params.order,
+      strategyId: params.strategyId,
+      inAssetFeed: params.inAssetFeed,
+      outAssetFeed: params.outAssetFeed,
+    })
     return this._buildStrategyConfigTransaction({
       strategyManagerAddress,
-      strategyConfig: params.strategyConfig,
+      strategyConfig,
       functionName: 'editStrategy',
       description: 'Edit DCA strategy',
       type: TransactionType.EditStrategy,
+      metadata: { order: params.order },
     }) as EditDcaStrategyTransactionInfo
   }
 
@@ -159,12 +173,19 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
+    const strategyConfig = this._orderToStrategyConfig({
+      order: params.order,
+      strategyId: params.strategyId,
+      inAssetFeed: params.inAssetFeed,
+      outAssetFeed: params.outAssetFeed,
+    })
     return this._buildStrategyConfigTransaction({
       strategyManagerAddress,
-      strategyConfig: params.strategyConfig,
+      strategyConfig,
       functionName: 'resumeStrategy',
       description: 'Resume DCA strategy',
       type: TransactionType.ResumeStrategy,
+      metadata: { order: params.order },
     }) as ResumeDcaStrategyTransactionInfo
   }
 
@@ -191,10 +212,16 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
+    const strategyConfig = this._orderToStrategyConfig({
+      order: params.order,
+      strategyId: params.strategyId,
+      inAssetFeed: params.inAssetFeed,
+      outAssetFeed: params.outAssetFeed,
+    })
     const calldata = encodeFunctionData({
       abi: DCAStrategyManagerAbi,
       functionName: 'executeDCA',
-      args: [this._toViemStrategyConfig(params.strategyConfig), params.ensoData],
+      args: [this._toViemStrategyConfig(strategyConfig), params.order.swapCalldata],
     }) as HexData
 
     return {
@@ -213,7 +240,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     const now = Math.floor(Date.now() / 1000)
     const deadline = params.deadlineUnixTimestamp
     const firstExecutionAt = params.firstExecutionUnixTimestamp
-    const orderId = crypto.randomUUID()
+    const orderId = params.id
 
     // Validate amount is a positive decimal string
     const amountRaw = params.amount.toSolidityValue()
@@ -539,6 +566,31 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     return Number(params.amount) * priceUsd
   }
 
+  private _orderToStrategyConfig(params: {
+    order: IArmadaDcaOrder
+    strategyId: string
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
+  }): IArmadaDcaStrategyConfig {
+    return {
+      strategyId: params.strategyId,
+      owner: params.order.userAddress,
+      sourceVault: params.order.fromVault,
+      targetVault: params.order.toVault,
+      inAsset: params.order.fromVault,
+      outAsset: params.order.toVault,
+      inAssetFeed: params.inAssetFeed,
+      outAssetFeed: params.outAssetFeed,
+      tradeAmount: params.order.amount,
+      interval: String(params.order.intervalSeconds),
+      slippageBps: String(Math.round(Number(params.order.slippage) * 100)),
+      maxPrice: params.order.neverBuyAbove ?? '0',
+      minPrice: params.order.neverSellBelow ?? '0',
+      endDate: String(params.order.deadlineUnixTimestamp ?? 0),
+      maxTrades: String(params.order.maxTrades),
+    }
+  }
+
   private _buildStrategyConfigTransaction(params: {
     strategyManagerAddress: AddressValue
     strategyConfig: IArmadaDcaStrategyConfig
@@ -548,6 +600,9 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       | TransactionType.CreateStrategy
       | TransactionType.EditStrategy
       | TransactionType.ResumeStrategy
+    metadata: {
+      order: IArmadaDcaOrder
+    }
   }):
     | CreateDcaStrategyTransactionInfo
     | EditDcaStrategyTransactionInfo
@@ -565,6 +620,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         target: params.strategyManagerAddress,
         calldata,
       }),
+      metadata: params.metadata,
     }
   }
 

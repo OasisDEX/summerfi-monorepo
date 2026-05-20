@@ -1,20 +1,26 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import type { ChainId, HexData, IArmadaDcaStrategyConfig } from '@summerfi/sdk-common'
+import type { AddressValue, ChainId, IArmadaDcaOrder } from '@summerfi/sdk-common'
 
 export const executeDCATxHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     chainId,
-    strategyConfig,
-    ensoData,
+    order,
+    strategyId,
+    inAssetFeed,
+    outAssetFeed,
   }: {
     chainId: ChainId
-    strategyConfig: IArmadaDcaStrategyConfig
-    ensoData: HexData
+    order: IArmadaDcaOrder
+    strategyId: string
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
   }) => {
     return sdk.armada.dca.executeDCATx({
       chainId,
-      strategyConfig,
-      ensoData,
+      order,
+      strategyId,
+      inAssetFeed,
+      outAssetFeed,
     })
   }

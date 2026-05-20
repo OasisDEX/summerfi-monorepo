@@ -1,17 +1,23 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import type { ChainId, IArmadaDcaStrategyConfig } from '@summerfi/sdk-common'
+import type { AddressValue, ChainId, IArmadaDcaOrder } from '@summerfi/sdk-common'
 
 export const createStrategyTxHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     chainId,
-    strategyConfig,
+    order,
+    inAssetFeed,
+    outAssetFeed,
   }: {
     chainId: ChainId
-    strategyConfig: IArmadaDcaStrategyConfig
+    order: IArmadaDcaOrder
+    inAssetFeed: AddressValue
+    outAssetFeed: AddressValue
   }) => {
     return sdk.armada.dca.createStrategyTx({
       chainId,
-      strategyConfig,
+      order,
+      inAssetFeed,
+      outAssetFeed,
     })
   }

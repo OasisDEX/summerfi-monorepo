@@ -4,6 +4,7 @@ import type { IPrice } from '../../../common/interfaces/IPrice'
 import type { IPercentage } from '../../../common/interfaces/IPercentage'
 import type { Transaction } from './Transaction'
 import type { IArmadaVaultId } from '../../../common/interfaces/IArmadaVaultId'
+import type { IArmadaDcaOrder } from '../../../common/interfaces/IArmadaDcaOrder'
 
 /**
  * @enum TransactionType
@@ -151,10 +152,16 @@ export type Permit2RevokeTransactionInfo = TransactionInfo & {
 
 export type CreateDcaStrategyTransactionInfo = TransactionInfo & {
   type: TransactionType.CreateStrategy
+  metadata: {
+    order: IArmadaDcaOrder
+  }
 }
 
 export type EditDcaStrategyTransactionInfo = TransactionInfo & {
   type: TransactionType.EditStrategy
+  metadata: {
+    order: IArmadaDcaOrder
+  }
 }
 
 export type PauseDcaStrategyTransactionInfo = TransactionInfo & {
@@ -163,6 +170,9 @@ export type PauseDcaStrategyTransactionInfo = TransactionInfo & {
 
 export type ResumeDcaStrategyTransactionInfo = TransactionInfo & {
   type: TransactionType.ResumeStrategy
+  metadata: {
+    order: IArmadaDcaOrder
+  }
 }
 
 export type CancelDcaStrategyTransactionInfo = TransactionInfo & {
