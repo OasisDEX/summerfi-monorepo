@@ -237,7 +237,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       .selectFrom('armadaDcaOrders')
       .selectAll()
       .where('id', '=', params.orderId)
-      .where('userAddress', '=', params.userAddress)
+      .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
       .executeTakeFirst()
 
     if (!row) {
@@ -254,7 +254,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     let query = db
       .selectFrom('armadaDcaOrders')
       .selectAll()
-      .where('userAddress', '=', params.userAddress)
+      .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
 
     if (params.chainId) {
       query = query.where('chainId', '=', params.chainId)
@@ -291,7 +291,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         cancelledAt: String(now),
       })
       .where('id', '=', params.orderId)
-      .where('userAddress', '=', params.userAddress)
+      .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
       .executeTakeFirstOrThrow()
 
     return {
@@ -326,7 +326,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         pausedAt: String(now),
       })
       .where('id', '=', params.orderId)
-      .where('userAddress', '=', params.userAddress)
+      .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
       .executeTakeFirstOrThrow()
 
     return {
@@ -361,7 +361,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         pausedAt: null,
       })
       .where('id', '=', params.orderId)
-      .where('userAddress', '=', params.userAddress)
+      .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
       .executeTakeFirstOrThrow()
 
     return {
