@@ -22,6 +22,7 @@ import {
   recoverMessageAddress,
   type Address as ViemAddress,
 } from 'viem'
+import { sql } from 'kysely'
 import type { SummerProtocolDb, SummerProtocolDbProvider } from './dca/getDb'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 
@@ -237,7 +238,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       .selectFrom('armadaDcaOrders')
       .selectAll()
       .where('id', '=', params.orderId)
-      .where('userAddress', '=', params.userAddress)
+      .where(sql`lower(user_address)`, '=', params.userAddress.toLowerCase())
       .executeTakeFirst()
 
     if (!row) {
@@ -254,7 +255,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     let query = db
       .selectFrom('armadaDcaOrders')
       .selectAll()
-      .where('userAddress', '=', params.userAddress)
+      .where(sql`lower(user_address)`, '=', params.userAddress.toLowerCase())
 
     if (params.chainId) {
       query = query.where('chainId', '=', params.chainId)
@@ -291,7 +292,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         cancelledAt: String(now),
       })
       .where('id', '=', params.orderId)
-      .where('userAddress', '=', params.userAddress)
+      .where(sql`lower(user_address)`, '=', params.userAddress.toLowerCase())
       .executeTakeFirstOrThrow()
 
     return {
@@ -326,7 +327,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         pausedAt: String(now),
       })
       .where('id', '=', params.orderId)
-      .where('userAddress', '=', params.userAddress)
+      .where(sql`lower(user_address)`, '=', params.userAddress.toLowerCase())
       .executeTakeFirstOrThrow()
 
     return {
@@ -361,7 +362,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         pausedAt: null,
       })
       .where('id', '=', params.orderId)
-      .where('userAddress', '=', params.userAddress)
+      .where(sql`lower(user_address)`, '=', params.userAddress.toLowerCase())
       .executeTakeFirstOrThrow()
 
     return {

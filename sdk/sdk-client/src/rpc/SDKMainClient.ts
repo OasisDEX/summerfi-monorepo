@@ -6,6 +6,38 @@ export type RPCMainClientType = ReturnType<typeof createTRPCClient<SDKAppRouter>
 
 const URL_LENGTH_SPLIT = 3000
 
+function getEstimatedUrlLength(apiURL: string, path: string, input: unknown): number {
+  const encodedInput = SerializationService.stringify(input)
+
+  return apiURL.length + path.length + encodedInput.length + 64
+}
+
+function getRequestMethod(type: 'query' | 'mutation' | 'subscription', estimatedUrlLength: number) {
+  return type === 'query' && estimatedUrlLength <= URL_LENGTH_SPLIT ? 'GET' : 'POST'
+}
+
+function getLoggedRequestUrl(params: {
+  apiURL: string
+  path: string
+  input: unknown
+  method: 'GET' | 'POST'
+}): string {
+  const [apiUrlWithoutQuery, ...queryPartsFromBaseUrl] = params.apiURL.split('?')
+  const queryParts = queryPartsFromBaseUrl.length > 0 ? [queryPartsFromBaseUrl.join('?')] : []
+  const url = `${apiUrlWithoutQuery.replace(/\/$/, '')}/${params.path}`
+
+  queryParts.push('batch=1')
+
+  if (params.method === 'GET' && params.input !== undefined) {
+    const serializedInput = SerializationService.getTransformer().input.serialize(params.input)
+    const batchInput = { 0: serializedInput }
+
+    queryParts.push(`input=${encodeURIComponent(JSON.stringify(batchInput))}`)
+  }
+
+  return queryParts.length > 0 ? `${url}?${queryParts.join('&')}` : url
+}
+
 export function createMainRPCClient(params: {
   apiURL: string
   clientId?: string
@@ -43,14 +75,16 @@ export function createMainRPCClient(params: {
       loggerLink({
         enabled: () => !!params.logging,
         logger(opts) {
-          const apiUrlBase = new URL(`${params.apiURL}/${opts.path}`)
-          const encodedInput = SerializationService.stringify(opts.input)
-          const estimatedUrlLength =
-            params.apiURL.length + opts.path.length + encodedInput.length + 64
-          const method =
-            opts.type === 'query' && estimatedUrlLength <= URL_LENGTH_SPLIT ? 'GET' : 'POST'
+          const estimatedUrlLength = getEstimatedUrlLength(params.apiURL, opts.path, opts.input)
+          const method = getRequestMethod(opts.type, estimatedUrlLength)
+          const fullUrl = getLoggedRequestUrl({
+            apiURL: params.apiURL,
+            path: opts.path,
+            input: opts.input,
+            method,
+          })
 
-          LoggingService.log(`[SDK] ${method}: ${apiUrlBase}`)
+          LoggingService.log(`[SDK] ${method}: ${fullUrl}`)
         },
       }),
       splitLink({
@@ -59,9 +93,8 @@ export function createMainRPCClient(params: {
             return true
           }
 
-          const encodedInput = SerializationService.stringify(op.input)
-          const estimatedUrlLength =
-            params.apiURL.length + op.path.length + encodedInput.length + 64
+          const estimatedUrlLength = getEstimatedUrlLength(params.apiURL, op.path, op.input)
+
           return estimatedUrlLength > URL_LENGTH_SPLIT
         },
         true: postBatchLink,
