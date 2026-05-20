@@ -22,6 +22,7 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common'
+import { useRouter } from 'next/navigation'
 
 import { VaultSwitchBox } from '@/components/molecules/SidebarElements/VaultSwitchBox'
 import { DCASidebar } from '@/features/dca/components/DCASidebar/DCASidebar'
@@ -42,6 +43,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
   const { walletClient, address } = useEarnProtocolWallet()
   const { chain, setChain, isSettingChain } = useEarnProtocolChain()
   const { createAndSaveBuyOrder } = useAppSDK()
+  const { push } = useRouter()
   const [isCreating, setIsCreating] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -171,6 +173,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
     pair.toVault,
     walletClient,
     address,
+    push,
   ])
 
   const primaryButton = useMemo(() => {
