@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   Button,
   Card,
@@ -8,12 +8,12 @@ import {
   getUniqueVaultId,
   PortfolioPosition,
   SkeletonLine,
+  TabBarSimple,
   Text,
   Timeframes,
   ToggleButton,
   useLocalStorage,
   useMobileCheck,
-  // WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
@@ -29,6 +29,7 @@ import {
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
+import { ArmadaDcaOrderStatusEnum, type IArmadaDcaOrder } from '@summerfi/sdk-common'
 import Link from 'next/link'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
@@ -38,6 +39,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 // import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
+import { PortfolioDcaPosition } from '@/features/portfolio/components/PortfolioOverview/PortfolioDcaPosition'
 // import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSummerPro/PortfolioSummerPro'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
@@ -61,6 +63,112 @@ type PortfolioOverviewProps = {
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
+  dcaOrders: IArmadaDcaOrder[]
+}
+
+const PositionsListView = ({
+  sortedPositions,
+  positionsHistoricalChartMap,
+  vaultsApyByNetworkMap,
+  rewardTokenPrices,
+  timeframe,
+  buttonClickEventHandler,
+  tooltipEventHandler,
+  isMobile,
+  isTablet,
+  handleButtonClick,
+}: {
+  sortedPositions: PositionWithVault[]
+  positionsHistoricalChartMap: {
+    [key: string]: SingleSourceChartData
+  }
+  vaultsApyByNetworkMap: GetVaultsApyResponse
+  rewardTokenPrices: RewardTokenPrices
+  timeframe: TimeframesType
+  buttonClickEventHandler: ReturnType<typeof useHandleButtonClickEvent>
+  tooltipEventHandler: ReturnType<typeof useHandleTooltipOpenEvent>
+  isMobile: boolean
+  isTablet: boolean
+  handleButtonClick: (event: string) => void
+}) => {
+  return sortedPositions.length ? (
+    sortedPositions.map((position) => (
+      <PortfolioPosition
+        isMobile={isMobile || isTablet}
+        key={`Position_${position.position.id.id}_${position.vault.protocol.network}`}
+        portfolioPosition={position}
+        buttonClickEventHandler={buttonClickEventHandler}
+        tooltipEventHandler={tooltipEventHandler}
+        positionGraph={
+          <PositionHistoricalChart
+            chartData={positionsHistoricalChartMap[getUniqueVaultId(position.vault)]}
+            position={position}
+            timeframe={timeframe}
+            tokenSymbol={getDisplayToken(position.vault.inputToken.symbol) as TokenSymbolsList}
+          />
+        }
+        vaultApyData={
+          vaultsApyByNetworkMap[
+            `${position.vault.id}-${subgraphNetworkToId(supportedSDKNetwork(position.vault.protocol.network))}`
+          ]
+        }
+        sumrPrice={rewardTokenPrices.SUMR}
+      />
+    ))
+  ) : (
+    <div className={portfolioOverviewStyles.noPositionsWrapper}>
+      <Text as="h5" variant="h5">
+        You don’t have any positions yet
+      </Text>
+      <Text as="p" variant="p2">
+        Start earning sustainably higher yields, optimized with AI.
+        <br />
+        Earn more, save time, and reduce costs.
+      </Text>
+      <Link
+        href="/"
+        onClick={() => {
+          handleButtonClick('portfolio-overview-view-strategies')
+        }}
+      >
+        <Button variant="primaryMedium">View strategies</Button>
+      </Link>
+    </div>
+  )
+}
+
+const DcaStrategiesListView = ({
+  dcaOrders,
+  vaultsList,
+  buttonClickEventHandler,
+}: {
+  dcaOrders: IArmadaDcaOrder[]
+  vaultsList: SDKVaultsListType
+  buttonClickEventHandler: ReturnType<typeof useHandleButtonClickEvent>
+}) => {
+  return (
+    <div className={portfolioOverviewStyles.portfolioDcaPositionsListWrapper}>
+      {dcaOrders.length ? (
+        dcaOrders.map((order) => (
+          <PortfolioDcaPosition key={order.id} order={order} vaultsList={vaultsList} />
+        ))
+      ) : (
+        <div className={portfolioOverviewStyles.noPositionsWrapper}>
+          <Text as="h5" variant="h5">
+            You don’t have any DCA strategies yet
+          </Text>
+          <Link
+            href="/dca/new"
+            onClick={() => {
+              buttonClickEventHandler('portfolio-overview-view-strategies')
+            }}
+          >
+            <Button variant="primaryMedium">View DCA strategies</Button>
+          </Link>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export const PortfolioOverview = ({
@@ -71,12 +179,18 @@ export const PortfolioOverview = ({
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
   rewardTokenPrices,
+  dcaOrders,
 }: PortfolioOverviewProps) => {
+  const [positionsTab, setPositionsTab] = useState<string>('positions')
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
 
   const [showEmptyPositions, setShowEmptyPositions] = useLocalStorage<boolean>(
     'showEmptyPositions',
+    false,
+  )
+  const [showInactiveDcaPositions, setShowInactiveDcaPositions] = useLocalStorage<boolean>(
+    'showInactiveDcaPositions',
     false,
   )
 
@@ -99,13 +213,15 @@ export const PortfolioOverview = ({
     })
   }, [filteredPositions])
 
+  const filteredDcaOrders = useMemo(() => {
+    return showInactiveDcaPositions
+      ? dcaOrders
+      : dcaOrders.filter((order) => order.status === ArmadaDcaOrderStatusEnum.Active)
+  }, [dcaOrders, showInactiveDcaPositions])
+
   const hasPositions = !!sortedPositions.length
 
-  const {
-    timeframe,
-    setTimeframe,
-    timeframes: _timeframes, // ignored on portfolio, we allow all timeframes
-  } = useTimeframes({
+  const { timeframe, setTimeframe } = useTimeframes({
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     chartData: hasPositions
       ? positionsHistoricalChartMap[getUniqueVaultId(sortedPositions[0].vault)].data
@@ -138,6 +254,14 @@ export const PortfolioOverview = ({
   const handleShowEmptyPositions = () => {
     setShowEmptyPositions((prev) => {
       buttonClickEventHandler(`portfolio-overview-portfolio-overview-show-empty-positions-${!prev}`)
+
+      return !prev
+    })
+  }
+
+  const handleShowInactiveDcaPositions = () => {
+    setShowInactiveDcaPositions((prev) => {
+      buttonClickEventHandler(`portfolio-overview-show-inactive-dca-positions-${!prev}`)
 
       return !prev
     })
@@ -176,69 +300,78 @@ export const PortfolioOverview = ({
               titleStyle={{ color: item.titleColor }}
               value={item.value}
               valueSize="large"
-              // subValue={item.subValue}
             />
           </Card>
         ))}
         <Card className={portfolioOverviewStyles.portfolioPositionsList} variant="cardSecondary">
           <div className={portfolioOverviewStyles.portfolioPositionsListHeader}>
-            <Text as="h5" variant="h5">
-              Positions
-            </Text>
-            <div className={portfolioOverviewStyles.portfolioPositionsListOptions}>
-              <ToggleButton
-                checked={showEmptyPositions}
-                title="Show empty positions"
-                onChange={handleShowEmptyPositions}
-              />
-              <Timeframes
-                timeframes={hasPositions ? allTimeframesAvailable : allTimeframesNotAvailable}
-                setActiveTimeframe={handleSetNextTimeframe}
-                activeTimeframe={timeframe}
-              />
-            </div>
+            <TabBarSimple
+              tabs={[
+                {
+                  id: 'positions',
+                  label: <Text variant="p2semi">Positions</Text>,
+                },
+                {
+                  id: 'dca-strategies',
+                  label: <Text variant="p2semi">DCA&nbsp;Strategies</Text>,
+                },
+              ]}
+              tabBarStyle={{
+                width: 'fit-content',
+              }}
+              activeTabId={positionsTab}
+              onTabChange={(tab) => {
+                setPositionsTab(tab.id)
+                buttonClickEventHandler(`portfolio-overview-tab-changed-${tab.id}`)
+              }}
+            />
+            {positionsTab === 'positions' ? (
+              <div className={portfolioOverviewStyles.portfolioPositionsListOptions}>
+                <ToggleButton
+                  checked={showEmptyPositions}
+                  title="Show empty positions"
+                  onChange={handleShowEmptyPositions}
+                />
+                <Timeframes
+                  timeframes={hasPositions ? allTimeframesAvailable : allTimeframesNotAvailable}
+                  setActiveTimeframe={handleSetNextTimeframe}
+                  activeTimeframe={timeframe}
+                />
+              </div>
+            ) : positionsTab === 'dca-strategies' ? (
+              <div className={portfolioOverviewStyles.portfolioPositionsListOptions}>
+                <ToggleButton
+                  checked={showInactiveDcaPositions}
+                  title="Show inactive DCA positions"
+                  onChange={handleShowInactiveDcaPositions}
+                />
+              </div>
+            ) : (
+              <div className={portfolioOverviewStyles.portfolioPositionsListOptions} />
+            )}
           </div>
-          {hasPositions ? (
-            sortedPositions.map((position) => (
-              <PortfolioPosition
-                isMobile={isMobile || isTablet}
-                key={`Position_${position.position.id.id}_${position.vault.protocol.network}`}
-                portfolioPosition={position}
-                buttonClickEventHandler={buttonClickEventHandler}
-                tooltipEventHandler={tooltipEventHandler}
-                positionGraph={
-                  <PositionHistoricalChart
-                    chartData={positionsHistoricalChartMap[getUniqueVaultId(position.vault)]}
-                    position={position}
-                    timeframe={timeframe}
-                    tokenSymbol={
-                      getDisplayToken(position.vault.inputToken.symbol) as TokenSymbolsList
-                    }
-                  />
-                }
-                vaultApyData={
-                  vaultsApyByNetworkMap[
-                    `${position.vault.id}-${subgraphNetworkToId(supportedSDKNetwork(position.vault.protocol.network))}`
-                  ]
-                }
-                sumrPrice={rewardTokenPrices.SUMR}
-              />
-            ))
-          ) : (
-            <div className={portfolioOverviewStyles.noPositionsWrapper}>
-              <Text as="h5" variant="h5">
-                You don’t have any positions yet
-              </Text>
-              <Text as="p" variant="p2">
-                Start earning sustainably higher yields, optimized with AI.
-                <br />
-                Earn more, save time, and reduce costs.
-              </Text>
-              <Link href="/" onClick={handleButtonClick('portfolio-overview-view-strategies')}>
-                <Button variant="primaryMedium">View strategies</Button>
-              </Link>
-            </div>
-          )}
+          {positionsTab === 'positions' ? (
+            <PositionsListView
+              sortedPositions={sortedPositions}
+              positionsHistoricalChartMap={positionsHistoricalChartMap}
+              vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+              rewardTokenPrices={rewardTokenPrices}
+              timeframe={timeframe}
+              buttonClickEventHandler={buttonClickEventHandler}
+              tooltipEventHandler={tooltipEventHandler}
+              isMobile={isMobile}
+              isTablet={isTablet}
+              handleButtonClick={handleButtonClick}
+            />
+          ) : null}
+          {positionsTab === 'dca-strategies' ? (
+            <DcaStrategiesListView
+              dcaOrders={filteredDcaOrders}
+              vaultsList={vaultsList}
+              buttonClickEventHandler={buttonClickEventHandler}
+            />
+          ) : null}
+
           <PortfolioVaultsCarousel
             vaultsList={vaultsList}
             vaultsApyByNetworkMap={vaultsApyByNetworkMap}

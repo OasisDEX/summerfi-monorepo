@@ -37,6 +37,7 @@
 .portfolioPositionsListHeader {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   flex-wrap: wrap;
   gap: var(--spacing-space-small);
@@ -60,4 +61,11 @@
     gap: var(--general-space-24);
     margin-top: var(--general-space-8);
   }
+}
+
+.portfolioDcaPositionsListWrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--general-space-16);
+  margin-top: 20px;
 }

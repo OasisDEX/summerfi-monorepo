@@ -1,0 +1,151 @@
+.wrapperCard {
+  width: 100%;
+  padding: var(--general-space-24);
+  margin-bottom: var(--general-space-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-20);
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-16);
+}
+
+.label {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--general-space-4);
+}
+
+.muted {
+  color: var(--color-text-secondary);
+}
+
+.vaultRow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--general-space-24);
+}
+
+.vaultBoxWrapper {
+  display: flex;
+  width: 100%;
+}
+
+.vaultBoxFallback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-8);
+  padding: var(--general-space-16);
+  background: var(--color-surface-subtler);
+  border-radius: 8px;
+  word-break: break-all;
+}
+
+.vaultBridge {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff49a4 0%, #b049ff 93%);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-surface-subtler);
+}
+
+.metricsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+  justify-content: space-between;
+  padding-top: var(--general-space-16);
+  border-top: 1px solid var(--color-border-primary);
+}
+
+.metric {
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+.footerRow {
+  display: flex;
+  align-items: stretch;
+  gap: var(--general-space-16);
+  padding-top: var(--general-space-16);
+  border-top: 1px solid var(--color-border-primary);
+}
+
+.viewLink {
+  align-self: center;
+  flex: 0 0 auto;
+}
+
+.status-active,
+.status-paused,
+.status-cancelled,
+.status-completed {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+  padding: var(--general-space-4) var(--general-space-8);
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.status-active {
+  color: var(--earn-protocol-success-100);
+  background: var(--earn-protocol-success-10);
+  border-color: var(--earn-protocol-success-30);
+}
+
+.status-paused {
+  color: var(--earn-protocol-warning-100);
+  background: var(--earn-protocol-warning-10);
+  border-color: var(--earn-protocol-warning-40);
+}
+
+.status-cancelled,
+.status-completed {
+  color: var(--color-text-secondary);
+  background: var(--color-surface-subtler);
+  border-color: var(--color-border-primary);
+}
+
+@media (max-width: 743px) {
+  .wrapperCard {
+    padding: var(--general-space-20);
+  }
+
+  .vaultRow {
+    grid-template-columns: 1fr;
+    gap: var(--general-space-16);
+  }
+
+  .vaultBridge {
+    transform: rotate(90deg);
+    margin: 0 auto;
+  }
+
+  .metric {
+    width: 100%;
+    min-width: 0;
+    flex-basis: 100%;
+  }
+
+  .footerRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .viewLink {
+    align-self: stretch;
+  }
+
+  .conditionsList {
+    gap: var(--general-space-12);
+  }
+}

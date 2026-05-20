@@ -63,9 +63,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   rewardTokenPrices,
   dcaOrders,
 }) => {
-  // eslint-disable-next-line no-console
-  console.log('dcaOrders', dcaOrders)
-
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
   const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
@@ -133,6 +130,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           positionsHistoricalChartMap={positionsHistoricalChartMap}
           vaultsApyByNetworkMap={vaultsApyByNetworkMap}
           rewardTokenPrices={rewardTokenPrices}
+          dcaOrders={dcaOrders}
         />
       ),
     },
