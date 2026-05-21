@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
   const rewrittenPath = rewriteSdkPath(req.nextUrl.pathname)
   const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
 
-  const headers = {}
+  const headers = {
+    'Content-Type': 'application/json',
+  }
   const response = await fetch(url, {
     headers,
     method: 'POST',
