@@ -550,8 +550,16 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       address: stakingContractAddress,
     })
 
+    // Default to the deployed AdmiralsQuarters address when authorizedCaller is not provided
+    const resolvedCaller =
+      params.authorizedCaller ??
+      this._deploymentProvider.getDeployedContractAddress({
+        chainId: this._hubChainInfo.chainId,
+        contractName: 'admiralsQuarters',
+      })
+
     const transactionInfo = await stakingContract.setAuthorization({
-      authorizedCaller: params.authorizedCaller.value,
+      authorizedCaller: resolvedCaller.value,
       isAuthorized: params.isAuthorized,
     })
 
@@ -578,9 +586,17 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       address: stakingContractAddress,
     })
 
+    // Default to the deployed AdmiralsQuarters address when authorizedCaller is not provided
+    const resolvedCaller =
+      params.authorizedCaller ??
+      this._deploymentProvider.getDeployedContractAddress({
+        chainId: this._hubChainInfo.chainId,
+        contractName: 'admiralsQuarters',
+      })
+
     return stakingContract.isAuthorized({
       owner: params.owner.value,
-      authorizedCaller: params.authorizedCaller.value,
+      authorizedCaller: resolvedCaller.value,
     })
   }
 

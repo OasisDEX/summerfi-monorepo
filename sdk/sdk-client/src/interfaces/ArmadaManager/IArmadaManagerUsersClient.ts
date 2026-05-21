@@ -1082,28 +1082,32 @@ export interface IArmadaManagerUsersClient {
 
   /**
    * @name authorizeStakingRewardsCallerV2
-   * @description Generates a transaction to authorize a caller for staking rewards
+   * @description Generates a transaction to authorize a caller for staking rewards.
+   *              When authorizedCaller is omitted, the server defaults to the deployed
+   *              AdmiralsQuarters address on the hub chain.
    * @param params.user The user who is authorizing
-   * @param params.authorizedCaller The address to authorize
+   * @param params.authorizedCaller The address to authorize (optional; defaults to deployed AdmiralsQuarters)
    * @param params.isAuthorized Whether to authorize or revoke authorization
    * @returns Promise<[ClaimTransactionInfo]> Array containing the authorization transaction
    */
   authorizeStakingRewardsCallerV2(params: {
     user: IUser
-    authorizedCaller: IAddress
+    authorizedCaller?: IAddress
     isAuthorized: boolean
   }): Promise<[ClaimTransactionInfo]>
 
   /**
    * @name isAuthorizedStakingRewardsCallerV2
-   * @description Checks if a caller is authorized for staking rewards
+   * @description Checks if a caller is authorized for staking rewards.
+   *              When authorizedCaller is omitted, the server defaults to the deployed
+   *              AdmiralsQuarters address on the hub chain.
    * @param params.owner The owner address
-   * @param params.authorizedCaller The address to check authorization for
+   * @param params.authorizedCaller The address to check authorization for (optional; defaults to deployed AdmiralsQuarters)
    * @returns Promise<boolean> True if the caller is authorized, false otherwise
    */
   isAuthorizedStakingRewardsCallerV2(params: {
     owner: IAddress
-    authorizedCaller: IAddress
+    authorizedCaller?: IAddress
   }): Promise<boolean>
 
   /**
