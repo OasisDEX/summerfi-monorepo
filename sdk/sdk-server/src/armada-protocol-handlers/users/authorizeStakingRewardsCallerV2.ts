@@ -6,7 +6,7 @@ export const authorizeStakingRewardsCallerV2 = publicProcedure
   .input(
     z.object({
       user: z.custom<IUser>(isUser),
-      authorizedCaller: z.custom<IAddress>(isAddress),
+      authorizedCaller: z.custom<IAddress>(isAddress).optional(),
       isAuthorized: z.boolean(),
     }),
   )
