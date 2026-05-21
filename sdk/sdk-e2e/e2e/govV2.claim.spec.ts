@@ -1,6 +1,5 @@
-import { User } from '@summerfi/sdk-common'
+import { ChainIds, ChainId, User } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
-import type { TestConfigKey } from './utils/testConfig'
 import { formatSumr } from './utils/stringifiers'
 
 jest.setTimeout(300000)
@@ -9,17 +8,10 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Gov V2 Claims', () => {
-  const scenarios: {
-    testConfigKey?: TestConfigKey
-  }[] = [
-    {
-      testConfigKey: 'BaseUSDC',
-    },
-  ]
+  const scenarios = [{}]
 
   describe.each(scenarios)('claim staking v2 rewards with scenario %#', (scenario) => {
-    const { testConfigKey: chainConfigKey } = scenario
-    const setup = createSdkTestSetup(chainConfigKey)
+    const setup = createSdkTestSetup({ chainId: ChainIds.Base })
     const { sdk, chainId, userAddress, userSendTxTool } = setup
 
     const user = User.createFromEthereum(chainId, userAddress.value)

@@ -1,8 +1,7 @@
-import { User } from '@summerfi/sdk-common'
+import { ChainIds, User } from '@summerfi/sdk-common'
 import assert from 'assert'
 
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
-import { type TestConfigKey } from './utils/testConfig'
 import { formatSumr } from './utils/stringifiers'
 import { SECONDS_PER_DAY, SUMR_DECIMALS } from './utils/constants'
 
@@ -10,13 +9,11 @@ jest.setTimeout(300000)
 
 describe('Armada Protocol Gov V2 Stake', () => {
   const scenarios: {
-    testConfigKey?: TestConfigKey
     amountSumr?: bigint
     lockupDays?: bigint
   }[] = [
     {
       // 0
-      testConfigKey: 'BaseUSDC',
       amountSumr: 1000n,
       lockupDays: 0n,
     },
@@ -55,9 +52,9 @@ describe('Armada Protocol Gov V2 Stake', () => {
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testConfigKey: chainConfigKey, amountSumr, lockupDays } = scenario
+    const { amountSumr, lockupDays } = scenario
     // Setup SDK and tools
-    const setup = createSdkTestSetup(chainConfigKey)
+    const setup = createSdkTestSetup({ chainId: ChainIds.Base })
     const { sdk, chainId, userAddress, userSendTxTool } = setup
 
     const user = User.createFromEthereum(chainId, userAddress.value)

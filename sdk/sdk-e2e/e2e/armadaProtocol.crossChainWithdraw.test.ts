@@ -29,7 +29,7 @@ describe('Armada Protocol - Cross Chain Withdraw', () => {
   }[] = [
     {
       fromChainId: ChainIds.ArbitrumOne,
-      fromFleetAddress: FleetAddresses.ArbitrumOne.USDT,
+      fromFleetAddress: FleetAddresses[ChainIds.ArbitrumOne].USDT,
       fromSymbol: 'USDT',
       toChainId: ChainIds.Base,
       toSymbol: 'USDT',
@@ -42,7 +42,7 @@ describe('Armada Protocol - Cross Chain Withdraw', () => {
       scenario
 
     it('should get cross-chain withdraw transaction', async () => {
-      const setup = createSdkTestSetup('ArbitrumUSDT')
+      const setup = createSdkTestSetup({ chainId: ChainIds.ArbitrumOne })
       const { sdk, userAddress, userSendTxTool } = setup
 
       console.log(

@@ -11,7 +11,7 @@ import assert from 'assert'
 import { stringifyArmadaVaultInfo } from './utils/stringifiers'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
-import { TestClientIds, type TestConfigKey } from './utils/testConfig'
+import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -48,7 +48,9 @@ describe('Armada Protocol - All Vaults', () => {
 
     it('should get all vaults with info', async () => {
       // Choose SDK setup based on scenario
-      const setup = testClientId ? createAdminSdkTestSetup(testClientId) : createSdkTestSetup()
+      const setup = testClientId
+        ? createAdminSdkTestSetup(testClientId)
+        : createSdkTestSetup({ chainId })
       const { sdk } = setup
 
       // Use chainId from scenario if provided, otherwise use default from setup
