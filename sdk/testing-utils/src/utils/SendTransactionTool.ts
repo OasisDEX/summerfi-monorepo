@@ -135,5 +135,11 @@ export function getWalletClientForChain(
     chainInfo: getChainInfoByChainId(chainId),
     useFork,
   })
-  return transactionUtils.walletClient
+  const walletClient = transactionUtils.walletClient
+
+  if (walletClient.account == null) {
+    throw new Error('Wallet client account is null')
+  }
+
+  return walletClient
 }
