@@ -13,10 +13,13 @@ import {
   useEarnProtocolChain,
   useEarnProtocolLogin,
   useEarnProtocolWallet,
+  useIsIframe,
 } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList } from '@summerfi/app-types'
+import { useTermsOfService } from '@summerfi/app-tos'
+import { type TokenSymbolsList, TOSStatus } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
+  sdkChainIdToHumanNetwork,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
@@ -31,12 +34,16 @@ import { useRouter } from 'next/navigation'
 
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
 import { VaultSwitchBox } from '@/components/molecules/SidebarElements/VaultSwitchBox'
+import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { DCASidebar } from '@/features/dca/components/DCASidebar/DCASidebar'
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
 import { MAX_TRADES } from '@/features/dca/lib/dca-wizard-constants'
 import { type DCAConfig, type DCAResolvedPair } from '@/features/dca/lib/types'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
+import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
+import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 
 import classNames from '@/features/dca/components/dca.module.css'
 
@@ -51,14 +58,34 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
   const { walletClient, address } = useEarnProtocolWallet()
   const { chain, setChain, isSettingChain } = useEarnProtocolChain()
   const { createAndSaveBuyOrder } = useAppSDK()
+  const dcaChainId = subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network))
+  const { publicClient } = useNetworkAlignedClient({
+    chainId: dcaChainId,
+    overrideNetwork: sdkChainIdToHumanNetwork(dcaChainId),
+  })
   const { push } = useRouter()
   const [isCreating, setIsCreating] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const dcaChainId = subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network))
   const { isLoading, position } = usePosition({
     vaultId: pair.fromVault.id,
     chainId: dcaChainId,
   })
+  const signTosMessage = useTermsOfServiceSigner()
+  const isIframe = useIsIframe()
+
+  const tosState = useTermsOfService({
+    publicClient,
+    signMessage: signTosMessage,
+    chainId: dcaChainId,
+    walletAddress: address,
+    version: TermsOfServiceVersion.APP_VERSION,
+    cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
+    host: '/earn',
+    type: 'default',
+    isIframe,
+  })
+
+  const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: onBack })
 
   const isProperChainSelected = chain.id === dcaChainId
   const targetChain = getEarnProtocolChainById(dcaChainId)
@@ -190,6 +217,13 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
     if (!address) {
       return { label: 'Connect Wallet', action: login, disabled: false }
     }
+    if (tosState.status !== TOSStatus.DONE) {
+      return {
+        label: tosSidebarProps.primaryButton.label,
+        action: tosSidebarProps.primaryButton.action,
+        disabled: tosSidebarProps.primaryButton.disabled,
+      }
+    }
     if (!isProperChainSelected) {
       return {
         label: `Switch network to ${targetChain.name}`,
@@ -212,6 +246,10 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
     login,
     setChain,
     targetChain,
+    tosSidebarProps.primaryButton.action,
+    tosSidebarProps.primaryButton.disabled,
+    tosSidebarProps.primaryButton.label,
+    tosState.status,
   ])
 
   return (
@@ -517,6 +555,11 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
             }}
           />
         </DCAWizardStepCard>
+        {address && tosState.status !== TOSStatus.DONE && tosState.status !== TOSStatus.INIT ? (
+          <DCAWizardStepCard title={tosSidebarProps.title}>
+            {tosSidebarProps.content}
+          </DCAWizardStepCard>
+        ) : null}
         <div
           style={{
             display: 'flex',
