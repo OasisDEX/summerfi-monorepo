@@ -421,10 +421,10 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
             {!isLoading && (!position || Number(position.assetsUSD.amount) <= 0.001) ? (
               <div className={classNames.positionInfoEmpty}>
                 <div className={classNames.pricePreviewBlock} style={{ textAlign: 'center' }}>
-                  <Text as="p" variant="p3" className={classNames.mutedText}>
+                  <Text as="p" variant="p4" className={classNames.mutedText}>
                     No position found in source vault, or vault balance is zero. To execute the DCA
                     strategy, you need to have an active position in the source vault with
-                    sufficient balance.
+                    sufficient balance. You can do that after creating the DCA strategy.
                   </Text>
                 </div>
               </div>
