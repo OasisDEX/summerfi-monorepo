@@ -29,6 +29,7 @@ import {
 } from '@summerfi/sdk-common'
 import { useRouter } from 'next/navigation'
 
+import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
 import { VaultSwitchBox } from '@/components/molecules/SidebarElements/VaultSwitchBox'
 import { DCASidebar } from '@/features/dca/components/DCASidebar/DCASidebar'
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
@@ -53,18 +54,14 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
   const { push } = useRouter()
   const [isCreating, setIsCreating] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const dcaChainId = subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network))
   const { isLoading, position } = usePosition({
     vaultId: pair.fromVault.id,
-    chainId: subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network)),
+    chainId: dcaChainId,
   })
 
-  const chainId = useMemo(
-    () => subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network)),
-    [pair.fromVault.protocol.network],
-  )
-
-  const isProperChainSelected = chain.id === chainId
-  const targetChain = getEarnProtocolChainById(chainId)
+  const isProperChainSelected = chain.id === dcaChainId
+  const targetChain = getEarnProtocolChainById(dcaChainId)
 
   const sourceSymbol = getDisplayToken(pair.fromVault.inputToken.symbol)
   const targetSymbol = getDisplayToken(pair.toVault.inputToken.symbol)
@@ -126,7 +123,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
 
     try {
       const sourceToken = Token.createFrom({
-        chainInfo: getChainInfoByChainId(chainId),
+        chainInfo: getChainInfoByChainId(dcaChainId),
         address: Address.createFromEthereum({
           value: pair.fromVault.inputToken.id as AddressValue,
         }),
@@ -142,7 +139,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
 
       const dcaPositionData = await createAndSaveBuyOrder({
         userAddress: address as `0x${string}`,
-        chainId,
+        chainId: dcaChainId,
         toVaultAddress: pair.toVault.id as AddressValue,
         fromVaultAddress: pair.fromVault.id as AddressValue,
         signTypedData: walletClient.signTypedData,
@@ -174,7 +171,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
       setIsCreating(false)
     }
   }, [
-    chainId,
+    dcaChainId,
     config.amount,
     config.deadline,
     config.frequency,
@@ -232,7 +229,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
               <div className={classNames.vaultSelectorCard}>
                 <VaultSwitchBox
                   title="From"
-                  chainId={chainId}
+                  chainId={dcaChainId}
                   tokenName={pair.fromVault.inputToken.symbol as TokenSymbolsList}
                   risk={
                     pair.fromVault.isDaoManaged
@@ -263,7 +260,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
               <div className={classNames.vaultSelectorCard}>
                 <VaultSwitchBox
                   title="To"
-                  chainId={chainId}
+                  chainId={dcaChainId}
                   tokenName={pair.toVault.inputToken.symbol as TokenSymbolsList}
                   risk={
                     pair.toVault.isDaoManaged
@@ -278,7 +275,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
           </div>
 
           <div className={classNames.positionInfoBar}>
-            {isLoading || position ? (
+            {isLoading || (position && Number(position.assetsUSD.amount) > 0.001) ? (
               <>
                 <div className={classNames.amountInputsColumn}>
                   <div className={classNames.pricePreviewBlock}>
@@ -383,7 +380,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
                 </div>
               </>
             ) : null}
-            {!isLoading && !position ? (
+            {!isLoading && (!position || Number(position.assetsUSD.amount) <= 0.001) ? (
               <div className={classNames.positionInfoEmpty}>
                 <div className={classNames.pricePreviewBlock} style={{ textAlign: 'center' }}>
                   <Text as="p" variant="p3" className={classNames.mutedText}>
@@ -510,6 +507,15 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
               {errorMessage}
             </Text>
           ) : null}
+        </DCAWizardStepCard>
+        <DCAWizardStepCard title="Execute transactions">
+          <PendingTransactionsList
+            chainId={dcaChainId}
+            transactions={[]}
+            style={{
+              marginTop: '2px',
+            }}
+          />
         </DCAWizardStepCard>
         <div
           style={{
