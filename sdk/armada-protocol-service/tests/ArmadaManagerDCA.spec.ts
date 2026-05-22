@@ -26,6 +26,8 @@ const TO_VAULT = '0x2222222222222222222222222222222222222222' as AddressValue
 const ADMIRALS_QUARTERS = '0x3333333333333333333333333333333333333333' as AddressValue
 const ENSO_ROUTER = '0x4444444444444444444444444444444444444444' as AddressValue
 const STRATEGY_MANAGER = '0x5555555555555555555555555555555555555555' as AddressValue
+const IN_ASSET_FEED = '0x6666666666666666666666666666666666666666' as AddressValue
+const OUT_ASSET_FEED = '0x7777777777777777777777777777777777777777' as AddressValue
 
 const TEST_SIGNER_PRIVATE_KEY =
   '0x0000000000000000000000000000000000000000000000000000000000000001' as HexData
@@ -385,8 +387,6 @@ describe('ArmadaManagerDCA', () => {
       targetVault: TO_VAULT,
       inAsset: FROM_VAULT,
       outAsset: TO_VAULT,
-      inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
-      outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
       tradeAmount: 1000000n,
       interval: 3600n,
       slippageBps: 50n,
@@ -399,29 +399,29 @@ describe('ArmadaManagerDCA', () => {
     const createTx = await manager.createStrategyTx({
       chainId: DEFAULT_CHAIN_ID,
       order: TEST_DCA_ORDER,
-      inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
-      outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
+      inAssetFeed: IN_ASSET_FEED,
+      outAssetFeed: OUT_ASSET_FEED,
     })
     const editTx = await manager.editStrategyTx({
       chainId: DEFAULT_CHAIN_ID,
       order: TEST_DCA_ORDER,
       strategyId: '1',
-      inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
-      outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
+      inAssetFeed: IN_ASSET_FEED,
+      outAssetFeed: OUT_ASSET_FEED,
     })
     const resumeTx = await manager.resumeStrategyTx({
       chainId: DEFAULT_CHAIN_ID,
       order: TEST_DCA_ORDER,
       strategyId: '1',
-      inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
-      outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
+      inAssetFeed: IN_ASSET_FEED,
+      outAssetFeed: OUT_ASSET_FEED,
     })
     const executeTx = await manager.executeDCATx({
       chainId: DEFAULT_CHAIN_ID,
       order: TEST_DCA_ORDER,
       strategyId: '1',
-      inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
-      outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
+      inAssetFeed: IN_ASSET_FEED,
+      outAssetFeed: OUT_ASSET_FEED,
     })
 
     expect(createTx.type).toBe(TransactionType.CreateStrategy)
@@ -430,7 +430,14 @@ describe('ArmadaManagerDCA', () => {
       encodeFunctionData({
         abi: DCAStrategyManagerAbi,
         functionName: 'createStrategy',
-        args: [{ ...baseExpectedConfig, strategyId: 0n }],
+        args: [
+          {
+            ...baseExpectedConfig,
+            strategyId: 0n,
+            inAssetFeed: IN_ASSET_FEED,
+            outAssetFeed: OUT_ASSET_FEED,
+          },
+        ],
       }),
     )
 
@@ -439,7 +446,14 @@ describe('ArmadaManagerDCA', () => {
       encodeFunctionData({
         abi: DCAStrategyManagerAbi,
         functionName: 'editStrategy',
-        args: [{ ...baseExpectedConfig, strategyId: 1n }],
+        args: [
+          {
+            ...baseExpectedConfig,
+            strategyId: 1n,
+            inAssetFeed: IN_ASSET_FEED,
+            outAssetFeed: OUT_ASSET_FEED,
+          },
+        ],
       }),
     )
 
@@ -448,7 +462,14 @@ describe('ArmadaManagerDCA', () => {
       encodeFunctionData({
         abi: DCAStrategyManagerAbi,
         functionName: 'resumeStrategy',
-        args: [{ ...baseExpectedConfig, strategyId: 1n }],
+        args: [
+          {
+            ...baseExpectedConfig,
+            strategyId: 1n,
+            inAssetFeed: IN_ASSET_FEED,
+            outAssetFeed: OUT_ASSET_FEED,
+          },
+        ],
       }),
     )
 
@@ -457,26 +478,44 @@ describe('ArmadaManagerDCA', () => {
       encodeFunctionData({
         abi: DCAStrategyManagerAbi,
         functionName: 'executeDCA',
-        args: [{ ...baseExpectedConfig, strategyId: 1n }, TEST_DCA_ORDER.swapCalldata],
+        args: [
+          {
+            ...baseExpectedConfig,
+            strategyId: 1n,
+            inAssetFeed: IN_ASSET_FEED,
+            outAssetFeed: OUT_ASSET_FEED,
+          },
+          TEST_DCA_ORDER.swapCalldata,
+        ],
       }),
     )
   })
 
   it('should build strategy id transactions', async () => {
-    const manager = createManager({
+    const manager = new ArmadaManagerDCA({
+      configProvider: createConfigProviderMock(),
+      deploymentProvider: {
+        getDeployedContractAddress: jest.fn(({ contractName }: { contractName: string }) => {
+          if (contractName === 'dcaStrategyManager') return { value: STRATEGY_MANAGER }
+          return { value: ADMIRALS_QUARTERS }
+        }),
+      } as never,
       summerProtocolDbProvider: async () => ({}) as SummerProtocolDb,
+      blockchainClientProvider: createBlockchainClientProviderMock(),
+      oracleManager: createOracleManagerMock(),
     })
 
     const pauseTx = await manager.pauseStrategyTx({
-      strategyManagerAddress: STRATEGY_MANAGER,
+      chainId: DEFAULT_CHAIN_ID,
       strategyId: '42',
     })
     const cancelTx = await manager.cancelStrategyTx({
-      strategyManagerAddress: STRATEGY_MANAGER,
+      chainId: DEFAULT_CHAIN_ID,
       strategyId: '42',
     })
 
     expect(pauseTx.type).toBe(TransactionType.PauseStrategy)
+    expect(pauseTx.transaction.target.value).toBe(STRATEGY_MANAGER)
     expect(pauseTx.transaction.calldata).toBe(
       encodeFunctionData({
         abi: DCAStrategyManagerAbi,
@@ -486,6 +525,7 @@ describe('ArmadaManagerDCA', () => {
     )
 
     expect(cancelTx.type).toBe(TransactionType.CancelStrategy)
+    expect(cancelTx.transaction.target.value).toBe(STRATEGY_MANAGER)
     expect(cancelTx.transaction.calldata).toBe(
       encodeFunctionData({
         abi: DCAStrategyManagerAbi,

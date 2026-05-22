@@ -33,7 +33,6 @@ import {
 import type { SummerProtocolDb, SummerProtocolDbProvider } from '../../db-provider/getDb'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { DCAStrategyManagerAbi } from './abi/DCAStrategyManagerAbi'
-import type { ArmadaDcaOrders } from '@summerfi/summer-protocol-db'
 
 const MIN_INTERVAL_SECONDS = 3600 // 1 hour
 const MAX_INTERVAL_SECONDS = 31536000 // 1 year
@@ -49,7 +48,35 @@ const ERC20_METADATA_ABI = parseAbi([
   'function symbol() view returns (string)',
 ])
 
-export type DbOrderRow = ArmadaDcaOrders
+export type DbOrderRow = {
+  id: string
+  orderId: string
+  userAddress: string
+  chainId: number
+  fromVault: string
+  toVault: string
+  amount: string
+  slippage: string
+  intervalSeconds: number
+  nextExecutionAt: string | null
+  deadline: string | null
+  maxTrades: number
+  tradesExecuted: number
+  allowedVaultsRoot: string
+  fromVaultProof: unknown
+  toVaultProof: unknown
+  swapCalldata: string
+  signature: string
+  ensoRouterAddress: string
+  verifyingContractAddress: string
+  status: string
+  createdAt: string
+  updatedAt: string
+  cancelledAt: string | null
+  pausedAt: string | null
+  neverBuyAbove: string | null
+  neverSellBelow: string | null
+}
 
 /**
  * @name ArmadaManagerDCA
