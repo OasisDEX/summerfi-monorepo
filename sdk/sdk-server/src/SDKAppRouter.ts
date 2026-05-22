@@ -134,6 +134,7 @@ import { setWhitelistedAQ } from './armada-protocol-handlers/access-control/setW
 import { setWhitelistedBatchAQ } from './armada-protocol-handlers/access-control/setWhitelistedBatchAQ'
 import { getAllRoles } from './armada-protocol-handlers/access-control/getAllRoles'
 import { createAndSaveBuyOrder } from './armada-protocol-handlers/dca/createAndSaveBuyOrder'
+import { editBuyOrder } from './armada-protocol-handlers/dca/editBuyOrder'
 import { createStrategyTx } from './armada-protocol-handlers/dca/createStrategyTx'
 import { getBuyOrder } from './armada-protocol-handlers/dca/getBuyOrder'
 import { getBuyOrders } from './armada-protocol-handlers/dca/getBuyOrders'
@@ -316,6 +317,7 @@ export const sdkAppRouter = router({
       cancelStrategyTx: cancelStrategyTx,
       executeDCATx: executeDCATx,
       createAndSaveBuyOrder: createAndSaveBuyOrder,
+      editBuyOrder: editBuyOrder,
       getBuyOrder: getBuyOrder,
       getBuyOrders: getBuyOrders,
       cancelBuyOrder: cancelBuyOrder,

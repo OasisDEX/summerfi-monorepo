@@ -112,6 +112,54 @@ export class ArmadaManagerDCAClient extends IRPCClient implements IArmadaManager
     })
   }
 
+  async editBuyOrder(
+    params: Parameters<IArmadaManagerDCAClient['editBuyOrder']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['editBuyOrder']> {
+    const { signTypedData, bearerToken, ...orderParams } = params
+
+    if (!signTypedData) {
+      throw new Error('signTypedData is required to edit a DCA buy order.')
+    }
+
+    const { admiralsQuarters } = await this.rpcClient.armada.users.getProtocolAddresses.query({
+      chainId: params.chainId,
+    })
+    const rebalanceAuthorizationDeadline =
+      params.deadlineUnixTimestamp ??
+      Math.floor(Date.now() / 1000) + DEFAULT_REBALANCE_AUTHORIZATION_DEADLINE_SECONDS
+    const allowedVaultsRoot = this._generateAllowedVaultsRoot({
+      fromVault: params.fromVault,
+      toVault: params.toVault,
+    })
+
+    const rebalanceAuthorizationSignature = (await signTypedData({
+      account: params.userAddress,
+      domain: {
+        name: 'AdmiralsQuarters',
+        version: '1',
+        chainId: params.chainId,
+        verifyingContract: admiralsQuarters as ViemAddress,
+      },
+      types: {
+        RebalanceAuthorization: [
+          { name: 'allowedVaultsRoot', type: 'bytes32' },
+          { name: 'deadline', type: 'uint256' },
+        ],
+      },
+      primaryType: 'RebalanceAuthorization',
+      message: {
+        allowedVaultsRoot,
+        deadline: BigInt(rebalanceAuthorizationDeadline),
+      },
+    })) as HexData
+
+    return this.rpcClient.armada.dca.editBuyOrder.mutate({
+      ...orderParams,
+      rebalanceAuthorizationSignature,
+      bearerToken,
+    })
+  }
+
   async getBuyOrder(
     params: Parameters<IArmadaManagerDCAClient['getBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCAClient['getBuyOrder']> {

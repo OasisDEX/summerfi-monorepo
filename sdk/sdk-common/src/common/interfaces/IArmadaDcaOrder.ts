@@ -5,6 +5,8 @@ import type { HexData } from '../types/HexData'
 
 export interface IArmadaDcaOrder {
   id: string
+  /** External order identifier provided by the caller (distinct from the DB row id) */
+  orderId: string
   userAddress: AddressValue
   chainId: ChainId
   fromVault: AddressValue

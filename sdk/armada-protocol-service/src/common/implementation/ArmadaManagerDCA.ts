@@ -33,6 +33,7 @@ import {
 import type { SummerProtocolDb, SummerProtocolDbProvider } from '../../db-provider/getDb'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { DCAStrategyManagerAbi } from './abi/DCAStrategyManagerAbi'
+import type { ArmadaDcaOrders } from '@summerfi/summer-protocol-db'
 
 const MIN_INTERVAL_SECONDS = 3600 // 1 hour
 const MAX_INTERVAL_SECONDS = 31536000 // 1 year
@@ -48,34 +49,7 @@ const ERC20_METADATA_ABI = parseAbi([
   'function symbol() view returns (string)',
 ])
 
-type DbOrderRow = {
-  id: string
-  userAddress: string
-  chainId: number
-  fromVault: string
-  toVault: string
-  amount: string
-  slippage: string
-  intervalSeconds: number
-  nextExecutionAt: string | null
-  deadline: string | null
-  maxTrades: number
-  tradesExecuted: number
-  allowedVaultsRoot: string
-  fromVaultProof: unknown
-  toVaultProof: unknown
-  swapCalldata: string
-  signature: string
-  ensoRouterAddress: string
-  verifyingContractAddress: string
-  status: string
-  createdAt: string
-  updatedAt: string
-  cancelledAt: string | null
-  pausedAt: string | null
-  neverBuyAbove: string | null
-  neverSellBelow: string | null
-}
+export type DbOrderRow = ArmadaDcaOrders
 
 /**
  * @name ArmadaManagerDCA
@@ -237,111 +211,14 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async createAndSaveBuyOrder(
     params: Parameters<IArmadaManagerDCA['createAndSaveBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['createAndSaveBuyOrder']> {
-    const now = Math.floor(Date.now() / 1000)
-    const deadline = params.deadlineUnixTimestamp
-    const firstExecutionAt = params.firstExecutionUnixTimestamp
-    const orderId = params.id
-
-    // Validate amount is a positive decimal string
-    const amountRaw = params.amount.toSolidityValue()
-    if (amountRaw <= 0) {
-      throw new Error('amount must be a positive number')
-    }
-
-    // Validate amount is above dust threshold in USD
-    const amountUsd = await this._getUnderlyingAssetUsdValue({
-      chainId: params.chainId,
-      vaultAddress: params.fromVault,
-      amount: params.amount.amount,
-    })
-    if (amountUsd < DUST_THRESHOLD_USD) {
-      throw new Error(`amount must be worth at least ${DUST_THRESHOLD_USD} USD`)
-    }
-
-    // Validate interval bounds
-    if (params.intervalSeconds < MIN_INTERVAL_SECONDS) {
-      throw new Error(`intervalSeconds must be at least ${MIN_INTERVAL_SECONDS} (1 hour)`)
-    }
-    if (params.intervalSeconds > MAX_INTERVAL_SECONDS) {
-      throw new Error(`intervalSeconds must be at most ${MAX_INTERVAL_SECONDS} (1 year)`)
-    }
-
-    // Validate deadline is in the future if provided
-    if (deadline !== undefined && deadline <= now) {
-      throw new Error('deadlineUnixTimestamp must be in the future')
-    }
-
-    // Validate vault allowlist via HarborCommand on-chain read
-    await this._validateVaultAllowlist({
-      chainId: params.chainId,
-      fromVault: params.fromVault,
-      toVault: params.toVault,
-    })
-
-    const { allowedVaultsRoot, fromVaultProof, toVaultProof } = this._generateMerkleProofs({
-      fromVault: params.fromVault,
-      toVault: params.toVault,
-    })
-
-    const verifyingContract = this._deploymentProvider.getDeployedContractAddress({
-      contractName: 'admiralsQuarters',
-      chainId: params.chainId,
-    })
-
-    const ensoRouterAddress = this._configProvider.getConfigurationItem({
-      name: 'ENSO_ROUTER_ADDRESS',
-    })
-    if (!ensoRouterAddress || !isAddressValue(ensoRouterAddress)) {
-      throw new Error('ENSO_ROUTER_ADDRESS is not configured or invalid')
-    }
-
-    console.log('Fetching Enso swap calldata...')
-
-    const swapCalldata = await this._fetchEnsoSwapCalldata({
-      chainId: params.chainId,
-      fromAddress: verifyingContract.value,
-      ensoRouterAddress,
-      tokenIn: params.fromVault,
-      tokenOut: params.toVault,
-      amountIn: amountRaw,
-      slippage: String(Number(params.slippagePercentage) * 100),
-    })
-
-    const order: IArmadaDcaOrder = {
-      id: orderId,
-      userAddress: params.userAddress,
-      chainId: params.chainId,
-      fromVault: params.fromVault,
-      toVault: params.toVault,
-      amount: amountRaw.toString(),
-      slippage: params.slippagePercentage,
-      intervalSeconds: params.intervalSeconds,
-      nextExecutionAtUnixTimestamp: firstExecutionAt,
-      deadlineUnixTimestamp: deadline,
-      maxTrades: params.maxTrades,
-      tradesExecuted: 0,
-      neverBuyAbove: params.neverBuyAbove,
-      neverSellBelow: params.neverSellBelow,
-      allowedVaultsRoot,
-      fromVaultProof,
-      toVaultProof,
-      swapCalldata,
-      signature: params.rebalanceAuthorizationSignature,
-      ensoRouterAddress,
-      verifyingContractAddress: verifyingContract.value,
-      status: ArmadaDcaOrderStatusEnum.Active,
-      createdAt: now,
-      updatedAt: now,
-    }
-
-    // check if approval is set for the order amount before saving the order, throw if not approved
-    // use approvals provider to check approval status
+    const order = await this._buildAndValidateOrder({ params, now: Math.floor(Date.now() / 1000) })
 
     const db = await this._getDb()
     await db
       .insertInto('armadaDcaOrders')
       .values({
         id: order.id,
+        orderId: order.orderId,
         userAddress: order.userAddress,
         chainId: order.chainId,
         fromVault: order.fromVault,
@@ -350,7 +227,8 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         slippage: order.slippage,
         intervalSeconds: order.intervalSeconds,
         nextExecutionAt: BigInt(order.nextExecutionAtUnixTimestamp),
-        deadline: deadline !== undefined ? String(deadline) : null,
+        deadline:
+          order.deadlineUnixTimestamp !== undefined ? String(order.deadlineUnixTimestamp) : null,
         maxTrades: order.maxTrades,
         tradesExecuted: 0,
         neverBuyAbove: order.neverBuyAbove ?? null,
@@ -369,6 +247,65 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       .executeTakeFirstOrThrow()
 
     return order
+  }
+
+  async editBuyOrder(
+    params: Parameters<IArmadaManagerDCA['editBuyOrder']>[0],
+  ): ReturnType<IArmadaManagerDCA['editBuyOrder']> {
+    const now = Math.floor(Date.now() / 1000)
+    const existingOrder = await this._getExistingOrderOrThrow({
+      orderId: params.id,
+      userAddress: params.userAddress,
+    })
+
+    if (
+      existingOrder.status === ArmadaDcaOrderStatusEnum.Cancelled ||
+      existingOrder.status === ArmadaDcaOrderStatusEnum.Completed
+    ) {
+      throw new Error(`Cannot edit an order with status: ${existingOrder.status}`)
+    }
+
+    const updated = await this._buildAndValidateOrder({ params, now })
+
+    const db = await this._getDb()
+    await db
+      .updateTable('armadaDcaOrders')
+      .set({
+        orderId: updated.orderId ?? null,
+        fromVault: updated.fromVault,
+        toVault: updated.toVault,
+        amount: updated.amount,
+        slippage: updated.slippage,
+        intervalSeconds: updated.intervalSeconds,
+        nextExecutionAt: BigInt(updated.nextExecutionAtUnixTimestamp),
+        deadline:
+          updated.deadlineUnixTimestamp !== undefined
+            ? String(updated.deadlineUnixTimestamp)
+            : null,
+        maxTrades: updated.maxTrades,
+        neverBuyAbove: updated.neverBuyAbove ?? null,
+        neverSellBelow: updated.neverSellBelow ?? null,
+        allowedVaultsRoot: updated.allowedVaultsRoot,
+        fromVaultProof: JSON.stringify(updated.fromVaultProof),
+        toVaultProof: JSON.stringify(updated.toVaultProof),
+        swapCalldata: updated.swapCalldata,
+        signature: updated.signature,
+        ensoRouterAddress: updated.ensoRouterAddress,
+        verifyingContractAddress: updated.verifyingContractAddress,
+        updatedAt: String(now),
+      })
+      .where('id', '=', params.id)
+      .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
+      .executeTakeFirstOrThrow()
+
+    return {
+      ...updated,
+      tradesExecuted: existingOrder.tradesExecuted,
+      status: existingOrder.status,
+      createdAt: existingOrder.createdAt,
+      cancelledAt: existingOrder.cancelledAt,
+      pausedAt: existingOrder.pausedAt,
+    }
   }
 
   async getBuyOrder(
@@ -511,6 +448,118 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       status: ArmadaDcaOrderStatusEnum.Active,
       updatedAt: now,
       pausedAt: undefined,
+    }
+  }
+
+  private async _buildAndValidateOrder(params: {
+    params: {
+      id: string
+      orderId: string
+      userAddress: AddressValue
+      chainId: ChainId
+      fromVault: AddressValue
+      toVault: AddressValue
+      rebalanceAuthorizationSignature: HexData
+      amount: { toSolidityValue(): bigint; amount: string }
+      slippagePercentage: string
+      intervalSeconds: number
+      firstExecutionUnixTimestamp: number
+      deadlineUnixTimestamp?: number
+      maxTrades: number
+      neverBuyAbove?: string
+      neverSellBelow?: string
+    }
+    now: number
+  }): Promise<IArmadaDcaOrder> {
+    const { params: p, now } = params
+    const deadline = p.deadlineUnixTimestamp
+
+    const amountRaw = p.amount.toSolidityValue()
+    if (amountRaw <= 0) {
+      throw new Error('amount must be a positive number')
+    }
+
+    const amountUsd = await this._getUnderlyingAssetUsdValue({
+      chainId: p.chainId,
+      vaultAddress: p.fromVault,
+      amount: p.amount.amount,
+    })
+    if (amountUsd < DUST_THRESHOLD_USD) {
+      throw new Error(`amount must be worth at least ${DUST_THRESHOLD_USD} USD`)
+    }
+
+    if (p.intervalSeconds < MIN_INTERVAL_SECONDS) {
+      throw new Error(`intervalSeconds must be at least ${MIN_INTERVAL_SECONDS} (1 hour)`)
+    }
+    if (p.intervalSeconds > MAX_INTERVAL_SECONDS) {
+      throw new Error(`intervalSeconds must be at most ${MAX_INTERVAL_SECONDS} (1 year)`)
+    }
+
+    if (deadline !== undefined && deadline <= now) {
+      throw new Error('deadlineUnixTimestamp must be in the future')
+    }
+
+    await this._validateVaultAllowlist({
+      chainId: p.chainId,
+      fromVault: p.fromVault,
+      toVault: p.toVault,
+    })
+
+    const { allowedVaultsRoot, fromVaultProof, toVaultProof } = this._generateMerkleProofs({
+      fromVault: p.fromVault,
+      toVault: p.toVault,
+    })
+
+    const verifyingContract = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'admiralsQuarters',
+      chainId: p.chainId,
+    })
+
+    const ensoRouterAddress = this._configProvider.getConfigurationItem({
+      name: 'ENSO_ROUTER_ADDRESS',
+    })
+    if (!ensoRouterAddress || !isAddressValue(ensoRouterAddress)) {
+      throw new Error('ENSO_ROUTER_ADDRESS is not configured or invalid')
+    }
+
+    console.log('Fetching Enso swap calldata...')
+
+    const swapCalldata = await this._fetchEnsoSwapCalldata({
+      chainId: p.chainId,
+      fromAddress: verifyingContract.value,
+      ensoRouterAddress,
+      tokenIn: p.fromVault,
+      tokenOut: p.toVault,
+      amountIn: amountRaw,
+      slippage: String(Number(p.slippagePercentage) * 100),
+    })
+
+    return {
+      id: p.id,
+      orderId: p.orderId,
+      userAddress: p.userAddress,
+      chainId: p.chainId,
+      fromVault: p.fromVault,
+      toVault: p.toVault,
+      amount: amountRaw.toString(),
+      slippage: p.slippagePercentage,
+      intervalSeconds: p.intervalSeconds,
+      nextExecutionAtUnixTimestamp: p.firstExecutionUnixTimestamp,
+      deadlineUnixTimestamp: deadline,
+      maxTrades: p.maxTrades,
+      tradesExecuted: 0,
+      neverBuyAbove: p.neverBuyAbove,
+      neverSellBelow: p.neverSellBelow,
+      allowedVaultsRoot,
+      fromVaultProof,
+      toVaultProof,
+      swapCalldata,
+      signature: p.rebalanceAuthorizationSignature,
+      ensoRouterAddress,
+      verifyingContractAddress: verifyingContract.value,
+      status: ArmadaDcaOrderStatusEnum.Active,
+      createdAt: now,
+      updatedAt: now,
     }
   }
 
@@ -834,6 +883,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
 
     return {
       id: row.id,
+      orderId: row.orderId,
       userAddress: row.userAddress as AddressValue,
       chainId: row.chainId as ChainId,
       fromVault: row.fromVault as AddressValue,

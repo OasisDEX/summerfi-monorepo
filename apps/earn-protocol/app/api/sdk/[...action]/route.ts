@@ -19,7 +19,11 @@ export async function POST(req: NextRequest) {
   const rewrittenPath = rewriteSdkPath(req.nextUrl.pathname)
   const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
 
-  const headers = {}
+  const headers: Record<string, string> = {}
+  const authorization = req.headers.get('Authorization') || req.headers.get('authorization')
+  if (authorization) {
+    headers['Authorization'] = authorization
+  }
   const response = await fetch(url, {
     headers,
     method: 'POST',
@@ -49,7 +53,11 @@ export async function GET(req: NextRequest) {
   const rewrittenPath = rewriteSdkPath(req.nextUrl.pathname)
   const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
 
-  const headers = {}
+  const headers: Record<string, string> = {}
+  const authorization = req.headers.get('Authorization') || req.headers.get('authorization')
+  if (authorization) {
+    headers['Authorization'] = authorization
+  }
   const response = await fetch(url, {
     headers,
     next: {

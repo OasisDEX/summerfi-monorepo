@@ -6,6 +6,7 @@ import {
   type AddressValue,
   type ChainId,
   type HexData,
+  type IArmadaDcaOrder,
   type IArmadaDcaStrategyConfig,
   TransactionType,
   Token,
@@ -15,7 +16,7 @@ import {
 } from '@summerfi/sdk-common'
 import { encodeFunctionData } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { ArmadaManagerDCA } from '../src/common/implementation/ArmadaManagerDCA'
+import { ArmadaManagerDCA, type DbOrderRow } from '../src/common/implementation/ArmadaManagerDCA'
 import { DCAStrategyManagerAbi } from '../src/common/implementation/abi/DCAStrategyManagerAbi'
 import type { SummerProtocolDb } from '../src/db-provider/getDb'
 
@@ -57,33 +58,34 @@ const TEST_STRATEGY_CONFIG: IArmadaDcaStrategyConfig = {
   maxTrades: '10',
 }
 
-type DbOrderRow = {
-  id: string
-  userAddress: string
-  chainId: number
-  fromVault: string
-  toVault: string
-  amount: string
-  slippage: string
-  intervalSeconds: number
-  nextExecutionAt: string
-  deadline: string | null
-  maxTrades: number
-  tradesExecuted: number
-  allowedVaultsRoot: string
-  fromVaultProof: unknown
-  toVaultProof: unknown
-  swapCalldata: string
-  signature: string
-  ensoRouterAddress: string
-  verifyingContractAddress: string
-  status: string
-  createdAt: string
-  updatedAt: string
-  cancelledAt: string | null
-  pausedAt: string | null
-  neverBuyAbove: string | null
-  neverSellBelow: string | null
+// Order fixture used by the strategy transaction tests
+const TEST_DCA_ORDER: IArmadaDcaOrder = {
+  id: 'strategy-test',
+  orderId: 'strategy-test-ext',
+  userAddress: '0x6666666666666666666666666666666666666666' as AddressValue,
+  chainId: DEFAULT_CHAIN_ID,
+  fromVault: FROM_VAULT,
+  toVault: TO_VAULT,
+  amount: '1000000',
+  slippage: '0.5',
+  intervalSeconds: 3600,
+  nextExecutionAtUnixTimestamp: 1700000000,
+  deadlineUnixTimestamp: 1800000000,
+  maxTrades: 10,
+  tradesExecuted: 0,
+  allowedVaultsRoot:
+    '0x0000000000000000000000000000000000000000000000000000000000000000' as HexData,
+  fromVaultProof: [] as HexData[],
+  toVaultProof: [] as HexData[],
+  swapCalldata: '0x' as HexData,
+  signature: '0x' as HexData,
+  ensoRouterAddress: ENSO_ROUTER,
+  verifyingContractAddress: ADMIRALS_QUARTERS,
+  status: ArmadaDcaOrderStatusEnum.Active,
+  createdAt: 1700000000,
+  updatedAt: 1700000000,
+  neverBuyAbove: '200000000',
+  neverSellBelow: '100000000',
 }
 
 function createBlockchainClientProviderMock(): IBlockchainClientProvider {
@@ -162,6 +164,8 @@ describe('ArmadaManagerDCA', () => {
 
     const account = privateKeyToAccount(TEST_SIGNER_PRIVATE_KEY)
     const order = await manager.createAndSaveBuyOrder({
+      id: 'order-1',
+      orderId: 'external-order-1',
       userAddress: account.address as AddressValue,
       chainId: DEFAULT_CHAIN_ID,
       fromVault: FROM_VAULT,
@@ -211,6 +215,7 @@ describe('ArmadaManagerDCA', () => {
     const rows: DbOrderRow[] = [
       {
         id: 'order-1',
+        orderId: 'external-order-1',
         userAddress: '0x6666666666666666666666666666666666666666',
         chainId: DEFAULT_CHAIN_ID,
         fromVault: FROM_VAULT,
@@ -278,6 +283,7 @@ describe('ArmadaManagerDCA', () => {
 
     const existingRow: DbOrderRow = {
       id: orderId,
+      orderId: orderId,
       userAddress: account.address,
       chainId: DEFAULT_CHAIN_ID,
       fromVault: FROM_VAULT,
@@ -358,17 +364,27 @@ describe('ArmadaManagerDCA', () => {
   })
 
   it('should build strategy config transactions', async () => {
-    const manager = createManager({
+    // Use a deployment provider that returns STRATEGY_MANAGER for dcaStrategyManager
+    const manager = new ArmadaManagerDCA({
+      configProvider: createConfigProviderMock(),
+      deploymentProvider: {
+        getDeployedContractAddress: jest.fn(({ contractName }: { contractName: string }) => {
+          if (contractName === 'dcaStrategyManager') return { value: STRATEGY_MANAGER }
+          return { value: ADMIRALS_QUARTERS }
+        }),
+      } as never,
       summerProtocolDbProvider: async () => ({}) as SummerProtocolDb,
+      blockchainClientProvider: createBlockchainClientProviderMock(),
+      oracleManager: createOracleManagerMock(),
     })
 
-    const expectedConfig = {
-      strategyId: 1n,
-      owner: TEST_STRATEGY_CONFIG.owner,
-      sourceVault: TEST_STRATEGY_CONFIG.sourceVault,
-      targetVault: TEST_STRATEGY_CONFIG.targetVault,
-      inAsset: TEST_STRATEGY_CONFIG.inAsset,
-      outAsset: TEST_STRATEGY_CONFIG.outAsset,
+    // _orderToStrategyConfig derives inAsset/outAsset from fromVault/toVault
+    const baseExpectedConfig = {
+      owner: TEST_DCA_ORDER.userAddress,
+      sourceVault: FROM_VAULT,
+      targetVault: TO_VAULT,
+      inAsset: FROM_VAULT,
+      outAsset: TO_VAULT,
       inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
       outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
       tradeAmount: 1000000n,
@@ -381,21 +397,31 @@ describe('ArmadaManagerDCA', () => {
     }
 
     const createTx = await manager.createStrategyTx({
-      strategyManagerAddress: STRATEGY_MANAGER,
-      strategyConfig: TEST_STRATEGY_CONFIG,
+      chainId: DEFAULT_CHAIN_ID,
+      order: TEST_DCA_ORDER,
+      inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
+      outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
     })
     const editTx = await manager.editStrategyTx({
-      strategyManagerAddress: STRATEGY_MANAGER,
-      strategyConfig: TEST_STRATEGY_CONFIG,
+      chainId: DEFAULT_CHAIN_ID,
+      order: TEST_DCA_ORDER,
+      strategyId: '1',
+      inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
+      outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
     })
     const resumeTx = await manager.resumeStrategyTx({
-      strategyManagerAddress: STRATEGY_MANAGER,
-      strategyConfig: TEST_STRATEGY_CONFIG,
+      chainId: DEFAULT_CHAIN_ID,
+      order: TEST_DCA_ORDER,
+      strategyId: '1',
+      inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
+      outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
     })
     const executeTx = await manager.executeDCATx({
-      strategyManagerAddress: STRATEGY_MANAGER,
-      strategyConfig: TEST_STRATEGY_CONFIG,
-      ensoData: '0x1234' as HexData,
+      chainId: DEFAULT_CHAIN_ID,
+      order: TEST_DCA_ORDER,
+      strategyId: '1',
+      inAssetFeed: TEST_STRATEGY_CONFIG.inAssetFeed,
+      outAssetFeed: TEST_STRATEGY_CONFIG.outAssetFeed,
     })
 
     expect(createTx.type).toBe(TransactionType.CreateStrategy)
@@ -404,7 +430,7 @@ describe('ArmadaManagerDCA', () => {
       encodeFunctionData({
         abi: DCAStrategyManagerAbi,
         functionName: 'createStrategy',
-        args: [expectedConfig],
+        args: [{ ...baseExpectedConfig, strategyId: 0n }],
       }),
     )
 
@@ -413,7 +439,7 @@ describe('ArmadaManagerDCA', () => {
       encodeFunctionData({
         abi: DCAStrategyManagerAbi,
         functionName: 'editStrategy',
-        args: [expectedConfig],
+        args: [{ ...baseExpectedConfig, strategyId: 1n }],
       }),
     )
 
@@ -422,7 +448,7 @@ describe('ArmadaManagerDCA', () => {
       encodeFunctionData({
         abi: DCAStrategyManagerAbi,
         functionName: 'resumeStrategy',
-        args: [expectedConfig],
+        args: [{ ...baseExpectedConfig, strategyId: 1n }],
       }),
     )
 
@@ -431,7 +457,7 @@ describe('ArmadaManagerDCA', () => {
       encodeFunctionData({
         abi: DCAStrategyManagerAbi,
         functionName: 'executeDCA',
-        args: [expectedConfig, '0x1234'],
+        args: [{ ...baseExpectedConfig, strategyId: 1n }, TEST_DCA_ORDER.swapCalldata],
       }),
     )
   })
@@ -467,5 +493,283 @@ describe('ArmadaManagerDCA', () => {
         args: [42n],
       }),
     )
+  })
+
+  it('should persist orderId in values on createAndSaveBuyOrder', async () => {
+    let capturedValues: Record<string, unknown> | undefined
+    const executeTakeFirstOrThrow = jest.fn().mockResolvedValue({})
+    const values = jest.fn().mockImplementation((v: Record<string, unknown>) => {
+      capturedValues = v
+      return { executeTakeFirstOrThrow }
+    })
+    const insertInto = jest.fn().mockReturnValue({ values })
+
+    const dbProvider = jest.fn(async () => ({ insertInto }))
+    const manager = createManager({
+      summerProtocolDbProvider: dbProvider as unknown as () => Promise<SummerProtocolDb>,
+    })
+    const managerInternals = manager as unknown as {
+      _fetchEnsoSwapCalldata: (params: unknown) => Promise<HexData>
+    }
+    jest.spyOn(managerInternals, '_fetchEnsoSwapCalldata').mockResolvedValue('0xabcd' as HexData)
+
+    const account = privateKeyToAccount(TEST_SIGNER_PRIVATE_KEY)
+    await manager.createAndSaveBuyOrder({
+      id: 'order-persist',
+      orderId: 'ext-order-persist',
+      userAddress: account.address as AddressValue,
+      chainId: DEFAULT_CHAIN_ID,
+      fromVault: FROM_VAULT,
+      toVault: TO_VAULT,
+      rebalanceAuthorizationSignature: '0x1234' as HexData,
+      amount: TEST_AMOUNT,
+      slippagePercentage: '0.5',
+      intervalSeconds: 3600,
+      firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
+      maxTrades: 10,
+    })
+
+    expect(capturedValues?.orderId).toBe('ext-order-persist')
+  })
+
+  it('should map orderId from db row in returned order', async () => {
+    const row: DbOrderRow = {
+      id: 'order-map',
+      orderId: 'ext-order-map',
+      userAddress: '0x6666666666666666666666666666666666666666',
+      chainId: DEFAULT_CHAIN_ID,
+      fromVault: FROM_VAULT,
+      toVault: TO_VAULT,
+      amount: '1',
+      slippage: '0.5',
+      intervalSeconds: 3600,
+      nextExecutionAt: '1700000000',
+      deadline: null,
+      allowedVaultsRoot: '0xaaa',
+      fromVaultProof: ['0xbbb'],
+      toVaultProof: ['0xccc'],
+      swapCalldata: '0xddd',
+      signature: '0xeee',
+      ensoRouterAddress: ENSO_ROUTER,
+      verifyingContractAddress: ADMIRALS_QUARTERS,
+      status: 'active',
+      createdAt: '1700000000',
+      updatedAt: '1700000000',
+      cancelledAt: null,
+      pausedAt: null,
+      maxTrades: 10,
+      tradesExecuted: 0,
+      neverBuyAbove: null,
+      neverSellBelow: null,
+    }
+
+    const query = {
+      selectAll: jest.fn(),
+      where: jest.fn(),
+      executeTakeFirst: jest.fn().mockResolvedValue(row),
+    }
+    query.selectAll.mockReturnValue(query)
+    query.where.mockReturnValue(query)
+
+    const dbProvider = jest.fn(async () => ({
+      selectFrom: jest.fn().mockReturnValue(query),
+    }))
+
+    const manager = createManager({
+      summerProtocolDbProvider: dbProvider as unknown as () => Promise<SummerProtocolDb>,
+    })
+
+    const result = await manager.getBuyOrder({
+      orderId: 'order-map',
+      userAddress: row.userAddress as AddressValue,
+    })
+
+    expect(result).toBeDefined()
+    expect(result?.orderId).toBe('ext-order-map')
+  })
+
+  it('should update mutable fields and preserve tradesExecuted on editBuyOrder', async () => {
+    const account = privateKeyToAccount(TEST_SIGNER_PRIVATE_KEY)
+
+    const existingRow: DbOrderRow = {
+      id: 'order-edit',
+      orderId: 'ext-order-edit',
+      userAddress: account.address,
+      chainId: DEFAULT_CHAIN_ID,
+      fromVault: FROM_VAULT,
+      toVault: TO_VAULT,
+      amount: '1000000',
+      slippage: '0.5',
+      intervalSeconds: 3600,
+      nextExecutionAt: '1700000000',
+      deadline: null,
+      allowedVaultsRoot: '0xaaa',
+      fromVaultProof: ['0xbbb'],
+      toVaultProof: ['0xccc'],
+      swapCalldata: '0xddd',
+      signature: '0xeee',
+      ensoRouterAddress: ENSO_ROUTER,
+      verifyingContractAddress: ADMIRALS_QUARTERS,
+      status: 'active',
+      createdAt: '1700000000',
+      updatedAt: '1700000000',
+      cancelledAt: null,
+      pausedAt: null,
+      maxTrades: 10,
+      tradesExecuted: 3,
+      neverBuyAbove: null,
+      neverSellBelow: null,
+    }
+
+    const selectQuery = {
+      selectAll: jest.fn(),
+      where: jest.fn(),
+      executeTakeFirst: jest.fn().mockResolvedValue(existingRow),
+    }
+    selectQuery.selectAll.mockReturnValue(selectQuery)
+    selectQuery.where.mockReturnValue(selectQuery)
+
+    const updateQuery = {
+      set: jest.fn(),
+      where: jest.fn(),
+      executeTakeFirstOrThrow: jest.fn().mockResolvedValue({}),
+    }
+    updateQuery.set.mockReturnValue(updateQuery)
+    updateQuery.where.mockReturnValue(updateQuery)
+
+    const dbProvider = jest.fn(async () => ({
+      selectFrom: jest.fn().mockReturnValue(selectQuery),
+      updateTable: jest.fn().mockReturnValue(updateQuery),
+    }))
+
+    const manager = createManager({
+      summerProtocolDbProvider: dbProvider as unknown as () => Promise<SummerProtocolDb>,
+    })
+    const managerInternals = manager as unknown as {
+      _fetchEnsoSwapCalldata: (params: unknown) => Promise<HexData>
+    }
+    jest.spyOn(managerInternals, '_fetchEnsoSwapCalldata').mockResolvedValue('0xnew' as HexData)
+
+    const result = await manager.editBuyOrder({
+      id: 'order-edit',
+      orderId: 'ext-order-edit-v2',
+      userAddress: account.address as AddressValue,
+      chainId: DEFAULT_CHAIN_ID,
+      fromVault: FROM_VAULT,
+      toVault: TO_VAULT,
+      rebalanceAuthorizationSignature: '0x5678' as HexData,
+      amount: TEST_AMOUNT,
+      slippagePercentage: '1.0',
+      intervalSeconds: 7200,
+      firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 7200,
+      maxTrades: 20,
+    })
+
+    expect(result.tradesExecuted).toBe(3)
+    expect(result.status).toBe(ArmadaDcaOrderStatusEnum.Active)
+    expect(updateQuery.set).toHaveBeenCalledTimes(1)
+    expect(updateQuery.executeTakeFirstOrThrow).toHaveBeenCalledTimes(1)
+  })
+
+  it('should throw when editBuyOrder targets a cancelled order', async () => {
+    const account = privateKeyToAccount(TEST_SIGNER_PRIVATE_KEY)
+
+    const cancelledRow: DbOrderRow = {
+      id: 'order-cancelled',
+      orderId: 'ext-cancelled',
+      userAddress: account.address,
+      chainId: DEFAULT_CHAIN_ID,
+      fromVault: FROM_VAULT,
+      toVault: TO_VAULT,
+      amount: '1000000',
+      slippage: '0.5',
+      intervalSeconds: 3600,
+      nextExecutionAt: '1700000000',
+      deadline: null,
+      allowedVaultsRoot: '0xaaa',
+      fromVaultProof: ['0xbbb'],
+      toVaultProof: ['0xccc'],
+      swapCalldata: '0xddd',
+      signature: '0xeee',
+      ensoRouterAddress: ENSO_ROUTER,
+      verifyingContractAddress: ADMIRALS_QUARTERS,
+      status: ArmadaDcaOrderStatusEnum.Cancelled,
+      createdAt: '1700000000',
+      updatedAt: '1700000000',
+      cancelledAt: '1700001000',
+      pausedAt: null,
+      maxTrades: 10,
+      tradesExecuted: 0,
+      neverBuyAbove: null,
+      neverSellBelow: null,
+    }
+
+    const selectQuery = {
+      selectAll: jest.fn(),
+      where: jest.fn(),
+      executeTakeFirst: jest.fn().mockResolvedValue(cancelledRow),
+    }
+    selectQuery.selectAll.mockReturnValue(selectQuery)
+    selectQuery.where.mockReturnValue(selectQuery)
+
+    const dbProvider = jest.fn(async () => ({
+      selectFrom: jest.fn().mockReturnValue(selectQuery),
+    }))
+
+    const manager = createManager({
+      summerProtocolDbProvider: dbProvider as unknown as () => Promise<SummerProtocolDb>,
+    })
+
+    await expect(
+      manager.editBuyOrder({
+        id: 'order-cancelled',
+        orderId: 'ext-cancelled',
+        userAddress: account.address as AddressValue,
+        chainId: DEFAULT_CHAIN_ID,
+        fromVault: FROM_VAULT,
+        toVault: TO_VAULT,
+        rebalanceAuthorizationSignature: '0x1234' as HexData,
+        amount: TEST_AMOUNT,
+        slippagePercentage: '0.5',
+        intervalSeconds: 3600,
+        firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
+        maxTrades: 10,
+      }),
+    ).rejects.toThrow('Cannot edit an order with status')
+  })
+
+  it('should throw on editBuyOrder when row is not found', async () => {
+    const selectQuery = {
+      selectAll: jest.fn(),
+      where: jest.fn(),
+      executeTakeFirst: jest.fn().mockResolvedValue(undefined),
+    }
+    selectQuery.selectAll.mockReturnValue(selectQuery)
+    selectQuery.where.mockReturnValue(selectQuery)
+
+    const dbProvider = jest.fn(async () => ({
+      selectFrom: jest.fn().mockReturnValue(selectQuery),
+    }))
+
+    const manager = createManager({
+      summerProtocolDbProvider: dbProvider as unknown as () => Promise<SummerProtocolDb>,
+    })
+
+    await expect(
+      manager.editBuyOrder({
+        id: 'missing-order',
+        orderId: 'ext-missing',
+        userAddress: '0x6666666666666666666666666666666666666666' as AddressValue,
+        chainId: DEFAULT_CHAIN_ID,
+        fromVault: FROM_VAULT,
+        toVault: TO_VAULT,
+        rebalanceAuthorizationSignature: '0x1234' as HexData,
+        amount: TEST_AMOUNT,
+        slippagePercentage: '0.5',
+        intervalSeconds: 3600,
+        firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
+        maxTrades: 10,
+      }),
+    ).rejects.toThrow('DCA order not found')
   })
 })

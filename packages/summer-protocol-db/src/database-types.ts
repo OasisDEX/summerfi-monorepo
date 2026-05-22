@@ -44,6 +44,7 @@ export interface ArmadaDcaOrders {
   neverBuyAbove: string | null;
   neverSellBelow: string | null;
   nextExecutionAt: Int8;
+  orderId: string;
   pausedAt: Int8 | null;
   signature: string;
   slippage: string;
