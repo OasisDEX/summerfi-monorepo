@@ -20,6 +20,6 @@ describe('Armada Protocol - DCA Orders Read', () => {
       status: ArmadaDcaOrderStatusEnum.Active,
     })
 
-    //
+    // WIP: add more assertions once we have a better test setup with known orders
   })
 })

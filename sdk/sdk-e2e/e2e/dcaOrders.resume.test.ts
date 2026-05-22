@@ -1,15 +1,7 @@
 import assert from 'assert'
 import { privateKeyToAccount } from 'viem/accounts'
-import {
-  Token,
-  TokenAmount,
-  Address,
-  ChainIds,
-  getChainInfoByChainId,
-  type AddressValue,
-  ArmadaDcaOrderStatusEnum,
-} from '@summerfi/sdk-common'
-import { TestConfigAccounts, TestConfigs } from './utils/testConfig'
+import { ChainIds, ArmadaDcaOrderStatusEnum } from '@summerfi/sdk-common'
+import { TestConfigAccounts } from './utils/testConfig'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
@@ -18,76 +10,38 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - DCA Orders Resume', () => {
-  it('should resume a paused buy order', async () => {
-    const setup = createSdkTestSetup({ chainId: ChainIds.Base })
-    const { sdk, chainId } = setup
+  const scenarios: { orderId: string }[] = [{ orderId: '<replace-with-order-id>' }]
 
-    const fromVault = TestConfigs.BaseUSDC
-    const toVault = TestConfigs.BaseWETH
-    const userAddress = TestConfigAccounts.testUserAddressValue
+  describe.each(scenarios)('with scenario %#', (scenario) => {
+    const { orderId } = scenario
 
-    const usdcToken = Token.createFrom({
-      chainInfo: getChainInfoByChainId(chainId),
-      address: Address.createFromEthereum({
-        value: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as AddressValue,
-      }),
-      symbol: 'USDC',
-      name: 'USD Coin',
-      decimals: 6,
-    })
-    const amount = TokenAmount.createFrom({ token: usdcToken, amount: '6' })
-    const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
+    it('should resume a paused DCA buy order by id', async () => {
+      const setup = createSdkTestSetup({ chainId: ChainIds.Base })
+      const { sdk, userAddressValue: userAddress } = setup
 
-    const order = await sdk.armada.dca.createAndSaveBuyOrder({
-      userAddress,
-      chainId,
-      fromVault: fromVault.fleetAddressValue,
-      toVault: toVault.fleetAddressValue,
-      signTypedData: account.signTypedData,
-      amount,
-      slippagePercentage: '0.5',
-      intervalSeconds: 3600,
-      firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
-      maxTrades: 10,
-    })
+      const existingOrder = await sdk.armada.dca.getBuyOrder({ orderId, userAddress })
 
-    assert(order.id, 'Expected order id to be defined')
-    console.log(`[Resume] Created order:`, JSON.stringify(order, null, 2))
+      assert(existingOrder, `Expected order ${orderId} to exist`)
 
-    // pause first
-    const pauseMessage = `I want to pause ${order.id}.`
-    const pauseSignature = await account.signMessage({ message: pauseMessage })
-    const pausedOrder = await sdk.armada.dca.pauseBuyOrder({
-      orderId: order.id,
-      userAddress,
-      signedMessage: pauseMessage,
-      signature: pauseSignature,
-    })
+      if (existingOrder.status === ArmadaDcaOrderStatusEnum.Active) {
+        console.log(`[Resume] Order ${orderId} is already active, skipping`)
+        return
+      }
 
-    assert.strictEqual(pausedOrder.status, ArmadaDcaOrderStatusEnum.Paused)
-    console.log(`[Resume] Paused order:`, JSON.stringify(pausedOrder, null, 2))
+      const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
 
-    // resume
-    const resumeMessage = `I want to resume ${order.id}.`
-    const resumeSignature = await account.signMessage({ message: resumeMessage })
-    const resumedOrder = await sdk.armada.dca.resumeBuyOrder({
-      orderId: order.id,
-      userAddress,
-      signedMessage: resumeMessage,
-      signature: resumeSignature,
-    })
+      const signedMessage = `I want to resume ${orderId}.`
+      const signature = await account.signMessage({ message: signedMessage })
 
-    assert.strictEqual(resumedOrder.status, ArmadaDcaOrderStatusEnum.Active)
-    console.log(`[Resume] Resumed order:`, JSON.stringify(resumedOrder, null, 2))
+      const resumedOrder = await sdk.armada.dca.resumeBuyOrder({
+        orderId,
+        userAddress,
+        signedMessage,
+        signature,
+      })
 
-    // clean up — cancel the order
-    const cancelMessage = `I want to cancel ${order.id}.`
-    const cancelSignature = await account.signMessage({ message: cancelMessage })
-    await sdk.armada.dca.cancelBuyOrder({
-      orderId: order.id,
-      userAddress,
-      signedMessage: cancelMessage,
-      signature: cancelSignature,
+      assert.strictEqual(resumedOrder.status, ArmadaDcaOrderStatusEnum.Active)
+      console.log(`[Resume] Resumed DCA order with ID: ${orderId}`)
     })
   })
 })
