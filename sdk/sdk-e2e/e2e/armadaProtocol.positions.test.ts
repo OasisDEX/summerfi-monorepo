@@ -62,8 +62,10 @@ describe('Armada Protocol - Positions', () => {
 
     it('should get user positions', async () => {
       // Choose SDK setup based on scenario
-      const setup = testClientId ? createAdminSdkTestSetup(testClientId) : createSdkTestSetup()
-      const { sdk, chainId, fleetAddress, userAddress } = setup
+      const setup = testClientId
+        ? createAdminSdkTestSetup(testClientId)
+        : createSdkTestSetup({ chainId: scenarioChainId ?? ChainIds.Base })
+      const { sdk, chainId, userAddress } = setup
 
       const chainInfo = getChainInfoByChainId(scenarioChainId ?? chainId)
       const user = User.createFromEthereum(
@@ -75,9 +77,13 @@ describe('Armada Protocol - Positions', () => {
 
       if (testSpecificFleet) {
         // Test for specific fleet
+        // Admin setup provides fleetAddress directly; user setup scenarios that use
+        // testSpecificFleet must be updated to include a fleetAddressValue when reactivated.
+        const fleetAddrValue = (setup as ReturnType<typeof createAdminSdkTestSetup>).fleetAddress
+          .value
         const position = await sdk.armada.users.getUserPosition({
           user: user,
-          fleetAddress: Address.createFromEthereum({ value: fleetAddress.value }),
+          fleetAddress: Address.createFromEthereum({ value: fleetAddrValue }),
         })
 
         assert(position != null, 'User position not found')

@@ -2,7 +2,9 @@
 import {
   Address,
   ArmadaVaultId,
+  ChainIds,
   getChainInfoByChainId,
+  type AddressValue,
   type IArmadaVaultInfo,
 } from '@summerfi/sdk-common'
 
@@ -10,7 +12,7 @@ import assert from 'assert'
 import { stringifyArmadaVaultInfo } from './utils/stringifiers'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
-import { TestClientIds, type TestConfigKey } from './utils/testConfig'
+import { FleetAddresses, TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -19,8 +21,15 @@ jest.setTimeout(300000)
  */
 
 describe('Armada Protocol - Specific Vault', () => {
-  const scenarios: { testConfigKey?: TestConfigKey; testClientId?: TestClientIds }[] = [
-    { testConfigKey: 'MainnetETHDao' },
+  const scenarios: {
+    chainId?: typeof ChainIds.Mainnet
+    fleetAddressValue?: AddressValue
+    testClientId?: TestClientIds
+  }[] = [
+    {
+      chainId: ChainIds.Mainnet,
+      fleetAddressValue: FleetAddresses[ChainIds.Mainnet].ETHDao,
+    },
     // {
     //   testClientId: TestClientIds.ACME,
     // },
@@ -30,24 +39,29 @@ describe('Armada Protocol - Specific Vault', () => {
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testClientId, testConfigKey } = scenario
+    const { testClientId, chainId, fleetAddressValue } = scenario
 
     it('should get specific vault info', async () => {
       // Choose SDK setup based on scenario
       const setup = testClientId
         ? createAdminSdkTestSetup(testClientId)
-        : createSdkTestSetup(testConfigKey)
-      const { sdk, chainId, fleetAddress, userAddress } = setup
+        : createSdkTestSetup({ chainId: chainId! })
+      const { sdk, chainId: setupChainId, userAddress } = setup
+
+      const effectiveChainId = setupChainId
+      const effectiveFleetAddressValue = testClientId
+        ? (setup as ReturnType<typeof createAdminSdkTestSetup>).fleetAddress.value
+        : fleetAddressValue!
 
       const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
       console.log(
-        `[${sdkType}] Running on chain ${chainId} for ${testClientId || testConfigKey} with user ${userAddress.value}`,
+        `[${sdkType}] Running on chain ${effectiveChainId} for ${testClientId || `chain ${chainId}`} with user ${userAddress.value}`,
       )
 
       // Test for specific vault
       const vaultId = ArmadaVaultId.createFrom({
-        chainInfo: getChainInfoByChainId(chainId),
-        fleetAddress: Address.createFromEthereum({ value: fleetAddress.value }),
+        chainInfo: getChainInfoByChainId(effectiveChainId),
+        fleetAddress: Address.createFromEthereum({ value: effectiveFleetAddressValue }),
       })
 
       const vaultInfo = await sdk.armada.users.getVaultInfo({

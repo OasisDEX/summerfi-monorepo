@@ -1,7 +1,5 @@
-import { Address, ChainIds, User, type AddressValue, type ChainId } from '@summerfi/sdk-common'
-import { makeSDK } from '@summerfi/sdk-client'
-import { createSendTransactionTool } from '@summerfi/testing-utils'
-import { SDKApiUrl, RpcUrls, TestConfigAccounts } from './utils/testConfig'
+import { Address, ChainIds, User } from '@summerfi/sdk-common'
+import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
 
@@ -10,49 +8,45 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - Gov V2 Authorization', () => {
   const scenarios: {
-    userAddress: AddressValue
-    chainId: ChainId
+    chainId: typeof ChainIds.Base
     shouldAuthorize: boolean
-    target: AddressValue
+    target?: string
   }[] = [
     {
-      userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+      chainId: ChainIds.Base,
+      shouldAuthorize: true,
+      target: '0xfec27FAAF888Fb4C2Ce6d51547F82E5D05F5D12d',
+    },
+    {
       chainId: ChainIds.Base,
       shouldAuthorize: false,
-      target: '0xfec27FAAF888Fb4C2Ce6d51547F82E5D05F5D12d', // aq
+      target: '0xfec27FAAF888Fb4C2Ce6d51547F82E5D05F5D12d',
     },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { userAddress, chainId, shouldAuthorize, target } = scenario
+    const { chainId, shouldAuthorize, target } = scenario
 
-    const sdk = makeSDK({ apiDomainUrl: SDKApiUrl })
-    const userSendTxTool = createSendTransactionTool({
+    const { sdk, userAddress, userSendTxTool } = createSdkTestSetup({
       chainId,
-      rpcUrl: RpcUrls[chainId as keyof typeof RpcUrls],
-      senderAddressValue: userAddress,
-      signerPrivateKey: TestConfigAccounts.testUserPrivateKey,
       simulateOnly: false,
     })
 
-    const user = User.createFromEthereum(chainId, userAddress)
+    const user = User.createFromEthereum(chainId, userAddress.value)
 
-    // Use a deterministic test address as the authorized caller
-    const testAuthorizedCaller = Address.createFromEthereum({
-      value: target,
-    })
+    const authorizedCaller = target
+      ? Address.createFromEthereum({ value: target as `0x${string}` })
+      : undefined
 
     it('should send authorization transaction and set staking rewards caller authorization state', async () => {
-      // Check initial authorization status
       const initialAuthStatus = await sdk.armada.users.isAuthorizedStakingRewardsCallerV2({
-        owner: Address.createFromEthereum({ value: userAddress }),
-        authorizedCaller: testAuthorizedCaller,
+        owner: userAddress,
+        authorizedCaller,
       })
       console.log(
-        `Initial authorization status for ${testAuthorizedCaller.value}: ${initialAuthStatus}`,
+        `Initial authorization status for ${authorizedCaller?.value ?? 'default AQ'}: ${initialAuthStatus}`,
       )
 
-      // Skip if already in the desired state
       if (shouldAuthorize === initialAuthStatus) {
         console.log(
           `Skipping - caller is already ${shouldAuthorize ? 'authorized' : 'not authorized'}`,
@@ -60,29 +54,50 @@ describe('Armada Protocol - Gov V2 Authorization', () => {
         return
       }
 
-      // Set authorization
       const authorizeTx = await sdk.armada.users.authorizeStakingRewardsCallerV2({
         user,
-        authorizedCaller: testAuthorizedCaller,
+        authorizedCaller,
         isAuthorized: shouldAuthorize,
       })
 
       expect(authorizeTx).toBeDefined()
       expect(authorizeTx).toHaveLength(1)
 
-      // Send the transaction
       const txStatus = await userSendTxTool(authorizeTx, { confirmations: 5 })
       expect(txStatus).toStrictEqual(['success'])
 
-      // Verify the final authorization state matches the desired value
       const afterAuthStatus = await sdk.armada.users.isAuthorizedStakingRewardsCallerV2({
-        owner: Address.createFromEthereum({ value: userAddress }),
-        authorizedCaller: testAuthorizedCaller,
+        owner: userAddress,
+        authorizedCaller,
       })
       console.log(
         `Authorization status after ${shouldAuthorize ? 'authorization' : 'revocation'}: ${afterAuthStatus}`,
       )
       expect(afterAuthStatus).toBe(shouldAuthorize)
+    })
+
+    it('should check authorization status', async () => {
+      const authStatus = await sdk.armada.users.isAuthorizedStakingRewardsCallerV2({
+        owner: userAddress,
+        authorizedCaller,
+      })
+      console.log(
+        `isAuthorizedStakingRewardsCallerV2 (caller: ${authorizedCaller?.value ?? 'default AQ'}): ${authStatus}`,
+      )
+      expect(typeof authStatus).toBe('boolean')
+    })
+
+    it('should build authorize transaction', async () => {
+      const authorizeTx = await sdk.armada.users.authorizeStakingRewardsCallerV2({
+        user,
+        authorizedCaller,
+        isAuthorized: false,
+      })
+
+      expect(authorizeTx).toBeDefined()
+      expect(authorizeTx).toHaveLength(1)
+      expect(authorizeTx[0].transaction.target).toBeDefined()
+      expect(authorizeTx[0].transaction.calldata).toBeDefined()
     })
   })
 })

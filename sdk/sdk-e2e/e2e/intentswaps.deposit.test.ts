@@ -90,9 +90,6 @@ describe('Intent swaps: Swap with Deposit', () => {
 
     const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
     const walletClient = getWalletClientForChain(chainId, RpcUrls[chainId], signerPrivateKey)
-    if (walletClient.account == null) {
-      throw new Error('Wallet client account is null')
-    }
 
     it('should complete intent swap flow', async () => {
       const sdk = makeSDK({

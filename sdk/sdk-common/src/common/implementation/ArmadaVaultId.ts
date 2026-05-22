@@ -7,6 +7,10 @@ import type { IArmadaVaultId, IArmadaVaultIdData } from '../interfaces/IArmadaVa
 import type { IChainInfo } from '../interfaces/IChainInfo'
 import { ArmadaProtocol } from './ArmadaProtocol'
 import { PoolId } from './PoolId'
+import type { ChainId } from '../types/ChainId'
+import type { AddressValue } from '../types/AddressValue'
+import { Address } from './Address'
+import { getChainInfoByChainId } from './ChainFamilies'
 
 /**
  * Type for the parameters of ArmadaVaultId
@@ -30,6 +34,16 @@ export class ArmadaVaultId extends PoolId implements IArmadaVaultId {
   /** FACTORY */
   static createFrom(params: ArmadaVaultIdParameters): ArmadaVaultId {
     return new ArmadaVaultId(params)
+  }
+
+  static createSimple(params: {
+    chainId: ChainId
+    fleetAddressValue: AddressValue
+  }): ArmadaVaultId {
+    return new ArmadaVaultId({
+      chainInfo: getChainInfoByChainId(params.chainId),
+      fleetAddress: Address.createFromEthereum({ value: params.fleetAddressValue }),
+    })
   }
 
   /** SEALED CONSTRUCTOR */

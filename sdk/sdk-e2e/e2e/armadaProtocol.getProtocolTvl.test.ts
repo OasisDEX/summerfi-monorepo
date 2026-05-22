@@ -1,3 +1,4 @@
+import { ChainIds } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
@@ -7,7 +8,7 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - getProtocolTvl', () => {
   it('should get total protocol TVL across all chains', async () => {
-    const { sdk } = createSdkTestSetup()
+    const { sdk } = createSdkTestSetup({ chainId: ChainIds.Base })
 
     console.log('Fetching total protocol TVL...')
 

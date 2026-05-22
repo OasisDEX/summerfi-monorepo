@@ -6,7 +6,7 @@ export const isAuthorizedStakingRewardsCallerV2 = publicProcedure
   .input(
     z.object({
       owner: z.custom<IAddress>(isAddress),
-      authorizedCaller: z.custom<IAddress>(isAddress),
+      authorizedCaller: z.custom<IAddress>(isAddress).optional(),
     }),
   )
   .query(async (opts) => {

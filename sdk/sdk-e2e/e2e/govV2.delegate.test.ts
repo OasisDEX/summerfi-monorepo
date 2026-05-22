@@ -1,25 +1,17 @@
 import assert from 'assert'
 import { zeroAddress } from 'viem'
 
+import { ChainIds, ChainId } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
-import { type TestConfigKey } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
 describe('Armada Protocol Gov V2 Delegate', () => {
-  const scenarios: {
-    testConfigKey?: TestConfigKey
-  }[] = [
-    {
-      testConfigKey: 'BaseUSDC',
-    },
-  ]
+  const scenarios = [{}]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testConfigKey: chainConfigKey } = scenario
-
     // Setup SDK and tools
-    const setup = createSdkTestSetup(chainConfigKey)
+    const setup = createSdkTestSetup({ chainId: ChainIds.Base })
     const { sdk, userAddress: _ua, userSendTxTool } = setup
     const userAddress = _ua.toSolidityValue()
 

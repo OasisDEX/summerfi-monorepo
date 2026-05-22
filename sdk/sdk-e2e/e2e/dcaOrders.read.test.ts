@@ -1,13 +1,13 @@
 import assert from 'assert'
-import { ArmadaDcaOrderStatusEnum } from '@summerfi/sdk-common'
-import { TestConfigAccounts, type TestConfigKey } from './utils/testConfig'
+import { ArmadaDcaOrderStatusEnum, ChainIds, ChainId } from '@summerfi/sdk-common'
+import { TestConfigAccounts } from './utils/testConfig'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
 
-const scenarios: { testConfigKey: TestConfigKey; status?: ArmadaDcaOrderStatusEnum }[] = [
-  { testConfigKey: 'BaseUSDC', status: ArmadaDcaOrderStatusEnum.Active },
-  { testConfigKey: 'BaseUSDC', status: undefined },
+const scenarios: { chainId: ChainId; status?: ArmadaDcaOrderStatusEnum }[] = [
+  { chainId: ChainIds.Base, status: ArmadaDcaOrderStatusEnum.Active },
+  { chainId: ChainIds.Base, status: undefined },
 ]
 
 /**
@@ -15,13 +15,11 @@ const scenarios: { testConfigKey: TestConfigKey; status?: ArmadaDcaOrderStatusEn
  */
 describe('Armada Protocol - DCA Orders Read', () => {
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testConfigKey, status } = scenario
+    const { chainId, status } = scenario
 
     it('should get a list of buy orders', async () => {
-      const setup = createSdkTestSetup(testConfigKey)
-      const { sdk, chainId } = setup
-
-      const userAddress = TestConfigAccounts.testUserAddressValue
+      const setup = createSdkTestSetup({ chainId })
+      const { sdk, userAddressValue: userAddress } = setup
 
       // getBuyOrders with optional status filter
       const orders = await sdk.armada.dca.getBuyOrders({
