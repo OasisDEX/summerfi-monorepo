@@ -19,9 +19,10 @@ export const isAuthorizedStakingRewardsCallerV2Handler =
     authorizedCallerAddress?: AddressValue
   }) => {
     const owner = Address.createFromEthereum({ value: ownerAddress })
-    const authorizedCaller = authorizedCallerAddress
-      ? Address.createFromEthereum({ value: authorizedCallerAddress })
-      : undefined
+    const authorizedCaller =
+      authorizedCallerAddress !== undefined
+        ? Address.createFromEthereum({ value: authorizedCallerAddress })
+        : undefined
     const isAuthorized = await sdk.armada.users.isAuthorizedStakingRewardsCallerV2({
       owner,
       authorizedCaller,
