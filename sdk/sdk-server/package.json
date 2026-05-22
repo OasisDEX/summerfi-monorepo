@@ -52,7 +52,7 @@
     "@summerfi/tokens-common": "workspace:*",
     "@summerfi/tokens-service": "workspace:*",
     "@trpc/server": "11.16.0",
-    "jose": "^6.0.10"
+    "jose": "^6.2.2"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

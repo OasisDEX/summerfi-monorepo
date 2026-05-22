@@ -22,6 +22,7 @@ export const oracleAddressesSchema = z.object({
 
 export const orderSchema: z.ZodType<IArmadaDcaOrder> = z.object({
   id: z.string().uuid(),
+  orderId: uint256StringSchema,
   userAddress: addressSchema,
   chainId: z.number() as z.ZodType<ChainId>,
   fromVault: addressSchema,
