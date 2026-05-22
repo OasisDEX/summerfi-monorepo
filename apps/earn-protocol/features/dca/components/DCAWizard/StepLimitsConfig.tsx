@@ -3,14 +3,14 @@ import { DatePicker, Input, Text, useAmount } from '@summerfi/app-earn-ui'
 import { type IToken } from '@summerfi/app-types'
 
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
-import { MAX_FREQUENCY_DAYS } from '@/features/dca/lib/dca-wizard-constants'
+import { DEFAULT_MAX_TRADES, MAX_TRADES } from '@/features/dca/lib/dca-wizard-constants'
 import { type DCAConfig } from '@/features/dca/lib/types'
 
 import classNames from '@/features/dca/components/dca.module.css'
 
 const THRESHOLD_DECIMALS = 8
 
-interface StepAdvancedConfigProps {
+interface StepLimitsConfigProps {
   config: DCAConfig
   sourceSymbol: string
   targetSymbol: string
@@ -21,7 +21,7 @@ interface StepAdvancedConfigProps {
   patchConfig: (patch: Partial<DCAConfig>) => void
 }
 
-export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
+export const StepLimitsConfig: FC<StepLimitsConfigProps> = ({
   config,
   sourceSymbol,
   targetSymbol,
@@ -57,7 +57,7 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
     : isNeverSellBelow
       ? `Skip executions when ${sourceSymbol} trades below this price.`
       : null
-  const currentEthPriceLabel = `Current ETH price: $${ethPrice.toLocaleString()}`
+  const currentEthPriceValue = Number(ethPrice.toFixed(THRESHOLD_DECIMALS))
   const thresholdValue = isNeverBuyAbove ? config.neverBuyAbove : config.neverSellBelow
 
   const handleThresholdChange = (value: number | undefined) => {
@@ -118,6 +118,15 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
     patchConfig({ deadline: date ? date.toISOString() : undefined })
   }
 
+  const minDeadlineDate = (() => {
+    const tomorrow = new Date()
+
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    tomorrow.setHours(0, 0, 0, 0)
+
+    return tomorrow
+  })()
+
   const onThresholdInputChange = (ev: ChangeEvent<HTMLInputElement>) => {
     if (ev.target.value === '') {
       manualSetThreshold(undefined)
@@ -129,8 +138,19 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
     handleThresholdAmountChange(ev)
   }
 
+  const onCurrentEthPriceClick = () => {
+    if (!Number.isFinite(currentEthPriceValue) || currentEthPriceValue <= 0) {
+      return
+    }
+
+    const nextValue = currentEthPriceValue.toString()
+
+    manualSetThresholdRef.current(nextValue)
+    handleThresholdChange(currentEthPriceValue)
+  }
+
   return (
-    <DCAWizardStepCard title="Step 4 - Advanced configuration">
+    <DCAWizardStepCard title="Step 4 - Set limits and conditions">
       <div className={classNames.conditionsStack}>
         {thresholdTitle && thresholdDescription ? (
           <div className={classNames.conditionCardContent}>
@@ -141,6 +161,9 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
                 </Text>
               </div>
             </div>
+            <Text as="p" variant="p4" className={classNames.mutedText}>
+              {thresholdDescription}
+            </Text>
             <Input
               variant="dark"
               inputMode="decimal"
@@ -165,9 +188,14 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
               }
             />
             <Text as="p" variant="p4" className={classNames.mutedText}>
-              {thresholdDescription}
-              <br />
-              {currentEthPriceLabel}
+              Current price:{' '}
+              <button
+                type="button"
+                className={classNames.currentPriceButton}
+                onClick={onCurrentEthPriceClick}
+              >
+                ${ethPrice.toLocaleString()}
+              </button>
             </Text>
             {thresholdError ? (
               <Text as="p" variant="p4" style={{ color: 'var(--earn-protocol-critical-100)' }}>
@@ -181,51 +209,57 @@ export const StepAdvancedConfig: FC<StepAdvancedConfigProps> = ({
           <div className={classNames.conditionHeader}>
             <div>
               <Text as="h4" variant="p2semi">
-                Maximum Number of Trades
+                Only trade until
               </Text>
             </div>
           </div>
-          <Input
-            variant="dark"
-            type="number"
-            min={1}
-            step={1}
-            value={config.maxTrades ?? ''}
-            onChange={(ev) => {
-              const nextValue = ev.target.value
-
-              if (nextValue === '') {
-                patchConfig({ maxTrades: undefined })
-
-                return
-              }
-
-              patchConfig({
-                maxTrades: Number(Math.max(1, Math.min(MAX_FREQUENCY_DAYS, Number(nextValue)))),
-              })
-            }}
-          />
           <Text as="p" variant="p4" className={classNames.mutedText}>
-            Stop the strategy after this many successful trades.
+            Stop the strategy once this date is reached.
           </Text>
+          <DatePicker
+            isMobile={isMobile}
+            onChange={handleDeadlineChange}
+            value={config.deadline ? new Date(config.deadline) : undefined}
+            minDate={minDeadlineDate}
+          />
         </div>
 
         <div className={classNames.conditionCardContent}>
           <div className={classNames.conditionHeader}>
             <div>
               <Text as="h4" variant="p2semi">
-                Only trade until
+                Max. Number of Trades{' '}
+                <Text as="span" className={classNames.requiredStar}>
+                  *
+                </Text>
               </Text>
             </div>
           </div>
-          <DatePicker
-            isMobile={isMobile}
-            onChange={handleDeadlineChange}
-            value={config.deadline ? new Date(config.deadline) : undefined}
-          />
           <Text as="p" variant="p4" className={classNames.mutedText}>
-            Stop the strategy once this date is reached.
+            Stop the strategy after this many successful trades.
           </Text>
+          <Input
+            variant="dark"
+            type="number"
+            min={1}
+            max={MAX_TRADES}
+            step={1}
+            required
+            value={config.maxTrades}
+            onChange={(ev) => {
+              const parsedValue = Number(ev.target.value)
+
+              if (!Number.isFinite(parsedValue)) {
+                patchConfig({ maxTrades: DEFAULT_MAX_TRADES })
+
+                return
+              }
+
+              patchConfig({
+                maxTrades: Math.max(1, Math.min(MAX_TRADES, Math.round(parsedValue))),
+              })
+            }}
+          />
         </div>
       </div>
     </DCAWizardStepCard>

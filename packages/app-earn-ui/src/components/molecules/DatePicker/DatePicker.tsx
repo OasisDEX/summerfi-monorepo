@@ -19,9 +19,17 @@ type DatePickerProps = {
   isMobile: boolean
   onChange: (date: Date | undefined) => void
   value?: Date
+  minDate?: Date
+  maxDate?: Date
 }
 
-export const DatePicker: FC<DatePickerProps> = ({ isMobile, onChange, value }) => {
+export const DatePicker: FC<DatePickerProps> = ({
+  isMobile,
+  onChange,
+  value,
+  minDate,
+  maxDate,
+}) => {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const dialogId = useId()
   const headerId = useId()
@@ -30,6 +38,14 @@ export const DatePicker: FC<DatePickerProps> = ({ isMobile, onChange, value }) =
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [inputValue, setInputValue] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const isDateDisabled = (date: Date): boolean => {
+    if (minDate && date < minDate) return true
+
+    if (maxDate && date > maxDate) return true
+
+    return false
+  }
 
   const toggleDialog = () => setIsDialogOpen(!isDialogOpen)
 
@@ -68,6 +84,10 @@ export const DatePicker: FC<DatePickerProps> = ({ isMobile, onChange, value }) =
       return
     }
 
+    if (isDateDisabled(date)) {
+      return
+    }
+
     setSelectedDate(date)
     onChange(date)
     setInputValue(dayjs(date).format('DD/MM/YYYY'))
@@ -93,6 +113,12 @@ export const DatePicker: FC<DatePickerProps> = ({ isMobile, onChange, value }) =
 
     if (parsedDate.isValid()) {
       const date = parsedDate.toDate()
+
+      if (isDateDisabled(date)) {
+        setSelectedDate(undefined)
+
+        return
+      }
 
       setSelectedDate(date)
       onChange(date)
@@ -145,6 +171,7 @@ export const DatePicker: FC<DatePickerProps> = ({ isMobile, onChange, value }) =
               mode="single"
               selected={selectedDate}
               onSelect={handleDayPickerSelect}
+              disabled={isDateDisabled}
               className={styles.datePicker}
             />
           </div>
@@ -167,6 +194,7 @@ export const DatePicker: FC<DatePickerProps> = ({ isMobile, onChange, value }) =
             mode="single"
             selected={selectedDate}
             onSelect={handleDayPickerSelect}
+            disabled={isDateDisabled}
             className={styles.datePicker}
           />
         </dialog>

@@ -6,7 +6,8 @@ export interface DCAConfig {
   frequency: number
   neverBuyAbove?: number
   neverSellBelow?: number
-  maxTrades?: number
+  maxTrades: number
+  finalMaxTradingAmount: number
   deadline?: string
 }
 

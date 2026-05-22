@@ -140,16 +140,37 @@
   opacity: 0.7;
 }
 
+.currentPriceButton {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--earn-protocol-accent-100);
+  font: inherit;
+  line-height: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.currentPriceButton:hover {
+  opacity: 0.85;
+}
+
 .amountInputRow {
   display: flex;
   align-items: center;
   gap: var(--general-space-8);
 }
 
+.periodSummariesContainer {
+  display: flex;
+  align-items: center;
+}
+
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--general-space-12);
+  flex: 1;
 }
 
 .previewControls {
@@ -177,6 +198,24 @@
 .previewControlButton:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.positionInfoBar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  gap: var(--general-space-16);
+  padding: var(--general-space-16) 0 0;
+}
+
+.positionInfoEmpty {
+  grid-column: 1 / -1;
+}
+
+.positionInfoItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-4);
 }
 
 .conditionsStack {
@@ -410,13 +449,21 @@
   cursor: not-allowed;
 }
 
-.step3Row {
-  display: flex;
+.amountRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   width: 100%;
   gap: var(--general-space-16);
 }
 
-.step3InputsColumn {
+.amountSummaryRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  gap: var(--general-space-16);
+}
+
+.amountInputsColumn {
   display: flex;
   flex-direction: column;
   gap: var(--general-space-16);
@@ -432,7 +479,7 @@
 .pricePreviewBlock {
   display: flex;
   flex-direction: column;
-  gap: var(--general-space-1);
+  justify-content: center;
   padding: var(--general-space-16) var(--general-space-20);
   border-radius: var(--general-radius-8);
   background: var(--earn-protocol-neutral-85);
@@ -443,6 +490,7 @@
 
 .pricePreviewAmount {
   color: var(--earn-protocol-accent-100);
+  margin-bottom: -8px;
 }
 
 .frequencySegmented {
@@ -549,4 +597,10 @@
 
 .approvalCircleDone {
   background: var(--earn-protocol-success-100);
+}
+
+.requiredStar {
+  color: var(--earn-protocol-critical-100);
+  font-size: 12px;
+  line-height: 0;
 }

@@ -6,8 +6,8 @@ import { type SDKVaultsListType } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
 
 import { DCASidebar } from '@/features/dca/components/DCASidebar/DCASidebar'
-import { StepAdvancedConfig } from '@/features/dca/components/DCAWizard/StepAdvancedConfig'
 import { StepAmountFrequency } from '@/features/dca/components/DCAWizard/StepAmountFrequency'
+import { StepLimitsConfig } from '@/features/dca/components/DCAWizard/StepLimitsConfig'
 import { StepNetworkSelector } from '@/features/dca/components/DCAWizard/StepNetworkSelector'
 import { StepVaultSelector } from '@/features/dca/components/DCAWizard/StepVaultSelector'
 import { useDCAConfig } from '@/features/dca/hooks/useDCAConfig'
@@ -172,7 +172,7 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
             patchConfig({ frequency: Math.max(1, Math.min(MAX_FREQUENCY_DAYS, frequency)) })
           }
         />
-        <StepAdvancedConfig
+        <StepLimitsConfig
           config={config}
           sourceSymbol={sourceSymbol}
           targetSymbol={targetSymbol}

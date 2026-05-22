@@ -130,8 +130,8 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
         ))}
       </div>
 
-      <div className={classNames.step3Row}>
-        <div className={classNames.step3InputsColumn}>
+      <div className={classNames.amountRow}>
+        <div className={classNames.amountInputsColumn}>
           <Input
             variant="dark"
             inputMode="decimal"
@@ -149,7 +149,10 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
             button={
               isAmountFocused ? null : (
                 <Text as="span" variant="p2semi" className={classNames.amountUnit}>
-                  {sourceSymbol}
+                  {sourceSymbol}{' '}
+                  <Text as="span" className={classNames.requiredStar}>
+                    *
+                  </Text>
                 </Text>
               )
             }
@@ -166,14 +169,24 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
             onChange={(ev) => onFrequencyChange(Math.max(1, Math.min(90, Number(ev.target.value))))}
             button={
               <Text as="span" variant="p2semi" className={classNames.amountUnit}>
-                Days
+                Days{' '}
+                <Text as="span" className={classNames.requiredStar}>
+                  *
+                </Text>
               </Text>
             }
           />
         </div>
         <div className={classNames.pricePreviewBlock}>
-          <Text as="p" variant="p3" className={classNames.mutedText}>
-            {targetSymbol} you will receive at current price
+          <Text
+            as="p"
+            variant="p3"
+            className={classNames.mutedText}
+            style={{
+              marginBottom: '-6px',
+            }}
+          >
+            At current price
           </Text>
           <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
             {estimatedTargetAmount ? (
@@ -198,41 +211,7 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
         </div>
       </div>
 
-      <div className={classNames.statsGrid}>
-        {periodSummaries.map((summary, index) => {
-          // Find first period where executions are capped (executions < runs)
-          const isLimitMet = summary.executions < summary.runs
-          // Don't render periods after limit is met
-          const shouldRender = !periodSummaries.some((s, i) => i < index && s.executions < s.runs)
-
-          if (!shouldRender) return null
-
-          return (
-            <div key={summary.days} className={classNames.kpiCard}>
-              <Text as="p" variant="p2semi" className={classNames.mutedText}>
-                {summary.days >= 365 && summary.days % 365 === 0
-                  ? `${summary.days / 365} year${summary.days / 365 === 1 ? '' : 's'}`
-                  : `${summary.days} days`}
-              </Text>
-              <Text as="span" variant="p4" className={classNames.mutedText}>
-                Spend ~{/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-                {summary.totalSourceAmount ? formatCryptoBalance(summary.totalSourceAmount) : 0}
-                &nbsp;{sourceSymbol}
-              </Text>
-              <Text as="span" variant="p4" className={classNames.mutedText}>
-                Accumulate ~
-                {summary.totalTargetAmount ? formatCryptoBalance(summary.totalTargetAmount) : 0}
-                &nbsp;{targetSymbol}
-              </Text>
-              <Text as="span" variant="p4" className={classNames.mutedText}>
-                {summary.executions} execution{summary.executions === 1 ? '' : 's'}
-                {isLimitMet && ' (limit met)'}
-              </Text>
-            </div>
-          )
-        })}
-      </div>
-      <div className={classNames.previewControls}>
+      <div className={classNames.periodSummariesContainer}>
         <button
           type="button"
           className={classNames.previewControlButton}
@@ -241,6 +220,41 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
         >
           <Icon iconName="arrow_backward" size={16} />
         </button>
+        <div className={classNames.statsGrid}>
+          {periodSummaries.map((summary, index) => {
+            // Find first period where executions are capped (executions < runs)
+            const isLimitMet = summary.executions < summary.runs
+            // Don't render periods after limit is met
+            const shouldRender = !periodSummaries.some((s, i) => i < index && s.executions < s.runs)
+
+            if (!shouldRender) return null
+
+            return (
+              <div key={summary.days} className={classNames.kpiCard}>
+                <Text as="p" variant="p2semi" className={classNames.mutedText}>
+                  {summary.days >= 365 && summary.days % 365 === 0
+                    ? `${summary.days / 365} year${summary.days / 365 === 1 ? '' : 's'}`
+                    : `${summary.days} days`}
+                </Text>
+                <Text as="span" variant="p4" className={classNames.mutedText}>
+                  Spend ~
+                  {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+                  {summary.totalSourceAmount ? formatCryptoBalance(summary.totalSourceAmount) : 0}
+                  &nbsp;{sourceSymbol}
+                </Text>
+                <Text as="span" variant="p4" className={classNames.mutedText}>
+                  Accumulate ~
+                  {summary.totalTargetAmount ? formatCryptoBalance(summary.totalTargetAmount) : 0}
+                  &nbsp;{targetSymbol}
+                </Text>
+                <Text as="span" variant="p4" className={classNames.mutedText}>
+                  {summary.executions} execution{summary.executions === 1 ? '' : 's'}
+                  {isLimitMet && ' (limit met)'}
+                </Text>
+              </div>
+            )
+          })}
+        </div>
         <button
           type="button"
           className={classNames.previewControlButton}
