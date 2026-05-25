@@ -64,6 +64,7 @@ type PortfolioOverviewProps = {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
   dcaOrders: IArmadaDcaOrder[]
+  dcaEnabled?: boolean
 }
 
 const PositionsListView = ({
@@ -201,6 +202,7 @@ export const PortfolioOverview = ({
   vaultsApyByNetworkMap,
   rewardTokenPrices,
   dcaOrders,
+  dcaEnabled,
 }: PortfolioOverviewProps) => {
   const [positionsTab, setPositionsTab] = useState<string>('positions')
   const buttonClickEventHandler = useHandleButtonClickEvent()
@@ -327,16 +329,25 @@ export const PortfolioOverview = ({
         <Card className={portfolioOverviewStyles.portfolioPositionsList} variant="cardSecondary">
           <div className={portfolioOverviewStyles.portfolioPositionsListHeader}>
             <TabBarSimple
-              tabs={[
-                {
-                  id: 'positions',
-                  label: <Text variant="p2semi">Positions</Text>,
-                },
-                {
-                  id: 'dca-strategies',
-                  label: <Text variant="p2semi">DCA&nbsp;Strategies</Text>,
-                },
-              ]}
+              tabs={
+                dcaEnabled
+                  ? [
+                      {
+                        id: 'positions',
+                        label: <Text variant="p2semi">Positions</Text>,
+                      },
+                      {
+                        id: 'dca-strategies',
+                        label: <Text variant="p2semi">DCA&nbsp;Strategies</Text>,
+                      },
+                    ]
+                  : [
+                      {
+                        id: 'positions',
+                        label: <Text variant="p2semi">Positions</Text>,
+                      },
+                    ]
+              }
               tabBarStyle={{
                 width: 'fit-content',
               }}
