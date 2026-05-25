@@ -17,6 +17,7 @@ import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-d
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { VaultOpenViewComponent } from '@/components/layout/VaultOpenView/VaultOpenViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
+import { type VaultCurationEvent } from '@/features/curation-activity/types'
 
 export const VaultOpenView = ({
   vault,
@@ -25,6 +26,7 @@ export const VaultOpenView = ({
   latestActivity,
   topDepositors,
   rebalanceActivity,
+  curationEvents,
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
@@ -39,6 +41,7 @@ export const VaultOpenView = ({
   latestActivity: LatestActivityPagination
   topDepositors: TopDepositorsPagination
   rebalanceActivity: RebalanceActivityPagination
+  curationEvents: VaultCurationEvent[]
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: InterestRates
@@ -56,6 +59,7 @@ export const VaultOpenView = ({
         latestActivity={latestActivity}
         topDepositors={topDepositors}
         rebalanceActivity={rebalanceActivity}
+        curationEvents={curationEvents}
         medianDefiYield={medianDefiYield}
         arksHistoricalChartData={arksHistoricalChartData}
         arksInterestRates={arksInterestRates}

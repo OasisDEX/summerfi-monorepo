@@ -29,6 +29,7 @@ export const VaultOpenLoadingView = () => {
             'Historical yield',
             'Vault exposure',
             'Rebalancing activity',
+            'Curation activity',
             'Users activity',
             'Strategy management fee',
           ].map((expanderLabel) => (

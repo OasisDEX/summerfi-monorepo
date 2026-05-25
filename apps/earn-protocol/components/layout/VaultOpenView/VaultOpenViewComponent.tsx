@@ -54,6 +54,7 @@ import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/t
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { BeachClubReferralForm } from '@/features/beach-club/components/BeachClubReferralForm/BeachClubReferralForm'
+import { type VaultCurationEvent } from '@/features/curation-activity/types'
 // import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 // import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 // import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
@@ -86,6 +87,7 @@ type VaultOpenViewComponentProps = {
   latestActivity: LatestActivityPagination
   topDepositors: TopDepositorsPagination
   rebalanceActivity: RebalanceActivityPagination
+  curationEvents: VaultCurationEvent[]
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: InterestRates
@@ -102,6 +104,7 @@ export const VaultOpenViewComponent = ({
   latestActivity,
   topDepositors,
   rebalanceActivity,
+  curationEvents,
   medianDefiYield,
   arksHistoricalChartData,
   arksInterestRates,
@@ -554,6 +557,7 @@ export const VaultOpenViewComponent = ({
             latestActivity={latestActivity}
             topDepositors={topDepositors}
             rebalanceActivity={rebalanceActivity}
+            curationEvents={curationEvents}
             arksHistoricalChartData={arksHistoricalChartData}
             arksInterestRates={arksInterestRates}
             vaultApyData={vaultApyData}

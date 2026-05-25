@@ -22,6 +22,8 @@ import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
+import { CurationActivity } from '@/features/curation-activity/components/CurationActivity/CurationActivity'
+import { type VaultCurationEvent } from '@/features/curation-activity/types'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
@@ -37,6 +39,7 @@ interface VaultOpenViewDetailsProps {
   topDepositors: TopDepositorsPagination
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
+  curationEvents?: VaultCurationEvent[]
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
@@ -48,6 +51,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   latestActivity,
   topDepositors,
   rebalanceActivity,
+  curationEvents = [],
   arksHistoricalChartData,
   arksInterestRates,
   vaultApyData,
@@ -127,6 +131,17 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
           buttonClickEventHandler={buttonClickEventHandler}
           tooltipEventHandler={tooltipEventHandler}
         />
+      </Expander>
+      <Expander
+        onExpand={handleExpanderToggle('curation-activity')}
+        title={
+          <Text as="p" variant="p1semi">
+            Curation activity
+          </Text>
+        }
+        defaultExpanded
+      >
+        <CurationActivity vault={vault} curationEvents={curationEvents} />
       </Expander>
       <Expander
         onExpand={handleExpanderToggle('users-activity')}

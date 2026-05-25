@@ -33,6 +33,8 @@ import { VaultExposureDescription } from '@/components/molecules/VaultExposureDe
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
 import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
+import { CurationActivity } from '@/features/curation-activity/components/CurationActivity/CurationActivity'
+import { type VaultCurationEvent } from '@/features/curation-activity/types'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
@@ -49,6 +51,7 @@ export const VaultManageViewDetails = ({
   rebalanceActivity,
   latestActivity,
   topDepositors,
+  curationEvents,
   viewWalletAddress,
 }: {
   vault: SDKVaultishType
@@ -59,6 +62,7 @@ export const VaultManageViewDetails = ({
   rebalanceActivity: RebalanceActivityPagination
   latestActivity: LatestActivityPagination
   topDepositors: TopDepositorsPagination
+  curationEvents: VaultCurationEvent[]
   viewWalletAddress?: string
 }) => {
   const vaultBenchmarkAsset = ['ETH', 'WETH'].includes(vault.inputToken.symbol.toUpperCase())
@@ -228,6 +232,16 @@ export const VaultManageViewDetails = ({
           buttonClickEventHandler={buttonClickEventHandler}
           tooltipEventHandler={tooltipEventHandler}
         />
+      </Expander>
+      <Expander
+        title={
+          <Text as="p" variant="p1semi">
+            Curation activity
+          </Text>
+        }
+        onExpand={handleExpanderToggle('curation-activity')}
+      >
+        <CurationActivity vault={vault} curationEvents={curationEvents} />
       </Expander>
       <Expander
         title={

@@ -69,6 +69,7 @@ import { PendingTransactionsList } from '@/components/molecules/PendingTransacti
 import { OrderInfoIntentSwap } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { type VaultCurationEvent } from '@/features/curation-activity/types'
 // import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 // import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 // import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
@@ -147,6 +148,7 @@ export const VaultManageViewComponent = ({
   topDepositors,
   viewWalletAddress,
   rebalanceActivity,
+  curationEvents,
   performanceChartData,
   arksHistoricalChartData,
   arksInterestRates,
@@ -165,6 +167,7 @@ export const VaultManageViewComponent = ({
   topDepositors: TopDepositorsPagination
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
+  curationEvents: VaultCurationEvent[]
   viewWalletAddress: string
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
@@ -880,6 +883,7 @@ export const VaultManageViewComponent = ({
             vaultApyData={vaultApyData}
             vault={vault}
             rebalanceActivity={rebalanceActivity}
+            curationEvents={curationEvents}
             latestActivity={latestActivity}
             topDepositors={topDepositors}
             viewWalletAddress={viewWalletAddress}
