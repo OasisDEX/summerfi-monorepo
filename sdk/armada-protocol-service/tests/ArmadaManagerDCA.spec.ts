@@ -88,6 +88,10 @@ const TEST_DCA_ORDER: IArmadaDcaOrder = {
   updatedAt: 1700000000,
   neverBuyAbove: '200000000',
   neverSellBelow: '100000000',
+  inAsset: FROM_VAULT,
+  outAsset: TO_VAULT,
+  inAssetFeed: IN_ASSET_FEED,
+  outAssetFeed: OUT_ASSET_FEED,
 }
 
 function createBlockchainClientProviderMock(): IBlockchainClientProvider {
@@ -173,11 +177,15 @@ describe('ArmadaManagerDCA', () => {
       fromVault: FROM_VAULT,
       toVault: TO_VAULT,
       rebalanceAuthorizationSignature: '0x1234' as HexData,
-      amount: TEST_AMOUNT,
+      amountShares: TEST_AMOUNT,
       slippagePercentage: '0.5',
       intervalSeconds: 3600,
       firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
       maxTrades: 10,
+      inAsset: FROM_VAULT,
+      outAsset: TO_VAULT,
+      inAssetFeed: IN_ASSET_FEED,
+      outAssetFeed: OUT_ASSET_FEED,
     })
 
     expect(order.id).toBeDefined()
@@ -243,6 +251,10 @@ describe('ArmadaManagerDCA', () => {
         tradesExecuted: 0,
         neverBuyAbove: null,
         neverSellBelow: null,
+        inAsset: FROM_VAULT,
+        outAsset: TO_VAULT,
+        inAssetFeed: IN_ASSET_FEED,
+        outAssetFeed: OUT_ASSET_FEED,
       },
     ]
 
@@ -311,6 +323,10 @@ describe('ArmadaManagerDCA', () => {
       tradesExecuted: 0,
       neverBuyAbove: null,
       neverSellBelow: null,
+      inAsset: FROM_VAULT,
+      outAsset: TO_VAULT,
+      inAssetFeed: IN_ASSET_FEED,
+      outAssetFeed: OUT_ASSET_FEED,
     }
 
     const selectQuery = {
@@ -394,30 +410,35 @@ describe('ArmadaManagerDCA', () => {
 
     const createTx = await manager.createStrategyTx({
       chainId: DEFAULT_CHAIN_ID,
-      order: TEST_DCA_ORDER,
-      inAssetFeed: IN_ASSET_FEED,
-      outAssetFeed: OUT_ASSET_FEED,
+      userAddress: TEST_DCA_ORDER.userAddress,
+      fromVault: TEST_DCA_ORDER.fromVault,
+      toVault: TEST_DCA_ORDER.toVault,
+      inAsset: TEST_DCA_ORDER.inAsset,
+      outAsset: TEST_DCA_ORDER.outAsset,
+      inAssetFeed: TEST_DCA_ORDER.inAssetFeed,
+      outAssetFeed: TEST_DCA_ORDER.outAssetFeed,
+      amountShares: TEST_DCA_ORDER.amount,
+      slippagePercentage: TEST_DCA_ORDER.slippage,
+      intervalSeconds: TEST_DCA_ORDER.intervalSeconds,
+      maxTrades: TEST_DCA_ORDER.maxTrades,
+      neverBuyAbove: TEST_DCA_ORDER.neverBuyAbove,
+      neverSellBelow: TEST_DCA_ORDER.neverSellBelow,
+      deadlineUnixTimestamp: TEST_DCA_ORDER.deadlineUnixTimestamp,
     })
     const editTx = await manager.editStrategyTx({
       chainId: DEFAULT_CHAIN_ID,
       order: TEST_DCA_ORDER,
       strategyId: '1',
-      inAssetFeed: IN_ASSET_FEED,
-      outAssetFeed: OUT_ASSET_FEED,
     })
     const resumeTx = await manager.resumeStrategyTx({
       chainId: DEFAULT_CHAIN_ID,
       order: TEST_DCA_ORDER,
       strategyId: '1',
-      inAssetFeed: IN_ASSET_FEED,
-      outAssetFeed: OUT_ASSET_FEED,
     })
     const executeTx = await manager.executeDCATx({
       chainId: DEFAULT_CHAIN_ID,
       order: TEST_DCA_ORDER,
       strategyId: '1',
-      inAssetFeed: IN_ASSET_FEED,
-      outAssetFeed: OUT_ASSET_FEED,
     })
 
     expect(createTx.type).toBe(TransactionType.CreateStrategy)
@@ -558,7 +579,7 @@ describe('ArmadaManagerDCA', () => {
       fromVault: FROM_VAULT,
       toVault: TO_VAULT,
       rebalanceAuthorizationSignature: '0x1234' as HexData,
-      amount: TEST_AMOUNT,
+      amountShares: TEST_AMOUNT,
       slippagePercentage: '0.5',
       intervalSeconds: 3600,
       firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
@@ -694,7 +715,7 @@ describe('ArmadaManagerDCA', () => {
       fromVault: FROM_VAULT,
       toVault: TO_VAULT,
       rebalanceAuthorizationSignature: '0x5678' as HexData,
-      amount: TEST_AMOUNT,
+      amountShares: TEST_AMOUNT,
       slippagePercentage: '1.0',
       intervalSeconds: 7200,
       firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 7200,
@@ -765,7 +786,7 @@ describe('ArmadaManagerDCA', () => {
         fromVault: FROM_VAULT,
         toVault: TO_VAULT,
         rebalanceAuthorizationSignature: '0x1234' as HexData,
-        amount: TEST_AMOUNT,
+        amountShares: TEST_AMOUNT,
         slippagePercentage: '0.5',
         intervalSeconds: 3600,
         firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
@@ -800,7 +821,7 @@ describe('ArmadaManagerDCA', () => {
         fromVault: FROM_VAULT,
         toVault: TO_VAULT,
         rebalanceAuthorizationSignature: '0x1234' as HexData,
-        amount: TEST_AMOUNT,
+        amountShares: TEST_AMOUNT,
         slippagePercentage: '0.5',
         intervalSeconds: 3600,
         firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,

@@ -28,6 +28,10 @@ export const createAndSaveBuyOrder = publicProcedure
       maxTrades: z.number().int().positive(),
       neverBuyAbove: z.string().optional(),
       neverSellBelow: z.string().optional(),
+      inAsset: z.custom<AddressValue>(isAddressValue),
+      outAsset: z.custom<AddressValue>(isAddressValue),
+      inAssetFeed: z.custom<AddressValue>(isAddressValue),
+      outAssetFeed: z.custom<AddressValue>(isAddressValue),
     }),
   )
   .query(async (opts) => {

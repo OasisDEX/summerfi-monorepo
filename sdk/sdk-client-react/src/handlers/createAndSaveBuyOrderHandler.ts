@@ -5,7 +5,6 @@ import type { SignTypedDataParameters } from 'viem'
 export const createAndSaveBuyOrderHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
-    id,
     orderId,
     userAddress,
     chainId,
@@ -20,8 +19,11 @@ export const createAndSaveBuyOrderHandler =
     maxTrades,
     neverBuyAbove,
     neverSellBelow,
+    inAsset,
+    outAsset,
+    inAssetFeed,
+    outAssetFeed,
   }: {
-    id: string
     orderId: string
     userAddress: AddressValue
     chainId: ChainId
@@ -43,9 +45,16 @@ export const createAndSaveBuyOrderHandler =
     neverBuyAbove?: string
     /** Price floor — skip execution if the toVault token price is below this value (optional) */
     neverSellBelow?: string
+    /** The underlying asset of the source vault */
+    inAsset: AddressValue
+    /** The underlying asset of the target vault */
+    outAsset: AddressValue
+    /** Oracle price feed address for the input asset */
+    inAssetFeed: AddressValue
+    /** Oracle price feed address for the output asset */
+    outAssetFeed: AddressValue
   }) => {
     return sdk.armada.dca.createAndSaveBuyOrder({
-      id,
       orderId,
       userAddress,
       chainId,
@@ -60,5 +69,9 @@ export const createAndSaveBuyOrderHandler =
       maxTrades,
       neverBuyAbove,
       neverSellBelow,
+      inAsset,
+      outAsset,
+      inAssetFeed,
+      outAssetFeed,
     })
   }

@@ -1,14 +1,11 @@
 import assert from 'assert'
-import { TestConfigAccounts, TestConfigs as TestConfigFleets } from './utils/testConfig'
-import { privateKeyToAccount } from 'viem/accounts'
+import { TestConfigs as TestConfigFleets } from './utils/testConfig'
 import {
   Token,
   TokenAmount,
   Address,
   getChainInfoByChainId,
-  ArmadaDcaOrderStatusEnum,
   type AddressValue,
-  type HexData,
 } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
@@ -35,21 +32,31 @@ describe('Armada Protocol - DCA Orders', () => {
       decimals: 6,
     })
     const amount = TokenAmount.createFrom({ token: usdcToken, amount: '6' })
-    const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
 
-    const now = Math.floor(Date.now() / 1000)
+    const [fromVaultToken, toVaultToken] = await Promise.all([
+      sdk.tokens.getTokenBySymbol({
+        chainId,
+        symbol: fromVault.symbol,
+      }),
+      sdk.tokens.getTokenBySymbol({
+        chainId,
+        symbol: toVault.symbol,
+      }),
+    ])
+
     const orderTx = await sdk.armada.dca.createStrategyTx({
       chainId,
       userAddress: userAddress.toSolidityValue(),
       fromVault: fromVault.fleetAddressValue,
       toVault: toVault.fleetAddressValue,
-      amount: amount.toSolidityValue().toString(),
-      slippagePercentage: '0.5',
-      intervalSeconds: 3600,
-      nextExecutionAtUnixTimestamp: now + 3600,
-      maxTrades: 10,
+      inAsset: fromVaultToken.address.toSolidityValue(),
+      outAsset: toVaultToken.address.toSolidityValue(),
       inAssetFeed: fromVault.chainlinkOracleAddressValue,
       outAssetFeed: toVault.chainlinkOracleAddressValue,
+      amount: amount.toSolidityValue().toString(),
+      slippagePercentage: '0.5',
+      intervalSeconds: 60 * 60, // hourly
+      maxTrades: 5,
     })
 
     // Send the createStrategy transaction and extract strategyId from the StrategyCreated event
@@ -68,30 +75,17 @@ describe('Armada Protocol - DCA Orders', () => {
     const onChainStrategyId = BigInt(strategyLog.topics[1])
     console.log('On-chain strategy ID:', onChainStrategyId.toString())
 
-    const order = await sdk.armada.dca.createAndSaveBuyOrder({
-      orderId: onChainStrategyId.toString(),
-      userAddress: userAddress.toSolidityValue(),
-      chainId,
-      fromVault: fromVault.fleetAddressValue,
-      toVault: toVault.fleetAddressValue,
-      signTypedData: account.signTypedData,
-      amount: amount,
-      slippagePercentage: '0.5',
-      intervalSeconds: 3600,
-      firstExecutionUnixTimestamp: Math.floor(Date.now() / 1000) + 3600,
-      maxTrades: 10,
-    })
-
-    assert(order.id, 'Expected order id to be defined')
-    console.log('Created DCA order with ID:', order.id)
-
     const fetchedOrder = await sdk.armada.dca.getBuyOrder({
-      orderId: order.id,
+      orderId: onChainStrategyId.toString(),
       userAddress: userAddress.toSolidityValue(),
     })
 
     assert(fetchedOrder, 'Expected created order to be retrievable')
-    assert.strictEqual(fetchedOrder.id, order.id)
+    assert.strictEqual(
+      fetchedOrder.id,
+      onChainStrategyId.toString(),
+      'Fetched order ID should match on-chain strategy ID',
+    )
     console.log('Fetched DCA order with ID:', fetchedOrder.id)
   })
 })

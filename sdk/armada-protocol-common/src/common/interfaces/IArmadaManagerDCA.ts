@@ -20,17 +20,26 @@ import type {
 export interface IArmadaManagerDCA {
   createStrategyTx(params: {
     chainId: ChainId
-    order: IArmadaDcaOrder
+    userAddress: AddressValue
+    fromVault: AddressValue
+    toVault: AddressValue
+    inAsset: AddressValue
+    outAsset: AddressValue
     inAssetFeed: AddressValue
     outAssetFeed: AddressValue
+    amountShares: string
+    slippagePercentage: string
+    intervalSeconds: number
+    maxTrades: number
+    neverBuyAbove?: string
+    neverSellBelow?: string
+    deadlineUnixTimestamp?: number
   }): Promise<CreateDcaStrategyTransactionInfo>
 
   editStrategyTx(params: {
     chainId: ChainId
     order: IArmadaDcaOrder
     strategyId: string
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
   }): Promise<EditDcaStrategyTransactionInfo>
 
   pauseStrategyTx(params: {
@@ -42,8 +51,6 @@ export interface IArmadaManagerDCA {
     chainId: ChainId
     order: IArmadaDcaOrder
     strategyId: string
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
   }): Promise<ResumeDcaStrategyTransactionInfo>
 
   cancelStrategyTx(params: {
@@ -55,8 +62,6 @@ export interface IArmadaManagerDCA {
     chainId: ChainId
     order: IArmadaDcaOrder
     strategyId: string
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
   }): Promise<ExecuteDcaTransactionInfo>
 
   /**
@@ -70,7 +75,7 @@ export interface IArmadaManagerDCA {
     fromVault: AddressValue
     toVault: AddressValue
     rebalanceAuthorizationSignature: HexData
-    amount: ITokenAmount
+    amountShares: ITokenAmount
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number
@@ -84,6 +89,14 @@ export interface IArmadaManagerDCA {
     neverBuyAbove?: string
     /** Price floor — skip execution if the toVault token price is below this value (optional) */
     neverSellBelow?: string
+    /** The underlying asset of the source vault */
+    inAsset: AddressValue
+    /** The underlying asset of the target vault */
+    outAsset: AddressValue
+    /** Oracle price feed address for the input asset */
+    inAssetFeed: AddressValue
+    /** Oracle price feed address for the output asset */
+    outAssetFeed: AddressValue
   }): Promise<IArmadaDcaOrder>
 
   /**
@@ -98,7 +111,7 @@ export interface IArmadaManagerDCA {
     fromVault: AddressValue
     toVault: AddressValue
     rebalanceAuthorizationSignature: HexData
-    amount: ITokenAmount
+    amountShares: ITokenAmount
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number

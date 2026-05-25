@@ -75,6 +75,10 @@ export type DbOrderRow = {
   pausedAt: string | null
   neverBuyAbove: string | null
   neverSellBelow: string | null
+  inAsset: string
+  outAsset: string
+  inAssetFeed: string
+  outAssetFeed: string
 }
 
 /**
@@ -121,19 +125,29 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
-    const strategyConfig = this._orderToStrategyConfig({
-      order: params.order,
+    const strategyConfig: IArmadaDcaStrategyConfig = {
       strategyId: '0',
+      owner: params.userAddress,
+      sourceVault: params.fromVault,
+      targetVault: params.toVault,
+      inAsset: params.inAsset,
+      outAsset: params.outAsset,
       inAssetFeed: params.inAssetFeed,
       outAssetFeed: params.outAssetFeed,
-    })
-    return this._buildStrategyConfigTransaction({
+      tradeAmount: params.amountShares,
+      interval: String(params.intervalSeconds),
+      slippageBps: String(Math.round(Number(params.slippagePercentage) * 100)),
+      maxPrice: params.neverBuyAbove ?? '0',
+      minPrice: params.neverSellBelow ?? '0',
+      endDate: String(params.deadlineUnixTimestamp ?? 0),
+      maxTrades: String(params.maxTrades),
+    }
+    return this._buildCreateTransaction({
       strategyManagerAddress,
       strategyConfig,
       functionName: 'createStrategy',
       description: 'Create DCA strategy',
       type: TransactionType.CreateStrategy,
-      metadata: { order: params.order },
     }) as CreateDcaStrategyTransactionInfo
   }
 
@@ -147,8 +161,6 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     const strategyConfig = this._orderToStrategyConfig({
       order: params.order,
       strategyId: params.strategyId,
-      inAssetFeed: params.inAssetFeed,
-      outAssetFeed: params.outAssetFeed,
     })
     return this._buildStrategyConfigTransaction({
       strategyManagerAddress,
@@ -186,8 +198,6 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     const strategyConfig = this._orderToStrategyConfig({
       order: params.order,
       strategyId: params.strategyId,
-      inAssetFeed: params.inAssetFeed,
-      outAssetFeed: params.outAssetFeed,
     })
     return this._buildStrategyConfigTransaction({
       strategyManagerAddress,
@@ -225,8 +235,6 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     const strategyConfig = this._orderToStrategyConfig({
       order: params.order,
       strategyId: params.strategyId,
-      inAssetFeed: params.inAssetFeed,
-      outAssetFeed: params.outAssetFeed,
     })
     const calldata = encodeFunctionData({
       abi: DCAStrategyManagerAbi,
@@ -241,112 +249,6 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
         target: strategyManagerAddress,
         calldata,
       }),
-    }
-  }
-
-  async createAndSaveBuyOrder(
-    params: Parameters<IArmadaManagerDCA['createAndSaveBuyOrder']>[0],
-  ): ReturnType<IArmadaManagerDCA['createAndSaveBuyOrder']> {
-    await this._assertEarnAppCookieAuth(params.userAddress)
-    const id = crypto.randomUUID()
-    const order = await this._buildAndValidateOrder({
-      params: { ...params, id },
-      now: Math.floor(Date.now() / 1000),
-    })
-
-    const db = await this._getDb()
-    await db
-      .insertInto('armadaDcaOrders')
-      .values({
-        id: order.id,
-        orderId: order.orderId,
-        userAddress: order.userAddress,
-        chainId: order.chainId,
-        fromVault: order.fromVault,
-        toVault: order.toVault,
-        amount: order.amount,
-        slippage: order.slippage,
-        intervalSeconds: order.intervalSeconds,
-        nextExecutionAt: BigInt(order.nextExecutionAtUnixTimestamp),
-        deadline:
-          order.deadlineUnixTimestamp !== undefined ? String(order.deadlineUnixTimestamp) : null,
-        maxTrades: order.maxTrades,
-        tradesExecuted: 0,
-        neverBuyAbove: order.neverBuyAbove ?? null,
-        neverSellBelow: order.neverSellBelow ?? null,
-        allowedVaultsRoot: order.allowedVaultsRoot,
-        fromVaultProof: JSON.stringify(order.fromVaultProof),
-        toVaultProof: JSON.stringify(order.toVaultProof),
-        swapCalldata: order.swapCalldata,
-        signature: order.signature,
-        ensoRouterAddress: order.ensoRouterAddress,
-        verifyingContractAddress: order.verifyingContractAddress,
-        status: order.status,
-        createdAt: String(order.createdAt),
-        updatedAt: String(order.updatedAt),
-      })
-      .executeTakeFirstOrThrow()
-
-    return order
-  }
-
-  async editBuyOrder(
-    params: Parameters<IArmadaManagerDCA['editBuyOrder']>[0],
-  ): ReturnType<IArmadaManagerDCA['editBuyOrder']> {
-    await this._assertEarnAppCookieAuth(params.userAddress)
-    const now = Math.floor(Date.now() / 1000)
-    const existingOrder = await this._getExistingOrderOrThrow({
-      orderId: params.id,
-      userAddress: params.userAddress,
-    })
-
-    if (
-      existingOrder.status === ArmadaDcaOrderStatusEnum.Cancelled ||
-      existingOrder.status === ArmadaDcaOrderStatusEnum.Completed
-    ) {
-      throw new Error(`Cannot edit an order with status: ${existingOrder.status}`)
-    }
-
-    const updated = await this._buildAndValidateOrder({ params, now })
-
-    const db = await this._getDb()
-    await db
-      .updateTable('armadaDcaOrders')
-      .set({
-        orderId: updated.orderId ?? null,
-        fromVault: updated.fromVault,
-        toVault: updated.toVault,
-        amount: updated.amount,
-        slippage: updated.slippage,
-        intervalSeconds: updated.intervalSeconds,
-        nextExecutionAt: BigInt(updated.nextExecutionAtUnixTimestamp),
-        deadline:
-          updated.deadlineUnixTimestamp !== undefined
-            ? String(updated.deadlineUnixTimestamp)
-            : null,
-        maxTrades: updated.maxTrades,
-        neverBuyAbove: updated.neverBuyAbove ?? null,
-        neverSellBelow: updated.neverSellBelow ?? null,
-        allowedVaultsRoot: updated.allowedVaultsRoot,
-        fromVaultProof: JSON.stringify(updated.fromVaultProof),
-        toVaultProof: JSON.stringify(updated.toVaultProof),
-        swapCalldata: updated.swapCalldata,
-        signature: updated.signature,
-        ensoRouterAddress: updated.ensoRouterAddress,
-        verifyingContractAddress: updated.verifyingContractAddress,
-        updatedAt: String(now),
-      })
-      .where('id', '=', params.id)
-      .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
-      .executeTakeFirstOrThrow()
-
-    return {
-      ...updated,
-      tradesExecuted: existingOrder.tradesExecuted,
-      status: existingOrder.status,
-      createdAt: existingOrder.createdAt,
-      cancelledAt: existingOrder.cancelledAt,
-      pausedAt: existingOrder.pausedAt,
     }
   }
 
@@ -392,107 +294,227 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     return rows.map((row) => this._mapDbOrderToOrder(row))
   }
 
-  async cancelBuyOrder(
-    params: Parameters<IArmadaManagerDCA['cancelBuyOrder']>[0],
-  ): ReturnType<IArmadaManagerDCA['cancelBuyOrder']> {
-    await this._assertEarnAppCookieAuth(params.userAddress)
-    const existingOrder = await this._getExistingOrderOrThrow(params)
+  async createAndSaveBuyOrder() // params: Parameters<IArmadaManagerDCA['createAndSaveBuyOrder']>[0],
+  : ReturnType<IArmadaManagerDCA['createAndSaveBuyOrder']> {
+    throw new Error('createAndSaveBuyOrder is deprecated, please use createStrategyTx instead.')
 
-    if (existingOrder.status === ArmadaDcaOrderStatusEnum.Cancelled) {
-      throw new Error('Order is already cancelled')
-    }
+    // await this._assertEarnAppCookieAuth(params.userAddress)
+    // const id = crypto.randomUUID()
+    // const order = await this._buildAndValidateDcaOrder({
+    //   params: { ...params, id },
+    //   now: Math.floor(Date.now() / 1000),
+    // })
 
-    const now = Math.floor(Date.now() / 1000)
-    const db = await this._getDb()
+    // const db = await this._getDb()
+    // await db
+    //   .insertInto('armadaDcaOrders')
+    //   .values({
+    //     id: order.id,
+    //     orderId: order.orderId,
+    //     userAddress: order.userAddress,
+    //     chainId: order.chainId,
+    //     fromVault: order.fromVault,
+    //     toVault: order.toVault,
+    //     amount: order.amount,
+    //     slippage: order.slippage,
+    //     intervalSeconds: order.intervalSeconds,
+    //     nextExecutionAt: BigInt(order.nextExecutionAtUnixTimestamp),
+    //     deadline:
+    //       order.deadlineUnixTimestamp !== undefined ? String(order.deadlineUnixTimestamp) : null,
+    //     maxTrades: order.maxTrades,
+    //     tradesExecuted: 0,
+    //     neverBuyAbove: order.neverBuyAbove ?? null,
+    //     neverSellBelow: order.neverSellBelow ?? null,
+    //     inAsset: order.inAsset,
+    //     outAsset: order.outAsset,
+    //     inAssetFeed: order.inAssetFeed,
+    //     outAssetFeed: order.outAssetFeed,
+    //     allowedVaultsRoot: order.allowedVaultsRoot,
+    //     fromVaultProof: JSON.stringify(order.fromVaultProof),
+    //     toVaultProof: JSON.stringify(order.toVaultProof),
+    //     swapCalldata: order.swapCalldata,
+    //     signature: order.signature,
+    //     ensoRouterAddress: order.ensoRouterAddress,
+    //     verifyingContractAddress: order.verifyingContractAddress,
+    //     status: order.status,
+    //     createdAt: String(order.createdAt),
+    //     updatedAt: String(order.updatedAt),
+    //   })
+    //   .executeTakeFirstOrThrow()
 
-    await db
-      .updateTable('armadaDcaOrders')
-      .set({
-        status: ArmadaDcaOrderStatusEnum.Cancelled,
-        updatedAt: String(now),
-        cancelledAt: String(now),
-      })
-      .where('id', '=', params.orderId)
-      .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
-      .executeTakeFirstOrThrow()
-
-    return {
-      ...existingOrder,
-      status: ArmadaDcaOrderStatusEnum.Cancelled,
-      updatedAt: now,
-      cancelledAt: now,
-    }
+    // return order
   }
 
-  async pauseBuyOrder(
-    params: Parameters<IArmadaManagerDCA['pauseBuyOrder']>[0],
-  ): ReturnType<IArmadaManagerDCA['pauseBuyOrder']> {
-    await this._assertEarnAppCookieAuth(params.userAddress)
-    const existingOrder = await this._getExistingOrderOrThrow(params)
+  async editBuyOrder() // params: Parameters<IArmadaManagerDCA['editBuyOrder']>[0],
+  : ReturnType<IArmadaManagerDCA['editBuyOrder']> {
+    throw new Error('editBuyOrder is deprecated, please use editStrategyTx instead.')
 
-    if (existingOrder.status !== 'active') {
-      throw new Error(
-        `Cannot pause an order that is not active (current status: ${existingOrder.status})`,
-      )
-    }
+    // await this._assertEarnAppCookieAuth(params.userAddress)
 
-    const now = Math.floor(Date.now() / 1000)
-    const db = await this._getDb()
+    // const now = Math.floor(Date.now() / 1000)
+    // const existingOrder = await this._getExistingOrderOrThrow({
+    //   orderId: params.id,
+    //   userAddress: params.userAddress,
+    // })
 
-    await db
-      .updateTable('armadaDcaOrders')
-      .set({
-        status: ArmadaDcaOrderStatusEnum.Paused,
-        updatedAt: String(now),
-        pausedAt: String(now),
-      })
-      .where('id', '=', params.orderId)
-      .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
-      .executeTakeFirstOrThrow()
+    // if (
+    //   existingOrder.status === ArmadaDcaOrderStatusEnum.Cancelled ||
+    //   existingOrder.status === ArmadaDcaOrderStatusEnum.Completed
+    // ) {
+    //   throw new Error(`Cannot edit an order with status: ${existingOrder.status}`)
+    // }
 
-    return {
-      ...existingOrder,
-      status: ArmadaDcaOrderStatusEnum.Paused,
-      updatedAt: now,
-      pausedAt: now,
-    }
+    // const updated = await this._buildAndValidateDcaOrder({
+    //   params,
+    //   now,
+    // })
+
+    // const db = await this._getDb()
+    // await db
+    //   .updateTable('armadaDcaOrders')
+    //   .set({
+    //     orderId: updated.orderId ?? null,
+    //     fromVault: updated.fromVault,
+    //     toVault: updated.toVault,
+    //     amount: updated.amount,
+    //     slippage: updated.slippage,
+    //     intervalSeconds: updated.intervalSeconds,
+    //     nextExecutionAt: BigInt(updated.nextExecutionAtUnixTimestamp),
+    //     deadline:
+    //       updated.deadlineUnixTimestamp !== undefined
+    //         ? String(updated.deadlineUnixTimestamp)
+    //         : null,
+    //     maxTrades: updated.maxTrades,
+    //     neverBuyAbove: updated.neverBuyAbove ?? null,
+    //     neverSellBelow: updated.neverSellBelow ?? null,
+    //     allowedVaultsRoot: updated.allowedVaultsRoot,
+    //     fromVaultProof: JSON.stringify(updated.fromVaultProof),
+    //     toVaultProof: JSON.stringify(updated.toVaultProof),
+    //     swapCalldata: updated.swapCalldata,
+    //     signature: updated.signature,
+    //     ensoRouterAddress: updated.ensoRouterAddress,
+    //     verifyingContractAddress: updated.verifyingContractAddress,
+    //     updatedAt: String(now),
+    //   })
+    //   .where('id', '=', params.id)
+    //   .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
+    //   .executeTakeFirstOrThrow()
+
+    // return {
+    //   ...updated,
+    //   tradesExecuted: existingOrder.tradesExecuted,
+    //   status: existingOrder.status,
+    //   createdAt: existingOrder.createdAt,
+    //   cancelledAt: existingOrder.cancelledAt,
+    //   pausedAt: existingOrder.pausedAt,
+    // }
+  }
+
+  async cancelBuyOrder() // params: Parameters<IArmadaManagerDCA['cancelBuyOrder']>[0],
+  : ReturnType<IArmadaManagerDCA['cancelBuyOrder']> {
+    throw new Error('cancelBuyOrder is deprecated, please use cancelStrategyTx instead.')
+
+    // await this._assertEarnAppCookieAuth(params.userAddress)
+    // const existingOrder = await this._getExistingOrderOrThrow(params)
+
+    // if (existingOrder.status === ArmadaDcaOrderStatusEnum.Cancelled) {
+    //   throw new Error('Order is already cancelled')
+    // }
+
+    // const now = Math.floor(Date.now() / 1000)
+    // const db = await this._getDb()
+
+    // await db
+    //   .updateTable('armadaDcaOrders')
+    //   .set({
+    //     status: ArmadaDcaOrderStatusEnum.Cancelled,
+    //     updatedAt: String(now),
+    //     cancelledAt: String(now),
+    //   })
+    //   .where('id', '=', params.orderId)
+    //   .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
+    //   .executeTakeFirstOrThrow()
+
+    // return {
+    //   ...existingOrder,
+    //   status: ArmadaDcaOrderStatusEnum.Cancelled,
+    //   updatedAt: now,
+    //   cancelledAt: now,
+    // }
+  }
+
+  async pauseBuyOrder() // params: Parameters<IArmadaManagerDCA['pauseBuyOrder']>[0],
+  : ReturnType<IArmadaManagerDCA['pauseBuyOrder']> {
+    throw new Error('pauseBuyOrder is deprecated, please use pauseStrategyTx instead.')
+
+    // await this._assertEarnAppCookieAuth(params.userAddress)
+    // const existingOrder = await this._getExistingOrderOrThrow(params)
+
+    // if (existingOrder.status !== 'active') {
+    //   throw new Error(
+    //     `Cannot pause an order that is not active (current status: ${existingOrder.status})`,
+    //   )
+    // }
+
+    // const now = Math.floor(Date.now() / 1000)
+    // const db = await this._getDb()
+
+    // await db
+    //   .updateTable('armadaDcaOrders')
+    //   .set({
+    //     status: ArmadaDcaOrderStatusEnum.Paused,
+    //     updatedAt: String(now),
+    //     pausedAt: String(now),
+    //   })
+    //   .where('id', '=', params.orderId)
+    //   .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
+    //   .executeTakeFirstOrThrow()
+
+    // return {
+    //   ...existingOrder,
+    //   status: ArmadaDcaOrderStatusEnum.Paused,
+    //   updatedAt: now,
+    //   pausedAt: now,
+    // }
   }
 
   async resumeBuyOrder(
     params: Parameters<IArmadaManagerDCA['resumeBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['resumeBuyOrder']> {
-    await this._assertEarnAppCookieAuth(params.userAddress)
-    const existingOrder = await this._getExistingOrderOrThrow(params)
+    throw new Error('resumeBuyOrder is deprecated, please use resumeStrategyTx instead.')
 
-    if (existingOrder.status !== 'paused') {
-      throw new Error(
-        `Cannot resume an order that is not paused (current status: ${existingOrder.status})`,
-      )
-    }
+    // await this._assertEarnAppCookieAuth(params.userAddress)
+    // const existingOrder = await this._getExistingOrderOrThrow(params)
 
-    const now = Math.floor(Date.now() / 1000)
-    const db = await this._getDb()
+    // if (existingOrder.status !== 'paused') {
+    //   throw new Error(
+    //     `Cannot resume an order that is not paused (current status: ${existingOrder.status})`,
+    //   )
+    // }
 
-    await db
-      .updateTable('armadaDcaOrders')
-      .set({
-        status: ArmadaDcaOrderStatusEnum.Active,
-        updatedAt: String(now),
-        pausedAt: null,
-      })
-      .where('id', '=', params.orderId)
-      .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
-      .executeTakeFirstOrThrow()
+    // const now = Math.floor(Date.now() / 1000)
+    // const db = await this._getDb()
 
-    return {
-      ...existingOrder,
-      status: ArmadaDcaOrderStatusEnum.Active,
-      updatedAt: now,
-      pausedAt: undefined,
-    }
+    // await db
+    //   .updateTable('armadaDcaOrders')
+    //   .set({
+    //     status: ArmadaDcaOrderStatusEnum.Active,
+    //     updatedAt: String(now),
+    //     pausedAt: null,
+    //   })
+    //   .where('id', '=', params.orderId)
+    //   .where((eb) => eb.fn('lower', [eb.ref('userAddress')]), '=', params.userAddress.toLowerCase())
+    //   .executeTakeFirstOrThrow()
+
+    // return {
+    //   ...existingOrder,
+    //   status: ArmadaDcaOrderStatusEnum.Active,
+    //   updatedAt: now,
+    //   pausedAt: undefined,
+    // }
   }
 
-  private async _buildAndValidateOrder(params: {
+  private async _buildAndValidateDcaOrder(params: {
     params: {
       id: string
       orderId: string
@@ -501,7 +523,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       fromVault: AddressValue
       toVault: AddressValue
       rebalanceAuthorizationSignature: HexData
-      amount: { toSolidityValue(): bigint; amount: string }
+      amountShares: { toSolidityValue(): bigint; amount: string }
       slippagePercentage: string
       intervalSeconds: number
       firstExecutionUnixTimestamp: number
@@ -509,13 +531,17 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       maxTrades: number
       neverBuyAbove?: string
       neverSellBelow?: string
+      inAsset: AddressValue
+      outAsset: AddressValue
+      inAssetFeed: AddressValue
+      outAssetFeed: AddressValue
     }
     now: number
   }): Promise<IArmadaDcaOrder> {
     const { params: p, now } = params
     const deadline = p.deadlineUnixTimestamp
 
-    const amountRaw = p.amount.toSolidityValue()
+    const amountRaw = p.amountShares.toSolidityValue()
     if (amountRaw <= 0) {
       throw new Error('amount must be a positive number')
     }
@@ -523,7 +549,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     const amountUsd = await this._getUnderlyingAssetUsdValue({
       chainId: p.chainId,
       vaultAddress: p.fromVault,
-      amount: p.amount.amount,
+      amount: p.amountShares.amount,
     })
     if (amountUsd < DUST_THRESHOLD_USD) {
       throw new Error(`amount must be worth at least ${DUST_THRESHOLD_USD} USD`)
@@ -591,6 +617,10 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       tradesExecuted: 0,
       neverBuyAbove: p.neverBuyAbove,
       neverSellBelow: p.neverSellBelow,
+      inAsset: p.inAsset,
+      outAsset: p.outAsset,
+      inAssetFeed: p.inAssetFeed,
+      outAssetFeed: p.outAssetFeed,
       allowedVaultsRoot,
       fromVaultProof,
       toVaultProof,
@@ -663,18 +693,16 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   private _orderToStrategyConfig(params: {
     order: IArmadaDcaOrder
     strategyId: string
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
   }): IArmadaDcaStrategyConfig {
     return {
       strategyId: params.strategyId,
       owner: params.order.userAddress,
       sourceVault: params.order.fromVault,
       targetVault: params.order.toVault,
-      inAsset: params.order.fromVault,
-      outAsset: params.order.toVault,
-      inAssetFeed: params.inAssetFeed,
-      outAssetFeed: params.outAssetFeed,
+      inAsset: params.order.inAsset,
+      outAsset: params.order.outAsset,
+      inAssetFeed: params.order.inAssetFeed,
+      outAssetFeed: params.order.outAssetFeed,
       tradeAmount: params.order.amount,
       interval: String(params.order.intervalSeconds),
       slippageBps: String(Math.round(Number(params.order.slippage) * 100)),
@@ -685,22 +713,39 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     }
   }
 
+  private _buildCreateTransaction(params: {
+    strategyManagerAddress: AddressValue
+    strategyConfig: IArmadaDcaStrategyConfig
+    functionName: 'createStrategy'
+    description: string
+    type: TransactionType.CreateStrategy
+  }): CreateDcaStrategyTransactionInfo {
+    const calldata = encodeFunctionData({
+      abi: DCAStrategyManagerAbi,
+      functionName: params.functionName,
+      args: [this._toViemStrategyConfig(params.strategyConfig)],
+    }) as HexData
+
+    return {
+      type: params.type,
+      description: params.description,
+      transaction: this._buildTransaction({
+        target: params.strategyManagerAddress,
+        calldata,
+      }),
+    }
+  }
+
   private _buildStrategyConfigTransaction(params: {
     strategyManagerAddress: AddressValue
     strategyConfig: IArmadaDcaStrategyConfig
-    functionName: 'createStrategy' | 'editStrategy' | 'resumeStrategy'
+    functionName: 'editStrategy' | 'resumeStrategy'
     description: string
-    type:
-      | TransactionType.CreateStrategy
-      | TransactionType.EditStrategy
-      | TransactionType.ResumeStrategy
+    type: TransactionType.EditStrategy | TransactionType.ResumeStrategy
     metadata: {
       order: IArmadaDcaOrder
     }
-  }):
-    | CreateDcaStrategyTransactionInfo
-    | EditDcaStrategyTransactionInfo
-    | ResumeDcaStrategyTransactionInfo {
+  }): EditDcaStrategyTransactionInfo | ResumeDcaStrategyTransactionInfo {
     const calldata = encodeFunctionData({
       abi: DCAStrategyManagerAbi,
       functionName: params.functionName,
@@ -932,6 +977,10 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       pausedAt: row.pausedAt ? Number(row.pausedAt) : undefined,
       neverBuyAbove: row.neverBuyAbove ?? undefined,
       neverSellBelow: row.neverSellBelow ?? undefined,
+      inAsset: row.inAsset as AddressValue,
+      outAsset: row.outAsset as AddressValue,
+      inAssetFeed: row.inAssetFeed as AddressValue,
+      outAssetFeed: row.outAssetFeed as AddressValue,
     }
   }
 }

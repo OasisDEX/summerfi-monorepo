@@ -1,5 +1,5 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import type { AddressValue, ChainId, IArmadaDcaOrder } from '@summerfi/sdk-common'
+import type { ChainId, IArmadaDcaOrder } from '@summerfi/sdk-common'
 
 export const resumeStrategyTxHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
@@ -7,20 +7,14 @@ export const resumeStrategyTxHandler =
     chainId,
     order,
     strategyId,
-    inAssetFeed,
-    outAssetFeed,
   }: {
     chainId: ChainId
     order: IArmadaDcaOrder
     strategyId: string
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
   }) => {
     return sdk.armada.dca.resumeStrategyTx({
       chainId,
       order,
       strategyId,
-      inAssetFeed,
-      outAssetFeed,
     })
   }

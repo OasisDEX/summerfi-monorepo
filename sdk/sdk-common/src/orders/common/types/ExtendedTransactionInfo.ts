@@ -152,9 +152,6 @@ export type Permit2RevokeTransactionInfo = TransactionInfo & {
 
 export type CreateDcaStrategyTransactionInfo = TransactionInfo & {
   type: TransactionType.CreateStrategy
-  metadata: {
-    order: IArmadaDcaOrder
-  }
 }
 
 export type EditDcaStrategyTransactionInfo = TransactionInfo & {

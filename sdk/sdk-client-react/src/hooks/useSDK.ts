@@ -103,7 +103,6 @@ import { getBuyOrdersHandler } from '../handlers/getBuyOrdersHandler'
 import { cancelBuyOrderHandler } from '../handlers/cancelBuyOrderHandler'
 import { cancelStrategyTxHandler } from '../handlers/cancelStrategyTxHandler'
 import { editStrategyTxHandler } from '../handlers/editStrategyTxHandler'
-import { executeDCATxHandler } from '../handlers/executeDCATxHandler'
 import { pauseStrategyTxHandler } from '../handlers/pauseStrategyTxHandler'
 import { resumeStrategyTxHandler } from '../handlers/resumeStrategyTxHandler'
 
@@ -308,7 +307,6 @@ export const useSDK = (params: UseSdk) => {
   const pauseStrategyTx = useMemo(() => pauseStrategyTxHandler(sdk), [sdk])
   const resumeStrategyTx = useMemo(() => resumeStrategyTxHandler(sdk), [sdk])
   const cancelStrategyTx = useMemo(() => cancelStrategyTxHandler(sdk), [sdk])
-  const executeDCATx = useMemo(() => executeDCATxHandler(sdk), [sdk])
   const createAndSaveBuyOrder = useMemo(() => createAndSaveBuyOrderHandler(sdk), [sdk])
   const getBuyOrder = useMemo(() => getBuyOrderHandler(sdk), [sdk])
   const getBuyOrders = useMemo(() => getBuyOrdersHandler(sdk), [sdk])
@@ -419,7 +417,6 @@ export const useSDK = (params: UseSdk) => {
       pauseStrategyTx,
       resumeStrategyTx,
       cancelStrategyTx,
-      executeDCATx,
       createAndSaveBuyOrder,
       getBuyOrder,
       getBuyOrders,
@@ -528,7 +525,6 @@ export const useSDK = (params: UseSdk) => {
       pauseStrategyTx,
       resumeStrategyTx,
       cancelStrategyTx,
-      executeDCATx,
       createAndSaveBuyOrder,
       getBuyOrder,
       getBuyOrders,

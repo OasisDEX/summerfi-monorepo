@@ -15,9 +15,22 @@ const hexDataSchema = z.string().regex(/^0x[0-9a-fA-F]*$/) as z.ZodType<HexData>
 
 export const strategyIdSchema = uint256StringSchema
 
-export const oracleAddressesSchema = z.object({
+export const createStrategyTxInputSchema = z.object({
+  chainId: z.number() as z.ZodType<ChainId>,
+  userAddress: addressSchema,
+  fromVault: addressSchema,
+  toVault: addressSchema,
+  inAsset: addressSchema,
+  outAsset: addressSchema,
   inAssetFeed: addressSchema,
   outAssetFeed: addressSchema,
+  amount: uint256StringSchema,
+  slippagePercentage: z.string(),
+  intervalSeconds: z.number().int().positive(),
+  maxTrades: z.number().int().positive(),
+  neverBuyAbove: z.string().optional(),
+  neverSellBelow: z.string().optional(),
+  deadlineUnixTimestamp: z.number().int().optional(),
 })
 
 export const orderSchema: z.ZodType<IArmadaDcaOrder> = z.object({
@@ -48,6 +61,10 @@ export const orderSchema: z.ZodType<IArmadaDcaOrder> = z.object({
   pausedAt: z.number().int().optional(),
   neverBuyAbove: z.string().optional(),
   neverSellBelow: z.string().optional(),
+  inAsset: addressSchema,
+  outAsset: addressSchema,
+  inAssetFeed: addressSchema,
+  outAssetFeed: addressSchema,
 })
 
 export const strategyConfigSchema: z.ZodType<IArmadaDcaStrategyConfig> = z.object({

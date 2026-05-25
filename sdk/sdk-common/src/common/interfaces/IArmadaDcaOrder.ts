@@ -38,4 +38,12 @@ export interface IArmadaDcaOrder {
   neverBuyAbove?: string
   /** Price floor — skip execution if the toVault token price is below this value */
   neverSellBelow?: string
+  /** The underlying asset of the source vault (input asset for DCA trades) */
+  inAsset: AddressValue
+  /** The underlying asset of the target vault (output asset for DCA trades) */
+  outAsset: AddressValue
+  /** Oracle price feed address for the input asset */
+  inAssetFeed: AddressValue
+  /** Oracle price feed address for the output asset */
+  outAssetFeed: AddressValue
 }

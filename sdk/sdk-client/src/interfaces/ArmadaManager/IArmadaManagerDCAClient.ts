@@ -21,17 +21,26 @@ import type { SignTypedDataParameters } from 'viem'
 export interface IArmadaManagerDCAClient {
   createStrategyTx(params: {
     chainId: ChainId
-    order: IArmadaDcaOrder
+    userAddress: AddressValue
+    fromVault: AddressValue
+    toVault: AddressValue
+    inAsset: AddressValue
+    outAsset: AddressValue
     inAssetFeed: AddressValue
     outAssetFeed: AddressValue
+    amount: string
+    slippagePercentage: string
+    intervalSeconds: number
+    maxTrades: number
+    neverBuyAbove?: string
+    neverSellBelow?: string
+    deadlineUnixTimestamp?: number
   }): Promise<CreateDcaStrategyTransactionInfo>
 
   editStrategyTx(params: {
     chainId: ChainId
     order: IArmadaDcaOrder
     strategyId: string
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
   }): Promise<EditDcaStrategyTransactionInfo>
 
   pauseStrategyTx(params: {
@@ -43,8 +52,6 @@ export interface IArmadaManagerDCAClient {
     chainId: ChainId
     order: IArmadaDcaOrder
     strategyId: string
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
   }): Promise<ResumeDcaStrategyTransactionInfo>
 
   cancelStrategyTx(params: {
@@ -56,8 +63,6 @@ export interface IArmadaManagerDCAClient {
     chainId: ChainId
     order: IArmadaDcaOrder
     strategyId: string
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
   }): Promise<ExecuteDcaTransactionInfo>
 
   createAndSaveBuyOrder(params: {
@@ -81,6 +86,14 @@ export interface IArmadaManagerDCAClient {
     neverBuyAbove?: string
     /** Price floor — skip execution if the toVault token price is below this value (optional) */
     neverSellBelow?: string
+    /** The underlying asset of the source vault */
+    inAsset: AddressValue
+    /** The underlying asset of the target vault */
+    outAsset: AddressValue
+    /** Oracle price feed address for the input asset */
+    inAssetFeed: AddressValue
+    /** Oracle price feed address for the output asset */
+    outAssetFeed: AddressValue
   }): Promise<IArmadaDcaOrder>
 
   editBuyOrder(params: {
