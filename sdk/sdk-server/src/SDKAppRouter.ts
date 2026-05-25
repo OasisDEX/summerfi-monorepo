@@ -136,8 +136,10 @@ import { getAllRoles } from './armada-protocol-handlers/access-control/getAllRol
 import { createAndSaveBuyOrder } from './armada-protocol-handlers/dca/createAndSaveBuyOrder'
 import { editBuyOrder } from './armada-protocol-handlers/dca/editBuyOrder'
 import { createStrategyTx } from './armada-protocol-handlers/dca/createStrategyTx'
-import { getBuyOrder } from './armada-protocol-handlers/dca/getBuyOrder'
-import { getBuyOrders } from './armada-protocol-handlers/dca/getBuyOrders'
+import { getStrategies } from './armada-protocol-handlers/dca/getStrategies'
+import { getStrategy } from './armada-protocol-handlers/dca/getStrategy'
+import { getExecutions } from './armada-protocol-handlers/dca/getExecutions'
+import { getExecution } from './armada-protocol-handlers/dca/getExecution'
 import { cancelBuyOrder } from './armada-protocol-handlers/dca/cancelBuyOrder'
 import { cancelStrategyTx } from './armada-protocol-handlers/dca/cancelStrategyTx'
 import { editStrategyTx } from './armada-protocol-handlers/dca/editStrategyTx'
@@ -318,8 +320,10 @@ export const sdkAppRouter = router({
       executeDCATx: executeDCATx,
       createAndSaveBuyOrder: createAndSaveBuyOrder,
       editBuyOrder: editBuyOrder,
-      getBuyOrder: getBuyOrder,
-      getBuyOrders: getBuyOrders,
+      getStrategies: getStrategies,
+      getStrategy: getStrategy,
+      getExecutions: getExecutions,
+      getExecution: getExecution,
       cancelBuyOrder: cancelBuyOrder,
       pauseBuyOrder: pauseBuyOrder,
       resumeBuyOrder: resumeBuyOrder,

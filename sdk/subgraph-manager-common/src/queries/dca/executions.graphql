@@ -1,0 +1,10 @@
+query GetExecutions($strategy_id: String!) {
+  executions(where: { strategy_: { id_contains_nocase: $strategy_id } }) {
+    id
+    txHash
+    executionTimestamp
+    amountIn
+    amountOut
+    tradesExecutedAfter
+  }
+}

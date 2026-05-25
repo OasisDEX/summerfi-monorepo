@@ -11,7 +11,7 @@ export const createAndSaveBuyOrderHandler =
     fromVaultAddress,
     toVaultAddress,
     signTypedData,
-    amount,
+    amountShares,
     slippagePercentage,
     intervalSeconds,
     firstExecutionUnixTimestamp,
@@ -31,7 +31,7 @@ export const createAndSaveBuyOrderHandler =
     toVaultAddress: AddressValue
     signTypedData: (params: SignTypedDataParameters) => Promise<`0x${string}`>
     /** Full token amount (e.g. "1.5" for 1.5 USDC, not raw units) */
-    amount: ITokenAmount
+    amountShares: ITokenAmount
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number
@@ -61,7 +61,7 @@ export const createAndSaveBuyOrderHandler =
       fromVault: fromVaultAddress,
       toVault: toVaultAddress,
       signTypedData,
-      amount,
+      amountShares,
       slippagePercentage,
       intervalSeconds,
       firstExecutionUnixTimestamp,

@@ -1,6 +1,5 @@
 import type {
   AddressValue,
-  ArmadaDcaOrderStatusEnum,
   ChainId,
   HexData,
   IArmadaDcaOrder,
@@ -12,6 +11,7 @@ import type {
   CancelDcaStrategyTransactionInfo,
   ExecuteDcaTransactionInfo,
 } from '@summerfi/sdk-common'
+import type { GetStrategiesQuery, GetExecutionsQuery } from '@summerfi/subgraph-manager-common'
 import type { SignTypedDataParameters } from 'viem'
 
 /**
@@ -28,7 +28,7 @@ export interface IArmadaManagerDCAClient {
     outAsset: AddressValue
     inAssetFeed: AddressValue
     outAssetFeed: AddressValue
-    amount: string
+    amountShares: string
     slippagePercentage: string
     intervalSeconds: number
     maxTrades: number
@@ -72,7 +72,7 @@ export interface IArmadaManagerDCAClient {
     fromVault: AddressValue
     toVault: AddressValue
     signTypedData: (params: SignTypedDataParameters) => Promise<`0x${string}`>
-    amount: ITokenAmount
+    amountShares: ITokenAmount
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number
@@ -104,7 +104,7 @@ export interface IArmadaManagerDCAClient {
     fromVault: AddressValue
     toVault: AddressValue
     signTypedData: (params: SignTypedDataParameters) => Promise<`0x${string}`>
-    amount: ITokenAmount
+    amountShares: ITokenAmount
     /** Slippage as a percentage (e.g. "0.5" for 0.5%) */
     slippagePercentage: string
     intervalSeconds: number
@@ -122,16 +122,23 @@ export interface IArmadaManagerDCAClient {
     bearerToken: string
   }): Promise<IArmadaDcaOrder>
 
-  getBuyOrder(params: {
-    orderId: string
-    userAddress: AddressValue
-  }): Promise<IArmadaDcaOrder | undefined>
+  getStrategies(params: { chainId: ChainId; userAddress?: AddressValue }): Promise<GetStrategiesQuery>
 
-  getBuyOrders(params: {
-    userAddress: AddressValue
-    chainId?: ChainId
-    status?: ArmadaDcaOrderStatusEnum
-  }): Promise<IArmadaDcaOrder[]>
+  getStrategy(params: {
+    strategyId: string
+    chainId: ChainId
+  }): Promise<GetStrategiesQuery['strategies'][0] | undefined>
+
+  getExecutions(params: {
+    chainId: ChainId
+    strategyId: string
+  }): Promise<GetExecutionsQuery>
+
+  getExecution(params: {
+    chainId: ChainId
+    strategyId: string
+    executionId: string
+  }): Promise<GetExecutionsQuery['executions'][0] | undefined>
 
   cancelBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IArmadaDcaOrder>
 

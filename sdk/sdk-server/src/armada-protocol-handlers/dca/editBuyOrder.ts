@@ -21,7 +21,7 @@ export const editBuyOrder = publicProcedure
       fromVault: z.custom<AddressValue>(isAddressValue),
       toVault: z.custom<AddressValue>(isAddressValue),
       rebalanceAuthorizationSignature: z.custom<HexData>(isHexData),
-      amount: z.custom<ITokenAmount>(isTokenAmount),
+      amountShares: z.custom<ITokenAmount>(isTokenAmount),
       slippagePercentage: z.string(),
       intervalSeconds: z.number().int().positive(),
       firstExecutionUnixTimestamp: z.number().int().positive(),

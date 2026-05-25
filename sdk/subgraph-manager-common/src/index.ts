@@ -1,6 +1,8 @@
 export type { IArmadaSubgraphManager } from './interfaces/IArmadaSubgraphManager'
+export type { IDcaSubgraphManager } from './interfaces/IDcaSubgraphManager'
 export { createProtocolGraphQLClient } from './utils/createProtocolGraphQLClient'
 export { createInstitutionsGraphQLClient } from './utils/createInstitutionsGraphQLClient'
+export { createDcaGraphQLClient } from './utils/createDcaGraphQLClient'
 export type {
   GetUserPositionQuery,
   GetUserPositionsQuery,
@@ -39,4 +41,8 @@ export {
   GetInstitutionByIdDocument,
   GetRolesDocument,
 } from './generated/institutions/client'
+export type {
+  GetStrategiesQuery,
+  GetExecutionsQuery,
+} from './generated/dca/client'
 export { SubgraphTypes, type SubgraphType } from './types/SubgraphTypes'

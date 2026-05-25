@@ -17,7 +17,7 @@ import {
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { getChainInfoByChainId, IAddress, type IChainInfo } from '@summerfi/sdk-common'
-import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import { IArmadaSubgraphManager, type IDcaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { ISwapManager } from '@summerfi/swap-common'
@@ -63,6 +63,7 @@ export class ArmadaManager implements IArmadaManager {
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
   private _subgraphManager: IArmadaSubgraphManager
+  private _dcaSubgraphManager: IDcaSubgraphManager
   private _blockchainClientProvider: IBlockchainClientProvider
   private _swapManager: ISwapManager
   private _oracleManager: IOracleManager
@@ -83,6 +84,7 @@ export class ArmadaManager implements IArmadaManager {
     supportedChains: IChainInfo[]
     summerProtocolDbProvider?: SummerProtocolDbProvider
     earnAppCookieVerifier: EarnAppCookieVerifier
+    dcaSubgraphManager: IDcaSubgraphManager
   }) {
     this._clientId = params.clientId
     this._configProvider = params.configProvider
@@ -90,6 +92,7 @@ export class ArmadaManager implements IArmadaManager {
     this._allowanceManager = params.allowanceManager
     this._contractsProvider = params.contractsProvider
     this._subgraphManager = params.subgraphManager
+    this._dcaSubgraphManager = params.dcaSubgraphManager
     this._blockchainClientProvider = params.blockchainClientProvider
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
@@ -194,6 +197,7 @@ export class ArmadaManager implements IArmadaManager {
       oracleManager: this._oracleManager,
       summerProtocolDbProvider: params.summerProtocolDbProvider,
       earnAppCookieVerifier: params.earnAppCookieVerifier,
+      dcaSubgraphManager: this._dcaSubgraphManager,
     })
   }
 }

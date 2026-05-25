@@ -1,9 +1,8 @@
 overwrite: true
-schema: '${SUBGRAPH_BASE}/summer-protocol-base'
-# schema: 'https://api.goldsky.com/api/public/project_cmgyeezx300294yp2bgo8cfjo/subgraphs/summer-protocol-base/prod/gn'
-documents: './src/queries/protocol/*.graphql'
+schema: '${SUBGRAPH_BASE}/summer-dca-base'
+documents: './src/queries/dca/*.graphql'
 generates:
-  src/generated/protocol/client.ts:
+  src/generated/dca/client.ts:
     plugins:
       - add:
           content:

@@ -257,7 +257,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   /** PRIVATE */
-  _getClient<T extends SubgraphType>(
+  _getClient<T extends typeof SubgraphTypes.protocol | typeof SubgraphTypes.institutions>(
     subgraphType: T,
     chainId: ChainId,
   ): ReturnType<
@@ -299,6 +299,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     const typeToClient = {
       [SubgraphTypes.protocol]: 'makeSdk',
       [SubgraphTypes.institutions]: 'makeAdminSdk',
+      [SubgraphTypes.dca]: 'makeDcaSdk',
     } as const
 
     if (this._config.subgraphType !== subgraphType) {

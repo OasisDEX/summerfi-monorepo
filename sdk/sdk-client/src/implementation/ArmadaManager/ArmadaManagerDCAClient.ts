@@ -160,16 +160,28 @@ export class ArmadaManagerDCAClient extends IRPCClient implements IArmadaManager
     })
   }
 
-  async getBuyOrder(
-    params: Parameters<IArmadaManagerDCAClient['getBuyOrder']>[0],
-  ): ReturnType<IArmadaManagerDCAClient['getBuyOrder']> {
-    return this.rpcClient.armada.dca.getBuyOrder.query(params)
+  async getStrategies(
+    params: Parameters<IArmadaManagerDCAClient['getStrategies']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['getStrategies']> {
+    return this.rpcClient.armada.dca.getStrategies.query(params)
   }
 
-  async getBuyOrders(
-    params: Parameters<IArmadaManagerDCAClient['getBuyOrders']>[0],
-  ): ReturnType<IArmadaManagerDCAClient['getBuyOrders']> {
-    return this.rpcClient.armada.dca.getBuyOrders.query(params)
+  async getStrategy(
+    params: Parameters<IArmadaManagerDCAClient['getStrategy']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['getStrategy']> {
+    return this.rpcClient.armada.dca.getStrategy.query(params)
+  }
+
+  async getExecutions(
+    params: Parameters<IArmadaManagerDCAClient['getExecutions']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['getExecutions']> {
+    return this.rpcClient.armada.dca.getExecutions.query(params)
+  }
+
+  async getExecution(
+    params: Parameters<IArmadaManagerDCAClient['getExecution']>[0],
+  ): ReturnType<IArmadaManagerDCAClient['getExecution']> {
+    return this.rpcClient.armada.dca.getExecution.query(params)
   }
 
   async cancelBuyOrder(

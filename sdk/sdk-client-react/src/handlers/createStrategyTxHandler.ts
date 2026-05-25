@@ -12,7 +12,7 @@ export const createStrategyTxHandler =
     outAsset,
     inAssetFeed,
     outAssetFeed,
-    amount,
+    amountShares,
     slippagePercentage,
     intervalSeconds,
     maxTrades,
@@ -28,7 +28,7 @@ export const createStrategyTxHandler =
     outAsset: AddressValue
     inAssetFeed: AddressValue
     outAssetFeed: AddressValue
-    amount: string
+    amountShares: string
     slippagePercentage: string
     intervalSeconds: number
     maxTrades: number
@@ -45,7 +45,7 @@ export const createStrategyTxHandler =
       outAsset,
       inAssetFeed,
       outAssetFeed,
-      amount,
+      amountShares,
       slippagePercentage,
       intervalSeconds,
       maxTrades,

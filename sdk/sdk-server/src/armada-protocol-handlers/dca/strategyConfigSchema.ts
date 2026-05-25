@@ -24,7 +24,7 @@ export const createStrategyTxInputSchema = z.object({
   outAsset: addressSchema,
   inAssetFeed: addressSchema,
   outAssetFeed: addressSchema,
-  amount: uint256StringSchema,
+  amountShares: uint256StringSchema,
   slippagePercentage: z.string(),
   intervalSeconds: z.number().int().positive(),
   maxTrades: z.number().int().positive(),

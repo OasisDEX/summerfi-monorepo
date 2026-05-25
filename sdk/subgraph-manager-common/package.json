@@ -16,9 +16,10 @@
     "build": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "generate": "pnpm run generate:protocol && pnpm run generate:institutions",
+    "generate": "pnpm run generate:protocol && pnpm run generate:institutions && pnpm run generate:dca",
     "generate:protocol": "DOTENV_CONFIG_PATH=../../.env graphql-codegen --config summer-protocol.yml -r dotenv/config",
-    "generate:institutions": "DOTENV_CONFIG_PATH=../../.env graphql-codegen --config summer-institutions.yml -r dotenv/config"
+    "generate:institutions": "DOTENV_CONFIG_PATH=../../.env graphql-codegen --config summer-institutions.yml -r dotenv/config",
+    "generate:dca": "DOTENV_CONFIG_PATH=../../.env graphql-codegen --config summer-dca.yml -r dotenv/config"
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",

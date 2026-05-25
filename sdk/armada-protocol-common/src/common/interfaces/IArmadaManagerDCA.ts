@@ -3,7 +3,6 @@ import type {
   IArmadaDcaOrder,
   ChainId,
   HexData,
-  ArmadaDcaOrderStatusEnum,
   ITokenAmount,
   CreateDcaStrategyTransactionInfo,
   EditDcaStrategyTransactionInfo,
@@ -12,6 +11,7 @@ import type {
   CancelDcaStrategyTransactionInfo,
   ExecuteDcaTransactionInfo,
 } from '@summerfi/sdk-common'
+import type { GetStrategiesQuery, GetExecutionsQuery } from '@summerfi/subgraph-manager-common'
 
 /**
  * @name IArmadaManagerDCA
@@ -128,23 +128,38 @@ export interface IArmadaManagerDCA {
   }): Promise<IArmadaDcaOrder>
 
   /**
-   * @name getBuyOrder
-   * @description Gets a single DCA buy order owned by a user
+   * @name getStrategies
+   * @description Gets all DCA strategies for a chain from the subgraph
    */
-  getBuyOrder(params: {
-    orderId: string
-    userAddress: AddressValue
-  }): Promise<IArmadaDcaOrder | undefined>
+  getStrategies(params: { chainId: ChainId; userAddress?: AddressValue }): Promise<GetStrategiesQuery>
 
   /**
-   * @name getBuyOrders
-   * @description Gets DCA buy orders for a user
+   * @name getStrategy
+   * @description Gets a single DCA strategy by strategyId from the subgraph
    */
-  getBuyOrders(params: {
-    userAddress: AddressValue
-    chainId?: ChainId
-    status?: ArmadaDcaOrderStatusEnum
-  }): Promise<IArmadaDcaOrder[]>
+  getStrategy(params: {
+    strategyId: string
+    chainId: ChainId
+  }): Promise<GetStrategiesQuery['strategies'][0] | undefined>
+
+  /**
+   * @name getExecutions
+   * @description Gets all executions for a given DCA strategy from the subgraph
+   */
+  getExecutions(params: {
+    chainId: ChainId
+    strategyId: string
+  }): Promise<GetExecutionsQuery>
+
+  /**
+   * @name getExecution
+   * @description Gets a single execution by executionId from the subgraph
+   */
+  getExecution(params: {
+    chainId: ChainId
+    strategyId: string
+    executionId: string
+  }): Promise<GetExecutionsQuery['executions'][0] | undefined>
 
   /**
    * @name cancelBuyOrder

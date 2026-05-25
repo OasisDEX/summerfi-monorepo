@@ -53,7 +53,7 @@ describe('Armada Protocol - DCA Orders', () => {
       outAsset: toVaultToken.address.toSolidityValue(),
       inAssetFeed: fromVault.chainlinkOracleAddressValue,
       outAssetFeed: toVault.chainlinkOracleAddressValue,
-      amount: amount.toSolidityValue().toString(),
+      amountShares: amount.toSolidityValue().toString(),
       slippagePercentage: '0.5',
       intervalSeconds: 60 * 60, // hourly
       maxTrades: 5,
@@ -75,9 +75,9 @@ describe('Armada Protocol - DCA Orders', () => {
     const onChainStrategyId = BigInt(strategyLog.topics[1])
     console.log('On-chain strategy ID:', onChainStrategyId.toString())
 
-    const fetchedOrder = await sdk.armada.dca.getBuyOrder({
-      orderId: onChainStrategyId.toString(),
-      userAddress: userAddress.toSolidityValue(),
+    const fetchedOrder = await sdk.armada.dca.getStrategy({
+      chainId,
+      strategyId: onChainStrategyId.toString(),
     })
 
     assert(fetchedOrder, 'Expected created order to be retrievable')
