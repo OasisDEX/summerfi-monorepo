@@ -8,8 +8,9 @@ import {
 } from '@summerfi/sdk-common'
 
 import assert from 'assert'
+import { ChainIds, type AddressValue } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
-import type { TestConfigKey } from './utils/testConfig'
+import { FleetAddresses } from './utils/testConfig'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 
 jest.setTimeout(300000)
@@ -18,29 +19,30 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol Migration', () => {
-  const scenarios: { testConfigKey: TestConfigKey }[] = [
-    { testConfigKey: 'BaseUSDC' },
-    {
-      testConfigKey: 'ArbitrumUSDT',
-    },
-    { testConfigKey: 'MainnetUSDCLowRisk' },
+  const scenarios: {
+    chainId: (typeof ChainIds)[keyof typeof ChainIds]
+    fleetAddressValue: AddressValue
+  }[] = [
+    { chainId: ChainIds.Base, fleetAddressValue: FleetAddresses[ChainIds.Base].USDC },
+    { chainId: ChainIds.ArbitrumOne, fleetAddressValue: FleetAddresses[ChainIds.ArbitrumOne].USDT },
+    { chainId: ChainIds.Mainnet, fleetAddressValue: FleetAddresses[ChainIds.Mainnet].USDCLowRisk },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testConfigKey } = scenario
+    const { chainId, fleetAddressValue } = scenario
 
     describe.skip('getMigrationTX', () => {
       const migrationType = ArmadaMigrationType.AaveV3
 
       it('should migrate first migratable position', async () => {
-        const setup = createSdkTestSetup(testConfigKey)
-        const { sdk, chainId, fleetAddress, userAddress, userSendTxTool } = setup
+        const setup = createSdkTestSetup({ chainId })
+        const { sdk, chainId: setupChainId, userAddress, userSendTxTool } = setup
 
-        const chainInfo = getChainInfoByChainId(chainId)
-        const user = User.createFromEthereum(chainId, userAddress.value)
+        const chainInfo = getChainInfoByChainId(setupChainId)
+        const user = User.createFromEthereum(setupChainId, userAddress.value)
 
         console.log(
-          `Migrating positions on chain ${chainId} for ${testConfigKey} with user ${userAddress.value}`,
+          `Migrating positions on chain ${setupChainId} for chain ${setupChainId} with user ${userAddress.value}`,
         )
 
         const positionsBefore = await sdk.armada.users.getMigratablePositions({
@@ -62,7 +64,7 @@ describe('Armada Protocol Migration', () => {
 
         const vaultId = ArmadaVaultId.createFrom({
           chainInfo,
-          fleetAddress: Address.createFromEthereum({ value: fleetAddress.value }),
+          fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
         })
 
         const positionIdsToMigrate = positionsBefore.positions.slice(0, 1).map((p) => p.id)
@@ -112,14 +114,14 @@ describe('Armada Protocol Migration', () => {
       })
 
       it.skip('should migrate multiple migratable positions', async () => {
-        const setup = createSdkTestSetup(testConfigKey)
-        const { sdk, chainId, fleetAddress, userAddress, userSendTxTool } = setup
+        const setup = createSdkTestSetup({ chainId })
+        const { sdk, chainId: setupChainId, userAddress, userSendTxTool } = setup
 
-        const chainInfo = getChainInfoByChainId(chainId)
-        const user = User.createFromEthereum(chainId, userAddress.value)
+        const chainInfo = getChainInfoByChainId(setupChainId)
+        const user = User.createFromEthereum(setupChainId, userAddress.value)
 
         console.log(
-          `Migrating multiple positions on chain ${chainId} for ${testConfigKey} with user ${userAddress.value}`,
+          `Migrating multiple positions on chain ${setupChainId} for chain ${setupChainId} with user ${userAddress.value}`,
         )
 
         const positionsBefore = await sdk.armada.users.getMigratablePositions({
@@ -141,7 +143,7 @@ describe('Armada Protocol Migration', () => {
 
         const vaultId = ArmadaVaultId.createFrom({
           chainInfo,
-          fleetAddress: Address.createFromEthereum({ value: fleetAddress.value }),
+          fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
         })
 
         const positionIdsToMigrate = positionsBefore.positions.slice(0, 2).map((p) => p.id)

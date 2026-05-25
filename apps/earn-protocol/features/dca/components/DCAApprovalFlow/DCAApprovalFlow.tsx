@@ -6,15 +6,23 @@ import {
   getDisplayToken,
   getEarnProtocolChainById,
   Icon,
+  SkeletonLine,
   Text,
   TextNumberAnimated,
   Tooltip,
   useEarnProtocolChain,
   useEarnProtocolLogin,
   useEarnProtocolWallet,
+  useIsIframe,
 } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
+import { useTermsOfService } from '@summerfi/app-tos'
+import { type TokenSymbolsList, TOSStatus } from '@summerfi/app-types'
+import {
+  formatCryptoBalance,
+  sdkChainIdToHumanNetwork,
+  subgraphNetworkToSDKId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 import {
   Address,
   type AddressValue,
@@ -24,11 +32,18 @@ import {
 } from '@summerfi/sdk-common'
 import { useRouter } from 'next/navigation'
 
+import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
 import { VaultSwitchBox } from '@/components/molecules/SidebarElements/VaultSwitchBox'
+import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { DCASidebar } from '@/features/dca/components/DCASidebar/DCASidebar'
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
+import { MAX_TRADES } from '@/features/dca/lib/dca-wizard-constants'
 import { type DCAConfig, type DCAResolvedPair } from '@/features/dca/lib/types'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { usePosition } from '@/hooks/use-position'
+import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
+import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 
 import classNames from '@/features/dca/components/dca.module.css'
 
@@ -43,23 +58,45 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
   const { walletClient, address } = useEarnProtocolWallet()
   const { chain, setChain, isSettingChain } = useEarnProtocolChain()
   const { createAndSaveBuyOrder } = useAppSDK()
+  const dcaChainId = subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network))
+  const { publicClient } = useNetworkAlignedClient({
+    chainId: dcaChainId,
+    overrideNetwork: sdkChainIdToHumanNetwork(dcaChainId),
+  })
   const { push } = useRouter()
   const [isCreating, setIsCreating] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { isLoading, position } = usePosition({
+    vaultId: pair.fromVault.id,
+    chainId: dcaChainId,
+  })
+  const signTosMessage = useTermsOfServiceSigner()
+  const isIframe = useIsIframe()
 
-  const chainId = useMemo(
-    () => subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network)),
-    [pair.fromVault.protocol.network],
-  )
+  const tosState = useTermsOfService({
+    publicClient,
+    signMessage: signTosMessage,
+    chainId: dcaChainId,
+    walletAddress: address,
+    version: TermsOfServiceVersion.APP_VERSION,
+    cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
+    host: '/earn',
+    type: 'default',
+    isIframe,
+  })
 
-  const isProperChainSelected = chain.id === chainId
-  const targetChain = getEarnProtocolChainById(chainId)
+  const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: onBack })
+
+  const isProperChainSelected = chain.id === dcaChainId
+  const targetChain = getEarnProtocolChainById(dcaChainId)
 
   const sourceSymbol = getDisplayToken(pair.fromVault.inputToken.symbol)
   const targetSymbol = getDisplayToken(pair.toVault.inputToken.symbol)
   const frequencyDays = Number.isFinite(config.frequency)
     ? Math.max(1, Math.round(config.frequency))
     : 1
+
+  const fullPermitAmount = config.amount * config.maxTrades
 
   const isTargetEthVault = targetSymbol === 'ETH'
   const isSourceEthVault = sourceSymbol === 'ETH'
@@ -113,7 +150,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
 
     try {
       const sourceToken = Token.createFrom({
-        chainInfo: getChainInfoByChainId(chainId),
+        chainInfo: getChainInfoByChainId(dcaChainId),
         address: Address.createFromEthereum({
           value: pair.fromVault.inputToken.id as AddressValue,
         }),
@@ -129,7 +166,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
 
       const dcaPositionData = await createAndSaveBuyOrder({
         userAddress: address as `0x${string}`,
-        chainId,
+        chainId: dcaChainId,
         toVaultAddress: pair.toVault.id as AddressValue,
         fromVaultAddress: pair.fromVault.id as AddressValue,
         signTypedData: walletClient.signTypedData,
@@ -138,7 +175,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
         intervalSeconds,
         firstExecutionUnixTimestamp,
         deadlineUnixTimestamp,
-        maxTrades: config.maxTrades ?? 1000,
+        maxTrades: config.maxTrades,
         neverBuyAbove: config.neverBuyAbove?.toString(),
         neverSellBelow: config.neverSellBelow?.toString(),
       })
@@ -161,7 +198,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
       setIsCreating(false)
     }
   }, [
-    chainId,
+    dcaChainId,
     config.amount,
     config.deadline,
     config.frequency,
@@ -179,6 +216,13 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
   const primaryButton = useMemo(() => {
     if (!address) {
       return { label: 'Connect Wallet', action: login, disabled: false }
+    }
+    if (tosState.status !== TOSStatus.DONE) {
+      return {
+        label: tosSidebarProps.primaryButton.label,
+        action: tosSidebarProps.primaryButton.action,
+        disabled: tosSidebarProps.primaryButton.disabled,
+      }
     }
     if (!isProperChainSelected) {
       return {
@@ -202,6 +246,10 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
     login,
     setChain,
     targetChain,
+    tosSidebarProps.primaryButton.action,
+    tosSidebarProps.primaryButton.disabled,
+    tosSidebarProps.primaryButton.label,
+    tosState.status,
   ])
 
   return (
@@ -219,7 +267,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
               <div className={classNames.vaultSelectorCard}>
                 <VaultSwitchBox
                   title="From"
-                  chainId={chainId}
+                  chainId={dcaChainId}
                   tokenName={pair.fromVault.inputToken.symbol as TokenSymbolsList}
                   risk={
                     pair.fromVault.isDaoManaged
@@ -250,7 +298,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
               <div className={classNames.vaultSelectorCard}>
                 <VaultSwitchBox
                   title="To"
-                  chainId={chainId}
+                  chainId={dcaChainId}
                   tokenName={pair.toVault.inputToken.symbol as TokenSymbolsList}
                   risk={
                     pair.toVault.isDaoManaged
@@ -263,11 +311,130 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
               </div>
             </div>
           </div>
+
+          <div className={classNames.positionInfoBar}>
+            {isLoading || (position && Number(position.assetsUSD.amount) > 0.001) ? (
+              <>
+                <div className={classNames.amountInputsColumn}>
+                  <div className={classNames.pricePreviewBlock}>
+                    <Text as="p" variant="p3" className={classNames.mutedText}>
+                      Source vault balance
+                    </Text>
+                    <Text
+                      as="span"
+                      variant="h5"
+                      className={classNames.pricePreviewAmount}
+                      style={{ margin: '0' }}
+                    >
+                      {isLoading ? (
+                        <SkeletonLine width="80px" height={18} style={{ margin: '7px 0' }} />
+                      ) : position ? (
+                        `${formatCryptoBalance(Number(position.assets.amount))} ${sourceSymbol}`
+                      ) : null}
+                    </Text>
+                    <Text as="p" variant="p4" className={classNames.mutedText}>
+                      Current amount held in the source vault.
+                    </Text>
+                  </div>
+                </div>
+                <div className={classNames.amountInputsColumn}>
+                  <div className={classNames.pricePreviewBlock}>
+                    <Text as="p" variant="p3" className={classNames.mutedText}>
+                      Possible executions
+                    </Text>
+                    <Text
+                      as="span"
+                      variant="h5"
+                      className={classNames.pricePreviewAmount}
+                      style={
+                        position
+                          ? {
+                              color:
+                                config.amount > 0 &&
+                                Math.floor(Number(position.assets.amount) / config.amount) >= 1
+                                  ? 'var(--earn-protocol-success-100)'
+                                  : 'var(--earn-protocol-warning-100)',
+                              margin: '0',
+                            }
+                          : {
+                              margin: '0',
+                            }
+                      }
+                    >
+                      {isLoading ? (
+                        <SkeletonLine width="30px" height={18} style={{ margin: '7px 0' }} />
+                      ) : position ? (
+                        config.amount > 0 ? (
+                          Math.floor(Number(position.assets.amount) / config.amount)
+                        ) : (
+                          '—'
+                        )
+                      ) : null}
+                    </Text>
+                    <Text as="p" variant="p4" className={classNames.mutedText}>
+                      How many trades can be funded at the set amount.
+                    </Text>
+                  </div>
+                </div>
+                <div className={classNames.amountInputsColumn}>
+                  <div className={classNames.pricePreviewBlock}>
+                    <Text as="p" variant="p3" className={classNames.mutedText}>
+                      Balance covers strategy
+                    </Text>
+                    <Text
+                      as="span"
+                      variant="h5"
+                      className={classNames.pricePreviewAmount}
+                      style={
+                        position
+                          ? {
+                              color:
+                                config.amount > 0 &&
+                                Number(position.assets.amount) >= config.amount * config.maxTrades
+                                  ? 'var(--earn-protocol-success-100)'
+                                  : 'var(--earn-protocol-warning-100)',
+                              margin: '0',
+                            }
+                          : {
+                              margin: '0',
+                            }
+                      }
+                    >
+                      {isLoading ? (
+                        <SkeletonLine width="40px" height={18} style={{ margin: '7px 0' }} />
+                      ) : position ? (
+                        config.amount > 0 &&
+                        Number(position.assets.amount) >= config.amount * config.maxTrades ? (
+                          'Yes'
+                        ) : (
+                          'No'
+                        )
+                      ) : null}
+                    </Text>
+                    <Text as="p" variant="p4" className={classNames.mutedText}>
+                      Whether the balance covers all {config.maxTrades} scheduled trades.
+                    </Text>
+                  </div>
+                </div>
+              </>
+            ) : null}
+            {!isLoading && (!position || Number(position.assetsUSD.amount) <= 0.001) ? (
+              <div className={classNames.positionInfoEmpty}>
+                <div className={classNames.pricePreviewBlock} style={{ textAlign: 'center' }}>
+                  <Text as="p" variant="p4" className={classNames.mutedText}>
+                    No position found in source vault, or vault balance is zero. To execute the DCA
+                    strategy, you need to have an active position in the source vault with
+                    sufficient balance. You can do that after creating the DCA strategy.
+                  </Text>
+                </div>
+              </div>
+            ) : null}
+          </div>
         </DCAWizardStepCard>
 
         <DCAWizardStepCard title="Amount and frequency">
-          <div className={classNames.step3Row}>
-            <div className={classNames.step3InputsColumn}>
+          <div className={classNames.amountSummaryRow}>
+            <div className={classNames.amountInputsColumn}>
               <div className={classNames.pricePreviewBlock}>
                 <Text as="p" variant="p3" className={classNames.mutedText}>
                   Amount per run
@@ -277,30 +444,37 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
                 </Text>
               </div>
             </div>
-            <div className={classNames.step3InputsColumn}>
+            <div className={classNames.amountInputsColumn}>
               <div className={classNames.pricePreviewBlock}>
                 <Text as="p" variant="p3" className={classNames.mutedText}>
                   Frequency
                 </Text>
                 <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
-                  Every {frequencyDays} {frequencyDays === 1 ? 'day' : 'days'}
+                  Every {frequencyDays > 1 ? frequencyDays : ''}{' '}
+                  {frequencyDays === 1 ? 'day' : 'days'}
+                </Text>
+              </div>
+            </div>
+            <div className={classNames.amountInputsColumn}>
+              <div className={classNames.pricePreviewBlock}>
+                <Text as="p" variant="p3" className={classNames.mutedText}>
+                  Full permit amount
+                </Text>
+                <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
+                  {formatCryptoBalance(fullPermitAmount)} {sourceSymbol}
                 </Text>
               </div>
             </div>
           </div>
         </DCAWizardStepCard>
 
-        <DCAWizardStepCard title="Step 4 - Advanced configuration">
+        <DCAWizardStepCard title="Limits and conditions">
           <div className={classNames.conditionsStack}>
             {thresholdLabel && thresholdDescription ? (
-              <div className={classNames.conditionCardContent}>
-                <div className={classNames.conditionHeader}>
-                  <div>
-                    <Text as="h4" variant="p2semi">
-                      {thresholdLabel}
-                    </Text>
-                  </div>
-                </div>
+              <div className={classNames.pricePreviewBlock}>
+                <Text as="p" variant="p3" className={classNames.mutedText}>
+                  {thresholdLabel}
+                </Text>
                 <Tooltip
                   tooltipWrapperStyles={{ minWidth: '230px' }}
                   tooltip={
@@ -314,7 +488,12 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
                     </div>
                   }
                 >
-                  <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
+                  <Text
+                    as="span"
+                    variant="h5"
+                    className={classNames.pricePreviewAmount}
+                    style={{ margin: '0' }}
+                  >
                     {thresholdValue}
                   </Text>
                 </Tooltip>
@@ -324,31 +503,33 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
               </div>
             ) : null}
 
-            <div className={classNames.conditionCardContent}>
-              <div className={classNames.conditionHeader}>
-                <div>
-                  <Text as="h4" variant="p2semi">
-                    Maximum Number of Trades
-                  </Text>
-                </div>
-              </div>
-              <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
-                {config.maxTrades === 1000 ? '1000 (maximum)' : (config.maxTrades ?? 'Not set')}
+            <div className={classNames.pricePreviewBlock}>
+              <Text as="p" variant="p3" className={classNames.mutedText}>
+                Max. Number of Trades
+              </Text>
+              <Text
+                as="span"
+                variant="h5"
+                className={classNames.pricePreviewAmount}
+                style={{ margin: '0' }}
+              >
+                {config.maxTrades === MAX_TRADES ? `${MAX_TRADES} (maximum)` : config.maxTrades}
               </Text>
               <Text as="p" variant="p4" className={classNames.mutedText}>
                 Stop the strategy after this many successful trades.
               </Text>
             </div>
 
-            <div className={classNames.conditionCardContent}>
-              <div className={classNames.conditionHeader}>
-                <div>
-                  <Text as="h4" variant="p2semi">
-                    Only trade until
-                  </Text>
-                </div>
-              </div>
-              <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
+            <div className={classNames.pricePreviewBlock}>
+              <Text as="p" variant="p3" className={classNames.mutedText}>
+                Only trade until
+              </Text>
+              <Text
+                as="span"
+                variant="h5"
+                className={classNames.pricePreviewAmount}
+                style={{ margin: '0' }}
+              >
                 {config.deadline
                   ? new Date(config.deadline).toLocaleDateString('en-GB')
                   : 'Not set'}
@@ -365,6 +546,20 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
             </Text>
           ) : null}
         </DCAWizardStepCard>
+        <DCAWizardStepCard title="Execute transactions">
+          <PendingTransactionsList
+            chainId={dcaChainId}
+            transactions={[]}
+            style={{
+              marginTop: '2px',
+            }}
+          />
+        </DCAWizardStepCard>
+        {address && tosState.status !== TOSStatus.DONE && tosState.status !== TOSStatus.INIT ? (
+          <DCAWizardStepCard title={tosSidebarProps.title}>
+            {tosSidebarProps.content}
+          </DCAWizardStepCard>
+        ) : null}
         <div
           style={{
             display: 'flex',

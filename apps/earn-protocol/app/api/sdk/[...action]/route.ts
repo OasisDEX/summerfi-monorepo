@@ -11,6 +11,7 @@ function rewriteSdkPath(pathname: string): string {
 
 export async function POST(req: NextRequest) {
   const sdkApiUrl = `${process.env.SDK_API_URL}/sdk/trpc`
+  const body = await req.json()
 
   if (!sdkApiUrl) {
     return NextResponse.json({ error: 'SDK_API_URL is not set' }, { status: 500 })
@@ -19,15 +20,19 @@ export async function POST(req: NextRequest) {
   const rewrittenPath = rewriteSdkPath(req.nextUrl.pathname)
   const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
 
-  const headers: Record<string, string> = {}
-  const authorization = req.headers.get('Authorization') || req.headers.get('authorization')
-  if (authorization) {
-    headers['Authorization'] = authorization
+  const clientId = req.headers.get('client-id')
+  const headers: { [key: string]: string } = {
+    'Content-Type': 'application/json',
   }
+
+  if (clientId) {
+    headers['Client-Id'] = clientId
+  }
+
   const response = await fetch(url, {
     headers,
     method: 'POST',
-    body: JSON.stringify(await req.json()),
+    body: JSON.stringify(body),
     next: {
       revalidate: CACHE_TIMES.ALWAYS_FRESH,
     },
@@ -53,11 +58,13 @@ export async function GET(req: NextRequest) {
   const rewrittenPath = rewriteSdkPath(req.nextUrl.pathname)
   const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
 
-  const headers: Record<string, string> = {}
-  const authorization = req.headers.get('Authorization') || req.headers.get('authorization')
-  if (authorization) {
-    headers['Authorization'] = authorization
+  const clientId = req.headers.get('client-id')
+  const headers: { [key: string]: string } = {}
+
+  if (clientId) {
+    headers['Client-Id'] = clientId
   }
+
   const response = await fetch(url, {
     headers,
     next: {

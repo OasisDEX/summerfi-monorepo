@@ -1,13 +1,15 @@
 import {
   Address,
   ArmadaPositionId,
+  ChainIds,
   getChainInfoByChainId,
   User,
   Wallet,
+  type AddressValue,
 } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
-import { TestClientIds, type TestConfigKey } from './utils/testConfig'
+import { FleetAddresses, TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -15,34 +17,49 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Position Deposits and Withdrawals', () => {
-  const scenarios: { testConfigKey?: TestConfigKey; testClientId?: TestClientIds }[] = [
-    { testConfigKey: 'BaseUSDC' },
+  const scenarios: {
+    chainId?: typeof ChainIds.Base
+    fleetAddressValue?: AddressValue
+    testClientId?: TestClientIds
+  }[] = [
+    {
+      chainId: ChainIds.Base,
+      fleetAddressValue: FleetAddresses[ChainIds.Base].USDC,
+    },
     {
       testClientId: TestClientIds.ACME,
     },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testClientId, testConfigKey } = scenario
+    const { testClientId, chainId: scenarioChainId, fleetAddressValue } = scenario
 
     describe('getDeposits', () => {
       it('should retrieve deposits for a valid position', async () => {
         // Choose SDK setup based on scenario
-        const setup = testClientId
+        const testSetup = testClientId
           ? createAdminSdkTestSetup(testClientId)
-          : createSdkTestSetup(testConfigKey)
-        const { sdk, chainId, fleetAddress, userAddress } = setup
+          : scenarioChainId
+            ? createSdkTestSetup({ chainId: scenarioChainId! })
+            : (() => {
+                throw new Error('Either testClientId or scenarioChainId must be provided')
+              })()
+
+        const { sdk, chainId, userAddress } = testSetup
+        const effectiveFleetAddressValue = testClientId
+          ? (testSetup as ReturnType<typeof createAdminSdkTestSetup>).fleetAddress.value
+          : fleetAddressValue!
 
         const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
         console.log(
-          `[${sdkType}] Testing deposit retrieval for ${testClientId || testConfigKey} on chain ${chainId}`,
+          `[${sdkType}] Testing deposit retrieval for ${testClientId ? `${testClientId} on chain ${chainId}` : `chain ${chainId}`}`,
         )
 
         // Setup: Create test user and position ID
         const user = User.createFromEthereum(chainId, userAddress.value)
 
         const positionId = ArmadaPositionId.createFrom({
-          id: `${userAddress.value.toLowerCase()}-${fleetAddress.value.toLowerCase()}`,
+          id: `${userAddress.value.toLowerCase()}-${effectiveFleetAddressValue.toLowerCase()}`,
           user,
         })
 
@@ -93,15 +110,22 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
       it('should support pagination parameters', async () => {
         const setup = testClientId
           ? createAdminSdkTestSetup(testClientId)
-          : createSdkTestSetup(testConfigKey)
-        const { sdk, chainId, fleetAddress, userAddress } = setup
+          : scenarioChainId
+            ? createSdkTestSetup({ chainId: scenarioChainId! })
+            : (() => {
+                throw new Error('Either testClientId or scenarioChainId must be provided')
+              })()
+        const { sdk, chainId, userAddress } = setup
+        const effectiveFleetAddressValue = testClientId
+          ? (setup as ReturnType<typeof createAdminSdkTestSetup>).fleetAddress.value
+          : fleetAddressValue!
 
         const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
 
         // Setup
         const user = User.createFromEthereum(chainId, userAddress.value)
         const positionId = ArmadaPositionId.createFrom({
-          id: `${userAddress.value.toLowerCase()}-${fleetAddress.value.toLowerCase()}`,
+          id: `${userAddress.value.toLowerCase()}-${effectiveFleetAddressValue.toLowerCase()}`,
           user,
         })
 
@@ -126,7 +150,11 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
       it('should handle non-existent position gracefully', async () => {
         const setup = testClientId
           ? createAdminSdkTestSetup(testClientId)
-          : createSdkTestSetup(testConfigKey)
+          : scenarioChainId
+            ? createSdkTestSetup({ chainId: scenarioChainId! })
+            : (() => {
+                throw new Error('Either testClientId or scenarioChainId must be provided')
+              })()
         const { sdk, chainId } = setup
 
         const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
@@ -162,19 +190,26 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
       it('should retrieve withdrawals for a valid position', async () => {
         const setup = testClientId
           ? createAdminSdkTestSetup(testClientId)
-          : createSdkTestSetup(testConfigKey)
-        const { sdk, chainId, fleetAddress, userAddress } = setup
+          : scenarioChainId
+            ? createSdkTestSetup({ chainId: scenarioChainId! })
+            : (() => {
+                throw new Error('Either testClientId or scenarioChainId must be provided')
+              })()
+        const { sdk, chainId, userAddress } = setup
+        const effectiveFleetAddressValue = testClientId
+          ? (setup as ReturnType<typeof createAdminSdkTestSetup>).fleetAddress.value
+          : fleetAddressValue!
 
         const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
         console.log(
-          `[${sdkType}] Testing withdrawal retrieval for ${testClientId || testConfigKey} on chain ${chainId}`,
+          `[${sdkType}] Testing withdrawal retrieval for ${testClientId || `chain ${chainId}`} on chain ${chainId}`,
         )
 
         // Setup: Create test user and position ID
         const user = User.createFromEthereum(chainId, userAddress.value)
 
         const positionId = ArmadaPositionId.createFrom({
-          id: `${userAddress.value.toLowerCase()}-${fleetAddress.value.toLowerCase()}`,
+          id: `${userAddress.value.toLowerCase()}-${effectiveFleetAddressValue.toLowerCase()}`,
           user,
         })
 
@@ -226,15 +261,22 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
       it('should support pagination parameters', async () => {
         const setup = testClientId
           ? createAdminSdkTestSetup(testClientId)
-          : createSdkTestSetup(testConfigKey)
-        const { sdk, chainId, fleetAddress, userAddress } = setup
+          : scenarioChainId
+            ? createSdkTestSetup({ chainId: scenarioChainId! })
+            : (() => {
+                throw new Error('Either testClientId or scenarioChainId must be provided')
+              })()
+        const { sdk, chainId, userAddress } = setup
+        const effectiveFleetAddressValue = testClientId
+          ? (setup as ReturnType<typeof createAdminSdkTestSetup>).fleetAddress.value
+          : fleetAddressValue!
 
         const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
 
         // Setup
         const user = User.createFromEthereum(chainId, userAddress.value)
         const positionId = ArmadaPositionId.createFrom({
-          id: `${userAddress.value.toLowerCase()}-${fleetAddress.value.toLowerCase()}`,
+          id: `${userAddress.value.toLowerCase()}-${effectiveFleetAddressValue.toLowerCase()}`,
           user,
         })
 
@@ -259,7 +301,11 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
       it('should handle non-existent position gracefully', async () => {
         const setup = testClientId
           ? createAdminSdkTestSetup(testClientId)
-          : createSdkTestSetup(testConfigKey)
+          : scenarioChainId
+            ? createSdkTestSetup({ chainId: scenarioChainId! })
+            : (() => {
+                throw new Error('Either testClientId or scenarioChainId must be provided')
+              })()
         const { sdk, chainId } = setup
 
         const sdkType = testClientId ? 'Admin SDK' : 'User SDK'

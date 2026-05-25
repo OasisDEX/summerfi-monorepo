@@ -1,43 +1,67 @@
 import { makeSDK } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
-import { SDKApiUrl, TestConfigs, TestConfigAccounts, type TestConfigKey } from './testConfig'
-import { createSendTransactionTool } from '@summerfi/testing-utils'
+import { SDKApiUrl, TestConfigAccounts, RpcUrls, FleetAddresses } from './testConfig'
+import {
+  createSendTransactionTool,
+  getPublicClientForChain,
+  getWalletClientForChain,
+} from '@summerfi/testing-utils'
+
+type FleetAddressesByChain = typeof FleetAddresses
+type FleetAddressKey<TChainId extends keyof FleetAddressesByChain> =
+  keyof FleetAddressesByChain[TChainId]
 
 /**
  * Shared setup for Armada Protocol Access Control tests
  */
-export function createSdkTestSetup(testConfigKey: TestConfigKey = 'BaseUSDC') {
+export function createSdkTestSetup<TChainId extends keyof FleetAddressesByChain>(params: {
+  chainId: TChainId
+  simulateOnly?: boolean
+}) {
+  const { chainId, simulateOnly = true } = params
+
   const sdk = makeSDK({
     apiDomainUrl: SDKApiUrl,
     logging: process.env.SDK_LOGGING_ENABLED === 'true',
-  })
-
-  const { chainId, rpcUrl, fleetAddressValue } = TestConfigs[testConfigKey]
-
-  const fleetAddress = Address.createFromEthereum({
-    value: fleetAddressValue,
   })
 
   const userAddress = Address.createFromEthereum({
     value: TestConfigAccounts.testUserAddressValue,
   })
 
+  const signerPrivateKey = TestConfigAccounts.testUserPrivateKey
+
   const userSendTxTool = createSendTransactionTool({
     chainId: chainId,
-    rpcUrl,
+    rpcUrl: RpcUrls[chainId],
     senderAddressValue: userAddress.value,
-    signerPrivateKey: TestConfigAccounts.testUserPrivateKey,
-    simulateOnly: false,
+    signerPrivateKey,
+    simulateOnly,
   })
+
+  const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
+  const walletClient = getWalletClientForChain(chainId, RpcUrls[chainId], signerPrivateKey)
+
+  const getFleetAddressValue = <
+    TChainId extends keyof typeof FleetAddresses,
+    TVault extends FleetAddressKey<TChainId>,
+  >(
+    chainId: TChainId,
+    vault: TVault,
+  ) => {
+    return FleetAddresses[chainId][vault]
+  }
 
   return {
     sdk,
     chainId,
-    fleetAddress,
     userAddress,
+    userAddressValue: userAddress.toSolidityValue(),
     userSendTxTool,
-    aqAddress: undefined,
-    governorAddress: undefined,
-    governorSendTxTool: undefined,
+    publicClient,
+    walletClient,
+    getFleetAddressValue,
   }
 }
+
+// createSdkTestSetup({ chainId: 1 }).getFleetAddressValue(1, 'ETHDao')

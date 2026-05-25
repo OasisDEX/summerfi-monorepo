@@ -38,7 +38,7 @@ describe('Armada Protocol - Cross Chain Deposit', () => {
       fromChainId: ChainIds.Base,
       fromSymbol: 'USDC',
       toChainId: ChainIds.ArbitrumOne,
-      toFleetAddress: FleetAddresses.ArbitrumOne.TargenUSDC,
+      toFleetAddress: FleetAddresses[ChainIds.ArbitrumOne].TargenUSDC,
       toSymbol: 'USDC',
       depositAmount: '10',
     },
@@ -48,7 +48,7 @@ describe('Armada Protocol - Cross Chain Deposit', () => {
     const { fromChainId, fromSymbol, toChainId, toFleetAddress, toSymbol, depositAmount } = scenario
 
     it('should get cross-chain deposit transaction', async () => {
-      const setup = createSdkTestSetup('BaseUSDC')
+      const setup = createSdkTestSetup({ chainId: ChainIds.Base })
       const { sdk, userAddress, userSendTxTool } = setup
 
       console.log(

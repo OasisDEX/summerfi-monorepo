@@ -75,16 +75,19 @@ export function createMainRPCClient(params: {
       loggerLink({
         enabled: () => !!params.logging,
         logger(opts) {
-          const estimatedUrlLength = getEstimatedUrlLength(params.apiURL, opts.path, opts.input)
-          const method = getRequestMethod(opts.type, estimatedUrlLength)
-          const fullUrl = getLoggedRequestUrl({
-            apiURL: params.apiURL,
-            path: opts.path,
-            input: opts.input,
-            method,
-          })
+          // Only log the URL for outgoing requests, not responses
+          if (opts.direction === 'up') {
+            const estimatedUrlLength = getEstimatedUrlLength(params.apiURL, opts.path, opts.input)
+            const method = getRequestMethod(opts.type, estimatedUrlLength)
+            const fullUrl = getLoggedRequestUrl({
+              apiURL: params.apiURL,
+              path: opts.path,
+              input: opts.input,
+              method,
+            })
 
-          LoggingService.log(`[SDK] ${method}: ${fullUrl}`)
+            LoggingService.log(`[SDK] ${method}: ${fullUrl}`)
+          }
         },
       }),
       splitLink({

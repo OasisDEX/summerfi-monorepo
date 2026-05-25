@@ -40,26 +40,26 @@ export const RpcUrls = {
 } as const
 
 export const FleetAddresses = {
-  Base: {
+  [ChainIds.Base]: {
     ETH: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
     USDC: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
     EURC: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
     AcmeUSDC: '0x1db644c6077912cf5dab0b5a7f2d8efb5b61df5c',
   },
-  ArbitrumOne: {
+  [ChainIds.ArbitrumOne]: {
     USDT: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
     TargenUSDC: '0x6e23cfe8d830488bc824c0add201a1a2e1dfdbeb',
   },
-  Mainnet: {
+  [ChainIds.Mainnet]: {
     USDCHighRisk: '0xe9cda459bed6dcfb8ac61cd8ce08e2d52370cb06',
     USDCLowRisk: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
     ETHHighRisk: '0x2e6abcbcced9af05bc3b8a4908e0c98c29a88e10',
     ETHDao: '0x0c1fbccc019320032d9acd193447560c8c632114',
   },
-  Sonic: {
+  [ChainIds.Sonic]: {
     USDC: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
   },
-  Hyperliquid: {
+  [ChainIds.Hyperliquid]: {
     USDC: '0x252e5aa42c1804b85b2ce6712cd418a0561232ba',
     USDT: '0x2cc190fb654141dfbeac4c0f718f4d511674d346',
   },
@@ -89,28 +89,28 @@ export const TestConfigs = {
   BaseWETH: {
     rpcUrl: RpcUrls[ChainIds.Base],
     chainId: ChainIds.Base,
-    fleetAddressValue: FleetAddresses.Base.ETH,
+    fleetAddressValue: FleetAddresses[ChainIds.Base].ETH,
     symbol: 'ETH',
     chainlinkOracleAddressValue: '0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70' as AddressValue,
   },
   BaseUSDC: {
     rpcUrl: RpcUrls[ChainIds.Base],
     chainId: ChainIds.Base,
-    fleetAddressValue: FleetAddresses.Base.USDC,
+    fleetAddressValue: FleetAddresses[ChainIds.Base].USDC,
     symbol: 'USDC',
     chainlinkOracleAddressValue: '0x7e860098F58bBFC8648a4311b374B1D669a2bc6B' as AddressValue,
   },
   MainnetUSDCLowRisk: {
     rpcUrl: RpcUrls[ChainIds.Mainnet],
     chainId: ChainIds.Mainnet,
-    fleetAddressValue: FleetAddresses.Mainnet.USDCLowRisk,
+    fleetAddressValue: FleetAddresses[ChainIds.Mainnet].USDCLowRisk,
     symbol: 'USDC',
     chainlinkOracleAddressValue: '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6' as AddressValue,
   },
   MainnetETHDao: {
     rpcUrl: RpcUrls[ChainIds.Mainnet],
     chainId: ChainIds.Mainnet,
-    fleetAddressValue: FleetAddresses.Mainnet.ETHDao,
+    fleetAddressValue: FleetAddresses[ChainIds.Mainnet].ETHDao,
     symbol: 'ETH',
     chainlinkOracleAddressValue: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419' as AddressValue,
   },
@@ -140,6 +140,14 @@ export const TestConfigs = {
   // },
 } satisfies Record<string, ChainConfig>
 
+export const getTestConfig = (key: TestConfigKey) => {
+  const config = TestConfigs[key]
+  if (!config) {
+    throw new Error(`Invalid test config key: ${key}`)
+  }
+  return config
+}
+
 export type TestConfigKey = keyof typeof TestConfigs
 export const TestConfigKeys: TestConfigKey[] = Object.keys(TestConfigs) as TestConfigKey[]
 
@@ -153,7 +161,7 @@ export const InstiTestConfigs = {
   [TestClientIds.ACME]: {
     rpcUrl: RpcUrls[ChainIds.Base],
     chainId: ChainIds.Base,
-    fleetAddressValue: FleetAddresses.Base.AcmeUSDC,
+    fleetAddressValue: FleetAddresses[ChainIds.Base].AcmeUSDC,
     aqAddressValue: '0x477285d524628faa3ed62d8086be56810a34795e',
     userAddressValue: TestConfigAccounts.testUserAddressValue,
     symbol: 'ETH',
@@ -161,7 +169,7 @@ export const InstiTestConfigs = {
   [TestClientIds.Targen]: {
     rpcUrl: RpcUrls[ChainIds.ArbitrumOne],
     chainId: ChainIds.ArbitrumOne,
-    fleetAddressValue: FleetAddresses.ArbitrumOne.TargenUSDC,
+    fleetAddressValue: FleetAddresses[ChainIds.ArbitrumOne].TargenUSDC,
     aqAddressValue: '0x43d2c9786e8f5a960e75d6141e44411d065a4615',
     userAddressValue: '0x43d2c9786e8f5a960e75d6141e44411d065a4615',
     symbol: 'USDT',

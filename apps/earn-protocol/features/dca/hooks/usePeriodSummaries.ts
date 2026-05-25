@@ -14,7 +14,7 @@ interface UsePeriodSummariesParams {
   frequencyDays: number
   amount: number
   estimatedTargetAmount: number | null
-  maxTrades?: number
+  maxTrades: number
   deadline?: string
 }
 
@@ -62,10 +62,7 @@ export const usePeriodSummaries = ({
       const runs = Math.floor(days / frequencyDays)
       let executions = runs
 
-      // Cap executions by maxTrades if set
-      if (maxTrades && maxTrades > 0) {
-        executions = Math.min(executions, maxTrades)
-      }
+      executions = Math.min(executions, maxTrades)
 
       // Cap executions by deadline if set
       if (deadlineDate) {

@@ -31,6 +31,7 @@ import { getCachedClaimableWSTETHMerkleRewards } from '@/app/server-handlers/cac
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
+import { getCachedVaultCurationEvents } from '@/app/server-handlers/cached/get-vault-curation-events'
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultInfo } from '@/app/server-handlers/cached/get-vault-info'
@@ -153,6 +154,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     latestArkInterestRatesMap,
     vaultInterestRates,
     positionHistory,
+    curationEvents,
     positionForecastResponse,
     // migratablePositionsData,
     rewardTokenPrices,
@@ -188,6 +190,11 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       network: parsedNetwork,
       address: walletAddress.toLowerCase(),
       vault,
+    }),
+    getCachedVaultCurationEvents({
+      network: parsedNetwork,
+      vault,
+      timestampFrom: dayjs().subtract(30, 'days').unix(),
     }),
     fetchForecastData({
       fleetAddress: vault.id as `0x${string}`,
@@ -288,6 +295,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       latestActivity={latestActivity}
       topDepositors={topDepositors}
       rebalanceActivity={rebalanceActivity}
+      curationEvents={curationEvents}
       performanceChartData={performanceChartData}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={latestArkInterestRatesMap}

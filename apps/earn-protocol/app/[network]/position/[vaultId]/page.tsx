@@ -21,6 +21,7 @@ import { isAddress } from 'viem'
 
 import { getCachedMedianDefiYield } from '@/app/server-handlers/cached/defillama/get-median-defi-yield'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedVaultCurationEvents } from '@/app/server-handlers/cached/get-vault-curation-events'
 import {
   getCachedIsVaultDaoManaged,
   getDaoManagedVaultsIDsList,
@@ -149,6 +150,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     latestArkInterestRatesMap,
     vaultInterestRates,
     vaultsApyRaw,
+    curationEvents,
   ] = await Promise.all([
     getCachedVaultsBenchmark({
       vaultChainId: subgraphNetworkToId(parsedNetwork),
@@ -178,6 +180,11 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
+    getCachedVaultCurationEvents({
+      network: parsedNetwork,
+      vault: vaultWithConfig,
+      timestampFrom: dayjs().subtract(30, 'days').unix(),
+    }),
   ])
 
   const arksHistoricalChartData = getArkHistoricalChartData({
@@ -201,6 +208,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       latestActivity={latestActivity}
       topDepositors={topDepositors}
       rebalanceActivity={rebalanceActivity}
+      curationEvents={curationEvents}
       medianDefiYield={
         vaultBenchmarkApy30d && Number(Number(vaultBenchmarkApy30d) * 100) > 0
           ? Number(vaultBenchmarkApy30d) * 100

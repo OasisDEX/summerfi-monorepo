@@ -45,6 +45,7 @@ export const VaultManageLoadingView = () => {
             'Vault exposure',
             'Strategy management fee',
             'Rebalancing activity',
+            'Curation activity',
             'User activity',
           ].map((expanderLabel) => (
             <Expander

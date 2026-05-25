@@ -21,6 +21,7 @@ import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-d
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { VaultManageViewComponent } from '@/components/layout/VaultManageView/VaultManageViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
+import { type VaultCurationEvent } from '@/features/curation-activity/types'
 // import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 
 export const VaultManageView = ({
@@ -31,6 +32,7 @@ export const VaultManageView = ({
   latestActivity,
   topDepositors,
   rebalanceActivity,
+  curationEvents,
   viewWalletAddress,
   performanceChartData,
   arksHistoricalChartData,
@@ -50,6 +52,7 @@ export const VaultManageView = ({
   latestActivity: LatestActivityPagination
   topDepositors: TopDepositorsPagination
   rebalanceActivity: RebalanceActivityPagination
+  curationEvents: VaultCurationEvent[]
   viewWalletAddress: string
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
@@ -79,6 +82,7 @@ export const VaultManageView = ({
         latestActivity={latestActivity}
         topDepositors={topDepositors}
         rebalanceActivity={rebalanceActivity}
+        curationEvents={curationEvents}
         viewWalletAddress={viewWalletAddress}
         performanceChartData={performanceChartData}
         arksHistoricalChartData={arksHistoricalChartData}

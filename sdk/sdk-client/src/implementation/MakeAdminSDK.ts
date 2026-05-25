@@ -25,9 +25,6 @@ export function makeAdminSDK(params: MakeAdminSDKParams) {
     throw new Error('Either apiDomainUrl or apiURL must be provided')
   }
 
-  if (params.logging) {
-    console.log('Summer.fi Admin SDK: versionedURL', versionedURL)
-  }
   const rpcClient = createMainRPCClient({
     apiURL: versionedURL,
     clientId: params.clientId,

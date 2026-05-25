@@ -8,4 +8,16 @@ export const baseHandler = awsLambdaRequestHandler({
   allowMethodOverride: true,
 })
 
-export const handler = baseHandler
+export const handler = (
+  event: Parameters<typeof baseHandler>[0],
+  context: Parameters<typeof baseHandler>[1],
+) => {
+  console.log('[raw event headers]', JSON.stringify(event.headers))
+  const normalizedEvent = {
+    ...event,
+    headers: Object.fromEntries(
+      Object.entries(event.headers ?? {}).map(([k, v]) => [k.toLowerCase(), v]),
+    ),
+  }
+  return baseHandler(normalizedEvent, context)
+}

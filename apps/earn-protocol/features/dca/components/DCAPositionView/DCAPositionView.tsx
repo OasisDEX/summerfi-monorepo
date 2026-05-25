@@ -285,8 +285,8 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
         </DCAWizardStepCard>
 
         <DCAWizardStepCard title="Amount and frequency">
-          <div className={classNames.step3Row}>
-            <div className={classNames.step3InputsColumn}>
+          <div className={classNames.amountRow}>
+            <div className={classNames.amountInputsColumn}>
               <div className={classNames.pricePreviewBlock}>
                 <Text as="p" variant="p3" className={classNames.mutedText}>
                   Amount per run
@@ -321,7 +321,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
                 )}
               </div>
             </div>
-            <div className={classNames.step3InputsColumn}>
+            <div className={classNames.amountInputsColumn}>
               <div className={classNames.pricePreviewBlock}>
                 <Text as="p" variant="p3" className={classNames.mutedText}>
                   Frequency
