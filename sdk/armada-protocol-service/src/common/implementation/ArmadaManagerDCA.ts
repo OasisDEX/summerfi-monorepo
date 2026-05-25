@@ -378,8 +378,6 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async cancelBuyOrder(
     params: Parameters<IArmadaManagerDCA['cancelBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['cancelBuyOrder']> {
-    await this._verifyOrderSignature({ action: 'cancel', ...params })
-
     const existingOrder = await this._getExistingOrderOrThrow(params)
 
     if (existingOrder.status === ArmadaDcaOrderStatusEnum.Cancelled) {
@@ -411,8 +409,6 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async pauseBuyOrder(
     params: Parameters<IArmadaManagerDCA['pauseBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['pauseBuyOrder']> {
-    await this._verifyOrderSignature({ action: 'pause', ...params })
-
     const existingOrder = await this._getExistingOrderOrThrow(params)
 
     if (existingOrder.status !== 'active') {
@@ -446,8 +442,6 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async resumeBuyOrder(
     params: Parameters<IArmadaManagerDCA['resumeBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['resumeBuyOrder']> {
-    await this._verifyOrderSignature({ action: 'resume', ...params })
-
     const existingOrder = await this._getExistingOrderOrThrow(params)
 
     if (existingOrder.status !== 'paused') {
@@ -748,28 +742,6 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       minPrice: BigInt(config.minPrice),
       endDate: BigInt(config.endDate),
       maxTrades: BigInt(config.maxTrades),
-    }
-  }
-
-  private async _verifyOrderSignature(params: {
-    action: 'cancel' | 'pause' | 'resume'
-    orderId: string
-    userAddress: string
-    signedMessage: string
-    signature: `0x${string}`
-  }): Promise<void> {
-    const expectedSignedMessage = `I want to ${params.action} ${params.orderId}.`
-    if (params.signedMessage !== expectedSignedMessage) {
-      throw new Error(`Invalid ${params.action} message`)
-    }
-
-    const recoveredAddress = await recoverMessageAddress({
-      message: params.signedMessage,
-      signature: params.signature,
-    })
-
-    if (recoveredAddress.toLowerCase() !== params.userAddress.toLowerCase()) {
-      throw new Error(`${params.action} signature does not match userAddress`)
     }
   }
 

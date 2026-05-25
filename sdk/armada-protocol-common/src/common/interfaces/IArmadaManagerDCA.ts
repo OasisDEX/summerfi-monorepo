@@ -138,32 +138,17 @@ export interface IArmadaManagerDCA {
    * @name cancelBuyOrder
    * @description Marks a DCA buy order as cancelled
    */
-  cancelBuyOrder(params: {
-    orderId: string
-    userAddress: AddressValue
-    signedMessage: string
-    signature: HexData
-  }): Promise<IArmadaDcaOrder>
+  cancelBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IArmadaDcaOrder>
 
   /**
    * @name pauseBuyOrder
    * @description Pauses an active DCA buy order. Requires a signed message: "I want to pause <orderId>."
    */
-  pauseBuyOrder(params: {
-    orderId: string
-    userAddress: AddressValue
-    signedMessage: string
-    signature: HexData
-  }): Promise<IArmadaDcaOrder>
+  pauseBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IArmadaDcaOrder>
 
   /**
    * @name resumeBuyOrder
    * @description Resumes a paused DCA buy order. Requires a signed message: "I want to resume <orderId>."
    */
-  resumeBuyOrder(params: {
-    orderId: string
-    userAddress: AddressValue
-    signedMessage: string
-    signature: HexData
-  }): Promise<IArmadaDcaOrder>
+  resumeBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IArmadaDcaOrder>
 }

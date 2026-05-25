@@ -121,24 +121,13 @@ export interface IArmadaManagerDCAClient {
     status?: ArmadaDcaOrderStatusEnum
   }): Promise<IArmadaDcaOrder[]>
 
-  cancelBuyOrder(params: {
-    orderId: string
-    userAddress: AddressValue
-    signedMessage: string
-    signature: HexData
-  }): Promise<IArmadaDcaOrder>
+  cancelBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IArmadaDcaOrder>
 
   pauseBuyOrder(params: {
     orderId: string
     userAddress: AddressValue
-    signedMessage: string
     signature: HexData
   }): Promise<IArmadaDcaOrder>
 
-  resumeBuyOrder(params: {
-    orderId: string
-    userAddress: AddressValue
-    signedMessage: string
-    signature: HexData
-  }): Promise<IArmadaDcaOrder>
+  resumeBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IArmadaDcaOrder>
 }

@@ -6,6 +6,7 @@ export const createAndSaveBuyOrderHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     id,
+    orderId,
     userAddress,
     chainId,
     fromVaultAddress,
@@ -21,6 +22,7 @@ export const createAndSaveBuyOrderHandler =
     neverSellBelow,
   }: {
     id: string
+    orderId: string
     userAddress: AddressValue
     chainId: ChainId
     fromVaultAddress: AddressValue
@@ -44,6 +46,7 @@ export const createAndSaveBuyOrderHandler =
   }) => {
     return sdk.armada.dca.createAndSaveBuyOrder({
       id,
+      orderId,
       userAddress,
       chainId,
       fromVault: fromVaultAddress,

@@ -1,23 +1,11 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import { type AddressValue, type HexData } from '@summerfi/sdk-common'
+import { type AddressValue } from '@summerfi/sdk-common'
 
 export const cancelBuyOrderHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
-  async ({
-    orderId,
-    userAddress,
-    signedMessage,
-    signature,
-  }: {
-    orderId: string
-    userAddress: AddressValue
-    signedMessage: string
-    signature: HexData
-  }) => {
+  async ({ orderId, userAddress }: { orderId: string; userAddress: AddressValue }) => {
     return sdk.armada.dca.cancelBuyOrder({
       orderId,
       userAddress,
-      signedMessage,
-      signature,
     })
   }

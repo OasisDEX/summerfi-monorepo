@@ -341,8 +341,6 @@ describe('ArmadaManagerDCA', () => {
     const result = await manager.cancelBuyOrder({
       orderId,
       userAddress: account.address as AddressValue,
-      signedMessage,
-      signature: signature as HexData,
     })
 
     expect(result.status).toBe(ArmadaDcaOrderStatusEnum.Cancelled)
@@ -359,8 +357,6 @@ describe('ArmadaManagerDCA', () => {
       manager.cancelBuyOrder({
         orderId: 'order-1',
         userAddress: '0x7777777777777777777777777777777777777777' as AddressValue,
-        signedMessage: 'wrong-message',
-        signature: '0x1234' as HexData,
       }),
     ).rejects.toThrow('Invalid cancel message')
   })
