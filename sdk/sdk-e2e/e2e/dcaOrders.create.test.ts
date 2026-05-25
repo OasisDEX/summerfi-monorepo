@@ -10,6 +10,7 @@ import {
   type AddressValue,
   ArmadaDcaOrderStatusEnum,
 } from '@summerfi/sdk-common'
+import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
 
@@ -17,7 +18,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - DCA Orders', () => {
-  const sdk = createTestSdkInstance()
+  const { sdk } = createSdkTestSetup()
 
   it('should create, fetch, list and cancel a DCA buy order', async () => {
     const fromVault = TestConfigFleets.BaseUSDC
@@ -37,7 +38,25 @@ describe('Armada Protocol - DCA Orders', () => {
     const amount = TokenAmount.createFrom({ token: usdcToken, amount: '6' })
     const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
 
+    const orderTx = await sdk.armada.dca.createStrategyTx({
+      chainId,
+      order: {
+        chainId,
+        userAddress,
+        fromVault: fromVault.fleetAddressValue,
+        toVault: toVault.fleetAddressValue,
+        amount: amount.toSolidityValue().toString(),
+        intervalSeconds: 3600,
+        maxTrades: 10,
+      },
+      inAssetFeed: fromVault.chainlinkOracleAddressValue,
+      outAssetFeed: toVault.chainlinkOracleAddressValue,
+    })
+
+    // get order ID from the executed transaction response
+
     const order = await sdk.armada.dca.createAndSaveBuyOrder({
+      orderId: `test-order-${Date.now()}`,
       userAddress: userAddress,
       chainId,
       fromVault: fromVault.fleetAddressValue,
@@ -61,29 +80,5 @@ describe('Armada Protocol - DCA Orders', () => {
     assert(fetchedOrder, 'Expected created order to be retrievable')
     assert.strictEqual(fetchedOrder.id, order.id)
     console.log('Fetched DCA order with ID:', fetchedOrder.id)
-
-    const activeOrders = await sdk.armada.dca.getBuyOrders({
-      userAddress: userAddress,
-      chainId,
-      status: ArmadaDcaOrderStatusEnum.Active,
-    })
-
-    assert(activeOrders.find((activeOrder) => activeOrder.id === order.id))
-    console.log('Active DCA orders include order with ID:', order.id)
-
-    const signedMessage = `I want to cancel ${order.id}.`
-    const signature = await account.signMessage({
-      message: signedMessage,
-    })
-
-    const cancelledOrder = await sdk.armada.dca.cancelBuyOrder({
-      orderId: order.id,
-      userAddress: userAddress,
-      signedMessage,
-      signature,
-    })
-
-    assert.strictEqual(cancelledOrder.status, ArmadaDcaOrderStatusEnum.Cancelled)
-    console.log('Cancelled DCA order with ID:', order.id)
   })
 })

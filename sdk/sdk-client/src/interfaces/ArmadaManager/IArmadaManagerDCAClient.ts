@@ -61,7 +61,6 @@ export interface IArmadaManagerDCAClient {
   }): Promise<ExecuteDcaTransactionInfo>
 
   createAndSaveBuyOrder(params: {
-    id: string
     orderId: string
     userAddress: AddressValue
     chainId: ChainId

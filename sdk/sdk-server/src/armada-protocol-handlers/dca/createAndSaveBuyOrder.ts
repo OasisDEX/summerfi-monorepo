@@ -14,7 +14,6 @@ import { publicProcedure } from '../../SDKTRPC'
 export const createAndSaveBuyOrder = publicProcedure
   .input(
     z.object({
-      id: z.string(),
       orderId: z.string(),
       userAddress: z.custom<AddressValue>(isAddressValue),
       chainId: z.custom<ChainId>(isChainId),

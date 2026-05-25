@@ -64,7 +64,6 @@ export interface IArmadaManagerDCA {
    * @description Creates a signed DCA buy order payload and persists it in the database
    */
   createAndSaveBuyOrder(params: {
-    id: string
     orderId: string
     userAddress: AddressValue
     chainId: ChainId

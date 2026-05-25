@@ -248,7 +248,11 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     params: Parameters<IArmadaManagerDCA['createAndSaveBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['createAndSaveBuyOrder']> {
     await this._assertEarnAppCookieAuth(params.userAddress)
-    const order = await this._buildAndValidateOrder({ params, now: Math.floor(Date.now() / 1000) })
+    const id = crypto.randomUUID()
+    const order = await this._buildAndValidateOrder({
+      params: { ...params, id },
+      now: Math.floor(Date.now() / 1000),
+    })
 
     const db = await this._getDb()
     await db
