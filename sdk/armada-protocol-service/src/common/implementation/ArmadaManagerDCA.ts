@@ -27,7 +27,6 @@ import {
   encodePacked,
   keccak256,
   parseAbi,
-  recoverMessageAddress,
   type Address as ViemAddress,
 } from 'viem'
 import type { SummerProtocolDb, SummerProtocolDbProvider } from '../../db-provider/getDb'
@@ -79,6 +78,13 @@ export type DbOrderRow = {
 }
 
 /**
+ * @name EarnAppCookieVerifier
+ * @description Callback that verifies a request is authorized for the given user address.
+ * Should throw an error if the verification fails.
+ */
+export type EarnAppCookieVerifier = (userAddress: AddressValue) => Promise<void>
+
+/**
  * @name ArmadaManagerDCA
  * @description Handles creation and persistence of recurring DCA buy orders.
  */
@@ -88,6 +94,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   private _summerProtocolDbProvider?: SummerProtocolDbProvider
   private _blockchainClientProvider: IBlockchainClientProvider
   private _oracleManager: IOracleManager
+  private _earnAppCookieVerifier: EarnAppCookieVerifier
 
   constructor(params: {
     clientId?: string
@@ -96,6 +103,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     summerProtocolDbProvider?: SummerProtocolDbProvider
     blockchainClientProvider: IBlockchainClientProvider
     oracleManager: IOracleManager
+    earnAppCookieVerifier: EarnAppCookieVerifier
   }) {
     super({ clientId: params.clientId })
     this._configProvider = params.configProvider
@@ -103,6 +111,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     this._blockchainClientProvider = params.blockchainClientProvider
     this._oracleManager = params.oracleManager
     this._summerProtocolDbProvider = params.summerProtocolDbProvider
+    this._earnAppCookieVerifier = params.earnAppCookieVerifier
   }
 
   async createStrategyTx(
@@ -238,6 +247,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async createAndSaveBuyOrder(
     params: Parameters<IArmadaManagerDCA['createAndSaveBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['createAndSaveBuyOrder']> {
+    await this._assertEarnAppCookieAuth(params.userAddress)
     const order = await this._buildAndValidateOrder({ params, now: Math.floor(Date.now() / 1000) })
 
     const db = await this._getDb()
@@ -279,6 +289,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async editBuyOrder(
     params: Parameters<IArmadaManagerDCA['editBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['editBuyOrder']> {
+    await this._assertEarnAppCookieAuth(params.userAddress)
     const now = Math.floor(Date.now() / 1000)
     const existingOrder = await this._getExistingOrderOrThrow({
       orderId: params.id,
@@ -338,6 +349,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async getBuyOrder(
     params: Parameters<IArmadaManagerDCA['getBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['getBuyOrder']> {
+    await this._assertEarnAppCookieAuth(params.userAddress)
     const db = await this._getDb()
     const row = await db
       .selectFrom('armadaDcaOrders')
@@ -356,6 +368,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async getBuyOrders(
     params: Parameters<IArmadaManagerDCA['getBuyOrders']>[0],
   ): ReturnType<IArmadaManagerDCA['getBuyOrders']> {
+    await this._assertEarnAppCookieAuth(params.userAddress)
     const db = await this._getDb()
     let query = db
       .selectFrom('armadaDcaOrders')
@@ -378,6 +391,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async cancelBuyOrder(
     params: Parameters<IArmadaManagerDCA['cancelBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['cancelBuyOrder']> {
+    await this._assertEarnAppCookieAuth(params.userAddress)
     const existingOrder = await this._getExistingOrderOrThrow(params)
 
     if (existingOrder.status === ArmadaDcaOrderStatusEnum.Cancelled) {
@@ -409,6 +423,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async pauseBuyOrder(
     params: Parameters<IArmadaManagerDCA['pauseBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['pauseBuyOrder']> {
+    await this._assertEarnAppCookieAuth(params.userAddress)
     const existingOrder = await this._getExistingOrderOrThrow(params)
 
     if (existingOrder.status !== 'active') {
@@ -442,6 +457,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   async resumeBuyOrder(
     params: Parameters<IArmadaManagerDCA['resumeBuyOrder']>[0],
   ): ReturnType<IArmadaManagerDCA['resumeBuyOrder']> {
+    await this._assertEarnAppCookieAuth(params.userAddress)
     const existingOrder = await this._getExistingOrderOrThrow(params)
 
     if (existingOrder.status !== 'paused') {
@@ -582,6 +598,10 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       createdAt: now,
       updatedAt: now,
     }
+  }
+
+  private async _assertEarnAppCookieAuth(userAddress: AddressValue): Promise<void> {
+    await this._earnAppCookieVerifier(userAddress)
   }
 
   private async _getExistingOrderOrThrow(params: {

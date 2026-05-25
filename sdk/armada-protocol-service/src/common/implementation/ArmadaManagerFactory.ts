@@ -11,6 +11,7 @@ import type { ITokensManager } from '@summerfi/tokens-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { IChainInfo } from '@summerfi/sdk-common'
 import type { SummerProtocolDbProvider } from '../../db-provider/getDb'
+import type { EarnAppCookieVerifier } from './ArmadaManagerDCA'
 
 /**
  * @name ArmadaManagerFactory
@@ -30,6 +31,7 @@ export class ArmadaManagerFactory {
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
     summerProtocolDbProvider?: SummerProtocolDbProvider
+    earnAppCookieVerifier: EarnAppCookieVerifier
   }): ArmadaManager {
     return new ArmadaManager(params)
   }

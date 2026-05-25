@@ -12,6 +12,7 @@ import {
   fetchInstiDeploymentProviderConfig,
   type DeploymentProviderConfig,
   type IDeploymentProvider,
+  type EarnAppCookieVerifier,
 } from '@summerfi/armada-protocol-service'
 import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
@@ -30,6 +31,7 @@ import { ISwapManager } from '@summerfi/swap-common'
 import { SwapManagerFactory, CowSwapProvider } from '@summerfi/swap-service'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { TokensManagerFactory } from '@summerfi/tokens-service'
+import { jwtVerify } from 'jose'
 
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
@@ -63,6 +65,59 @@ export type SDKAppContext = {
   intentSwapsManager: CowSwapProvider
 }
 
+function parseCookies(event: APIGatewayProxyEventV2): Record<string, string> {
+  const cookies: Record<string, string> = {}
+  // API Gateway v2 provides cookies as an array of "name=value" strings
+  if (event.cookies) {
+    for (const cookie of event.cookies) {
+      const idx = cookie.indexOf('=')
+      if (idx >= 0) {
+        cookies[cookie.slice(0, idx).trim()] = cookie.slice(idx + 1).trim()
+      }
+    }
+  }
+  // Fallback: parse from Cookie header
+  const cookieHeader = event.headers['cookie'] || event.headers['Cookie']
+  if (cookieHeader) {
+    for (const part of cookieHeader.split(';')) {
+      const idx = part.indexOf('=')
+      if (idx >= 0) {
+        const name = part.slice(0, idx).trim()
+        if (!(name in cookies)) {
+          cookies[name] = part.slice(idx + 1).trim()
+        }
+      }
+    }
+  }
+  return cookies
+}
+
+function buildEarnAppCookieVerifier(
+  cookies: Record<string, string>,
+  cookiePrefix: string,
+  jwtSecret: string,
+): EarnAppCookieVerifier {
+  return async (userAddress): Promise<void> => {
+    const cookieName = `${cookiePrefix}-${userAddress.toLowerCase()}`
+    const cookieValue = cookies[cookieName]
+    if (!cookieValue) {
+      throw new Error(`Unauthorized: missing authentication cookie for address ${userAddress}`)
+    }
+    let decodedAddress: string
+    try {
+      const secretEncoded = new TextEncoder().encode(jwtSecret)
+      const { payload } = await jwtVerify(cookieValue, secretEncoded, { algorithms: ['HS512'] })
+      const jwtData = (payload as { payload?: { address?: string } }).payload
+      decodedAddress = jwtData?.address ?? ''
+    } catch {
+      throw new Error('Unauthorized: invalid or expired authentication token')
+    }
+    if (!decodedAddress || decodedAddress.toLowerCase() !== userAddress.toLowerCase()) {
+      throw new Error('Unauthorized: token address does not match the requested address')
+    }
+  }
+}
+
 const quickHashCode = (str: string): string => {
   let hash = 0
   for (let i = 0, len = str.length; i < len; i++) {
@@ -79,6 +134,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
   LoggingService.log('Request headers', opts.event.headers)
 
+  const requestCookies = parseCookies(opts.event)
   const configProvider = new ConfigurationProvider()
   const summerDeployment = configProvider.getConfigurationItem({
     name: 'SUMMER_DEPLOYMENT_CONFIG',
@@ -170,6 +226,17 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     blockchainClientProvider,
   })
 
+  const earnCookiePrefix = configProvider.getConfigurationItem({
+    name: 'EARN_PROTOCOL_DCA_COOKIE_PREFIX',
+  })
+  const earnJwtSecret = configProvider.getConfigurationItem({ name: 'EARN_PROTOCOL_JWT_SECRET' })
+
+  const earnAppCookieVerifier: EarnAppCookieVerifier = buildEarnAppCookieVerifier(
+    requestCookies,
+    earnCookiePrefix,
+    earnJwtSecret,
+  )
+
   const armadaManager = ArmadaManagerFactory.newArmadaManager({
     configProvider,
     deploymentProvider,
@@ -182,6 +249,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     tokensManager,
     supportedChains,
     clientId,
+    earnAppCookieVerifier,
   })
 
   return {

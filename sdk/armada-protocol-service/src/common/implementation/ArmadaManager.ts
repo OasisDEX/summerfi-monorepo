@@ -32,7 +32,7 @@ import { ArmadaManagerPositions } from './ArmadaManagerPositions'
 import { ArmadaManagerMerklRewards } from './ArmadaManagerMerklRewards'
 import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
 import { ArmadaManagerAccessControl } from './ArmadaManagerAccessControl'
-import { ArmadaManagerDCA } from './ArmadaManagerDCA'
+import { ArmadaManagerDCA, type EarnAppCookieVerifier } from './ArmadaManagerDCA'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { SummerProtocolDbProvider } from '../../db-provider/getDb'
 
@@ -82,6 +82,7 @@ export class ArmadaManager implements IArmadaManager {
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
     summerProtocolDbProvider?: SummerProtocolDbProvider
+    earnAppCookieVerifier: EarnAppCookieVerifier
   }) {
     this._clientId = params.clientId
     this._configProvider = params.configProvider
@@ -192,6 +193,7 @@ export class ArmadaManager implements IArmadaManager {
       blockchainClientProvider: this._blockchainClientProvider,
       oracleManager: this._oracleManager,
       summerProtocolDbProvider: params.summerProtocolDbProvider,
+      earnAppCookieVerifier: params.earnAppCookieVerifier,
     })
   }
 }
