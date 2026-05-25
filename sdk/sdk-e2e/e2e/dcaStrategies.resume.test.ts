@@ -9,13 +9,13 @@ jest.setTimeout(300000)
 /**
  * @group e2e
  */
-describe('Armada Protocol - DCA Orders Pause', () => {
+describe('Armada Protocol - DCA Strategies Resume', () => {
   const scenarios: { orderId: string }[] = [{ orderId: '<replace-with-order-id>' }]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { orderId } = scenario
 
-    it('should pause an active DCA buy order by id', async () => {
+    it('should resume a paused DCA strategy by id', async () => {
       const setup = createSdkTestSetup({ chainId: ChainIds.Base })
       const { sdk, userAddressValue: userAddress } = setup
 
@@ -23,25 +23,25 @@ describe('Armada Protocol - DCA Orders Pause', () => {
 
       assert(existingOrder, `Expected order ${orderId} to exist`)
 
-      if (existingOrder.status === ArmadaDcaOrderStatusEnum.Paused) {
-        console.log(`[Pause] Order ${orderId} is already paused, skipping`)
+      if (existingOrder.status === ArmadaDcaOrderStatusEnum.Active) {
+        console.log(`[Resume] Order ${orderId} is already active, skipping`)
         return
       }
 
       const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
 
-      const signedMessage = `I want to pause ${orderId}.`
+      const signedMessage = `I want to resume ${orderId}.`
       const signature = await account.signMessage({ message: signedMessage })
 
-      const pausedOrder = await sdk.armada.dca.pauseBuyOrder({
+      const resumedOrder = await sdk.armada.dca.resumeBuyOrder({
         orderId,
         userAddress,
         signedMessage,
         signature,
       })
 
-      assert.strictEqual(pausedOrder.status, ArmadaDcaOrderStatusEnum.Paused)
-      console.log(`[Pause] Paused DCA order with ID: ${orderId}`)
+      assert.strictEqual(resumedOrder.status, ArmadaDcaOrderStatusEnum.Active)
+      console.log(`[Resume] Resumed DCA order with ID: ${orderId}`)
     })
   })
 })

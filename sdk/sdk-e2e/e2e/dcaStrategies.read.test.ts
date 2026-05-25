@@ -13,11 +13,11 @@ const scenarios: { chainId: ChainId; status?: ArmadaDcaOrderStatusEnum }[] = [
 /**
  * @group e2e
  */
-describe('Armada Protocol - DCA Orders Read', () => {
+describe('Armada Protocol - DCA Strategies Read', () => {
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { chainId, status } = scenario
 
-    it('should get a list of buy orders', async () => {
+    it('should get a list of strategies', async () => {
       const setup = createSdkTestSetup({ chainId })
       const { sdk, userAddressValue: userAddress } = setup
 

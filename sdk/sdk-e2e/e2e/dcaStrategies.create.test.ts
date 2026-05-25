@@ -14,8 +14,8 @@ jest.setTimeout(300000)
 /**
  * @group e2e
  */
-describe('Armada Protocol - DCA Orders', () => {
-  it('should create, fetch, list and cancel a DCA buy order', async () => {
+describe('Armada Protocol - DCA Strategies', () => {
+  it('should create, fetch, list and cancel a DCA buy strategy', async () => {
     const fromVault = TestConfigFleets.BaseUSDC
     const chainId = fromVault.chainId
     const toVault = TestConfigFleets.BaseWETH
@@ -44,7 +44,7 @@ describe('Armada Protocol - DCA Orders', () => {
       }),
     ])
 
-    const orderTx = await sdk.armada.dca.createStrategyTx({
+    const strategyTx = await sdk.armada.dca.createStrategyTx({
       chainId,
       userAddress: userAddress.toSolidityValue(),
       fromVault: fromVault.fleetAddressValue,
@@ -62,30 +62,30 @@ describe('Armada Protocol - DCA Orders', () => {
     // Send the createStrategy transaction and extract strategyId from the StrategyCreated event
     const txHash = await walletClient.sendTransaction({
       account: walletClient.account!,
-      to: orderTx.transaction.target.value,
-      value: BigInt(orderTx.transaction.value),
-      data: orderTx.transaction.calldata,
+      to: strategyTx.transaction.target.value,
+      value: BigInt(strategyTx.transaction.value),
+      data: strategyTx.transaction.calldata,
       chain: walletClient.chain,
     })
     const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash })
     const strategyLog = receipt.logs.find(
-      (log) => log.address.toLowerCase() === orderTx.transaction.target.value.toLowerCase(),
+      (log) => log.address.toLowerCase() === strategyTx.transaction.target.value.toLowerCase(),
     )
     assert(strategyLog?.topics[1], 'Expected StrategyCreated event with strategyId topic')
     const onChainStrategyId = BigInt(strategyLog.topics[1])
     console.log('On-chain strategy ID:', onChainStrategyId.toString())
 
-    const fetchedOrder = await sdk.armada.dca.getStrategy({
+    const fetchedStrategy = await sdk.armada.dca.getStrategy({
       chainId,
       strategyId: onChainStrategyId.toString(),
     })
 
-    assert(fetchedOrder, 'Expected created order to be retrievable')
+    assert(fetchedStrategy, 'Expected created strategy to be retrievable')
     assert.strictEqual(
-      fetchedOrder.id,
+      fetchedStrategy.id,
       onChainStrategyId.toString(),
-      'Fetched order ID should match on-chain strategy ID',
+      'Fetched strategy ID should match on-chain strategy ID',
     )
-    console.log('Fetched DCA order with ID:', fetchedOrder.id)
+    console.log('Fetched DCA strategy with ID:', fetchedStrategy.id)
   })
 })

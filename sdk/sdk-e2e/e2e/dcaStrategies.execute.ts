@@ -8,8 +8,8 @@ jest.setTimeout(300000)
 /**
  * @group e2e
  */
-describe('Armada Protocol - DCA Orders Read', () => {
-  it('should get a list of buy orders', async () => {
+describe('Armada Protocol - DCA Strategies Execute', () => {
+  it('should execute a DCA strategy', async () => {
     const setup = createSdkTestSetup({ chainId: ChainIds.Base })
     const { sdk, chainId, userAddressValue } = setup
 

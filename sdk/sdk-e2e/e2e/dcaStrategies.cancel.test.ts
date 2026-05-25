@@ -9,13 +9,13 @@ jest.setTimeout(300000)
 /**
  * @group e2e
  */
-describe('Armada Protocol - DCA Orders Cancel', () => {
+describe('Armada Protocol - DCA Strategies Cancel', () => {
   const scenarios: { orderId: string }[] = [{ orderId: '2ee5a4cb-31ac-4b9c-91b1-cfbcaec5e891' }]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { orderId } = scenario
 
-    it('should cancel a DCA buy order by id', async () => {
+    it('should cancel a DCA strategy by id', async () => {
       const setup = createSdkTestSetup({ chainId: ChainIds.Base })
       const { sdk, userAddressValue: userAddress } = setup
 
