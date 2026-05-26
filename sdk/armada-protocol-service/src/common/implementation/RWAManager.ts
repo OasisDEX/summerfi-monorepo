@@ -30,10 +30,10 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getVaultInfoListPerChain(
     params: Parameters<IRWAManager['getVaultInfoListPerChain']>[0],
   ): ReturnType<IRWAManager['getVaultInfoListPerChain']> {
-    const { chainId, institutionId } = params
+    const { chainId, clientId } = params
     const queryResult = await this._rwaSubgraphManager.getVaults({
       chainId,
-      institutionId,
+      clientId,
     })
 
     if (!queryResult || !queryResult.vaults) {

@@ -1,6 +1,6 @@
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { type IRwaSubgraphManager, createRwaGraphQLClient } from '@summerfi/subgraph-manager-common'
-import { LoggingService, type ChainId } from '@summerfi/sdk-common'
+import { LoggingService, toBytes32InHex, type ChainId, type HexData } from '@summerfi/sdk-common'
 
 /**
  * @name RwaSubgraphManager
@@ -26,8 +26,10 @@ export class RwaSubgraphManager implements IRwaSubgraphManager {
     this._urlMap = urlMap
   }
 
-  getVaults({ chainId, institutionId }: Parameters<IRwaSubgraphManager['getVaults']>[0]) {
-    return this._getClient(chainId).GetVaults({ institutionId })
+  getVaults({ chainId, clientId }: Parameters<IRwaSubgraphManager['getVaults']>[0]) {
+    return this._getClient(chainId).GetVaults({
+      institutionId: this._getInstitutionId(clientId),
+    })
   }
 
   getVault({ chainId, vaultId }: Parameters<IRwaSubgraphManager['getVault']>[0]) {
@@ -41,5 +43,9 @@ export class RwaSubgraphManager implements IRwaSubgraphManager {
       throw new Error(`No RWA subgraph url found for chainId: ${chainId}`)
     }
     return createRwaGraphQLClient(urlMapForChain.rwa)
+  }
+
+  private _getInstitutionId(clientId: string): HexData {
+    return toBytes32InHex(clientId)
   }
 }

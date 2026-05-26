@@ -15,16 +15,16 @@ jest.setTimeout(300000)
 describe('RWA - All Vaults', () => {
   const scenarios: {
     chainId: typeof ChainIds.Base
-    institutionId: string
+    clientId: string
   }[] = [
     {
       chainId: RwaTestConfig.chainId,
-      institutionId: RwaTestConfig.institutionId,
+      clientId: RwaTestConfig.clientId,
     },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { chainId, institutionId } = scenario
+    const { chainId, clientId } = scenario
 
     it('should get all RWA vaults with info', async () => {
       const setup = createSdkTestSetup({ chainId })
@@ -33,18 +33,21 @@ describe('RWA - All Vaults', () => {
       const chainInfo = getChainInfoByChainId(chainId)
 
       console.log(
-        `[RWA SDK] Running on chain ${chainId} (${chainInfo.name}) for institutionId ${institutionId}`,
+        `[RWA SDK] Running on chain ${chainId} (${chainInfo.name}) for clientId ${clientId}`,
       )
 
       const vaults = await sdk.rwa.getVaultInfoListPerChain({
         chainId,
-        institutionId,
+        clientId,
       })
 
       if (!vaults.list || vaults.list.length === 0) {
         console.log('No RWA vaults found')
       } else {
-        console.log(`[RWA SDK] All vaults info:\n`, vaults.list.map(stringifyRwaVaultInfo).join('\n'))
+        console.log(
+          `[RWA SDK] All vaults info:\n`,
+          vaults.list.map(stringifyRwaVaultInfo).join('\n'),
+        )
         vaults.list.forEach(validateApys)
       }
     })

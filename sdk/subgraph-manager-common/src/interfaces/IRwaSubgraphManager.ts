@@ -8,16 +8,18 @@ import type { GetVaultQuery, GetVaultsQuery } from '../generated/rwa/client'
 export interface IRwaSubgraphManager {
   /**
    * @name getVaults
-   * @description Get all RWA vaults for a given institution on a given chain
+   * @description Get all RWA vaults for a given institution on a given chain.
+   *              The clientId is encoded to a bytes32 institutionId internally before
+   *              being passed to the subgraph (mirrors ArmadaSubgraphManager).
    *
    * @param chainId target chain
-   * @param institutionId institution ID owning the vaults
+   * @param clientId institution client ID string (e.g. 'ExtDemoCorp_v2');
    *
    * @returns GetVaultsQuery
    *
    * @throws Error
    */
-  getVaults(params: { chainId: ChainId; institutionId: string }): Promise<GetVaultsQuery>
+  getVaults(params: { chainId: ChainId; clientId: string }): Promise<GetVaultsQuery>
 
   /**
    * @name getVault

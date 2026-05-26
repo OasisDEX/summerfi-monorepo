@@ -79,8 +79,14 @@ export function mapSubgraphVaultToVaultInfoParams(params: {
       }>
     | undefined
 }): ArmadaVaultInfoParameters {
-  const { chainId, rawVault, tokensManager, apysForVault, rewardsApysForVault, merklRewardsForVault } =
-    params
+  const {
+    chainId,
+    rawVault,
+    tokensManager,
+    apysForVault,
+    rewardsApysForVault,
+    merklRewardsForVault,
+  } = params
 
   const chainInfo = getChainInfoByChainId(chainId)
   const fleetAddress = rawVault.id.toLowerCase()

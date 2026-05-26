@@ -6,7 +6,7 @@ export const getVaultInfoListPerChain = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
-      institutionId: z.string().nonempty(),
+      clientId: z.string().nonempty(),
     }),
   )
   .query(async (opts) => {

@@ -166,5 +166,5 @@ export const RwaTestConfig = {
   fleetAddressValue: '',
   aqAddressValue: '',
   userAddressValue: TestConfigAccounts.testUserAddressValue,
-  institutionId: 'TODO_SET_RWA_INSTITUTION_ID',
+  clientId: 'ExtDemoCorp_v2',
 } as const
