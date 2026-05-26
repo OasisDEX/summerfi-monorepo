@@ -45,5 +45,11 @@ export async function up(db: Kysely<never>): Promise<void> {
 }
 
 export async function down(db: Kysely<never>): Promise<void> {
-  await db.schema.dropTable('armada_dca_orders').execute()
+  // No data was ever added for this migration, so no restoration is required.
+  // Guard drops with `ifExists()` to avoid errors if the objects are already absent.
+  // Drop indexes created in `up()` before dropping the table.
+  await db.schema.dropIndex('armada_dca_orders_user_idx').ifExists().execute()
+  await db.schema.dropIndex('armada_dca_orders_next_execution_idx').ifExists().execute()
+
+  await db.schema.dropTable('armada_dca_orders').ifExists().execute()
 }
