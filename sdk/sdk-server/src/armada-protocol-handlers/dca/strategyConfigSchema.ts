@@ -43,8 +43,8 @@ export const dcaStrategySchema: z.ZodType<IDcaStrategy> = z.object({
   tradesExecuted: bigintSchema,
   neverBuyAbove: z.string(),
   neverSellBelow: z.string(),
-  createdAt: bigintSchema,
-  updatedAt: bigintSchema,
+  createdAtUnixTimestamp: bigintSchema,
+  updatedAtUnixTimestamp: bigintSchema,
 })
 
 export const createDcaStrategyTxInputSchema = z.object({
