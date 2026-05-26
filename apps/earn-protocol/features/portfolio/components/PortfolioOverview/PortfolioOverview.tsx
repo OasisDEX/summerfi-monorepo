@@ -29,7 +29,7 @@ import {
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import { DcaStrategyStatusEnum, type IArmadaDcaOrder } from '@summerfi/sdk-common'
+import { DcaStrategyStatusEnum, type IDcaStrategy } from '@summerfi/sdk-common'
 import Link from 'next/link'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
@@ -63,7 +63,7 @@ type PortfolioOverviewProps = {
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
-  dcaOrders: IArmadaDcaOrder[]
+  dcaOrders: IDcaStrategy[]
   dcaEnabled?: boolean
 }
 
@@ -92,7 +92,7 @@ const PositionsListView = ({
   isMobile: boolean
   isTablet: boolean
   handleButtonClick: (event: string) => void
-  dcaOrders: IArmadaDcaOrder[]
+  dcaOrders: IDcaStrategy[]
 }) => {
   const getDcaOrderForVault = (
     vaultId: string,
@@ -100,13 +100,15 @@ const PositionsListView = ({
     const normalizedId = vaultId.toLowerCase()
 
     const order = dcaOrders.find(
-      (o) => o.fromVault.toLowerCase() === normalizedId || o.toVault.toLowerCase() === normalizedId,
+      (o) =>
+        o.sourceVault.toLowerCase() === normalizedId ||
+        o.targetVault.toLowerCase() === normalizedId,
     )
 
     if (!order) return undefined
 
     const type =
-      order.fromVault.toLowerCase() === normalizedId ? ('from' as const) : ('to' as const)
+      order.sourceVault.toLowerCase() === normalizedId ? ('from' as const) : ('to' as const)
 
     return { id: order.id, type }
   }
@@ -164,7 +166,7 @@ const DcaStrategiesListView = ({
   vaultsList,
   buttonClickEventHandler,
 }: {
-  dcaOrders: IArmadaDcaOrder[]
+  dcaOrders: IDcaStrategy[]
   vaultsList: SDKVaultsListType
   buttonClickEventHandler: ReturnType<typeof useHandleButtonClickEvent>
 }) => {

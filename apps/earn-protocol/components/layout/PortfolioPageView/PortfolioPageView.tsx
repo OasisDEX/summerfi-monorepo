@@ -14,7 +14,7 @@ import {
   type SDKVaultishType,
   type SingleSourceChartData,
 } from '@summerfi/app-types'
-import { type IArmadaDcaOrder } from '@summerfi/sdk-common'
+import { type IDcaStrategy } from '@summerfi/sdk-common'
 
 import {
   emptyClaimableRewards,
@@ -51,7 +51,7 @@ interface PortfolioPageViewProps {
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
-  dcaOrders: IArmadaDcaOrder[]
+  dcaOrders: IDcaStrategy[]
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({

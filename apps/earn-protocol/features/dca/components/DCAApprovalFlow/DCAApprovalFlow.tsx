@@ -137,8 +137,12 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
     const parsedDeadline = config.deadline
       ? Math.floor(new Date(config.deadline).getTime() / 1000)
       : undefined
+    const oneYearInSeconds = 365 * 24 * 60 * 60
+    // default deadline to one year from now if not set or invalid, to prevent transactions from failing with a past deadline
     const deadlineUnixTimestamp =
-      parsedDeadline && Number.isFinite(parsedDeadline) ? parsedDeadline : undefined
+      parsedDeadline && Number.isFinite(parsedDeadline)
+        ? parsedDeadline
+        : Math.floor(Date.now() / 1000) + oneYearInSeconds
 
     try {
       const [txInfo] = await createStrategyTx({
@@ -162,7 +166,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
 
       await walletClient.sendTransaction({
         account: walletClient.account ?? (address as `0x${string}`),
-        to: txInfo.transaction.targetContract.value as `0x${string}`,
+        to: txInfo.transaction.target.value as `0x${string}`,
         data: txInfo.transaction.calldata as `0x${string}`,
         chain: null,
       })

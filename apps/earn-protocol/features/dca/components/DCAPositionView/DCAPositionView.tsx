@@ -14,7 +14,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type IToken, type TokenSymbolsList } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, supportedSDKNetwork, ten } from '@summerfi/app-utils'
-import { DcaStrategyStatusEnum, type IArmadaDcaOrder } from '@summerfi/sdk-common'
+import { DcaStrategyStatusEnum, type IDcaStrategy } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { useRouter } from 'next/navigation'
 
@@ -27,7 +27,7 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import classNames from '@/features/dca/components/dca.module.css'
 
 interface DCAPositionViewProps {
-  order: IArmadaDcaOrder
+  order: IDcaStrategy
   pair: DCAResolvedPair
 }
 
@@ -55,7 +55,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
   const { cancelStrategyTx } = useAppSDK()
   const { refresh } = useRouter()
 
-  const [order, setOrder] = useState<IArmadaDcaOrder>(initialOrder)
+  const [order, setOrder] = useState<IDcaStrategy>(initialOrder)
   const [isEditing, setIsEditing] = useState(false)
   const [isCancelling, setIsCancelling] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -68,9 +68,9 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
   const sourceSymbol = getDisplayToken(pair.fromVault.inputToken.symbol)
   const targetSymbol = getDisplayToken(pair.toVault.inputToken.symbol)
 
-  const frequencyDays = Math.max(1, Math.round(order.intervalSeconds / SECONDS_PER_DAY))
+  const frequencyDays = Math.max(1, Math.round(Number(order.intervalSeconds) / SECONDS_PER_DAY))
   const deadlineDate = order.deadlineUnixTimestamp
-    ? new Date(order.deadlineUnixTimestamp * 1000)
+    ? new Date(Number(order.deadlineUnixTimestamp) * 1000)
     : undefined
 
   const isTargetEthVault = targetSymbol === 'ETH'
@@ -106,7 +106,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
       decimals: pair.fromVault.inputToken.decimals,
       symbol: sourceSymbol,
     } as IToken,
-    initialAmount: new BigNumber(order.amount)
+    initialAmount: new BigNumber(order.tradeAmount)
       .div(ten.pow(pair.fromVault.inputToken.decimals))
       .toString(),
     inputChangeHandler: () => undefined,
@@ -166,12 +166,12 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
     try {
       const [txInfo] = await cancelStrategyTx({
         chainId,
-        strategyId: order.id,
+        strategy: order,
       })
 
       await walletClient.sendTransaction({
         account: walletClient.account ?? (address as `0x${string}`),
-        to: txInfo.transaction.targetContract.value as `0x${string}`,
+        to: txInfo.transaction.target.value as `0x${string}`,
         data: txInfo.transaction.calldata as `0x${string}`,
         chain: null,
       })
@@ -420,7 +420,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
                 />
               ) : (
                 <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
-                  {order.maxTrades === 1000 ? '1000 (maximum)' : order.maxTrades}
+                  {Number(order.maxTrades) === 1000 ? '1000 (maximum)' : order.maxTrades}
                 </Text>
               )}
               <Text as="p" variant="p4" className={classNames.mutedText}>

@@ -1,5 +1,6 @@
 import { type FC } from 'react'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
+import type { ChainId } from '@summerfi/sdk-common'
 import { type Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
@@ -11,14 +12,14 @@ import { DCAPositionLoader } from '@/features/dca/components/DCAPositionView/DCA
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 interface DCAPositionPageProps {
-  params: Promise<{ walletAddress: string; orderId: string }>
+  params: Promise<{ chainId: ChainId; orderId: string }>
 }
 
 const DCAPositionPage: FC<DCAPositionPageProps> = async ({ params }) => {
-  const { walletAddress, orderId } = await params
+  const { chainId, orderId } = await params
 
   const [order, { vaults }, configRaw] = await Promise.all([
-    getCachedUserDcaOrder({ walletAddress, orderId }),
+    getCachedUserDcaOrder({ chainId, orderId }),
     getCachedVaultsList(),
     getCachedConfig(),
   ])
@@ -37,10 +38,10 @@ const DCAPositionPage: FC<DCAPositionPageProps> = async ({ params }) => {
   })
 
   const fromVault = vaultsWithConfig.find(
-    (vault) => vault.id.toLowerCase() === order.fromVault.toLowerCase(),
+    (vault) => vault.id.toLowerCase() === order.sourceVault.toLowerCase(),
   )
   const toVault = vaultsWithConfig.find(
-    (vault) => vault.id.toLowerCase() === order.toVault.toLowerCase(),
+    (vault) => vault.id.toLowerCase() === order.targetVault.toLowerCase(),
   )
 
   if (!fromVault || !toVault) {

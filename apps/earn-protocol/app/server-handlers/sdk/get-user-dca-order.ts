@@ -5,7 +5,7 @@ import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
 export async function getUserDcaOrder({ chainId, orderId }: { chainId: ChainId; orderId: string }) {
   try {
-    const { result: order } = await backendSDK.dca.getStrategy({
+    const order = await backendSDK.dca.getStrategy({
       chainId,
       strategyId: orderId,
     })

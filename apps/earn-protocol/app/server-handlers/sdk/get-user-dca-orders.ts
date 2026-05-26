@@ -11,7 +11,7 @@ export async function getUserDcaOrders({
   walletAddress: string
 }) {
   try {
-    const { result: strategies } = await backendSDK.dca.getStrategies({
+    const strategies = await backendSDK.dca.getStrategies({
       chainId,
       userAddress: walletAddress.toLowerCase() as `0x${string}`,
     })

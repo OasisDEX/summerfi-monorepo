@@ -13,6 +13,7 @@ import {
   supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
+import type { ChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { type Metadata } from 'next'
 import { headers } from 'next/headers'
@@ -36,11 +37,18 @@ import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
   params: Promise<{
+    chainId: ChainId
     walletAddress: string
   }>
 }
 
-const portfolioCallsHandler = async ({ walletAddress }: { walletAddress: string }) => {
+const portfolioCallsHandler = async ({
+  chainId,
+  walletAddress,
+}: {
+  chainId: ChainId
+  walletAddress: string
+}) => {
   const [userPositions, vaultsList, systemConfig, vaultsInfo] = await Promise.all([
     getCachedUserPositions({ walletAddress }),
     getCachedVaultsList(),
@@ -50,7 +58,7 @@ const portfolioCallsHandler = async ({ walletAddress }: { walletAddress: string 
 
   const parsedSystemConfig = parseServerResponseToClient(systemConfig)
   const dcaEnabled = !!parsedSystemConfig.features?.DcaEnabled
-  const userDcaOrders = dcaEnabled ? await getCachedUserDcaOrders({ walletAddress }) : []
+  const userDcaOrders = dcaEnabled ? await getCachedUserDcaOrders({ chainId, walletAddress }) : []
 
   return {
     userPositions,
@@ -74,7 +82,7 @@ const mapPortfolioVaultsApy = (
   }, {})
 
 const PortfolioPage = async ({ params }: PortfolioPageProps) => {
-  const [{ walletAddress: walletAddressRaw }, rewardTokenPrices] = await Promise.all([
+  const [{ walletAddress: walletAddressRaw, chainId }, rewardTokenPrices] = await Promise.all([
     params,
     getCachedRewardTokenPrice(),
   ])
@@ -87,6 +95,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const { userPositions, userDcaOrders, vaultsList, systemConfig, vaultsInfo } =
     await portfolioCallsHandler({
+      chainId,
       walletAddress,
     })
 
@@ -164,14 +173,14 @@ export async function generateMetadata({
 }: PortfolioPageProps & {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }): Promise<Metadata> {
-  const [{ walletAddress: walletAddressRaw }, headersList, searchParamsAwaited] = await Promise.all(
-    [params, headers(), searchParams],
-  )
+  const [{ walletAddress: walletAddressRaw, chainId }, headersList, searchParamsAwaited] =
+    await Promise.all([params, headers(), searchParams])
   const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
   const walletAddress = walletAddressRaw.toLowerCase()
   const { userPositions, vaultsList, systemConfig, vaultsInfo } = await portfolioCallsHandler({
+    chainId,
     walletAddress,
   })
 
