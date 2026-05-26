@@ -142,6 +142,7 @@ import { cancelStrategyTx } from './armada-protocol-handlers/dca/cancelStrategyT
 import { editStrategyTx } from './armada-protocol-handlers/dca/editStrategyTx'
 import { pauseStrategyTx } from './armada-protocol-handlers/dca/pauseStrategyTx'
 import { resumeStrategyTx } from './armada-protocol-handlers/dca/resumeStrategyTx'
+import { getVaultInfoListPerChain as getRwaVaultInfoListPerChain } from './armada-protocol-handlers/rwa/getVaultInfoListPerChain'
 import { getProtocolAddresses } from './armada-protocol-handlers/users/getProtocolAddresses'
 
 /**
@@ -315,6 +316,9 @@ export const sdkAppRouter = router({
       getStrategy: getStrategy,
       getExecutions: getExecutions,
       getExecution: getExecution,
+    },
+    rwa: {
+      getVaultInfoListPerChain: getRwaVaultInfoListPerChain,
     },
   },
 })

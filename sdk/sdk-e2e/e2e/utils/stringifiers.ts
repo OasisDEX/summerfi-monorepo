@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IArmadaPosition, IArmadaVaultInfo } from '@summerfi/sdk-common'
+import type { IArmadaPosition, IArmadaVaultInfo, IRwaVaultInfo } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 import { SUMR_DECIMALS } from './constants'
 
@@ -49,6 +49,39 @@ export function stringifyArmadaVaultInfo(vaultInfo: IArmadaVaultInfo): string {
         token: reward.token.toString(),
         dailyEmission: BigNumber(reward.dailyEmission).div(BigNumber('1e18')).toString(),
       })),
+    },
+    null,
+    2,
+  )
+}
+
+export function stringifyRwaVaultInfo(vaultInfo: IRwaVaultInfo): string {
+  return JSON.stringify(
+    {
+      id: vaultInfo.id.toString(),
+      address: vaultInfo.id.fleetAddress.toString(),
+      token: vaultInfo.token.toString(),
+      assetToken: vaultInfo.assetToken.toString(),
+      depositCap: vaultInfo.depositCap.toString(),
+      totalDeposits: vaultInfo.totalDeposits.toString(),
+      totalShares: vaultInfo.totalShares.toString(),
+      sharePrice: vaultInfo.sharePrice.toString(),
+      apy: vaultInfo.apy?.toString(),
+      apys: {
+        live: vaultInfo.apys.live?.toString(),
+        sma24h: vaultInfo.apys.sma24h?.toString(),
+        sma7day: vaultInfo.apys.sma7day?.toString(),
+        sma30day: vaultInfo.apys.sma30day?.toString(),
+      },
+      rewardsApys: vaultInfo.rewardsApys?.map((reward) => ({
+        token: reward.token.toString(),
+        apy: reward.apy?.toString(),
+      })),
+      merklRewards: vaultInfo.merklRewards?.map((reward) => ({
+        token: reward.token.toString(),
+        dailyEmission: BigNumber(reward.dailyEmission).div(BigNumber('1e18')).toString(),
+      })),
+      tvlUsd: vaultInfo.tvlUsd.toString(),
     },
     null,
     2,

@@ -300,6 +300,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
       [SubgraphTypes.protocol]: 'makeSdk',
       [SubgraphTypes.institutions]: 'makeAdminSdk',
       [SubgraphTypes.dca]: 'makeDcaSdk',
+      [SubgraphTypes.rwa]: 'makeRwaSdk',
     } as const
 
     if (this._config.subgraphType !== subgraphType) {

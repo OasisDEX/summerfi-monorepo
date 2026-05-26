@@ -2,6 +2,7 @@ import { ISDKManager } from '../interfaces/ISDKManager'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { ArmadaManagerClient } from './ArmadaManager/ArmadaManagerClient'
 import { DcaManagerClient } from './ArmadaManager/DcaManagerClient'
+import { RwaManagerClient } from './ArmadaManager/RwaManagerClient'
 import { ChainsManagerClient } from './ChainsManager'
 import { PortfolioManager } from './PortfolioManager'
 import { SwapManagerClient } from './SwapManagerClient'
@@ -19,6 +20,7 @@ export class SDKManager implements ISDKManager {
   public readonly users: UsersManager
   public readonly portfolio: PortfolioManager
   public readonly dca: DcaManagerClient
+  public readonly rwa: RwaManagerClient
   public readonly armada: ArmadaManagerClient
   public readonly swaps: SwapManagerClient
   public readonly oracle: OracleManagerClient
@@ -31,6 +33,7 @@ export class SDKManager implements ISDKManager {
     this.users = new UsersManager(params)
     this.portfolio = new PortfolioManager(params)
     this.dca = new DcaManagerClient(params)
+    this.rwa = new RwaManagerClient(params)
     this.armada = new ArmadaManagerClient(params)
     this.swaps = new SwapManagerClient(params)
     this.oracle = new OracleManagerClient(params)

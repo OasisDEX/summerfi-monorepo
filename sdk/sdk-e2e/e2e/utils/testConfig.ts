@@ -154,3 +154,17 @@ export const InstiTestConfigs = {
   TestClientIds,
   ChainConfig & { aqAddressValue: AddressValue; userAddressValue: AddressValue }
 >
+
+/** RWA CONFIG
+ *  institutionId used by the RWA subgraph query (where institution: $institutionId).
+ *  Replace with a real institutionId from the deployed RWA subgraph when available.
+ */
+
+export const RwaTestConfig = {
+  chainId: ChainIds.Base,
+  rpcUrl: RpcUrls[ChainIds.Base],
+  fleetAddressValue: '',
+  aqAddressValue: '',
+  userAddressValue: TestConfigAccounts.testUserAddressValue,
+  institutionId: 'TODO_SET_RWA_INSTITUTION_ID',
+} as const

@@ -149,6 +149,8 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
 
   const dcaSubgraphManager = SubgraphManagerFactory.newDcaSubgraph({ configProvider })
 
+  const rwaSubgraphManager = SubgraphManagerFactory.newRwaSubgraph({ configProvider })
+
   let deploymentProviderConfigs: DeploymentProviderConfig[]
   let supportedChains: IChainInfo[]
 
@@ -253,6 +255,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     supportedChains,
     clientId,
     dcaSubgraphManager,
+    rwaSubgraphManager,
   })
 
   return {

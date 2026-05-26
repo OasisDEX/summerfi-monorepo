@@ -103,6 +103,8 @@ export { ArmadaVaultId } from './common/implementation/ArmadaVaultId'
 export type { ArmadaVaultIdParameters } from './common/implementation/ArmadaVaultId'
 export { ArmadaVaultInfo } from './common/implementation/ArmadaVaultInfo'
 export type { ArmadaVaultInfoParameters } from './common/implementation/ArmadaVaultInfo'
+export { RwaVaultInfo } from './common/implementation/RwaVaultInfo'
+export type { RwaVaultInfoParameters } from './common/implementation/RwaVaultInfo'
 export { ArmadaPosition } from './common/implementation/ArmadaPosition'
 export type { ArmadaPositionParameters } from './common/implementation/ArmadaPosition'
 export { ArmadaPositionId } from './common/implementation/ArmadaPositionId'
@@ -186,6 +188,12 @@ export {
   isArmadaVaultInfo,
 } from './common/interfaces/IArmadaVaultInfo'
 export type { IArmadaVaultInfo, IArmadaVaultInfoData } from './common/interfaces/IArmadaVaultInfo'
+export {
+  RwaVaultInfoDataSchema,
+  __signature__ as __irwavaultinfo__,
+  isRwaVaultInfo,
+} from './common/interfaces/IRwaVaultInfo'
+export type { IRwaVaultInfo, IRwaVaultInfoData } from './common/interfaces/IRwaVaultInfo'
 export {
   ArmadaPositionDataSchema,
   __signature__ as __iarmadaposition__,

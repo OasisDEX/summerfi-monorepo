@@ -7,11 +7,11 @@ import { LoggingService, type ChainId } from '@summerfi/sdk-common'
  * @implements IDcaSubgraphManager
  */
 export class DcaSubgraphManager implements IDcaSubgraphManager {
-  private readonly _urlMap: Record<ChainId, { dca: string }>
+  private readonly _urlMap: Record<ChainId, { dca?: string } | undefined>
 
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
-    const envName = 'SDK_SUBGRAPH_CONFIG_DCA'
+    const envName = 'SDK_SUBGRAPH_CONFIG'
     let urlMap
     try {
       urlMap = JSON.parse(params.configProvider.getConfigurationItem({ name: envName }))
@@ -19,7 +19,7 @@ export class DcaSubgraphManager implements IDcaSubgraphManager {
       throw new Error(`Invalid format of env ${envName} for sdk DCA subgraph config`)
     }
     if (!urlMap) {
-      throw new Error('No DCA subgraph config in env')
+      throw new Error('No subgraph config in env')
     }
     LoggingService.log(`Loaded DCA subgraph config from env ${envName}: ${JSON.stringify(urlMap)}`)
 
@@ -37,7 +37,7 @@ export class DcaSubgraphManager implements IDcaSubgraphManager {
   /** PRIVATE */
   private _getClient(chainId: ChainId): ReturnType<typeof createDcaGraphQLClient> {
     const urlMapForChain = this._urlMap[chainId]
-    if (!urlMapForChain) {
+    if (!urlMapForChain?.dca) {
       throw new Error(`No DCA subgraph url found for chainId: ${chainId}`)
     }
     return createDcaGraphQLClient(urlMapForChain.dca)

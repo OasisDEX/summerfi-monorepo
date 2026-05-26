@@ -13,11 +13,16 @@ import {
   type IArmadaManagerAdmin,
   type IArmadaManagerAccessControl,
   type IDCAManager,
+  type IRWAManager,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { getChainInfoByChainId, IAddress, type IChainInfo } from '@summerfi/sdk-common'
-import { IArmadaSubgraphManager, type IDcaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import {
+  IArmadaSubgraphManager,
+  type IDcaSubgraphManager,
+  type IRwaSubgraphManager,
+} from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { ISwapManager } from '@summerfi/swap-common'
@@ -33,6 +38,7 @@ import { ArmadaManagerMerklRewards } from './ArmadaManagerMerklRewards'
 import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
 import { ArmadaManagerAccessControl } from './ArmadaManagerAccessControl'
 import { DCAManager } from './DCAManager'
+import { RWAManager } from './RWAManager'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 
 /**
@@ -51,6 +57,7 @@ export class ArmadaManager implements IArmadaManager {
   admin: IArmadaManagerAdmin
   accessControl: IArmadaManagerAccessControl
   dca: IDCAManager
+  rwa: IRWAManager
 
   private _supportedChains: IChainInfo[]
   private _rewardsRedeemerAddress: IAddress
@@ -63,6 +70,7 @@ export class ArmadaManager implements IArmadaManager {
   private _contractsProvider: IContractsProvider
   private _subgraphManager: IArmadaSubgraphManager
   private _dcaSubgraphManager: IDcaSubgraphManager
+  private _rwaSubgraphManager: IRwaSubgraphManager
   private _blockchainClientProvider: IBlockchainClientProvider
   private _swapManager: ISwapManager
   private _oracleManager: IOracleManager
@@ -82,6 +90,7 @@ export class ArmadaManager implements IArmadaManager {
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
     dcaSubgraphManager: IDcaSubgraphManager
+    rwaSubgraphManager: IRwaSubgraphManager
   }) {
     this._clientId = params.clientId
     this._configProvider = params.configProvider
@@ -90,6 +99,7 @@ export class ArmadaManager implements IArmadaManager {
     this._contractsProvider = params.contractsProvider
     this._subgraphManager = params.subgraphManager
     this._dcaSubgraphManager = params.dcaSubgraphManager
+    this._rwaSubgraphManager = params.rwaSubgraphManager
     this._blockchainClientProvider = params.blockchainClientProvider
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
@@ -190,6 +200,11 @@ export class ArmadaManager implements IArmadaManager {
       clientId: this._clientId,
       deploymentProvider: this._deploymentProvider,
       dcaSubgraphManager: this._dcaSubgraphManager,
+    })
+    this.rwa = new RWAManager({
+      clientId: this._clientId,
+      rwaSubgraphManager: this._rwaSubgraphManager,
+      tokensManager: this._tokensManager,
     })
   }
 }
