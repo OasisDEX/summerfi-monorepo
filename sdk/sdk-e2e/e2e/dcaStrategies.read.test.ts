@@ -20,7 +20,7 @@ describe('Armada Protocol - DCA Strategies Read', () => {
       const setup = createSdkTestSetup({ chainId })
       const { sdk, userAddressValue: userAddress } = setup
 
-      const { strategies } = await sdk.dca.getStrategies({
+      const strategies = await sdk.dca.getStrategies({
         userAddress,
         chainId,
         status,

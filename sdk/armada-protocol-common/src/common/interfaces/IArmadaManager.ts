@@ -7,7 +7,7 @@ import type { IArmadaManagerUtils } from './IArmadaManagerUtils'
 import type { IArmadaManagerPositions } from './IArmadaManagerPositions'
 import type { IArmadaManagerAdmin } from './IArmadaManagerAdmin'
 import type { IArmadaManagerAccessControl } from './IArmadaManagerAccessControl'
-import type { IArmadaManagerDCA } from './IArmadaManagerDCA'
+import type { IDCAManager } from './IDCAManager'
 /**
  * @name IArmadaManager
  * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
@@ -25,5 +25,5 @@ export interface IArmadaManager {
   merklRewards: IArmadaManagerMerklRewards
   admin: IArmadaManagerAdmin
   accessControl: IArmadaManagerAccessControl
-  dca: IArmadaManagerDCA
+  dca: IDCAManager
 }

@@ -1,13 +1,13 @@
 import { isChainId, type ChainId } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { orderSchema, strategyIdSchema } from './strategyConfigSchema'
+import { strategySchema, strategyIdSchema } from './strategyConfigSchema'
 
 export const editStrategyTx = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
-      order: orderSchema,
+      strategy: strategySchema,
       strategyId: strategyIdSchema,
     }),
   )

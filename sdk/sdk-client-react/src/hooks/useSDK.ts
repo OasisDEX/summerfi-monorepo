@@ -96,10 +96,8 @@ import { getIntentSwapsSendDepositOrderHandler } from '../handlers/getIntentSwap
 import { getIntentSwapsCancelOrderHandler } from '../handlers/getIntentSwapsCancelOrderHandler'
 import { getIntentSwapsCheckOrderHandler } from '../handlers/getIntentSwapsCheckOrderHandler'
 import { getAddressesHandler } from '../handlers/getAddressesHandler'
-import { createAndSaveBuyOrderHandler } from '../handlers/createAndSaveBuyOrderHandler'
 import { createStrategyTxHandler } from '../handlers/createStrategyTxHandler'
 import { getStrategyHandler } from '../handlers/getStrategyHandler'
-import { cancelBuyOrderHandler } from '../handlers/cancelBuyOrderHandler'
 import { cancelStrategyTxHandler } from '../handlers/cancelStrategyTxHandler'
 import { editStrategyTxHandler } from '../handlers/editStrategyTxHandler'
 import { pauseStrategyTxHandler } from '../handlers/pauseStrategyTxHandler'
@@ -306,9 +304,7 @@ export const useSDK = (params: UseSdk) => {
   const pauseStrategyTx = useMemo(() => pauseStrategyTxHandler(sdk), [sdk])
   const resumeStrategyTx = useMemo(() => resumeStrategyTxHandler(sdk), [sdk])
   const cancelStrategyTx = useMemo(() => cancelStrategyTxHandler(sdk), [sdk])
-  const createAndSaveBuyOrder = useMemo(() => createAndSaveBuyOrderHandler(sdk), [sdk])
   const getStrategy = useMemo(() => getStrategyHandler(sdk), [sdk])
-  const cancelBuyOrder = useMemo(() => cancelBuyOrderHandler(sdk), [sdk])
 
   const memo = useMemo(
     () => ({
@@ -415,9 +411,7 @@ export const useSDK = (params: UseSdk) => {
       pauseStrategyTx,
       resumeStrategyTx,
       cancelStrategyTx,
-      createAndSaveBuyOrder,
       getStrategy,
-      cancelBuyOrder,
     }),
     [
       getCurrentUser,
@@ -522,9 +516,7 @@ export const useSDK = (params: UseSdk) => {
       pauseStrategyTx,
       resumeStrategyTx,
       cancelStrategyTx,
-      createAndSaveBuyOrder,
       getStrategy,
-      cancelBuyOrder,
     ],
   )
 

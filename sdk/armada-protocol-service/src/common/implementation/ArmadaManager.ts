@@ -12,7 +12,7 @@ import {
   type IArmadaManagerMerklRewards,
   type IArmadaManagerAdmin,
   type IArmadaManagerAccessControl,
-  type IArmadaManagerDCA,
+  type IDCAManager,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -32,7 +32,8 @@ import { ArmadaManagerPositions } from './ArmadaManagerPositions'
 import { ArmadaManagerMerklRewards } from './ArmadaManagerMerklRewards'
 import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
 import { ArmadaManagerAccessControl } from './ArmadaManagerAccessControl'
-import { ArmadaManagerDCA, type EarnAppCookieVerifier } from './ArmadaManagerDCA'
+import { DCAManager } from './DCAManager'
+import type { EarnAppCookieVerifier } from '@summerfi/sdk-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { SummerProtocolDbProvider } from '../../db-provider/getDb'
 
@@ -51,7 +52,7 @@ export class ArmadaManager implements IArmadaManager {
   merklRewards: IArmadaManagerMerklRewards
   admin: IArmadaManagerAdmin
   accessControl: IArmadaManagerAccessControl
-  dca: IArmadaManagerDCA
+  dca: IDCAManager
 
   private _supportedChains: IChainInfo[]
   private _rewardsRedeemerAddress: IAddress
@@ -189,7 +190,7 @@ export class ArmadaManager implements IArmadaManager {
       deploymentProvider: this._deploymentProvider,
       subgraphManager: this._subgraphManager,
     })
-    this.dca = new ArmadaManagerDCA({
+    this.dca = new DCAManager({
       clientId: this._clientId,
       configProvider: this._configProvider,
       deploymentProvider: this._deploymentProvider,

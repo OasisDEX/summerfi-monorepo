@@ -9,9 +9,8 @@ import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManager } from './ArmadaManager'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
-import type { IChainInfo } from '@summerfi/sdk-common'
+import type { IChainInfo, EarnAppCookieVerifier } from '@summerfi/sdk-common'
 import type { SummerProtocolDbProvider } from '../../db-provider/getDb'
-import type { EarnAppCookieVerifier } from './ArmadaManagerDCA'
 
 /**
  * @name ArmadaManagerFactory

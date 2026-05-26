@@ -1,8 +1,8 @@
 import type {
   AddressValue,
-  ChainId,
   IDcaStrategy,
   IDcaExecution,
+  ChainId,
   CreateDcaStrategyTransactionInfo,
   EditDcaStrategyTransactionInfo,
   PauseDcaStrategyTransactionInfo,
@@ -12,10 +12,10 @@ import type {
 } from '@summerfi/sdk-common'
 
 /**
- * @name IDcaManagerClient
- * @description Client interface for DCA order management
+ * @name IDCAManager
+ * @description Interface for creating and managing Armada recurring DCA buy orders
  */
-export interface IDcaManagerClient {
+export interface IDCAManager {
   createStrategyTx(params: {
     chainId: ChainId
     userAddress: AddressValue
@@ -56,19 +56,36 @@ export interface IDcaManagerClient {
     strategyId: string
   }): Promise<CancelDcaStrategyTransactionInfo>
 
+  /**
+   * @name getStrategies
+   * @description Gets all DCA strategies for a chain from the subgraph
+   */
   getStrategies(params: {
     chainId: ChainId
     userAddress?: AddressValue
     status?: DcaStrategyStatusEnum
   }): Promise<IDcaStrategy[]>
 
+  /**
+   * @name getStrategy
+   * @description Gets a single DCA strategy by strategyId from the subgraph
+   */
   getStrategy(params: { strategyId: string; chainId: ChainId }): Promise<IDcaStrategy | undefined>
 
+  /**
+   * @name getExecutions
+   * @description Gets all executions for a given DCA strategy from the subgraph
+   */
   getExecutions(params: { chainId: ChainId; strategyId: string }): Promise<IDcaExecution[]>
 
+  /**
+   * @name getExecution
+   * @description Gets a single execution by executionId from the subgraph
+   */
   getExecution(params: {
     chainId: ChainId
     strategyId: string
     executionId: string
   }): Promise<IDcaExecution | undefined>
+
 }

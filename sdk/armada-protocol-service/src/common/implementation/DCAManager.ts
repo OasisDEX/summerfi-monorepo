@@ -1,14 +1,15 @@
-import type { IArmadaManagerDCA } from '@summerfi/armada-protocol-common'
+import type { IDCAManager } from '@summerfi/armada-protocol-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
-import type { IDcaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import type { IDcaSubgraphManager, GetStrategiesQuery } from '@summerfi/subgraph-manager-common'
 import {
   type AddressValue,
   type ChainId,
   type HexData,
-  type IArmadaDcaOrder,
+  type IDcaStrategy,
+  type IDcaExecution,
   type IArmadaDcaStrategyConfig,
   Address,
   DcaStrategyStatusEnum,
@@ -19,6 +20,7 @@ import {
   type PauseDcaStrategyTransactionInfo,
   type ResumeDcaStrategyTransactionInfo,
   type CancelDcaStrategyTransactionInfo,
+  type EarnAppCookieVerifier,
   createTimeoutSignal,
   getChainInfoByChainId,
   isAddressValue,
@@ -48,52 +50,11 @@ const ERC20_METADATA_ABI = parseAbi([
   'function symbol() view returns (string)',
 ])
 
-export type DbOrderRow = {
-  id: string
-  orderId: string
-  userAddress: string
-  chainId: number
-  fromVault: string
-  toVault: string
-  amount: string
-  slippage: string
-  intervalSeconds: number
-  nextExecutionAt: string | null
-  deadline: string | null
-  maxTrades: number
-  tradesExecuted: number
-  allowedVaultsRoot: string
-  fromVaultProof: unknown
-  toVaultProof: unknown
-  swapCalldata: string
-  signature: string
-  ensoRouterAddress: string
-  verifyingContractAddress: string
-  status: string
-  createdAt: string
-  updatedAt: string
-  cancelledAt: string | null
-  pausedAt: string | null
-  neverBuyAbove: string | null
-  neverSellBelow: string | null
-  inAsset: string
-  outAsset: string
-  inAssetFeed: string
-  outAssetFeed: string
-}
-
 /**
- * @name EarnAppCookieVerifier
- * @description Callback that verifies a request is authorized for the given user address.
- * Should throw an error if the verification fails.
- */
-export type EarnAppCookieVerifier = (userAddress: AddressValue) => Promise<void>
-
-/**
- * @name ArmadaManagerDCA
+ * @name DCAManager
  * @description Handles creation and persistence of recurring DCA buy orders.
  */
-export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaManagerDCA {
+export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   private _configProvider: IConfigurationProvider
   private _deploymentProvider: IDeploymentProvider
   private _summerProtocolDbProvider?: SummerProtocolDbProvider
@@ -123,8 +84,8 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   }
 
   async createStrategyTx(
-    params: Parameters<IArmadaManagerDCA['createStrategyTx']>[0],
-  ): ReturnType<IArmadaManagerDCA['createStrategyTx']> {
+    params: Parameters<IDCAManager['createStrategyTx']>[0],
+  ): ReturnType<IDCAManager['createStrategyTx']> {
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
@@ -156,14 +117,14 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   }
 
   async editStrategyTx(
-    params: Parameters<IArmadaManagerDCA['editStrategyTx']>[0],
-  ): ReturnType<IArmadaManagerDCA['editStrategyTx']> {
+    params: Parameters<IDCAManager['editStrategyTx']>[0],
+  ): ReturnType<IDCAManager['editStrategyTx']> {
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
-    const strategyConfig = this._orderToStrategyConfig({
-      order: params.order,
+    const strategyConfig = this._strategyToStrategyConfig({
+      strategy: params.strategy,
       strategyId: params.strategyId,
     })
     return this._buildStrategyConfigTransaction({
@@ -172,13 +133,13 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       functionName: 'editStrategy',
       description: 'Edit DCA strategy',
       type: TransactionType.EditStrategy,
-      metadata: { order: params.order },
+      metadata: { strategy: params.strategy },
     }) as EditDcaStrategyTransactionInfo
   }
 
   async pauseStrategyTx(
-    params: Parameters<IArmadaManagerDCA['pauseStrategyTx']>[0],
-  ): ReturnType<IArmadaManagerDCA['pauseStrategyTx']> {
+    params: Parameters<IDCAManager['pauseStrategyTx']>[0],
+  ): ReturnType<IDCAManager['pauseStrategyTx']> {
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
@@ -193,14 +154,14 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   }
 
   async resumeStrategyTx(
-    params: Parameters<IArmadaManagerDCA['resumeStrategyTx']>[0],
-  ): ReturnType<IArmadaManagerDCA['resumeStrategyTx']> {
+    params: Parameters<IDCAManager['resumeStrategyTx']>[0],
+  ): ReturnType<IDCAManager['resumeStrategyTx']> {
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
-    const strategyConfig = this._orderToStrategyConfig({
-      order: params.order,
+    const strategyConfig = this._strategyToStrategyConfig({
+      strategy: params.strategy,
       strategyId: params.strategyId,
     })
     return this._buildStrategyConfigTransaction({
@@ -209,13 +170,13 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       functionName: 'resumeStrategy',
       description: 'Resume DCA strategy',
       type: TransactionType.ResumeStrategy,
-      metadata: { order: params.order },
+      metadata: { strategy: params.strategy },
     }) as ResumeDcaStrategyTransactionInfo
   }
 
   async cancelStrategyTx(
-    params: Parameters<IArmadaManagerDCA['cancelStrategyTx']>[0],
-  ): ReturnType<IArmadaManagerDCA['cancelStrategyTx']> {
+    params: Parameters<IDCAManager['cancelStrategyTx']>[0],
+  ): ReturnType<IDCAManager['cancelStrategyTx']> {
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
@@ -230,71 +191,51 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
   }
 
   async getStrategies(
-    params: Parameters<IArmadaManagerDCA['getStrategies']>[0],
-  ): ReturnType<IArmadaManagerDCA['getStrategies']> {
+    params: Parameters<IDCAManager['getStrategies']>[0],
+  ): ReturnType<IDCAManager['getStrategies']> {
     const result = await this._dcaSubgraphManager.getStrategies({ chainId: params.chainId })
-    let { strategies } = result
+    let subgraphStrategies = result.strategies
     if (params.userAddress) {
       const lowerAddress = params.userAddress.toLowerCase()
-      strategies = strategies.filter((s) => s.owner.id.toLowerCase() === lowerAddress)
+      subgraphStrategies = subgraphStrategies.filter(
+        (s) => s.owner.id.toLowerCase() === lowerAddress,
+      )
     }
     if (params.status) {
       const lowerStatus = params.status.toLowerCase()
-      strategies = strategies.filter((s) => s.status.toLowerCase() === lowerStatus)
+      subgraphStrategies = subgraphStrategies.filter((s) => s.status.toLowerCase() === lowerStatus)
     }
-    return { ...result, strategies }
+    const strategies = subgraphStrategies.map((s) =>
+      this._mapSubgraphStrategyToStrategy(s, params.chainId),
+    )
+    return strategies
   }
 
   async getStrategy(
-    params: Parameters<IArmadaManagerDCA['getStrategy']>[0],
-  ): ReturnType<IArmadaManagerDCA['getStrategy']> {
-    const { strategies } = await this.getStrategies({ chainId: params.chainId })
-    return strategies.find((s) => s.strategyId.toString() === params.strategyId)
+    params: Parameters<IDCAManager['getStrategy']>[0],
+  ): ReturnType<IDCAManager['getStrategy']> {
+    const strategies = await this.getStrategies({ chainId: params.chainId })
+    return strategies.find((s) => s.id === params.strategyId)
   }
 
   async getExecutions(
-    params: Parameters<IArmadaManagerDCA['getExecutions']>[0],
-  ): ReturnType<IArmadaManagerDCA['getExecutions']> {
-    return this._dcaSubgraphManager.getExecutions({
+    params: Parameters<IDCAManager['getExecutions']>[0],
+  ): ReturnType<IDCAManager['getExecutions']> {
+    const { executions } = await this._dcaSubgraphManager.getExecutions({
       chainId: params.chainId,
       strategyId: params.strategyId,
     })
+    return executions.map((e) => this._mapSubgraphExecutionToExecution(e))
   }
 
   async getExecution(
-    params: Parameters<IArmadaManagerDCA['getExecution']>[0],
-  ): ReturnType<IArmadaManagerDCA['getExecution']> {
-    const { executions } = await this.getExecutions({
+    params: Parameters<IDCAManager['getExecution']>[0],
+  ): ReturnType<IDCAManager['getExecution']> {
+    const executions = await this.getExecutions({
       chainId: params.chainId,
       strategyId: params.strategyId,
     })
     return executions.find((e) => e.id.toLowerCase() === params.executionId.toLowerCase())
-  }
-
-  async createAndSaveBuyOrder() // params: Parameters<IArmadaManagerDCA['createAndSaveBuyOrder']>[0],
-  : ReturnType<IArmadaManagerDCA['createAndSaveBuyOrder']> {
-    throw new Error('createAndSaveBuyOrder is deprecated, please use createStrategyTx instead.')
-  }
-
-  async editBuyOrder() // params: Parameters<IArmadaManagerDCA['editBuyOrder']>[0],
-  : ReturnType<IArmadaManagerDCA['editBuyOrder']> {
-    throw new Error('editBuyOrder is deprecated, please use editStrategyTx instead.')
-  }
-
-  async cancelBuyOrder() // params: Parameters<IArmadaManagerDCA['cancelBuyOrder']>[0],
-  : ReturnType<IArmadaManagerDCA['cancelBuyOrder']> {
-    throw new Error('cancelBuyOrder is deprecated, please use cancelStrategyTx instead.')
-  }
-
-  async pauseBuyOrder() // params: Parameters<IArmadaManagerDCA['pauseBuyOrder']>[0],
-  : ReturnType<IArmadaManagerDCA['pauseBuyOrder']> {
-    throw new Error('pauseBuyOrder is deprecated, please use pauseStrategyTx instead.')
-  }
-
-  async resumeBuyOrder(
-    params: Parameters<IArmadaManagerDCA['resumeBuyOrder']>[0],
-  ): ReturnType<IArmadaManagerDCA['resumeBuyOrder']> {
-    throw new Error('resumeBuyOrder is deprecated, please use resumeStrategyTx instead.')
   }
 
   private async _buildAndValidateDcaOrder(params: {
@@ -320,7 +261,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       outAssetFeed: AddressValue
     }
     now: number
-  }): Promise<IArmadaDcaOrder> {
+  }): Promise<IDcaStrategy> {
     const { params: p, now } = params
     const deadline = p.deadlineUnixTimestamp
 
@@ -462,26 +403,73 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     return Number(params.amount) * priceUsd
   }
 
-  private _orderToStrategyConfig(params: {
-    order: IArmadaDcaOrder
+  private _mapSubgraphExecutionToExecution(
+    subgraphExecution: Awaited<
+      ReturnType<typeof this._dcaSubgraphManager.getExecutions>
+    >['executions'][0],
+  ): IDcaExecution {
+    return {
+      id: subgraphExecution.id,
+      txHash: subgraphExecution.txHash,
+      executionTimestamp: Number(subgraphExecution.executionTimestamp),
+      amountIn: subgraphExecution.amountIn.toString(),
+      amountOut: subgraphExecution.amountOut.toString(),
+      tradesExecutedAfter: Number(subgraphExecution.tradesExecutedAfter),
+    }
+  }
+
+  private _mapSubgraphStrategyToStrategy(
+    subgraphStrategy: GetStrategiesQuery['strategies'][0],
+    chainId: ChainId,
+  ): IDcaStrategy {
+    return {
+      id: subgraphStrategy.strategyId.toString(),
+      userAddress: subgraphStrategy.owner.id as AddressValue,
+      chainId,
+      fromVault: subgraphStrategy.sourceVault as AddressValue,
+      toVault: subgraphStrategy.targetVault as AddressValue,
+      inAsset: subgraphStrategy.inAsset as AddressValue,
+      outAsset: subgraphStrategy.outAsset as AddressValue,
+      inAssetFeed: subgraphStrategy.inAssetFeed as AddressValue,
+      outAssetFeed: subgraphStrategy.outAssetFeed as AddressValue,
+      amount: subgraphStrategy.tradeAmount.toString(),
+      slippage: String(Number(subgraphStrategy.slippageBps) / 100),
+      intervalSeconds: Number(subgraphStrategy.interval),
+      nextExecutionAtUnixTimestamp: Number(subgraphStrategy.nextTriggerAt),
+      deadlineUnixTimestamp:
+        subgraphStrategy.endDate > 0n ? Number(subgraphStrategy.endDate) : undefined,
+      maxTrades: Number(subgraphStrategy.maxTrades),
+      tradesExecuted: Number(subgraphStrategy.tradesExecuted),
+      status: subgraphStrategy.status.toLowerCase() as DcaStrategyStatusEnum,
+      createdAt: Number(subgraphStrategy.createdAt),
+      updatedAt: Number(subgraphStrategy.updatedAt),
+      neverBuyAbove:
+        subgraphStrategy.maxPrice > 0n ? subgraphStrategy.maxPrice.toString() : undefined,
+      neverSellBelow:
+        subgraphStrategy.minPrice > 0n ? subgraphStrategy.minPrice.toString() : undefined,
+    }
+  }
+
+  private _strategyToStrategyConfig(params: {
+    strategy: IDcaStrategy
     strategyId: string
   }): IArmadaDcaStrategyConfig {
     return {
       strategyId: params.strategyId,
-      owner: params.order.userAddress,
-      sourceVault: params.order.fromVault,
-      targetVault: params.order.toVault,
-      inAsset: params.order.inAsset,
-      outAsset: params.order.outAsset,
-      inAssetFeed: params.order.inAssetFeed,
-      outAssetFeed: params.order.outAssetFeed,
-      tradeAmount: params.order.amount,
-      interval: String(params.order.intervalSeconds),
-      slippageBps: String(Math.round(Number(params.order.slippage) * 100)),
-      maxPrice: params.order.neverBuyAbove ?? '0',
-      minPrice: params.order.neverSellBelow ?? '0',
-      endDate: String(params.order.deadlineUnixTimestamp ?? 0),
-      maxTrades: String(params.order.maxTrades),
+      owner: params.strategy.userAddress,
+      sourceVault: params.strategy.fromVault,
+      targetVault: params.strategy.toVault,
+      inAsset: params.strategy.inAsset,
+      outAsset: params.strategy.outAsset,
+      inAssetFeed: params.strategy.inAssetFeed,
+      outAssetFeed: params.strategy.outAssetFeed,
+      tradeAmount: params.strategy.amount,
+      interval: String(params.strategy.intervalSeconds),
+      slippageBps: String(Math.round(Number(params.strategy.slippage) * 100)),
+      maxPrice: params.strategy.neverBuyAbove ?? '0',
+      minPrice: params.strategy.neverSellBelow ?? '0',
+      endDate: String(params.strategy.deadlineUnixTimestamp ?? 0),
+      maxTrades: String(params.strategy.maxTrades),
     }
   }
 
@@ -515,7 +503,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     description: string
     type: TransactionType.EditStrategy | TransactionType.ResumeStrategy
     metadata: {
-      order: IArmadaDcaOrder
+      strategy: IDcaStrategy
     }
   }): EditDcaStrategyTransactionInfo | ResumeDcaStrategyTransactionInfo {
     const calldata = encodeFunctionData({
@@ -702,57 +690,5 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     }
 
     return calldata as HexData
-  }
-
-  private _mapDbOrderToOrder(row: DbOrderRow): IArmadaDcaOrder {
-    const parseProof = (proof: unknown): unknown[] => {
-      if (typeof proof === 'string') {
-        try {
-          const parsed = JSON.parse(proof)
-          return Array.isArray(parsed) ? parsed : []
-        } catch {
-          return []
-        }
-      }
-
-      return Array.isArray(proof) ? proof : []
-    }
-
-    const fromVaultProof = parseProof(row.fromVaultProof)
-    const toVaultProof = parseProof(row.toVaultProof)
-
-    return {
-      id: row.id,
-      orderId: row.orderId,
-      userAddress: row.userAddress as AddressValue,
-      chainId: row.chainId as ChainId,
-      fromVault: row.fromVault as AddressValue,
-      toVault: row.toVault as AddressValue,
-      amount: row.amount,
-      slippage: row.slippage,
-      intervalSeconds: row.intervalSeconds,
-      nextExecutionAtUnixTimestamp: Number(row.nextExecutionAt ?? 0),
-      deadlineUnixTimestamp: row.deadline !== null ? Number(row.deadline) : undefined,
-      maxTrades: row.maxTrades,
-      tradesExecuted: row.tradesExecuted,
-      allowedVaultsRoot: row.allowedVaultsRoot as HexData,
-      fromVaultProof: fromVaultProof as HexData[],
-      toVaultProof: toVaultProof as HexData[],
-      swapCalldata: row.swapCalldata as HexData,
-      signature: row.signature as HexData,
-      ensoRouterAddress: row.ensoRouterAddress as AddressValue,
-      verifyingContractAddress: row.verifyingContractAddress as AddressValue,
-      status: row.status as DcaStrategyStatusEnum,
-      createdAt: Number(row.createdAt),
-      updatedAt: Number(row.updatedAt),
-      cancelledAt: row.cancelledAt ? Number(row.cancelledAt) : undefined,
-      pausedAt: row.pausedAt ? Number(row.pausedAt) : undefined,
-      neverBuyAbove: row.neverBuyAbove ?? undefined,
-      neverSellBelow: row.neverSellBelow ?? undefined,
-      inAsset: row.inAsset as AddressValue,
-      outAsset: row.outAsset as AddressValue,
-      inAssetFeed: row.inAssetFeed as AddressValue,
-      outAssetFeed: row.outAssetFeed as AddressValue,
-    }
   }
 }

@@ -14,11 +14,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type IToken, type TokenSymbolsList } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, supportedSDKNetwork, ten } from '@summerfi/app-utils'
-import {
-  type AddressValue,
-  DcaStrategyStatusEnum,
-  type IArmadaDcaOrder,
-} from '@summerfi/sdk-common'
+import { DcaStrategyStatusEnum, type IArmadaDcaOrder } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { useRouter } from 'next/navigation'
 
@@ -56,7 +52,7 @@ const formatStatus = (orderStatus: DcaStrategyStatusEnum) => {
 export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder, pair }) => {
   const { login } = useEarnProtocolLogin()
   const { walletClient, address } = useEarnProtocolWallet()
-  const { cancelBuyOrder } = useAppSDK()
+  const { cancelStrategyTx } = useAppSDK()
   const { refresh } = useRouter()
 
   const [order, setOrder] = useState<IArmadaDcaOrder>(initialOrder)
@@ -155,8 +151,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
   }
 
   const canCancel =
-    order.status === DcaStrategyStatusEnum.Active ||
-    order.status === DcaStrategyStatusEnum.Paused
+    order.status === DcaStrategyStatusEnum.Active || order.status === DcaStrategyStatusEnum.Paused
 
   const handleCancel = useCallback(async () => {
     if (!address || !walletClient) {
@@ -169,20 +164,18 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
     setErrorMessage(null)
 
     try {
-      const signedMessage = `I want to cancel ${order.id}.`
-      const signature = await walletClient.signMessage({
+      const txInfo = await cancelStrategyTx({
+        chainId,
+        strategyId: order.id,
+      })
+
+      await walletClient.sendTransaction({
         account: walletClient.account ?? (address as `0x${string}`),
-        message: signedMessage,
+        to: txInfo.transaction.targetContract.value as `0x${string}`,
+        data: txInfo.transaction.calldata as `0x${string}`,
+        chain: null,
       })
 
-      const cancelled = await cancelBuyOrder({
-        orderId: order.id,
-        userAddress: address as AddressValue,
-        signedMessage,
-        signature,
-      })
-
-      setOrder(cancelled)
       refresh()
     } catch (error) {
       const isRejected = error instanceof Error && /rejected|denied/iu.test(error.message)
@@ -200,7 +193,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
     } finally {
       setIsCancelling(false)
     }
-  }, [address, cancelBuyOrder, order.id, refresh, walletClient])
+  }, [address, cancelStrategyTx, chainId, order.id, refresh, walletClient])
 
   const cancelButton = useMemo(() => {
     if (!address) {

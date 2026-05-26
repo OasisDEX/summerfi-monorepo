@@ -11,12 +11,12 @@ export async function getUserDcaOrders({
   walletAddress: string
 }) {
   try {
-    const ordersList = await backendSDK.dca.getStrategies({
+    const { result: strategies } = await backendSDK.dca.getStrategies({
       chainId,
       userAddress: walletAddress.toLowerCase() as `0x${string}`,
     })
 
-    return ordersList
+    return strategies
   } catch (error) {
     return serverOnlyErrorHandler('getUserDcaOrders', error as string)
   }

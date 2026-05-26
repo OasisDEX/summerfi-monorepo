@@ -61,7 +61,7 @@ export type { IArmadaManagerUtils } from './common/interfaces/IArmadaManagerUtil
 export type { IArmadaManagerPositions } from './common/interfaces/IArmadaManagerPositions'
 export type { IArmadaManagerAdmin } from './common/interfaces/IArmadaManagerAdmin'
 export type { IArmadaManagerAccessControl } from './common/interfaces/IArmadaManagerAccessControl'
-export type { IArmadaManagerDCA } from './common/interfaces/IArmadaManagerDCA'
+export type { IDCAManager } from './common/interfaces/IDCAManager'
 export {
   setTestDeployment,
   isTestDeployment,

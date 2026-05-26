@@ -4,7 +4,7 @@ import {
   type AddressValue,
   type ChainId,
   type HexData,
-  type IArmadaDcaOrder,
+  type IDcaStrategy,
   type IArmadaDcaStrategyConfig,
 } from '@summerfi/sdk-common'
 import { z } from 'zod'
@@ -33,9 +33,9 @@ export const createStrategyTxInputSchema = z.object({
   deadlineUnixTimestamp: z.number().int().optional(),
 })
 
-export const orderSchema: z.ZodType<IArmadaDcaOrder> = z.object({
-  id: z.string().uuid(),
-  orderId: uint256StringSchema,
+export const strategySchema: z.ZodType<IDcaStrategy> = z.object({
+  id: z.string(),
+  orderId: uint256StringSchema.optional(),
   userAddress: addressSchema,
   chainId: z.number() as z.ZodType<ChainId>,
   fromVault: addressSchema,
@@ -47,13 +47,13 @@ export const orderSchema: z.ZodType<IArmadaDcaOrder> = z.object({
   deadlineUnixTimestamp: z.number().int().optional(),
   maxTrades: z.number().int().nonnegative(),
   tradesExecuted: z.number().int().nonnegative(),
-  allowedVaultsRoot: hexDataSchema,
-  fromVaultProof: z.array(hexDataSchema),
-  toVaultProof: z.array(hexDataSchema),
-  swapCalldata: hexDataSchema,
-  signature: hexDataSchema,
-  ensoRouterAddress: addressSchema,
-  verifyingContractAddress: addressSchema,
+  allowedVaultsRoot: hexDataSchema.optional(),
+  fromVaultProof: z.array(hexDataSchema).optional(),
+  toVaultProof: z.array(hexDataSchema).optional(),
+  swapCalldata: hexDataSchema.optional(),
+  signature: hexDataSchema.optional(),
+  ensoRouterAddress: addressSchema.optional(),
+  verifyingContractAddress: addressSchema.optional(),
   status: z.nativeEnum(DcaStrategyStatusEnum),
   createdAt: z.number().int(),
   updatedAt: z.number().int(),

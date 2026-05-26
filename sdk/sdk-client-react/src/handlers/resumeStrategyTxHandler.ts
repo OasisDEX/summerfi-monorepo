@@ -1,20 +1,20 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import type { ChainId, IArmadaDcaOrder } from '@summerfi/sdk-common'
+import type { ChainId, IDcaStrategy } from '@summerfi/sdk-common'
 
 export const resumeStrategyTxHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     chainId,
-    order,
+    strategy,
     strategyId,
   }: {
     chainId: ChainId
-    order: IArmadaDcaOrder
+    strategy: IDcaStrategy
     strategyId: string
   }) => {
     return sdk.dca.resumeStrategyTx({
       chainId,
-      order,
+      strategy,
       strategyId,
     })
   }

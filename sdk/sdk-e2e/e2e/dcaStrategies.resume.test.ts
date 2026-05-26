@@ -14,8 +14,8 @@ describe('Armada Protocol - DCA Strategies Resume', () => {
     const { strategyId } = scenario
 
     it('should resume a paused DCA strategy by id', async () => {
-      const setup = createSdkTestSetup({ chainId: ChainIds.Base })
-      const { sdk, chainId, userAddressValue: userAddress } = setup
+      const setup = createSdkTestSetup({ chainId: ChainIds.Base, simulateOnly: false })
+      const { sdk, chainId, walletClient, publicClient } = setup
 
       const existingStrategy = await sdk.dca.getStrategy({ strategyId, chainId })
 
@@ -26,12 +26,20 @@ describe('Armada Protocol - DCA Strategies Resume', () => {
         return
       }
 
-      const resumedStrategy = await sdk.dca.resumeBuyOrder({
-        orderId: strategyId,
-        userAddress,
-      })
+      const resumeTx = await sdk.dca.resumeStrategyTx({ chainId, strategy: existingStrategy, strategyId })
 
-      assert.strictEqual(resumedStrategy.status, DcaStrategyStatusEnum.Active)
+      const txHash = await walletClient.sendTransaction({
+        account: walletClient.account!,
+        to: resumeTx.transaction.target.value,
+        value: BigInt(resumeTx.transaction.value),
+        data: resumeTx.transaction.calldata,
+        chain: walletClient.chain,
+      })
+      await publicClient.waitForTransactionReceipt({ hash: txHash })
+
+      const updatedStrategy = await sdk.dca.getStrategy({ strategyId, chainId })
+      assert(updatedStrategy, `Expected strategy ${strategyId} to exist after resume`)
+      assert.strictEqual(updatedStrategy.status, DcaStrategyStatusEnum.Active)
       console.log(`[Resume] Resumed DCA strategy with ID: ${strategyId}`)
     })
   })

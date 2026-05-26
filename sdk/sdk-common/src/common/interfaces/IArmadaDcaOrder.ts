@@ -54,6 +54,3 @@ export interface IDcaStrategy {
   /** Oracle price feed address for the output asset */
   outAssetFeed: AddressValue
 }
-
-/** @deprecated Use IDcaStrategy instead */
-export type IArmadaDcaOrder = IDcaStrategy
