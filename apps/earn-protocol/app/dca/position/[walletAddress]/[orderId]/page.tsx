@@ -1,5 +1,9 @@
 import { type FC } from 'react'
-import { parseServerResponseToClient } from '@summerfi/app-utils'
+import {
+  parseServerResponseToClient,
+  subgraphNetworkToId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 import type { ChainId } from '@summerfi/sdk-common'
 import { type Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -38,10 +42,14 @@ const DCAPositionPage: FC<DCAPositionPageProps> = async ({ params }) => {
   })
 
   const fromVault = vaultsWithConfig.find(
-    (vault) => vault.id.toLowerCase() === order.sourceVault.toLowerCase(),
+    (vault) =>
+      vault.id.toLowerCase() === order.sourceVault.toLowerCase() &&
+      subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network)) === order.chainId,
   )
   const toVault = vaultsWithConfig.find(
-    (vault) => vault.id.toLowerCase() === order.targetVault.toLowerCase(),
+    (vault) =>
+      vault.id.toLowerCase() === order.targetVault.toLowerCase() &&
+      subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network)) === order.chainId,
   )
 
   if (!fromVault || !toVault) {

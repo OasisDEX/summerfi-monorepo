@@ -6,6 +6,7 @@ import {
 } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
+  subgraphNetworkToId,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
@@ -18,10 +19,18 @@ import { VaultSwitchBox } from '@/components/molecules/SidebarElements/VaultSwit
 
 import classNames from './PortfolioDcaPosition.module.css'
 
-const findVault = (vaultsList: SDKVaultsListType, address: string): SDKVaultishType | undefined => {
+const findVault = (
+  vaultsList: SDKVaultsListType,
+  address: string,
+  chainId: number,
+): SDKVaultishType | undefined => {
   const target = address.toLowerCase()
 
-  return vaultsList.find((vault) => vault.id.toLowerCase() === target)
+  return vaultsList.find(
+    (vault) =>
+      vault.id.toLowerCase() === target &&
+      subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network)) === chainId,
+  )
 }
 
 const formatTokenAmount = (rawAmount: string, decimals: number, symbol: string): string => {
@@ -73,8 +82,8 @@ export const PortfolioDcaPosition = ({
   order: IDcaStrategy
   vaultsList: SDKVaultsListType
 }) => {
-  const fromVault = findVault(vaultsList, order.sourceVault)
-  const toVault = findVault(vaultsList, order.targetVault)
+  const fromVault = findVault(vaultsList, order.sourceVault, order.chainId)
+  const toVault = findVault(vaultsList, order.targetVault, order.chainId)
 
   const fromSymbol = fromVault?.inputToken.symbol ?? 'TOKEN'
   const fromDecimals = fromVault?.inputToken.decimals ?? 18

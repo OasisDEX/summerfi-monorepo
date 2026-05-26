@@ -27,6 +27,7 @@ export const FREQUENCY_OPTIONS: FrequencyOption[] = [
 export const MAX_FREQUENCY_DAYS = 1000
 export const DEFAULT_MAX_TRADES = 120
 export const MAX_TRADES = 1000
+export const MIN_USD_DENOMINATED_DCA_AMOUNT = 5
 
 export const PERIOD_BUCKETS = [7, 30, 90, 180, 365, 730, 1095]
 export const PERIOD_WINDOW_SIZE = 3
