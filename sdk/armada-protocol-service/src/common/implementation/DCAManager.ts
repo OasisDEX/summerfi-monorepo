@@ -210,7 +210,6 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   ): ReturnType<IDCAManager['getStrategy']> {
     const strategies = await this.getStrategies({ chainId: params.chainId })
     const strategy = strategies.find((s) => s.strategyId.toString() === params.strategyId)
-    console.log('TYPE', typeof strategy?.tradeAmount)
     return strategy
   }
 

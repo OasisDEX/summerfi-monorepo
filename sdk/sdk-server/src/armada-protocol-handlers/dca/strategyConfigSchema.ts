@@ -1,6 +1,7 @@
 import {
   DcaStrategyStatusEnum,
   isAddressValue,
+  isChainId,
   type AddressValue,
   type ChainId,
   type IDcaStrategy,
@@ -23,7 +24,7 @@ const MAX_SLIPPAGE_PERCENTAGE = 100 // 100% = 10000 bps, matching _BPS in DCAStr
 export const dcaStrategySchema: z.ZodType<IDcaStrategy> = z.object({
   id: z.string(),
   strategyId: bigintSchema,
-  chainId: z.number() as z.ZodType<ChainId>,
+  chainId: z.custom<ChainId>(isChainId),
   ownerAddress: addressSchema,
   sourceVault: addressSchema,
   targetVault: addressSchema,
@@ -86,7 +87,7 @@ export const editDcaStrategyTxInputSchema = z.object({
         path: ['intervalSeconds'],
       })
     }
-    if (s.slippagePercentage > MAX_SLIPPAGE_PERCENTAGE) {
+    if (s.slippagePercentage < 0 || s.slippagePercentage > MAX_SLIPPAGE_PERCENTAGE) {
       ctx.addIssue({
         code: z.ZodIssueCode.too_big,
         maximum: MAX_SLIPPAGE_PERCENTAGE,
