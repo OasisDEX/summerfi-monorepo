@@ -41,13 +41,16 @@ type PortfolioPageProps = {
 }
 
 const portfolioCallsHandler = async ({ walletAddress }: { walletAddress: string }) => {
-  const [userPositions, userDcaOrders, vaultsList, systemConfig, vaultsInfo] = await Promise.all([
+  const [userPositions, vaultsList, systemConfig, vaultsInfo] = await Promise.all([
     getCachedUserPositions({ walletAddress }),
-    getCachedUserDcaOrders({ walletAddress }),
     getCachedVaultsList(),
     getCachedConfig(),
     getCachedVaultsInfo(),
   ])
+
+  const parsedSystemConfig = parseServerResponseToClient(systemConfig)
+  const dcaEnabled = !!parsedSystemConfig.features?.DcaEnabled
+  const userDcaOrders = dcaEnabled ? await getCachedUserDcaOrders({ walletAddress }) : []
 
   return {
     userPositions,

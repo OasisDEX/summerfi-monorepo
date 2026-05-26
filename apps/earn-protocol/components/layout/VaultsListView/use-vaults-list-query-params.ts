@@ -12,6 +12,8 @@ export type VaultsListFiltersType = {
   walletAddress?: (string | undefined)[]
 }
 
+const defaultVaultTabs = new Set(['risk-managed', 'defi-vaults'])
+
 export const useVaultsListQueryParams = () => {
   const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const { push } = useRouter()
@@ -40,7 +42,7 @@ export const useVaultsListQueryParams = () => {
         ...(newFilters.networks && { networks: newFilters.networks.join(',') }),
         ...(newFilters.walletAddress && { walletAddress: newFilters.walletAddress.join(',') }),
         ...(newFilters.vaults && {
-          vaults: newFilters.vaults !== 'risk-managed' ? newFilters.vaults : '', // if its the default one its gonna be deleted below
+          vaults: !defaultVaultTabs.has(newFilters.vaults) ? newFilters.vaults : '', // if its the default one its gonna be deleted below
         }),
         ...(newFilters.sorting && {
           sort: newFilters.sorting.value !== 'highest-apy' ? newFilters.sorting.value : '', // if its the default one its gonna be deleted below

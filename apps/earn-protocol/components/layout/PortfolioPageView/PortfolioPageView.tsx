@@ -109,6 +109,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 
   const beachClubEnabled = !!features?.BeachClub
   const stakingV2Enabled = !!features?.StakingV2
+  const dcaEnabled = !!features?.DcaEnabled
 
   const handleTabChange = (tab: { id: string }) => {
     handleButtonClick(`portfolio-tab-${tab.id}`)
@@ -131,6 +132,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           vaultsApyByNetworkMap={vaultsApyByNetworkMap}
           rewardTokenPrices={rewardTokenPrices}
           dcaOrders={dcaOrders}
+          dcaEnabled={dcaEnabled}
         />
       ),
     },

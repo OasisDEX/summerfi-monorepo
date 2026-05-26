@@ -596,6 +596,7 @@ export const VaultOpenViewComponent = ({
         //     />
         //   )
         // }
+        // rightExtraContent={<RwaSidebarInfo />} // when the rwa vault is ready
       />
     </>
   )
