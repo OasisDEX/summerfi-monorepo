@@ -38,25 +38,3 @@ export const publicProcedure = t.procedure.use(async (opts) => {
 
   return result
 })
-
-/**
- * Verifies an EARN JWT bearer token using EARN_PROTOCOL_JWT_SECRET.
- * Returns the decoded payload on success, throws UNAUTHORIZED on failure.
- */
-export async function verifyEarnBearerToken(bearerToken: string): Promise<void> {
-  const jwtSecret = process.env.EARN_PROTOCOL_JWT_SECRET
-  if (!jwtSecret) {
-    throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'JWT secret not configured' })
-  }
-
-  const token = bearerToken.startsWith('Bearer ') ? bearerToken.slice(7) : bearerToken
-  if (!token) {
-    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Missing bearer token' })
-  }
-
-  try {
-    await jwtVerify(token, new TextEncoder().encode(jwtSecret), { algorithms: ['HS512'] })
-  } catch {
-    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid or expired bearer token' })
-  }
-}
