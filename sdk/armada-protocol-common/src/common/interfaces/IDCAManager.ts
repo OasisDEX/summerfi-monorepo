@@ -32,29 +32,29 @@ export interface IDCAManager {
     neverBuyAbove?: string
     neverSellBelow?: string
     deadlineUnixTimestamp?: number
-  }): Promise<CreateDcaStrategyTransactionInfo>
+  }): Promise<[CreateDcaStrategyTransactionInfo]>
 
   editStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy
     strategyId: string
-  }): Promise<EditDcaStrategyTransactionInfo>
+  }): Promise<[EditDcaStrategyTransactionInfo]>
 
   pauseStrategyTx(params: {
     chainId: ChainId
     strategyId: string
-  }): Promise<PauseDcaStrategyTransactionInfo>
+  }): Promise<[PauseDcaStrategyTransactionInfo]>
 
   resumeStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy
     strategyId: string
-  }): Promise<ResumeDcaStrategyTransactionInfo>
+  }): Promise<[ResumeDcaStrategyTransactionInfo]>
 
   cancelStrategyTx(params: {
     chainId: ChainId
     strategyId: string
-  }): Promise<CancelDcaStrategyTransactionInfo>
+  }): Promise<[CancelDcaStrategyTransactionInfo]>
 
   /**
    * @name getStrategies
@@ -87,5 +87,4 @@ export interface IDCAManager {
     strategyId: string
     executionId: string
   }): Promise<IDcaExecution | undefined>
-
 }

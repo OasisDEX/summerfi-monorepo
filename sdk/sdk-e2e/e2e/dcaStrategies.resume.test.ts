@@ -26,7 +26,7 @@ describe('Armada Protocol - DCA Strategies Resume', () => {
         return
       }
 
-      const resumeTx = await sdk.dca.resumeStrategyTx({ chainId, strategy: existingStrategy, strategyId })
+      const [resumeTx] = await sdk.dca.resumeStrategyTx({ chainId, strategy: existingStrategy, strategyId })
 
       const txHash = await walletClient.sendTransaction({
         account: walletClient.account!,

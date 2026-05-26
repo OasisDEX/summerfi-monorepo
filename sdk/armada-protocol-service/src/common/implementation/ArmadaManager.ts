@@ -33,9 +33,7 @@ import { ArmadaManagerMerklRewards } from './ArmadaManagerMerklRewards'
 import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
 import { ArmadaManagerAccessControl } from './ArmadaManagerAccessControl'
 import { DCAManager } from './DCAManager'
-import type { EarnAppCookieVerifier } from '@summerfi/sdk-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
-import type { SummerProtocolDbProvider } from '../../db-provider/getDb'
 
 /**
  * @name ArmadaManager
@@ -83,8 +81,6 @@ export class ArmadaManager implements IArmadaManager {
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
-    summerProtocolDbProvider?: SummerProtocolDbProvider
-    earnAppCookieVerifier: EarnAppCookieVerifier
     dcaSubgraphManager: IDcaSubgraphManager
   }) {
     this._clientId = params.clientId
@@ -192,12 +188,7 @@ export class ArmadaManager implements IArmadaManager {
     })
     this.dca = new DCAManager({
       clientId: this._clientId,
-      configProvider: this._configProvider,
       deploymentProvider: this._deploymentProvider,
-      blockchainClientProvider: this._blockchainClientProvider,
-      oracleManager: this._oracleManager,
-      summerProtocolDbProvider: params.summerProtocolDbProvider,
-      earnAppCookieVerifier: params.earnAppCookieVerifier,
       dcaSubgraphManager: this._dcaSubgraphManager,
     })
   }

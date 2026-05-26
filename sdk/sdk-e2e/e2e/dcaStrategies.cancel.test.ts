@@ -29,7 +29,7 @@ describe('Armada Protocol - DCA Strategies Cancel', () => {
         return
       }
 
-      const cancelTx = await sdk.dca.cancelStrategyTx({ chainId, strategyId })
+      const [cancelTx] = await sdk.dca.cancelStrategyTx({ chainId, strategyId })
 
       const txHash = await walletClient.sendTransaction({
         account: walletClient.account!,

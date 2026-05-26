@@ -26,7 +26,7 @@ describe('Armada Protocol - DCA Strategies Pause', () => {
         return
       }
 
-      const pauseTx = await sdk.dca.pauseStrategyTx({ chainId, strategyId })
+      const [pauseTx] = await sdk.dca.pauseStrategyTx({ chainId, strategyId })
 
       const txHash = await walletClient.sendTransaction({
         account: walletClient.account!,

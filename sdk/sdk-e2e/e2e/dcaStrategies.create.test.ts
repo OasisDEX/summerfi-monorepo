@@ -44,7 +44,7 @@ describe('Armada Protocol - DCA Strategies', () => {
       }),
     ])
 
-    const strategyTx = await sdk.dca.createStrategyTx({
+    const [strategyTx] = await sdk.dca.createStrategyTx({
       chainId,
       userAddress: userAddress.toSolidityValue(),
       fromVault: fromVault.fleetAddressValue,

@@ -164,7 +164,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
     setErrorMessage(null)
 
     try {
-      const txInfo = await cancelStrategyTx({
+      const [txInfo] = await cancelStrategyTx({
         chainId,
         strategyId: order.id,
       })

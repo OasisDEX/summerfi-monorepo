@@ -12,7 +12,6 @@ import {
   fetchInstiDeploymentProviderConfig,
   type DeploymentProviderConfig,
   type IDeploymentProvider,
-  type EarnAppCookieVerifier,
 } from '@summerfi/armada-protocol-service'
 import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
@@ -29,9 +28,6 @@ import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { SubgraphManagerFactory } from '@summerfi/subgraph-manager-service'
 import { ISwapManager } from '@summerfi/swap-common'
 import { SwapManagerFactory, CowSwapProvider } from '@summerfi/swap-service'
-import { ITokensManager } from '@summerfi/tokens-common'
-import { TokensManagerFactory } from '@summerfi/tokens-service'
-import { jwtVerify } from 'jose'
 
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
@@ -41,8 +37,12 @@ import {
   isChainId,
   LoggingService,
   type ChainId,
+  type EarnAppCookieVerifier,
   type IChainInfo,
 } from '@summerfi/sdk-common'
+import type { ITokensManager } from '@summerfi/tokens-common'
+import { TokensManagerFactory } from '@summerfi/tokens-service'
+import { jwtVerify } from 'jose'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -63,6 +63,7 @@ export type SDKAppContext = {
   allowanceManager: IAllowanceManager
   armadaManager: IArmadaManager
   intentSwapsManager: CowSwapProvider
+  earnAppCookieVerifier: EarnAppCookieVerifier
 }
 
 function parseCookies(event: APIGatewayProxyEventV2): Record<string, string> {
@@ -251,7 +252,6 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     tokensManager,
     supportedChains,
     clientId,
-    earnAppCookieVerifier,
     dcaSubgraphManager,
   })
 
@@ -272,5 +272,6 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     allowanceManager,
     armadaManager,
     intentSwapsManager,
+    earnAppCookieVerifier,
   }
 }

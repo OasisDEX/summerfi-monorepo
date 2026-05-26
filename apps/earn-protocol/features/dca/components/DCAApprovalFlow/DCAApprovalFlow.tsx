@@ -141,7 +141,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
       parsedDeadline && Number.isFinite(parsedDeadline) ? parsedDeadline : undefined
 
     try {
-      const txInfo = await createStrategyTx({
+      const [txInfo] = await createStrategyTx({
         userAddress: address as AddressValue,
         chainId: dcaChainId,
         fromVault: pair.fromVault.id as AddressValue,
