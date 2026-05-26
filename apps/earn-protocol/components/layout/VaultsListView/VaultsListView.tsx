@@ -597,7 +597,7 @@ export const VaultsListView = ({
                 ? [
                     {
                       id: 'defi-vaults',
-                      label: 'Defi Vaults',
+                      label: 'DeFi Vaults',
                     },
                     {
                       id: 'permissioned-rwa-vaults',
