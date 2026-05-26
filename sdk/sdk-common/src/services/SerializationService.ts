@@ -1,6 +1,6 @@
 import type { RegisterOptions } from 'superjson/dist/class-registry'
 import type { CustomTransfomer } from 'superjson/dist/custom-transformer-registry'
-import type { JSONValue, SuperJSONResult } from 'superjson/dist/types'
+import type { JSONValue } from 'superjson/dist/types'
 import { SuperJSON } from 'superjson'
 import { LoggingService } from './LoggingService'
 
@@ -26,10 +26,6 @@ export class SerializationService {
 
   static parse<T>(v: string): T {
     return SuperJSON.parse(v) as T
-  }
-
-  static deserialize<T>(v: SuperJSONResult): T {
-    return SuperJSON.deserialize(v) as T
   }
 
   static getTransformer() {
