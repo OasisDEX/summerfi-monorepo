@@ -22,11 +22,6 @@ describe('Armada Protocol - DCA Strategies Resume', () => {
 
       assert(strategy, `Expected strategy ${strategyId} to exist`)
 
-      if (strategy.status === DcaStrategyStatusEnum.Active) {
-        console.log(`[Resume] Strategy ${strategyId} is already active, skipping`)
-        return
-      }
-
       const [resumeTx] = await sdk.dca.resumeStrategyTx({
         chainId,
         strategy,
@@ -41,9 +36,11 @@ describe('Armada Protocol - DCA Strategies Resume', () => {
       })
       await publicClient.waitForTransactionReceipt({ hash: txHash })
 
-      const updatedStrategy = await retryUntilDefined(() => sdk.dca.getStrategy({ strategyId, chainId }))
+      const updatedStrategy = await retryUntilDefined(
+        () => sdk.dca.getStrategy({ strategyId, chainId }),
+        (s) => s !== undefined && s.status === DcaStrategyStatusEnum.Active,
+      )
 
-      
       assert(updatedStrategy, `Expected strategy ${strategyId} to exist after resume`)
       assert.strictEqual(updatedStrategy.status, DcaStrategyStatusEnum.Active)
       console.log(`[Resume] Resumed DCA strategy with ID: ${strategyId}`)

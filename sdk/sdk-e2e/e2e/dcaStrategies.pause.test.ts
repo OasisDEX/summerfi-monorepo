@@ -22,11 +22,6 @@ describe('Armada Protocol - DCA Strategies Pause', () => {
 
       assert(strategy, `Expected strategy ${strategyId} to exist`)
 
-      if (strategy.status === DcaStrategyStatusEnum.Paused) {
-        console.log(`[Pause] Strategy ${strategyId} is already paused, skipping`)
-        return
-      }
-
       const [pauseTx] = await sdk.dca.pauseStrategyTx({ chainId, strategy })
 
       const txHash = await walletClient.sendTransaction({
@@ -38,8 +33,9 @@ describe('Armada Protocol - DCA Strategies Pause', () => {
       })
       await publicClient.waitForTransactionReceipt({ hash: txHash })
 
-      const updatedStrategy = await retryUntilDefined(() =>
-        sdk.dca.getStrategy({ strategyId, chainId }),
+      const updatedStrategy = await retryUntilDefined(
+        () => sdk.dca.getStrategy({ strategyId, chainId }),
+        (s) => s !== undefined && s.status === DcaStrategyStatusEnum.Paused,
       )
       assert(updatedStrategy, `Expected strategy ${strategyId} to exist after pause`)
       assert.strictEqual(updatedStrategy.status, DcaStrategyStatusEnum.Paused)

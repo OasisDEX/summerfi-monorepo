@@ -31,6 +31,7 @@ describe('Armada Protocol - DCA Strategies - getStrategy', () => {
           {
             id: strategy.id,
             status: strategy.status,
+            tradeAmount: strategy.tradeAmount,
           },
           null,
           2,

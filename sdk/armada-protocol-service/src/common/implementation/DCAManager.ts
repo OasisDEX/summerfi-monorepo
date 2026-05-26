@@ -84,6 +84,10 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async editStrategyTx(
     params: Parameters<IDCAManager['editStrategyTx']>[0],
   ): ReturnType<IDCAManager['editStrategyTx']> {
+    const strategyStatus = params.strategy.status
+    if (![DcaStrategyStatusEnum.Active, DcaStrategyStatusEnum.Paused].includes(strategyStatus)) {
+      throw new Error('Can only edit strategies with status active or paused')
+    }
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
@@ -107,6 +111,10 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async pauseStrategyTx(
     params: Parameters<IDCAManager['pauseStrategyTx']>[0],
   ): ReturnType<IDCAManager['pauseStrategyTx']> {
+    const strategyStatus = params.strategy.status
+    if (strategyStatus !== DcaStrategyStatusEnum.Active) {
+      throw new Error('Can only pause strategies with status active')
+    }
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
@@ -127,6 +135,10 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async resumeStrategyTx(
     params: Parameters<IDCAManager['resumeStrategyTx']>[0],
   ): ReturnType<IDCAManager['resumeStrategyTx']> {
+    const strategyStatus = params.strategy.status
+    if (strategyStatus !== DcaStrategyStatusEnum.Paused) {
+      throw new Error('Can only resume strategies with status paused')
+    }
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
@@ -150,6 +162,11 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async cancelStrategyTx(
     params: Parameters<IDCAManager['cancelStrategyTx']>[0],
   ): ReturnType<IDCAManager['cancelStrategyTx']> {
+    const strategyStatus = params.strategy.status
+    if (![DcaStrategyStatusEnum.Active, DcaStrategyStatusEnum.Paused].includes(strategyStatus)) {
+      throw new Error('Can only cancel strategies with status active or paused')
+    }
+
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
@@ -253,7 +270,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       deadlineUnixTimestamp: subgraphStrategy.endDate,
       maxTrades: subgraphStrategy.maxTrades,
       tradesExecuted: subgraphStrategy.tradesExecuted,
-      status: subgraphStrategy.status.toLowerCase() as DcaStrategyStatusEnum,
+      status: subgraphStrategy.status as DcaStrategyStatusEnum,
       createdAt: subgraphStrategy.createdAt,
       updatedAt: subgraphStrategy.updatedAt,
       neverBuyAbove: subgraphStrategy.maxPrice.toString(),

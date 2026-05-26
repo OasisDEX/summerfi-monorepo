@@ -23,11 +23,6 @@ describe('Armada Protocol - DCA Strategies Cancel', () => {
 
       assert(strategy, `Expected strategy ${strategyId} to exist`)
 
-      if (strategy.status === DcaStrategyStatusEnum.Cancelled) {
-        console.log(`[Cancel] Strategy ${strategyId} is already cancelled, skipping`)
-        return
-      }
-
       const [cancelTx] = await sdk.dca.cancelStrategyTx({ chainId, strategy })
 
       const txHash = await walletClient.sendTransaction({
@@ -39,8 +34,9 @@ describe('Armada Protocol - DCA Strategies Cancel', () => {
       })
       await publicClient.waitForTransactionReceipt({ hash: txHash })
 
-      const updatedStrategy = await retryUntilDefined(() =>
-        sdk.dca.getStrategy({ strategyId, chainId }),
+      const updatedStrategy = await retryUntilDefined(
+        () => sdk.dca.getStrategy({ strategyId, chainId }),
+        (s) => s !== undefined && s.status === DcaStrategyStatusEnum.Cancelled,
       )
       assert(updatedStrategy, `Expected strategy ${strategyId} to exist after cancel`)
       assert.strictEqual(updatedStrategy.status, DcaStrategyStatusEnum.Cancelled)
