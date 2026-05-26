@@ -209,7 +209,9 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     params: Parameters<IDCAManager['getStrategy']>[0],
   ): ReturnType<IDCAManager['getStrategy']> {
     const strategies = await this.getStrategies({ chainId: params.chainId })
-    return strategies.find((s) => s.strategyId.toString() === params.strategyId)
+    const strategy = strategies.find((s) => s.strategyId.toString() === params.strategyId)
+    console.log('TYPE', typeof strategy?.tradeAmount)
+    return strategy
   }
 
   async getExecutions(
@@ -253,7 +255,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   ): IDcaStrategy {
     return {
       id: subgraphStrategy.id,
-      strategyId: subgraphStrategy.strategyId,
+      strategyId: BigInt(subgraphStrategy.strategyId.toString()),
       ownerAddress: subgraphStrategy.owner.id as AddressValue,
       chainId,
       sourceVault: subgraphStrategy.sourceVault as AddressValue,
@@ -262,19 +264,19 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       outAsset: subgraphStrategy.outAsset as AddressValue,
       inAssetFeed: subgraphStrategy.inAssetFeed as AddressValue,
       outAssetFeed: subgraphStrategy.outAssetFeed as AddressValue,
-      tradeAmount: subgraphStrategy.tradeAmount,
+      tradeAmount: BigInt(subgraphStrategy.tradeAmount.toString()),
       slippagePercentage: Number(subgraphStrategy.slippageBps) / 100,
-      intervalSeconds: subgraphStrategy.interval,
-      nextTriggerAtUnixTimestamp: subgraphStrategy.nextTriggerAt,
-      lastScheduledAtUnixTimestamp: subgraphStrategy.lastScheduledAt,
-      deadlineUnixTimestamp: subgraphStrategy.endDate,
-      maxTrades: subgraphStrategy.maxTrades,
-      tradesExecuted: subgraphStrategy.tradesExecuted,
+      intervalSeconds: BigInt(subgraphStrategy.interval.toString()),
+      nextTriggerAtUnixTimestamp: BigInt(subgraphStrategy.nextTriggerAt.toString()),
+      lastScheduledAtUnixTimestamp: BigInt(subgraphStrategy.lastScheduledAt.toString()),
+      deadlineUnixTimestamp: BigInt(subgraphStrategy.endDate.toString()),
       status: subgraphStrategy.status as DcaStrategyStatusEnum,
-      createdAt: subgraphStrategy.createdAt,
-      updatedAt: subgraphStrategy.updatedAt,
+      maxTrades: BigInt(subgraphStrategy.maxTrades.toString()),
+      tradesExecuted: BigInt(subgraphStrategy.tradesExecuted.toString()),
       neverBuyAbove: subgraphStrategy.maxPrice.toString(),
       neverSellBelow: subgraphStrategy.minPrice.toString(),
+      createdAtUnixTimestamp: BigInt(subgraphStrategy.createdAt.toString()),
+      updatedAtUnixTimestamp: BigInt(subgraphStrategy.updatedAt.toString()),
     }
   }
 

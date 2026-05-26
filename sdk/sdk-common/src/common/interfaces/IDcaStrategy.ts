@@ -35,18 +35,18 @@ export interface IDcaStrategy {
   lastScheduledAtUnixTimestamp: bigint
   /** Unix timestamp after which the order stops executing */
   deadlineUnixTimestamp: bigint
-  /** Maximum number of trades to execute before the order completes */
-  maxTrades: bigint
   /** Current status of the strategy */
   status: DcaStrategyStatusEnum
+  /** Maximum number of trades to execute before the order completes */
+  maxTrades: bigint
   /** Number of trades that have been executed so far */
   tradesExecuted: bigint
-  /** Price ceiling — skip execution if the fromVault token price is above this value. Zero means no ceiling */
+  /** Price ceiling — skip execution if the fromVault token price is above this value. Zero means no ceiling. Full token units */
   neverBuyAbove: string
-  /** Price floor — skip execution if the toVault token price is below this value. Zero means no floor */
+  /** Price floor — skip execution if the toVault token price is below this value. Zero means no floor. Full token units */
   neverSellBelow: string
   /** Unix timestamp when the strategy was created */
-  createdAt: bigint
+  createdAtUnixTimestamp: bigint
   /** Unix timestamp when the strategy was last updated */
-  updatedAt: bigint
+  updatedAtUnixTimestamp: bigint
 }

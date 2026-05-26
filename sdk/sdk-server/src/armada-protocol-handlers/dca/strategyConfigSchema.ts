@@ -15,11 +15,7 @@ const nonZeroAddressSchema = addressSchema.refine(
 )
 
 // Accept either a bigint, a numeric string, or a number and coerce to bigint
-const bigintSchema = z.preprocess((val) => {
-  if (typeof val === 'string' && /^\d+$/.test(val)) return BigInt(val)
-  if (typeof val === 'number' && Number.isInteger(val)) return BigInt(val)
-  return val
-}, z.bigint())
+const bigintSchema = z.bigint()
 
 const MIN_INTERVAL_SECONDS = 86400 // 1 day, matching _MIN_INTERVAL in DCAStrategyManager
 const MAX_SLIPPAGE_PERCENTAGE = 100 // 100% = 10000 bps, matching _BPS in DCAStrategyManager
