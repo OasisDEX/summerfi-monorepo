@@ -96,10 +96,12 @@ import { getIntentSwapsSendDepositOrderHandler } from '../handlers/getIntentSwap
 import { getIntentSwapsCancelOrderHandler } from '../handlers/getIntentSwapsCancelOrderHandler'
 import { getIntentSwapsCheckOrderHandler } from '../handlers/getIntentSwapsCheckOrderHandler'
 import { getAddressesHandler } from '../handlers/getAddressesHandler'
-import { createAndSaveBuyOrderHandler } from '../handlers/createAndSaveBuyOrderHandler'
-import { getBuyOrderHandler } from '../handlers/getBuyOrderHandler'
-import { getBuyOrdersHandler } from '../handlers/getBuyOrdersHandler'
-import { cancelBuyOrderHandler } from '../handlers/cancelBuyOrderHandler'
+import { createStrategyTxHandler } from '../handlers/createStrategyTxHandler'
+import { getStrategyHandler } from '../handlers/getStrategyHandler'
+import { cancelStrategyTxHandler } from '../handlers/cancelStrategyTxHandler'
+import { editStrategyTxHandler } from '../handlers/editStrategyTxHandler'
+import { pauseStrategyTxHandler } from '../handlers/pauseStrategyTxHandler'
+import { resumeStrategyTxHandler } from '../handlers/resumeStrategyTxHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -297,10 +299,12 @@ export const useSDK = (params: UseSdk) => {
   )
   const getIntentSwapsPermit2RevokeTx = useMemo(() => getPermit2RevokeTxHandler(sdk), [sdk])
   const getAddresses = useMemo(() => getAddressesHandler(sdk), [sdk])
-  const createAndSaveBuyOrder = useMemo(() => createAndSaveBuyOrderHandler(sdk), [sdk])
-  const getBuyOrder = useMemo(() => getBuyOrderHandler(sdk), [sdk])
-  const getBuyOrders = useMemo(() => getBuyOrdersHandler(sdk), [sdk])
-  const cancelBuyOrder = useMemo(() => cancelBuyOrderHandler(sdk), [sdk])
+  const createStrategyTx = useMemo(() => createStrategyTxHandler(sdk), [sdk])
+  const editStrategyTx = useMemo(() => editStrategyTxHandler(sdk), [sdk])
+  const pauseStrategyTx = useMemo(() => pauseStrategyTxHandler(sdk), [sdk])
+  const resumeStrategyTx = useMemo(() => resumeStrategyTxHandler(sdk), [sdk])
+  const cancelStrategyTx = useMemo(() => cancelStrategyTxHandler(sdk), [sdk])
+  const getStrategy = useMemo(() => getStrategyHandler(sdk), [sdk])
 
   const memo = useMemo(
     () => ({
@@ -402,10 +406,12 @@ export const useSDK = (params: UseSdk) => {
       getIntentSwapsPermit2AuthorizationTx,
       getIntentSwapsPermit2RevokeTx,
       getAddresses,
-      createAndSaveBuyOrder,
-      getBuyOrder,
-      getBuyOrders,
-      cancelBuyOrder,
+      createStrategyTx,
+      editStrategyTx,
+      pauseStrategyTx,
+      resumeStrategyTx,
+      cancelStrategyTx,
+      getStrategy,
     }),
     [
       getCurrentUser,
@@ -505,10 +511,12 @@ export const useSDK = (params: UseSdk) => {
       getIntentSwapsPermit2AuthorizationTx,
       getIntentSwapsPermit2RevokeTx,
       getAddresses,
-      createAndSaveBuyOrder,
-      getBuyOrder,
-      getBuyOrders,
-      cancelBuyOrder,
+      createStrategyTx,
+      editStrategyTx,
+      pauseStrategyTx,
+      resumeStrategyTx,
+      cancelStrategyTx,
+      getStrategy,
     ],
   )
 

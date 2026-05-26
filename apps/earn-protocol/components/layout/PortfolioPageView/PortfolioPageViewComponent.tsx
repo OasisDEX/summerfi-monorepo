@@ -7,7 +7,7 @@ import {
   type SingleSourceChartData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
-import { type IArmadaDcaOrder } from '@summerfi/sdk-common'
+import { type IDcaStrategy } from '@summerfi/sdk-common'
 
 import { sdkApiUrl } from '@/constants/sdk'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
@@ -23,7 +23,7 @@ interface PortfolioPageViewComponentProps {
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
-  dcaOrders: IArmadaDcaOrder[]
+  dcaOrders: IDcaStrategy[]
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({

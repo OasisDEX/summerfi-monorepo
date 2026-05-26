@@ -1,0 +1,116 @@
+import { IPoolInfo, PoolInfoDataSchema } from './IPoolInfo'
+import { z } from 'zod'
+import { IArmadaVaultId, isArmadaVaultId } from './IArmadaVaultId'
+import { isTokenAmount, type ITokenAmount } from './ITokenAmount'
+import { PoolType } from '../enums/PoolType'
+import { isPercentage, type IPercentage } from './IPercentage'
+import { isToken, type IToken } from './IToken'
+import { isPrice, type IPrice } from './IPrice'
+import { isFiatCurrencyAmount, type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
+import type { VaultApys } from '../types/VaultApys'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
+ * @interface IRwaVaultInfo
+ * @description Extended info of a Real-World Asset (RWA) vault.
+ *              Cloned from IArmadaVaultInfo and intended to diverge as RWA-specific
+ *              fields are added.
+ */
+export interface IRwaVaultInfo extends IPoolInfo, IRwaVaultInfoData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
+  /** ID of the vault */
+  readonly id: IArmadaVaultId
+  /** Token of the vault */
+  readonly token: IToken
+  /** Underlying asset token that can be deposited into the vault */
+  readonly assetToken: IToken
+  /** Maximum amount that can be deposited into the vault at this moment */
+  readonly depositCap: ITokenAmount
+  /** Total amount of assets currently deposited in the vault */
+  readonly totalDeposits: ITokenAmount
+  /** Total amount of shares currently minted in the vault */
+  readonly totalShares: ITokenAmount
+  /** Current price per share of the vault */
+  readonly sharePrice: IPrice
+  /** Vault apy */
+  readonly apy: IPercentage | null
+  /** Vault apys for different time periods */
+  readonly apys: VaultApys
+  /** Vault SUMR rewards apy */
+  readonly rewardsApys:
+    | Array<{
+        token: IToken
+        apy: IPercentage | null
+      }>
+    | undefined
+  /** Vault Merkl rewards apy */
+  readonly merklRewards:
+    | Array<{
+        token: IToken
+        dailyEmission: string
+      }>
+    | undefined
+  /** Total value locked in USD */
+  readonly tvlUsd: IFiatCurrencyAmount
+
+  // Re-declaring the properties to narrow the types
+  readonly type: PoolType.Rwa
+}
+
+/**
+ * @description Zod schema for IRwaVaultInfo
+ */
+export const RwaVaultInfoDataSchema = z.object({
+  ...PoolInfoDataSchema.shape,
+  id: z.custom<IArmadaVaultId>((val) => isArmadaVaultId(val)),
+  token: z.custom<IToken>((val) => isToken(val)),
+  assetToken: z.custom<IToken>((val) => isToken(val)),
+  depositCap: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  totalDeposits: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  totalShares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  sharePrice: z.custom<IPrice>((val) => isPrice(val)),
+  apy: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+  apys: z.object({
+    live: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+    sma24h: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+    sma7day: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+    sma30day: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+  }),
+  rewardsApys: z
+    .array(
+      z.object({
+        token: z.custom<IToken>((val) => isToken(val)),
+        apy: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+      }),
+    )
+    .optional(),
+  merklRewards: z
+    .array(
+      z.object({
+        token: z.custom<IToken>((val) => isToken(val)),
+        dailyEmission: z.string(),
+      }),
+    )
+    .optional(),
+  tvlUsd: z.custom<IFiatCurrencyAmount>((val) => isFiatCurrencyAmount(val)),
+  type: z.literal(PoolType.Rwa),
+})
+
+/**
+ * Type for the data part of IRwaVaultInfo
+ */
+export type IRwaVaultInfoData = Readonly<z.infer<typeof RwaVaultInfoDataSchema>>
+
+/**
+ * @description Type guard for IRwaVaultInfo
+ * @param maybeRwaVaultInfo Object to be checked
+ * @returns true if the object is an IRwaVaultInfo
+ */
+export function isRwaVaultInfo(maybeRwaVaultInfo: unknown): maybeRwaVaultInfo is IRwaVaultInfo {
+  return RwaVaultInfoDataSchema.safeParse(maybeRwaVaultInfo).success
+}

@@ -14,11 +14,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type IToken, type TokenSymbolsList } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, supportedSDKNetwork, ten } from '@summerfi/app-utils'
-import {
-  type AddressValue,
-  ArmadaDcaOrderStatusEnum,
-  type IArmadaDcaOrder,
-} from '@summerfi/sdk-common'
+import { DcaStrategyStatusEnum, type IDcaStrategy } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { useRouter } from 'next/navigation'
 
@@ -31,22 +27,22 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import classNames from '@/features/dca/components/dca.module.css'
 
 interface DCAPositionViewProps {
-  order: IArmadaDcaOrder
+  order: IDcaStrategy
   pair: DCAResolvedPair
 }
 
 const SECONDS_PER_DAY = 24 * 60 * 60
 const THRESHOLD_DECIMALS = 8
 
-const formatStatus = (orderStatus: ArmadaDcaOrderStatusEnum) => {
+const formatStatus = (orderStatus: DcaStrategyStatusEnum) => {
   switch (orderStatus) {
-    case ArmadaDcaOrderStatusEnum.Active:
+    case DcaStrategyStatusEnum.Active:
       return 'Active'
-    case ArmadaDcaOrderStatusEnum.Paused:
+    case DcaStrategyStatusEnum.Paused:
       return 'Paused'
-    case ArmadaDcaOrderStatusEnum.Cancelled:
+    case DcaStrategyStatusEnum.Cancelled:
       return 'Cancelled'
-    case ArmadaDcaOrderStatusEnum.Completed:
+    case DcaStrategyStatusEnum.Completed:
       return 'Completed'
     default:
       return orderStatus
@@ -56,10 +52,11 @@ const formatStatus = (orderStatus: ArmadaDcaOrderStatusEnum) => {
 export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder, pair }) => {
   const { login } = useEarnProtocolLogin()
   const { walletClient, address } = useEarnProtocolWallet()
-  const { cancelBuyOrder } = useAppSDK()
+  const { cancelStrategyTx } = useAppSDK()
   const { refresh } = useRouter()
 
-  const [order, setOrder] = useState<IArmadaDcaOrder>(initialOrder)
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  const [order, setOrder] = useState<IDcaStrategy>(initialOrder)
   const [isEditing, setIsEditing] = useState(false)
   const [isCancelling, setIsCancelling] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -72,9 +69,9 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
   const sourceSymbol = getDisplayToken(pair.fromVault.inputToken.symbol)
   const targetSymbol = getDisplayToken(pair.toVault.inputToken.symbol)
 
-  const frequencyDays = Math.max(1, Math.round(order.intervalSeconds / SECONDS_PER_DAY))
+  const frequencyDays = Math.max(1, Math.round(Number(order.intervalSeconds) / SECONDS_PER_DAY))
   const deadlineDate = order.deadlineUnixTimestamp
-    ? new Date(order.deadlineUnixTimestamp * 1000)
+    ? new Date(Number(order.deadlineUnixTimestamp) * 1000)
     : undefined
 
   const isTargetEthVault = targetSymbol === 'ETH'
@@ -110,7 +107,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
       decimals: pair.fromVault.inputToken.decimals,
       symbol: sourceSymbol,
     } as IToken,
-    initialAmount: new BigNumber(order.amount)
+    initialAmount: new BigNumber(order.tradeAmount)
       .div(ten.pow(pair.fromVault.inputToken.decimals))
       .toString(),
     inputChangeHandler: () => undefined,
@@ -155,8 +152,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
   }
 
   const canCancel =
-    order.status === ArmadaDcaOrderStatusEnum.Active ||
-    order.status === ArmadaDcaOrderStatusEnum.Paused
+    order.status === DcaStrategyStatusEnum.Active || order.status === DcaStrategyStatusEnum.Paused
 
   const handleCancel = useCallback(async () => {
     if (!address || !walletClient) {
@@ -169,20 +165,18 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
     setErrorMessage(null)
 
     try {
-      const signedMessage = `I want to cancel ${order.id}.`
-      const signature = await walletClient.signMessage({
+      const [txInfo] = await cancelStrategyTx({
+        chainId,
+        strategy: order,
+      })
+
+      await walletClient.sendTransaction({
         account: walletClient.account ?? (address as `0x${string}`),
-        message: signedMessage,
+        to: txInfo.transaction.target.value as `0x${string}`,
+        data: txInfo.transaction.calldata as `0x${string}`,
+        chain: null,
       })
 
-      const cancelled = await cancelBuyOrder({
-        orderId: order.id,
-        userAddress: address as AddressValue,
-        signedMessage,
-        signature,
-      })
-
-      setOrder(cancelled)
       refresh()
     } catch (error) {
       const isRejected = error instanceof Error && /rejected|denied/iu.test(error.message)
@@ -200,7 +194,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
     } finally {
       setIsCancelling(false)
     }
-  }, [address, cancelBuyOrder, order.id, refresh, walletClient])
+  }, [address, cancelStrategyTx, chainId, order.id, refresh, walletClient])
 
   const cancelButton = useMemo(() => {
     if (!address) {
@@ -427,7 +421,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
                 />
               ) : (
                 <Text as="span" variant="h5" className={classNames.pricePreviewAmount}>
-                  {order.maxTrades === 1000 ? '1000 (maximum)' : order.maxTrades}
+                  {Number(order.maxTrades) === 1000 ? '1000 (maximum)' : order.maxTrades}
                 </Text>
               )}
               <Text as="p" variant="p4" className={classNames.mutedText}>

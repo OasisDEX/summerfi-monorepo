@@ -133,12 +133,16 @@ import { isWhitelistedAQ } from './armada-protocol-handlers/access-control/isWhi
 import { setWhitelistedAQ } from './armada-protocol-handlers/access-control/setWhitelistedAQ'
 import { setWhitelistedBatchAQ } from './armada-protocol-handlers/access-control/setWhitelistedBatchAQ'
 import { getAllRoles } from './armada-protocol-handlers/access-control/getAllRoles'
-import { createAndSaveBuyOrder } from './armada-protocol-handlers/dca/createAndSaveBuyOrder'
-import { getBuyOrder } from './armada-protocol-handlers/dca/getBuyOrder'
-import { getBuyOrders } from './armada-protocol-handlers/dca/getBuyOrders'
-import { cancelBuyOrder } from './armada-protocol-handlers/dca/cancelBuyOrder'
-import { pauseBuyOrder } from './armada-protocol-handlers/dca/pauseBuyOrder'
-import { resumeBuyOrder } from './armada-protocol-handlers/dca/resumeBuyOrder'
+import { createStrategyTx } from './armada-protocol-handlers/dca/createStrategyTx'
+import { getStrategies } from './armada-protocol-handlers/dca/getStrategies'
+import { getStrategy } from './armada-protocol-handlers/dca/getStrategy'
+import { getExecutions } from './armada-protocol-handlers/dca/getExecutions'
+import { getExecution } from './armada-protocol-handlers/dca/getExecution'
+import { cancelStrategyTx } from './armada-protocol-handlers/dca/cancelStrategyTx'
+import { editStrategyTx } from './armada-protocol-handlers/dca/editStrategyTx'
+import { pauseStrategyTx } from './armada-protocol-handlers/dca/pauseStrategyTx'
+import { resumeStrategyTx } from './armada-protocol-handlers/dca/resumeStrategyTx'
+import { getVaultInfoListPerChain as getRwaVaultInfoListPerChain } from './armada-protocol-handlers/rwa/getVaultInfoListPerChain'
 import { getProtocolAddresses } from './armada-protocol-handlers/users/getProtocolAddresses'
 
 /**
@@ -303,12 +307,18 @@ export const sdkAppRouter = router({
       getAllRoles: getAllRoles,
     },
     dca: {
-      createAndSaveBuyOrder: createAndSaveBuyOrder,
-      getBuyOrder: getBuyOrder,
-      getBuyOrders: getBuyOrders,
-      cancelBuyOrder: cancelBuyOrder,
-      pauseBuyOrder: pauseBuyOrder,
-      resumeBuyOrder: resumeBuyOrder,
+      createStrategyTx: createStrategyTx,
+      editStrategyTx: editStrategyTx,
+      pauseStrategyTx: pauseStrategyTx,
+      resumeStrategyTx: resumeStrategyTx,
+      cancelStrategyTx: cancelStrategyTx,
+      getStrategies: getStrategies,
+      getStrategy: getStrategy,
+      getExecutions: getExecutions,
+      getExecution: getExecution,
+    },
+    rwa: {
+      getVaultInfoListPerChain: getRwaVaultInfoListPerChain,
     },
   },
 })

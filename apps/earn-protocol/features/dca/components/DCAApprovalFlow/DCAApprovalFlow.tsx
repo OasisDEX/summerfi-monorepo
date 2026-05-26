@@ -23,13 +23,7 @@ import {
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import {
-  Address,
-  type AddressValue,
-  getChainInfoByChainId,
-  Token,
-  TokenAmount,
-} from '@summerfi/sdk-common'
+import { type AddressValue } from '@summerfi/sdk-common'
 import { useRouter } from 'next/navigation'
 
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
@@ -57,7 +51,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
   const { login } = useEarnProtocolLogin()
   const { walletClient, address } = useEarnProtocolWallet()
   const { chain, setChain, isSettingChain } = useEarnProtocolChain()
-  const { createAndSaveBuyOrder } = useAppSDK()
+  const { createStrategyTx } = useAppSDK()
   const dcaChainId = subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network))
   const { publicClient } = useNetworkAlignedClient({
     chainId: dcaChainId,
@@ -139,48 +133,45 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
     setIsCreating(true)
     setErrorMessage(null)
 
-    const nowUnix = Math.floor(Date.now() / 1000)
     const intervalSeconds = Math.max(1, Math.round(config.frequency * 24 * 60 * 60))
-    const firstExecutionUnixTimestamp = nowUnix + intervalSeconds
     const parsedDeadline = config.deadline
       ? Math.floor(new Date(config.deadline).getTime() / 1000)
       : undefined
+    const oneYearInSeconds = 365 * 24 * 60 * 60
+    // default deadline to one year from now if not set or invalid, to prevent transactions from failing with a past deadline
     const deadlineUnixTimestamp =
-      parsedDeadline && Number.isFinite(parsedDeadline) ? parsedDeadline : undefined
+      parsedDeadline && Number.isFinite(parsedDeadline)
+        ? parsedDeadline
+        : Math.floor(Date.now() / 1000) + oneYearInSeconds
 
     try {
-      const sourceToken = Token.createFrom({
-        chainInfo: getChainInfoByChainId(dcaChainId),
-        address: Address.createFromEthereum({
-          value: pair.fromVault.inputToken.id as AddressValue,
-        }),
-        name: pair.fromVault.inputToken.name,
-        symbol: pair.fromVault.inputToken.symbol,
-        decimals: pair.fromVault.inputToken.decimals,
-      })
-
-      const tokenAmount = TokenAmount.createFrom({
-        token: sourceToken,
-        amount: config.amount.toString(),
-      })
-
-      const dcaPositionData = await createAndSaveBuyOrder({
-        userAddress: address as `0x${string}`,
+      const [txInfo] = await createStrategyTx({
+        userAddress: address as AddressValue,
         chainId: dcaChainId,
-        toVaultAddress: pair.toVault.id as AddressValue,
-        fromVaultAddress: pair.fromVault.id as AddressValue,
-        signTypedData: walletClient.signTypedData,
-        amount: tokenAmount,
+        fromVault: pair.fromVault.id as AddressValue,
+        toVault: pair.toVault.id as AddressValue,
+        inAsset: pair.fromVault.inputToken.id as AddressValue,
+        outAsset: pair.toVault.inputToken.id as AddressValue,
+        // TODO: replace with real oracle feed addresses
+        inAssetFeed: '0x0000000000000000000000000000000000000000' as AddressValue,
+        outAssetFeed: '0x0000000000000000000000000000000000000000' as AddressValue,
+        amountShares: config.amount.toString(),
         slippagePercentage: '0.5',
         intervalSeconds,
-        firstExecutionUnixTimestamp,
         deadlineUnixTimestamp,
         maxTrades: config.maxTrades,
         neverBuyAbove: config.neverBuyAbove?.toString(),
         neverSellBelow: config.neverSellBelow?.toString(),
       })
 
-      push(`/dca/position/${address}/${dcaPositionData.id}`)
+      await walletClient.sendTransaction({
+        account: walletClient.account ?? (address as `0x${string}`),
+        to: txInfo.transaction.target.value as `0x${string}`,
+        data: txInfo.transaction.calldata as `0x${string}`,
+        chain: null,
+      })
+
+      push(`/dca`)
     } catch (error) {
       const isRejected = error instanceof Error && /rejected|denied/iu.test(error.message)
 
@@ -205,7 +196,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
     config.maxTrades,
     config.neverBuyAbove,
     config.neverSellBelow,
-    createAndSaveBuyOrder,
+    createStrategyTx,
     pair.fromVault,
     pair.toVault,
     walletClient,

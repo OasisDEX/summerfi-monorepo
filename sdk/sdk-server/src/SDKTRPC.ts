@@ -1,5 +1,6 @@
 import { SerializationService } from '@summerfi/sdk-common'
-import { initTRPC } from '@trpc/server'
+import { TRPCError, initTRPC } from '@trpc/server'
+import { jwtVerify } from 'jose'
 import { SDKAppContext } from './context/SDKContext'
 
 export const t = initTRPC.context<SDKAppContext>().create({

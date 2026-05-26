@@ -81,6 +81,8 @@ export type ChainConfig = {
   chainId: ChainId
   fleetAddressValue: AddressValue
   symbol: string
+  // https://data.chain.link/feeds/
+  chainlinkOracleAddressValue?: AddressValue
 }
 
 export const TestConfigs = {
@@ -88,49 +90,29 @@ export const TestConfigs = {
     rpcUrl: RpcUrls[ChainIds.Base],
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses[ChainIds.Base].ETH,
-    symbol: 'ETH',
+    symbol: 'WETH',
+    chainlinkOracleAddressValue: '0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70',
   },
   BaseUSDC: {
     rpcUrl: RpcUrls[ChainIds.Base],
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses[ChainIds.Base].USDC,
     symbol: 'USDC',
-  },
-  ArbitrumUSDT: {
-    rpcUrl: RpcUrls[ChainIds.ArbitrumOne],
-    chainId: ChainIds.ArbitrumOne,
-    fleetAddressValue: FleetAddresses[ChainIds.ArbitrumOne].USDT,
-    symbol: 'USDT',
+    chainlinkOracleAddressValue: '0x7e860098F58bBFC8648a4311b374B1D669a2bc6B',
   },
   MainnetUSDCLowRisk: {
     rpcUrl: RpcUrls[ChainIds.Mainnet],
     chainId: ChainIds.Mainnet,
     fleetAddressValue: FleetAddresses[ChainIds.Mainnet].USDCLowRisk,
     symbol: 'USDC',
+    chainlinkOracleAddressValue: '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6',
   },
   MainnetETHDao: {
     rpcUrl: RpcUrls[ChainIds.Mainnet],
     chainId: ChainIds.Mainnet,
     fleetAddressValue: FleetAddresses[ChainIds.Mainnet].ETHDao,
-    symbol: 'ETH',
-  },
-  SonicUSDC: {
-    rpcUrl: RpcUrls[ChainIds.Sonic],
-    chainId: ChainIds.Sonic,
-    fleetAddressValue: FleetAddresses[ChainIds.Sonic].USDC,
-    symbol: 'USDC',
-  },
-  HyperliquidUSDC: {
-    rpcUrl: RpcUrls[ChainIds.Hyperliquid],
-    chainId: ChainIds.Hyperliquid,
-    fleetAddressValue: FleetAddresses[ChainIds.Hyperliquid].USDC,
-    symbol: 'USDC',
-  },
-  HyperliquidUSDT: {
-    rpcUrl: RpcUrls[ChainIds.Hyperliquid],
-    chainId: ChainIds.Hyperliquid,
-    fleetAddressValue: FleetAddresses[ChainIds.Hyperliquid].USDT,
-    symbol: 'USDT',
+    symbol: 'WETH',
+    chainlinkOracleAddressValue: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
   },
 } satisfies Record<string, ChainConfig>
 
@@ -172,3 +154,17 @@ export const InstiTestConfigs = {
   TestClientIds,
   ChainConfig & { aqAddressValue: AddressValue; userAddressValue: AddressValue }
 >
+
+/** RWA CONFIG
+ *  institutionId used by the RWA subgraph query (where institution: $institutionId).
+ *  Replace with a real institutionId from the deployed RWA subgraph when available.
+ */
+
+export const RwaTestConfig = {
+  chainId: ChainIds.Base,
+  rpcUrl: RpcUrls[ChainIds.Base],
+  fleetAddressValue: '',
+  aqAddressValue: '',
+  userAddressValue: TestConfigAccounts.testUserAddressValue,
+  clientId: 'ExtDemoCorp_v2',
+} as const

@@ -72,6 +72,7 @@ sdk/.sst
 
 # editors configs
 .vscode
+.claude
 .github/instructions
 .github/prompts
 

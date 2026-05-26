@@ -1,0 +1,76 @@
+import { SerializationService } from '../../services/SerializationService'
+import { PoolType } from '../enums/PoolType'
+import type { IArmadaVaultId } from '../interfaces/IArmadaVaultId'
+import type { IRwaVaultInfo, IRwaVaultInfoData } from '../interfaces/IRwaVaultInfo'
+import { __signature__ } from '../interfaces/IRwaVaultInfo'
+import type { IPercentage } from '../interfaces/IPercentage'
+import type { IPrice } from '../interfaces/IPrice'
+import type { IToken } from '../interfaces/IToken'
+import type { ITokenAmount } from '../interfaces/ITokenAmount'
+import type { IFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
+import type { VaultApys } from '../types/VaultApys'
+import { PoolInfo } from './PoolInfo'
+
+/**
+ * Type for the parameters
+ */
+export type RwaVaultInfoParameters = Omit<IRwaVaultInfoData, 'type'>
+
+/**
+ * @class RwaVaultInfo
+ * @see IRwaVaultInfo
+ */
+export class RwaVaultInfo extends PoolInfo implements IRwaVaultInfo {
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
+
+  /** ATTRIBUTES */
+  readonly type = PoolType.Rwa
+  readonly id: IArmadaVaultId
+  readonly token: IToken
+  readonly assetToken: IToken
+  readonly depositCap: ITokenAmount
+  readonly totalDeposits: ITokenAmount
+  readonly totalShares: ITokenAmount
+  readonly sharePrice: IPrice
+  readonly apy: IPercentage | null
+  readonly apys: VaultApys
+  readonly rewardsApys:
+    | Array<{
+        token: IToken
+        apy: IPercentage | null
+      }>
+    | undefined
+  readonly merklRewards:
+    | Array<{
+        token: IToken
+        dailyEmission: string
+      }>
+    | undefined
+  readonly tvlUsd: IFiatCurrencyAmount
+
+  /** FACTORY */
+  static createFrom(params: RwaVaultInfoParameters): RwaVaultInfo {
+    return new RwaVaultInfo(params)
+  }
+
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: RwaVaultInfoParameters) {
+    super(params)
+
+    this.id = params.id
+    this.token = params.token
+    this.assetToken = params.assetToken
+    this.depositCap = params.depositCap
+    this.totalDeposits = params.totalDeposits
+    this.totalShares = params.totalShares
+    this.sharePrice = params.sharePrice
+    this.apy = params.apy
+    this.apys = params.apys
+    this.rewardsApys = params.rewardsApys
+    this.merklRewards = params.merklRewards
+    this.tvlUsd = params.tvlUsd
+  }
+}
+
+SerializationService.registerClass(RwaVaultInfo, { identifier: 'RwaVaultInfo' })

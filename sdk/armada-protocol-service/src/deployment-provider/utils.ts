@@ -1,14 +1,17 @@
 import { chainIdToGraphChain, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { getDeploymentsJsonConfig } from '@summerfi/armada-protocol-common'
-import type { DeploymentProviderConfig } from './DeploymentProviderConfig'
+import type {
+  DeploymentProviderConfigInsti,
+  DeploymentProviderConfigPublic,
+} from './DeploymentProviderConfig'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 
 export async function fetchInstiDeploymentProviderConfig(
   subgraphManager: IArmadaSubgraphManager,
   instiChainIds: ChainId[],
   clientId: string,
-): Promise<DeploymentProviderConfig[]> {
-  const deploymentProviderConfigs: DeploymentProviderConfig[] = []
+): Promise<DeploymentProviderConfigInsti[]> {
+  const deploymentProviderConfigs: DeploymentProviderConfigInsti[] = []
 
   for (const chainId of instiChainIds) {
     const institutionsData = await subgraphManager.getInstitutionById({ chainId, id: clientId })
@@ -33,13 +36,13 @@ export async function fetchInstiDeploymentProviderConfig(
 
 export const fetchPublicDeploymentProviderConfig = (
   deployedChainIds: ChainId[],
-): DeploymentProviderConfig[] => {
+): DeploymentProviderConfigPublic[] => {
   const jsonConfig = getDeploymentsJsonConfig()
   if (!jsonConfig) {
     throw new Error('Deployment config not found')
   }
 
-  const config: DeploymentProviderConfig[] = deployedChainIds.map((chainId) => {
+  const config: DeploymentProviderConfigPublic[] = deployedChainIds.map((chainId) => {
     const jsonConfigKey = chainIdToGraphChain(chainId)
 
     return {
@@ -54,6 +57,14 @@ export const fetchPublicDeploymentProviderConfig = (
           .address as AddressValue,
         protocolAccessManager: jsonConfig[jsonConfigKey].deployedContracts.gov.protocolAccessManager
           .address as AddressValue,
+        dcaStrategyManager:
+          'dcaStrategyManager' in jsonConfig[jsonConfigKey].deployedContracts.core
+            ? (
+                jsonConfig[jsonConfigKey].deployedContracts.core.dcaStrategyManager as {
+                  address: AddressValue
+                }
+              ).address
+            : undefined,
       },
     }
   })

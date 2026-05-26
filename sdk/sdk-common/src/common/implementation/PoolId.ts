@@ -30,7 +30,7 @@ export abstract class PoolId implements IPoolId, IPrintable {
 
   /** @see IPrintable.toString */
   toString(): string {
-    return `Pool ID: ${this.protocol.toString()}`
+    return `Pool ID: ${this.type.toString()}`
   }
 }
 

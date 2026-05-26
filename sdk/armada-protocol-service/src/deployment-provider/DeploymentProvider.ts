@@ -1,10 +1,10 @@
 import { Address, type ChainId } from '@summerfi/sdk-common'
-import type { DeploymentProviderConfig } from './DeploymentProviderConfig'
+import type { DeploymentProviderConfigPublic } from './DeploymentProviderConfig'
 import type { IDeploymentProvider } from './IDeploymentProvider'
 
 export const getDeployedContractAddress = (params: {
-  config: DeploymentProviderConfig
-  contractName: keyof DeploymentProviderConfig['contracts']
+  config: DeploymentProviderConfigPublic
+  contractName: keyof DeploymentProviderConfigPublic['contracts']
   chainId: ChainId
 }): Address => {
   const address = params.config.contracts[params.contractName]
@@ -26,7 +26,7 @@ const checkSupportedChainId = (supportedChainIds: ChainId[], chainId: ChainId) =
 
 export const DeploymentProvider = (
   supportedChainIds: ChainId[],
-  configs: DeploymentProviderConfig[],
+  configs: DeploymentProviderConfigPublic[],
 ) => {
   return {
     getDeployedContractAddress: (params) => {

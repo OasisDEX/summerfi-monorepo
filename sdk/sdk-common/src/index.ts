@@ -56,7 +56,7 @@ export {
   isArmadaMigrationType,
 } from './common/enums/ArmadaMigrationType'
 export { ArmadaMigrationType } from './common/enums/ArmadaMigrationType'
-export { ArmadaDcaOrderStatusEnum } from './common/enums/ArmadaDcaOrderStatus'
+export { DcaStrategyStatusEnum } from './common/enums/DcaStrategyStatus'
 export { StakingBucketSchema, isStakingBucket } from './common/enums/StakingBucket'
 export { StakingBucket, StakingBucketValues } from './common/enums/StakingBucket'
 export { Address } from './common/implementation/Address'
@@ -103,6 +103,8 @@ export { ArmadaVaultId } from './common/implementation/ArmadaVaultId'
 export type { ArmadaVaultIdParameters } from './common/implementation/ArmadaVaultId'
 export { ArmadaVaultInfo } from './common/implementation/ArmadaVaultInfo'
 export type { ArmadaVaultInfoParameters } from './common/implementation/ArmadaVaultInfo'
+export { RwaVaultInfo } from './common/implementation/RwaVaultInfo'
+export type { RwaVaultInfoParameters } from './common/implementation/RwaVaultInfo'
 export { ArmadaPosition } from './common/implementation/ArmadaPosition'
 export type { ArmadaPositionParameters } from './common/implementation/ArmadaPosition'
 export { ArmadaPositionId } from './common/implementation/ArmadaPositionId'
@@ -187,6 +189,12 @@ export {
 } from './common/interfaces/IArmadaVaultInfo'
 export type { IArmadaVaultInfo, IArmadaVaultInfoData } from './common/interfaces/IArmadaVaultInfo'
 export {
+  RwaVaultInfoDataSchema,
+  __signature__ as __irwavaultinfo__,
+  isRwaVaultInfo,
+} from './common/interfaces/IRwaVaultInfo'
+export type { IRwaVaultInfo, IRwaVaultInfoData } from './common/interfaces/IRwaVaultInfo'
+export {
   ArmadaPositionDataSchema,
   __signature__ as __iarmadaposition__,
   isArmadaPosition,
@@ -214,7 +222,10 @@ export {
   isArmadaWithdrawal,
 } from './common/interfaces/IArmadaWithdrawal'
 export type { IArmadaWithdrawal } from './common/interfaces/IArmadaWithdrawal'
-export type { IArmadaDcaOrder } from './common/interfaces/IArmadaDcaOrder'
+export type { IDcaStrategy } from './common/interfaces/IDcaStrategy'
+export type { IDcaExecution } from './common/interfaces/IDcaExecution'
+export type { IDcaStrategyConfig } from './common/interfaces/IDcaStrategyConfig'
+export type { EarnAppCookieVerifier } from './common/types/EarnAppCookieVerifier'
 export { getViemChain, hyperliquid } from './common/utils/getViemChain'
 export {
   newEmptyPositionFromPool,
@@ -339,6 +350,11 @@ export type {
   Erc20TransferTransactionInfo,
   Permit2AuthorizationTransactionInfo,
   Permit2RevokeTransactionInfo,
+  CreateDcaStrategyTransactionInfo,
+  EditDcaStrategyTransactionInfo,
+  PauseDcaStrategyTransactionInfo,
+  ResumeDcaStrategyTransactionInfo,
+  CancelDcaStrategyTransactionInfo,
 } from './orders/common/types/ExtendedTransactionInfo'
 export type { Order } from './orders/common/types/Order'
 export type { TransactionInfo } from './orders/common/types/TransactionInfo'

@@ -4,6 +4,7 @@ import type { IPrice } from '../../../common/interfaces/IPrice'
 import type { IPercentage } from '../../../common/interfaces/IPercentage'
 import type { Transaction } from './Transaction'
 import type { IArmadaVaultId } from '../../../common/interfaces/IArmadaVaultId'
+import type { IDcaStrategy } from '../../../common/interfaces/IDcaStrategy'
 
 /**
  * @enum TransactionType
@@ -26,6 +27,11 @@ export enum TransactionType {
   ToggleAQasMerklRewardsOperator = 'ToggleAQasMerklRewardsOperator',
   Permit2Authorization = 'Permit2Authorization',
   Permit2Revoke = 'Permit2Revoke',
+  CreateStrategy = 'CreateStrategy',
+  EditStrategy = 'EditStrategy',
+  PauseStrategy = 'PauseStrategy',
+  ResumeStrategy = 'ResumeStrategy',
+  CancelStrategy = 'CancelStrategy',
 }
 
 export type TransactionPriceImpact = {
@@ -141,4 +147,30 @@ export type Permit2AuthorizationTransactionInfo = TransactionInfo & {
 
 export type Permit2RevokeTransactionInfo = TransactionInfo & {
   type: TransactionType.Permit2Revoke
+}
+
+export type CreateDcaStrategyTransactionInfo = TransactionInfo & {
+  type: TransactionType.CreateStrategy
+}
+
+export type EditDcaStrategyTransactionInfo = TransactionInfo & {
+  type: TransactionType.EditStrategy
+  metadata: {
+    strategy: IDcaStrategy
+  }
+}
+
+export type PauseDcaStrategyTransactionInfo = TransactionInfo & {
+  type: TransactionType.PauseStrategy
+}
+
+export type ResumeDcaStrategyTransactionInfo = TransactionInfo & {
+  type: TransactionType.ResumeStrategy
+  metadata: {
+    strategy: IDcaStrategy
+  }
+}
+
+export type CancelDcaStrategyTransactionInfo = TransactionInfo & {
+  type: TransactionType.CancelStrategy
 }

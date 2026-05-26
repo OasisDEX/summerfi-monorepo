@@ -10,7 +10,7 @@ import {
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import { ArmadaDcaOrderStatusEnum, type IArmadaDcaOrder } from '@summerfi/sdk-common'
+import { DcaStrategyStatusEnum, type IDcaStrategy } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -67,10 +67,10 @@ const formatDay = (unixTimestamp?: number): string => {
   return dayjs.unix(unixTimestamp).format('DD MMM YYYY')
 }
 
-const getStatusLabel = (orderStatus: ArmadaDcaOrderStatusEnum): string => {
-  if (orderStatus === ArmadaDcaOrderStatusEnum.Active) return 'Active'
-  if (orderStatus === ArmadaDcaOrderStatusEnum.Paused) return 'Paused'
-  if (orderStatus === ArmadaDcaOrderStatusEnum.Cancelled) return 'Cancelled'
+const getStatusLabel = (orderStatus: DcaStrategyStatusEnum): string => {
+  if (orderStatus === DcaStrategyStatusEnum.Active) return 'Active'
+  if (orderStatus === DcaStrategyStatusEnum.Paused) return 'Paused'
+  if (orderStatus === DcaStrategyStatusEnum.Cancelled) return 'Cancelled'
 
   return 'Completed'
 }
@@ -79,16 +79,16 @@ export const PortfolioDcaPosition = ({
   order,
   vaultsList,
 }: {
-  order: IArmadaDcaOrder
+  order: IDcaStrategy
   vaultsList: SDKVaultsListType
 }) => {
-  const fromVault = findVault(vaultsList, order.fromVault, order.chainId)
-  const toVault = findVault(vaultsList, order.toVault, order.chainId)
+  const fromVault = findVault(vaultsList, order.sourceVault, order.chainId)
+  const toVault = findVault(vaultsList, order.targetVault, order.chainId)
 
   const fromSymbol = fromVault?.inputToken.symbol ?? 'TOKEN'
   const fromDecimals = fromVault?.inputToken.decimals ?? 18
   const amountLabel = formatTokenAmount(
-    order.amount,
+    order.tradeAmount.toString(),
     fromDecimals,
     fromVault ? getDisplayToken(fromSymbol) : fromSymbol,
   )
@@ -101,7 +101,15 @@ export const PortfolioDcaPosition = ({
         <Text as="h3" variant="h5">
           DCA Strategy
         </Text>
-        <div className={classNames[`status-${order.status}`]}>{getStatusLabel(order.status)}</div>
+        <div
+          className={
+            classNames[
+              `status-${order.status.toLowerCase() as 'active' | 'paused' | 'cancelled' | 'completed'}`
+            ]
+          }
+        >
+          {getStatusLabel(order.status)}
+        </div>
       </div>
 
       <div className={classNames.vaultRow}>
@@ -119,7 +127,7 @@ export const PortfolioDcaPosition = ({
         ) : (
           <div className={classNames.vaultBoxFallback}>
             <Text variant="p4semi">From</Text>
-            <Text variant="p3">{order.fromVault}</Text>
+            <Text variant="p3">{order.sourceVault}</Text>
           </div>
         )}
 
@@ -141,7 +149,7 @@ export const PortfolioDcaPosition = ({
         ) : (
           <div className={classNames.vaultBoxFallback}>
             <Text variant="p4semi">To</Text>
-            <Text variant="p3">{order.toVault}</Text>
+            <Text variant="p3">{order.targetVault}</Text>
           </div>
         )}
       </div>
@@ -158,14 +166,14 @@ export const PortfolioDcaPosition = ({
           <Text variant="p4" className={classNames.label}>
             Frequency
           </Text>
-          <Text variant="p2semi">{formatFrequency(order.intervalSeconds)}</Text>
+          <Text variant="p2semi">{formatFrequency(Number(order.intervalSeconds))}</Text>
         </div>
 
         <div className={classNames.metric}>
           <Text variant="p4" className={classNames.label}>
             Ends at
           </Text>
-          <Text variant="p2semi">{formatDay(order.deadlineUnixTimestamp)}</Text>
+          <Text variant="p2semi">{formatDay(Number(order.deadlineUnixTimestamp))}</Text>
         </div>
 
         <div className={classNames.metric}>
@@ -195,7 +203,7 @@ export const PortfolioDcaPosition = ({
 
       <div className={classNames.footerRow}>
         <Link
-          href={`/dca/position/${order.userAddress}/${order.id}`}
+          href={`/dca/position/${order.ownerAddress}/${order.id}`}
           className={classNames.viewLink}
         >
           <Button variant="primaryMedium">View position</Button>

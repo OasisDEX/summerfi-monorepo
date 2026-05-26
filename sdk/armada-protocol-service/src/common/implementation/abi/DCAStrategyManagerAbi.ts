@@ -131,12 +131,108 @@ export const DCAStrategyManagerAbi = [
   },
   {
     type: 'function',
+    name: 'activeCommitments',
+    inputs: [
+      {
+        name: 'commitment',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+        internalType: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'cancelStrategy',
     inputs: [
       {
         name: 'strategyId',
         type: 'uint256',
         internalType: 'uint256',
+      },
+      {
+        name: 'config',
+        type: 'tuple',
+        internalType: 'struct IDCAStrategyManager.StrategyConfig',
+        components: [
+          {
+            name: 'owner',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'sourceVault',
+            type: 'address',
+            internalType: 'contract IFleetCommander',
+          },
+          {
+            name: 'targetVault',
+            type: 'address',
+            internalType: 'contract IFleetCommander',
+          },
+          {
+            name: 'inAsset',
+            type: 'address',
+            internalType: 'contract IERC20',
+          },
+          {
+            name: 'outAsset',
+            type: 'address',
+            internalType: 'contract IERC20',
+          },
+          {
+            name: 'inAssetFeed',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'outAssetFeed',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'tradeAmount',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'interval',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'slippageBps',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'maxPrice',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'minPrice',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'endDate',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'maxTrades',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
       },
     ],
     outputs: [],
@@ -147,15 +243,15 @@ export const DCAStrategyManagerAbi = [
     name: 'checkUpkeep',
     inputs: [
       {
+        name: 'strategyId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
         name: 'config',
         type: 'tuple',
         internalType: 'struct IDCAStrategyManager.StrategyConfig',
         components: [
-          {
-            name: 'strategyId',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
           {
             name: 'owner',
             type: 'address',
@@ -253,11 +349,6 @@ export const DCAStrategyManagerAbi = [
         internalType: 'struct IDCAStrategyManager.StrategyConfig',
         components: [
           {
-            name: 'strategyId',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
-          {
             name: 'owner',
             type: 'address',
             internalType: 'address',
@@ -344,15 +435,92 @@ export const DCAStrategyManagerAbi = [
     name: 'editStrategy',
     inputs: [
       {
-        name: 'config',
+        name: 'strategyId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'oldConfig',
         type: 'tuple',
         internalType: 'struct IDCAStrategyManager.StrategyConfig',
         components: [
           {
-            name: 'strategyId',
+            name: 'owner',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'sourceVault',
+            type: 'address',
+            internalType: 'contract IFleetCommander',
+          },
+          {
+            name: 'targetVault',
+            type: 'address',
+            internalType: 'contract IFleetCommander',
+          },
+          {
+            name: 'inAsset',
+            type: 'address',
+            internalType: 'contract IERC20',
+          },
+          {
+            name: 'outAsset',
+            type: 'address',
+            internalType: 'contract IERC20',
+          },
+          {
+            name: 'inAssetFeed',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'outAssetFeed',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'tradeAmount',
             type: 'uint256',
             internalType: 'uint256',
           },
+          {
+            name: 'interval',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'slippageBps',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'maxPrice',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'minPrice',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'endDate',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'maxTrades',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+      {
+        name: 'newConfig',
+        type: 'tuple',
+        internalType: 'struct IDCAStrategyManager.StrategyConfig',
+        components: [
           {
             name: 'owner',
             type: 'address',
@@ -431,18 +599,18 @@ export const DCAStrategyManagerAbi = [
   },
   {
     type: 'function',
-    name: 'executeDCA',
+    name: 'executeStrategy',
     inputs: [
+      {
+        name: 'strategyId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
       {
         name: 'config',
         type: 'tuple',
         internalType: 'struct IDCAStrategyManager.StrategyConfig',
         components: [
-          {
-            name: 'strategyId',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
           {
             name: 'owner',
             type: 'address',
@@ -576,6 +744,83 @@ export const DCAStrategyManagerAbi = [
         type: 'uint256',
         internalType: 'uint256',
       },
+      {
+        name: 'config',
+        type: 'tuple',
+        internalType: 'struct IDCAStrategyManager.StrategyConfig',
+        components: [
+          {
+            name: 'owner',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'sourceVault',
+            type: 'address',
+            internalType: 'contract IFleetCommander',
+          },
+          {
+            name: 'targetVault',
+            type: 'address',
+            internalType: 'contract IFleetCommander',
+          },
+          {
+            name: 'inAsset',
+            type: 'address',
+            internalType: 'contract IERC20',
+          },
+          {
+            name: 'outAsset',
+            type: 'address',
+            internalType: 'contract IERC20',
+          },
+          {
+            name: 'inAssetFeed',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'outAssetFeed',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'tradeAmount',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'interval',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'slippageBps',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'maxPrice',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'minPrice',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'endDate',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'maxTrades',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
     ],
     outputs: [],
     stateMutability: 'nonpayable',
@@ -585,15 +830,15 @@ export const DCAStrategyManagerAbi = [
     name: 'resumeStrategy',
     inputs: [
       {
+        name: 'strategyId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
         name: 'config',
         type: 'tuple',
         internalType: 'struct IDCAStrategyManager.StrategyConfig',
         components: [
-          {
-            name: 'strategyId',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
           {
             name: 'owner',
             type: 'address',
@@ -708,7 +953,7 @@ export const DCAStrategyManagerAbi = [
           {
             name: 'status',
             type: 'uint8',
-            internalType: 'uint8',
+            internalType: 'enum IDCAStrategyManager.Status',
           },
           {
             name: 'tradesExecuted',
@@ -782,6 +1027,25 @@ export const DCAStrategyManagerAbi = [
   },
   {
     type: 'event',
+    name: 'StrategyCompleted',
+    inputs: [
+      {
+        name: 'strategyId',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
+      },
+      {
+        name: 'reason',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
     name: 'StrategyCreated',
     inputs: [
       {
@@ -796,11 +1060,6 @@ export const DCAStrategyManagerAbi = [
         indexed: false,
         internalType: 'struct IDCAStrategyManager.StrategyConfig',
         components: [
-          {
-            name: 'strategyId',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
           {
             name: 'owner',
             type: 'address',
@@ -892,11 +1151,6 @@ export const DCAStrategyManagerAbi = [
         indexed: false,
         internalType: 'struct IDCAStrategyManager.StrategyConfig',
         components: [
-          {
-            name: 'strategyId',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
           {
             name: 'owner',
             type: 'address',
@@ -1226,6 +1480,11 @@ export const DCAStrategyManagerAbi = [
   },
   {
     type: 'error',
+    name: 'DuplicateStrategy',
+    inputs: [],
+  },
+  {
+    type: 'error',
     name: 'EmptyEnsoData',
     inputs: [
       {
@@ -1373,7 +1632,7 @@ export const DCAStrategyManagerAbi = [
     name: 'PriceAboveCeiling',
     inputs: [
       {
-        name: 'inPrice',
+        name: 'executionPrice',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -1389,7 +1648,7 @@ export const DCAStrategyManagerAbi = [
     name: 'PriceBelowFloor',
     inputs: [
       {
-        name: 'inPrice',
+        name: 'executionPrice',
         type: 'uint256',
         internalType: 'uint256',
       },

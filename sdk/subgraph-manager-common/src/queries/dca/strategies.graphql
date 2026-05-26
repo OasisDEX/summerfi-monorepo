@@ -1,0 +1,30 @@
+query GetStrategies {
+  strategies {
+    id
+    strategyId
+    owner {
+      id
+    }
+    sourceVault
+    targetVault
+    inAsset
+    outAsset
+    inAssetFeed
+    outAssetFeed
+    tradeAmount
+    interval
+    slippageBps
+    maxPrice
+    minPrice
+    endDate
+    maxTrades
+    status
+    nextTriggerAt
+    lastScheduledAt
+    createdAt
+    updatedAt
+    tradesExecuted
+    totalInAssetSwapped
+    totalOutAssetReceived
+  }
+}

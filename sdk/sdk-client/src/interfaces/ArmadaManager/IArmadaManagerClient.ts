@@ -1,7 +1,6 @@
 import { IArmadaManagerAdminClient } from './IArmadaManagerAdminClient'
 import { IArmadaManagerUsersClient } from './IArmadaManagerUsersClient'
 import { IArmadaManagerClientAccessControl } from './IArmadaManagerClientAccessControl'
-import { IArmadaManagerDCAClient } from './IArmadaManagerDCAClient'
 
 /**
  * @interface IArmadaManagerClient
@@ -15,6 +14,4 @@ export interface IArmadaManagerClient {
   admin: IArmadaManagerAdminClient
   /** Access Control API for the Armada protocol - role-based access control operations */
   accessControl: IArmadaManagerClientAccessControl
-  /** DCA API for Armada recurring buy orders */
-  dca: IArmadaManagerDCAClient
 }

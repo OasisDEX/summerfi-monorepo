@@ -13,4 +13,4 @@ export {
   fetchInstiDeploymentProviderConfig,
   fetchPublicDeploymentProviderConfig,
 } from './deployment-provider/utils'
-export { type DeploymentProviderConfig } from './deployment-provider/DeploymentProviderConfig'
+export { type DeploymentProviderConfigPublic as DeploymentProviderConfig } from './deployment-provider/DeploymentProviderConfig'

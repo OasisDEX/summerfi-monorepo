@@ -21,11 +21,11 @@ export class SerializationService {
   }
 
   static stringify(v: unknown): string {
-    return SuperJSON.stringify(v)
+    return SuperJSON.stringify(v) as string
   }
 
   static parse<T>(v: string): T {
-    return SuperJSON.parse(v)
+    return SuperJSON.parse(v) as T
   }
 
   static getTransformer() {

@@ -1,7 +1,11 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
-import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import type {
+  IArmadaSubgraphManager,
+  IDcaSubgraphManager,
+  IRwaSubgraphManager,
+} from '@summerfi/subgraph-manager-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
@@ -10,7 +14,6 @@ import { ArmadaManager } from './ArmadaManager'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { IChainInfo } from '@summerfi/sdk-common'
-import type { SummerProtocolDbProvider } from '../../db-provider/getDb'
 
 /**
  * @name ArmadaManagerFactory
@@ -29,7 +32,8 @@ export class ArmadaManagerFactory {
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
-    summerProtocolDbProvider?: SummerProtocolDbProvider
+    dcaSubgraphManager: IDcaSubgraphManager
+    rwaSubgraphManager: IRwaSubgraphManager
   }): ArmadaManager {
     return new ArmadaManager(params)
   }

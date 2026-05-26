@@ -2,7 +2,11 @@ import { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { ArmadaManagerFactory } from '../src/common/implementation/ArmadaManagerFactory'
-import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import type {
+  IArmadaSubgraphManager,
+  IDcaSubgraphManager,
+  IRwaSubgraphManager,
+} from '@summerfi/subgraph-manager-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IDeploymentProvider } from '../src'
 import type { ISwapManager } from '@summerfi/swap-common'
@@ -15,6 +19,8 @@ describe('SDK Common | Armada | ArmadaManagerFactory', () => {
   const allowanceManager: IAllowanceManager = {} as IAllowanceManager
   const contractsProvider: IContractsProvider = {} as IContractsProvider
   const subgraphManager = {} as IArmadaSubgraphManager
+  const dcaSubgraphManager = {} as IDcaSubgraphManager
+  const rwaSubgraphManager = {} as IRwaSubgraphManager
 
   describe('#newArmadaManager()', () => {
     it('should instantiate with right data', () => {
@@ -23,6 +29,8 @@ describe('SDK Common | Armada | ArmadaManagerFactory', () => {
         allowanceManager,
         contractsProvider,
         subgraphManager,
+        dcaSubgraphManager,
+        rwaSubgraphManager,
         blockchainClientProvider: {} as IBlockchainClientProvider,
         deploymentProvider: {} as IDeploymentProvider,
         swapManager: {} as ISwapManager,

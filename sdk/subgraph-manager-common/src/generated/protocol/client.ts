@@ -75,8 +75,6 @@ export type AccountStakeLockupsArgs = {
 export type AccountRewards = {
   __typename?: 'AccountRewards';
   account: Account;
-  claimable: Scalars['BigInt']['output'];
-  claimableNormalized: Scalars['BigDecimal']['output'];
   claimed: Scalars['BigInt']['output'];
   claimedNormalized: Scalars['BigDecimal']['output'];
   id: Scalars['ID']['output'];
@@ -108,22 +106,6 @@ export type AccountRewards_Filter = {
   account_starts_with?: InputMaybe<Scalars['String']['input']>;
   account_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   and?: InputMaybe<Array<InputMaybe<AccountRewards_Filter>>>;
-  claimable?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimableNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimable_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  claimable_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_not?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   claimed?: InputMaybe<Scalars['BigInt']['input']>;
   claimedNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   claimedNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -183,8 +165,6 @@ export enum AccountRewards_OrderBy {
   AccountReferralTimestamp = 'account__referralTimestamp',
   AccountStakedSummerToken = 'account__stakedSummerToken',
   AccountStakedSummerTokenNormalized = 'account__stakedSummerTokenNormalized',
-  Claimable = 'claimable',
-  ClaimableNormalized = 'claimableNormalized',
   Claimed = 'claimed',
   ClaimedNormalized = 'claimedNormalized',
   Id = 'id',
@@ -341,6 +321,24 @@ export type ActiveAccount_Filter = {
 
 export enum ActiveAccount_OrderBy {
   Id = 'id'
+}
+
+export enum AdminAction {
+  ArkCapChanged = 'ARK_CAP_CHANGED',
+  ArkMaxPctTvlChanged = 'ARK_MAX_PCT_TVL_CHANGED',
+  ArkMaxRebalanceInflowChanged = 'ARK_MAX_REBALANCE_INFLOW_CHANGED',
+  ArkMaxRebalanceOutflowChanged = 'ARK_MAX_REBALANCE_OUTFLOW_CHANGED',
+  VaultCapChanged = 'VAULT_CAP_CHANGED',
+  VaultMinBufferChanged = 'VAULT_MIN_BUFFER_CHANGED',
+  VaultTipRateChanged = 'VAULT_TIP_RATE_CHANGED'
+}
+
+/** Indicates whether the current, partially filled bucket should be included in the response. Defaults to `exclude` */
+export enum Aggregation_Current {
+  /** Exclude the current, partially filled bucket from the response */
+  Exclude = 'exclude',
+  /** Include the current, partially filled bucket in the response */
+  Include = 'include'
 }
 
 export enum Aggregation_Interval {
@@ -1188,16 +1186,12 @@ export type Ark_Filter = {
   requiresKeeperData_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokens?: InputMaybe<Array<Scalars['String']['input']>>;
   rewardTokens_?: InputMaybe<RewardToken_Filter>;
   rewardTokens_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -1648,6 +1642,208 @@ export enum Board_OrderBy {
   VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
 }
 
+export type CurationEvent = {
+  __typename?: 'CurationEvent';
+  action: AdminAction;
+  blockNumber: Scalars['BigInt']['output'];
+  caller: Scalars['String']['output'];
+  hash: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  logIndex: Scalars['Int']['output'];
+  targetContract: Scalars['String']['output'];
+  timestamp: Scalars['BigInt']['output'];
+  valueAfter: Scalars['BigInt']['output'];
+  valueBefore: Scalars['BigInt']['output'];
+  vault: Vault;
+};
+
+export type CurationEvent_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  action?: InputMaybe<AdminAction>;
+  action_in?: InputMaybe<Array<AdminAction>>;
+  action_not?: InputMaybe<AdminAction>;
+  action_not_in?: InputMaybe<Array<AdminAction>>;
+  and?: InputMaybe<Array<InputMaybe<CurationEvent_Filter>>>;
+  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  caller?: InputMaybe<Scalars['String']['input']>;
+  caller_contains?: InputMaybe<Scalars['String']['input']>;
+  caller_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  caller_ends_with?: InputMaybe<Scalars['String']['input']>;
+  caller_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  caller_gt?: InputMaybe<Scalars['String']['input']>;
+  caller_gte?: InputMaybe<Scalars['String']['input']>;
+  caller_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  caller_lt?: InputMaybe<Scalars['String']['input']>;
+  caller_lte?: InputMaybe<Scalars['String']['input']>;
+  caller_not?: InputMaybe<Scalars['String']['input']>;
+  caller_not_contains?: InputMaybe<Scalars['String']['input']>;
+  caller_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  caller_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  caller_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  caller_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  caller_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  caller_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  caller_starts_with?: InputMaybe<Scalars['String']['input']>;
+  caller_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  hash?: InputMaybe<Scalars['String']['input']>;
+  hash_contains?: InputMaybe<Scalars['String']['input']>;
+  hash_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  hash_ends_with?: InputMaybe<Scalars['String']['input']>;
+  hash_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  hash_gt?: InputMaybe<Scalars['String']['input']>;
+  hash_gte?: InputMaybe<Scalars['String']['input']>;
+  hash_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  hash_lt?: InputMaybe<Scalars['String']['input']>;
+  hash_lte?: InputMaybe<Scalars['String']['input']>;
+  hash_not?: InputMaybe<Scalars['String']['input']>;
+  hash_not_contains?: InputMaybe<Scalars['String']['input']>;
+  hash_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  hash_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  hash_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  hash_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  hash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  hash_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  hash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  hash_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  logIndex?: InputMaybe<Scalars['Int']['input']>;
+  logIndex_gt?: InputMaybe<Scalars['Int']['input']>;
+  logIndex_gte?: InputMaybe<Scalars['Int']['input']>;
+  logIndex_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  logIndex_lt?: InputMaybe<Scalars['Int']['input']>;
+  logIndex_lte?: InputMaybe<Scalars['Int']['input']>;
+  logIndex_not?: InputMaybe<Scalars['Int']['input']>;
+  logIndex_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  or?: InputMaybe<Array<InputMaybe<CurationEvent_Filter>>>;
+  targetContract?: InputMaybe<Scalars['String']['input']>;
+  targetContract_contains?: InputMaybe<Scalars['String']['input']>;
+  targetContract_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  targetContract_ends_with?: InputMaybe<Scalars['String']['input']>;
+  targetContract_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  targetContract_gt?: InputMaybe<Scalars['String']['input']>;
+  targetContract_gte?: InputMaybe<Scalars['String']['input']>;
+  targetContract_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  targetContract_lt?: InputMaybe<Scalars['String']['input']>;
+  targetContract_lte?: InputMaybe<Scalars['String']['input']>;
+  targetContract_not?: InputMaybe<Scalars['String']['input']>;
+  targetContract_not_contains?: InputMaybe<Scalars['String']['input']>;
+  targetContract_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  targetContract_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  targetContract_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  targetContract_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  targetContract_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  targetContract_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  targetContract_starts_with?: InputMaybe<Scalars['String']['input']>;
+  targetContract_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  valueAfter?: InputMaybe<Scalars['BigInt']['input']>;
+  valueAfter_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  valueAfter_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  valueAfter_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  valueAfter_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  valueAfter_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  valueAfter_not?: InputMaybe<Scalars['BigInt']['input']>;
+  valueAfter_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  valueBefore?: InputMaybe<Scalars['BigInt']['input']>;
+  valueBefore_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  valueBefore_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  valueBefore_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  valueBefore_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  valueBefore_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  valueBefore_not?: InputMaybe<Scalars['BigInt']['input']>;
+  valueBefore_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  vault?: InputMaybe<Scalars['String']['input']>;
+  vault_?: InputMaybe<Vault_Filter>;
+  vault_contains?: InputMaybe<Scalars['String']['input']>;
+  vault_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_ends_with?: InputMaybe<Scalars['String']['input']>;
+  vault_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_gt?: InputMaybe<Scalars['String']['input']>;
+  vault_gte?: InputMaybe<Scalars['String']['input']>;
+  vault_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  vault_lt?: InputMaybe<Scalars['String']['input']>;
+  vault_lte?: InputMaybe<Scalars['String']['input']>;
+  vault_not?: InputMaybe<Scalars['String']['input']>;
+  vault_not_contains?: InputMaybe<Scalars['String']['input']>;
+  vault_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  vault_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  vault_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  vault_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  vault_starts_with?: InputMaybe<Scalars['String']['input']>;
+  vault_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum CurationEvent_OrderBy {
+  Action = 'action',
+  BlockNumber = 'blockNumber',
+  Caller = 'caller',
+  Hash = 'hash',
+  Id = 'id',
+  LogIndex = 'logIndex',
+  TargetContract = 'targetContract',
+  Timestamp = 'timestamp',
+  ValueAfter = 'valueAfter',
+  ValueBefore = 'valueBefore',
+  Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
+  VaultCalculatedApr = 'vault__calculatedApr',
+  VaultCreatedBlockNumber = 'vault__createdBlockNumber',
+  VaultCreatedTimestamp = 'vault__createdTimestamp',
+  VaultCumulativeProtocolSideRevenueUsd = 'vault__cumulativeProtocolSideRevenueUSD',
+  VaultCumulativeSupplySideRevenueUsd = 'vault__cumulativeSupplySideRevenueUSD',
+  VaultCumulativeTotalRevenueUsd = 'vault__cumulativeTotalRevenueUSD',
+  VaultDepositCap = 'vault__depositCap',
+  VaultDepositLimit = 'vault__depositLimit',
+  VaultDetails = 'vault__details',
+  VaultId = 'vault__id',
+  VaultInputTokenBalance = 'vault__inputTokenBalance',
+  VaultInputTokenPriceUsd = 'vault__inputTokenPriceUSD',
+  VaultLastUpdatePricePerShare = 'vault__lastUpdatePricePerShare',
+  VaultLastUpdateTimestamp = 'vault__lastUpdateTimestamp',
+  VaultMaxRebalanceOperations = 'vault__maxRebalanceOperations',
+  VaultMinimumBufferBalance = 'vault__minimumBufferBalance',
+  VaultName = 'vault__name',
+  VaultOutputTokenPriceUsd = 'vault__outputTokenPriceUSD',
+  VaultOutputTokenSupply = 'vault__outputTokenSupply',
+  VaultPricePerShare = 'vault__pricePerShare',
+  VaultRebalanceCount = 'vault__rebalanceCount',
+  VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
+  VaultStakingRewardsManager = 'vault__stakingRewardsManager',
+  VaultSymbol = 'vault__symbol',
+  VaultTipRate = 'vault__tipRate',
+  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
+  VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
+  VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
+}
+
 export type DailyInterestRate = {
   __typename?: 'DailyInterestRate';
   averageRate: Scalars['BigDecimal']['output'];
@@ -2058,8 +2254,6 @@ export enum Deposit_OrderBy {
   InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
   LogIndex = 'logIndex',
   Position = 'position',
-  PositionClaimableSummerToken = 'position__claimableSummerToken',
-  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -2946,28 +3140,20 @@ export type GovernanceStaking_Filter = {
   or?: InputMaybe<Array<InputMaybe<GovernanceStaking_Filter>>>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmountsPerOutputToken_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmountsPerOutputToken_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsFinish_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsFinish_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokens?: InputMaybe<Array<Scalars['String']['input']>>;
   rewardTokens_?: InputMaybe<Token_Filter>;
   rewardTokens_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -3173,8 +3359,6 @@ export type Position = {
   __typename?: 'Position';
   /**  Account associated with the position  */
   account: Account;
-  claimableSummerToken: Scalars['BigInt']['output'];
-  claimableSummerTokenNormalized: Scalars['BigDecimal']['output'];
   claimedSummerToken: Scalars['BigInt']['output'];
   claimedSummerTokenNormalized: Scalars['BigDecimal']['output'];
   /**  Creation block number  */
@@ -3471,8 +3655,6 @@ export enum PositionDailySnapshot_OrderBy {
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   Position = 'position',
-  PositionClaimableSummerToken = 'position__claimableSummerToken',
-  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -3666,8 +3848,6 @@ export enum PositionHourlySnapshot_OrderBy {
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   Position = 'position',
-  PositionClaimableSummerToken = 'position__claimableSummerToken',
-  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -3696,8 +3876,6 @@ export enum PositionHourlySnapshot_OrderBy {
 
 export type PositionRewards = {
   __typename?: 'PositionRewards';
-  claimable: Scalars['BigInt']['output'];
-  claimableNormalized: Scalars['BigDecimal']['output'];
   claimed: Scalars['BigInt']['output'];
   claimedNormalized: Scalars['BigDecimal']['output'];
   id: Scalars['ID']['output'];
@@ -3709,22 +3887,6 @@ export type PositionRewards_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
   and?: InputMaybe<Array<InputMaybe<PositionRewards_Filter>>>;
-  claimable?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimableNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimable_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  claimable_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_not?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   claimed?: InputMaybe<Scalars['BigInt']['input']>;
   claimedNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   claimedNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3795,14 +3957,10 @@ export type PositionRewards_Filter = {
 };
 
 export enum PositionRewards_OrderBy {
-  Claimable = 'claimable',
-  ClaimableNormalized = 'claimableNormalized',
   Claimed = 'claimed',
   ClaimedNormalized = 'claimedNormalized',
   Id = 'id',
   Position = 'position',
-  PositionClaimableSummerToken = 'position__claimableSummerToken',
-  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -4002,8 +4160,6 @@ export enum PositionWeeklySnapshot_OrderBy {
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
   Position = 'position',
-  PositionClaimableSummerToken = 'position__claimableSummerToken',
-  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -4055,22 +4211,6 @@ export type Position_Filter = {
   account_starts_with?: InputMaybe<Scalars['String']['input']>;
   account_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   and?: InputMaybe<Array<InputMaybe<Position_Filter>>>;
-  claimableSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimableSummerTokenNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimableSummerToken_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerToken_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerToken_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  claimableSummerToken_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerToken_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerToken_not?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerToken_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   claimedSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
   claimedSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   claimedSummerTokenNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -4319,8 +4459,6 @@ export enum Position_OrderBy {
   AccountReferralTimestamp = 'account__referralTimestamp',
   AccountStakedSummerToken = 'account__stakedSummerToken',
   AccountStakedSummerTokenNormalized = 'account__stakedSummerTokenNormalized',
-  ClaimableSummerToken = 'claimableSummerToken',
-  ClaimableSummerTokenNormalized = 'claimableSummerTokenNormalized',
   ClaimedSummerToken = 'claimedSummerToken',
   ClaimedSummerTokenNormalized = 'claimedSummerTokenNormalized',
   CreatedBlockNumber = 'createdBlockNumber',
@@ -5159,6 +5297,8 @@ export type Query = {
   arks: Array<Ark>;
   board?: Maybe<Board>;
   boards: Array<Board>;
+  curationEvent?: Maybe<CurationEvent>;
+  curationEvents: Array<CurationEvent>;
   dailyInterestRate?: Maybe<DailyInterestRate>;
   dailyInterestRates: Array<DailyInterestRate>;
   deposit?: Maybe<Deposit>;
@@ -5360,6 +5500,24 @@ export type QueryBoardsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Board_Filter>;
+};
+
+
+export type QueryCurationEventArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryCurationEventsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<CurationEvent_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<CurationEvent_Filter>;
 };
 
 
@@ -7057,8 +7215,6 @@ export enum Staked_OrderBy {
   InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
   LogIndex = 'logIndex',
   Position = 'position',
-  PositionClaimableSummerToken = 'position__claimableSummerToken',
-  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -7608,8 +7764,6 @@ export enum Unstaked_OrderBy {
   InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
   LogIndex = 'logIndex',
   Position = 'position',
-  PositionClaimableSummerToken = 'position__claimableSummerToken',
-  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -8071,7 +8225,7 @@ export type Vault = {
   rewardTokenEmissionsUSD?: Maybe<Array<Scalars['BigDecimal']['output']>>;
   /**  Aditional tokens that are given as reward for position in a protocol, usually in liquidity mining programs. e.g. SUSHI in the Onsen program, MATIC for Aave Polygon  */
   rewardTokens: Array<RewardToken>;
-  rewardsManager: RewardsManager;
+  rewardsManager?: Maybe<RewardsManager>;
   /**  Total supply of output tokens that are staked (usually in the MasterChef contract). Used to calculate reward APY.  */
   stakedOutputTokenAmount?: Maybe<Scalars['BigInt']['output']>;
   /**  Address of the staking rewards manager  */
@@ -8433,16 +8587,12 @@ export type VaultDailySnapshot_Filter = {
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   stakedOutputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -8969,16 +9119,12 @@ export type VaultHourlySnapshot_Filter = {
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   stakedOutputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -9286,16 +9432,12 @@ export type VaultWeeklySnapshot_Filter = {
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   stakedOutputTokenAmount?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
   stakedOutputTokenAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -9492,10 +9634,8 @@ export type Vault_Filter = {
   apr365d_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   aprValues?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   aprValues_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  aprValues_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   aprValues_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   aprValues_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  aprValues_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   arksArray?: InputMaybe<Array<Scalars['String']['input']>>;
   arksArray_?: InputMaybe<Ark_Filter>;
   arksArray_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -9797,28 +9937,20 @@ export type Vault_Filter = {
   rebalances_?: InputMaybe<Rebalance_Filter>;
   rewardTokenEmissionsAmount?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmount_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmount_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmountsPerOutputToken_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsAmountsPerOutputToken_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsAmountsPerOutputToken_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsFinish_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsFinish_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  rewardTokenEmissionsFinish_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewardTokenEmissionsUSD?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokenEmissionsUSD_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  rewardTokenEmissionsUSD_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   rewardTokens?: InputMaybe<Array<Scalars['String']['input']>>;
   rewardTokens_?: InputMaybe<RewardToken_Filter>;
   rewardTokens_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -10428,8 +10560,6 @@ export enum Withdraw_OrderBy {
   InputTokenBalanceNormalizedUsd = 'inputTokenBalanceNormalizedUSD',
   LogIndex = 'logIndex',
   Position = 'position',
-  PositionClaimableSummerToken = 'position__claimableSummerToken',
-  PositionClaimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   PositionClaimedSummerToken = 'position__claimedSummerToken',
   PositionClaimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   PositionCreatedBlockNumber = 'position__createdBlockNumber',
@@ -11009,14 +11139,14 @@ export type GetUsersActivityQuery = { __typename?: 'Query', positions: Array<{ _
 export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, outputTokenSupply: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, minimumBufferBalance: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardsManager: { __typename?: 'RewardsManager', id: string }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null }> };
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, outputTokenSupply: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, minimumBufferBalance: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardsManager?: { __typename?: 'RewardsManager', id: string } | null, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null }> };
 
 export type GetVaultQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, outputTokenSupply: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, minimumBufferBalance: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardsManager: { __typename?: 'RewardsManager', id: string }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null } | null };
+export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, outputTokenSupply: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, minimumBufferBalance: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardsManager?: { __typename?: 'RewardsManager', id: string } | null, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null } | null };
 
 
 export const GetGlobalRebalancesDocument = gql`

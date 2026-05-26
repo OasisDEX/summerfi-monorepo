@@ -25,7 +25,7 @@
     "e2e:intentswaps.deposit": "jest --roots e2e -- ./e2e/intentswaps.deposit.test.ts",
     "e2e:intentswaps.switch": "jest --roots e2e -- ./e2e/intentswaps.switch.test.ts",
     "e2e:vault": "jest --roots e2e -- ./e2e/armadaProtocol.vault.test.ts",
-    "e2e:allVaults": "jest --roots e2e -- ./e2e/armadaProtocol.allVaults.test.ts",
+    "e2e:vaults": "jest --roots e2e -- ./e2e/armadaProtocol.vaults.test.ts",
     "e2e:positions": "jest --roots e2e -- ./e2e/armadaProtocol.positions.test.ts",
     "e2e:positionsHistory": "jest --roots e2e -- ./e2e/armadaProtocol.positionsHistory.test.ts",
     "e2e:depositsWithdrawals": "jest --roots e2e -- ./e2e/armadaProtocol.depositsWithdrawals.test.ts",
@@ -63,11 +63,14 @@
     "e2e:vaulthistoricalrates": "jest --roots e2e -- ./e2e/armadaProtocol.vaultsHistoricalRates.test.ts",
     "e2e:protocoltvl": "jest --roots e2e -- ./e2e/armadaProtocol.getProtocolTvl.test.ts",
     "e2e:protocoladdresses": "jest --roots e2e -- ./e2e/armadaProtocol.getProtocolAddresses.test.ts",
-    "e2e:dca:orders:create": "jest --roots e2e -- ./e2e/dcaOrders.create.test.ts",
-    "e2e:dca:orders:read": "jest --roots e2e -- ./e2e/dcaOrders.read.test.ts",
-    "e2e:dca:orders:pause": "jest --roots e2e -- ./e2e/dcaOrders.pause.test.ts",
-    "e2e:dca:orders:resume": "jest --roots e2e -- ./e2e/dcaOrders.resume.test.ts",
-    "e2e:dca:orders:cancel": "jest --roots e2e -- ./e2e/dcaOrders.cancel.test.ts"
+    "e2e:dca:strategies:create": "jest --roots e2e -- ./e2e/dcaStrategies.create.test.ts",
+    "e2e:dca:strategies:getStrategies": "jest --roots e2e -- ./e2e/dcaStrategies.getStrategies.test.ts",
+    "e2e:dca:strategies:getStrategy": "jest --roots e2e -- ./e2e/dcaStrategies.getStrategy.test.ts",
+    "e2e:dca:strategies:pause": "jest --roots e2e -- ./e2e/dcaStrategies.pause.test.ts",
+    "e2e:dca:strategies:resume": "jest --roots e2e -- ./e2e/dcaStrategies.resume.test.ts",
+    "e2e:dca:strategies:cancel": "jest --roots e2e -- ./e2e/dcaStrategies.cancel.test.ts",
+    "e2e:rwa:vault": "jest --roots e2e -- ./e2e/rwa.vault.test.ts",
+    "e2e:rwa:vaults": "jest --roots e2e -- ./e2e/rwa.vaults.test.ts"
   },
   "devDependencies": {
     "@summerfi/armada-protocol-abis": "workspace:*",

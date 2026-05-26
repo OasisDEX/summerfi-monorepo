@@ -3427,6 +3427,9 @@ importers:
       '@trpc/server':
         specifier: 11.16.0
         version: 11.16.0(typescript@5.9.3)
+      jose:
+        specifier: ^6.2.2
+        version: 6.2.2
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
