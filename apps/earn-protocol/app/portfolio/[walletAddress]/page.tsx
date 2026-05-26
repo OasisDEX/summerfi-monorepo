@@ -13,7 +13,7 @@ import {
   supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
-import type { ChainId } from '@summerfi/sdk-common'
+import { type ChainId, ChainIds } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { type Metadata } from 'next'
 import { headers } from 'next/headers'
@@ -37,7 +37,6 @@ import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
   params: Promise<{
-    chainId: ChainId
     walletAddress: string
   }>
 }
@@ -82,7 +81,7 @@ const mapPortfolioVaultsApy = (
   }, {})
 
 const PortfolioPage = async ({ params }: PortfolioPageProps) => {
-  const [{ walletAddress: walletAddressRaw, chainId }, rewardTokenPrices] = await Promise.all([
+  const [{ walletAddress: walletAddressRaw }, rewardTokenPrices] = await Promise.all([
     params,
     getCachedRewardTokenPrice(),
   ])
@@ -95,7 +94,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const { userPositions, userDcaOrders, vaultsList, systemConfig, vaultsInfo } =
     await portfolioCallsHandler({
-      chainId,
+      chainId: ChainIds.Base,
       walletAddress,
     })
 
@@ -173,14 +172,15 @@ export async function generateMetadata({
 }: PortfolioPageProps & {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }): Promise<Metadata> {
-  const [{ walletAddress: walletAddressRaw, chainId }, headersList, searchParamsAwaited] =
-    await Promise.all([params, headers(), searchParams])
+  const [{ walletAddress: walletAddressRaw }, headersList, searchParamsAwaited] = await Promise.all(
+    [params, headers(), searchParams],
+  )
   const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
   const walletAddress = walletAddressRaw.toLowerCase()
   const { userPositions, vaultsList, systemConfig, vaultsInfo } = await portfolioCallsHandler({
-    chainId,
+    chainId: ChainIds.Base,
     walletAddress,
   })
 

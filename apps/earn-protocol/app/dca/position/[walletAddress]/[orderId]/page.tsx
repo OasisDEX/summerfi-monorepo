@@ -4,7 +4,7 @@ import {
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import type { ChainId } from '@summerfi/sdk-common'
+import { ChainIds } from '@summerfi/sdk-common'
 import { type Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
@@ -16,14 +16,14 @@ import { DCAPositionLoader } from '@/features/dca/components/DCAPositionView/DCA
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 interface DCAPositionPageProps {
-  params: Promise<{ chainId: ChainId; orderId: string }>
+  params: Promise<{ orderId: string }>
 }
 
 const DCAPositionPage: FC<DCAPositionPageProps> = async ({ params }) => {
-  const { chainId, orderId } = await params
+  const { orderId } = await params
 
   const [order, { vaults }, configRaw] = await Promise.all([
-    getCachedUserDcaOrder({ chainId, orderId }),
+    getCachedUserDcaOrder({ chainId: ChainIds.Base, orderId }),
     getCachedVaultsList(),
     getCachedConfig(),
   ])
