@@ -1,6 +1,7 @@
 import assert from 'assert'
 import { TestConfigs as TestConfigFleets } from './utils/testConfig'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
+import { retryUntilDefined } from './utils/retryUntilDefined'
 
 jest.setTimeout(300000)
 
@@ -38,7 +39,7 @@ describe('Armada Protocol - DCA Strategies', () => {
       outAssetFeed: toVault.chainlinkOracleAddressValue,
       amountShares,
       slippagePercentage: '0.5',
-      intervalSeconds: 60 * 60, // hourly
+      intervalSeconds: 60 * 60 * 24, // daily
       maxTrades: 1,
       deadlineUnixTimestamp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 1 week from now
     })
@@ -59,12 +60,14 @@ describe('Armada Protocol - DCA Strategies', () => {
     const onChainStrategyId = BigInt(strategyLog.topics[1])
     console.log('On-chain strategy ID:', onChainStrategyId.toString())
 
-    const fetchedStrategy = await sdk.dca.getStrategy({
-      chainId,
-      strategyId: onChainStrategyId.toString(),
-    })
+    const fetchedStrategy = await retryUntilDefined(() =>
+      sdk.dca.getStrategy({
+        chainId,
+        strategyId: onChainStrategyId.toString(),
+      }),
+    )
 
-    assert(fetchedStrategy, 'Expected created strategy to be retrievable')
+    assert(fetchedStrategy !== undefined, 'Expected created strategy to be retrievable')
     assert.strictEqual(
       fetchedStrategy.id,
       onChainStrategyId.toString(),
