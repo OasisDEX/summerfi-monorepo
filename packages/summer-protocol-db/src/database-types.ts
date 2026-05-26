@@ -28,36 +28,6 @@ export type Numeric = ColumnType<string, number | string, number | string>;
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-export interface ArmadaDcaOrders {
-  allowedVaultsRoot: string;
-  amount: string;
-  cancelledAt: Int8 | null;
-  chainId: number;
-  createdAt: Int8;
-  deadline: string | null;
-  ensoRouterAddress: string;
-  fromVault: string;
-  fromVaultProof: Json;
-  id: string;
-  intervalSeconds: number;
-  maxTrades: number;
-  neverBuyAbove: string | null;
-  neverSellBelow: string | null;
-  nextExecutionAt: Int8;
-  orderId: string;
-  pausedAt: Int8 | null;
-  signature: string;
-  slippage: string;
-  status: Generated<string>;
-  swapCalldata: string;
-  toVault: string;
-  toVaultProof: Json;
-  tradesExecuted: Generated<number>;
-  updatedAt: Int8;
-  userAddress: string;
-  verifyingContractAddress: string;
-}
-
 export interface Campaigns {
   campaign: CampaignType;
   id: Generated<number>;
@@ -320,7 +290,6 @@ export interface YieldRaceLeaderboard {
 }
 
 export interface Database {
-  armadaDcaOrders: ArmadaDcaOrders;
   campaigns: Campaigns;
   dailyFleetInterestRate: DailyFleetInterestRate;
   dailyRewardRate: DailyRewardRate;
