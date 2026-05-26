@@ -18,6 +18,7 @@ interface StepAmountFrequencyProps {
   targetSymbol: string
   estimatedTargetAmount: number | null
   sourceToTargetRate: number | null
+  minimumAmountError: string | null
   periodSummaries: PeriodSummary[]
   canPreviewPrevious: boolean
   canPreviewNext: boolean
@@ -36,6 +37,7 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
   targetSymbol,
   estimatedTargetAmount,
   sourceToTargetRate,
+  minimumAmountError,
   periodSummaries,
   canPreviewPrevious,
   canPreviewNext,
@@ -210,6 +212,11 @@ export const StepAmountFrequency: FC<StepAmountFrequencyProps> = ({
           ) : null}
         </div>
       </div>
+      {minimumAmountError ? (
+        <Text as="p" variant="p4" style={{ color: 'var(--earn-protocol-critical-100)' }}>
+          {minimumAmountError}
+        </Text>
+      ) : null}
 
       <div className={classNames.periodSummariesContainer}>
         <button

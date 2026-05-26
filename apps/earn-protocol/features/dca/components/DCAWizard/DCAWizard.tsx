@@ -24,6 +24,8 @@ import {
   FREQUENCY_OPTIONS,
   type FrequencyOptionId,
   MAX_FREQUENCY_DAYS,
+  MIN_USD_DENOMINATED_DCA_AMOUNT,
+  STABLE_TOKEN_SYMBOLS,
 } from '@/features/dca/lib/dca-wizard-constants'
 import { type DCAConfig, type DCAResolvedPair } from '@/features/dca/lib/types'
 
@@ -104,6 +106,18 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
   const selectedFrequencyOption: FrequencyOptionId =
     FREQUENCY_OPTIONS.find((option) => option.days === frequencyDays)?.id ?? 'custom'
 
+  const usdDenominatedAmount = STABLE_TOKEN_SYMBOLS.includes(
+    sourceSymbol as (typeof STABLE_TOKEN_SYMBOLS)[number],
+  )
+    ? config.amount
+    : sourceTokenPrice > 0
+      ? config.amount * sourceTokenPrice
+      : null
+  const minimumAmountError =
+    usdDenominatedAmount !== null && usdDenominatedAmount < MIN_USD_DENOMINATED_DCA_AMOUNT
+      ? `Amount must be at least ${MIN_USD_DENOMINATED_DCA_AMOUNT} USDC/USDT equivalent.`
+      : null
+
   const thresholdError =
     isTargetEthVault &&
     config.neverBuyAbove !== undefined &&
@@ -162,6 +176,7 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
           targetSymbol={targetSymbol}
           estimatedTargetAmount={estimatedTargetAmount}
           sourceToTargetRate={sourceToTargetRate}
+          minimumAmountError={minimumAmountError}
           periodSummaries={periodSummaries}
           canPreviewPrevious={canPreviewPrevious}
           canPreviewNext={canPreviewNext}
@@ -196,7 +211,7 @@ const DCAWizardInner: FC<DCAWizardInnerProps> = ({
           <Button
             variant="primaryLarge"
             onClick={() => onSubmit(config, pair)}
-            disabled={!hasEligiblePair || !!pairError || !!thresholdError}
+            disabled={!hasEligiblePair || !!pairError || !!thresholdError || !!minimumAmountError}
           >
             Preview DCA Strategy
           </Button>
