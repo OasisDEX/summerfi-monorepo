@@ -55,6 +55,7 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
   const { cancelStrategyTx } = useAppSDK()
   const { refresh } = useRouter()
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const [order, setOrder] = useState<IDcaStrategy>(initialOrder)
   const [isEditing, setIsEditing] = useState(false)
   const [isCancelling, setIsCancelling] = useState(false)
