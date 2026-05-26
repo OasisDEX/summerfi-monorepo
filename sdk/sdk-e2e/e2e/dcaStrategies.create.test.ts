@@ -1,12 +1,5 @@
 import assert from 'assert'
 import { TestConfigs as TestConfigFleets } from './utils/testConfig'
-import {
-  Token,
-  TokenAmount,
-  Address,
-  getChainInfoByChainId,
-  type AddressValue,
-} from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
@@ -19,19 +12,7 @@ describe('Armada Protocol - DCA Strategies', () => {
     const fromVault = TestConfigFleets.BaseUSDC
     const chainId = fromVault.chainId
     const toVault = TestConfigFleets.BaseWETH
-
     const { sdk, userAddress, publicClient, walletClient } = createSdkTestSetup({ chainId })
-
-    const usdcToken = Token.createFrom({
-      chainInfo: getChainInfoByChainId(chainId),
-      address: Address.createFromEthereum({
-        value: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as AddressValue,
-      }),
-      symbol: 'USDC',
-      name: 'USD Coin',
-      decimals: 6,
-    })
-    const amount = TokenAmount.createFrom({ token: usdcToken, amount: '6' })
 
     const [fromVaultToken, toVaultToken] = await Promise.all([
       sdk.tokens.getTokenBySymbol({
@@ -44,6 +25,8 @@ describe('Armada Protocol - DCA Strategies', () => {
       }),
     ])
 
+    const amountShares = '1000000' // 1 USDC in shares (6 decimals)
+
     const [strategyTx] = await sdk.dca.createStrategyTx({
       chainId,
       userAddress: userAddress.toSolidityValue(),
@@ -53,10 +36,10 @@ describe('Armada Protocol - DCA Strategies', () => {
       outAsset: toVaultToken.address.toSolidityValue(),
       inAssetFeed: fromVault.chainlinkOracleAddressValue,
       outAssetFeed: toVault.chainlinkOracleAddressValue,
-      amountShares: amount.toSolidityValue().toString(),
+      amountShares,
       slippagePercentage: '0.5',
       intervalSeconds: 60 * 60, // hourly
-      maxTrades: 5,
+      maxTrades: 1,
     })
 
     // Send the createStrategy transaction and extract strategyId from the StrategyCreated event

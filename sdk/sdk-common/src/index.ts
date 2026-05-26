@@ -214,9 +214,9 @@ export {
   isArmadaWithdrawal,
 } from './common/interfaces/IArmadaWithdrawal'
 export type { IArmadaWithdrawal } from './common/interfaces/IArmadaWithdrawal'
-export type { IDcaStrategy } from './common/interfaces/IArmadaDcaOrder'
+export type { IDcaStrategy } from './common/interfaces/IDcaStrategy'
 export type { IDcaExecution } from './common/interfaces/IDcaExecution'
-export type { IArmadaDcaStrategyConfig } from './common/interfaces/IArmadaDcaStrategyConfig'
+export type { IDcaStrategyConfig } from './common/interfaces/IDcaStrategyConfig'
 export type { EarnAppCookieVerifier } from './common/types/EarnAppCookieVerifier'
 export { getViemChain, hyperliquid } from './common/utils/getViemChain'
 export {

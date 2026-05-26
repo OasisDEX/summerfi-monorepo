@@ -7,7 +7,7 @@ import {
   type HexData,
   type IDcaStrategy,
   type IDcaExecution,
-  type IArmadaDcaStrategyConfig,
+  type IDcaStrategyConfig,
   Address,
   DcaStrategyStatusEnum,
   TransactionType,
@@ -46,32 +46,39 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
-    const strategyConfig: IArmadaDcaStrategyConfig = {
-      strategyId: '0',
-      owner: params.userAddress,
-      sourceVault: params.fromVault,
-      targetVault: params.toVault,
-      inAsset: params.inAsset,
-      outAsset: params.outAsset,
-      inAssetFeed: params.inAssetFeed,
-      outAssetFeed: params.outAssetFeed,
-      tradeAmount: params.amountShares,
-      interval: String(params.intervalSeconds),
-      slippageBps: String(Math.round(Number(params.slippagePercentage) * 100)),
-      maxPrice: params.neverBuyAbove ?? '0',
-      minPrice: params.neverSellBelow ?? '0',
-      endDate: String(params.deadlineUnixTimestamp ?? 0),
-      maxTrades: String(params.maxTrades),
-    }
+    const calldata = encodeFunctionData({
+      abi: DCAStrategyManagerAbi,
+      functionName: 'createStrategy',
+      args: [
+        {
+          owner: params.userAddress,
+          sourceVault: params.fromVault,
+          targetVault: params.toVault,
+          inAsset: params.inAsset,
+          outAsset: params.outAsset,
+          inAssetFeed: params.inAssetFeed,
+          outAssetFeed: params.outAssetFeed,
+          tradeAmount: BigInt(params.amountShares),
+          interval: BigInt(params.intervalSeconds),
+          slippageBps: BigInt(Math.round(Number(params.slippagePercentage) * 100)),
+          maxPrice: BigInt(params.neverBuyAbove ?? '0'),
+          minPrice: BigInt(params.neverSellBelow ?? '0'),
+          endDate: BigInt(params.deadlineUnixTimestamp ?? 0),
+          maxTrades: BigInt(params.maxTrades),
+        },
+      ],
+    }) as HexData
+
     return [
-      this._buildCreateTransaction({
-        strategyManagerAddress,
-        strategyConfig,
-        functionName: 'createStrategy',
-        description: 'Create DCA strategy',
+      {
         type: TransactionType.CreateStrategy,
-      }),
-    ] as [CreateDcaStrategyTransactionInfo]
+        description: 'Create DCA strategy',
+        transaction: this._buildTransaction({
+          target: strategyManagerAddress,
+          calldata,
+        }),
+      },
+    ]
   }
 
   async editStrategyTx(
@@ -83,11 +90,11 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     }).value
     const strategyConfig = this._strategyToStrategyConfig({
       strategy: params.strategy,
-      strategyId: params.strategyId,
     })
     return [
       this._buildStrategyConfigTransaction({
         strategyManagerAddress,
+        strategyId: params.strategy.strategyId,
         strategyConfig,
         functionName: 'editStrategy',
         description: 'Edit DCA strategy',
@@ -104,10 +111,12 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
+    const strategyConfig = this._strategyToStrategyConfig({ strategy: params.strategy })
     return [
       this._buildStrategyIdTransaction({
         strategyManagerAddress,
-        strategyId: params.strategyId,
+        strategyId: params.strategy.strategyId,
+        strategyConfig,
         functionName: 'pauseStrategy',
         description: 'Pause DCA strategy',
         type: TransactionType.PauseStrategy,
@@ -124,11 +133,11 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     }).value
     const strategyConfig = this._strategyToStrategyConfig({
       strategy: params.strategy,
-      strategyId: params.strategyId,
     })
     return [
       this._buildStrategyConfigTransaction({
         strategyManagerAddress,
+        strategyId: params.strategy.strategyId,
         strategyConfig,
         functionName: 'resumeStrategy',
         description: 'Resume DCA strategy',
@@ -145,10 +154,12 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
+    const strategyConfig = this._strategyToStrategyConfig({ strategy: params.strategy })
     return [
       this._buildStrategyIdTransaction({
         strategyManagerAddress,
-        strategyId: params.strategyId,
+        strategyId: params.strategy.strategyId,
+        strategyConfig,
         functionName: 'cancelStrategy',
         description: 'Cancel DCA strategy',
         type: TransactionType.CancelStrategy,
@@ -181,7 +192,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     params: Parameters<IDCAManager['getStrategy']>[0],
   ): ReturnType<IDCAManager['getStrategy']> {
     const strategies = await this.getStrategies({ chainId: params.chainId })
-    return strategies.find((s) => s.id === params.strategyId)
+    return strategies.find((s) => s.strategyId.toString() === params.strategyId)
   }
 
   async getExecutions(
@@ -224,59 +235,54 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     chainId: ChainId,
   ): IDcaStrategy {
     return {
-      id: subgraphStrategy.strategyId.toString(),
-      userAddress: subgraphStrategy.owner.id as AddressValue,
+      id: subgraphStrategy.id,
+      strategyId: subgraphStrategy.strategyId,
+      ownerAddress: subgraphStrategy.owner.id as AddressValue,
       chainId,
-      fromVault: subgraphStrategy.sourceVault as AddressValue,
-      toVault: subgraphStrategy.targetVault as AddressValue,
+      sourceVault: subgraphStrategy.sourceVault as AddressValue,
+      targetVault: subgraphStrategy.targetVault as AddressValue,
       inAsset: subgraphStrategy.inAsset as AddressValue,
       outAsset: subgraphStrategy.outAsset as AddressValue,
       inAssetFeed: subgraphStrategy.inAssetFeed as AddressValue,
       outAssetFeed: subgraphStrategy.outAssetFeed as AddressValue,
-      amount: subgraphStrategy.tradeAmount.toString(),
-      slippage: String(Number(subgraphStrategy.slippageBps) / 100),
-      intervalSeconds: Number(subgraphStrategy.interval),
-      nextExecutionAtUnixTimestamp: Number(subgraphStrategy.nextTriggerAt),
-      deadlineUnixTimestamp:
-        subgraphStrategy.endDate > 0n ? Number(subgraphStrategy.endDate) : undefined,
-      maxTrades: Number(subgraphStrategy.maxTrades),
-      tradesExecuted: Number(subgraphStrategy.tradesExecuted),
+      tradeAmount: subgraphStrategy.tradeAmount,
+      slippagePercentage: Number(subgraphStrategy.slippageBps) / 100,
+      intervalSeconds: subgraphStrategy.interval,
+      nextTriggerAtUnixTimestamp: subgraphStrategy.nextTriggerAt,
+      lastScheduledAtUnixTimestamp: subgraphStrategy.lastScheduledAt,
+      deadlineUnixTimestamp: subgraphStrategy.endDate,
+      maxTrades: subgraphStrategy.maxTrades,
+      tradesExecuted: subgraphStrategy.tradesExecuted,
       status: subgraphStrategy.status.toLowerCase() as DcaStrategyStatusEnum,
-      createdAt: Number(subgraphStrategy.createdAt),
-      updatedAt: Number(subgraphStrategy.updatedAt),
-      neverBuyAbove:
-        subgraphStrategy.maxPrice > 0n ? subgraphStrategy.maxPrice.toString() : undefined,
-      neverSellBelow:
-        subgraphStrategy.minPrice > 0n ? subgraphStrategy.minPrice.toString() : undefined,
+      createdAt: subgraphStrategy.createdAt,
+      updatedAt: subgraphStrategy.updatedAt,
+      neverBuyAbove: subgraphStrategy.maxPrice.toString(),
+      neverSellBelow: subgraphStrategy.minPrice.toString(),
     }
   }
 
-  private _strategyToStrategyConfig(params: {
-    strategy: IDcaStrategy
-    strategyId: string
-  }): IArmadaDcaStrategyConfig {
+  private _strategyToStrategyConfig(params: { strategy: IDcaStrategy }): IDcaStrategyConfig {
     return {
-      strategyId: params.strategyId,
-      owner: params.strategy.userAddress,
-      sourceVault: params.strategy.fromVault,
-      targetVault: params.strategy.toVault,
+      owner: params.strategy.ownerAddress,
+      sourceVault: params.strategy.sourceVault,
+      targetVault: params.strategy.targetVault,
       inAsset: params.strategy.inAsset,
       outAsset: params.strategy.outAsset,
       inAssetFeed: params.strategy.inAssetFeed,
       outAssetFeed: params.strategy.outAssetFeed,
-      tradeAmount: params.strategy.amount,
-      interval: String(params.strategy.intervalSeconds),
-      slippageBps: String(Math.round(Number(params.strategy.slippage) * 100)),
-      maxPrice: params.strategy.neverBuyAbove ?? '0',
-      minPrice: params.strategy.neverSellBelow ?? '0',
-      endDate: String(params.strategy.deadlineUnixTimestamp ?? 0),
-      maxTrades: String(params.strategy.maxTrades),
+      tradeAmount: params.strategy.tradeAmount,
+      interval: params.strategy.intervalSeconds,
+      slippageBps: BigInt(Math.round(params.strategy.slippagePercentage * 100)),
+      maxPrice: BigInt(params.strategy.neverBuyAbove),
+      minPrice: BigInt(params.strategy.neverSellBelow),
+      endDate: params.strategy.deadlineUnixTimestamp,
+      maxTrades: params.strategy.maxTrades,
     }
   }
 
   private _buildCreateTransaction(params: {
     strategyManagerAddress: AddressValue
-    strategyConfig: IArmadaDcaStrategyConfig
+    strategyConfig: IDcaStrategyConfig
     functionName: 'createStrategy'
     description: string
     type: TransactionType.CreateStrategy
@@ -299,7 +305,8 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
 
   private _buildStrategyConfigTransaction(params: {
     strategyManagerAddress: AddressValue
-    strategyConfig: IArmadaDcaStrategyConfig
+    strategyId: bigint
+    strategyConfig: IDcaStrategyConfig
     functionName: 'editStrategy' | 'resumeStrategy'
     description: string
     type: TransactionType.EditStrategy | TransactionType.ResumeStrategy
@@ -307,10 +314,14 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       strategy: IDcaStrategy
     }
   }): EditDcaStrategyTransactionInfo | ResumeDcaStrategyTransactionInfo {
+    const viemConfig = this._toViemStrategyConfig(params.strategyConfig)
     const calldata = encodeFunctionData({
       abi: DCAStrategyManagerAbi,
       functionName: params.functionName,
-      args: [this._toViemStrategyConfig(params.strategyConfig)],
+      args:
+        params.functionName === 'editStrategy'
+          ? [params.strategyId, viemConfig, viemConfig]
+          : [params.strategyId, viemConfig],
     }) as HexData
 
     return {
@@ -326,7 +337,8 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
 
   private _buildStrategyIdTransaction(params: {
     strategyManagerAddress: AddressValue
-    strategyId: string
+    strategyId: bigint
+    strategyConfig: IDcaStrategyConfig
     functionName: 'pauseStrategy' | 'cancelStrategy'
     description: string
     type: TransactionType.PauseStrategy | TransactionType.CancelStrategy
@@ -334,7 +346,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     const calldata = encodeFunctionData({
       abi: DCAStrategyManagerAbi,
       functionName: params.functionName,
-      args: [BigInt(params.strategyId)],
+      args: [params.strategyId, this._toViemStrategyConfig(params.strategyConfig)],
     }) as HexData
 
     return {
@@ -355,9 +367,8 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     }
   }
 
-  private _toViemStrategyConfig(config: IArmadaDcaStrategyConfig) {
+  private _toViemStrategyConfig(config: IDcaStrategyConfig): IDcaStrategyConfig {
     return {
-      strategyId: BigInt(config.strategyId),
       owner: config.owner,
       sourceVault: config.sourceVault,
       targetVault: config.targetVault,
@@ -365,13 +376,13 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       outAsset: config.outAsset,
       inAssetFeed: config.inAssetFeed,
       outAssetFeed: config.outAssetFeed,
-      tradeAmount: BigInt(config.tradeAmount),
-      interval: BigInt(config.interval),
-      slippageBps: BigInt(config.slippageBps),
-      maxPrice: BigInt(config.maxPrice),
-      minPrice: BigInt(config.minPrice),
-      endDate: BigInt(config.endDate),
-      maxTrades: BigInt(config.maxTrades),
+      tradeAmount: config.tradeAmount,
+      interval: config.interval,
+      slippageBps: config.slippageBps,
+      maxPrice: config.maxPrice,
+      minPrice: config.minPrice,
+      endDate: config.endDate,
+      maxTrades: config.maxTrades,
     }
   }
 }

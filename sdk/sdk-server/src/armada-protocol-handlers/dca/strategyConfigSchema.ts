@@ -3,15 +3,12 @@ import {
   isAddressValue,
   type AddressValue,
   type ChainId,
-  type HexData,
   type IDcaStrategy,
-  type IArmadaDcaStrategyConfig,
 } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 const uint256StringSchema = z.string().regex(/^\d+$/)
 const addressSchema = z.custom<AddressValue>(isAddressValue)
-const hexDataSchema = z.string().regex(/^0x[0-9a-fA-F]*$/) as z.ZodType<HexData>
 
 export const strategyIdSchema = uint256StringSchema
 
@@ -35,52 +32,26 @@ export const createStrategyTxInputSchema = z.object({
 
 export const strategySchema: z.ZodType<IDcaStrategy> = z.object({
   id: z.string(),
-  orderId: uint256StringSchema.optional(),
-  userAddress: addressSchema,
+  strategyId: z.bigint(),
   chainId: z.number() as z.ZodType<ChainId>,
-  fromVault: addressSchema,
-  toVault: addressSchema,
-  amount: uint256StringSchema,
-  slippage: z.string(),
-  intervalSeconds: z.number().int().positive(),
-  nextExecutionAtUnixTimestamp: z.number().int(),
-  deadlineUnixTimestamp: z.number().int().optional(),
-  maxTrades: z.number().int().nonnegative(),
-  tradesExecuted: z.number().int().nonnegative(),
-  allowedVaultsRoot: hexDataSchema.optional(),
-  fromVaultProof: z.array(hexDataSchema).optional(),
-  toVaultProof: z.array(hexDataSchema).optional(),
-  swapCalldata: hexDataSchema.optional(),
-  signature: hexDataSchema.optional(),
-  ensoRouterAddress: addressSchema.optional(),
-  verifyingContractAddress: addressSchema.optional(),
-  status: z.nativeEnum(DcaStrategyStatusEnum),
-  createdAt: z.number().int(),
-  updatedAt: z.number().int(),
-  cancelledAt: z.number().int().optional(),
-  pausedAt: z.number().int().optional(),
-  neverBuyAbove: z.string().optional(),
-  neverSellBelow: z.string().optional(),
-  inAsset: addressSchema,
-  outAsset: addressSchema,
-  inAssetFeed: addressSchema,
-  outAssetFeed: addressSchema,
-})
-
-export const strategyConfigSchema: z.ZodType<IArmadaDcaStrategyConfig> = z.object({
-  strategyId: uint256StringSchema,
-  owner: addressSchema,
+  ownerAddress: addressSchema,
   sourceVault: addressSchema,
   targetVault: addressSchema,
   inAsset: addressSchema,
   outAsset: addressSchema,
   inAssetFeed: addressSchema,
   outAssetFeed: addressSchema,
-  tradeAmount: uint256StringSchema,
-  interval: uint256StringSchema,
-  slippageBps: uint256StringSchema,
-  maxPrice: uint256StringSchema,
-  minPrice: uint256StringSchema,
-  endDate: uint256StringSchema,
-  maxTrades: uint256StringSchema,
+  tradeAmount: z.bigint(),
+  slippagePercentage: z.number(),
+  intervalSeconds: z.bigint(),
+  nextTriggerAtUnixTimestamp: z.bigint(),
+  lastScheduledAtUnixTimestamp: z.bigint(),
+  deadlineUnixTimestamp: z.bigint(),
+  maxTrades: z.bigint(),
+  status: z.nativeEnum(DcaStrategyStatusEnum),
+  tradesExecuted: z.bigint(),
+  neverBuyAbove: z.string(),
+  neverSellBelow: z.string(),
+  createdAt: z.bigint(),
+  updatedAt: z.bigint(),
 })

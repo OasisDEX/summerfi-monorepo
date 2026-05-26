@@ -4,7 +4,7 @@ import type { IPrice } from '../../../common/interfaces/IPrice'
 import type { IPercentage } from '../../../common/interfaces/IPercentage'
 import type { Transaction } from './Transaction'
 import type { IArmadaVaultId } from '../../../common/interfaces/IArmadaVaultId'
-import type { IDcaStrategy } from '../../../common/interfaces/IArmadaDcaOrder'
+import type { IDcaStrategy } from '../../../common/interfaces/IDcaStrategy'
 
 /**
  * @enum TransactionType

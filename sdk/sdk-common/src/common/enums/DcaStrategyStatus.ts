@@ -1,6 +1,6 @@
 export enum DcaStrategyStatusEnum {
-  Active = 'active',
-  Paused = 'paused',
-  Cancelled = 'cancelled',
-  Completed = 'completed',
+  Active = 'ACTIVE',
+  Paused = 'PAUSED',
+  Cancelled = 'CANCELLED',
+  Completed = 'COMPLETED',
 }

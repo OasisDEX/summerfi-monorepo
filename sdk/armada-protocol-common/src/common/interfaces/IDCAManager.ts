@@ -37,23 +37,21 @@ export interface IDCAManager {
   editStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy
-    strategyId: string
   }): Promise<[EditDcaStrategyTransactionInfo]>
 
   pauseStrategyTx(params: {
     chainId: ChainId
-    strategyId: string
+    strategy: IDcaStrategy
   }): Promise<[PauseDcaStrategyTransactionInfo]>
 
   resumeStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy
-    strategyId: string
   }): Promise<[ResumeDcaStrategyTransactionInfo]>
 
   cancelStrategyTx(params: {
     chainId: ChainId
-    strategyId: string
+    strategy: IDcaStrategy
   }): Promise<[CancelDcaStrategyTransactionInfo]>
 
   /**
