@@ -1,11 +1,11 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import type { ChainId } from '@summerfi/sdk-common'
+import type { ChainId, IDcaStrategy } from '@summerfi/sdk-common'
 
 export const pauseStrategyTxHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
-  async ({ chainId, strategyId }: { chainId: ChainId; strategyId: string }) => {
+  async ({ chainId, strategy }: { chainId: ChainId; strategy: IDcaStrategy }) => {
     return sdk.dca.pauseStrategyTx({
       chainId,
-      strategyId,
+      strategy,
     })
   }

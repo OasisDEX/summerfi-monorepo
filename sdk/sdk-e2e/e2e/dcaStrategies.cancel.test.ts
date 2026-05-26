@@ -9,9 +9,7 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - DCA Strategies Cancel', () => {
   // Replace with an on-chain numeric strategyId (e.g. '1', '2', ...)
-  const scenarios: { strategyId: string }[] = [
-    { strategyId: '<replace-with-strategy-id>' },
-  ]
+  const scenarios: { strategyId: string }[] = [{ strategyId: '<replace-with-strategy-id>' }]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { strategyId } = scenario

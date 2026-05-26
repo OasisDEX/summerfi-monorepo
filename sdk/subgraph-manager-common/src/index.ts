@@ -41,8 +41,5 @@ export {
   GetInstitutionByIdDocument,
   GetRolesDocument,
 } from './generated/institutions/client'
-export type {
-  GetStrategiesQuery,
-  GetExecutionsQuery,
-} from './generated/dca/client'
+export type { GetStrategiesQuery, GetExecutionsQuery } from './generated/dca/client'
 export { SubgraphTypes, type SubgraphType } from './types/SubgraphTypes'

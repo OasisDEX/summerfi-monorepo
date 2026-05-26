@@ -64,5 +64,4 @@ export class DcaManagerClient extends IRPCClient implements IDcaManagerClient {
   ): ReturnType<IDcaManagerClient['getExecution']> {
     return this.rpcClient.armada.dca.getExecution.query(params)
   }
-
 }
