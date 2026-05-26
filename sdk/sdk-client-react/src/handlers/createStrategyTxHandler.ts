@@ -34,7 +34,7 @@ export const createStrategyTxHandler =
     maxTrades: number
     neverBuyAbove?: string
     neverSellBelow?: string
-    deadlineUnixTimestamp?: number
+    deadlineUnixTimestamp: number
   }) => {
     return sdk.dca.createStrategyTx({
       chainId,

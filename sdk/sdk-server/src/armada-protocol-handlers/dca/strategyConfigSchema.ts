@@ -27,7 +27,7 @@ export const createStrategyTxInputSchema = z.object({
   maxTrades: z.number().int().positive(),
   neverBuyAbove: z.string().optional(),
   neverSellBelow: z.string().optional(),
-  deadlineUnixTimestamp: z.number().int().optional(),
+  deadlineUnixTimestamp: z.number().int(),
 })
 
 export const strategySchema: z.ZodType<IDcaStrategy> = z.object({

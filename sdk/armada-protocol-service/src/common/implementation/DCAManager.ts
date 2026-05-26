@@ -63,7 +63,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
           slippageBps: BigInt(Math.round(Number(params.slippagePercentage) * 100)),
           maxPrice: BigInt(params.neverBuyAbove ?? '0'),
           minPrice: BigInt(params.neverSellBelow ?? '0'),
-          endDate: BigInt(params.deadlineUnixTimestamp ?? 0),
+          endDate: BigInt(params.deadlineUnixTimestamp),
           maxTrades: BigInt(params.maxTrades),
         },
       ],

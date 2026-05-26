@@ -31,7 +31,7 @@ export interface IDcaManagerClient {
     maxTrades: number
     neverBuyAbove?: string
     neverSellBelow?: string
-    deadlineUnixTimestamp?: number
+    deadlineUnixTimestamp: number
   }): Promise<[CreateDcaStrategyTransactionInfo]>
 
   editStrategyTx(params: {

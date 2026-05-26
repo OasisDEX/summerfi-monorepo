@@ -40,6 +40,7 @@ describe('Armada Protocol - DCA Strategies', () => {
       slippagePercentage: '0.5',
       intervalSeconds: 60 * 60, // hourly
       maxTrades: 1,
+      deadlineUnixTimestamp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 1 week from now
     })
 
     // Send the createStrategy transaction and extract strategyId from the StrategyCreated event
