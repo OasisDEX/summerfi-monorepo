@@ -9,7 +9,7 @@ import type {
   PauseDcaStrategyTransactionInfo,
   ResumeDcaStrategyTransactionInfo,
   CancelDcaStrategyTransactionInfo,
-  ExecuteDcaTransactionInfo,
+  DcaStrategyStatusEnum,
 } from '@summerfi/sdk-common'
 import type { GetStrategiesQuery, GetExecutionsQuery } from '@summerfi/subgraph-manager-common'
 
@@ -38,7 +38,7 @@ export interface IArmadaManagerDCA {
 
   editStrategyTx(params: {
     chainId: ChainId
-    order: IArmadaDcaOrder
+    strategy: IDcaStrategy
     strategyId: string
   }): Promise<EditDcaStrategyTransactionInfo>
 
@@ -49,7 +49,7 @@ export interface IArmadaManagerDCA {
 
   resumeStrategyTx(params: {
     chainId: ChainId
-    order: IArmadaDcaOrder
+    strategy: IDcaStrategy
     strategyId: string
   }): Promise<ResumeDcaStrategyTransactionInfo>
 
@@ -57,12 +57,6 @@ export interface IArmadaManagerDCA {
     chainId: ChainId
     strategyId: string
   }): Promise<CancelDcaStrategyTransactionInfo>
-
-  executeDCATx(params: {
-    chainId: ChainId
-    order: IArmadaDcaOrder
-    strategyId: string
-  }): Promise<ExecuteDcaTransactionInfo>
 
   /**
    * @name createAndSaveBuyOrder
@@ -97,7 +91,7 @@ export interface IArmadaManagerDCA {
     inAssetFeed: AddressValue
     /** Oracle price feed address for the output asset */
     outAssetFeed: AddressValue
-  }): Promise<IArmadaDcaOrder>
+  }): Promise<IDcaStrategy>
 
   /**
    * @name editBuyOrder
@@ -125,13 +119,17 @@ export interface IArmadaManagerDCA {
     neverBuyAbove?: string
     /** Price floor — skip execution if the toVault token price is below this value (optional) */
     neverSellBelow?: string
-  }): Promise<IArmadaDcaOrder>
+  }): Promise<IDcaStrategy>
 
   /**
    * @name getStrategies
    * @description Gets all DCA strategies for a chain from the subgraph
    */
-  getStrategies(params: { chainId: ChainId; userAddress?: AddressValue }): Promise<GetStrategiesQuery>
+  getStrategies(params: {
+    chainId: ChainId
+    userAddress?: AddressValue
+    status?: DcaStrategyStatusEnum
+  }): Promise<{ strategies: IDcaStrategy[] }>
 
   /**
    * @name getStrategy
@@ -140,16 +138,13 @@ export interface IArmadaManagerDCA {
   getStrategy(params: {
     strategyId: string
     chainId: ChainId
-  }): Promise<GetStrategiesQuery['strategies'][0] | undefined>
+  }): Promise<IDcaStrategy | undefined>
 
   /**
    * @name getExecutions
    * @description Gets all executions for a given DCA strategy from the subgraph
    */
-  getExecutions(params: {
-    chainId: ChainId
-    strategyId: string
-  }): Promise<GetExecutionsQuery>
+  getExecutions(params: { chainId: ChainId; strategyId: string }): Promise<GetExecutionsQuery>
 
   /**
    * @name getExecution
@@ -164,18 +159,21 @@ export interface IArmadaManagerDCA {
   /**
    * @name cancelBuyOrder
    * @description Marks a DCA buy order as cancelled
+   * @deprecated Use cancelStrategyTx instead
    */
-  cancelBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IArmadaDcaOrder>
+  cancelBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IDcaStrategy>
 
   /**
    * @name pauseBuyOrder
-   * @description Pauses an active DCA buy order. Requires a signed message: "I want to pause <orderId>."
+   * @description Pauses an active DCA buy order.
+   * @deprecated Use pauseStrategyTx instead
    */
-  pauseBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IArmadaDcaOrder>
+  pauseBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IDcaStrategy>
 
   /**
    * @name resumeBuyOrder
-   * @description Resumes a paused DCA buy order. Requires a signed message: "I want to resume <orderId>."
+   * @description Resumes a paused DCA buy order.
+   * @deprecated Use resumeStrategyTx instead
    */
-  resumeBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IArmadaDcaOrder>
+  resumeBuyOrder(params: { orderId: string; userAddress: AddressValue }): Promise<IDcaStrategy>
 }

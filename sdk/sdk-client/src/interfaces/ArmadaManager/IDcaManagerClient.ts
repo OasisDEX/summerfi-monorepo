@@ -9,16 +9,16 @@ import type {
   PauseDcaStrategyTransactionInfo,
   ResumeDcaStrategyTransactionInfo,
   CancelDcaStrategyTransactionInfo,
-  ExecuteDcaTransactionInfo,
+  DcaStrategyStatusEnum,
 } from '@summerfi/sdk-common'
 import type { GetStrategiesQuery, GetExecutionsQuery } from '@summerfi/subgraph-manager-common'
 import type { SignTypedDataParameters } from 'viem'
 
 /**
- * @name IArmadaManagerDCAClient
- * @description Client interface for Armada DCA order management
+ * @name IDcaManagerClient
+ * @description Client interface for DCA order management
  */
-export interface IArmadaManagerDCAClient {
+export interface IDcaManagerClient {
   createStrategyTx(params: {
     chainId: ChainId
     userAddress: AddressValue
@@ -58,12 +58,6 @@ export interface IArmadaManagerDCAClient {
     chainId: ChainId
     strategyId: string
   }): Promise<CancelDcaStrategyTransactionInfo>
-
-  executeDCATx(params: {
-    chainId: ChainId
-    order: IArmadaDcaOrder
-    strategyId: string
-  }): Promise<ExecuteDcaTransactionInfo>
 
   createAndSaveBuyOrder(params: {
     orderId: string
@@ -122,17 +116,18 @@ export interface IArmadaManagerDCAClient {
     bearerToken: string
   }): Promise<IArmadaDcaOrder>
 
-  getStrategies(params: { chainId: ChainId; userAddress?: AddressValue }): Promise<GetStrategiesQuery>
+  getStrategies(params: {
+    chainId: ChainId
+    userAddress?: AddressValue
+    status?: DcaStrategyStatusEnum
+  }): Promise<GetStrategiesQuery>
 
   getStrategy(params: {
     strategyId: string
     chainId: ChainId
   }): Promise<GetStrategiesQuery['strategies'][0] | undefined>
 
-  getExecutions(params: {
-    chainId: ChainId
-    strategyId: string
-  }): Promise<GetExecutionsQuery>
+  getExecutions(params: { chainId: ChainId; strategyId: string }): Promise<GetExecutionsQuery>
 
   getExecution(params: {
     chainId: ChainId

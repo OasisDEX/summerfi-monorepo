@@ -1,12 +1,12 @@
-import type { ArmadaDcaOrderStatusEnum } from '../enums/ArmadaDcaOrderStatus'
+import type { DcaStrategyStatusEnum } from '../enums/DcaStrategyStatus'
 import type { AddressValue } from '../types/AddressValue'
 import type { ChainId } from '../types/ChainId'
 import type { HexData } from '../types/HexData'
 
-export interface IArmadaDcaOrder {
+export interface IDcaStrategy {
   id: string
-  /** External order identifier provided by the caller (distinct from the DB row id) */
-  orderId: string
+  /** External order identifier provided by the caller (only present for DB-persisted strategies) */
+  orderId?: string
   userAddress: AddressValue
   chainId: ChainId
   fromVault: AddressValue
@@ -22,14 +22,21 @@ export interface IArmadaDcaOrder {
   maxTrades: number
   /** Number of trades that have been executed so far */
   tradesExecuted: number
-  allowedVaultsRoot: HexData
-  fromVaultProof: HexData[]
-  toVaultProof: HexData[]
-  swapCalldata: HexData
-  signature: HexData
-  ensoRouterAddress: AddressValue
-  verifyingContractAddress: AddressValue
-  status: ArmadaDcaOrderStatusEnum
+  /** Only present for DB-persisted strategies */
+  allowedVaultsRoot?: HexData
+  /** Only present for DB-persisted strategies */
+  fromVaultProof?: HexData[]
+  /** Only present for DB-persisted strategies */
+  toVaultProof?: HexData[]
+  /** Only present for DB-persisted strategies */
+  swapCalldata?: HexData
+  /** Only present for DB-persisted strategies */
+  signature?: HexData
+  /** Only present for DB-persisted strategies */
+  ensoRouterAddress?: AddressValue
+  /** Only present for DB-persisted strategies */
+  verifyingContractAddress?: AddressValue
+  status: DcaStrategyStatusEnum
   createdAt: number
   updatedAt: number
   cancelledAt?: number
@@ -47,3 +54,6 @@ export interface IArmadaDcaOrder {
   /** Oracle price feed address for the output asset */
   outAssetFeed: AddressValue
 }
+
+/** @deprecated Use IDcaStrategy instead */
+export type IArmadaDcaOrder = IDcaStrategy

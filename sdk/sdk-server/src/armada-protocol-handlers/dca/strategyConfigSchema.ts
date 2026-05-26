@@ -1,5 +1,5 @@
 import {
-  ArmadaDcaOrderStatusEnum,
+  DcaStrategyStatusEnum,
   isAddressValue,
   type AddressValue,
   type ChainId,
@@ -54,7 +54,7 @@ export const orderSchema: z.ZodType<IArmadaDcaOrder> = z.object({
   signature: hexDataSchema,
   ensoRouterAddress: addressSchema,
   verifyingContractAddress: addressSchema,
-  status: z.nativeEnum(ArmadaDcaOrderStatusEnum),
+  status: z.nativeEnum(DcaStrategyStatusEnum),
   createdAt: z.number().int(),
   updatedAt: z.number().int(),
   cancelledAt: z.number().int().optional(),

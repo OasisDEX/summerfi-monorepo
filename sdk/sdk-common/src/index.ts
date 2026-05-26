@@ -56,7 +56,7 @@ export {
   isArmadaMigrationType,
 } from './common/enums/ArmadaMigrationType'
 export { ArmadaMigrationType } from './common/enums/ArmadaMigrationType'
-export { ArmadaDcaOrderStatusEnum } from './common/enums/ArmadaDcaOrderStatus'
+export { DcaStrategyStatusEnum } from './common/enums/DcaStrategyStatus'
 export { StakingBucketSchema, isStakingBucket } from './common/enums/StakingBucket'
 export { StakingBucket, StakingBucketValues } from './common/enums/StakingBucket'
 export { Address } from './common/implementation/Address'
@@ -214,7 +214,7 @@ export {
   isArmadaWithdrawal,
 } from './common/interfaces/IArmadaWithdrawal'
 export type { IArmadaWithdrawal } from './common/interfaces/IArmadaWithdrawal'
-export type { IArmadaDcaOrder } from './common/interfaces/IArmadaDcaOrder'
+export type { IDcaStrategy, IArmadaDcaOrder } from './common/interfaces/IArmadaDcaOrder'
 export type { IArmadaDcaStrategyConfig } from './common/interfaces/IArmadaDcaStrategyConfig'
 export { getViemChain, hyperliquid } from './common/utils/getViemChain'
 export {
@@ -345,7 +345,6 @@ export type {
   PauseDcaStrategyTransactionInfo,
   ResumeDcaStrategyTransactionInfo,
   CancelDcaStrategyTransactionInfo,
-  ExecuteDcaTransactionInfo,
 } from './orders/common/types/ExtendedTransactionInfo'
 export type { Order } from './orders/common/types/Order'
 export type { TransactionInfo } from './orders/common/types/TransactionInfo'

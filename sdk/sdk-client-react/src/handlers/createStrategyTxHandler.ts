@@ -36,7 +36,7 @@ export const createStrategyTxHandler =
     neverSellBelow?: string
     deadlineUnixTimestamp?: number
   }) => {
-    return sdk.armada.dca.createStrategyTx({
+    return sdk.dca.createStrategyTx({
       chainId,
       userAddress,
       fromVault,

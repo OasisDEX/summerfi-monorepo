@@ -12,7 +12,7 @@ export const editStrategyTxHandler =
     order: IArmadaDcaOrder
     strategyId: string
   }) => {
-    return sdk.armada.dca.editStrategyTx({
+    return sdk.dca.editStrategyTx({
       chainId,
       order,
       strategyId,

@@ -2,12 +2,10 @@ import { IArmadaManagerClient } from '../../interfaces/ArmadaManager/IArmadaMana
 import { IArmadaManagerAdminClient } from '../../interfaces/ArmadaManager/IArmadaManagerAdminClient'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IArmadaManagerClientAccessControl } from '../../interfaces/ArmadaManager/IArmadaManagerClientAccessControl'
-import { IArmadaManagerDCAClient } from '../../interfaces/ArmadaManager/IArmadaManagerDCAClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
 import { ArmadaManagerAdminClient } from './ArmadaManagerAdminClient'
 import { ArmadaManagerUsersClient } from './ArmadaManagerUsersClient'
 import { ArmadaManagerClientAccessControl } from './ArmadaManagerClientAccessControl'
-import { ArmadaManagerDCAClient } from './ArmadaManagerDCAClient'
 
 /**
  * @name ArmadaManagerClient
@@ -18,12 +16,10 @@ export class ArmadaManagerClient implements IArmadaManagerClient {
   readonly users: IArmadaManagerUsersClient
   readonly admin: IArmadaManagerAdminClient
   readonly accessControl: IArmadaManagerClientAccessControl
-  readonly dca: IArmadaManagerDCAClient
 
   constructor(params: { rpcClient: RPCMainClientType }) {
     this.users = new ArmadaManagerUsersClient(params)
     this.admin = new ArmadaManagerAdminClient(params)
     this.accessControl = new ArmadaManagerClientAccessControl(params)
-    this.dca = new ArmadaManagerDCAClient(params)
   }
 }

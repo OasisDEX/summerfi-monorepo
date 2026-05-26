@@ -4,7 +4,7 @@ import type { ChainId } from '@summerfi/sdk-common'
 export const cancelStrategyTxHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
   async ({ chainId, strategyId }: { chainId: ChainId; strategyId: string }) => {
-    return sdk.armada.dca.cancelStrategyTx({
+    return sdk.dca.cancelStrategyTx({
       chainId,
       strategyId,
     })

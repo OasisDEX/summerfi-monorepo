@@ -29,7 +29,7 @@ import {
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import { ArmadaDcaOrderStatusEnum, type IArmadaDcaOrder } from '@summerfi/sdk-common'
+import { DcaStrategyStatusEnum, type IArmadaDcaOrder } from '@summerfi/sdk-common'
 import Link from 'next/link'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
@@ -237,7 +237,7 @@ export const PortfolioOverview = ({
   const filteredDcaOrders = useMemo(() => {
     return showInactiveDcaPositions
       ? dcaOrders
-      : dcaOrders.filter((order) => order.status === ArmadaDcaOrderStatusEnum.Active)
+      : dcaOrders.filter((order) => order.status === DcaStrategyStatusEnum.Active)
   }, [dcaOrders, showInactiveDcaPositions])
 
   const hasPositions = !!sortedPositions.length

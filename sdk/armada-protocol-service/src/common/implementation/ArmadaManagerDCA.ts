@@ -11,7 +11,7 @@ import {
   type IArmadaDcaOrder,
   type IArmadaDcaStrategyConfig,
   Address,
-  ArmadaDcaOrderStatusEnum,
+  DcaStrategyStatusEnum,
   Token,
   TransactionType,
   type CreateDcaStrategyTransactionInfo,
@@ -229,47 +229,20 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
     }) as CancelDcaStrategyTransactionInfo
   }
 
-  async executeDCATx(
-    params: Parameters<IArmadaManagerDCA['executeDCATx']>[0],
-  ): ReturnType<IArmadaManagerDCA['executeDCATx']> {
-    const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
-      contractName: 'dcaStrategyManager',
-      chainId: params.chainId,
-    }).value
-    const strategyConfig = this._orderToStrategyConfig({
-      order: params.order,
-      strategyId: params.strategyId,
-    })
-    const calldata = encodeFunctionData({
-      abi: DCAStrategyManagerAbi,
-      functionName: 'executeDCA',
-      args: [this._toViemStrategyConfig(strategyConfig), params.order.swapCalldata],
-    }) as HexData
-
-    return {
-      type: TransactionType.ExecuteDCA,
-      description: 'Execute DCA strategy',
-      transaction: this._buildTransaction({
-        target: strategyManagerAddress,
-        calldata,
-      }),
-    }
-  }
-
   async getStrategies(
     params: Parameters<IArmadaManagerDCA['getStrategies']>[0],
   ): ReturnType<IArmadaManagerDCA['getStrategies']> {
     const result = await this._dcaSubgraphManager.getStrategies({ chainId: params.chainId })
-    if (!params.userAddress) {
-      return result
+    let { strategies } = result
+    if (params.userAddress) {
+      const lowerAddress = params.userAddress.toLowerCase()
+      strategies = strategies.filter((s) => s.owner.id.toLowerCase() === lowerAddress)
     }
-    const lowerAddress = params.userAddress.toLowerCase()
-    return {
-      ...result,
-      strategies: result.strategies.filter(
-        (s) => s.owner.id.toLowerCase() === lowerAddress,
-      ),
+    if (params.status) {
+      const lowerStatus = params.status.toLowerCase()
+      strategies = strategies.filter((s) => s.status.toLowerCase() === lowerStatus)
     }
+    return { ...result, strategies }
   }
 
   async getStrategy(
@@ -438,7 +411,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       signature: p.rebalanceAuthorizationSignature,
       ensoRouterAddress,
       verifyingContractAddress: verifyingContract.value,
-      status: ArmadaDcaOrderStatusEnum.Active,
+      status: DcaStrategyStatusEnum.Active,
       createdAt: now,
       updatedAt: now,
     }
@@ -769,7 +742,7 @@ export class ArmadaManagerDCA extends ArmadaManagerShared implements IArmadaMana
       signature: row.signature as HexData,
       ensoRouterAddress: row.ensoRouterAddress as AddressValue,
       verifyingContractAddress: row.verifyingContractAddress as AddressValue,
-      status: row.status as ArmadaDcaOrderStatusEnum,
+      status: row.status as DcaStrategyStatusEnum,
       createdAt: Number(row.createdAt),
       updatedAt: Number(row.updatedAt),
       cancelledAt: row.cancelledAt ? Number(row.cancelledAt) : undefined,

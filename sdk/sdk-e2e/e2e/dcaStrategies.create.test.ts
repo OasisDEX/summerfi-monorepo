@@ -44,7 +44,7 @@ describe('Armada Protocol - DCA Strategies', () => {
       }),
     ])
 
-    const strategyTx = await sdk.armada.dca.createStrategyTx({
+    const strategyTx = await sdk.dca.createStrategyTx({
       chainId,
       userAddress: userAddress.toSolidityValue(),
       fromVault: fromVault.fleetAddressValue,
@@ -75,7 +75,7 @@ describe('Armada Protocol - DCA Strategies', () => {
     const onChainStrategyId = BigInt(strategyLog.topics[1])
     console.log('On-chain strategy ID:', onChainStrategyId.toString())
 
-    const fetchedStrategy = await sdk.armada.dca.getStrategy({
+    const fetchedStrategy = await sdk.dca.getStrategy({
       chainId,
       strategyId: onChainStrategyId.toString(),
     })

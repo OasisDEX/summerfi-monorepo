@@ -143,7 +143,6 @@ import { getExecution } from './armada-protocol-handlers/dca/getExecution'
 import { cancelBuyOrder } from './armada-protocol-handlers/dca/cancelBuyOrder'
 import { cancelStrategyTx } from './armada-protocol-handlers/dca/cancelStrategyTx'
 import { editStrategyTx } from './armada-protocol-handlers/dca/editStrategyTx'
-import { executeDCATx } from './armada-protocol-handlers/dca/executeDCATx'
 import { pauseStrategyTx } from './armada-protocol-handlers/dca/pauseStrategyTx'
 import { pauseBuyOrder } from './armada-protocol-handlers/dca/pauseBuyOrder'
 import { resumeStrategyTx } from './armada-protocol-handlers/dca/resumeStrategyTx'
@@ -317,7 +316,6 @@ export const sdkAppRouter = router({
       pauseStrategyTx: pauseStrategyTx,
       resumeStrategyTx: resumeStrategyTx,
       cancelStrategyTx: cancelStrategyTx,
-      executeDCATx: executeDCATx,
       createAndSaveBuyOrder: createAndSaveBuyOrder,
       editBuyOrder: editBuyOrder,
       getStrategies: getStrategies,

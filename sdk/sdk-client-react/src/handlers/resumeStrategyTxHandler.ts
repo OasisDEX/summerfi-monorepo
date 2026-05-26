@@ -12,7 +12,7 @@ export const resumeStrategyTxHandler =
     order: IArmadaDcaOrder
     strategyId: string
   }) => {
-    return sdk.armada.dca.resumeStrategyTx({
+    return sdk.dca.resumeStrategyTx({
       chainId,
       order,
       strategyId,

@@ -1,7 +1,5 @@
 import assert from 'assert'
-import { privateKeyToAccount } from 'viem/accounts'
-import { ChainIds, ArmadaDcaOrderStatusEnum } from '@summerfi/sdk-common'
-import { TestConfigAccounts } from './utils/testConfig'
+import { ChainIds, DcaStrategyStatusEnum } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
@@ -10,38 +8,32 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - DCA Strategies Cancel', () => {
-  const scenarios: { orderId: string }[] = [{ orderId: '2ee5a4cb-31ac-4b9c-91b1-cfbcaec5e891' }]
+  const scenarios: { strategyId: string }[] = [
+    { strategyId: '2ee5a4cb-31ac-4b9c-91b1-cfbcaec5e891' },
+  ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { orderId } = scenario
+    const { strategyId } = scenario
 
     it('should cancel a DCA strategy by id', async () => {
       const setup = createSdkTestSetup({ chainId: ChainIds.Base })
-      const { sdk, userAddressValue: userAddress } = setup
+      const { sdk, chainId, userAddressValue: userAddress } = setup
 
-      const existingOrder = await sdk.armada.dca.getBuyOrder({ orderId, userAddress })
+      const existingStrategy = await sdk.dca.getStrategy({ strategyId, chainId })
 
-      assert(existingOrder, `Expected order ${orderId} to exist`)
+      assert(existingStrategy, `Expected strategy ${strategyId} to exist`)
 
-      if (existingOrder.status === ArmadaDcaOrderStatusEnum.Cancelled) {
-        console.log(`[Cancel] Order ${orderId} is already cancelled, skipping`)
+      if (existingStrategy.status === DcaStrategyStatusEnum.Cancelled) {
+        console.log(`[Cancel] Strategy ${strategyId} is already cancelled, skipping`)
         return
       }
-
-      const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
-
-      const signedMessage = `I want to cancel ${orderId}.`
-      const signature = await account.signMessage({ message: signedMessage })
-
-      const cancelledOrder = await sdk.armada.dca.cancelBuyOrder({
-        orderId,
+      const cancelledStrategy = await sdk.dca.cancelBuyOrder({
+        orderId: strategyId,
         userAddress,
-        signedMessage,
-        signature,
       })
 
-      assert.strictEqual(cancelledOrder.status, ArmadaDcaOrderStatusEnum.Cancelled)
-      console.log(`[Cancel] Cancelled DCA order with ID: ${orderId}`)
+      assert.strictEqual(cancelledStrategy.status, DcaStrategyStatusEnum.Cancelled)
+      console.log(`[Cancel] Cancelled DCA strategy with ID: ${strategyId}`)
     })
   })
 })

@@ -54,7 +54,7 @@ export const createAndSaveBuyOrderHandler =
     /** Oracle price feed address for the output asset */
     outAssetFeed: AddressValue
   }) => {
-    return sdk.armada.dca.createAndSaveBuyOrder({
+    return sdk.dca.createAndSaveBuyOrder({
       orderId,
       userAddress,
       chainId,

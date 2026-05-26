@@ -1,12 +1,11 @@
 import assert from 'assert'
-import { ArmadaDcaOrderStatusEnum, ChainIds, ChainId } from '@summerfi/sdk-common'
-import { TestConfigAccounts } from './utils/testConfig'
+import { DcaStrategyStatusEnum, ChainIds, ChainId } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
 
-const scenarios: { chainId: ChainId; status?: ArmadaDcaOrderStatusEnum }[] = [
-  { chainId: ChainIds.Base, status: ArmadaDcaOrderStatusEnum.Active },
+const scenarios: { chainId: ChainId; status?: DcaStrategyStatusEnum }[] = [
+  { chainId: ChainIds.Base, status: DcaStrategyStatusEnum.Active },
   { chainId: ChainIds.Base, status: undefined },
 ]
 
@@ -21,25 +20,24 @@ describe('Armada Protocol - DCA Strategies Read', () => {
       const setup = createSdkTestSetup({ chainId })
       const { sdk, userAddressValue: userAddress } = setup
 
-      // getBuyOrders with optional status filter
-      const orders = await sdk.armada.dca.getBuyOrders({
+      const { strategies } = await sdk.dca.getStrategies({
         userAddress,
         chainId,
         status,
       })
 
-      assert(Array.isArray(orders), 'Expected orders to be an array')
+      assert(Array.isArray(strategies), 'Expected strategies to be an array')
       console.log(
-        `[Read] Orders (status=${status ?? 'all'}, count=${orders.length}):`,
-        JSON.stringify(orders.map(logOrder), null, 2),
+        `[Read] Strategies (status=${status ?? 'all'}, count=${strategies.length}):`,
+        JSON.stringify(strategies.map(logStrategy), null, 2),
       )
     })
   })
 })
 
-function logOrder(order: { id: string; status: ArmadaDcaOrderStatusEnum }) {
+function logStrategy(strategy: { id: string; status: string }) {
   return {
-    id: order.id,
-    status: order.status,
+    id: strategy.id,
+    status: strategy.status,
   }
 }

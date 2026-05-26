@@ -9,7 +9,7 @@ import {
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import { ArmadaDcaOrderStatusEnum, type IArmadaDcaOrder } from '@summerfi/sdk-common'
+import { DcaStrategyStatusEnum, type IArmadaDcaOrder } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -58,10 +58,10 @@ const formatDay = (unixTimestamp?: number): string => {
   return dayjs.unix(unixTimestamp).format('DD MMM YYYY')
 }
 
-const getStatusLabel = (orderStatus: ArmadaDcaOrderStatusEnum): string => {
-  if (orderStatus === ArmadaDcaOrderStatusEnum.Active) return 'Active'
-  if (orderStatus === ArmadaDcaOrderStatusEnum.Paused) return 'Paused'
-  if (orderStatus === ArmadaDcaOrderStatusEnum.Cancelled) return 'Cancelled'
+const getStatusLabel = (orderStatus: DcaStrategyStatusEnum): string => {
+  if (orderStatus === DcaStrategyStatusEnum.Active) return 'Active'
+  if (orderStatus === DcaStrategyStatusEnum.Paused) return 'Paused'
+  if (orderStatus === DcaStrategyStatusEnum.Cancelled) return 'Cancelled'
 
   return 'Completed'
 }

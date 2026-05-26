@@ -16,7 +16,7 @@ import { type IToken, type TokenSymbolsList } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, supportedSDKNetwork, ten } from '@summerfi/app-utils'
 import {
   type AddressValue,
-  ArmadaDcaOrderStatusEnum,
+  DcaStrategyStatusEnum,
   type IArmadaDcaOrder,
 } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
@@ -38,15 +38,15 @@ interface DCAPositionViewProps {
 const SECONDS_PER_DAY = 24 * 60 * 60
 const THRESHOLD_DECIMALS = 8
 
-const formatStatus = (orderStatus: ArmadaDcaOrderStatusEnum) => {
+const formatStatus = (orderStatus: DcaStrategyStatusEnum) => {
   switch (orderStatus) {
-    case ArmadaDcaOrderStatusEnum.Active:
+    case DcaStrategyStatusEnum.Active:
       return 'Active'
-    case ArmadaDcaOrderStatusEnum.Paused:
+    case DcaStrategyStatusEnum.Paused:
       return 'Paused'
-    case ArmadaDcaOrderStatusEnum.Cancelled:
+    case DcaStrategyStatusEnum.Cancelled:
       return 'Cancelled'
-    case ArmadaDcaOrderStatusEnum.Completed:
+    case DcaStrategyStatusEnum.Completed:
       return 'Completed'
     default:
       return orderStatus
@@ -155,8 +155,8 @@ export const DCAPositionView: FC<DCAPositionViewProps> = ({ order: initialOrder,
   }
 
   const canCancel =
-    order.status === ArmadaDcaOrderStatusEnum.Active ||
-    order.status === ArmadaDcaOrderStatusEnum.Paused
+    order.status === DcaStrategyStatusEnum.Active ||
+    order.status === DcaStrategyStatusEnum.Paused
 
   const handleCancel = useCallback(async () => {
     if (!address || !walletClient) {

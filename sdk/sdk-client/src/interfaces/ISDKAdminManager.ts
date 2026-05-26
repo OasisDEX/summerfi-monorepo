@@ -1,4 +1,5 @@
 import type { IArmadaManagerClient } from './ArmadaManager/IArmadaManagerClient'
+import type { IDcaManagerClient } from './ArmadaManager/IDcaManagerClient'
 import type { IChainsManagerClient } from './IChainsManager'
 import type { IOracleManagerClient } from './IOracleManagerClient'
 import type { ISwapManagerClient } from './ISwapManagerClient'
@@ -18,6 +19,8 @@ export interface ISDKAdminManager {
   readonly tokens: ITokensManagerClient2
   /** Users Manager for retrieving information about a user */
   readonly users: IUsersManager
+  /** DCA Manager for interacting with DCA strategies and buy orders */
+  readonly dca: IDcaManagerClient
   /** Armada Manager for interacting with the Armada protocol */
   readonly armada: IArmadaManagerClient
   /** Swap Manager for interacting with the swaps */

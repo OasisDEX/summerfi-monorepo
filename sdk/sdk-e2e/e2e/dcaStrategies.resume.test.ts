@@ -1,7 +1,5 @@
 import assert from 'assert'
-import { privateKeyToAccount } from 'viem/accounts'
-import { ChainIds, ArmadaDcaOrderStatusEnum } from '@summerfi/sdk-common'
-import { TestConfigAccounts } from './utils/testConfig'
+import { ChainIds, DcaStrategyStatusEnum } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
@@ -10,38 +8,31 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - DCA Strategies Resume', () => {
-  const scenarios: { orderId: string }[] = [{ orderId: '<replace-with-order-id>' }]
+  const scenarios: { strategyId: string }[] = [{ strategyId: '<replace-with-strategy-id>' }]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { orderId } = scenario
+    const { strategyId } = scenario
 
     it('should resume a paused DCA strategy by id', async () => {
       const setup = createSdkTestSetup({ chainId: ChainIds.Base })
-      const { sdk, userAddressValue: userAddress } = setup
+      const { sdk, chainId, userAddressValue: userAddress } = setup
 
-      const existingOrder = await sdk.armada.dca.getBuyOrder({ orderId, userAddress })
+      const existingStrategy = await sdk.dca.getStrategy({ strategyId, chainId })
 
-      assert(existingOrder, `Expected order ${orderId} to exist`)
+      assert(existingStrategy, `Expected strategy ${strategyId} to exist`)
 
-      if (existingOrder.status === ArmadaDcaOrderStatusEnum.Active) {
-        console.log(`[Resume] Order ${orderId} is already active, skipping`)
+      if (existingStrategy.status === DcaStrategyStatusEnum.Active) {
+        console.log(`[Resume] Strategy ${strategyId} is already active, skipping`)
         return
       }
 
-      const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
-
-      const signedMessage = `I want to resume ${orderId}.`
-      const signature = await account.signMessage({ message: signedMessage })
-
-      const resumedOrder = await sdk.armada.dca.resumeBuyOrder({
-        orderId,
+      const resumedStrategy = await sdk.dca.resumeBuyOrder({
+        orderId: strategyId,
         userAddress,
-        signedMessage,
-        signature,
       })
 
-      assert.strictEqual(resumedOrder.status, ArmadaDcaOrderStatusEnum.Active)
-      console.log(`[Resume] Resumed DCA order with ID: ${orderId}`)
+      assert.strictEqual(resumedStrategy.status, DcaStrategyStatusEnum.Active)
+      console.log(`[Resume] Resumed DCA strategy with ID: ${strategyId}`)
     })
   })
 })

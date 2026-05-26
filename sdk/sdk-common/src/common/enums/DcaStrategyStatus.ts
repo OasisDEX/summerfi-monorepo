@@ -1,4 +1,4 @@
-export enum ArmadaDcaOrderStatusEnum {
+export enum DcaStrategyStatusEnum {
   Active = 'active',
   Paused = 'paused',
   Cancelled = 'cancelled',

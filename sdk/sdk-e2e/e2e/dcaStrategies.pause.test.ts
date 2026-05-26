@@ -1,7 +1,5 @@
 import assert from 'assert'
-import { privateKeyToAccount } from 'viem/accounts'
-import { ChainIds, ArmadaDcaOrderStatusEnum } from '@summerfi/sdk-common'
-import { TestConfigAccounts } from './utils/testConfig'
+import { ChainIds, DcaStrategyStatusEnum } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
@@ -10,38 +8,31 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - DCA Strategies Pause', () => {
-  const scenarios: { orderId: string }[] = [{ orderId: '<replace-with-order-id>' }]
+  const scenarios: { strategyId: string }[] = [{ strategyId: '<replace-with-strategy-id>' }]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { orderId } = scenario
+    const { strategyId } = scenario
 
     it('should pause an active DCA strategy by id', async () => {
       const setup = createSdkTestSetup({ chainId: ChainIds.Base })
-      const { sdk, userAddressValue: userAddress } = setup
+      const { sdk, chainId, userAddressValue: userAddress } = setup
 
-      const existingOrder = await sdk.armada.dca.getBuyOrder({ orderId, userAddress })
+      const existingStrategy = await sdk.dca.getStrategy({ strategyId, chainId })
 
-      assert(existingOrder, `Expected order ${orderId} to exist`)
+      assert(existingStrategy, `Expected strategy ${strategyId} to exist`)
 
-      if (existingOrder.status === ArmadaDcaOrderStatusEnum.Paused) {
-        console.log(`[Pause] Order ${orderId} is already paused, skipping`)
+      if (existingStrategy.status === DcaStrategyStatusEnum.Paused) {
+        console.log(`[Pause] Strategy ${strategyId} is already paused, skipping`)
         return
       }
 
-      const account = privateKeyToAccount(TestConfigAccounts.testUserPrivateKey)
-
-      const signedMessage = `I want to pause ${orderId}.`
-      const signature = await account.signMessage({ message: signedMessage })
-
-      const pausedOrder = await sdk.armada.dca.pauseBuyOrder({
-        orderId,
+      const pausedStrategy = await sdk.dca.pauseBuyOrder({
+        orderId: strategyId,
         userAddress,
-        signedMessage,
-        signature,
       })
 
-      assert.strictEqual(pausedOrder.status, ArmadaDcaOrderStatusEnum.Paused)
-      console.log(`[Pause] Paused DCA order with ID: ${orderId}`)
+      assert.strictEqual(pausedStrategy.status, DcaStrategyStatusEnum.Paused)
+      console.log(`[Pause] Paused DCA strategy with ID: ${strategyId}`)
     })
   })
 })

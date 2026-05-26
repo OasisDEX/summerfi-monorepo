@@ -8,7 +8,7 @@ const DEFAULT_REBALANCE_AUTHORIZATION_DEADLINE_SECONDS = 315360000 // ~10 years
 
 /**
  * @name DcaManagerClient
- * @description Implementation of the DCA Manager client interface
+ * @description Implementation of the DCA manager client interface
  */
 export class DcaManagerClient extends IRPCClient implements IDcaManagerClient {
   private _generateAllowedVaultsRoot(params: {
