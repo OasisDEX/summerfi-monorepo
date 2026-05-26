@@ -1,6 +1,7 @@
 import assert from 'assert'
 import { ChainIds, DcaStrategyStatusEnum } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
+import { retryUntilDefined } from './utils/retryUntilDefined'
 
 jest.setTimeout(300000)
 
@@ -8,7 +9,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - DCA Strategies Resume', () => {
-  const scenarios: { strategyId: string }[] = [{ strategyId: '<replace-with-strategy-id>' }]
+  const scenarios: { strategyId: string }[] = [{ strategyId: '3' }]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { strategyId } = scenario
@@ -17,19 +18,18 @@ describe('Armada Protocol - DCA Strategies Resume', () => {
       const setup = createSdkTestSetup({ chainId: ChainIds.Base, simulateOnly: false })
       const { sdk, chainId, walletClient, publicClient } = setup
 
-      const existingStrategy = await sdk.dca.getStrategy({ strategyId, chainId })
+      const strategy = await retryUntilDefined(() => sdk.dca.getStrategy({ strategyId, chainId }))
 
-      assert(existingStrategy, `Expected strategy ${strategyId} to exist`)
+      assert(strategy, `Expected strategy ${strategyId} to exist`)
 
-      if (existingStrategy.status === DcaStrategyStatusEnum.Active) {
+      if (strategy.status === DcaStrategyStatusEnum.Active) {
         console.log(`[Resume] Strategy ${strategyId} is already active, skipping`)
         return
       }
 
       const [resumeTx] = await sdk.dca.resumeStrategyTx({
         chainId,
-        strategy: existingStrategy,
-        strategyId,
+        strategy,
       })
 
       const txHash = await walletClient.sendTransaction({
@@ -41,7 +41,9 @@ describe('Armada Protocol - DCA Strategies Resume', () => {
       })
       await publicClient.waitForTransactionReceipt({ hash: txHash })
 
-      const updatedStrategy = await sdk.dca.getStrategy({ strategyId, chainId })
+      const updatedStrategy = await retryUntilDefined(() => sdk.dca.getStrategy({ strategyId, chainId }))
+
+      
       assert(updatedStrategy, `Expected strategy ${strategyId} to exist after resume`)
       assert.strictEqual(updatedStrategy.status, DcaStrategyStatusEnum.Active)
       console.log(`[Resume] Resumed DCA strategy with ID: ${strategyId}`)

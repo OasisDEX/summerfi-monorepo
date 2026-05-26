@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { DcaStrategyStatusEnum, ChainIds, ChainId } from '@summerfi/sdk-common'
+import { DcaStrategyStatusEnum, ChainIds, ChainId, type IDcaStrategy } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
@@ -12,7 +12,7 @@ const scenarios: { chainId: ChainId; status?: DcaStrategyStatusEnum }[] = [
 /**
  * @group e2e
  */
-describe('Armada Protocol - DCA Strategies Read', () => {
+describe('Armada Protocol - DCA Strategies - getStrategies', () => {
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { chainId, status } = scenario
 
@@ -35,7 +35,7 @@ describe('Armada Protocol - DCA Strategies Read', () => {
   })
 })
 
-function logStrategy(strategy: { id: string; status: string }) {
+function logStrategy(strategy: IDcaStrategy) {
   return {
     id: strategy.id,
     status: strategy.status,

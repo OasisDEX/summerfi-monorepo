@@ -1,6 +1,7 @@
 import assert from 'assert'
 import { ChainIds, DcaStrategyStatusEnum } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
+import { retryUntilDefined } from './utils/retryUntilDefined'
 
 jest.setTimeout(300000)
 
@@ -8,7 +9,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - DCA Strategies Pause', () => {
-  const scenarios: { strategyId: string }[] = [{ strategyId: '<replace-with-strategy-id>' }]
+  const scenarios: { strategyId: string }[] = [{ strategyId: '3' }]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { strategyId } = scenario
@@ -17,16 +18,16 @@ describe('Armada Protocol - DCA Strategies Pause', () => {
       const setup = createSdkTestSetup({ chainId: ChainIds.Base, simulateOnly: false })
       const { sdk, chainId, walletClient, publicClient } = setup
 
-      const existingStrategy = await sdk.dca.getStrategy({ strategyId, chainId })
+      const strategy = await retryUntilDefined(() => sdk.dca.getStrategy({ strategyId, chainId }))
 
-      assert(existingStrategy, `Expected strategy ${strategyId} to exist`)
+      assert(strategy, `Expected strategy ${strategyId} to exist`)
 
-      if (existingStrategy.status === DcaStrategyStatusEnum.Paused) {
+      if (strategy.status === DcaStrategyStatusEnum.Paused) {
         console.log(`[Pause] Strategy ${strategyId} is already paused, skipping`)
         return
       }
 
-      const [pauseTx] = await sdk.dca.pauseStrategyTx({ chainId, strategyId })
+      const [pauseTx] = await sdk.dca.pauseStrategyTx({ chainId, strategy })
 
       const txHash = await walletClient.sendTransaction({
         account: walletClient.account!,
@@ -37,7 +38,9 @@ describe('Armada Protocol - DCA Strategies Pause', () => {
       })
       await publicClient.waitForTransactionReceipt({ hash: txHash })
 
-      const updatedStrategy = await sdk.dca.getStrategy({ strategyId, chainId })
+      const updatedStrategy = await retryUntilDefined(() =>
+        sdk.dca.getStrategy({ strategyId, chainId }),
+      )
       assert(updatedStrategy, `Expected strategy ${strategyId} to exist after pause`)
       assert.strictEqual(updatedStrategy.status, DcaStrategyStatusEnum.Paused)
       console.log(`[Pause] Paused DCA strategy with ID: ${strategyId}`)

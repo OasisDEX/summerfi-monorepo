@@ -64,7 +64,8 @@
     "e2e:protocoltvl": "jest --roots e2e -- ./e2e/armadaProtocol.getProtocolTvl.test.ts",
     "e2e:protocoladdresses": "jest --roots e2e -- ./e2e/armadaProtocol.getProtocolAddresses.test.ts",
     "e2e:dca:strategies:create": "jest --roots e2e -- ./e2e/dcaStrategies.create.test.ts",
-    "e2e:dca:strategies:read": "jest --roots e2e -- ./e2e/dcaStrategies.read.test.ts",
+    "e2e:dca:strategies:getStrategies": "jest --roots e2e -- ./e2e/dcaStrategies.getStrategies.test.ts",
+    "e2e:dca:strategies:getStrategy": "jest --roots e2e -- ./e2e/dcaStrategies.getStrategy.test.ts",
     "e2e:dca:strategies:pause": "jest --roots e2e -- ./e2e/dcaStrategies.pause.test.ts",
     "e2e:dca:strategies:resume": "jest --roots e2e -- ./e2e/dcaStrategies.resume.test.ts",
     "e2e:dca:strategies:cancel": "jest --roots e2e -- ./e2e/dcaStrategies.cancel.test.ts"

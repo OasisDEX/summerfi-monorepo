@@ -90,7 +90,7 @@ export const TestConfigs = {
     rpcUrl: RpcUrls[ChainIds.Base],
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses[ChainIds.Base].ETH,
-    symbol: 'ETH',
+    symbol: 'WETH',
     chainlinkOracleAddressValue: '0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70',
   },
   BaseUSDC: {
@@ -111,33 +111,9 @@ export const TestConfigs = {
     rpcUrl: RpcUrls[ChainIds.Mainnet],
     chainId: ChainIds.Mainnet,
     fleetAddressValue: FleetAddresses[ChainIds.Mainnet].ETHDao,
-    symbol: 'ETH',
+    symbol: 'WETH',
     chainlinkOracleAddressValue: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
   },
-  // ArbitrumUSDT: {
-  //   rpcUrl: RpcUrls[ChainIds.ArbitrumOne],
-  //   chainId: ChainIds.ArbitrumOne,
-  //   fleetAddressValue: FleetAddresses.ArbitrumOne.USDT,
-  //   symbol: 'USDT',
-  // },
-  // SonicUSDC: {
-  //   rpcUrl: RpcUrls[ChainIds.Sonic],
-  //   chainId: ChainIds.Sonic,
-  //   fleetAddressValue: FleetAddresses.Sonic.USDC,
-  //   symbol: 'USDC',
-  // },
-  // HyperliquidUSDC: {
-  //   rpcUrl: RpcUrls[ChainIds.Hyperliquid],
-  //   chainId: ChainIds.Hyperliquid,
-  //   fleetAddressValue: FleetAddresses.Hyperliquid.USDC,
-  //   symbol: 'USDC',
-  // },
-  // HyperliquidUSDT: {
-  //   rpcUrl: RpcUrls[ChainIds.Hyperliquid],
-  //   chainId: ChainIds.Hyperliquid,
-  //   fleetAddressValue: FleetAddresses.Hyperliquid.USDT,
-  //   symbol: 'USDT',
-  // },
 } satisfies Record<string, ChainConfig>
 
 export const getTestConfig = (key: TestConfigKey) => {
