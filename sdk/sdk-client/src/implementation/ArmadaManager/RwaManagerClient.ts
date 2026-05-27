@@ -22,4 +22,10 @@ export class RwaManagerClient extends IRPCClient implements IRwaManagerClient {
   ): ReturnType<IRwaManagerClient['getVaultsRaw']> {
     return this.rpcClient.armada.rwa.getVaultsRaw.query(params)
   }
+
+  async getVaultRaw(
+    params: Parameters<IRwaManagerClient['getVaultRaw']>[0],
+  ): ReturnType<IRwaManagerClient['getVaultRaw']> {
+    return this.rpcClient.armada.rwa.getVaultRaw.query(params)
+  }
 }

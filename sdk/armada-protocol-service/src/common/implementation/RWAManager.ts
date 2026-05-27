@@ -65,4 +65,14 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       clientId: params.clientId,
     })
   }
+
+  /** @see IRWAManager.getVaultRaw */
+  async getVaultRaw(
+    params: Parameters<IRWAManager['getVaultRaw']>[0],
+  ): ReturnType<IRWAManager['getVaultRaw']> {
+    return this._rwaSubgraphManager.getVault({
+      chainId: params.vaultId.chainInfo.chainId,
+      vaultId: params.vaultId.fleetAddress.value,
+    })
+  }
 }
