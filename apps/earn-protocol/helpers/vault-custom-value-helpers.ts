@@ -82,7 +82,7 @@ export const getVaultCuratedBy = (
   }
 
   const vaultNetworkConfig = Object.values(fleetMap).find((network) =>
-    Object.values(network).some(
+    (Object.values(network) as EarnAppFleetCustomConfigType[]).some(
       (fleet) => fleet.address.toLowerCase() === vaultAddress.toLowerCase(),
     ),
   )
@@ -91,9 +91,9 @@ export const getVaultCuratedBy = (
     return false
   }
 
-  const vaultConfig = Object.values(vaultNetworkConfig).find(
+  const vaultConfig = (Object.values(vaultNetworkConfig) as EarnAppFleetCustomConfigType[]).find(
     (fleet) => fleet.address.toLowerCase() === vaultAddress.toLowerCase(),
-  ) as EarnAppFleetCustomConfigType | undefined
+  )
 
   return typeof vaultConfig?.curatedBy !== 'undefined' ? vaultConfig.curatedBy : false
 }

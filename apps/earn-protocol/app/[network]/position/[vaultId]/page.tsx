@@ -67,9 +67,10 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
 
   const referralCode = getServerSideCookies('referralCode', cookie)
 
-  const parsedVaultId = isAddress(vaultId)
+  const parsedVaultId = !isAddress(vaultId)
     ? vaultId.toLowerCase()
-    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
+    : (getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig) ??
+      vaultId.toLowerCase())
 
   const isRwaVault = !!getVaultCuratedBy(parsedVaultId, systemConfig) // rough check
 
