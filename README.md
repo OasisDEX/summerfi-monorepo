@@ -6,7 +6,9 @@
 
 ### Apps
 
-- `summerfi-api`: Summerfi API
+- `earn-protocol`: Earn Protocol App (Summer.fi)
+- `earn-protocol-institutions`: Earn Protocol Institutions App
+- `earn-protocol-landing-page`: Earn Protocol Landing Page
 
 ### Packages
 
