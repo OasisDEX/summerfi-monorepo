@@ -70,3 +70,30 @@ export const getVaultIdByVaultCustomName = (
 
   return customFields.address
 }
+
+export const getVaultCuratedBy = (
+  vaultAddress: string,
+  systemConfig: Partial<EarnAppConfigType>,
+) => {
+  const { fleetMap } = systemConfig
+
+  if (!fleetMap) {
+    return false
+  }
+
+  const vaultNetworkConfig = Object.values(fleetMap).find((network) =>
+    Object.values(network).some(
+      (fleet) => fleet.address.toLowerCase() === vaultAddress.toLowerCase(),
+    ),
+  )
+
+  if (!vaultNetworkConfig) {
+    return false
+  }
+
+  const vaultConfig = Object.values(vaultNetworkConfig).find(
+    (fleet) => fleet.address.toLowerCase() === vaultAddress.toLowerCase(),
+  ) as EarnAppFleetCustomConfigType | undefined
+
+  return typeof vaultConfig?.curatedBy !== 'undefined' ? vaultConfig.curatedBy : false
+}

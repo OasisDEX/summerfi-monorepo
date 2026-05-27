@@ -26,6 +26,7 @@ export const CACHE_TAGS = {
   STAKING_V2_GLOBAL_DATA: 'staking-v2-global-data',
   VAULT_DAO_MANAGED: 'vault-dao-managed',
   VAULT_PERFORMANCE: 'vault-performance',
+  RWA_VAULTS_INFO: 'rwa-vaults-info',
 }
 
 export const CACHE_TIMES = {
@@ -56,4 +57,5 @@ export const CACHE_TIMES = {
   CLAIMABLE_MERKLE_REWARDS: 600,
   STAKING_V2_GLOBAL_DATA: 300,
   ONE_DAY: 3600 * 24,
+  RWA_VAULTS_INFO: 300,
 }

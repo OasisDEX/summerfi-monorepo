@@ -21,6 +21,8 @@ import { isAddress } from 'viem'
 
 import { getCachedMedianDefiYield } from '@/app/server-handlers/cached/defillama/get-median-defi-yield'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedRwaVaultDetails } from '@/app/server-handlers/cached/get-rwa-vault-details'
+import { getCachedRwaVaultsList } from '@/app/server-handlers/cached/get-rwa-vaults-list'
 import { getCachedVaultCurationEvents } from '@/app/server-handlers/cached/get-vault-curation-events'
 import {
   getCachedIsVaultDaoManaged,
@@ -41,6 +43,7 @@ import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-histo
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
+  getVaultCuratedBy,
   getVaultIdByVaultCustomName,
 } from '@/helpers/vault-custom-value-helpers'
 
@@ -68,6 +71,8 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
+  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, systemConfig) // rough check
+
   if (!parsedVaultId) {
     redirect('/not-found')
   }
@@ -78,17 +83,19 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const [
     vault,
     { vaults },
+    { vaults: rwaVaults },
     medianDefiYield,
     topDepositors,
     latestActivity,
     rebalanceActivity,
     rewardTokenPrices,
   ] = await Promise.all([
-    getCachedVaultDetails({
+    (isRwaVault ? getCachedRwaVaultDetails : getCachedVaultDetails)({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getCachedVaultsList(),
+    getCachedRwaVaultsList(),
     getCachedMedianDefiYield(),
     getPaginatedTopDepositors({
       page: 1,
@@ -116,10 +123,11 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       </Text>
     )
   }
+  const allVaults = [...vaults, ...rwaVaults]
 
   // Now get DAO managed vaults and vault info in parallel
   const [daoManagedVaultsList, vaultInfo] = await Promise.all([
-    getDaoManagedVaultsIDsList(vaults),
+    getDaoManagedVaultsIDsList(allVaults),
     getCachedVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])
 
@@ -139,7 +147,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   }
 
   const allVaultsWithConfig = decorateVaultsWithConfig({
-    vaults,
+    vaults: allVaults,
     systemConfig,
     daoManagedVaultsList,
   })
@@ -252,8 +260,10 @@ export async function generateMetadata({
     }
   }
 
+  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, systemConfig)
+
   const [vault] = await Promise.all([
-    getCachedVaultDetails({
+    (isRwaVault ? getCachedRwaVaultDetails : getCachedVaultDetails)({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),

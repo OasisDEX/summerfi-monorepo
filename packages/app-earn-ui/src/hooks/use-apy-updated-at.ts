@@ -46,14 +46,14 @@ export const getVaultApyUpdatedAtLabel = ({
 export const useApyUpdatedAt = ({
   vaultApyData,
 }: {
-  vaultApyData: VaultApyData
+  vaultApyData?: VaultApyData
 }): {
   apyUpdatedAtLabel: string
   apyUpdatedAtAltLabel: string
 } => {
   return useMemo(() => {
     return getVaultApyUpdatedAtLabel({
-      apyTimestamp: vaultApyData.apyTimestamp,
+      apyTimestamp: vaultApyData?.apyTimestamp ?? null,
     })
-  }, [vaultApyData.apyTimestamp])
+  }, [vaultApyData?.apyTimestamp])
 }
