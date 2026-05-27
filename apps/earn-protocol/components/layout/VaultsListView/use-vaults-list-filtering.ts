@@ -179,7 +179,7 @@ export const useVaultsListFiltering = ({
       ? (networkFilteredVaults.filter(filterAssetVaults) as SDKVaultishType[] | undefined)
       : networkFilteredVaults
 
-    const sortedVaults = assetFilteredVaults?.sort(sortVaults)
+    const sortedVaults = [...(assetFilteredVaults ?? [])].sort(sortVaults)
 
     return sortedVaults
   }, [

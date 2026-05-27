@@ -72,7 +72,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     : (getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig) ??
       vaultId.toLowerCase())
 
-  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, systemConfig) // rough check
+  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig) // rough check
 
   if (!parsedVaultId) {
     redirect('/not-found')
@@ -261,7 +261,7 @@ export async function generateMetadata({
     }
   }
 
-  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, systemConfig)
+  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
 
   const [vault] = await Promise.all([
     (isRwaVault ? getCachedRwaVaultDetails : getCachedVaultDetails)({

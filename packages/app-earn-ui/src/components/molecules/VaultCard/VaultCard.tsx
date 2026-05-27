@@ -103,7 +103,10 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     vaultApyData,
   })
 
-  const depositCapInToken = new BigNumber(depositCap.toString()).div(ten.pow(inputToken.decimals))
+  // depositCap math is regular vaults-only; RWA payloads may not include depositCap
+  const depositCapInToken = isRwaVault
+    ? new BigNumber(0)
+    : new BigNumber(depositCap.toString()).div(ten.pow(inputToken.decimals))
 
   const depositCapUsed = new BigNumber(inputTokenBalance.toString())
     .div(ten.pow(inputToken.decimals))
