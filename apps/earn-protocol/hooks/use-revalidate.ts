@@ -65,8 +65,13 @@ export const useRevalidateVaultsListData = () => {
   const queryClient = useQueryClient()
 
   return () => {
+    // The vaults-list query key is [VAULTS_LIST, filter, wallet] and the additional-data
+    // query key is [VAULTS_LIST, 'additional-data']; match on the leading tag so a refresh
+    // actually refetches them (a [VAULTS_LIST, INTEREST_RATES] prefix never would).
     queryClient.refetchQueries({
-      queryKey: [CACHE_TAGS.VAULTS_LIST, CACHE_TAGS.INTEREST_RATES],
+      predicate: (query) =>
+        query.queryKey[0] === CACHE_TAGS.VAULTS_LIST ||
+        query.queryKey[0] === CACHE_TAGS.INTEREST_RATES,
       type: 'all',
     })
 

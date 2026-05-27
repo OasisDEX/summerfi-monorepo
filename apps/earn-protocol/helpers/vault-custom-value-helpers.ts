@@ -70,3 +70,23 @@ export const getVaultIdByVaultCustomName = (
 
   return customFields.address
 }
+
+export const getVaultCuratedBy = (
+  vaultAddress: string,
+  chainId: number | string,
+  systemConfig: Partial<EarnAppConfigType>,
+) => {
+  const { fleetMap } = systemConfig
+
+  if (!fleetMap) {
+    return false
+  }
+
+  const vaultNetworkConfig = fleetMap[String(chainId) as keyof typeof fleetMap]
+
+  const vaultConfig = (Object.values(vaultNetworkConfig) as EarnAppFleetCustomConfigType[]).find(
+    (fleet) => fleet.address.toLowerCase() === vaultAddress.toLowerCase(),
+  )
+
+  return typeof vaultConfig?.curatedBy !== 'undefined' ? vaultConfig.curatedBy : false
+}

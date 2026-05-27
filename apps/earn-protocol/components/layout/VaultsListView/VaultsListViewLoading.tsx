@@ -5,12 +5,31 @@ import {
   Sidebar,
   SimpleGrid,
   SkeletonLine,
-  Text,
   useMobileCheck,
   VaultGrid,
 } from '@summerfi/app-earn-ui'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+
+export const VaultsListLeftContentLoading = () => (
+  <>
+    <div
+      style={{
+        display: 'flex',
+        gap: '12px',
+      }}
+    >
+      <SkeletonLine width="20%" height={38} radius="var(--radius-roundish)" />
+      <SkeletonLine width="20%" height={38} radius="var(--radius-roundish)" />
+      <SkeletonLine width="20%" height={38} radius="var(--radius-roundish)" />
+      <SkeletonLine width="20%" height={38} radius="var(--radius-roundish)" />
+    </div>
+    <SkeletonLine width="100%" height={208} radius="var(--radius-roundish)" />
+    <SkeletonLine width="100%" height={208} radius="var(--radius-roundish)" />
+    <SkeletonLine width="100%" height={208} radius="var(--radius-roundish)" />
+    <SkeletonLine width="100%" height={208} radius="var(--radius-roundish)" />
+  </>
+)
 
 export const VaultsListViewLoading = () => {
   const { deviceType } = useDeviceType()
@@ -46,32 +65,33 @@ export const VaultsListViewLoading = () => {
           />
         </SimpleGrid>
       }
-      leftContent={
-        <>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              Choose a strategy
-            </Text>
-          </div>
-          <div
+      additionalFullWithTopContent={
+        <div
+          style={{
+            display: 'flex',
+            gap: '32px',
+            marginLeft: '40px',
+          }}
+        >
+          <SkeletonLine
+            width="10%"
+            height={28}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
+              margin: '8px 0 18px',
             }}
-          >
-            <div style={{ display: 'flex', gap: '16px' }}>
-              <SkeletonLine width={130} height={35} style={{ margin: '5px 0 5px' }} />
-              <SkeletonLine width={130} height={35} style={{ margin: '5px 0 5px' }} />
-            </div>
-            <SkeletonLine width={160} height={35} style={{ margin: '5px 0 5px' }} />
-          </div>
-          <SkeletonLine width="100%" height={208} radius="var(--radius-roundish)" />
-          <SkeletonLine width="100%" height={208} radius="var(--radius-roundish)" />
-          <SkeletonLine width="100%" height={208} radius="var(--radius-roundish)" />
-          <SkeletonLine width="100%" height={208} radius="var(--radius-roundish)" />
-        </>
+            radius="var(--radius-roundish)"
+          />
+          <SkeletonLine
+            width="10%"
+            height={28}
+            style={{
+              margin: '8px 0 18px',
+            }}
+            radius="var(--radius-roundish)"
+          />
+        </div>
       }
+      leftContent={<VaultsListLeftContentLoading />}
       rightContent={
         <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
           <Sidebar

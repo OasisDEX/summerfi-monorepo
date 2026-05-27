@@ -28,12 +28,26 @@
 }
 
 .vaultCardAssetsWrapper {
-  display: flex;
-  gap: var(--general-space-16);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-space-medium) var(--general-space-16);
   width: 100%;
-  flex-wrap: wrap;
-  justify-content: space-between;
   margin-bottom: var(--spacing-space-medium);
+}
+
+.vaultCardAssetCell {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+/* Two shared column tracks so both rows line up regardless of label/value width. */
+@media (min-width: 532px) {
+  .vaultCardAssetsWrapper {
+    grid-template-columns: repeat(2, minmax(210px, max-content));
+    justify-content: space-between;
+  }
 }
 
 .vaultCardAssetsWrapper .totalAssetsDisplay {
