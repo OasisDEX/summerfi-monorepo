@@ -140,6 +140,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             tooltipName={`${tooltipName}-${slugifyVault(props)}-risk-label`}
             onTooltipOpen={onTooltipOpen}
             isNewVault={isNewVault}
+            isRwaVault={isRwaVault}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>

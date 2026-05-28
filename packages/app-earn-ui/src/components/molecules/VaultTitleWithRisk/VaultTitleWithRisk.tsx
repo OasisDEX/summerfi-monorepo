@@ -26,6 +26,7 @@ interface VaultTitleWithRiskProps {
   onTooltipOpen?: (tooltipName: string) => void
   isNewVault?: boolean
   isDaoManagedVault?: boolean
+  isRwaVault?: boolean
 }
 
 export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
@@ -40,6 +41,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
   onTooltipOpen,
   isNewVault = false,
   isDaoManagedVault,
+  isRwaVault,
 }) => {
   const resolvedRisk = isDaoManagedVault ? 'higher' : risk
   const color = riskColors[resolvedRisk]
@@ -57,6 +59,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       isVaultCard={isVaultCard}
       isNewVault={isNewVault}
       isDaoManagedVault={isDaoManagedVault}
+      isRwaVault={isRwaVault}
       /* networkName should work 99% of the time, because SDKVault returns very similar results for that */
       networkName={networkName}
       value={

@@ -31,6 +31,7 @@ export const decorateWithFleetConfig = (
       const isDaoManaged = daoManagedVaultsList
         .map((v) => v.toLowerCase())
         .includes(vault.id.toLowerCase() as `0x${string}`)
+      const isRwaVault = !!configCustomFields?.curatedBy
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       return configCustomFields
@@ -41,10 +42,12 @@ export const decorateWithFleetConfig = (
               ...configCustomFields,
             },
             isDaoManaged,
+            isRwaVault,
           }
         : {
             ...vault,
             isDaoManaged,
+            isRwaVault,
           }
     })
     .filter(({ inputTokenBalance, depositCap, customFields, id }) => {

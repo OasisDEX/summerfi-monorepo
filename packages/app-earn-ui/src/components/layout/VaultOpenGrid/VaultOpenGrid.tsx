@@ -328,6 +328,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 onTooltipOpen={tooltipEventHandler}
                 isNewVault={isNewVault}
                 isDaoManagedVault={vault.isDaoManaged}
+                isRwaVault={vault.isRwaVault}
               />
             </Dropdown>
             <div className={vaultOpenGridStyles.vaultBonusWrapper}>

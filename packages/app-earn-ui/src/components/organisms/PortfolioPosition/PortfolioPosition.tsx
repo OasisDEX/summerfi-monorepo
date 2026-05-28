@@ -160,6 +160,7 @@ export const PortfolioPosition = ({
               tooltipName={`portfolio-overview-risk-label-${slugifyVault(portfolioPosition.vault)}`}
               onTooltipOpen={tooltipEventHandler}
               isNewVault={isNewVault}
+              isRwaVault={portfolioPosition.vault.isRwaVault}
               isDaoManagedVault={portfolioPosition.vault.isDaoManaged}
             />
             {isMobile && buttonsWrapper}

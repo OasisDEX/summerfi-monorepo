@@ -48,6 +48,7 @@ import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-d
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
+import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
@@ -113,6 +114,7 @@ export const VaultOpenViewComponent = ({
   referralCode: referralCodeFromCookie,
   rewardTokenPrices,
 }: VaultOpenViewComponentProps) => {
+  const isRwaVault = vault.isRwaVault ?? false
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
     token: string
@@ -596,7 +598,7 @@ export const VaultOpenViewComponent = ({
         //     />
         //   )
         // }
-        // rightExtraContent={<RwaSidebarInfo />} // when the rwa vault is ready
+        rightExtraContent={isRwaVault ? <RwaSidebarInfo /> : null}
       />
     </>
   )
