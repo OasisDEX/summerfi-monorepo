@@ -21,7 +21,8 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
       'zod',
     ],
   },
-  output: phase !== PHASE_DEVELOPMENT_SERVER ? 'export' : 'export',
+  // Always a fully static export (served as static files behind a CDN/proxy).
+  output: 'export',
   reactStrictMode: false,
   ...(phase !== PHASE_DEVELOPMENT_SERVER
     ? {

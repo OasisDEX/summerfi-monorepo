@@ -1,6 +1,6 @@
 'use client'
 
-import { type PropsWithChildren, useLayoutEffect } from 'react'
+import { type PropsWithChildren, useEffect } from 'react'
 import {
   BeachClubRadialGradient,
   Footer,
@@ -68,7 +68,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
     }
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     pageViewedEventHandler(pathname)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
