@@ -1,98 +1,51 @@
 'use client'
 
-import {
-  type ArksHistoricalChartData,
-  type EarnAppConfigType,
-  type GetVaultsApyResponse,
-  type IArmadaPosition,
-  type InterestRates,
-  type PerformanceChartData,
-  type RewardTokenPrices,
-  type SDKVaultishType,
-  type SDKVaultsListType,
-  type SDKVaultType,
-} from '@summerfi/app-types'
+import { Text } from '@summerfi/app-earn-ui'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
-import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 
-// import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
-import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
-import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { useVaultManageCoreQuery } from '@/components/layout/VaultManageView/useVaultManageQuery'
+import { VaultManageLoadingView } from '@/components/layout/VaultManageView/VaultManageLoadingView'
 import { VaultManageViewComponent } from '@/components/layout/VaultManageView/VaultManageViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
-import { type VaultCurationEvent } from '@/features/curation-activity/types'
-// import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 
 export const VaultManageView = ({
-  vault,
-  vaultInfo,
-  vaults,
-  position,
-  latestActivity,
-  topDepositors,
-  rebalanceActivity,
-  curationEvents,
-  viewWalletAddress,
-  performanceChartData,
-  arksHistoricalChartData,
-  arksInterestRates,
-  vaultsApyByNetworkMap,
-  // migratablePositions,
-  // migrationBestVaultApy,
-  systemConfig,
-  noOfDeposits,
-  rewardTokenPrices,
-  rewardTokensClaimableNow,
+  network,
+  vaultId,
+  walletAddress,
 }: {
-  vault: SDKVaultType | SDKVaultishType
-  vaultInfo?: IArmadaVaultInfo
-  vaults: SDKVaultsListType
-  position: IArmadaPosition
-  latestActivity: LatestActivityPagination
-  topDepositors: TopDepositorsPagination
-  rebalanceActivity: RebalanceActivityPagination
-  curationEvents: VaultCurationEvent[]
-  viewWalletAddress: string
-  performanceChartData: PerformanceChartData
-  arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: InterestRates
-  vaultsApyByNetworkMap: GetVaultsApyResponse
-  // migratablePositions: MigratablePosition[]
-  // migrationBestVaultApy: MigrationEarningsDataByChainId
-  systemConfig: Partial<EarnAppConfigType>
-  noOfDeposits: number
-  rewardTokenPrices: RewardTokenPrices
-  rewardTokensClaimableNow: {
-    [tokenSymbol: string]: {
-      amount: number
-      tokenAddress: string
-    }
-  }
+  network: SupportedSDKNetworks
+  vaultId: string
+  walletAddress: string
 }) => {
+  // Reads straight from the server-hydrated cache on first render; only ever hits the API route
+  // fallback if the prefetch failed to dehydrate (then VaultManageLoadingView covers the gap).
+  const { data, isPending } = useVaultManageCoreQuery(network, vaultId, walletAddress)
+
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <VaultManageViewComponent
-        systemConfig={systemConfig}
-        vault={vault}
-        vaultInfo={vaultInfo}
-        vaults={vaults}
-        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-        position={position}
-        latestActivity={latestActivity}
-        topDepositors={topDepositors}
-        rebalanceActivity={rebalanceActivity}
-        curationEvents={curationEvents}
-        viewWalletAddress={viewWalletAddress}
-        performanceChartData={performanceChartData}
-        arksHistoricalChartData={arksHistoricalChartData}
-        arksInterestRates={arksInterestRates}
-        // migratablePositions={migratablePositions}
-        // migrationBestVaultApy={migrationBestVaultApy}
-        noOfDeposits={noOfDeposits}
-        rewardTokenPrices={rewardTokenPrices}
-        rewardTokensClaimableNow={rewardTokensClaimableNow}
-      />
+      {isPending ? (
+        <VaultManageLoadingView />
+      ) : data ? (
+        <VaultManageViewComponent
+          network={network}
+          vaultId={vaultId}
+          systemConfig={data.systemConfig}
+          vault={data.vault}
+          vaultInfo={data.vaultInfo}
+          vaults={data.vaults}
+          vaultsApyByNetworkMap={data.vaultsApyByNetworkMap}
+          position={data.position}
+          viewWalletAddress={data.viewWalletAddress}
+          noOfDeposits={data.noOfDeposits}
+          rewardTokenPrices={data.rewardTokenPrices}
+          rewardTokensClaimableNow={data.rewardTokensClaimableNow}
+        />
+      ) : (
+        <Text>
+          No position found on {walletAddress} on the network {network}
+        </Text>
+      )}
     </SDKContextProvider>
   )
 }

@@ -1,56 +1,37 @@
 'use client'
-
 import { type FC } from 'react'
-import {
-  type ArksHistoricalChartData,
-  type InterestRates,
-  type SDKVaultishType,
-  type VaultApyData,
-} from '@summerfi/app-types'
+import { Text, VaultGridDetails } from '@summerfi/app-earn-ui'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 
-import { VaultDetailsFaq } from '@/features/vault-details/components/VaultDetailsFaq/VaultDetailsFaq'
-import { VaultDetailsHowItWorks } from '@/features/vault-details/components/VaultDetailsHowItWorks/VaultDetailsHowItWorks'
-import { VaultDetailsSecurity } from '@/features/vault-details/components/VaultDetailsSecurity/VaultDetailsSecurity'
-import { VaultDetailsYields } from '@/features/vault-details/components/VaultDetailsYields/VaultDetailsYields'
+import { useVaultDetailsCoreQuery } from '@/components/layout/VaultDetailsView/useVaultDetailsQuery'
+import { VaultDetailsContent } from '@/components/layout/VaultDetailsView/VaultDetailsContent'
+import { VaultDetailsLoadingView } from '@/components/layout/VaultDetailsView/VaultDetailsLoadingView'
 
 interface VaultDetailsViewProps {
-  arksHistoricalChartData: ArksHistoricalChartData
-  summerVaultName: string
-  vault: SDKVaultishType
-  arksInterestRates: InterestRates
-  totalRebalanceActions: number
-  totalUsers: number
-  vaultApyData: VaultApyData
-  tvl: number
+  network: SupportedSDKNetworks
+  vaultId: string
 }
 
-export const VaultDetailsView: FC<VaultDetailsViewProps> = ({
-  arksHistoricalChartData,
-  summerVaultName,
-  vault,
-  arksInterestRates,
-  totalRebalanceActions,
-  totalUsers,
-  vaultApyData,
-  tvl,
-}) => {
+export const VaultDetailsView: FC<VaultDetailsViewProps> = ({ network, vaultId }) => {
+  // Reads straight from the server-hydrated cache on first render; only ever hits the API route
+  // fallback if the prefetch failed to dehydrate (then VaultDetailsLoadingView covers the gap).
+  const { data: core, isPending } = useVaultDetailsCoreQuery(network, vaultId)
+
+  if (isPending) {
+    return <VaultDetailsLoadingView />
+  }
+
+  if (!core) {
+    return (
+      <Text>
+        No vault found with the id {vaultId} on the network {network}
+      </Text>
+    )
+  }
+
   return (
-    <>
-      <VaultDetailsHowItWorks vault={vault} />
-      <VaultDetailsYields
-        arksHistoricalChartData={arksHistoricalChartData}
-        summerVaultName={summerVaultName}
-        vault={vault}
-        arksInterestRates={arksInterestRates}
-        vaultApyData={vaultApyData}
-      />
-      <VaultDetailsSecurity
-        vault={vault}
-        totalRebalanceActions={totalRebalanceActions}
-        totalUsers={totalUsers}
-        tvl={tvl}
-      />
-      <VaultDetailsFaq />
-    </>
+    <VaultGridDetails vault={core.vault} vaults={core.vaults}>
+      <VaultDetailsContent network={network} vaultId={vaultId} vault={core.vault} />
+    </VaultGridDetails>
   )
 }

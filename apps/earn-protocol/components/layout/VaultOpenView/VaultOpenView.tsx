@@ -1,73 +1,46 @@
 'use client'
 
-import {
-  type ArksHistoricalChartData,
-  type InterestRates,
-  type RewardTokenPrices,
-  type SDKVaultishType,
-  type SDKVaultsListType,
-  type SDKVaultType,
-  type VaultApyData,
-} from '@summerfi/app-types'
+import { Text } from '@summerfi/app-earn-ui'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
-import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 
-import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
-import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
-import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { useVaultOpenCoreQuery } from '@/components/layout/VaultOpenView/useVaultOpenQuery'
+import { VaultOpenLoadingView } from '@/components/layout/VaultOpenView/VaultOpenLoadingView'
 import { VaultOpenViewComponent } from '@/components/layout/VaultOpenView/VaultOpenViewComponent'
 import { sdkApiUrl } from '@/constants/sdk'
-import { type VaultCurationEvent } from '@/features/curation-activity/types'
 
 export const VaultOpenView = ({
-  vault,
-  vaults,
-  vaultInfo,
-  latestActivity,
-  topDepositors,
-  rebalanceActivity,
-  curationEvents,
-  medianDefiYield,
-  arksHistoricalChartData,
-  arksInterestRates,
-  vaultApyData,
-  // vaultsApyRaw,
-  referralCode,
-  rewardTokenPrices,
+  network,
+  vaultId,
 }: {
-  vault: SDKVaultType | SDKVaultishType
-  vaults: SDKVaultsListType
-  vaultInfo?: IArmadaVaultInfo
-  latestActivity: LatestActivityPagination
-  topDepositors: TopDepositorsPagination
-  rebalanceActivity: RebalanceActivityPagination
-  curationEvents: VaultCurationEvent[]
-  medianDefiYield?: number
-  arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: InterestRates
-  vaultApyData: VaultApyData
-  // vaultsApyRaw: GetVaultsApyResponse
-  referralCode?: string
-  rewardTokenPrices: RewardTokenPrices
+  network: SupportedSDKNetworks
+  vaultId: string
 }) => {
+  // Reads straight from the server-hydrated cache on first render; only ever hits the API route
+  // fallback if the prefetch failed to dehydrate (then VaultOpenLoadingView covers the gap).
+  const { data, isPending } = useVaultOpenCoreQuery(network, vaultId)
+
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <VaultOpenViewComponent
-        vault={vault}
-        vaults={vaults}
-        vaultInfo={vaultInfo}
-        latestActivity={latestActivity}
-        topDepositors={topDepositors}
-        rebalanceActivity={rebalanceActivity}
-        curationEvents={curationEvents}
-        medianDefiYield={medianDefiYield}
-        arksHistoricalChartData={arksHistoricalChartData}
-        arksInterestRates={arksInterestRates}
-        vaultApyData={vaultApyData}
-        // vaultsApyRaw={vaultsApyRaw}
-        referralCode={referralCode}
-        rewardTokenPrices={rewardTokenPrices}
-      />
+      {isPending ? (
+        <VaultOpenLoadingView />
+      ) : data ? (
+        <VaultOpenViewComponent
+          network={network}
+          vaultId={vaultId}
+          vault={data.vault}
+          vaults={data.vaults}
+          vaultInfo={data.vaultInfo}
+          medianDefiYield={data.medianDefiYield}
+          vaultApyData={data.vaultApyData}
+          referralCode={data.referralCode}
+          rewardTokenPrices={data.rewardTokenPrices}
+        />
+      ) : (
+        <Text>
+          No vault found with the id {vaultId} on the network {network}
+        </Text>
+      )}
     </SDKContextProvider>
   )
 }
