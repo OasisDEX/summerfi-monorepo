@@ -7,7 +7,7 @@ export const allowanceGetPermit2Data = publicProcedure
     z.object({
       chainId: z.custom<ChainId>(isChainId),
       tokenAddress: z.custom<AddressValue>(isAddressValue),
-      amount: z.bigint(),
+      amount: z.bigint().nonnegative({ message: 'amount must be non-negative' }),
       spenderAddress: z.custom<AddressValue>(isAddressValue),
       senderAddress: z.custom<AddressValue>(isAddressValue),
     }),

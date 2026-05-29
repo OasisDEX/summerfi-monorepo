@@ -14,7 +14,7 @@ export const allowanceIsPermit2AuthorizationNeeded = publicProcedure
       chainId: z.custom<ChainId>(isChainId),
       ownerAddress: z.custom<AddressValue>(isAddressValue),
       tokenAddress: z.custom<AddressValue>(isAddressValue),
-      amount: z.bigint(),
+      amount: z.bigint().nonnegative({ message: 'amount must be non-negative' }),
     }),
   )
   .query(async (opts) => {
