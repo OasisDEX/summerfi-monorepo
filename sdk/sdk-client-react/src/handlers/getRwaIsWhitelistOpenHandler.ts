@@ -4,13 +4,7 @@ import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 export const getRwaIsWhitelistOpenHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
-  async ({
-    fleetAddress,
-    chainId,
-  }: {
-    fleetAddress: AddressValue
-    chainId: ChainId
-  }) => {
+  async ({ fleetAddress, chainId }: { fleetAddress: AddressValue; chainId: ChainId }) => {
     const chainInfo = getChainInfoByChainId(chainId)
     const vaultId = ArmadaVaultId.createFrom({
       chainInfo,

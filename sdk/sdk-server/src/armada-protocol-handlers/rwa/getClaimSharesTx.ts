@@ -1,4 +1,11 @@
-import { isAddress, isArmadaVaultId, isUser, type IAddress, type IArmadaVaultId, type IUser } from '@summerfi/sdk-common'
+import {
+  isAddress,
+  isArmadaVaultId,
+  isUser,
+  type IAddress,
+  type IArmadaVaultId,
+  type IUser,
+} from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
