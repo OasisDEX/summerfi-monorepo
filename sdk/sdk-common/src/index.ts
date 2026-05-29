@@ -13,6 +13,7 @@ export {
 export { DenominationDataSchema, isDenomination } from './common/types/Denomination'
 export type { DenominationData, Denomination } from './common/types/Denomination'
 export { type HexData, isHexData } from './common/types/HexData'
+export type { Permit2PermitData } from './common/types/Permit2PermitData'
 export type { Maybe } from './common/types/Maybe'
 export type { ArmadaMigratablePosition } from './common/types/ArmadaMigratablePosition'
 export type { ArmadaMigratablePositionApy } from './common/types/ArmadaMigratablePositionApy'
@@ -46,6 +47,10 @@ export { TokenSymbolSchema, isTokenSymbol } from './common/enums/TokenSymbol'
 export type { TokenSymbol } from './common/enums/TokenSymbol'
 export { PoolTypeSchema, isPoolType } from './common/enums/PoolType'
 export { PoolType } from './common/enums/PoolType'
+export { RoundStateSchema, isRoundState } from './common/enums/RoundState'
+export { RoundState } from './common/enums/RoundState'
+export { RoundsVaultTypeSchema, isRoundsVaultType } from './common/enums/RoundsVaultType'
+export { RoundsVaultType } from './common/enums/RoundsVaultType'
 export { PositionTypeSchema, isPositionType } from './common/enums/PositionType'
 export { PositionType } from './common/enums/PositionType'
 export type { IPositionTypeData } from './common/enums/PositionType'
@@ -325,8 +330,9 @@ export type {
   IPositionsManager,
   IPositionsManagerData,
 } from './orders/common/interfaces/IPositionsManager'
-export { TransactionType } from './orders/common/types/ExtendedTransactionInfo'
+export { TransactionType } from './orders/common/types/TransactionInfo'
 export type {
+  TransactionInfo,
   TransactionMetadataApproval,
   TransactionPriceImpact,
   TransactionMetadataDeposit,
@@ -355,9 +361,8 @@ export type {
   PauseDcaStrategyTransactionInfo,
   ResumeDcaStrategyTransactionInfo,
   CancelDcaStrategyTransactionInfo,
-} from './orders/common/types/ExtendedTransactionInfo'
+} from './orders/common/types/TransactionInfo'
 export type { Order } from './orders/common/types/Order'
-export type { TransactionInfo } from './orders/common/types/TransactionInfo'
 export type { Transaction } from './orders/common/types/Transaction'
 export {
   ExternalLendingPositionTypeSchema,
@@ -461,7 +466,6 @@ export { Simulation } from './simulation/implementation/Simulation'
 export * as steps from './simulation/interfaces/Steps'
 export { FETCH_CONFIG, createTimeoutSignal, fetchWithTimeout } from './configs/fetch'
 
-export type { ExtendedTransactionInfo } from './orders/common/types/DEPRECATED'
 export { NATIVE_CURRENCY_ADDRESS_LOWERCASE } from './common/utils/nativeCurrencyAddress'
 export type { VaultApys } from './common/types/VaultApys'
 export { MAX_UINT256_STRING } from './common/utils/constants'

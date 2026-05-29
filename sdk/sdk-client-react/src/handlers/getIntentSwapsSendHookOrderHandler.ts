@@ -57,16 +57,14 @@ export const getIntentSwapsSendDepositOrderHandler =
     const permitTokenAddress = toAmount.token.address.toSolidityValue()
     const { admiralsQuarters: aqAddress } = await sdk.armada.users.getProtocolAddresses({ chainId })
 
-    const { permitData, signature } = await sdk.intentSwaps.createPermit2Data({
+    const { permitData, signTypedDataParameters } = await sdk.allowance.getPermit2Data({
       chainId,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      viemAccount: walletClient.account as any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      signTypedData,
+      senderAddress: sender,
       tokenAddress: permitTokenAddress,
       amount: permitAmount,
       spenderAddress: aqAddress,
     })
+    const signature = await signTypedData(signTypedDataParameters)
     const enterFleetCallData = encodeFunctionData({
       abi: getAdmiralsQuartersAbi(),
       functionName: 'enterFleetWithPermit2',

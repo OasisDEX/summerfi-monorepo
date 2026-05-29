@@ -68,7 +68,7 @@ export interface IArmadaManagerVaults {
    * @param amount Token amount to be withdrawn
    * @param slippage Maximum slippage allowed for the operation
    *
-   * @returns ExtendedTransactionInfo[] An array of transactions that must be executed for the operation to succeed
+   * @returns An array of transactions that must be executed for the operation to succeed. If the user has not approved the vault to spend their tokens, an approval transaction will be included in the array.
    */
   getWithdrawTx(params: {
     vaultId: IArmadaVaultId

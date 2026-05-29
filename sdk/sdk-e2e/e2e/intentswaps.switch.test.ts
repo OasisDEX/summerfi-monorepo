@@ -90,10 +90,6 @@ describe('Intent swaps: Swap with Deposit', () => {
 
     const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
     const walletClient = getWalletClientForChain(chainId, RpcUrls[chainId], signerPrivateKey)
-    if (walletClient.account == null) {
-      throw new Error('Wallet client account is null')
-    }
-
     it('should complete intent swap flow', async () => {
       const sdk = makeSDK({
         apiDomainUrl: SDKApiUrl,
@@ -147,25 +143,27 @@ describe('Intent swaps: Swap with Deposit', () => {
         args: [fromAmount.toSolidityValue()],
       })
       const vaultSharesToken = fromVaultInfo.token
-      const isPermit2AuthNeeded = await sdk.intentSwaps.isPermit2AuthorizationNeeded({
-        ownerAddress: senderAddress,
-        tokenAddress: vaultSharesToken.address,
+      const isPermit2AuthNeeded = await sdk.allowance.isPermit2AuthorizationNeeded({
+        chainId,
+        ownerAddress: senderAddressValue,
+        tokenAddress: vaultSharesToken.address.toSolidityValue(),
         amount: vaultSharesToRedeem,
-        publicClient,
       })
       console.log('Is Permit2 Authorization Needed?', isPermit2AuthNeeded)
 
       // send permit2 approval first otherwise deposit will fail
       if (isPermit2AuthNeeded && authorizePermit2) {
-        const permit2AuthorizationTxInfo = await sdk.intentSwaps.getPermit2AuthorizationTx({
-          tokenAddress: vaultSharesToken.address,
+        const permit2AuthorizationTxInfo = await sdk.allowance.getPermit2AuthorizationTx({
+          chainId,
+          tokenAddress: vaultSharesToken.address.toSolidityValue(),
         })
         console.log('Sending Permit2 authorization transaction...')
         const [permit2TxStatus] = await userSendTxTool(permit2AuthorizationTxInfo)
         assert(permit2TxStatus === 'success', 'Permit2 authorization transaction failed')
       } else if (revokePermit2) {
-        const permit2RevokeTxInfo = await sdk.intentSwaps.getPermit2RevokeTx({
-          tokenAddress: vaultSharesToken.address,
+        const permit2RevokeTxInfo = await sdk.allowance.getPermit2RevokeTx({
+          chainId,
+          tokenAddress: vaultSharesToken.address.toSolidityValue(),
         })
         console.log('Sending Permit2 revoke transaction...')
         const [revokeTxStatus] = await userSendTxTool(permit2RevokeTxInfo)
@@ -187,15 +185,15 @@ describe('Intent swaps: Swap with Deposit', () => {
         depositPermitTokenAddress: depositPermitTokenAddress,
       })
 
-      const { permitData: withdrawPermitData, signature: withdrawSignature } =
-        await sdk.intentSwaps.createPermit2Data({
+      const { permitData: withdrawPermitData, signTypedDataParameters: withdrawSignTypedData } =
+        await sdk.allowance.getPermit2Data({
           chainId,
-          signTypedData: walletClient.signTypedData,
-          viemAccount: walletClient.account,
+          senderAddress: senderAddressValue,
           tokenAddress: withdrawPermitTokenAddress,
           amount: withdrawPermitAmount,
           spenderAddress: aqAddressValue,
         })
+      const withdrawSignature = await walletClient.signTypedData(withdrawSignTypedData)
       const withdrawCallData = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
         functionName: 'exitFleetWithPermit2',
@@ -214,15 +212,15 @@ describe('Intent swaps: Swap with Deposit', () => {
         },
       ]
 
-      const { permitData: depositPermitData, signature: depositSignature } =
-        await sdk.intentSwaps.createPermit2Data({
+      const { permitData: depositPermitData, signTypedDataParameters: depositSignTypedData } =
+        await sdk.allowance.getPermit2Data({
           chainId,
-          signTypedData: walletClient.signTypedData,
-          viemAccount: walletClient.account,
+          senderAddress: senderAddressValue,
           tokenAddress: depositPermitTokenAddress,
           amount: depositPermitAmount,
           spenderAddress: aqAddressValue,
         })
+      const depositSignature = await walletClient.signTypedData(depositSignTypedData)
 
       const enterFleetCallData = encodeFunctionData({
         abi: AdmiralsQuartersAbi,

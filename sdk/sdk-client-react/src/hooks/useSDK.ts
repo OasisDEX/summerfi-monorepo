@@ -102,6 +102,20 @@ import { cancelStrategyTxHandler } from '../handlers/cancelStrategyTxHandler'
 import { editStrategyTxHandler } from '../handlers/editStrategyTxHandler'
 import { pauseStrategyTxHandler } from '../handlers/pauseStrategyTxHandler'
 import { resumeStrategyTxHandler } from '../handlers/resumeStrategyTxHandler'
+import { getRwaDepositTxHandler } from '../handlers/getRwaDepositTxHandler'
+import { getRwaWithdrawTxHandler } from '../handlers/getRwaWithdrawTxHandler'
+import { getRwaClaimSharesTxHandler } from '../handlers/getRwaClaimSharesTxHandler'
+import { getRwaClaimAssetsTxHandler } from '../handlers/getRwaClaimAssetsTxHandler'
+import { getRwaCancelRoundDepositTxHandler } from '../handlers/getRwaCancelRoundDepositTxHandler'
+import { getRwaCurrentRoundHandler } from '../handlers/getRwaCurrentRoundHandler'
+import { getRwaRoundStateHandler } from '../handlers/getRwaRoundStateHandler'
+import { getRwaExchangeRateHandler } from '../handlers/getRwaExchangeRateHandler'
+import { getRwaReceiptBalancesHandler } from '../handlers/getRwaReceiptBalancesHandler'
+import { getRwaSetWhitelistedTxHandler } from '../handlers/getRwaSetWhitelistedTxHandler'
+import { getRwaSetWhitelistedBatchTxHandler } from '../handlers/getRwaSetWhitelistedBatchTxHandler'
+import { getRwaSetWhitelistOpenTxHandler } from '../handlers/getRwaSetWhitelistOpenTxHandler'
+import { getRwaIsWhitelistedHandler } from '../handlers/getRwaIsWhitelistedHandler'
+import { getRwaIsWhitelistOpenHandler } from '../handlers/getRwaIsWhitelistOpenHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -306,6 +320,22 @@ export const useSDK = (params: UseSdk) => {
   const cancelStrategyTx = useMemo(() => cancelStrategyTxHandler(sdk), [sdk])
   const getStrategy = useMemo(() => getStrategyHandler(sdk), [sdk])
 
+  // RWA HANDLERS
+  const getRwaDepositTx = useMemo(() => getRwaDepositTxHandler(sdk), [sdk])
+  const getRwaWithdrawTx = useMemo(() => getRwaWithdrawTxHandler(sdk), [sdk])
+  const getRwaClaimSharesTx = useMemo(() => getRwaClaimSharesTxHandler(sdk), [sdk])
+  const getRwaClaimAssetsTx = useMemo(() => getRwaClaimAssetsTxHandler(sdk), [sdk])
+  const getRwaCancelRoundDepositTx = useMemo(() => getRwaCancelRoundDepositTxHandler(sdk), [sdk])
+  const getRwaCurrentRound = useMemo(() => getRwaCurrentRoundHandler(sdk), [sdk])
+  const getRwaRoundState = useMemo(() => getRwaRoundStateHandler(sdk), [sdk])
+  const getRwaExchangeRate = useMemo(() => getRwaExchangeRateHandler(sdk), [sdk])
+  const getRwaReceiptBalances = useMemo(() => getRwaReceiptBalancesHandler(sdk), [sdk])
+  const getRwaSetWhitelistedTx = useMemo(() => getRwaSetWhitelistedTxHandler(sdk), [sdk])
+  const getRwaSetWhitelistedBatchTx = useMemo(() => getRwaSetWhitelistedBatchTxHandler(sdk), [sdk])
+  const getRwaSetWhitelistOpenTx = useMemo(() => getRwaSetWhitelistOpenTxHandler(sdk), [sdk])
+  const getRwaIsWhitelisted = useMemo(() => getRwaIsWhitelistedHandler(sdk), [sdk])
+  const getRwaIsWhitelistOpen = useMemo(() => getRwaIsWhitelistOpenHandler(sdk), [sdk])
+
   const memo = useMemo(
     () => ({
       getCurrentUser,
@@ -412,6 +442,21 @@ export const useSDK = (params: UseSdk) => {
       resumeStrategyTx,
       cancelStrategyTx,
       getStrategy,
+      // RWA
+      getRwaDepositTx,
+      getRwaWithdrawTx,
+      getRwaClaimSharesTx,
+      getRwaClaimAssetsTx,
+      getRwaCancelRoundDepositTx,
+      getRwaCurrentRound,
+      getRwaRoundState,
+      getRwaExchangeRate,
+      getRwaReceiptBalances,
+      getRwaSetWhitelistedTx,
+      getRwaSetWhitelistedBatchTx,
+      getRwaSetWhitelistOpenTx,
+      getRwaIsWhitelisted,
+      getRwaIsWhitelistOpen,
     }),
     [
       getCurrentUser,
@@ -517,6 +562,21 @@ export const useSDK = (params: UseSdk) => {
       resumeStrategyTx,
       cancelStrategyTx,
       getStrategy,
+      // RWA
+      getRwaDepositTx,
+      getRwaWithdrawTx,
+      getRwaClaimSharesTx,
+      getRwaClaimAssetsTx,
+      getRwaCancelRoundDepositTx,
+      getRwaCurrentRound,
+      getRwaRoundState,
+      getRwaExchangeRate,
+      getRwaReceiptBalances,
+      getRwaSetWhitelistedTx,
+      getRwaSetWhitelistedBatchTx,
+      getRwaSetWhitelistOpenTx,
+      getRwaIsWhitelisted,
+      getRwaIsWhitelistOpen,
     ],
   )
 

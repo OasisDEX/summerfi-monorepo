@@ -212,11 +212,12 @@ export const useTransaction = ({
             ownerAddress: sender,
             tokenAddress: toToken.address.toSolidityValue(),
             amount: toAmount.toSolidityValue(),
-            publicClient: publicClient as any,
+            chainId: vaultChainId,
           })
 
           transactionsList = isPermit2AuthNeeded
             ? await getPermit2AuthorizationTx({
+                chainId: vaultChainId,
                 tokenAddress: toToken.address.toSolidityValue(),
               })
             : []

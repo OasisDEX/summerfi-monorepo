@@ -75,4 +75,102 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       vaultId: params.vaultId.fleetAddress.value,
     })
   }
+
+  /** @see IRWAManager.getDepositTx */
+  async getDepositTx(
+    _params: Parameters<IRWAManager['getDepositTx']>[0],
+  ): ReturnType<IRWAManager['getDepositTx']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getClaimSharesTx */
+  async getClaimSharesTx(
+    _params: Parameters<IRWAManager['getClaimSharesTx']>[0],
+  ): ReturnType<IRWAManager['getClaimSharesTx']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getWithdrawTx */
+  async getWithdrawTx(
+    _params: Parameters<IRWAManager['getWithdrawTx']>[0],
+  ): ReturnType<IRWAManager['getWithdrawTx']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getClaimAssetsTx */
+  async getClaimAssetsTx(
+    _params: Parameters<IRWAManager['getClaimAssetsTx']>[0],
+  ): ReturnType<IRWAManager['getClaimAssetsTx']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getCancelRoundDepositTx */
+  async getCancelRoundDepositTx(
+    _params: Parameters<IRWAManager['getCancelRoundDepositTx']>[0],
+  ): ReturnType<IRWAManager['getCancelRoundDepositTx']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getCurrentRound */
+  async getCurrentRound(
+    _params: Parameters<IRWAManager['getCurrentRound']>[0],
+  ): ReturnType<IRWAManager['getCurrentRound']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getRoundState */
+  async getRoundState(
+    _params: Parameters<IRWAManager['getRoundState']>[0],
+  ): ReturnType<IRWAManager['getRoundState']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getExchangeRate */
+  async getExchangeRate(
+    _params: Parameters<IRWAManager['getExchangeRate']>[0],
+  ): ReturnType<IRWAManager['getExchangeRate']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getReceiptBalances */
+  async getReceiptBalances(
+    _params: Parameters<IRWAManager['getReceiptBalances']>[0],
+  ): ReturnType<IRWAManager['getReceiptBalances']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getSetWhitelistedTx */
+  async getSetWhitelistedTx(
+    _params: Parameters<IRWAManager['getSetWhitelistedTx']>[0],
+  ): ReturnType<IRWAManager['getSetWhitelistedTx']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getSetWhitelistedBatchTx */
+  async getSetWhitelistedBatchTx(
+    _params: Parameters<IRWAManager['getSetWhitelistedBatchTx']>[0],
+  ): ReturnType<IRWAManager['getSetWhitelistedBatchTx']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.getSetWhitelistOpenTx */
+  async getSetWhitelistOpenTx(
+    _params: Parameters<IRWAManager['getSetWhitelistOpenTx']>[0],
+  ): ReturnType<IRWAManager['getSetWhitelistOpenTx']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.isWhitelisted */
+  async isWhitelisted(
+    _params: Parameters<IRWAManager['isWhitelisted']>[0],
+  ): ReturnType<IRWAManager['isWhitelisted']> {
+    throw new Error('Not implemented')
+  }
+
+  /** @see IRWAManager.isWhitelistOpen */
+  async isWhitelistOpen(
+    _params: Parameters<IRWAManager['isWhitelistOpen']>[0],
+  ): ReturnType<IRWAManager['isWhitelistOpen']> {
+    throw new Error('Not implemented')
+  }
 }

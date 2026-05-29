@@ -223,6 +223,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
   const allowanceManager = AllowanceManagerFactory.newAllowanceManager({
     configProvider,
     contractsProvider,
+    blockchainClientProvider,
   })
   const intentSwapsManager = new CowSwapProvider({
     configProvider,

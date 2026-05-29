@@ -133,25 +133,27 @@ describe('Intent swaps: Swap with Deposit', () => {
       console.log('Sell Order Quote:', fromAmount.toString(), '=>', sellQuote.toAmount.toString())
 
       // check permit2 allowance
-      const isPermit2AuthNeeded = await sdk.intentSwaps.isPermit2AuthorizationNeeded({
-        ownerAddress: senderAddress,
-        tokenAddress: sellQuote.toAmount.token.address,
+      const isPermit2AuthNeeded = await sdk.allowance.isPermit2AuthorizationNeeded({
+        chainId,
+        ownerAddress: senderAddressValue,
+        tokenAddress: sellQuote.toAmount.token.address.toSolidityValue(),
         amount: sellQuote.toAmount.toSolidityValue(),
-        publicClient,
       })
       console.log('Is Permit2 Authorization Needed?', isPermit2AuthNeeded)
 
       // send permit2 approval first otherwise deposit will fail
       if (isPermit2AuthNeeded && authorizePermit2) {
-        const permit2AuthorizationTxInfo = await sdk.intentSwaps.getPermit2AuthorizationTx({
-          tokenAddress: sellQuote.toAmount.token.address,
+        const permit2AuthorizationTxInfo = await sdk.allowance.getPermit2AuthorizationTx({
+          chainId,
+          tokenAddress: sellQuote.toAmount.token.address.toSolidityValue(),
         })
         console.log('Sending Permit2 authorization transaction...')
         const [permit2TxStatus] = await userSendTxTool(permit2AuthorizationTxInfo)
         assert(permit2TxStatus === 'success', 'Permit2 authorization transaction failed')
       } else if (revokePermit2) {
-        const permit2RevokeTxInfo = await sdk.intentSwaps.getPermit2RevokeTx({
-          tokenAddress: sellQuote.toAmount.token.address,
+        const permit2RevokeTxInfo = await sdk.allowance.getPermit2RevokeTx({
+          chainId,
+          tokenAddress: sellQuote.toAmount.token.address.toSolidityValue(),
         })
         console.log('Sending Permit2 revoke transaction...')
         const [revokeTxStatus] = await userSendTxTool(permit2RevokeTxInfo)
@@ -166,14 +168,14 @@ describe('Intent swaps: Swap with Deposit', () => {
 
       console.log('Permit', { permitAmount, permitTokenAddress })
 
-      const { permitData, signature } = await sdk.intentSwaps.createPermit2Data({
+      const { permitData, signTypedDataParameters } = await sdk.allowance.getPermit2Data({
         chainId,
-        signTypedData: walletClient.signTypedData,
-        viemAccount: walletClient.account,
+        senderAddress: senderAddressValue,
         tokenAddress: permitTokenAddress,
         amount: permitAmount,
         spenderAddress,
       })
+      const signature = await walletClient.signTypedData(signTypedDataParameters)
 
       const enterFleetCallData = encodeFunctionData({
         abi: getAdmiralsQuartersAbi(),

@@ -1,4 +1,16 @@
-import type { ChainId, IArmadaVaultId, IChainInfo, IRwaVaultInfo } from '@summerfi/sdk-common'
+import type {
+  ChainId,
+  IArmadaVaultId,
+  IAddress,
+  IChainInfo,
+  IRwaVaultInfo,
+  IPrice,
+  ITokenAmount,
+  IUser,
+  RoundState,
+  RoundsVaultType,
+  TransactionInfo,
+} from '@summerfi/sdk-common'
 import type { GetVaultQueryRwa, GetVaultsQueryRwa } from '@summerfi/subgraph-manager-common'
 
 /**
@@ -44,4 +56,225 @@ export interface IRWAManager {
    * @returns The raw GetVault query result from the RWA subgraph
    */
   getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQueryRwa>
+
+  // ---------------------------------------------------------------------------
+  // Deposit flow — RoundsVaultInput (USDC → ERC-1155 receipt → Fleet shares)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @method getDepositTx
+   * @description Builds the approve + RoundsVaultInput.deposit transaction pair for a whitelisted
+   *              user. Mints an ERC-1155 receipt for the current open round.
+   *
+   * @param vaultId   The Fleet vault identifier (chainInfo + fleet address)
+   * @param user      The depositing user
+   * @param amount    Amount of the underlying asset (e.g. USDC) to deposit
+   */
+  getDepositTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+  }): Promise<TransactionInfo[]>
+
+  /**
+   * @method getClaimSharesTx
+   * @description Builds the RoundsVaultInput.redeemExchangeAsset transaction to exchange a
+   *              settled-round receipt for Fleet shares.
+   *
+   * @param vaultId   The Fleet vault identifier
+   * @param user      The user holding the receipt (owner)
+   * @param roundId   The settled round whose receipt is being exchanged
+   * @param amount    Number of ERC-1155 receipt tokens to redeem
+   * @param receiver  Optional alternative receiver of the Fleet shares
+   */
+  getClaimSharesTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    roundId: bigint
+    amount: bigint
+    receiver?: IAddress
+  }): Promise<TransactionInfo>
+
+  // ---------------------------------------------------------------------------
+  // Withdraw flow — RoundsVaultOutput (Fleet shares → ERC-1155 receipt → USDC)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @method getWithdrawTx
+   * @description Builds the approve + RoundsVaultOutput.deposit transaction pair for a whitelisted
+   *              user who wants to exit the Fleet. Mints an ERC-1155 receipt for the current round.
+   *
+   * @param vaultId   The Fleet vault identifier
+   * @param user      The withdrawing user
+   * @param amount    Amount of Fleet shares to deposit into the Output vault
+   */
+  getWithdrawTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+  }): Promise<TransactionInfo[]>
+
+  /**
+   * @method getClaimAssetsTx
+   * @description Builds the RoundsVaultOutput.redeemExchangeAsset transaction to exchange a
+   *              settled-round receipt for the underlying asset (e.g. USDC).
+   *
+   * @param vaultId   The Fleet vault identifier
+   * @param user      The user holding the receipt (owner)
+   * @param roundId   The settled round whose receipt is being exchanged
+   * @param amount    Number of ERC-1155 receipt tokens to redeem
+   * @param receiver  Optional alternative receiver of the underlying asset
+   */
+  getClaimAssetsTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    roundId: bigint
+    amount: bigint
+    receiver?: IAddress
+  }): Promise<TransactionInfo>
+
+  /**
+   * @method getCancelRoundDepositTx
+   * @description Builds the RoundsVaultBase.redeem transaction to return an open current-round
+   *              receipt before it enters settlement (cancels a pending deposit or withdraw).
+   *
+   * @param vaultId      The Fleet vault identifier
+   * @param user         The user cancelling their position (owner)
+   * @param roundId      The current open round id (must equal getCurrentRound)
+   * @param amount       Number of ERC-1155 receipt tokens to redeem
+   * @param receiver     Optional alternative receiver of the returned asset
+   * @param vaultType    RoundsVaultType.Input (cancels a USDC deposit) or
+   *                     RoundsVaultType.Output (cancels a share deposit)
+   */
+  getCancelRoundDepositTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    roundId: bigint
+    amount: bigint
+    receiver?: IAddress
+    vaultType: RoundsVaultType
+  }): Promise<TransactionInfo>
+
+  // ---------------------------------------------------------------------------
+  // Round state reads
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @method getCurrentRound
+   * @description Returns the current (open) round number for the given RoundsVault.
+   *
+   * @param vaultId      The Fleet vault identifier
+   * @param vaultType    Whether to query the Input or Output RoundsVault
+   */
+  getCurrentRound(params: { vaultId: IArmadaVaultId; vaultType: RoundsVaultType }): Promise<bigint>
+
+  /**
+   * @method getRoundState
+   * @description Returns the on-chain state of a specific round.
+   *
+   * @param vaultId      The Fleet vault identifier
+   * @param roundId      The round number to query
+   * @param vaultType    Whether to query the Input or Output RoundsVault
+   */
+  getRoundState(params: {
+    vaultId: IArmadaVaultId
+    roundId: bigint
+    vaultType: RoundsVaultType
+  }): Promise<RoundState>
+
+  /**
+   * @method getExchangeRate
+   * @description Returns the snapshotted exchange rate for a settled round
+   *              (output-asset amount per unit of receipt token).
+   *
+   * @param vaultId      The Fleet vault identifier
+   * @param roundId      A settled round number
+   * @param vaultType    Whether to query the Input or Output RoundsVault
+   */
+  getExchangeRate(params: {
+    vaultId: IArmadaVaultId
+    roundId: bigint
+    vaultType: RoundsVaultType
+  }): Promise<IPrice>
+
+  /**
+   * @method getReceiptBalances
+   * @description Returns all ERC-1155 receipt token balances held by an account across
+   *              every round id (via balanceOfAll).
+   *
+   * @param vaultId      The Fleet vault identifier
+   * @param account      The account to query
+   * @param vaultType    Whether to query the Input or Output RoundsVault
+   */
+  getReceiptBalances(params: {
+    vaultId: IArmadaVaultId
+    account: IAddress
+    vaultType: RoundsVaultType
+  }): Promise<{ roundId: bigint; balance: bigint }[]>
+
+  // ---------------------------------------------------------------------------
+  // Whitelisting (Manager set) — keyed on the Fleet address as context
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @method getSetWhitelistedTx
+   * @description Builds the transaction to set or revoke whitelist status for a single account
+   *              on the Fleet's ProtocolAccessManagerV2 context.
+   *
+   * @param vaultId  The Fleet vault identifier (fleet address is the whitelist context)
+   * @param account  The account to whitelist or de-list
+   * @param allowed  true to whitelist, false to revoke
+   */
+  getSetWhitelistedTx(params: {
+    vaultId: IArmadaVaultId
+    account: IAddress
+    allowed: boolean
+  }): Promise<TransactionInfo>
+
+  /**
+   * @method getSetWhitelistedBatchTx
+   * @description Builds the transaction to set or revoke whitelist status for multiple accounts
+   *              in a single on-chain call.
+   *
+   * @param vaultId  The Fleet vault identifier
+   * @param accounts Array of accounts to update
+   * @param allowed  Parallel array of allowed flags
+   */
+  getSetWhitelistedBatchTx(params: {
+    vaultId: IArmadaVaultId
+    accounts: IAddress[]
+    allowed: boolean[]
+  }): Promise<TransactionInfo>
+
+  /**
+   * @method getSetWhitelistOpenTx
+   * @description Builds the transaction to toggle the open-whitelist flag for the Fleet context.
+   *              When open, any address is considered whitelisted regardless of individual entries.
+   *
+   * @param vaultId  The Fleet vault identifier
+   * @param isOpen   true to open the whitelist globally, false to close it
+   */
+  getSetWhitelistOpenTx(params: {
+    vaultId: IArmadaVaultId
+    isOpen: boolean
+  }): Promise<TransactionInfo>
+
+  /**
+   * @method isWhitelisted
+   * @description Returns whether an account is whitelisted on the Fleet context
+   *              (either individually or because the whitelist is open).
+   *
+   * @param vaultId  The Fleet vault identifier
+   * @param account  The account to check
+   */
+  isWhitelisted(params: { vaultId: IArmadaVaultId; account: IAddress }): Promise<boolean>
+
+  /**
+   * @method isWhitelistOpen
+   * @description Returns whether the Fleet's whitelist is globally open
+   *              (i.e. _isWhitelistOpen[fleetAddress] == true).
+   *
+   * @param vaultId  The Fleet vault identifier
+   */
+  isWhitelistOpen(params: { vaultId: IArmadaVaultId }): Promise<boolean>
 }

@@ -9,6 +9,7 @@ import { UsersManager } from './UsersManager'
 import type { ISDKAdminManager } from '../interfaces/ISDKAdminManager'
 import { TokensManagerClient2 } from './TokensManagerClient2'
 import { IntentSwapClient } from './IntentSwapClient'
+import { AllowanceManagerClient } from './AllowanceManagerClient'
 
 /** @see ISDKAdminManager */
 export class SDKAdminManager implements ISDKAdminManager {
@@ -21,6 +22,7 @@ export class SDKAdminManager implements ISDKAdminManager {
   public readonly swaps: SwapManagerClient
   public readonly oracle: OracleManagerClient
   public readonly intentSwaps: IntentSwapClient
+  public readonly allowance: AllowanceManagerClient
 
   public constructor(params: { rpcClient: RPCMainClientType }) {
     this.chains = new ChainsManagerClient(params)
@@ -32,5 +34,6 @@ export class SDKAdminManager implements ISDKAdminManager {
     this.swaps = new SwapManagerClient(params)
     this.oracle = new OracleManagerClient(params)
     this.intentSwaps = new IntentSwapClient(params)
+    this.allowance = new AllowanceManagerClient(params)
   }
 }
