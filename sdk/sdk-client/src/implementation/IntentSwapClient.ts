@@ -15,18 +15,10 @@ import {
   WRAPPED_NATIVE_CURRENCIES,
 } from '@cowprotocol/cow-sdk'
 import { ViemAdapter } from '@cowprotocol/sdk-viem-adapter'
-import { encodeFunctionData, maxUint256, erc20Abi } from 'viem'
-import { permit2Address } from '@uniswap/permit2-sdk'
 
-import {
-  LoggingService,
-  NATIVE_CURRENCY_ADDRESS_LOWERCASE,
-  Price,
-  TransactionType,
-} from '@summerfi/sdk-common'
+import { LoggingService, NATIVE_CURRENCY_ADDRESS_LOWERCASE, Price } from '@summerfi/sdk-common'
 
-const PERMIT2_ADDRESS = '0x000000000022D473030F116dDEE9F6B43aC78BA3' as const
-const PERMIT2_EXPIRATION_MINUTES = 10
+const ORDER_VALIDITY_MINUTES = 10
 
 /**
  * @name IntentSwapClient
@@ -61,7 +53,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       partiallyFillable: params.partiallyFillable,
       limitPrice,
       slippagePercentage: params.slippagePercentage,
-      validFor: PERMIT2_EXPIRATION_MINUTES * 60,
+      validFor: ORDER_VALIDITY_MINUTES * 60,
     })
   }
 
@@ -242,139 +234,5 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       chainId: params.chainId,
       orderId: params.orderId,
     })
-  }
-
-  /** @see IIntentSwapClient.isPermit2AuthorizationNeeded */
-  isPermit2AuthorizationNeeded: IIntentSwapClient['isPermit2AuthorizationNeeded'] = async (
-    params,
-  ) => {
-    if (params.amount === 0n) {
-      LoggingService.debug('Allowance amount is zero')
-      return false
-    }
-
-    if (params.tokenAddress.toSolidityValue() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
-      LoggingService.debug('Token is native currency, no approval needed')
-      // Native token (e.g. ETH) does not require approval
-      return false
-    }
-
-    const allowance = await params.publicClient.readContract({
-      address: params.tokenAddress.toSolidityValue() as `0x${string}`,
-      abi: erc20Abi,
-      functionName: 'allowance',
-      args: [params.ownerAddress.toSolidityValue() as `0x${string}`, PERMIT2_ADDRESS],
-    })
-
-    return allowance < params.amount
-  }
-
-  /** @see IIntentSwapClient.getPermit2AuthorizationTx */
-  getPermit2AuthorizationTx: IIntentSwapClient['getPermit2AuthorizationTx'] = (params) => {
-    if (params.tokenAddress.toSolidityValue() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
-      throw new Error('Native token does not require Permit2 authorization')
-    }
-
-    const calldata = encodeFunctionData({
-      abi: erc20Abi,
-      functionName: 'approve',
-      args: [PERMIT2_ADDRESS, maxUint256],
-    })
-    return [
-      {
-        type: TransactionType.Permit2Authorization,
-        transaction: {
-          target: params.tokenAddress,
-          calldata,
-          value: '0',
-        },
-        description: `Authorize Permit2 to spend token ${params.tokenAddress.toSolidityValue()}`,
-      },
-    ]
-  }
-
-  /** @see IIntentSwapClient.getPermit2RevokeTx */
-  getPermit2RevokeTx: IIntentSwapClient['getPermit2RevokeTx'] = (params) => {
-    if (params.tokenAddress.toSolidityValue() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
-      throw new Error('Native token does not require Permit2 authorization, so no need to revoke')
-    }
-
-    const calldata = encodeFunctionData({
-      abi: erc20Abi,
-      functionName: 'approve',
-      args: [PERMIT2_ADDRESS, 0n],
-    })
-    return [
-      {
-        type: TransactionType.Permit2Revoke,
-        transaction: {
-          target: params.tokenAddress,
-          calldata,
-          value: '0',
-        },
-        description: `Revoke Permit2 authorization for token ${params.tokenAddress.toSolidityValue()}`,
-      },
-    ]
-  }
-
-  /** @see IIntentSwapClient.createPermit2Data */
-  createPermit2Data: IIntentSwapClient['createPermit2Data'] = async (params) => {
-    const { chainId, tokenAddress, amount, spenderAddress, signTypedData, viemAccount } = params
-
-    const nonce = BigInt(Date.now())
-    const deadline = BigInt(Math.floor(Date.now() / 1000) + PERMIT2_EXPIRATION_MINUTES * 60) // X minutes from now
-
-    const permitData = {
-      permitted: {
-        token: tokenAddress,
-        amount,
-      },
-      nonce,
-      deadline,
-    }
-
-    const domain = {
-      name: 'Permit2',
-      chainId,
-      verifyingContract: permit2Address(chainId) as `0x${string}`,
-    }
-
-    const types = {
-      PermitTransferFrom: [
-        { name: 'permitted', type: 'TokenPermissions' },
-        { name: 'spender', type: 'address' },
-        { name: 'nonce', type: 'uint256' },
-        { name: 'deadline', type: 'uint256' },
-      ],
-      TokenPermissions: [
-        { name: 'token', type: 'address' },
-        { name: 'amount', type: 'uint256' },
-      ],
-    }
-
-    if (!signTypedData) {
-      throw new Error('signTypedData is required to create Permit2 data.')
-    }
-    if (!viemAccount) {
-      throw new Error('viemAccount is required to create Permit2 data.')
-    }
-
-    const signature = await signTypedData({
-      account: viemAccount,
-      domain,
-      types,
-      primaryType: 'PermitTransferFrom',
-      message: {
-        permitted: {
-          token: tokenAddress,
-          amount,
-        },
-        spender: spenderAddress,
-        nonce,
-        deadline,
-      },
-    })
-
-    return { permitData, signature }
   }
 }

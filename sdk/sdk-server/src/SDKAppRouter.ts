@@ -102,6 +102,11 @@ import { intentSwapsGetSellOrderQuote } from './handlers/intentSwapsGetSellOrder
 import { intentSwapsSendOrder } from './handlers/intentSwapsSendOrder'
 import { intentSwapsCancelOrder } from './handlers/intentSwapsCancelOrder'
 import { intentSwapsCheckOrder } from './handlers/intentSwapsCheckOrder'
+import { allowanceGetApproval } from './handlers/allowanceGetApproval'
+import { allowanceIsPermit2AuthorizationNeeded } from './handlers/allowanceIsPermit2AuthorizationNeeded'
+import { allowanceGetPermit2AuthorizationTx } from './handlers/allowanceGetPermit2AuthorizationTx'
+import { allowanceGetPermit2RevokeTx } from './handlers/allowanceGetPermit2RevokeTx'
+import { allowanceGetPermit2Data } from './handlers/allowanceGetPermit2Data'
 import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitchTx'
 import { getVaultSwitchEnsoTx } from './armada-protocol-handlers/users/getVaultSwitchEnsoTx'
 import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
@@ -175,6 +180,13 @@ export const sdkAppRouter = router({
     sendOrder: intentSwapsSendOrder,
     cancelOrder: intentSwapsCancelOrder,
     checkOrder: intentSwapsCheckOrder,
+  },
+  allowance: {
+    getApproval: allowanceGetApproval,
+    isPermit2AuthorizationNeeded: allowanceIsPermit2AuthorizationNeeded,
+    getPermit2AuthorizationTx: allowanceGetPermit2AuthorizationTx,
+    getPermit2RevokeTx: allowanceGetPermit2RevokeTx,
+    getPermit2Data: allowanceGetPermit2Data,
   },
   swaps: {
     getSwapDataExactInput: getSwapDataExactInput,

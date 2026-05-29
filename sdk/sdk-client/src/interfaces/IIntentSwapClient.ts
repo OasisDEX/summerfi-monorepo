@@ -4,15 +4,12 @@ import type {
   IntentQuoteData,
   ChainId,
   IAddress,
-  AddressValue,
   TransactionInfo,
   HexData,
-  Permit2AuthorizationTransactionInfo,
-  Permit2RevokeTransactionInfo,
   IPrice,
 } from '@summerfi/sdk-common'
 import type { EnrichedOrder, UnsignedOrder } from '@cowprotocol/cow-sdk'
-import type { Account, PublicClient, WalletClient, SignTypedDataParameters } from 'viem'
+import type { Account, PublicClient, WalletClient } from 'viem'
 
 export type CowHook = {
   target: HexData
@@ -142,64 +139,4 @@ export interface IIntentSwapClient {
     chainId: ChainId
     orderId: string
   }): Promise<{ order: EnrichedOrder } | null>
-
-  /**
-   * @name isPermit2AuthorizationNeeded
-   * @description Checks if the Permit2 contract needs authorization for a specific token and amount
-   * @param ownerAddress The token owner's address
-   * @param tokenAddress The ERC-20 token address to check authorization for
-   * @param amount The required amount (in token base units) to check against the current allowance
-   * @param publicClient The public client to use for reading blockchain state
-   * @returns True if the current Permit2 allowance is less than the required amount
-   */
-  isPermit2AuthorizationNeeded(params: {
-    ownerAddress: IAddress
-    tokenAddress: IAddress
-    amount: bigint
-    publicClient: PublicClient
-  }): Promise<boolean>
-
-  /**
-   * @name getPermit2AuthorizationTx
-   * @description Creates a transaction to authorize the Permit2 contract to spend a specific token
-   * @param tokenAddress The ERC-20 token address to authorize
-   * @returns A TransactionInfo for the approve(Permit2, MaxUint256) transaction
-   */
-  getPermit2AuthorizationTx(params: {
-    tokenAddress: IAddress
-  }): [Permit2AuthorizationTransactionInfo]
-
-  /**
-   * @name getPermit2RevokeTx
-   * @description Creates a transaction to revoke the Permit2 contract authorization for a specific token
-   * @param tokenAddress The ERC-20 token address to revoke
-   * @returns A TransactionInfo for the approve(Permit2, 0) transaction
-   */
-  getPermit2RevokeTx(params: { tokenAddress: IAddress }): [Permit2RevokeTransactionInfo]
-
-  /**
-   * @name createPermit2Data
-   * @description Creates the EIP-712 signed permit2 data for a PermitTransferFrom operation
-   * @param chainId The chain ID where the permit will be used
-   * @param tokenAddress The ERC-20 token address to permit
-   * @param amount The amount of tokens to permit (in token base units)
-   * @param spenderAddress The address authorized to spend the tokens
-   * @param viemAccount The viem account to sign the permit data with
-   * @returns The permit data and the EIP-712 signature
-   */
-  createPermit2Data(params: {
-    chainId: ChainId
-    tokenAddress: AddressValue
-    amount: bigint
-    spenderAddress: AddressValue
-    viemAccount?: Account
-    signTypedData: (params: SignTypedDataParameters) => Promise<`0x${string}`>
-  }): Promise<{
-    permitData: {
-      permitted: { token: `0x${string}`; amount: bigint }
-      nonce: bigint
-      deadline: bigint
-    }
-    signature: `0x${string}`
-  }>
 }

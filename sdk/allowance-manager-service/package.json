@@ -20,11 +20,13 @@
   },
   "dependencies": {
     "@summerfi/allowance-manager-common": "workspace:*",
+    "@summerfi/blockchain-client-common": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/contracts-provider-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
+    "@uniswap/permit2-sdk": "^1.4.0",
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {

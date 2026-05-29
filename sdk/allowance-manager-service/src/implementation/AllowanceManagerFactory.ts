@@ -1,6 +1,6 @@
-import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-
-import { IContractsProvider } from '@summerfi/contracts-provider-common'
+import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
+import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { AllowanceManager } from './AllowanceManager'
 
 /**
@@ -11,6 +11,7 @@ export class AllowanceManagerFactory {
   public static newAllowanceManager(params: {
     configProvider: IConfigurationProvider
     contractsProvider: IContractsProvider
+    blockchainClientProvider: IBlockchainClientProvider
   }): AllowanceManager {
     return new AllowanceManager(params)
   }

@@ -7,6 +7,7 @@ import type { ISwapManagerClient } from './ISwapManagerClient'
 import type { ITokensManagerClient2 } from './ITokensManagerClient2'
 import type { IUsersManager } from './IUsersManager'
 import type { IIntentSwapClient } from './IIntentSwapClient'
+import type { IAllowanceManagerClient } from './IAllowanceManagerClient'
 
 /**
  * SDKManager is the main entry point for interacting with the SDK in the client side
@@ -32,4 +33,6 @@ export interface ISDKAdminManager {
   readonly oracle: IOracleManagerClient
   /** Intent Swap Client for interacting with CoW Protocol intent swaps */
   readonly intentSwaps: IIntentSwapClient
+  /** Allowance Manager Client for Permit2 authorization checks, transactions and typed data */
+  readonly allowance: IAllowanceManagerClient
 }
