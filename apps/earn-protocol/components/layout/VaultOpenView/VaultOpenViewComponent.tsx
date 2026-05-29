@@ -22,13 +22,12 @@ import {
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
-  type ArksHistoricalChartData,
   type DropdownRawOption,
-  type InterestRates,
   type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
+  type SupportedSDKNetworks,
   // SupportedNetworkIds,
   TOSStatus,
   TransactionAction,
@@ -43,19 +42,16 @@ import {
 } from '@summerfi/sdk-common'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
-import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
-import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
 import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
+import { useVaultOpenDetailsQuery } from '@/components/layout/VaultOpenView/useVaultOpenQuery'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { BeachClubReferralForm } from '@/features/beach-club/components/BeachClubReferralForm/BeachClubReferralForm'
-import { type VaultCurationEvent } from '@/features/curation-activity/types'
 // import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 // import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 // import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
@@ -79,19 +75,16 @@ import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 
+import { VaultOpenDetailsLoading } from './VaultOpenDetailsLoading'
 import { VaultOpenViewDetails } from './VaultOpenViewDetails'
 
 type VaultOpenViewComponentProps = {
+  network: SupportedSDKNetworks
+  vaultId: string
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   vaultInfo?: IArmadaVaultInfo
-  latestActivity: LatestActivityPagination
-  topDepositors: TopDepositorsPagination
-  rebalanceActivity: RebalanceActivityPagination
-  curationEvents: VaultCurationEvent[]
   medianDefiYield?: number
-  arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   // vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
@@ -99,21 +92,22 @@ type VaultOpenViewComponentProps = {
 }
 
 export const VaultOpenViewComponent = ({
+  network,
+  vaultId,
   vault,
   vaultInfo,
   vaults,
-  latestActivity,
-  topDepositors,
-  rebalanceActivity,
-  curationEvents,
   medianDefiYield,
-  arksHistoricalChartData,
-  arksInterestRates,
   vaultApyData,
   // vaultsApyRaw,
   referralCode: referralCodeFromCookie,
   rewardTokenPrices,
 }: VaultOpenViewComponentProps) => {
+  // Below-the-fold details stream in independently of the deposit sidebar: hydrated on first
+  // render, or fetched via the API route fallback (showing VaultOpenDetailsLoading) if the
+  // prefetch failed to dehydrate.
+  const { data: details } = useVaultOpenDetailsQuery(network, vaultId)
+
   const isRwaVault = vault.isRwaVault ?? false
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -554,17 +548,21 @@ export const VaultOpenViewComponent = ({
           />
         }
         detailsContent={
-          <VaultOpenViewDetails
-            vault={vault}
-            latestActivity={latestActivity}
-            topDepositors={topDepositors}
-            rebalanceActivity={rebalanceActivity}
-            curationEvents={curationEvents}
-            arksHistoricalChartData={arksHistoricalChartData}
-            arksInterestRates={arksInterestRates}
-            vaultApyData={vaultApyData}
-            isDaoManaged={vault.isDaoManaged}
-          />
+          details ? (
+            <VaultOpenViewDetails
+              vault={vault}
+              latestActivity={details.latestActivity}
+              topDepositors={details.topDepositors}
+              rebalanceActivity={details.rebalanceActivity}
+              curationEvents={details.curationEvents}
+              arksHistoricalChartData={details.arksHistoricalChartData}
+              arksInterestRates={details.arksInterestRates}
+              vaultApyData={vaultApyData}
+              isDaoManaged={vault.isDaoManaged}
+            />
+          ) : (
+            <VaultOpenDetailsLoading vault={vault} isDaoManaged={vault.isDaoManaged} />
+          )
         }
         sidebarContent={
           <>

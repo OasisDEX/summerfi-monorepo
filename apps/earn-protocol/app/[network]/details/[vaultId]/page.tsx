@@ -1,35 +1,26 @@
-import { getDisplayToken, Text, VaultGridDetails } from '@summerfi/app-earn-ui'
-import { getArksInterestRates } from '@summerfi/app-server-handlers'
+import { Suspense } from 'react'
+import { getDisplayToken } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
-  getVaultNiceName,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
-  supportedSDKNetwork,
 } from '@summerfi/app-utils'
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import capitalize from 'lodash-es/capitalize'
 import { type Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
-import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
-import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
-import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
-import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
-import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
-import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
+import { getVaultDetailsCoreData } from '@/app/server-handlers/vault-details/get-vault-details-core-data'
+import { getVaultDetailsCoreQueryKey } from '@/components/layout/VaultDetailsView/vault-details-query-keys'
+import { VaultDetailsLoadingView } from '@/components/layout/VaultDetailsView/VaultDetailsLoadingView'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
-import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { getServerQueryClient } from '@/helpers/get-server-query-client'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
-import {
-  decorateVaultsWithConfig,
-  getVaultIdByVaultCustomName,
-} from '@/helpers/vault-custom-value-helpers'
+import { getVaultIdByVaultCustomName } from '@/helpers/vault-custom-value-helpers'
 
 type EarnVaultDetailsPageProps = {
   params: Promise<{
@@ -38,14 +29,38 @@ type EarnVaultDetailsPageProps = {
   }>
 }
 
+const VaultDetailsWithData = async ({
+  network,
+  vaultId,
+}: {
+  network: SupportedSDKNetworks
+  vaultId: string
+}) => {
+  const queryClient = getServerQueryClient()
+
+  // Only the core (shell) is prefetched + hydrated so the VaultGridDetails header + intro paint
+  // instantly from the server cache. The heavier content island (yield chart, exposure, security
+  // stats) is intentionally left to its own client query, which streams it into the section
+  // skeletons after the shell — see useVaultDetailsContentQuery / VaultDetailsContentLoading.
+  await queryClient.prefetchQuery({
+    queryKey: getVaultDetailsCoreQueryKey(network, vaultId),
+    queryFn: () => getVaultDetailsCoreData({ network, vaultId }),
+  })
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <VaultDetailsView network={network} vaultId={vaultId} />
+    </HydrationBoundary>
+  )
+}
+
 const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
-  const [{ network, vaultId }, configRaw] = await Promise.all([params, getCachedConfig()])
+  const { network, vaultId } = await params
 
-  const parsedNetwork = humanNetworktoSDKNetwork(network)
-  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-
-  const systemConfig = parseServerResponseToClient(configRaw)
-
+  // Cheap, cached resolution to preserve the not-found redirect; the data prefetch itself lives
+  // inside the Suspense boundary so the skeleton streams immediately.
+  const systemConfig = parseServerResponseToClient(await getCachedConfig())
+  const parsedNetworkId = subgraphNetworkToId(humanNetworktoSDKNetwork(network))
   const parsedVaultId = isAddress(vaultId)
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
@@ -54,107 +69,10 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     redirect('/not-found')
   }
 
-  const [vault, { vaults }, rebalanceActivity, latestActivity] = await Promise.all([
-    getCachedVaultDetails({
-      vaultAddress: parsedVaultId,
-      network: parsedNetwork,
-    }),
-    getCachedVaultsList(),
-    // just to get info about total rebalance actions
-    getPaginatedRebalanceActivity({
-      page: 1,
-      limit: 1,
-    }),
-    // just to get info about total unique users
-    getPaginatedLatestActivity({
-      page: 1,
-      limit: 1,
-      filterOutUsersAddresses: userAddresesToFilterOut,
-    }),
-  ])
-
-  if (!vault) {
-    return (
-      <Text>
-        No vault found with the id {parsedVaultId} on the network {parsedNetwork}
-      </Text>
-    )
-  }
-
-  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
-
-  const allVaultsWithConfig = decorateVaultsWithConfig({
-    vaults,
-    systemConfig,
-    daoManagedVaultsList,
-  })
-
-  const [vaultWithConfig] = decorateVaultsWithConfig({
-    vaults: [vault],
-    systemConfig,
-    daoManagedVaultsList,
-  })
-
-  const [
-    fullArkInterestRatesMap,
-    latestArkInterestRatesMap,
-    vaultInterestRates,
-    vaultsApyRaw,
-    tvl,
-  ] = await Promise.all([
-    getArksInterestRates({
-      network: parsedNetwork,
-      arksList: vault.arks.filter(
-        (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
-      ),
-    }),
-    getArksInterestRates({
-      network: parsedNetwork,
-      arksList: vault.arks,
-      justLatestRates: true,
-    }),
-    getCachedVaultsHistoricalApy({
-      // just the vault displayed
-      fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
-      })),
-    }),
-    getCachedVaultsApy({
-      fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
-      })),
-    }),
-    getCachedTvl(),
-  ])
-
-  const arksHistoricalChartData = getArkHistoricalChartData({
-    vault: vaultWithConfig,
-    arkInterestRatesMap: fullArkInterestRatesMap,
-    vaultInterestRates,
-  })
-
-  const summerVaultName = getVaultNiceName({ vault: vaultWithConfig })
-
-  const totalRebalanceActions = rebalanceActivity.pagination.totalItems
-  const totalUsers = latestActivity.totalUniqueUsers
-  const vaultApyData =
-    vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`]
-
   return (
-    <VaultGridDetails vault={vaultWithConfig} vaults={allVaultsWithConfig}>
-      <VaultDetailsView
-        arksHistoricalChartData={arksHistoricalChartData}
-        summerVaultName={summerVaultName}
-        vault={vaultWithConfig}
-        arksInterestRates={latestArkInterestRatesMap}
-        totalRebalanceActions={totalRebalanceActions}
-        totalUsers={totalUsers}
-        vaultApyData={vaultApyData}
-        tvl={tvl}
-      />
-    </VaultGridDetails>
+    <Suspense fallback={<VaultDetailsLoadingView />}>
+      <VaultDetailsWithData network={network} vaultId={vaultId} />
+    </Suspense>
   )
 }
 

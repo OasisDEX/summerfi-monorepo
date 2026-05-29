@@ -1,45 +1,31 @@
-import { getDisplayToken, isVaultAtLeastDaysOld, Text } from '@summerfi/app-earn-ui'
-import { getArksInterestRates } from '@summerfi/app-server-handlers'
+import { Suspense } from 'react'
+import { getDisplayToken, isVaultAtLeastDaysOld } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
-  getServerSideCookies,
   humanNetworktoSDKNetwork,
-  parseServerResponseToClient,
   subgraphNetworkToId,
   supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
-import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
-import { cookies, headers } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { headers } from 'next/headers'
 import { isAddress } from 'viem'
 
-import { getCachedMedianDefiYield } from '@/app/server-handlers/cached/defillama/get-median-defi-yield'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedRwaVaultDetails } from '@/app/server-handlers/cached/get-rwa-vault-details'
-import { getCachedRwaVaultsList } from '@/app/server-handlers/cached/get-rwa-vaults-list'
-import { getCachedVaultCurationEvents } from '@/app/server-handlers/cached/get-vault-curation-events'
-import {
-  getCachedIsVaultDaoManaged,
-  getDaoManagedVaultsIDsList,
-} from '@/app/server-handlers/cached/get-vault-dao-managed'
+import { getCachedIsVaultDaoManaged } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
-import { getCachedVaultInfo } from '@/app/server-handlers/cached/get-vault-info'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
-import { getCachedVaultsBenchmark } from '@/app/server-handlers/cached/get-vaults-benchmark'
-import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
-import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import { getCachedRewardTokenPrice } from '@/app/server-handlers/reward-token-price'
-import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
-import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
-import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
+import { getVaultOpenCoreData } from '@/app/server-handlers/vault-open/get-vault-open-core-data'
+import { getVaultOpenCoreQueryKey } from '@/components/layout/VaultOpenView/vault-open-query-keys'
+import { VaultOpenLoadingView } from '@/components/layout/VaultOpenView/VaultOpenLoadingView'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
-import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { getServerQueryClient } from '@/helpers/get-server-query-client'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
@@ -54,183 +40,40 @@ type EarnVaultOpenPageProps = {
   }>
 }
 
-const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
-  const [{ network: paramsNetwork, vaultId }, cookieRaw, configRaw] = await Promise.all([
-    params,
-    cookies(),
-    getCachedConfig(),
-  ])
-  const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
-  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const systemConfig = parseServerResponseToClient(configRaw)
-  const cookie = cookieRaw.toString()
+const VaultOpenWithData = async ({
+  network,
+  vaultId,
+}: {
+  network: SupportedSDKNetworks
+  vaultId: string
+}) => {
+  const queryClient = getServerQueryClient()
 
-  const referralCode = getServerSideCookies('referralCode', cookie)
-
-  const parsedVaultId = !isAddress(vaultId)
-    ? vaultId.toLowerCase()
-    : (getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig) ??
-      vaultId.toLowerCase())
-
-  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig) // rough check
-
-  if (!parsedVaultId) {
-    redirect('/not-found')
-  }
-
-  const strategy = `${parsedVaultId}-${parsedNetwork}`
-
-  // Fetch initial data and start DAO check in parallel
-  const [
-    vault,
-    { vaults },
-    { vaults: rwaVaults },
-    medianDefiYield,
-    topDepositors,
-    latestActivity,
-    rebalanceActivity,
-    rewardTokenPrices,
-  ] = await Promise.all([
-    (isRwaVault ? getCachedRwaVaultDetails : getCachedVaultDetails)({
-      vaultAddress: parsedVaultId,
-      network: parsedNetwork,
-    }),
-    getCachedVaultsList(),
-    getCachedRwaVaultsList(),
-    getCachedMedianDefiYield(),
-    getPaginatedTopDepositors({
-      page: 1,
-      limit: 4,
-      strategies: [strategy],
-    }),
-    getPaginatedLatestActivity({
-      page: 1,
-      limit: 4,
-      strategies: [strategy],
-    }),
-    getPaginatedRebalanceActivity({
-      page: 1,
-      limit: 4,
-      strategies: [strategy],
-      startTimestamp: dayjs().subtract(30, 'days').unix(),
-    }),
-    getCachedRewardTokenPrice(),
-  ])
-
-  if (!vault) {
-    return (
-      <Text>
-        No vault found with the id {parsedVaultId} on the network {parsedNetwork}
-      </Text>
-    )
-  }
-  const allVaults = [...vaults, ...rwaVaults]
-
-  // Now get DAO managed vaults and vault info in parallel
-  const [daoManagedVaultsList, vaultInfo] = await Promise.all([
-    getDaoManagedVaultsIDsList(allVaults),
-    getCachedVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
-  ])
-
-  const [vaultWithConfig] = decorateVaultsWithConfig({
-    vaults: [vault],
-    systemConfig,
-    daoManagedVaultsList,
+  // Only the core (shell) is prefetched + hydrated so the header + deposit sidebar paint instantly
+  // from the server cache. The heavier details island (charts, vault exposure, activity tables) is
+  // intentionally left to its own client query, which streams it into the section skeletons after
+  // the shell — see useVaultOpenDetailsQuery / VaultOpenDetailsLoading.
+  await queryClient.prefetchQuery({
+    queryKey: getVaultOpenCoreQueryKey(network, vaultId),
+    queryFn: () => getVaultOpenCoreData({ network, vaultId }),
   })
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (vault && !vaultWithConfig) {
-    return (
-      <Text>
-        No vault found with the id {parsedVaultId} on the network {parsedNetwork}
-      </Text>
-    )
-  }
-
-  const allVaultsWithConfig = decorateVaultsWithConfig({
-    vaults: allVaults,
-    systemConfig,
-    daoManagedVaultsList,
-  })
-
-  const [
-    { apy30d: vaultBenchmarkApy30d, chartData: vaultBenchmark },
-    fullArkInterestRatesMap,
-    latestArkInterestRatesMap,
-    vaultInterestRates,
-    vaultsApyRaw,
-    curationEvents,
-  ] = await Promise.all([
-    getCachedVaultsBenchmark({
-      vaultChainId: subgraphNetworkToId(parsedNetwork),
-      vaultToken: vault.inputToken.symbol,
-    }),
-    getArksInterestRates({
-      network: parsedNetwork,
-      arksList: vaultWithConfig.arks.filter(
-        (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
-      ),
-    }),
-    getArksInterestRates({
-      network: parsedNetwork,
-      arksList: vaultWithConfig.arks,
-      justLatestRates: true,
-    }),
-    getCachedVaultsHistoricalApy({
-      // just the vault displayed
-      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-      })),
-    }),
-    getCachedVaultsApy({
-      fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-      })),
-    }),
-    getCachedVaultCurationEvents({
-      network: parsedNetwork,
-      vault: vaultWithConfig,
-      timestampFrom: dayjs().subtract(30, 'days').unix(),
-    }),
-  ])
-
-  const arksHistoricalChartData = getArkHistoricalChartData({
-    vault: vaultWithConfig,
-    arkInterestRatesMap: fullArkInterestRatesMap,
-    vaultInterestRates,
-    vaultBenchmark,
-  })
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const vaultApyData = vaultsApyRaw[
-    `${vaultWithConfig.id}-${subgraphNetworkToId(supportedSDKNetwork(vaultWithConfig.protocol.network))}`
-  ] || { sma7d: null, sma30d: null, current: null }
-
-  const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
 
   return (
-    <VaultOpenView
-      vault={vaultWithConfig}
-      vaults={allVaultsWithConfig}
-      latestActivity={latestActivity}
-      topDepositors={topDepositors}
-      rebalanceActivity={rebalanceActivity}
-      curationEvents={curationEvents}
-      medianDefiYield={
-        vaultBenchmarkApy30d && Number(Number(vaultBenchmarkApy30d) * 100) > 0
-          ? Number(vaultBenchmarkApy30d) * 100
-          : medianDefiYield
-      }
-      arksHistoricalChartData={arksHistoricalChartData}
-      arksInterestRates={latestArkInterestRatesMap}
-      vaultApyData={vaultApyData}
-      // vaultsApyRaw={vaultsApyRaw}
-      referralCode={referralCode}
-      vaultInfo={vaultInfoParsed}
-      rewardTokenPrices={rewardTokenPrices}
-    />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <VaultOpenView network={network} vaultId={vaultId} />
+    </HydrationBoundary>
+  )
+}
+
+const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
+  const { network, vaultId } = await params
+
+  // The await above only parses the URL; the data prefetch lives inside the Suspense boundary so
+  // the skeleton streams immediately while the prefetch resolves and streams in after it.
+  return (
+    <Suspense fallback={<VaultOpenLoadingView />}>
+      <VaultOpenWithData network={network} vaultId={vaultId} />
+    </Suspense>
   )
 }
 

@@ -37,7 +37,8 @@
     "armada:install": "git submodule update --init armada-protocol/contracts && cd armada-protocol/contracts && pnpm i",
     "armada:generate": "zx bin/generate.mjs",
     "armada:genindex": "cd armada-protocol/abis && pnpm run genindex",
-    "armada:upconfig": "cd armada-protocol/contracts/packages/deployment/config && cp -r index.json ../../../../../sdk/armada-protocol-common/src/deployments/config.json"
+    "armada:upconfig": "cd armada-protocol/contracts/packages/deployment/config && cp -r index.json ../../../../../sdk/armada-protocol-common/src/deployments/config.json",
+    "cicheck:earn-frontend": "turbo run cicheck --cache-dir=.turbo --filter=@summerfi/earn-protocol... --filter=@summerfi/earn-protocol-landing-page... --filter=@summerfi/earn-protocol-institutions..."
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.732.0",

@@ -1,19 +1,19 @@
 'use client'
+import { type FC, type ReactNode, useState } from 'react'
 import {
   Card,
   Expander,
   getDisplayToken,
   getUniqueVaultId,
   getVaultDetailsUrl,
+  SkeletonLine,
   Text,
   VaultExposure,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
-  type ArksHistoricalChartData,
-  type InterestRates,
-  type PerformanceChartData,
   type SDKVaultishType,
+  type SupportedSDKNetworks,
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
@@ -25,16 +25,20 @@ import {
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
-import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
-import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
-import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import {
+  useVaultManageCurationQuery,
+  useVaultManageExposureQuery,
+  useVaultManagePerformanceQuery,
+  useVaultManageRebalancingQuery,
+  useVaultManageUserActivityQuery,
+  useVaultManageYieldChartQuery,
+} from '@/components/layout/VaultManageView/useVaultManageQuery'
 import { detailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
 import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { CurationActivity } from '@/features/curation-activity/components/CurationActivity/CurationActivity'
-import { type VaultCurationEvent } from '@/features/curation-activity/types'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
@@ -42,29 +46,22 @@ import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/us
 
 import vaultManageViewStyles from './VaultManageView.module.css'
 
-export const VaultManageViewDetails = ({
-  vault,
-  arksHistoricalChartData,
-  performanceChartData,
-  arksInterestRates,
-  vaultApyData,
-  rebalanceActivity,
-  latestActivity,
-  topDepositors,
-  curationEvents,
-  viewWalletAddress,
-}: {
+// Loader shown inside an expander while its lazily-fetched section is loading.
+const SectionLoader = () => (
+  <SkeletonLine
+    height={448}
+    radius="var(--radius-roundish)"
+    style={{ marginTop: 'var(--spacing-space-medium)' }}
+  />
+)
+
+export const VaultManageViewDetails: FC<{
+  network: SupportedSDKNetworks
+  vaultId: string
+  viewWalletAddress: string
   vault: SDKVaultishType
-  arksHistoricalChartData: ArksHistoricalChartData
-  performanceChartData: PerformanceChartData
-  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
-  rebalanceActivity: RebalanceActivityPagination
-  latestActivity: LatestActivityPagination
-  topDepositors: TopDepositorsPagination
-  curationEvents: VaultCurationEvent[]
-  viewWalletAddress?: string
-}) => {
+}> = ({ network, vaultId, viewWalletAddress, vault, vaultApyData }) => {
   const vaultBenchmarkAsset = ['ETH', 'WETH'].includes(vault.inputToken.symbol.toUpperCase())
     ? 'ETH'
     : 'USD'
@@ -77,9 +74,53 @@ export const VaultManageViewDetails = ({
     sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
   )
 
-  const handleExpanderToggle = (expanderId: string) => (isOpen: boolean) => {
-    buttonClickEventHandler(`vault-manage-expander-${expanderId}-${isOpen ? 'open' : 'close'}`)
-  }
+  // Each lazy expander tracks its own open state so the matching query is only `enabled` (and thus
+  // only fetched) once the user reveals it. The performance chart is open by default, so it starts
+  // enabled. Re-collapsing keeps the cached data; re-expanding doesn't refetch within staleTime.
+  const [performanceOpen, setPerformanceOpen] = useState(true)
+  const [yieldOpen, setYieldOpen] = useState(false)
+  const [exposureOpen, setExposureOpen] = useState(false)
+  const [rebalancingOpen, setRebalancingOpen] = useState(false)
+  const [curationOpen, setCurationOpen] = useState(false)
+  const [userActivityOpen, setUserActivityOpen] = useState(false)
+
+  const performanceQuery = useVaultManagePerformanceQuery(
+    network,
+    vaultId,
+    viewWalletAddress,
+    performanceOpen,
+  )
+  const yieldQuery = useVaultManageYieldChartQuery(network, vaultId, viewWalletAddress, yieldOpen)
+  const exposureQuery = useVaultManageExposureQuery(
+    network,
+    vaultId,
+    viewWalletAddress,
+    exposureOpen,
+  )
+  const rebalancingQuery = useVaultManageRebalancingQuery(
+    network,
+    vaultId,
+    viewWalletAddress,
+    rebalancingOpen,
+  )
+  const curationQuery = useVaultManageCurationQuery(
+    network,
+    vaultId,
+    viewWalletAddress,
+    curationOpen,
+  )
+  const userActivityQuery = useVaultManageUserActivityQuery(
+    network,
+    vaultId,
+    viewWalletAddress,
+    userActivityOpen,
+  )
+
+  const handleExpand =
+    (expanderId: string, setOpen: (open: boolean) => void) => (isOpen: boolean) => {
+      setOpen(isOpen)
+      buttonClickEventHandler(`vault-manage-expander-${expanderId}-${isOpen ? 'open' : 'close'}`)
+    }
 
   return [
     <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
@@ -89,13 +130,17 @@ export const VaultManageViewDetails = ({
             Forecasted Market Value
           </Text>
         }
-        onExpand={handleExpanderToggle('performance')}
+        onExpand={handleExpand('performance', setPerformanceOpen)}
         defaultExpanded
       >
-        <PositionPerformanceChart
-          chartData={performanceChartData}
-          inputToken={getDisplayToken(vault.inputToken.symbol)}
-        />
+        {performanceQuery.data ? (
+          <PositionPerformanceChart
+            chartData={performanceQuery.data.performanceChartData}
+            inputToken={getDisplayToken(vault.inputToken.symbol)}
+          />
+        ) : (
+          <SectionLoader />
+        )}
       </Expander>
     </div>,
     <div className={vaultManageViewStyles.leftContentWrapper} key="AboutTheStrategy">
@@ -153,14 +198,18 @@ export const VaultManageViewDetails = ({
             Historical yield
           </Text>
         }
-        onExpand={handleExpanderToggle('historical-yield')}
+        onExpand={handleExpand('historical-yield', setYieldOpen)}
       >
-        <ArkHistoricalYieldChart
-          chartId="manage-view"
-          chartData={arksHistoricalChartData}
-          summerVaultName={getVaultNiceName({ vault })}
-          vaultBenchmarkName={vaultBenchmarkName}
-        />
+        {yieldQuery.data ? (
+          <ArkHistoricalYieldChart
+            chartId="manage-view"
+            chartData={yieldQuery.data.arksHistoricalChartData}
+            summerVaultName={getVaultNiceName({ vault })}
+            vaultBenchmarkName={vaultBenchmarkName}
+          />
+        ) : (
+          <SectionLoader />
+        )}
       </Expander>
       <Expander
         title={
@@ -168,18 +217,22 @@ export const VaultManageViewDetails = ({
             Vault exposure
           </Text>
         }
-        onExpand={handleExpanderToggle('vault-exposure')}
+        onExpand={handleExpand('vault-exposure', setExposureOpen)}
       >
-        <VaultExposureDescription humanReadableNetwork={humanReadableNetwork} vault={vault}>
-          <VaultExposure
-            vault={vault}
-            arksInterestRates={arksInterestRates}
-            vaultApyData={vaultApyData}
-            columnsToHide={vaultExposureColumnsToHideOpenManage}
-            tableId="vault-manage"
-            buttonClickEventHandler={buttonClickEventHandler}
-          />
-        </VaultExposureDescription>
+        {exposureQuery.data ? (
+          <VaultExposureDescription humanReadableNetwork={humanReadableNetwork} vault={vault}>
+            <VaultExposure
+              vault={vault}
+              arksInterestRates={exposureQuery.data.arksInterestRates}
+              vaultApyData={vaultApyData}
+              columnsToHide={vaultExposureColumnsToHideOpenManage}
+              tableId="vault-manage"
+              buttonClickEventHandler={buttonClickEventHandler}
+            />
+          </VaultExposureDescription>
+        ) : (
+          <SectionLoader />
+        )}
       </Expander>
       <Expander
         title={
@@ -187,7 +240,7 @@ export const VaultManageViewDetails = ({
             Strategy management fee
           </Text>
         }
-        onExpand={handleExpanderToggle('strategy-management-fee')}
+        onExpand={handleExpand('strategy-management-fee', () => undefined)}
       >
         <Card style={{ flexDirection: 'column', marginTop: 'var(--general-space-16)' }}>
           <Text
@@ -223,15 +276,19 @@ export const VaultManageViewDetails = ({
             Rebalancing activity
           </Text>
         }
-        onExpand={handleExpanderToggle('rebalancing-activity')}
+        onExpand={handleExpand('rebalancing-activity', setRebalancingOpen)}
       >
-        <RebalancingActivity
-          rebalanceActivity={rebalanceActivity}
-          vaultId={getUniqueVaultId(vault)}
-          tableId="vault-manage-rebalancing-activity"
-          buttonClickEventHandler={buttonClickEventHandler}
-          tooltipEventHandler={tooltipEventHandler}
-        />
+        {rebalancingQuery.data ? (
+          <RebalancingActivity
+            rebalanceActivity={rebalancingQuery.data.rebalanceActivity}
+            vaultId={getUniqueVaultId(vault)}
+            tableId="vault-manage-rebalancing-activity"
+            buttonClickEventHandler={buttonClickEventHandler}
+            tooltipEventHandler={tooltipEventHandler}
+          />
+        ) : (
+          <SectionLoader />
+        )}
       </Expander>
       <Expander
         title={
@@ -239,9 +296,13 @@ export const VaultManageViewDetails = ({
             Curation activity
           </Text>
         }
-        onExpand={handleExpanderToggle('curation-activity')}
+        onExpand={handleExpand('curation-activity', setCurationOpen)}
       >
-        <CurationActivity vault={vault} curationEvents={curationEvents} />
+        {curationQuery.data ? (
+          <CurationActivity vault={vault} curationEvents={curationQuery.data.curationEvents} />
+        ) : (
+          <SectionLoader />
+        )}
       </Expander>
       <Expander
         title={
@@ -249,19 +310,23 @@ export const VaultManageViewDetails = ({
             User activity
           </Text>
         }
-        onExpand={handleExpanderToggle('user-activity')}
+        onExpand={handleExpand('user-activity', setUserActivityOpen)}
       >
-        <LatestActivity
-          latestActivity={latestActivity}
-          topDepositors={topDepositors}
-          vaultId={getUniqueVaultId(vault)}
-          page="manage"
-          noHighlight
-          walletAddress={viewWalletAddress}
-          tableId="vault-manage-user-activity"
-          buttonClickEventHandler={buttonClickEventHandler}
-        />
+        {userActivityQuery.data ? (
+          <LatestActivity
+            latestActivity={userActivityQuery.data.latestActivity}
+            topDepositors={userActivityQuery.data.topDepositors}
+            vaultId={getUniqueVaultId(vault)}
+            page="manage"
+            noHighlight
+            walletAddress={viewWalletAddress}
+            tableId="vault-manage-user-activity"
+            buttonClickEventHandler={buttonClickEventHandler}
+          />
+        ) : (
+          <SectionLoader />
+        )}
       </Expander>
     </div>,
-  ]
+  ] as ReactNode[]
 }
