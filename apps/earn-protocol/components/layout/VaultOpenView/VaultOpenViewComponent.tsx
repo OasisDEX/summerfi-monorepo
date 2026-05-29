@@ -9,8 +9,10 @@ import {
   sidebarFootnote,
   SidebarMobileHeader,
   type SidebarProps,
+  Text,
   useAmount,
   useAmountWithSwap,
+  useEarnProtocolLogin,
   useEarnProtocolWallet,
   useForecast,
   useIsIframe,
@@ -60,6 +62,7 @@ import { TransakWidget } from '@/features/transak/components/TransakWidget/Trans
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useIsWhitelisted } from '@/hooks/use-is-whitelisted'
 import {
   useHandleButtonClickEvent,
   useHandleDropdownChangeEvent,
@@ -128,6 +131,14 @@ export const VaultOpenViewComponent = ({
   // const migrationsEnabled = !!features?.Migrations
 
   const { address: userWalletAddress } = useEarnProtocolWallet()
+  const { login, logout } = useEarnProtocolLogin()
+
+  // RWA vaults are permissioned: disconnect the current wallet and restart the
+  // login flow so the user can connect a wallet that has passed KYC/AML checks.
+  const handleConnectWhitelistedWallet = useCallback(async () => {
+    await logout()
+    login()
+  }, [login, logout])
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 
@@ -311,6 +322,14 @@ export const VaultOpenViewComponent = ({
     selectedToken,
     inputChangeHandler,
     inputName: 'vault-open-approval-amount',
+  })
+
+  const { isWhitelisted, isLoading: isWhitelistedLoading } = useIsWhitelisted({
+    isRwaVault,
+    sdk,
+    walletAddress: userWalletAddress,
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
   })
 
   const {
@@ -515,10 +534,36 @@ export const VaultOpenViewComponent = ({
 
   const nextTransactionType = nextTransaction?.type
 
-  const resovledSidebarProps =
-    tosState.status !== TOSStatus.DONE &&
-    nextTransactionType &&
-    [TransactionType.Approve, TransactionType.Deposit].includes(nextTransactionType)
+  // RWA vaults can only be entered by whitelisted wallets. Until the connected wallet is
+  // confirmed whitelisted, replace the deposit/TOS sidebar with the permissioned notice.
+  const showPermissionedSidebar = isRwaVault && !isWhitelisted
+
+  const permissionedSidebarProps: SidebarProps = {
+    title: 'Permissioned Vault',
+    content: (
+      <Text
+        as="p"
+        variant="p3semi"
+        style={{ color: 'var(--earn-protocol-secondary-60)', margin: '8px 0 24px 0' }}
+      >
+        This Vault is restricted to users and their wallets which have been approved for access
+        through KYC/AML checks either through Summer.fi or an approved custodian or wallet provider.
+      </Text>
+    ),
+    primaryButton: {
+      label: 'Connect a whitelisted wallet',
+      action: handleConnectWhitelistedWallet,
+      loading: isWhitelistedLoading,
+    },
+    isMobileOrTablet,
+    handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
+  }
+
+  const resovledSidebarProps = showPermissionedSidebar
+    ? permissionedSidebarProps
+    : tosState.status !== TOSStatus.DONE &&
+        nextTransactionType &&
+        [TransactionType.Approve, TransactionType.Deposit].includes(nextTransactionType)
       ? tosSidebarProps
       : sidebarProps
 
