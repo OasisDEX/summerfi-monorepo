@@ -136,6 +136,7 @@ export const VaultGridDetails = ({
               networkName={supportedSDKNetwork(vault.protocol.network)}
               isNewVault={isNewVault}
               isDaoManagedVault={vault.isDaoManaged}
+              isRwaVault={vault.isRwaVault}
             />
           </Dropdown>
           <Button

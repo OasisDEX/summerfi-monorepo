@@ -31,6 +31,7 @@ interface VaultTitleProps {
   iconSize?: number
   isNewVault?: boolean
   isDaoManagedVault?: boolean
+  isRwaVault?: boolean
 }
 
 export const VaultTitle: FC<VaultTitleProps> = ({
@@ -45,6 +46,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   iconSize = 44,
   isNewVault = false,
   isDaoManagedVault,
+  isRwaVault,
 }) => {
   const resolvedSymbol = getDisplayToken(symbol)
   const isIconDefined = getTokenGuarded(resolvedSymbol)?.iconName
@@ -92,7 +94,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
           >
             {isLoading ? <SkeletonLine height={40} width={70} /> : resolvedSymbol}
             {isNewVault && !isLoading && <Emphasis variant="p2semiColorful">New!</Emphasis>}
-            {!isLoading && typeof isDaoManagedVault !== 'undefined' ? (
+            {!isLoading && !isRwaVault && typeof isDaoManagedVault !== 'undefined' ? (
               <RiskManagedPill isDaoManagedVault={isDaoManagedVault} />
             ) : null}
           </Text>

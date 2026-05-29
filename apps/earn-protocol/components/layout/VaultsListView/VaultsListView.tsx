@@ -1,82 +1,47 @@
 'use client'
 
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
-  Card,
-  DataBlock,
-  Emphasis,
-  getRewardsTokenBonus,
   getUniqueVaultId,
   getVaultPositionUrl,
-  getVaultsProtocolsList,
   getVaultUrl,
-  SumrStakeCard,
-  TabBar,
-  Text,
-  useAmount,
-  useAmountWithSwap,
   useEarnProtocolWallet,
   useLocalConfig,
   useMobileCheck,
-  useTokenSelector,
-  VaultCard,
   VaultGrid,
-  VaultSimulationForm,
 } from '@summerfi/app-earn-ui'
 import {
-  type DropdownRawOption,
   type GetVaultsApyResponse,
-  type IToken,
   type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
-  type SupportedSDKNetworks,
   type TokenSymbolsList,
-  TransactionAction,
 } from '@summerfi/app-types'
-import {
-  convertWethToEth,
-  findVaultInfo,
-  formatAddress,
-  formatCryptoBalance,
-  formatPercent,
-  sdkNetworkToHumanNetwork,
-  slugifyVault,
-  subgraphNetworkToId,
-  subgraphNetworkToSDKId,
-  supportedSDKNetwork,
-  zero,
-} from '@summerfi/app-utils'
+import { convertWethToEth, slugifyVault, supportedSDKNetwork } from '@summerfi/app-utils'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
-import BigNumber from 'bignumber.js'
-import { capitalize } from 'lodash-es'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import { VaultsSorting } from '@/components/layout/VaultsListView/types'
+import { useDaoManagedBannerData } from '@/components/layout/VaultsListView/use-dao-managed-banner-data'
+import { useSumrStakingRewards } from '@/components/layout/VaultsListView/use-sumr-staking-rewards'
+import { useVaultSimulation } from '@/components/layout/VaultsListView/use-vault-simulation'
+import { useVaultsListFiltering } from '@/components/layout/VaultsListView/use-vaults-list-filtering'
 import { useVaultsListQueryParams } from '@/components/layout/VaultsListView/use-vaults-list-query-params'
-import { VaultsListDaoManagedVaultBanner } from '@/components/layout/VaultsListView/VaultsListDaoManagedVaultBanner'
-import { VaultsFiltersIntermediary } from '@/components/layout/VaultsListView/VaultsListFilters'
-import { VaultsInfoSidebarBlock } from '@/components/molecules/VaultsInfoSidebarBlock/VaultsInfoSidebarBlock'
-import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
+import { useVaultsListQuery } from '@/components/layout/VaultsListView/useVaultsListQuery'
+import { VaultSimulationSidebar } from '@/components/layout/VaultsListView/VaultSimulationSidebar'
+import { VaultsListCards } from '@/components/layout/VaultsListView/VaultsListCards'
+import { VaultsListMetrics } from '@/components/layout/VaultsListView/VaultsListMetrics'
+import { VaultsListTabs } from '@/components/layout/VaultsListView/VaultsListTabs'
+import {
+  VaultsListLeftContentLoading,
+  VaultsListViewLoading,
+} from '@/components/layout/VaultsListView/VaultsListViewLoading'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
-import { getManagementFee } from '@/helpers/get-management-fee'
-import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
-import { useAppSDK } from '@/hooks/use-app-sdk'
-import {
-  useHandleButtonClickEvent,
-  useHandleDropdownChangeEvent,
-  useHandleInputChangeEvent,
-  useHandleTooltipOpenEvent,
-} from '@/hooks/use-mixpanel-event'
-import { usePosition } from '@/hooks/use-position'
+import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 import { useRevalidateVaultsListData } from '@/hooks/use-revalidate'
-import { useTokenBalances } from '@/hooks/use-tokens-balances'
 
-import vaultsListViewStyles from './VaultsListView.module.css'
-
-type VaultsListViewProps = {
+type VaultsListViewInnerProps = {
   vaultsList: SDKVaultsListType
   filteredWalletAssetsVaults: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
@@ -84,13 +49,19 @@ type VaultsListViewProps = {
   sumrPriceUsd: number
   rewardTokenPrices: RewardTokenPrices
   tvl: number
+  instantLiquidity: number
+  protocolsList: {
+    topProtocols: string[]
+    allVaultsProtocols: string[]
+  }
+  vaultsListLoading?: boolean
 }
 
-const getVaultApySelector = (vault: SDKVaultishType) => {
-  return `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}` as keyof GetVaultsApyResponse
+type VaultsListViewProps = {
+  walletAddress?: string
 }
 
-export const VaultsListView = ({
+const VaultsListViewInner = ({
   vaultsList,
   filteredWalletAssetsVaults,
   vaultsApyByNetworkMap,
@@ -98,25 +69,24 @@ export const VaultsListView = ({
   sumrPriceUsd,
   rewardTokenPrices,
   tvl,
-}: VaultsListViewProps) => {
+  instantLiquidity,
+  protocolsList,
+  vaultsListLoading,
+}: VaultsListViewInnerProps) => {
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
   const queryParams = useSearchParams()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const buttonClickEventHandler = useHandleButtonClickEvent()
-  const inputChangeHandler = useHandleInputChangeEvent()
-  const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const revalidateVaultsListData = useRevalidateVaultsListData()
   const { features } = useSystemConfig()
-  const [maxApy, setMaxApy] = useState<number>(0)
-  const [sumrRewardApy, setSumrRewardApy] = useState<string | undefined>()
-  const [isLoadingRewardRates, setIsLoadingRewardRates] = useState<boolean>(true)
   const {
-    state: { sumrNetApyConfig, slippageConfig },
+    state: { sumrNetApyConfig },
   } = useLocalConfig()
-
   const { sumrStakeInfo } = useUserStakeInfo()
+  const { updateQueryParams } = useVaultsListQueryParams()
+  const { isMobileOrTablet } = useMobileCheck(deviceType)
 
   const stakingV2Enabled = !!features?.StakingV2
   const daoManagedVaultsEnabled = !!features?.DaoManagedVaults
@@ -125,209 +95,28 @@ export const VaultsListView = ({
   const sumrAvailableToStake =
     Number(sumrStakeInfo?.sumrBalances.total ?? 0) +
     Number(sumrStakeInfo?.sumrStakeInfo.stakedAmount ?? 0)
-
   const sumrAvailableToStakeUSD = sumrAvailableToStake * sumrPriceUsd
 
-  const { isMobileOrTablet } = useMobileCheck(deviceType)
-  const filterNetworks = useMemo(() => queryParams.get('networks')?.split(',') ?? [], [queryParams])
-  const filterAssets = useMemo(() => queryParams.get('assets')?.split(',') ?? [], [queryParams])
-  const filterWallet = useMemo(() => queryParams.get('walletAddress') ?? '', [queryParams])
-  const filterVaults = useMemo(() => queryParams.get('vaults')?.split(',') ?? [], [queryParams])
-  const isPermissionedRwaTab = rwaVaultsEnabled && filterVaults.includes('permissioned-rwa-vaults')
-  const sortingMethodId = useMemo(
-    () => queryParams.get('sort') ?? VaultsSorting.HIGHEST_APY,
-    [queryParams],
-  )
-
-  const vaultsFilteredByType = useMemo(() => {
-    if (rwaVaultsEnabled) {
-      if (isPermissionedRwaTab) {
-        return []
-      }
-
-      return filterWallet ? filteredWalletAssetsVaults : vaultsList
-    }
-
-    if (!daoManagedVaultsEnabled) {
-      return vaultsList
-    }
-
-    const vaultsListToUse = filterWallet ? filteredWalletAssetsVaults : vaultsList
-
-    if (filterVaults.includes('dao-risk-managed')) {
-      return vaultsListToUse.filter((vault) => {
-        return vault.isDaoManaged
-      })
-    } else {
-      return vaultsListToUse.filter((vault) => {
-        return !vault.isDaoManaged
-      })
-    }
-  }, [
-    daoManagedVaultsEnabled,
+  const {
+    filterNetworks,
+    filterAssets,
     filterWallet,
-    filteredWalletAssetsVaults,
-    isPermissionedRwaTab,
-    rwaVaultsEnabled,
-    vaultsList,
     filterVaults,
-  ])
-
-  const sdk = useAppSDK()
-
-  const fetchStakingData = useCallback(async () => {
-    try {
-      setIsLoadingRewardRates(true)
-      // Fetch all data in parallel
-      const [rewardRates] = await Promise.all([
-        sdk.getStakingRewardRatesV2({
-          sumrPriceUsd,
-        }),
-      ])
-
-      setMaxApy(rewardRates.maxApy.value)
-      const summerRewardApyValue = formatPercent(
-        new BigNumber(rewardRates.summerRewardYield.value).times(MAX_MULTIPLE),
-        {
-          precision: 2,
-        },
-      )
-
-      setSumrRewardApy(summerRewardApyValue)
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to fetch staking data:', error)
-    } finally {
-      setIsLoadingRewardRates(false)
-    }
-  }, [sdk, sumrPriceUsd])
-
-  // Fetch all staking data on mount
-  useEffect(() => {
-    void fetchStakingData()
-  }, [fetchStakingData])
-
-  const filterAssetVaults = useCallback(
-    (vault: (typeof vaultsList)[number]) => {
-      const assetsFilterList = [...filterAssets.map((asset) => asset.toLowerCase())]
-
-      if (assetsFilterList.includes('eth')) {
-        assetsFilterList.push('weth')
-      }
-      if (assetsFilterList.includes('USDT'.toLowerCase())) {
-        assetsFilterList.push('USD₮0'.toLowerCase())
-      }
-
-      const filtered = assetsFilterList.includes(vault.inputToken.symbol.toLowerCase())
-
-      return filtered
-    },
-    [filterAssets],
-  )
-
-  const filterNetworkVaults = useCallback(
-    ({ protocol }: (typeof vaultsList)[number]) => {
-      const filtered = filterNetworks
-        .map((network) => network.toLowerCase())
-        .includes(protocol.network.toLowerCase())
-
-      return filtered
-    },
-    [filterNetworks],
-  )
-
-  const sortVaults = useCallback(
-    (a: (typeof vaultsList)[number], b: (typeof vaultsList)[number]) => {
-      const aTvl = a.totalValueLockedUSD
-      const bTvl = b.totalValueLockedUSD
-
-      if (sortingMethodId === VaultsSorting.HIGHEST_TVL) {
-        return Number(aTvl) > Number(bTvl) ? -1 : 1
-      }
-
-      const aMerklRewards = findVaultInfo(vaultsInfo, a)?.merklRewards
-      const bMerklRewards = findVaultInfo(vaultsInfo, b)?.merklRewards
-
-      const aRewards = getRewardsTokenBonus({
-        merklRewards: aMerklRewards,
-        tokensPriceMap: rewardTokenPrices,
-        totalValueLockedUSD: aTvl,
-      }).rawTokenBonus
-      const bRewards = getRewardsTokenBonus({
-        merklRewards: bMerklRewards,
-        tokensPriceMap: rewardTokenPrices,
-        totalValueLockedUSD: bTvl,
-      }).rawTokenBonus
-
-      if (sortingMethodId === VaultsSorting.HIGHEST_REWARDS) {
-        return Number(aRewards) > Number(bRewards) ? -1 : 1
-      }
-
-      const { rawTokenBonus: aRawSumrTokenBonus } = getRewardsTokenBonus({
-        merklRewards: aMerklRewards,
-        tokensPriceMap: rewardTokenPrices,
-        totalValueLockedUSD: aTvl,
-      })
-      const { rawTokenBonus: bRawSumrTokenBonus } = getRewardsTokenBonus({
-        merklRewards: bMerklRewards,
-        tokensPriceMap: rewardTokenPrices,
-        totalValueLockedUSD: bTvl,
-      })
-      const aApy =
-        vaultsApyByNetworkMap[
-          `${a.id}-${subgraphNetworkToId(supportedSDKNetwork(a.protocol.network))}`
-        ]
-
-      const bApy =
-        vaultsApyByNetworkMap[
-          `${b.id}-${subgraphNetworkToId(supportedSDKNetwork(b.protocol.network))}`
-        ]
-
-      // default sorting method which is VaultsSorting.HIGHEST_APY
-      return Number(aApy.apy + Number(Number(aRawSumrTokenBonus))) >
-        Number(bApy.apy + Number(Number(bRawSumrTokenBonus)))
-        ? -1
-        : 1
-    },
-    [vaultsApyByNetworkMap, sortingMethodId, vaultsInfo, rewardTokenPrices],
-  )
-
-  const filteredSafeVaultsList = useMemo(() => {
-    // the 'safe' means theres always gonna be a vault on this list (even if the filteredAndSortedVaults
-    // is empty due to filters) but we try to make it at least have something in common with the filters
-    const [vaultFilteredByNetwork] = vaultsList.filter(filterNetworkVaults)
-    const [vaultFilteredByAssets] = vaultsList
-      .filter(filterAssetVaults)
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      .filter((vault) => vault.id !== vaultFilteredByNetwork?.id)
-
-    const vaultsSafeSorted = [vaultFilteredByAssets, vaultFilteredByNetwork]
-      .filter(Boolean)
-      .sort(sortVaults)
-
-    return [...(vaultsSafeSorted.length ? vaultsSafeSorted : [vaultsList[0]])]
-  }, [filterAssetVaults, filterNetworkVaults, sortVaults, vaultsList])
-
-  const filteredAndSortedVaults = useMemo(() => {
-    const networkFilteredVaults = filterNetworks.length
-      ? vaultsFilteredByType.filter(filterNetworkVaults)
-      : vaultsFilteredByType
-
-    const assetFilteredVaults = filterAssets.length
-      ? (networkFilteredVaults.filter(filterAssetVaults) as SDKVaultishType[] | undefined)
-      : networkFilteredVaults
-
-    const sortedVaults = assetFilteredVaults?.sort(sortVaults)
-
-    return sortedVaults
-  }, [
-    vaultsFilteredByType,
-    filterNetworks.length,
-    filterNetworkVaults,
-    filterAssets.length,
-    filterAssetVaults,
-    sortVaults,
-  ])
+    isPermissionedRwaTab,
+    sortingMethodId,
+    vaultMetricsMap,
+    filteredAndSortedVaults,
+    filteredSafeVaultsList,
+  } = useVaultsListFiltering({
+    vaultsList,
+    filteredWalletAssetsVaults,
+    vaultsApyByNetworkMap,
+    vaultsInfo,
+    rewardTokenPrices,
+    queryParams,
+    daoManagedVaultsEnabled,
+    rwaVaultsEnabled,
+  })
 
   const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
     filteredAndSortedVaults?.length
@@ -342,11 +131,9 @@ export const VaultsListView = ({
     [filteredAndSortedVaults, filteredSafeVaultsList, selectedVaultId],
   )
 
-  const usingSafeVaultsList = !isPermissionedRwaTab && !filteredAndSortedVaults?.[0]
-  const resolvedVaultData = isPermissionedRwaTab
-    ? undefined
-    : (selectedVaultData ?? filteredAndSortedVaults?.[0] ?? filteredSafeVaultsList[0])
-  const activeVaultData = resolvedVaultData ?? vaultsList[0]
+  const usingSafeVaultsList = !filteredAndSortedVaults?.[0]
+  const activeVaultData =
+    selectedVaultData ?? filteredAndSortedVaults?.[0] ?? filteredSafeVaultsList[0]
 
   useEffect(() => {
     // update the selected vault id when the query params change
@@ -365,35 +152,9 @@ export const VaultsListView = ({
     }
   }, [filteredAndSortedVaults, filteredSafeVaultsList, selectedVaultId])
 
-  const { position: positionExists, isLoading } = usePosition({
-    chainId: subgraphNetworkToSDKId(supportedSDKNetwork(activeVaultData.protocol.network)),
-    vaultId: activeVaultData.id,
-    onlyActive: true,
-    cached: true,
-  })
-
-  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions, setSelectedTokenOption } =
-    useTokenSelector({
-      vault: activeVaultData,
-      chainId: subgraphNetworkToSDKId(supportedSDKNetwork(activeVaultData.protocol.network)),
-    })
-
-  const tokenBalances = useTokenBalances({
-    tokenSymbol: selectedTokenOption.value,
-    network: supportedSDKNetwork(activeVaultData.protocol.network),
-    vaultTokenSymbol: activeVaultData.inputToken.symbol,
-    cached: true,
-  })
-
-  // wrapper to show skeleton immediately when changing token
-  const handleTokenSelectionChangeWrapper = (option: DropdownRawOption) => {
-    dropdownChangeHandler({
-      inputName: `vault-list-token-selector-${slugifyVault(activeVaultData)}`,
-      value: option.value,
-    })
-    tokenBalances.handleSetTokenBalanceLoading(true)
-    handleTokenSelectionChange(option)
-  }
+  const simulation = useVaultSimulation(activeVaultData)
+  const { maxApy, sumrRewardApy, isLoadingRewardRates } = useSumrStakingRewards(sumrPriceUsd)
+  const daoManagedVaultsBannerData = useDaoManagedBannerData({ vaultsList, vaultMetricsMap })
 
   const handleChangeVault = (nextselectedVaultId: string) => {
     if (nextselectedVaultId === selectedVaultId) {
@@ -401,7 +162,7 @@ export const VaultsListView = ({
         `vaults-list-vault-card-${slugifyVault(activeVaultData)}-double-click`,
       )
       const vaultUrl =
-        positionExists && userWalletAddress
+        simulation.positionExists && userWalletAddress
           ? getVaultPositionUrl({
               network: supportedSDKNetwork(activeVaultData.protocol.network),
               vaultId: activeVaultData.id,
@@ -417,123 +178,18 @@ export const VaultsListView = ({
     setSelectedVaultId(nextselectedVaultId)
   }
 
-  const formattedTotalLiquidity = useMemo(() => {
-    return formatCryptoBalance(
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      vaultsList.reduce((acc, vault) => acc.plus(vault.withdrawableTotalAssetsUSD ?? zero), zero),
-    )
-  }, [vaultsList])
+  const handleSelectVault = (vault: SDKVaultishType, id: string) => {
+    handleChangeVault(id)
+    // we want to use ETH as native deposit token for WETH vaults
+    const resolvedTokenSymbol = convertWethToEth(vault.inputToken.symbol) as TokenSymbolsList
 
-  const formattedTotalAssets = useMemo(() => {
-    return formatCryptoBalance(tvl)
-  }, [tvl])
-
-  const formattedProtocolsSupportedList = useMemo(
-    () => getVaultsProtocolsList(vaultsList),
-    [vaultsList],
-  )
-
-  const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.allVaultsProtocols.length
-
-  const daoManagedVaultsBannerData = useMemo(() => {
-    if (!vaultsList.length) {
-      return {
-        assets: [],
-        highestApy: 0,
-        highestApyToken: '',
-      }
-    }
-
-    const daoManagedVaults = vaultsList.filter((vault) => vault.isDaoManaged)
-    const assets = Array.from(
-      new Set(daoManagedVaults.map((vault) => vault.inputToken.symbol)),
-    ) as TokenSymbolsList[]
-
-    const highest7dApyVault = daoManagedVaults.reduce((prev, current) => {
-      const prevApyData = vaultsApyByNetworkMap[getVaultApySelector(prev)]
-      const currentApyData = vaultsApyByNetworkMap[getVaultApySelector(current)]
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      const prevApy = prevApyData ? Number(prevApyData.apy) : 0
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      const currentApy = currentApyData ? Number(currentApyData.apy) : 0
-
-      // additional bonus to apy prev
-      const { rawTokenBonus: rawSumrTokenBonusPrev } = getRewardsTokenBonus({
-        merklRewards: findVaultInfo(vaultsInfo, prev)?.merklRewards,
-        tokensPriceMap: rewardTokenPrices,
-        totalValueLockedUSD: prev.totalValueLockedUSD,
-      })
-      const { rawTokenBonus: rawSumrTokenBonusCurrent } = getRewardsTokenBonus({
-        merklRewards: findVaultInfo(vaultsInfo, current)?.merklRewards,
-        tokensPriceMap: rewardTokenPrices,
-        totalValueLockedUSD: current.totalValueLockedUSD,
-      })
-
-      const currentApyWithBonus = currentApy + Number(rawSumrTokenBonusCurrent)
-      const prevApyWithBonus = prevApy + Number(rawSumrTokenBonusPrev)
-
-      return currentApyWithBonus > prevApyWithBonus ? current : prev
+    simulation.setSelectedTokenOption({
+      value: resolvedTokenSymbol,
+      label: resolvedTokenSymbol,
+      tokenSymbol: resolvedTokenSymbol,
     })
-
-    const { rawTokenBonus: rawSumrTokenBonusHighestApy } = getRewardsTokenBonus({
-      merklRewards: findVaultInfo(vaultsInfo, highest7dApyVault)?.merklRewards,
-      tokensPriceMap: rewardTokenPrices,
-      totalValueLockedUSD: highest7dApyVault.totalValueLockedUSD,
-    })
-
-    const managementFee = getManagementFee(highest7dApyVault.inputToken.symbol)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const highestApy = highest7dApyVault
-      ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        Number(vaultsApyByNetworkMap[getVaultApySelector(highest7dApyVault)]?.apy ?? 0) +
-        Number(rawSumrTokenBonusHighestApy) -
-        managementFee
-      : 0
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const highestApyToken = highest7dApyVault ? highest7dApyVault.inputToken.symbol : ''
-
-    return {
-      assets,
-      highestApy,
-      highestApyToken,
-    }
-  }, [vaultsApyByNetworkMap, vaultsList, vaultsInfo, rewardTokenPrices])
-
-  const {
-    amountParsed,
-    manualSetAmount,
-    amountDisplay,
-    amountDisplayUSD,
-    handleAmountChange,
-    onBlur,
-    onFocus,
-  } = useAmount({
-    inputName: `vault-list-amount-${slugifyVault(activeVaultData)}`,
-    inputChangeHandler,
-    tokenDecimals: activeVaultData.inputToken.decimals,
-    tokenPrice: activeVaultData.inputTokenPriceUSD,
-    selectedToken:
-      tokenBalances.token ??
-      ({
-        decimals: activeVaultData.inputToken.decimals,
-      } as IToken),
-  })
-
-  const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
-    vault: activeVaultData,
-    vaultChainId: subgraphNetworkToSDKId(supportedSDKNetwork(activeVaultData.protocol.network)),
-    amountDisplay,
-    amountDisplayUSD,
-    sidebarTransactionType: TransactionAction.DEPOSIT,
-    selectedTokenOption,
-    sdk,
-    slippageConfig,
-  })
-
-  const resolvedForecastAmount = getResolvedForecastAmountParsed({
-    amountParsed,
-    rawToTokenAmount,
-  })
+    simulation.tokenBalances.handleSetTokenBalanceLoading(true)
+  }
 
   const handleRefresh = () => {
     buttonClickEventHandler(`vaults-list-refresh-vaults-list`)
@@ -544,7 +200,25 @@ export const VaultsListView = ({
     buttonClickEventHandler('vaults-list-what-is-lazy')
   }
 
-  const { updateQueryParams } = useVaultsListQueryParams()
+  const handleTabChange = (tabId: string) => {
+    updateQueryParams(queryParams, {
+      vaults: tabId,
+    })
+  }
+
+  const handleDaoBannerClick = () => {
+    buttonClickEventHandler('vaults-list-dao-managed-vaults-banner-click')
+    updateQueryParams(queryParams, {
+      vaults: 'dao-risk-managed',
+    })
+  }
+
+  const handleStakeCardClick = () => {
+    buttonClickEventHandler('vaults-list-sumr-stake-card-click')
+    push(`/staking`)
+  }
+
+  const showStakeCard = stakingV2Enabled && !!userWalletAddress && !!sumrStakeInfo
 
   return (
     <VaultGrid
@@ -552,300 +226,99 @@ export const VaultsListView = ({
       onRefresh={handleRefresh}
       onWhatIsLazyClick={handleWhatIsLazyClick}
       topContent={
-        <div className={vaultsListViewStyles.topContentGrid}>
-          <DataBlock
-            title="Protocol TVL"
-            titleTooltip="Protocol TVL is the total amount of Assets currently deployed across all of the strategies including institutional deployments."
-            size="large"
-            value={`$${formattedTotalAssets}`}
-            tooltipName="vaults-list-protocol-tvl"
-            onTooltipOpen={tooltipEventHandler}
-          />
-
-          <DataBlock
-            title="Instant Liquidity"
-            titleTooltip={`This is the total amount of assets in USD that is instantly withdrawable from the strategies. There are currently ${formattedProtocolsSupportedCount} different protocols or markets supported across all active strategies.`}
-            size="large"
-            value={`$${formattedTotalLiquidity}`}
-            tooltipName="vaults-list-instant-liquidity"
-            onTooltipOpen={tooltipEventHandler}
-          />
-          <DataBlock
-            title="Protocols Supported"
-            // TODO: fill data (this is just a placeholder)
-            titleTooltip={`Protocols supported: ${Array.from(
-              formattedProtocolsSupportedList.topProtocols,
-            )
-              .filter((item) => item !== 'BufferArk')
-              .map(capitalize)
-              .join(', ')}, and ${
-              formattedProtocolsSupportedList.allVaultsProtocols.length -
-              formattedProtocolsSupportedList.topProtocols.length
-            } more.`}
-            size="large"
-            value={formattedProtocolsSupportedCount}
-            tooltipName="vaults-list-protocols-supported"
-            onTooltipOpen={tooltipEventHandler}
-          />
-        </div>
+        <VaultsListMetrics
+          tvl={tvl}
+          instantLiquidity={instantLiquidity}
+          protocolsList={protocolsList}
+          onTooltipOpen={tooltipEventHandler}
+        />
       }
       additionalFullWithTopContent={
         rwaVaultsEnabled || daoManagedVaultsEnabled ? (
-          <TabBar
-            tabs={
-              rwaVaultsEnabled
-                ? [
-                    {
-                      id: 'defi-vaults',
-                      label: 'DeFi Vaults',
-                    },
-                    {
-                      id: 'permissioned-rwa-vaults',
-                      label: 'Permissioned RWA Vaults',
-                    },
-                  ]
-                : [
-                    {
-                      id: 'risk-managed',
-                      label: 'Risk-Managed By BlockAnalitica',
-                    },
-                    {
-                      id: 'dao-risk-managed',
-                      label: (
-                        <>
-                          DAO Risk-Managed <Emphasis variant="p3semiColorful">New!</Emphasis>
-                        </>
-                      ),
-                    },
-                  ]
-            }
-            handleTabChange={(tab) => {
-              updateQueryParams(queryParams, {
-                vaults: tab.id,
-              })
-            }}
-            defaultIndex={
-              rwaVaultsEnabled
-                ? isPermissionedRwaTab
-                  ? 1
-                  : 0
-                : filterVaults.includes('dao-risk-managed')
-                  ? 1
-                  : filterVaults.includes('risk-managed')
-                    ? 0
-                    : 0
-            }
-            tabContentStyle={{
-              padding: 0,
-            }}
-            wrapperStyle={{
-              padding: '0 30px',
-            }}
-            tabHeadersStyle={{
-              borderBottom: 'none',
-            }}
-            useAsControlled
+          <VaultsListTabs
+            rwaVaultsEnabled={rwaVaultsEnabled}
+            isPermissionedRwaTab={isPermissionedRwaTab}
+            filterVaults={filterVaults}
+            onTabChange={handleTabChange}
           />
         ) : null
       }
       leftContent={
-        <>
-          <VaultsFiltersIntermediary
+        vaultsListLoading ? (
+          <VaultsListLeftContentLoading />
+        ) : (
+          <VaultsListCards
             vaultsList={vaultsList}
+            filteredAndSortedVaults={filteredAndSortedVaults}
+            filteredSafeVaultsList={filteredSafeVaultsList}
+            usingSafeVaultsList={usingSafeVaultsList}
             sortingMethodId={sortingMethodId}
             daoManagedVaultsEnabled={daoManagedVaultsEnabled}
+            rwaVaultsEnabled={rwaVaultsEnabled}
+            isPermissionedRwaTab={isPermissionedRwaTab}
             queryParams={queryParams}
             filterNetworks={filterNetworks}
             filterAssets={filterAssets}
             filterVaults={filterVaults}
             filterWallet={filterWallet}
+            selectedVaultId={selectedVaultId}
+            deviceType={deviceType}
+            withSumr={sumrNetApyConfig.withSumr}
+            rewardTokenPrices={rewardTokenPrices}
+            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+            vaultsInfo={vaultsInfo}
+            daoManagedVaultsBannerData={daoManagedVaultsBannerData}
+            onSelectVault={handleSelectVault}
+            onDaoBannerClick={handleDaoBannerClick}
+            onTooltipOpen={tooltipEventHandler}
+            showStakeCard={showStakeCard}
+            sumrAvailableToStake={sumrAvailableToStake}
+            sumrAvailableToStakeUSD={sumrAvailableToStakeUSD}
+            isLoadingRewardRates={isLoadingRewardRates}
+            maxApy={maxApy}
+            sumrRewardApy={sumrRewardApy}
+            onStakeCardClick={handleStakeCardClick}
           />
-          {filteredAndSortedVaults?.length ? (
-            filteredAndSortedVaults.map((vault, vaultIndex) => (
-              <Fragment key={getUniqueVaultId(vault)}>
-                {vaultIndex === 1 &&
-                  !rwaVaultsEnabled &&
-                  !filterVaults.includes('dao-risk-managed') && (
-                    <VaultsListDaoManagedVaultBanner
-                      assets={daoManagedVaultsBannerData.assets}
-                      highestApy={daoManagedVaultsBannerData.highestApy}
-                      highestApyToken={daoManagedVaultsBannerData.highestApyToken}
-                      onClick={() => {
-                        buttonClickEventHandler('vaults-list-dao-managed-vaults-banner-click')
-                        updateQueryParams(queryParams, {
-                          vaults: 'dao-risk-managed',
-                        })
-                      }}
-                    />
-                  )}
-                <VaultCard
-                  {...vault}
-                  withHover
-                  deviceType={deviceType}
-                  selected={
-                    selectedVaultId === getUniqueVaultId(vault) ||
-                    (!selectedVaultId && vaultIndex === 0)
-                  }
-                  onClick={(id) => {
-                    handleChangeVault(id)
-                    // we want to use ETH as native deposit token for WETH vaults
-                    const resolvedTokenSymbol = convertWethToEth(
-                      vault.inputToken.symbol,
-                    ) as TokenSymbolsList
-
-                    setSelectedTokenOption({
-                      value: resolvedTokenSymbol,
-                      label: resolvedTokenSymbol,
-                      tokenSymbol: resolvedTokenSymbol,
-                    })
-                    tokenBalances.handleSetTokenBalanceLoading(true)
-                  }}
-                  withTokenBonus={sumrNetApyConfig.withSumr}
-                  rewardTokenPrices={rewardTokenPrices}
-                  vaultApyData={
-                    vaultsApyByNetworkMap[
-                      `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
-                    ]
-                  }
-                  tooltipName="vaults-list-vault-card"
-                  onTooltipOpen={tooltipEventHandler}
-                  merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
-                />
-              </Fragment>
-            ))
-          ) : (
-            <div
-              className={vaultsListViewStyles.noVaultsWrapper}
-              style={{
-                textAlign: 'center',
-              }}
-            >
-              <Card
-                style={{
-                  margin: '0 auto 30px auto',
-                }}
-              >
-                <Text
-                  as="p"
-                  variant="p2"
-                  style={{
-                    color: 'var(--earn-protocol-secondary-60)',
-                    margin: '30px auto 30px auto',
-                  }}
-                >
-                  {`No ${
-                    isPermissionedRwaTab
-                      ? 'Permissioned RWA '
-                      : filterVaults.includes('dao-risk-managed')
-                        ? 'DAO Risk Managed '
-                        : ''
-                  }vaults available`}
-                  {filterNetworks.length
-                    ? ` on ${filterNetworks.map((network) => capitalize(sdkNetworkToHumanNetwork(network as SupportedSDKNetworks))).join(' and ')}`
-                    : ''}
-                  {filterAssets.length
-                    ? ` with ${filterAssets.join(' and ')} token${filterAssets.length > 1 ? 's' : ''}`
-                    : ''}
-                  {filterWallet.length
-                    ? ` for assets from ${formatAddress(filterWallet)} wallet`
-                    : ''}
-                  .
-                </Text>
-              </Card>
-              <Text
-                as="p"
-                variant="p1semiColorful"
-                style={{ color: 'var(--earn-protocol-secondary-60)' }}
-              >
-                You might like these:
-              </Text>
-            </div>
-          )}
-          {usingSafeVaultsList && filteredSafeVaultsList.length && (
-            <>
-              {filteredSafeVaultsList.map((vault, vaultIndex) => (
-                <VaultCard
-                  key={getUniqueVaultId(vault)}
-                  {...vault}
-                  withHover
-                  selected={
-                    selectedVaultId === getUniqueVaultId(vault) ||
-                    (!selectedVaultId && vaultIndex === 0)
-                  }
-                  onClick={(id) => {
-                    handleChangeVault(id)
-                    // we want to use ETH as native deposit token for WETH vaults
-                    const resolvedTokenSymbol = convertWethToEth(
-                      vault.inputToken.symbol,
-                    ) as TokenSymbolsList
-
-                    setSelectedTokenOption({
-                      value: resolvedTokenSymbol,
-                      label: resolvedTokenSymbol,
-                      tokenSymbol: resolvedTokenSymbol,
-                    })
-                    tokenBalances.handleSetTokenBalanceLoading(true)
-                  }}
-                  withTokenBonus={sumrNetApyConfig.withSumr}
-                  rewardTokenPrices={rewardTokenPrices}
-                  vaultApyData={
-                    vaultsApyByNetworkMap[
-                      `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
-                    ]
-                  }
-                  merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
-                />
-              ))}
-            </>
-          )}
-          {stakingV2Enabled && userWalletAddress && sumrStakeInfo && (
-            <SumrStakeCard
-              availableToStake={sumrAvailableToStake}
-              availableToStakeUSD={sumrAvailableToStakeUSD}
-              yieldTokenApy={isLoadingRewardRates ? '-' : Number(maxApy / 100).toString()}
-              yieldToken="USDC"
-              apy={sumrRewardApy}
-              tooltipName="sumr-stake-bonus-label"
-              onTooltipOpen={tooltipEventHandler}
-              handleClick={() => {
-                buttonClickEventHandler('vaults-list-sumr-stake-card-click')
-                push(`/staking`)
-              }}
-            />
-          )}
-        </>
+        )
       }
       rightContent={
-        resolvedVaultData ? (
-          <>
-            <VaultSimulationForm
-              vaultData={resolvedVaultData}
-              isMobileOrTablet={isMobileOrTablet}
-              tokenBalance={tokenBalances.tokenBalance}
-              isTokenBalanceLoading={tokenBalances.tokenBalanceLoading}
-              selectedTokenOption={selectedTokenOption}
-              handleTokenSelectionChange={handleTokenSelectionChangeWrapper}
-              tokenOptions={tokenOptions}
-              handleAmountChange={handleAmountChange}
-              inputProps={{
-                onFocus,
-                onBlur,
-                amountDisplay,
-                amountDisplayUSDWithSwap,
-                manualSetAmount,
-              }}
-              resolvedForecastAmount={resolvedForecastAmount}
-              amountParsed={amountParsed}
-              isEarnApp
-              positionExists={Boolean(positionExists)}
-              userWalletAddress={userWalletAddress}
-              isLoading={isLoading}
-              onButtonClick={buttonClickEventHandler}
-            />
-            {daoManagedVaultsEnabled && <VaultsInfoSidebarBlock />}
-          </>
-        ) : null
+        <VaultSimulationSidebar
+          activeVaultData={activeVaultData}
+          isMobileOrTablet={isMobileOrTablet}
+          userWalletAddress={userWalletAddress}
+          daoManagedVaultsEnabled={daoManagedVaultsEnabled}
+          onButtonClick={buttonClickEventHandler}
+          simulation={simulation}
+        />
       }
+    />
+  )
+}
+
+export const VaultsListView = ({ walletAddress }: VaultsListViewProps) => {
+  const queryParams = useSearchParams()
+  const selectedVaultsFilter = queryParams.get('vaults') ?? undefined
+  const { data, isFetching, isPlaceholderData } = useVaultsListQuery(
+    walletAddress,
+    selectedVaultsFilter,
+  )
+
+  if (!data) {
+    return <VaultsListViewLoading />
+  }
+
+  return (
+    <VaultsListViewInner
+      vaultsList={data.vaultsList}
+      filteredWalletAssetsVaults={data.filteredWalletAssetsVaults}
+      vaultsApyByNetworkMap={data.vaultsApyByNetworkMap}
+      vaultsInfo={data.vaultsInfo}
+      sumrPriceUsd={data.sumrPriceUsd}
+      rewardTokenPrices={data.rewardTokenPrices}
+      tvl={data.tvl}
+      instantLiquidity={data.instantLiquidity}
+      protocolsList={data.protocolsList}
+      vaultsListLoading={isFetching && isPlaceholderData}
     />
   )
 }

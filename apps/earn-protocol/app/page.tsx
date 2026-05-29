@@ -1,110 +1,75 @@
-import { getVaultsProtocolsList, sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
-import {
-  formatCryptoBalance,
-  getServerSideCookies,
-  networkNameToSDKId,
-  parseServerResponseToClient,
-  safeParseJson,
-  subgraphNetworkToId,
-  subgraphNetworkToSDKId,
-  supportedSDKNetwork,
-} from '@summerfi/app-utils'
+import { Suspense } from 'react'
+import { getVaultsProtocolsList } from '@summerfi/app-earn-ui'
+import { formatCryptoBalance } from '@summerfi/app-utils'
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { type Metadata } from 'next'
-import { cookies, headers } from 'next/headers'
+import { headers } from 'next/headers'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
-import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
-import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
-import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import {
-  emptyWalletAssets,
-  getCachedWalletAssets,
-} from '@/app/server-handlers/cached/get-wallet-assets'
-import { getCachedRewardTokenPrice } from '@/app/server-handlers/reward-token-price'
+import { getDefiVaultsListData } from '@/app/server-handlers/vaults-list/get-defi-vaults-list-data'
+import { getRwaVaultsListData } from '@/app/server-handlers/vaults-list/get-rwa-vaults-list-data'
+import { getVaultsListAdditionalData } from '@/app/server-handlers/vaults-list/get-vaults-list-additional-data'
+import { type VaultsListRouteResponse } from '@/components/layout/VaultsListView/useVaultsListQuery'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
-import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
+import {
+  getVaultsListAdditionalDataQueryKey,
+  getVaultsListRouteQueryKey,
+} from '@/components/layout/VaultsListView/vaults-list-query-keys'
+import { VaultsListViewLoading } from '@/components/layout/VaultsListView/VaultsListViewLoading'
+import { getServerQueryClient } from '@/helpers/get-server-query-client'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
-import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
+
+const RWA_VAULTS_FILTER = 'permissioned-rwa-vaults'
+
+const VaultsListWithData = async ({
+  walletAddress,
+  vaultsFilter,
+}: {
+  walletAddress?: string
+  vaultsFilter?: string
+}) => {
+  const queryClient = getServerQueryClient()
+
+  // Prefetch on the fast server -> SDK path and hydrate, so the client renders straight from
+  // the cache instead of waterfalling two API calls after the JS bundle loads. A prefetch that
+  // fails is simply not dehydrated, and the client transparently falls back to fetching it.
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: getVaultsListRouteQueryKey(walletAddress, vaultsFilter),
+      queryFn: (): Promise<VaultsListRouteResponse> =>
+        vaultsFilter === RWA_VAULTS_FILTER
+          ? // RWA's vaultsInfo is IRwaVaultInfo[]; the client contract and the list view treat it
+            // as the optional IArmadaVaultInfo[] shape, mirroring fetchVaultsListRoute's cast.
+            (getRwaVaultsListData(walletAddress) as unknown as Promise<VaultsListRouteResponse>)
+          : getDefiVaultsListData(walletAddress),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: getVaultsListAdditionalDataQueryKey(),
+      queryFn: getVaultsListAdditionalData,
+    }),
+  ])
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <VaultListViewComponent walletAddress={walletAddress} />
+    </HydrationBoundary>
+  )
+}
 
 const EarnAllVaultsPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ walletAddress?: string }>
+  searchParams: Promise<{ walletAddress?: string; vaults?: string }>
 }) => {
-  const { walletAddress } = await searchParams
+  const { walletAddress, vaults } = await searchParams
 
-  // First, fetch vaults list to know what we need
-  const { vaults } = await getCachedVaultsList()
-
-  // Start APY fetch immediately with raw vaults data
-  const vaultsApyPromise = getCachedVaultsApy({
-    fleets: vaults.map(({ id, protocol: { network } }) => ({
-      fleetAddress: id,
-      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-    })),
-  })
-
-  // Now fetch everything else in parallel including DAO managed check
-  const [
-    cookieRaw,
-    configRaw,
-    vaultsInfoRaw,
-    rewardTokenPrices,
-    tvl,
-    walletAssets,
-    daoManagedVaultsList,
-    vaultsApyByNetworkMap,
-  ] = await Promise.all([
-    cookies(),
-    getCachedConfig(),
-    getCachedVaultsInfo(),
-    getCachedRewardTokenPrice(),
-    getCachedTvl(),
-    walletAddress ? getCachedWalletAssets(walletAddress, true) : Promise.resolve(emptyWalletAssets),
-    getDaoManagedVaultsIDsList(vaults),
-    vaultsApyPromise,
-  ])
-
-  const systemConfig = parseServerResponseToClient(configRaw)
-
-  const vaultsWithConfig = decorateVaultsWithConfig({
-    systemConfig,
-    vaults,
-    daoManagedVaultsList,
-  })
-
-  const filteredWalletAssetsVaults = walletAddress
-    ? vaultsWithConfig.filter((vault) => {
-        return walletAssets.assets.some(
-          (asset) =>
-            asset.symbol.toLowerCase() === vault.inputToken.symbol.toLowerCase() &&
-            networkNameToSDKId(asset.network) ===
-              subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)),
-        )
-      })
-    : []
-
-  const vaultsInfo = parseServerResponseToClient(vaultsInfoRaw)
-  const cookie = cookieRaw.toString()
-  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-  const sumrPriceUsd = getEstimatedSumrPrice({
-    config: systemConfig,
-    sumrPrice: rewardTokenPrices.SUMR,
-    sumrNetApyConfig: sumrNetApyConfig ?? {},
-  })
-
+  // The await above only parses the URL; the data prefetch lives inside the Suspense boundary
+  // so the skeleton streams immediately while the prefetch resolves and streams in after it.
   return (
-    <VaultListViewComponent
-      vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-      vaultsInfo={vaultsInfo}
-      vaultsList={vaultsWithConfig}
-      filteredWalletAssetsVaults={filteredWalletAssetsVaults}
-      sumrPriceUsd={sumrPriceUsd}
-      rewardTokenPrices={rewardTokenPrices}
-      tvl={tvl}
-    />
+    <Suspense fallback={<VaultsListViewLoading />}>
+      <VaultsListWithData walletAddress={walletAddress} vaultsFilter={vaults} />
+    </Suspense>
   )
 }
 

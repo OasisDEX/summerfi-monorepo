@@ -39,8 +39,9 @@ type VaultCardProps = SDKVaultishType & {
   withHover?: boolean
   staggerIndex?: number
   withTokenBonus?: boolean
+  isRwaVault?: boolean
   sumrDilutedValuation?: string
-  vaultApyData: VaultApyData
+  vaultApyData?: VaultApyData
   wrapperStyle?: React.CSSProperties
   disabled?: boolean
   deviceType?: DeviceType
@@ -64,6 +65,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     customFields,
     merklRewards,
     vaultApyData,
+    isRwaVault,
     wrapperStyle,
     disabled,
     depositCap,
@@ -101,7 +103,10 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     vaultApyData,
   })
 
-  const depositCapInToken = new BigNumber(depositCap.toString()).div(ten.pow(inputToken.decimals))
+  // depositCap math is regular vaults-only; RWA payloads may not include depositCap
+  const depositCapInToken = isRwaVault
+    ? new BigNumber(0)
+    : new BigNumber(depositCap.toString()).div(ten.pow(inputToken.decimals))
 
   const depositCapUsed = new BigNumber(inputTokenBalance.toString())
     .div(ten.pow(inputToken.decimals))
@@ -135,12 +140,13 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             tooltipName={`${tooltipName}-${slugifyVault(props)}-risk-label`}
             onTooltipOpen={onTooltipOpen}
             isNewVault={isNewVault}
+            isRwaVault={isRwaVault}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
               <BonusLabel
                 totalAnnualRewardsPerToken={totalAnnualRewardsPerToken}
-                apy={vaultApyData.apy}
+                apy={vaultApyData?.apy}
                 managementFee={managementFee}
                 externalTokenBonus={customFields?.bonus}
                 apyUpdatedAt={apyUpdatedAt}
@@ -152,83 +158,144 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
           </div>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              minWidth: '210px',
-            }}
-          >
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-              Total Assets
-            </Text>
-            <div className={vaultCardStyles.totalAssetsDisplay}>
-              <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
-              </Text>
-              <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-                ${parsedTotalValueLockedUSD}
-              </Text>
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              minWidth: '210px',
-            }}
-          >
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-              Best For
-            </Text>
-            <Text
-              variant="p2semi"
-              style={{ color: 'var(--earn-protocol-secondary-100)', whiteSpace: 'nowrap' }}
-            >
-              {customFields?.bestFor ?? 'Optimized lending yield'}
-            </Text>
-          </div>
-        </div>
-        <div className={vaultCardStyles.vaultCardAssetsWrapper}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              minWidth: '210px',
-            }}
-          >
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-              Deposit cap
-            </Text>
-            <div className={vaultCardStyles.totalAssetsDisplay}>
-              <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                {formatCryptoBalance(depositCapInToken)}&nbsp;{inputToken.symbol}
-              </Text>
-              <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-                {depositCapInToken.gt(0.1) ? `${formatDecimalAsPercent(depositCapUsed)} used` : ''}
-              </Text>
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              minWidth: '210px',
-            }}
-          >
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-              Risk Management
-            </Text>
-            <div style={{ width: 'fit-content' }}>
-              <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                {isDaoManaged ? <>DAO&nbsp;Risk-Managed</> : <>Block&nbsp;Analitica</>}
-              </Text>
-            </div>
-          </div>
+          {isRwaVault ? (
+            <>
+              <div className={vaultCardStyles.vaultCardAssetCell}>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{ color: 'var(--earn-protocol-secondary-40)' }}
+                >
+                  Market Value
+                </Text>
+                <div className={vaultCardStyles.totalAssetsDisplay}>
+                  <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                    {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
+                  </Text>
+                  <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                    ${parsedTotalValueLockedUSD}
+                  </Text>
+                </div>
+              </div>
+              <div className={vaultCardStyles.vaultCardAssetCell}>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{ color: 'var(--earn-protocol-secondary-40)' }}
+                >
+                  Best For
+                </Text>
+                <Text
+                  variant="p2semi"
+                  style={{ color: 'var(--earn-protocol-secondary-100)', whiteSpace: 'nowrap' }}
+                >
+                  {customFields?.bestFor ?? 'Optimized lending yield'}
+                </Text>
+              </div>
+              <div className={vaultCardStyles.vaultCardAssetCell}>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{ color: 'var(--earn-protocol-secondary-40)' }}
+                >
+                  Minimum Deposit
+                </Text>
+                <div className={vaultCardStyles.totalAssetsDisplay}>
+                  <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                    {customFields?.minimumDeposit ? (
+                      <>
+                        {formatCryptoBalance(customFields.minimumDeposit)}&nbsp;{inputToken.symbol}
+                      </>
+                    ) : (
+                      <>n/a</>
+                    )}
+                  </Text>
+                </div>
+              </div>
+              <div className={vaultCardStyles.vaultCardAssetCell}>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{ color: 'var(--earn-protocol-secondary-40)' }}
+                >
+                  Curated By
+                </Text>
+                <div style={{ width: 'fit-content' }}>
+                  <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                    {customFields?.curatedBy ?? 'n/a'}
+                  </Text>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={vaultCardStyles.vaultCardAssetCell}>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{ color: 'var(--earn-protocol-secondary-40)' }}
+                >
+                  Total Assets
+                </Text>
+                <div className={vaultCardStyles.totalAssetsDisplay}>
+                  <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                    {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
+                  </Text>
+                  <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                    ${parsedTotalValueLockedUSD}
+                  </Text>
+                </div>
+              </div>
+              <div className={vaultCardStyles.vaultCardAssetCell}>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{ color: 'var(--earn-protocol-secondary-40)' }}
+                >
+                  Best For
+                </Text>
+                <Text
+                  variant="p2semi"
+                  style={{ color: 'var(--earn-protocol-secondary-100)', whiteSpace: 'nowrap' }}
+                >
+                  {customFields?.bestFor ?? 'Optimized lending yield'}
+                </Text>
+              </div>
+              <div className={vaultCardStyles.vaultCardAssetCell}>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{ color: 'var(--earn-protocol-secondary-40)' }}
+                >
+                  Deposit cap
+                </Text>
+                <div className={vaultCardStyles.totalAssetsDisplay}>
+                  <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                    {formatCryptoBalance(depositCapInToken)}&nbsp;{inputToken.symbol}
+                  </Text>
+                  <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                    {depositCapInToken.gt(0.1)
+                      ? `${formatDecimalAsPercent(depositCapUsed)} used`
+                      : ''}
+                  </Text>
+                </div>
+              </div>
+              <div className={vaultCardStyles.vaultCardAssetCell}>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{ color: 'var(--earn-protocol-secondary-40)' }}
+                >
+                  Risk Management
+                </Text>
+                <div style={{ width: 'fit-content' }}>
+                  <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                    {isDaoManaged ? <>DAO&nbsp;Risk-Managed</> : <>Block&nbsp;Analitica</>}
+                  </Text>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </Card>
     </GradientBox>

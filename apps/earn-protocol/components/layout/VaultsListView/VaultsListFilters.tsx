@@ -1,5 +1,3 @@
-'use client'
-
 import { type CSSProperties, type MouseEventHandler, useMemo } from 'react'
 import {
   Dropdown,

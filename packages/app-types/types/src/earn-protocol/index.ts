@@ -72,6 +72,7 @@ type VaultCustomFields = {
   // custom fields for vaults - decorated within the earn/lp apps
   customFields?: EarnAppFleetCustomConfigType
   isDaoManaged?: boolean
+  isRwaVault?: boolean
 }
 
 export type SDKVaultsListType = (GetVaultsQuery['vaults'][number] & VaultCustomFields)[]

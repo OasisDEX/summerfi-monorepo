@@ -1,4 +1,5 @@
-import type { ChainId, IRwaVaultInfo } from '@summerfi/sdk-common'
+import type { ChainId, IArmadaVaultId, IChainInfo, IRwaVaultInfo } from '@summerfi/sdk-common'
+import type { GetVaultQueryRwa, GetVaultsQueryRwa } from '@summerfi/subgraph-manager-common'
 
 /**
  * @name IRwaManagerClient
@@ -12,4 +13,18 @@ export interface IRwaManagerClient {
   getVaultInfoListPerChain(params: { chainId: ChainId; clientId: string }): Promise<{
     list: IRwaVaultInfo[]
   }>
+
+  /**
+   * @method getVaultsRaw
+   * @description Retrieves the raw RWA subgraph GetVaults response for a given chain
+   *              and institution clientId. RWA equivalent of armada.users.getVaultsRaw.
+   */
+  getVaultsRaw(params: { chainInfo: IChainInfo; clientId: string }): Promise<GetVaultsQueryRwa>
+
+  /**
+   * @method getVaultRaw
+   * @description Retrieves the raw RWA subgraph GetVault response for a single vault.
+   *              RWA equivalent of armada.users.getVaultRaw.
+   */
+  getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQueryRwa>
 }
