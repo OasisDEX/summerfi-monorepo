@@ -1,4 +1,16 @@
-import type { ChainId, IArmadaVaultId, IChainInfo, IRwaVaultInfo } from '@summerfi/sdk-common'
+import type {
+  ChainId,
+  IAddress,
+  IArmadaVaultId,
+  IChainInfo,
+  IPrice,
+  IRwaVaultInfo,
+  ITokenAmount,
+  IUser,
+  RoundState,
+  RoundsVaultType,
+  TransactionInfo,
+} from '@summerfi/sdk-common'
 import type { GetVaultQueryRwa, GetVaultsQueryRwa } from '@summerfi/subgraph-manager-common'
 
 /**
@@ -27,4 +39,90 @@ export interface IRwaManagerClient {
    *              RWA equivalent of armada.users.getVaultRaw.
    */
   getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQueryRwa>
+
+  // --- Deposit flow ---
+
+  getDepositTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+  }): Promise<TransactionInfo[]>
+
+  getClaimSharesTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    roundId: bigint
+    amount: bigint
+    receiver?: IAddress
+  }): Promise<TransactionInfo>
+
+  // --- Withdraw flow ---
+
+  getWithdrawTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+  }): Promise<TransactionInfo[]>
+
+  getClaimAssetsTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    roundId: bigint
+    amount: bigint
+    receiver?: IAddress
+  }): Promise<TransactionInfo>
+
+  getCancelRoundDepositTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    roundId: bigint
+    amount: bigint
+    receiver?: IAddress
+    vaultType: RoundsVaultType
+  }): Promise<TransactionInfo>
+
+  // --- Round state reads ---
+
+  getCurrentRound(params: { vaultId: IArmadaVaultId; vaultType: RoundsVaultType }): Promise<bigint>
+
+  getRoundState(params: {
+    vaultId: IArmadaVaultId
+    roundId: bigint
+    vaultType: RoundsVaultType
+  }): Promise<RoundState>
+
+  getExchangeRate(params: {
+    vaultId: IArmadaVaultId
+    roundId: bigint
+    vaultType: RoundsVaultType
+  }): Promise<IPrice>
+
+  getReceiptBalances(params: {
+    vaultId: IArmadaVaultId
+    account: IAddress
+    vaultType: RoundsVaultType
+  }): Promise<{ roundId: bigint; balance: bigint }[]>
+
+  // --- Whitelisting ---
+
+  getSetWhitelistedTx(params: {
+    vaultId: IArmadaVaultId
+    account: IAddress
+    allowed: boolean
+  }): Promise<TransactionInfo>
+
+  getSetWhitelistedBatchTx(params: {
+    vaultId: IArmadaVaultId
+    accounts: IAddress[]
+    allowed: boolean[]
+  }): Promise<TransactionInfo>
+
+  getSetWhitelistOpenTx(params: {
+    vaultId: IArmadaVaultId
+    isOpen: boolean
+  }): Promise<TransactionInfo>
+
+  isWhitelisted(params: { vaultId: IArmadaVaultId; account: IAddress }): Promise<boolean>
+
+  isWhitelistOpen(params: { vaultId: IArmadaVaultId }): Promise<boolean>
 }

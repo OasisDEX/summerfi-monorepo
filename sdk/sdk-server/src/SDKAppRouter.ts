@@ -150,6 +150,20 @@ import { resumeStrategyTx } from './armada-protocol-handlers/dca/resumeStrategyT
 import { getVaultInfoListPerChain as getRwaVaultInfoListPerChain } from './armada-protocol-handlers/rwa/getVaultInfoListPerChain'
 import { getVaultRaw as getRwaVaultRaw } from './armada-protocol-handlers/rwa/getVaultRaw'
 import { getVaultsRaw as getRwaVaultsRaw } from './armada-protocol-handlers/rwa/getVaultsRaw'
+import { getDepositTx as getRwaDepositTx } from './armada-protocol-handlers/rwa/getDepositTx'
+import { getClaimSharesTx as getRwaClaimSharesTx } from './armada-protocol-handlers/rwa/getClaimSharesTx'
+import { getWithdrawTx as getRwaWithdrawTx } from './armada-protocol-handlers/rwa/getWithdrawTx'
+import { getClaimAssetsTx as getRwaClaimAssetsTx } from './armada-protocol-handlers/rwa/getClaimAssetsTx'
+import { getCancelRoundDepositTx as getRwaCancelRoundDepositTx } from './armada-protocol-handlers/rwa/getCancelRoundDepositTx'
+import { getCurrentRound as getRwaCurrentRound } from './armada-protocol-handlers/rwa/getCurrentRound'
+import { getRoundState as getRwaRoundState } from './armada-protocol-handlers/rwa/getRoundState'
+import { getExchangeRate as getRwaExchangeRate } from './armada-protocol-handlers/rwa/getExchangeRate'
+import { getReceiptBalances as getRwaReceiptBalances } from './armada-protocol-handlers/rwa/getReceiptBalances'
+import { getSetWhitelistedTx as getRwaSetWhitelistedTx } from './armada-protocol-handlers/rwa/getSetWhitelistedTx'
+import { getSetWhitelistedBatchTx as getRwaSetWhitelistedBatchTx } from './armada-protocol-handlers/rwa/getSetWhitelistedBatchTx'
+import { getSetWhitelistOpenTx as getRwaSetWhitelistOpenTx } from './armada-protocol-handlers/rwa/getSetWhitelistOpenTx'
+import { isWhitelisted as isRwaWhitelisted } from './armada-protocol-handlers/rwa/isWhitelisted'
+import { isWhitelistOpen as isRwaWhitelistOpen } from './armada-protocol-handlers/rwa/isWhitelistOpen'
 import { getProtocolAddresses } from './armada-protocol-handlers/users/getProtocolAddresses'
 
 /**
@@ -335,6 +349,20 @@ export const sdkAppRouter = router({
       getVaultInfoListPerChain: getRwaVaultInfoListPerChain,
       getVaultsRaw: getRwaVaultsRaw,
       getVaultRaw: getRwaVaultRaw,
+      getDepositTx: getRwaDepositTx,
+      getClaimSharesTx: getRwaClaimSharesTx,
+      getWithdrawTx: getRwaWithdrawTx,
+      getClaimAssetsTx: getRwaClaimAssetsTx,
+      getCancelRoundDepositTx: getRwaCancelRoundDepositTx,
+      getCurrentRound: getRwaCurrentRound,
+      getRoundState: getRwaRoundState,
+      getExchangeRate: getRwaExchangeRate,
+      getReceiptBalances: getRwaReceiptBalances,
+      getSetWhitelistedTx: getRwaSetWhitelistedTx,
+      getSetWhitelistedBatchTx: getRwaSetWhitelistedBatchTx,
+      getSetWhitelistOpenTx: getRwaSetWhitelistOpenTx,
+      isWhitelisted: isRwaWhitelisted,
+      isWhitelistOpen: isRwaWhitelistOpen,
     },
   },
 })
