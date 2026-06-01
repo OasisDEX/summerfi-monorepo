@@ -212,13 +212,15 @@ WHERE u.id = ANY(${userIds});
       periodEnd >= this.MARCH_1_2026
         ? this.SUMR_REWARD_TIERS_POST_MARCH_2026
         : this.SUMR_REWARD_TIERS_PRE_MARCH_2026
-    const sumrCaseStatement = sumrTiers.map((tier) => {
-      if (tier.maxAmount === Infinity) {
-        return `ELSE rc.total_deposits_referred_usd * ${tier.percentage} / ${sumrTokenPriceUsd} / 8760`
-      } else {
-        return `WHEN rc.total_deposits_referred_usd <= ${tier.maxAmount} THEN rc.total_deposits_referred_usd * ${tier.percentage} / ${sumrTokenPriceUsd} / 8760`
-      }
-    }).join('\n          ')
+    const sumrCaseStatement = sumrTiers
+      .map((tier) => {
+        if (tier.maxAmount === Infinity) {
+          return `ELSE rc.total_deposits_referred_usd * ${tier.percentage} / ${sumrTokenPriceUsd} / 8760`
+        } else {
+          return `WHEN rc.total_deposits_referred_usd <= ${tier.maxAmount} THEN rc.total_deposits_referred_usd * ${tier.percentage} / ${sumrTokenPriceUsd} / 8760`
+        }
+      })
+      .join('\n          ')
 
     await trx.executeQuery(
       sql`
