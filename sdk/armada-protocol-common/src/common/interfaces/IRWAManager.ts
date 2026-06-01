@@ -2,11 +2,9 @@ import type {
   AddressValue,
   ChainId,
   IArmadaVaultId,
-  IAddress,
   IChainInfo,
   IRwaVaultInfo,
   IPrice,
-  IUser,
   RoundState,
   RoundsVaultType,
   TransactionInfo,
@@ -84,18 +82,20 @@ export interface IRWAManager {
    * @description Builds the RoundsVaultInput.redeemExchangeAsset transaction to exchange a
    *              settled-round receipt for Fleet shares.
    *
-   * @param vaultId   The Fleet vault identifier
-   * @param user      The user holding the receipt (owner)
-   * @param roundId   The settled round whose receipt is being exchanged
-   * @param amount    Number of ERC-1155 receipt tokens to redeem
-   * @param receiver  Optional alternative receiver of the Fleet shares
+   * @param chainId         The chain the Fleet is on
+   * @param fleetAddress    The Fleet address
+   * @param userAddress     The user holding the receipt (owner)
+   * @param roundId         The settled round whose receipt is being exchanged
+   * @param amount          Number of ERC-1155 receipt tokens to redeem (base units)
+   * @param receiverAddress Optional alternative receiver of the Fleet shares
    */
   getClaimSharesTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
     amount: bigint
-    receiver?: IAddress
+    receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
   // ---------------------------------------------------------------------------
@@ -125,18 +125,20 @@ export interface IRWAManager {
    * @description Builds the RoundsVaultOutput.redeemExchangeAsset transaction to exchange a
    *              settled-round receipt for the underlying asset (e.g. USDC).
    *
-   * @param vaultId   The Fleet vault identifier
-   * @param user      The user holding the receipt (owner)
-   * @param roundId   The settled round whose receipt is being exchanged
-   * @param amount    Number of ERC-1155 receipt tokens to redeem
-   * @param receiver  Optional alternative receiver of the underlying asset
+   * @param chainId         The chain the Fleet is on
+   * @param fleetAddress    The Fleet address
+   * @param userAddress     The user holding the receipt (owner)
+   * @param roundId         The settled round whose receipt is being exchanged
+   * @param amount          Number of ERC-1155 receipt tokens to redeem (base units)
+   * @param receiverAddress Optional alternative receiver of the underlying asset
    */
   getClaimAssetsTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
     amount: bigint
-    receiver?: IAddress
+    receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
   /**

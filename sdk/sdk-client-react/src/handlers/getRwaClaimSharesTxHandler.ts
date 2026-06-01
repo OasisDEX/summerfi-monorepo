@@ -1,5 +1,4 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import { ArmadaVaultId, Address, getChainInfoByChainId, User } from '@summerfi/sdk-common'
 import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 export const getRwaClaimSharesTxHandler =
@@ -19,14 +18,12 @@ export const getRwaClaimSharesTxHandler =
     amount: bigint
     receiverAddress?: AddressValue
   }) => {
-    const chainInfo = getChainInfoByChainId(chainId)
-    const vaultId = ArmadaVaultId.createFrom({
-      chainInfo,
-      fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
+    return sdk.rwa.getClaimSharesTx({
+      chainId,
+      fleetAddress,
+      userAddress,
+      roundId,
+      amount,
+      receiverAddress,
     })
-    const user = User.createFromEthereum(chainId, userAddress)
-    const receiver = receiverAddress
-      ? Address.createFromEthereum({ value: receiverAddress })
-      : undefined
-    return sdk.rwa.getClaimSharesTx({ vaultId, user, roundId, amount, receiver })
   }

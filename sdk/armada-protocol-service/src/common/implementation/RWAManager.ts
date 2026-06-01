@@ -149,16 +149,18 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   ): ReturnType<IRWAManager['getClaimSharesTx']> {
     // Exchange a settled Input-round receipt for Fleet shares.
     const vault = await this._resolveRoundsVault(
-      params.vaultId.chainInfo.chainId,
-      params.vaultId.fleetAddress.value,
+      params.chainId,
+      params.fleetAddress,
       RoundsVaultType.Input,
     )
     const contract = await this._getRoundsVaultContract(vault)
-    const owner = params.user.wallet.address
+    const owner = Address.createFromEthereum({ value: params.userAddress })
     return contract.redeemExchangeAsset({
       id: params.roundId,
       amount: params.amount,
-      receiver: params.receiver ?? owner,
+      receiver: params.receiverAddress
+        ? Address.createFromEthereum({ value: params.receiverAddress })
+        : owner,
       owner,
     })
   }
@@ -198,16 +200,18 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   ): ReturnType<IRWAManager['getClaimAssetsTx']> {
     // Exchange a settled Output-round receipt for the underlying asset (e.g. USDC).
     const vault = await this._resolveRoundsVault(
-      params.vaultId.chainInfo.chainId,
-      params.vaultId.fleetAddress.value,
+      params.chainId,
+      params.fleetAddress,
       RoundsVaultType.Output,
     )
     const contract = await this._getRoundsVaultContract(vault)
-    const owner = params.user.wallet.address
+    const owner = Address.createFromEthereum({ value: params.userAddress })
     return contract.redeemExchangeAsset({
       id: params.roundId,
       amount: params.amount,
-      receiver: params.receiver ?? owner,
+      receiver: params.receiverAddress
+        ? Address.createFromEthereum({ value: params.receiverAddress })
+        : owner,
       owner,
     })
   }
@@ -304,7 +308,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     const { receipts } = await this._rwaSubgraphManager.getReceipts({
       chainId: params.chainId,
       account: params.accountAddress.toLowerCase(),
-      vault: vault.address.value.toLowerCase(),
+      vault: vault.address.toLowerCase(),
     })
 
     return receipts.map((receipt) => ({
@@ -393,8 +397,8 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
 
     // The approval is denominated in the vault's underlying token (Input: USDC; Output: Fleet shares).
     const approval = await this._allowanceManager.getApproval({
-      chainInfo: vault.chainInfo,
-      spender: vault.address,
+      chainInfo: getChainInfoByChainId(vault.chainId),
+      spender: Address.createFromEthereum({ value: vault.address }),
       amount,
       owner: userAddress,
     })
@@ -438,8 +442,8 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
    */
   private _getRoundsVaultContract(vault: IResolvedRoundsVault): Promise<IRoundsVaultContract> {
     return this._contractsProvider.getRoundsVaultContract({
-      chainInfo: vault.chainInfo,
-      address: vault.address,
+      chainInfo: getChainInfoByChainId(vault.chainId),
+      address: Address.createFromEthereum({ value: vault.address }),
     })
   }
 
@@ -455,7 +459,6 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     fleetAddress: AddressValue,
     vaultType: RoundsVaultType,
   ): Promise<IResolvedRoundsVault> {
-    const chainInfo = getChainInfoByChainId(chainId)
     const { vault } = await this._rwaSubgraphManager.getVault({
       chainId,
       vaultId: fleetAddress.toLowerCase(),
@@ -472,15 +475,18 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     }
 
     const underlyingToken = this._buildToken(chainId, roundsVault.underlyingToken)
+    const exchangeAssetToken = this._buildToken(chainId, roundsVault.exchangeAssetToken)
+    const minPositionSize = TokenAmount.createFromBaseUnit({
+      token: underlyingToken,
+      amount: roundsVault.minPositionSize.toString(),
+    })
+
     return {
-      chainInfo,
-      address: Address.createFromEthereum({ value: roundsVault.id }),
+      chainId,
+      address: roundsVault.id as AddressValue,
       underlyingToken,
-      exchangeAssetToken: this._buildToken(chainId, roundsVault.exchangeAssetToken),
-      minPositionSize: TokenAmount.createFromBaseUnit({
-        token: underlyingToken,
-        amount: roundsVault.minPositionSize.toString(),
-      }),
+      exchangeAssetToken,
+      minPositionSize,
     }
   }
 

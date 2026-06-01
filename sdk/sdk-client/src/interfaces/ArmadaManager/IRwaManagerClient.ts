@@ -1,12 +1,10 @@
 import type {
   AddressValue,
   ChainId,
-  IAddress,
   IArmadaVaultId,
   IChainInfo,
   IPrice,
   IRwaVaultInfo,
-  IUser,
   RoundState,
   RoundsVaultType,
   TransactionInfo,
@@ -50,11 +48,12 @@ export interface IRwaManagerClient {
   }): Promise<TransactionInfo[]>
 
   getClaimSharesTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
     amount: bigint
-    receiver?: IAddress
+    receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
   // --- Withdraw flow ---
@@ -67,11 +66,12 @@ export interface IRwaManagerClient {
   }): Promise<TransactionInfo[]>
 
   getClaimAssetsTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
     amount: bigint
-    receiver?: IAddress
+    receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
   getCancelRoundDepositTx(params: {

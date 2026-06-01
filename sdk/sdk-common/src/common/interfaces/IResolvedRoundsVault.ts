@@ -1,5 +1,5 @@
-import type { IAddress } from './IAddress'
-import type { IChainInfo } from './IChainInfo'
+import type { AddressValue } from '../types/AddressValue'
+import type { ChainId } from '../types/ChainId'
 import type { IToken } from './IToken'
 import type { ITokenAmount } from './ITokenAmount'
 
@@ -11,9 +11,9 @@ import type { ITokenAmount } from './ITokenAmount'
  */
 export interface IResolvedRoundsVault {
   /** The chain the RoundsVault is deployed on */
-  chainInfo: IChainInfo
+  chainId: ChainId
   /** The RoundsVault contract address */
-  address: IAddress
+  address: AddressValue
   /** Token deposited by users (Input: Fleet underlying e.g. USDC; Output: Fleet shares) */
   underlyingToken: IToken
   /** Token returned at settlement (Input: Fleet shares; Output: Fleet underlying e.g. USDC) */

@@ -26,7 +26,7 @@ describe('RWA - getWithdrawTx', () => {
   }[] = [
     {
       fleetAddressValue: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
-      amountValue: '1',
+      amountValue: '0.3',
     },
   ]
 

@@ -1,10 +1,4 @@
-import {
-  Address,
-  ArmadaVaultId,
-  User,
-  getChainInfoByChainId,
-  type AddressValue,
-} from '@summerfi/sdk-common'
+import { type AddressValue } from '@summerfi/sdk-common'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { RwaTestConfig } from './utils/testConfig'
 
@@ -21,36 +15,33 @@ jest.setTimeout(300000)
  */
 describe('RWA - getClaimAssetsTx', () => {
   const { sdk, chainId, userAddress, userSendTxTool } = createInstiSdkTestSetup()
-  const chainInfo = getChainInfoByChainId(chainId)
 
   const scenarios: {
-    fleetAddressValue: AddressValue
+    fleetAddress: AddressValue
     roundId: bigint
     /** Receipt token amount to redeem (base units). */
     amount: bigint
     /** Optional alternative receiver of the underlying asset. */
-    receiverValue?: AddressValue
+    receiverAddress?: AddressValue
   }[] = [
     {
-      fleetAddressValue: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
-      roundId: 0n,
+      fleetAddress: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
+      roundId: 5n,
       amount: 1n,
     },
   ]
 
   test.each(scenarios)(
-    'builds claim-assets tx for fleet $fleetAddressValue round $roundId',
-    async ({ fleetAddressValue, roundId, amount, receiverValue }) => {
-      const vaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
+    'builds claim-assets tx for fleet $fleetAddress round $roundId',
+    async ({ fleetAddress, roundId, amount, receiverAddress }) => {
+      const tx = await sdk.rwa.getClaimAssetsTx({
+        chainId,
+        fleetAddress,
+        userAddress: userAddress.value,
+        roundId,
+        amount,
+        receiverAddress,
       })
-      const user = User.createFromEthereum(chainId, userAddress.value)
-      const receiver = receiverValue
-        ? Address.createFromEthereum({ value: receiverValue })
-        : undefined
-
-      const tx = await sdk.rwa.getClaimAssetsTx({ vaultId, user, roundId, amount, receiver })
       expect(tx).toBeDefined()
       console.log(`[RWA getClaimAssetsTx] tx: ${tx.description}`)
 
