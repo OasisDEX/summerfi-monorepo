@@ -1,4 +1,4 @@
-import type { IFiatCurrencyAmount } from '../..'
+import type { IFiatCurrencyAmount } from '../../common/interfaces/IFiatCurrencyAmount'
 import { SerializationService } from '../../services/SerializationService'
 import { PositionType } from '../enums/PositionType'
 import { __signature__ } from '../interfaces/IArmadaPosition'

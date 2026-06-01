@@ -1,9 +1,9 @@
-import { getChainInfoByChainId, type AddressValue } from '../..'
 import { SerializationService } from '../../services/SerializationService'
 import { IAddress } from '../interfaces/IAddress'
 import { IChainInfo } from '../interfaces/IChainInfo'
 import { IToken, ITokenData, __signature__ } from '../interfaces/IToken'
 import { Address } from './Address'
+import { getChainInfoByChainId } from './ChainFamilies'
 import { ChainInfo } from './ChainInfo'
 
 /**

@@ -43,6 +43,10 @@ export class TokenAmount implements ITokenAmount {
     return new TokenAmount(params)
   }
 
+  static createFromEthereum(params: TokenAmountParameters): ITokenAmount {
+    return new TokenAmount(params)
+  }
+
   /**
    * @name createFromBaseUnit
    * @param params Token amount data to create the instance

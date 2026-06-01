@@ -10,7 +10,6 @@ import {
   type AddressValue,
   type ChainId,
   type IAddress,
-  type IChainInfo,
   type IResolvedRoundsVault,
   type IToken,
   type ITokenAmount,
@@ -472,12 +471,12 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       )
     }
 
-    const underlyingToken = this._buildToken(chainInfo, roundsVault.underlyingToken)
+    const underlyingToken = this._buildToken(chainId, roundsVault.underlyingToken)
     return {
       chainInfo,
       address: Address.createFromEthereum({ value: roundsVault.id }),
       underlyingToken,
-      exchangeAssetToken: this._buildToken(chainInfo, roundsVault.exchangeAssetToken),
+      exchangeAssetToken: this._buildToken(chainId, roundsVault.exchangeAssetToken),
       minPositionSize: TokenAmount.createFromBaseUnit({
         token: underlyingToken,
         amount: roundsVault.minPositionSize.toString(),
@@ -490,11 +489,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
    * @description Builds an IToken from an RWA subgraph token row.
    */
   private _buildToken(
-    chainInfo: IChainInfo,
+    chainId: ChainId,
     row: { id: string; name: string; symbol: string; decimals: number },
   ): IToken {
     return Token.createFromEthereum({
-      chainId: chainInfo.chainId,
+      chainId,
       addressValue: row.id,
       decimals: row.decimals,
       symbol: row.symbol,

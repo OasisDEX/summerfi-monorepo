@@ -1,4 +1,4 @@
-import type { IAddress } from '../../..'
+import type { IAddress } from '../../../common/interfaces/IAddress'
 import type { HexData } from '../../../common/types/HexData'
 
 /**

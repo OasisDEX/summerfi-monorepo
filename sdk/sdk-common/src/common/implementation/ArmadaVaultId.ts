@@ -36,7 +36,7 @@ export class ArmadaVaultId extends PoolId implements IArmadaVaultId {
     return new ArmadaVaultId(params)
   }
 
-  static createSimple(params: {
+  static createFromEthereum(params: {
     chainId: ChainId
     fleetAddressValue: AddressValue
   }): ArmadaVaultId {

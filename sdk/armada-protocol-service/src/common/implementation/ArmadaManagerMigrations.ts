@@ -48,7 +48,7 @@ import {
 } from './abi'
 import type { ArmadaMigrationConfig } from './token-config/types'
 import { BigNumber } from 'bignumber.js'
-import type { IDeploymentProvider } from '../..'
+import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 
 type ArmadaMigratablePositionWithoutPrice = Omit<ArmadaMigratablePosition, 'usdValue'>
 
