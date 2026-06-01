@@ -1,3 +1,4 @@
+import { getChainInfoByChainId, type AddressValue } from '../..'
 import { SerializationService } from '../../services/SerializationService'
 import { IAddress } from '../interfaces/IAddress'
 import { IChainInfo } from '../interfaces/IChainInfo'
@@ -28,6 +29,17 @@ export class Token implements IToken {
   /** FACTORY */
   static createFrom(params: TokenParameters): Token {
     return new Token(params)
+  }
+
+  static createFromEthereum(
+    params: Omit<TokenParameters, 'chainInfo' | 'address'> & {
+      chainId: number
+      addressValue: string
+    },
+  ): Token {
+    const chainInfo = getChainInfoByChainId(params.chainId)
+    const address = Address.createFromEthereum({ value: params.addressValue })
+    return new Token({ ...params, chainInfo, address })
   }
 
   /** SEALED CONSTRUCTOR */

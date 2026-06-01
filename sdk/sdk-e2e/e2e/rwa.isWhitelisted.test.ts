@@ -1,9 +1,4 @@
-import {
-  Address,
-  ArmadaVaultId,
-  getChainInfoByChainId,
-  type AddressValue,
-} from '@summerfi/sdk-common'
+import { type AddressValue } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { RwaTestConfig } from './utils/testConfig'
@@ -17,31 +12,24 @@ jest.setTimeout(300000)
  */
 describe('RWA - Whitelist - isWhitelisted', () => {
   const { sdk, chainId } = createInstiSdkTestSetup()
-  const chainInfo = getChainInfoByChainId(chainId)
 
   const scenarios: {
-    fleetAddressValue: AddressValue
-    accountValue: AddressValue
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
     /** Optional expected value to assert against. */
     expected?: boolean
   }[] = [
     {
-      fleetAddressValue: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
-      accountValue: RwaTestConfig.userAddressValue,
+      fleetAddress: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
+      accountAddress: RwaTestConfig.userAddressValue,
     },
   ]
 
   test.each(scenarios)(
-    'reads isWhitelisted for $accountValue on fleet $fleetAddressValue',
-    async ({ fleetAddressValue, accountValue, expected }) => {
-      const vaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
-      })
-      const account = Address.createFromEthereum({ value: accountValue })
-
-      const isWhitelisted = await sdk.rwa.isWhitelisted({ vaultId, account })
-      console.log(`[RWA isWhitelisted] ${accountValue}: ${isWhitelisted}`)
+    'reads isWhitelisted for $accountAddress on fleet $fleetAddress',
+    async ({ fleetAddress, accountAddress, expected }) => {
+      const isWhitelisted = await sdk.rwa.isWhitelisted({ chainId, fleetAddress, accountAddress })
+      console.log(`[RWA isWhitelisted] ${accountAddress}: ${isWhitelisted}`)
       assert(typeof isWhitelisted === 'boolean', 'isWhitelisted should return a boolean')
 
       if (expected !== undefined) {

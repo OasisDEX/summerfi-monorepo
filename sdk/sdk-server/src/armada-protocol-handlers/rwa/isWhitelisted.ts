@@ -1,17 +1,13 @@
-import {
-  isAddress,
-  isArmadaVaultId,
-  type IAddress,
-  type IArmadaVaultId,
-} from '@summerfi/sdk-common'
+import { isAddressValue, isChainId, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
 export const isWhitelisted = publicProcedure
   .input(
     z.object({
-      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
-      account: z.custom<IAddress>(isAddress),
+      chainId: z.custom<ChainId>(isChainId),
+      fleetAddress: z.custom<AddressValue>(isAddressValue),
+      accountAddress: z.custom<AddressValue>(isAddressValue),
     }),
   )
   .query(async (opts) => {

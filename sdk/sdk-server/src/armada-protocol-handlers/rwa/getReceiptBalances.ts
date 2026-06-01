@@ -1,9 +1,9 @@
 import {
-  isAddress,
-  isArmadaVaultId,
+  isAddressValue,
+  isChainId,
   RoundsVaultType,
-  type IAddress,
-  type IArmadaVaultId,
+  type AddressValue,
+  type ChainId,
 } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
@@ -11,8 +11,9 @@ import { publicProcedure } from '../../SDKTRPC'
 export const getReceiptBalances = publicProcedure
   .input(
     z.object({
-      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
-      account: z.custom<IAddress>(isAddress),
+      chainId: z.custom<ChainId>(isChainId),
+      fleetAddress: z.custom<AddressValue>(isAddressValue),
+      accountAddress: z.custom<AddressValue>(isAddressValue),
       vaultType: z.nativeEnum(RoundsVaultType),
     }),
   )

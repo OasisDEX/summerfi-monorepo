@@ -1,5 +1,4 @@
 import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import { ArmadaVaultId, Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 export const getRwaSetWhitelistedBatchTxHandler =
@@ -15,11 +14,5 @@ export const getRwaSetWhitelistedBatchTxHandler =
     accountAddresses: AddressValue[]
     allowed: boolean[]
   }) => {
-    const chainInfo = getChainInfoByChainId(chainId)
-    const vaultId = ArmadaVaultId.createFrom({
-      chainInfo,
-      fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
-    })
-    const accounts = accountAddresses.map((a) => Address.createFromEthereum({ value: a }))
-    return sdk.rwa.getSetWhitelistedBatchTx({ vaultId, accounts, allowed })
+    return sdk.rwa.getSetWhitelistedBatchTx({ chainId, fleetAddress, accountAddresses, allowed })
   }

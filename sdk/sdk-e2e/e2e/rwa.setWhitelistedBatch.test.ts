@@ -1,9 +1,4 @@
-import {
-  Address,
-  ArmadaVaultId,
-  getChainInfoByChainId,
-  type AddressValue,
-} from '@summerfi/sdk-common'
+import { type AddressValue } from '@summerfi/sdk-common'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { RwaTestConfig } from './utils/testConfig'
 
@@ -14,47 +9,45 @@ jest.setTimeout(300000)
  *
  * RWA whitelist — setWhitelistedBatch (many accounts in one tx, per-Fleet context).
  *
- * Each scenario supplies parallel `accountValues` / `allowed` arrays (must be equal length, and at
+ * Each scenario supplies parallel `accountAddresses` / `allowed` arrays (must be equal length, and at
  * most MAX_WHITELIST_BATCH_SIZE = 200 on-chain). Sends the batch tx (simulate-only by default) and
  * re-reads each account's status afterwards.
  */
 describe('RWA - Whitelist - setWhitelistedBatch', () => {
   const { sdk, chainId, governorSendTxTool } = createInstiSdkTestSetup()
-  const chainInfo = getChainInfoByChainId(chainId)
 
   const scenarios: {
-    fleetAddressValue: AddressValue
-    accountValues: AddressValue[]
+    fleetAddress: AddressValue
+    accountAddresses: AddressValue[]
     allowed: boolean[]
   }[] = [
     {
-      fleetAddressValue: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
-      accountValues: [RwaTestConfig.userAddressValue],
+      fleetAddress: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
+      accountAddresses: [RwaTestConfig.userAddressValue],
       allowed: [true],
     },
   ]
 
   test.each(scenarios)(
-    'batch-sets whitelist status on fleet $fleetAddressValue',
-    async ({ fleetAddressValue, accountValues, allowed }) => {
-      expect(accountValues.length).toBe(allowed.length)
+    'batch-sets whitelist status on fleet $fleetAddress',
+    async ({ fleetAddress, accountAddresses, allowed }) => {
+      expect(accountAddresses.length).toBe(allowed.length)
 
-      const vaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
+      const txInfo = await sdk.rwa.getSetWhitelistedBatchTx({
+        chainId,
+        fleetAddress,
+        accountAddresses,
+        allowed,
       })
-      const accounts = accountValues.map((value) => Address.createFromEthereum({ value }))
-
-      const txInfo = await sdk.rwa.getSetWhitelistedBatchTx({ vaultId, accounts, allowed })
       expect(txInfo).toBeDefined()
       console.log(`[RWA whitelist batch] tx: ${txInfo.description}`)
 
       const status = await governorSendTxTool(txInfo)
       expect(status).toBe('success')
 
-      for (const account of accounts) {
-        const after = await sdk.rwa.isWhitelisted({ vaultId, account })
-        console.log(`[RWA whitelist batch] ${account.value} after: ${after}`)
+      for (const accountAddress of accountAddresses) {
+        const after = await sdk.rwa.isWhitelisted({ chainId, fleetAddress, accountAddress })
+        console.log(`[RWA whitelist batch] ${accountAddress} after: ${after}`)
       }
     },
   )

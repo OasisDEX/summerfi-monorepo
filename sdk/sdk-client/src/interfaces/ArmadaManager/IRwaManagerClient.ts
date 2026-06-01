@@ -86,46 +86,60 @@ export interface IRwaManagerClient {
 
   // --- Round state reads ---
 
-  getCurrentRound(params: { vaultId: IArmadaVaultId; vaultType: RoundsVaultType }): Promise<bigint>
+  getCurrentRound(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+  }): Promise<bigint>
 
   getRoundState(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     roundId: bigint
     vaultType: RoundsVaultType
   }): Promise<RoundState>
 
   getExchangeRate(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     roundId: bigint
     vaultType: RoundsVaultType
   }): Promise<IPrice>
 
   getReceiptBalances(params: {
-    vaultId: IArmadaVaultId
-    account: IAddress
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
     vaultType: RoundsVaultType
   }): Promise<{ roundId: bigint; balance: bigint }[]>
 
   // --- Whitelisting ---
 
   getSetWhitelistedTx(params: {
-    vaultId: IArmadaVaultId
-    account: IAddress
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
     allowed: boolean
   }): Promise<TransactionInfo>
 
   getSetWhitelistedBatchTx(params: {
-    vaultId: IArmadaVaultId
-    accounts: IAddress[]
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddresses: AddressValue[]
     allowed: boolean[]
   }): Promise<TransactionInfo>
 
   getSetWhitelistOpenTx(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     isOpen: boolean
   }): Promise<TransactionInfo>
 
-  isWhitelisted(params: { vaultId: IArmadaVaultId; account: IAddress }): Promise<boolean>
+  isWhitelisted(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
+  }): Promise<boolean>
 
-  isWhitelistOpen(params: { vaultId: IArmadaVaultId }): Promise<boolean>
+  isWhitelistOpen(params: { chainId: ChainId; fleetAddress: AddressValue }): Promise<boolean>
 }

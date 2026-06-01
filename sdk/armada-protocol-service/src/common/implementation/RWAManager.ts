@@ -1,15 +1,15 @@
 import type { IRWAManager } from '@summerfi/armada-protocol-common'
 import {
   Address,
-  ArmadaVaultId,
   getChainInfoByChainId,
   Price,
   RoundsVaultType,
   RwaVaultInfo,
   Token,
   TokenAmount,
+  type AddressValue,
+  type ChainId,
   type IAddress,
-  type IArmadaVaultId,
   type IChainInfo,
   type IResolvedRoundsVault,
   type IToken,
@@ -120,11 +120,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     params: Parameters<IRWAManager['getDepositTx']>[0],
   ): ReturnType<IRWAManager['getDepositTx']> {
     // Deposit the Fleet underlying (e.g. USDC) into the Input RoundsVault for the current round.
-    const vaultId = ArmadaVaultId.createFrom({
-      chainInfo: getChainInfoByChainId(params.chainId),
-      fleetAddress: Address.createFromEthereum({ value: params.fleetAddress }),
-    })
-    const vault = await this._resolveRoundsVault(vaultId, RoundsVaultType.Input)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      RoundsVaultType.Input,
+    )
     // Interpret the human-readable amount in the vault's underlying-token decimals.
     const amount = TokenAmount.createFrom({
       token: vault.underlyingToken,
@@ -149,7 +149,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     params: Parameters<IRWAManager['getClaimSharesTx']>[0],
   ): ReturnType<IRWAManager['getClaimSharesTx']> {
     // Exchange a settled Input-round receipt for Fleet shares.
-    const vault = await this._resolveRoundsVault(params.vaultId, RoundsVaultType.Input)
+    const vault = await this._resolveRoundsVault(
+      params.vaultId.chainInfo.chainId,
+      params.vaultId.fleetAddress.value,
+      RoundsVaultType.Input,
+    )
     const contract = await this._getRoundsVaultContract(vault)
     const owner = params.user.wallet.address
     return contract.redeemExchangeAsset({
@@ -165,11 +169,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     params: Parameters<IRWAManager['getWithdrawTx']>[0],
   ): ReturnType<IRWAManager['getWithdrawTx']> {
     // Deposit Fleet shares into the Output RoundsVault for the current round.
-    const vaultId = ArmadaVaultId.createFrom({
-      chainInfo: getChainInfoByChainId(params.chainId),
-      fleetAddress: Address.createFromEthereum({ value: params.fleetAddress }),
-    })
-    const vault = await this._resolveRoundsVault(vaultId, RoundsVaultType.Output)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      RoundsVaultType.Output,
+    )
     // Interpret the human-readable amount in the Output vault's underlying-token (share) decimals.
     const amount = TokenAmount.createFrom({
       token: vault.underlyingToken,
@@ -194,7 +198,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     params: Parameters<IRWAManager['getClaimAssetsTx']>[0],
   ): ReturnType<IRWAManager['getClaimAssetsTx']> {
     // Exchange a settled Output-round receipt for the underlying asset (e.g. USDC).
-    const vault = await this._resolveRoundsVault(params.vaultId, RoundsVaultType.Output)
+    const vault = await this._resolveRoundsVault(
+      params.vaultId.chainInfo.chainId,
+      params.vaultId.fleetAddress.value,
+      RoundsVaultType.Output,
+    )
     const contract = await this._getRoundsVaultContract(vault)
     const owner = params.user.wallet.address
     return contract.redeemExchangeAsset({
@@ -210,11 +218,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     params: Parameters<IRWAManager['getCancelRoundDepositTx']>[0],
   ): ReturnType<IRWAManager['getCancelRoundDepositTx']> {
     // Redeem an open current-round receipt back into the originally deposited asset.
-    const vaultId = ArmadaVaultId.createFrom({
-      chainInfo: getChainInfoByChainId(params.chainId),
-      fleetAddress: Address.createFromEthereum({ value: params.fleetAddress }),
-    })
-    const vault = await this._resolveRoundsVault(vaultId, params.vaultType)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
     const contract = await this._getRoundsVaultContract(vault)
     // The receipt amount is denominated in the resolved vault's underlying-token decimals.
     const amount = TokenAmount.createFrom({
@@ -236,7 +244,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getCurrentRound(
     params: Parameters<IRWAManager['getCurrentRound']>[0],
   ): ReturnType<IRWAManager['getCurrentRound']> {
-    const vault = await this._resolveRoundsVault(params.vaultId, params.vaultType)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
     const contract = await this._getRoundsVaultContract(vault)
     return contract.getCurrentRound()
   }
@@ -245,7 +257,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getRoundState(
     params: Parameters<IRWAManager['getRoundState']>[0],
   ): ReturnType<IRWAManager['getRoundState']> {
-    const vault = await this._resolveRoundsVault(params.vaultId, params.vaultType)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
     const contract = await this._getRoundsVaultContract(vault)
     const state = await contract.roundState({ roundId: params.roundId })
     return state as RoundState
@@ -255,7 +271,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getExchangeRate(
     params: Parameters<IRWAManager['getExchangeRate']>[0],
   ): ReturnType<IRWAManager['getExchangeRate']> {
-    const vault = await this._resolveRoundsVault(params.vaultId, params.vaultType)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
     const contract = await this._getRoundsVaultContract(vault)
     const { baseAmount, quoteAmount } = await contract.getExchangeRate({ round: params.roundId })
 
@@ -277,10 +297,14 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getReceiptBalances(
     params: Parameters<IRWAManager['getReceiptBalances']>[0],
   ): ReturnType<IRWAManager['getReceiptBalances']> {
-    const vault = await this._resolveRoundsVault(params.vaultId, params.vaultType)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
     const { receipts } = await this._rwaSubgraphManager.getReceipts({
-      chainId: params.vaultId.chainInfo.chainId,
-      account: params.account.value.toLowerCase(),
+      chainId: params.chainId,
+      account: params.accountAddress.toLowerCase(),
       vault: vault.address.value.toLowerCase(),
     })
 
@@ -294,10 +318,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getSetWhitelistedTx(
     params: Parameters<IRWAManager['getSetWhitelistedTx']>[0],
   ): ReturnType<IRWAManager['getSetWhitelistedTx']> {
-    const contract = await this._getProtocolAccessManagerV2Contract(params.vaultId)
+    const context = Address.createFromEthereum({ value: params.fleetAddress })
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
     return contract.setWhitelisted({
-      context: params.vaultId.fleetAddress,
-      account: params.account,
+      context,
+      account: Address.createFromEthereum({ value: params.accountAddress }),
       allowed: params.allowed,
     })
   }
@@ -306,10 +331,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getSetWhitelistedBatchTx(
     params: Parameters<IRWAManager['getSetWhitelistedBatchTx']>[0],
   ): ReturnType<IRWAManager['getSetWhitelistedBatchTx']> {
-    const contract = await this._getProtocolAccessManagerV2Contract(params.vaultId)
+    const context = Address.createFromEthereum({ value: params.fleetAddress })
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
     return contract.setWhitelistedBatch({
-      context: params.vaultId.fleetAddress,
-      accounts: params.accounts,
+      context,
+      accounts: params.accountAddresses.map((value) => Address.createFromEthereum({ value })),
       allowed: params.allowed,
     })
   }
@@ -318,9 +344,10 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getSetWhitelistOpenTx(
     params: Parameters<IRWAManager['getSetWhitelistOpenTx']>[0],
   ): ReturnType<IRWAManager['getSetWhitelistOpenTx']> {
-    const contract = await this._getProtocolAccessManagerV2Contract(params.vaultId)
+    const context = Address.createFromEthereum({ value: params.fleetAddress })
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
     return contract.setWhitelistOpen({
-      context: params.vaultId.fleetAddress,
+      context,
       isOpen: params.isOpen,
     })
   }
@@ -329,10 +356,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async isWhitelisted(
     params: Parameters<IRWAManager['isWhitelisted']>[0],
   ): ReturnType<IRWAManager['isWhitelisted']> {
-    const contract = await this._getProtocolAccessManagerV2Contract(params.vaultId)
+    const context = Address.createFromEthereum({ value: params.fleetAddress })
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
     return contract.isWhitelisted({
-      context: params.vaultId.fleetAddress,
-      account: params.account,
+      context,
+      account: Address.createFromEthereum({ value: params.accountAddress }),
     })
   }
 
@@ -340,10 +368,9 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async isWhitelistOpen(
     params: Parameters<IRWAManager['isWhitelistOpen']>[0],
   ): ReturnType<IRWAManager['isWhitelistOpen']> {
-    const contract = await this._getProtocolAccessManagerV2Contract(params.vaultId)
-    return contract.isWhitelistOpen({
-      context: params.vaultId.fleetAddress,
-    })
+    const context = Address.createFromEthereum({ value: params.fleetAddress })
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
+    return contract.isWhitelistOpen({ context })
   }
 
   /** PRIVATE HELPERS */
@@ -393,14 +420,15 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
    *              PAM-V2; the whitelist methods scope every call to the Fleet address as `context`.
    */
   private async _getProtocolAccessManagerV2Contract(
-    vaultId: IArmadaVaultId,
+    chainId: ChainId,
   ): Promise<IProtocolAccessManagerV2Contract> {
+    const chainInfo = getChainInfoByChainId(chainId)
     const address = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'protocolAccessManager',
-      chainId: vaultId.chainInfo.chainId,
+      chainId,
     })
     return this._contractsProvider.getProtocolAccessManagerV2Contract({
-      chainInfo: vaultId.chainInfo,
+      chainInfo,
       address,
     })
   }
@@ -421,47 +449,39 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
    * @description Resolves the Input or Output RoundsVault address + token metadata for a Fleet from
    *              the RWA subgraph (`vault.roundsVaultPair`).
    *
-   * @throws Error if the Fleet has no rounds-vault pair or the requested side is not registered.
+   * @throws Error if the Fleet (or the requested RoundsVault side) is not registered.
    */
   private async _resolveRoundsVault(
-    vaultId: IArmadaVaultId,
+    chainId: ChainId,
+    fleetAddress: AddressValue,
     vaultType: RoundsVaultType,
   ): Promise<IResolvedRoundsVault> {
+    const chainInfo = getChainInfoByChainId(chainId)
     const { vault } = await this._rwaSubgraphManager.getVault({
-      chainId: vaultId.chainInfo.chainId,
-      vaultId: vaultId.fleetAddress.value.toLowerCase(),
+      chainId,
+      vaultId: fleetAddress.toLowerCase(),
     })
 
-    if (!vault) {
-      throw new Error(
-        `No vault found for Fleet ${vaultId.fleetAddress.value} on chain ${vaultId.chainInfo.chainId}`,
-      )
-    }
-
-    const pair = vault.roundsVaultPair
-    if (!pair) {
-      throw new Error(
-        `No RoundsVault pair registered for Fleet ${vaultId.fleetAddress.value} on chain ${vaultId.chainInfo.chainId}`,
-      )
-    }
-    const isRoundsVaultInput = vaultType === RoundsVaultType.Input
-    const roundsVault = isRoundsVaultInput ? pair.inputVault : pair.outputVault
+    const roundsVault =
+      vaultType === RoundsVaultType.Input
+        ? vault?.roundsVaultPair?.inputVault
+        : vault?.roundsVaultPair?.outputVault
     if (!roundsVault) {
       throw new Error(
-        `No ${vaultType} RoundsVault registered for Fleet ${vaultId.fleetAddress.value} on chain ${vaultId.chainInfo.chainId}`,
+        `No ${vaultType} RoundsVault registered for Fleet ${fleetAddress} on chain ${chainId}`,
       )
     }
 
+    const underlyingToken = this._buildToken(chainInfo, roundsVault.underlyingToken)
     return {
-      chainInfo: vaultId.chainInfo,
+      chainInfo,
       address: Address.createFromEthereum({ value: roundsVault.id }),
-      underlyingToken: this._buildToken(vaultId.chainInfo, roundsVault.underlyingToken),
-      exchangeAssetToken: this._buildToken(vaultId.chainInfo, roundsVault.exchangeAssetToken),
-      minPositionSize: this._buildTokenAmount(
-        vaultId.chainInfo,
-        roundsVault.minPositionSize,
-        roundsVault.underlyingToken,
-      ),
+      underlyingToken,
+      exchangeAssetToken: this._buildToken(chainInfo, roundsVault.exchangeAssetToken),
+      minPositionSize: TokenAmount.createFromBaseUnit({
+        token: underlyingToken,
+        amount: roundsVault.minPositionSize.toString(),
+      }),
     }
   }
 
@@ -473,25 +493,12 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     chainInfo: IChainInfo,
     row: { id: string; name: string; symbol: string; decimals: number },
   ): IToken {
-    return Token.createFrom({
-      chainInfo,
-      address: Address.createFromEthereum({ value: row.id }),
+    return Token.createFromEthereum({
+      chainId: chainInfo.chainId,
+      addressValue: row.id,
       decimals: row.decimals,
       symbol: row.symbol,
       name: row.name,
     })
-  }
-
-  /**
-   * @name _buildTokenAmount
-   * @description Builds an ITokenAmount from a subgraph BigInt string (base units) and token row.
-   */
-  private _buildTokenAmount(
-    chainInfo: IChainInfo,
-    amount: string | bigint,
-    tokenRow: { id: string; name: string; symbol: string; decimals: number },
-  ): ITokenAmount {
-    const token = this._buildToken(chainInfo, tokenRow)
-    return TokenAmount.createFromBaseUnit({ token, amount: amount.toString() })
   }
 }

@@ -173,21 +173,28 @@ export interface IRWAManager {
    * @method getCurrentRound
    * @description Returns the current (open) round number for the given RoundsVault.
    *
-   * @param vaultId      The Fleet vault identifier
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
    * @param vaultType    Whether to query the Input or Output RoundsVault
    */
-  getCurrentRound(params: { vaultId: IArmadaVaultId; vaultType: RoundsVaultType }): Promise<bigint>
+  getCurrentRound(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+  }): Promise<bigint>
 
   /**
    * @method getRoundState
    * @description Returns the on-chain state of a specific round.
    *
-   * @param vaultId      The Fleet vault identifier
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
    * @param roundId      The round number to query
    * @param vaultType    Whether to query the Input or Output RoundsVault
    */
   getRoundState(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     roundId: bigint
     vaultType: RoundsVaultType
   }): Promise<RoundState>
@@ -197,28 +204,32 @@ export interface IRWAManager {
    * @description Returns the snapshotted exchange rate for a settled round
    *              (output-asset amount per unit of receipt token).
    *
-   * @param vaultId      The Fleet vault identifier
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
    * @param roundId      A settled round number
    * @param vaultType    Whether to query the Input or Output RoundsVault
    */
   getExchangeRate(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     roundId: bigint
     vaultType: RoundsVaultType
   }): Promise<IPrice>
 
   /**
    * @method getReceiptBalances
-   * @description Returns all ERC-1155 receipt token balances held by an account across
-   *              every round id (via balanceOfAll).
+   * @description Returns all ERC-1155 receipt token balances held by an account across every round id
+   *              (sourced from the RWA subgraph).
    *
-   * @param vaultId      The Fleet vault identifier
-   * @param account      The account to query
-   * @param vaultType    Whether to query the Input or Output RoundsVault
+   * @param chainId        The chain the Fleet is on
+   * @param fleetAddress   The Fleet address
+   * @param accountAddress The account to query
+   * @param vaultType      Whether to query the Input or Output RoundsVault
    */
   getReceiptBalances(params: {
-    vaultId: IArmadaVaultId
-    account: IAddress
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
     vaultType: RoundsVaultType
   }): Promise<{ roundId: bigint; balance: bigint }[]>
 
@@ -231,13 +242,15 @@ export interface IRWAManager {
    * @description Builds the transaction to set or revoke whitelist status for a single account
    *              on the Fleet's ProtocolAccessManagerV2 context.
    *
-   * @param vaultId  The Fleet vault identifier (fleet address is the whitelist context)
-   * @param account  The account to whitelist or de-list
-   * @param allowed  true to whitelist, false to revoke
+   * @param chainId        The chain the Fleet is on
+   * @param fleetAddress   The Fleet address (the whitelist context)
+   * @param accountAddress The account to whitelist or de-list
+   * @param allowed        true to whitelist, false to revoke
    */
   getSetWhitelistedTx(params: {
-    vaultId: IArmadaVaultId
-    account: IAddress
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
     allowed: boolean
   }): Promise<TransactionInfo>
 
@@ -246,13 +259,15 @@ export interface IRWAManager {
    * @description Builds the transaction to set or revoke whitelist status for multiple accounts
    *              in a single on-chain call.
    *
-   * @param vaultId  The Fleet vault identifier
-   * @param accounts Array of accounts to update
-   * @param allowed  Parallel array of allowed flags
+   * @param chainId          The chain the Fleet is on
+   * @param fleetAddress     The Fleet address (the whitelist context)
+   * @param accountAddresses Array of accounts to update
+   * @param allowed          Parallel array of allowed flags
    */
   getSetWhitelistedBatchTx(params: {
-    vaultId: IArmadaVaultId
-    accounts: IAddress[]
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddresses: AddressValue[]
     allowed: boolean[]
   }): Promise<TransactionInfo>
 
@@ -261,11 +276,13 @@ export interface IRWAManager {
    * @description Builds the transaction to toggle the open-whitelist flag for the Fleet context.
    *              When open, any address is considered whitelisted regardless of individual entries.
    *
-   * @param vaultId  The Fleet vault identifier
-   * @param isOpen   true to open the whitelist globally, false to close it
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address (the whitelist context)
+   * @param isOpen       true to open the whitelist globally, false to close it
    */
   getSetWhitelistOpenTx(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     isOpen: boolean
   }): Promise<TransactionInfo>
 
@@ -274,17 +291,23 @@ export interface IRWAManager {
    * @description Returns whether an account is whitelisted on the Fleet context
    *              (either individually or because the whitelist is open).
    *
-   * @param vaultId  The Fleet vault identifier
-   * @param account  The account to check
+   * @param chainId        The chain the Fleet is on
+   * @param fleetAddress   The Fleet address (the whitelist context)
+   * @param accountAddress The account to check
    */
-  isWhitelisted(params: { vaultId: IArmadaVaultId; account: IAddress }): Promise<boolean>
+  isWhitelisted(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
+  }): Promise<boolean>
 
   /**
    * @method isWhitelistOpen
    * @description Returns whether the Fleet's whitelist is globally open
    *              (i.e. _isWhitelistOpen[fleetAddress] == true).
    *
-   * @param vaultId  The Fleet vault identifier
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address (the whitelist context)
    */
-  isWhitelistOpen(params: { vaultId: IArmadaVaultId }): Promise<boolean>
+  isWhitelistOpen(params: { chainId: ChainId; fleetAddress: AddressValue }): Promise<boolean>
 }

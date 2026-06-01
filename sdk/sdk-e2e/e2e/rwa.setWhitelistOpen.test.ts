@@ -1,9 +1,4 @@
-import {
-  Address,
-  ArmadaVaultId,
-  getChainInfoByChainId,
-  type AddressValue,
-} from '@summerfi/sdk-common'
+import { type AddressValue } from '@summerfi/sdk-common'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { RwaTestConfig } from './utils/testConfig'
 
@@ -19,37 +14,31 @@ jest.setTimeout(300000)
  */
 describe('RWA - Whitelist - setWhitelistOpen', () => {
   const { sdk, chainId, governorSendTxTool } = createInstiSdkTestSetup()
-  const chainInfo = getChainInfoByChainId(chainId)
 
   const scenarios: {
-    fleetAddressValue: AddressValue
+    fleetAddress: AddressValue
     isOpen: boolean
   }[] = [
     {
-      fleetAddressValue: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
+      fleetAddress: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
       isOpen: true,
     },
   ]
 
   test.each(scenarios)(
-    'sets whitelist-open to $isOpen on fleet $fleetAddressValue',
-    async ({ fleetAddressValue, isOpen }) => {
-      const vaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
-      })
-
-      const before = await sdk.rwa.isWhitelistOpen({ vaultId })
+    'sets whitelist-open to $isOpen on fleet $fleetAddress',
+    async ({ fleetAddress, isOpen }) => {
+      const before = await sdk.rwa.isWhitelistOpen({ chainId, fleetAddress })
       console.log(`[RWA whitelist open] before: ${before}`)
 
-      const txInfo = await sdk.rwa.getSetWhitelistOpenTx({ vaultId, isOpen })
+      const txInfo = await sdk.rwa.getSetWhitelistOpenTx({ chainId, fleetAddress, isOpen })
       expect(txInfo).toBeDefined()
       console.log(`[RWA whitelist open] tx: ${txInfo.description}`)
 
       const status = await governorSendTxTool(txInfo)
       expect(status).toBe('success')
 
-      const after = await sdk.rwa.isWhitelistOpen({ vaultId })
+      const after = await sdk.rwa.isWhitelistOpen({ chainId, fleetAddress })
       console.log(`[RWA whitelist open] after: ${after}`)
     },
   )
