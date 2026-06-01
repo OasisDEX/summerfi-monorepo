@@ -1,6 +1,7 @@
 import {
   DcaStrategyStatusEnum,
   isAddressValue,
+  isChainId,
   type AddressValue,
   type ChainId,
   type IDcaStrategy,
@@ -20,7 +21,7 @@ const MAX_SLIPPAGE_PERCENTAGE = 100 // 100% = 10000 bps, matching _BPS in DCAStr
 export const strategyIdSchema = uint256StringSchema
 
 export const createStrategyTxInputSchema = z.object({
-  chainId: z.number() as z.ZodType<ChainId>,
+  chainId: z.custom<ChainId>(isChainId),
   userAddress: addressSchema,
   fromVault: addressSchema,
   toVault: addressSchema,
@@ -48,7 +49,7 @@ export const createStrategyTxInputSchema = z.object({
 export const strategySchema: z.ZodType<IDcaStrategy> = z.object({
   id: z.string(),
   strategyId: z.bigint(),
-  chainId: z.number() as z.ZodType<ChainId>,
+  chainId: z.custom<ChainId>(isChainId),
   ownerAddress: addressSchema,
   sourceVault: addressSchema,
   targetVault: addressSchema,
@@ -72,7 +73,7 @@ export const strategySchema: z.ZodType<IDcaStrategy> = z.object({
 })
 
 export const editStrategyTxInputSchema = z.object({
-  chainId: z.number() as z.ZodType<ChainId>,
+  chainId: z.custom<ChainId>(isChainId),
   strategy: strategySchema.superRefine((s, ctx) => {
     if (s.intervalSeconds < BigInt(MIN_INTERVAL_SECONDS)) {
       ctx.addIssue({
