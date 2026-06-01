@@ -7,6 +7,8 @@ export * from './FleetCommanderWhitelist.sol';
 export * from './GovernanceRewardsManager.sol';
 export * from './HarborCommand.sol';
 export * from './ProtocolAccessManagerWhiteList.sol';
+export * from './ProtocolAccessManagerV2.sol';
+export * from './RoundsVault.sol';
 export * from './StakingRewardsManagerBase.sol';
 export * from './SummerRewardsRedeemer.sol';
 export * from './SummerStaking.sol';
