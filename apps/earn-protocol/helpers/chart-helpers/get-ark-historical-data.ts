@@ -12,6 +12,7 @@ import { getVaultNiceName, subgraphNetworkToId, supportedSDKNetwork } from '@sum
 import dayjs from 'dayjs'
 
 import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/constants/charts'
+import { roundRateToFourDecimals } from '@/helpers/chart-helpers/round-rate-precision'
 
 type BaseHistoricalChartsDataReturnType = {
   [key in TimeframesType]: {
@@ -124,7 +125,7 @@ export const getArkHistoricalChartData = ({
     const timestamp = dayjs(Number(vaultHourlyInterestRate.date) * 1000).startOf('hour')
     const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
-    const averageRate = Number(vaultHourlyInterestRate.averageRate)
+    const averageRate = roundRateToFourDecimals(Number(vaultHourlyInterestRate.averageRate))
     const timestampAndData = { timestamp: timestampFormatted, [vaultName]: averageRate }
 
     if (timestamp.unix() > threshold7d) {
@@ -151,7 +152,7 @@ export const getArkHistoricalChartData = ({
       chartsDataRaw['90d'][timestampFormatted] = { timestamp: timestampFormatted }
       chartsDataRaw['90d'][timestampFormatted] = {
         ...chartsDataRaw['90d'][timestampFormatted],
-        [vaultName]: Number(vaultDailyInterestRate.averageRate),
+        [vaultName]: roundRateToFourDecimals(Number(vaultDailyInterestRate.averageRate)),
       }
     }
 
@@ -159,14 +160,14 @@ export const getArkHistoricalChartData = ({
       chartsDataRaw['6m'][timestampFormatted] = { timestamp: timestampFormatted }
       chartsDataRaw['6m'][timestampFormatted] = {
         ...chartsDataRaw['6m'][timestampFormatted],
-        [vaultName]: Number(vaultDailyInterestRate.averageRate),
+        [vaultName]: roundRateToFourDecimals(Number(vaultDailyInterestRate.averageRate)),
       }
     }
     if (timestamp.unix() > threshold1y) {
       chartsDataRaw['1y'][timestampFormatted] = { timestamp: timestampFormatted }
       chartsDataRaw['1y'][timestampFormatted] = {
         ...chartsDataRaw['1y'][timestampFormatted],
-        [vaultName]: Number(vaultDailyInterestRate.averageRate),
+        [vaultName]: roundRateToFourDecimals(Number(vaultDailyInterestRate.averageRate)),
       }
     }
   }
@@ -178,7 +179,7 @@ export const getArkHistoricalChartData = ({
       chartsDataRaw['3y'][timestampFormatted] = { timestamp: timestampFormatted }
       chartsDataRaw['3y'][timestampFormatted] = {
         ...chartsDataRaw['3y'][timestampFormatted],
-        [vaultName]: Number(vaultWeeklyInterestRate.averageRate),
+        [vaultName]: roundRateToFourDecimals(Number(vaultWeeklyInterestRate.averageRate)),
       }
     }
   }
@@ -189,7 +190,7 @@ export const getArkHistoricalChartData = ({
     const vaultBenchmarkDailyPoints = vaultBenchmark.map((dataPoint) => {
       const dayTimestamp = dayjs(dataPoint.timestamp).startOf('day')
       const dayTimestampFormatted = dayTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
-      const apy = Number(dataPoint.apy1dTotal) * 100
+      const apy = roundRateToFourDecimals(Number(dataPoint.apy1dTotal) * 100)
 
       vaultBenchmarkDailyMap.set(dayTimestampFormatted, apy)
 
@@ -326,13 +327,13 @@ export const getArkHistoricalChartData = ({
       if (timestamp in chartsDataRaw['7d'] && timestampNeat.unix() > threshold7d) {
         chartsDataRaw['7d'][timestamp] = {
           ...chartsDataRaw['7d'][timestamp],
-          [arkUniqueName]: Number(hourlyInterestRate.averageRate),
+          [arkUniqueName]: roundRateToFourDecimals(Number(hourlyInterestRate.averageRate)),
         }
       }
       if (timestamp in chartsDataRaw['30d'] && timestampNeat.unix() > threshold30d) {
         chartsDataRaw['30d'][timestamp] = {
           ...chartsDataRaw['30d'][timestamp],
-          [arkUniqueName]: Number(hourlyInterestRate.averageRate),
+          [arkUniqueName]: roundRateToFourDecimals(Number(hourlyInterestRate.averageRate)),
         }
       }
     }
@@ -343,19 +344,19 @@ export const getArkHistoricalChartData = ({
       if (timestamp in chartsDataRaw['90d'] && timestampNeat.unix() > threshold90d) {
         chartsDataRaw['90d'][timestamp] = {
           ...chartsDataRaw['90d'][timestamp],
-          [arkUniqueName]: Number(dailyInterestRate.averageRate),
+          [arkUniqueName]: roundRateToFourDecimals(Number(dailyInterestRate.averageRate)),
         }
       }
       if (timestamp in chartsDataRaw['6m'] && timestampNeat.unix() > threshold6m) {
         chartsDataRaw['6m'][timestamp] = {
           ...chartsDataRaw['6m'][timestamp],
-          [arkUniqueName]: Number(dailyInterestRate.averageRate),
+          [arkUniqueName]: roundRateToFourDecimals(Number(dailyInterestRate.averageRate)),
         }
       }
       if (timestamp in chartsDataRaw['1y'] && timestampNeat.unix() > threshold1y) {
         chartsDataRaw['1y'][timestamp] = {
           ...chartsDataRaw['1y'][timestamp],
-          [arkUniqueName]: Number(dailyInterestRate.averageRate),
+          [arkUniqueName]: roundRateToFourDecimals(Number(dailyInterestRate.averageRate)),
         }
       }
     }
@@ -368,7 +369,7 @@ export const getArkHistoricalChartData = ({
       if (timestamp in chartsDataRaw['3y'] && timestampNeat.unix() > threshold3y) {
         chartsDataRaw['3y'][timestamp] = {
           ...chartsDataRaw['3y'][timestamp],
-          [arkUniqueName]: Number(weeklyInterestRate.averageRate),
+          [arkUniqueName]: roundRateToFourDecimals(Number(weeklyInterestRate.averageRate)),
         }
       }
     }

@@ -11,6 +11,7 @@ import {
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
+  formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
@@ -269,7 +270,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             onClick={() => buttonClickEventHandler(`vault-manage-header-link-vault`)}
           >
             <Text as="span" variant="p3">
-              {vault.customFields?.name ?? vault.id}
+              {vault.customFields?.name ?? formatAddress(vault.id)}
             </Text>
           </Link>
           <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
@@ -283,7 +284,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             >
               {viewWalletAddress.toLowerCase() === connectedWalletAddress?.toLowerCase()
                 ? 'Your'
-                : viewWalletAddress}{' '}
+                : formatAddress(viewWalletAddress)}{' '}
               Position
             </Link>
             <div

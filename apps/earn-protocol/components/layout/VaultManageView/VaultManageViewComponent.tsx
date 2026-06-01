@@ -28,20 +28,18 @@ import {
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
-  type ArksHistoricalChartData,
   type DropdownRawOption,
   type EarnAppConfigType,
   type GetVaultsApyResponse,
   type IArmadaPosition,
   type IArmadaVaultInfo,
-  type InterestRates,
   type NetworkIds,
-  type PerformanceChartData,
   type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
   SupportedNetworkIds,
+  type SupportedSDKNetworks,
   TOSStatus,
   TransactionAction,
 } from '@summerfi/app-types'
@@ -57,9 +55,6 @@ import { TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
-import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
-import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
 import { RewardTokenClaimBox } from '@/components/layout/VaultManageView/RewardTokenClaimBox'
@@ -69,7 +64,6 @@ import { PendingTransactionsList } from '@/components/molecules/PendingTransacti
 import { OrderInfoIntentSwap } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { type VaultCurationEvent } from '@/features/curation-activity/types'
 // import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 // import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 // import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
@@ -139,19 +133,14 @@ const ControlsPermit2Authorization = dynamic(
 )
 
 export const VaultManageViewComponent = ({
+  network,
+  vaultId,
   vault,
   vaults,
   vaultInfo,
   noOfDeposits,
   position,
-  latestActivity,
-  topDepositors,
   viewWalletAddress,
-  rebalanceActivity,
-  curationEvents,
-  performanceChartData,
-  arksHistoricalChartData,
-  arksInterestRates,
   vaultsApyByNetworkMap,
   // migratablePositions,
   // migrationBestVaultApy,
@@ -159,19 +148,14 @@ export const VaultManageViewComponent = ({
   rewardTokenPrices,
   rewardTokensClaimableNow,
 }: {
+  network: SupportedSDKNetworks
+  vaultId: string
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
   vaultInfo?: IArmadaVaultInfo
   noOfDeposits: number
-  topDepositors: TopDepositorsPagination
-  latestActivity: LatestActivityPagination
-  rebalanceActivity: RebalanceActivityPagination
-  curationEvents: VaultCurationEvent[]
   viewWalletAddress: string
-  performanceChartData: PerformanceChartData
-  arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: InterestRates
   vaultsApyByNetworkMap: GetVaultsApyResponse
   // migratablePositions: MigratablePosition[]
   // migrationBestVaultApy: MigrationEarningsDataByChainId
@@ -877,16 +861,11 @@ export const VaultManageViewComponent = ({
         }
         detailsContent={
           <VaultManageViewDetails
-            arksHistoricalChartData={arksHistoricalChartData}
-            performanceChartData={performanceChartData}
-            arksInterestRates={arksInterestRates}
-            vaultApyData={vaultApyData}
-            vault={vault}
-            rebalanceActivity={rebalanceActivity}
-            curationEvents={curationEvents}
-            latestActivity={latestActivity}
-            topDepositors={topDepositors}
+            network={network}
+            vaultId={vaultId}
             viewWalletAddress={viewWalletAddress}
+            vault={vault}
+            vaultApyData={vaultApyData}
           />
         }
         sidebarContent={<Sidebar {...resovledSidebarProps} />}

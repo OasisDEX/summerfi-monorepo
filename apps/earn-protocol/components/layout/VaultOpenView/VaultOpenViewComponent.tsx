@@ -9,8 +9,10 @@ import {
   sidebarFootnote,
   SidebarMobileHeader,
   type SidebarProps,
+  Text,
   useAmount,
   useAmountWithSwap,
+  useEarnProtocolLogin,
   useEarnProtocolWallet,
   useForecast,
   useIsIframe,
@@ -22,13 +24,12 @@ import {
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
-  type ArksHistoricalChartData,
   type DropdownRawOption,
-  type InterestRates,
   type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
+  type SupportedSDKNetworks,
   // SupportedNetworkIds,
   TOSStatus,
   TransactionAction,
@@ -43,19 +44,16 @@ import {
 } from '@summerfi/sdk-common'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
-import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
-import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
 import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
+import { useVaultOpenDetailsQuery } from '@/components/layout/VaultOpenView/useVaultOpenQuery'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { BeachClubReferralForm } from '@/features/beach-club/components/BeachClubReferralForm/BeachClubReferralForm'
-import { type VaultCurationEvent } from '@/features/curation-activity/types'
 // import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 // import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 // import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
@@ -64,6 +62,7 @@ import { TransakWidget } from '@/features/transak/components/TransakWidget/Trans
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useIsWhitelisted } from '@/hooks/use-is-whitelisted'
 import {
   useHandleButtonClickEvent,
   useHandleDropdownChangeEvent,
@@ -79,19 +78,16 @@ import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
 
+import { VaultOpenDetailsLoading } from './VaultOpenDetailsLoading'
 import { VaultOpenViewDetails } from './VaultOpenViewDetails'
 
 type VaultOpenViewComponentProps = {
+  network: SupportedSDKNetworks
+  vaultId: string
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   vaultInfo?: IArmadaVaultInfo
-  latestActivity: LatestActivityPagination
-  topDepositors: TopDepositorsPagination
-  rebalanceActivity: RebalanceActivityPagination
-  curationEvents: VaultCurationEvent[]
   medianDefiYield?: number
-  arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   // vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
@@ -99,21 +95,22 @@ type VaultOpenViewComponentProps = {
 }
 
 export const VaultOpenViewComponent = ({
+  network,
+  vaultId,
   vault,
   vaultInfo,
   vaults,
-  latestActivity,
-  topDepositors,
-  rebalanceActivity,
-  curationEvents,
   medianDefiYield,
-  arksHistoricalChartData,
-  arksInterestRates,
   vaultApyData,
   // vaultsApyRaw,
   referralCode: referralCodeFromCookie,
   rewardTokenPrices,
 }: VaultOpenViewComponentProps) => {
+  // Below-the-fold details stream in independently of the deposit sidebar: hydrated on first
+  // render, or fetched via the API route fallback (showing VaultOpenDetailsLoading) if the
+  // prefetch failed to dehydrate.
+  const { data: details } = useVaultOpenDetailsQuery(network, vaultId)
+
   const isRwaVault = vault.isRwaVault ?? false
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -134,6 +131,14 @@ export const VaultOpenViewComponent = ({
   // const migrationsEnabled = !!features?.Migrations
 
   const { address: userWalletAddress } = useEarnProtocolWallet()
+  const { login, logout } = useEarnProtocolLogin()
+
+  // RWA vaults are permissioned: disconnect the current wallet and restart the
+  // login flow so the user can connect a wallet that has passed KYC/AML checks.
+  const handleConnectWhitelistedWallet = useCallback(async () => {
+    await logout()
+    login()
+  }, [login, logout])
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 
@@ -317,6 +322,14 @@ export const VaultOpenViewComponent = ({
     selectedToken,
     inputChangeHandler,
     inputName: 'vault-open-approval-amount',
+  })
+
+  const { isWhitelisted, isLoading: isWhitelistedLoading } = useIsWhitelisted({
+    isRwaVault,
+    sdk,
+    walletAddress: userWalletAddress,
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
   })
 
   const {
@@ -521,10 +534,36 @@ export const VaultOpenViewComponent = ({
 
   const nextTransactionType = nextTransaction?.type
 
-  const resovledSidebarProps =
-    tosState.status !== TOSStatus.DONE &&
-    nextTransactionType &&
-    [TransactionType.Approve, TransactionType.Deposit].includes(nextTransactionType)
+  // RWA vaults can only be entered by whitelisted wallets. Until the connected wallet is
+  // confirmed whitelisted, replace the deposit/TOS sidebar with the permissioned notice.
+  const showPermissionedSidebar = isRwaVault && !isWhitelisted
+
+  const permissionedSidebarProps: SidebarProps = {
+    title: 'Permissioned Vault',
+    content: (
+      <Text
+        as="p"
+        variant="p3semi"
+        style={{ color: 'var(--earn-protocol-secondary-60)', margin: '8px 0 24px 0' }}
+      >
+        This Vault is restricted to users and their wallets which have been approved for access
+        through KYC/AML checks either through Summer.fi or an approved custodian or wallet provider.
+      </Text>
+    ),
+    primaryButton: {
+      label: 'Connect a whitelisted wallet',
+      action: handleConnectWhitelistedWallet,
+      loading: isWhitelistedLoading,
+    },
+    isMobileOrTablet,
+    handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
+  }
+
+  const resovledSidebarProps = showPermissionedSidebar
+    ? permissionedSidebarProps
+    : tosState.status !== TOSStatus.DONE &&
+        nextTransactionType &&
+        [TransactionType.Approve, TransactionType.Deposit].includes(nextTransactionType)
       ? tosSidebarProps
       : sidebarProps
 
@@ -554,17 +593,21 @@ export const VaultOpenViewComponent = ({
           />
         }
         detailsContent={
-          <VaultOpenViewDetails
-            vault={vault}
-            latestActivity={latestActivity}
-            topDepositors={topDepositors}
-            rebalanceActivity={rebalanceActivity}
-            curationEvents={curationEvents}
-            arksHistoricalChartData={arksHistoricalChartData}
-            arksInterestRates={arksInterestRates}
-            vaultApyData={vaultApyData}
-            isDaoManaged={vault.isDaoManaged}
-          />
+          details ? (
+            <VaultOpenViewDetails
+              vault={vault}
+              latestActivity={details.latestActivity}
+              topDepositors={details.topDepositors}
+              rebalanceActivity={details.rebalanceActivity}
+              curationEvents={details.curationEvents}
+              arksHistoricalChartData={details.arksHistoricalChartData}
+              arksInterestRates={details.arksInterestRates}
+              vaultApyData={vaultApyData}
+              isDaoManaged={vault.isDaoManaged}
+            />
+          ) : (
+            <VaultOpenDetailsLoading vault={vault} isDaoManaged={vault.isDaoManaged} />
+          )
         }
         sidebarContent={
           <>

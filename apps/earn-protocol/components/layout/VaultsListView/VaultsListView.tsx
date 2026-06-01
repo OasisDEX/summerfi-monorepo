@@ -119,34 +119,35 @@ const VaultsListViewInner = ({
   })
 
   const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
-    filteredAndSortedVaults?.length
+    filteredAndSortedVaults.length
       ? getUniqueVaultId(filteredAndSortedVaults[0])
       : getUniqueVaultId(filteredSafeVaultsList[0]),
   )
 
   const selectedVaultData = useMemo(
     () =>
-      filteredAndSortedVaults?.find((vault) => getUniqueVaultId(vault) === selectedVaultId) ??
+      filteredAndSortedVaults.find((vault) => getUniqueVaultId(vault) === selectedVaultId) ??
       filteredSafeVaultsList.find((vault) => getUniqueVaultId(vault) === selectedVaultId),
     [filteredAndSortedVaults, filteredSafeVaultsList, selectedVaultId],
   )
 
-  const usingSafeVaultsList = !filteredAndSortedVaults?.[0]
+  const usingSafeVaultsList = !filteredAndSortedVaults[0]
   const activeVaultData =
-    selectedVaultData ?? filteredAndSortedVaults?.[0] ?? filteredSafeVaultsList[0]
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    selectedVaultData ?? filteredAndSortedVaults[0] ?? filteredSafeVaultsList[0]
 
   useEffect(() => {
     // update the selected vault id when the query params change
-    const nextSafeSelectedVault = filteredAndSortedVaults?.length
+    const nextSafeSelectedVault = filteredAndSortedVaults.length
       ? getUniqueVaultId(filteredAndSortedVaults[0])
       : getUniqueVaultId(filteredSafeVaultsList[0])
 
     if (selectedVaultId !== nextSafeSelectedVault) {
-      const tempVaultsIdList = filteredAndSortedVaults?.map((vault) => {
+      const tempVaultsIdList = filteredAndSortedVaults.map((vault) => {
         return getUniqueVaultId(vault)
       })
 
-      if (selectedVaultId && !tempVaultsIdList?.includes(selectedVaultId)) {
+      if (selectedVaultId && !tempVaultsIdList.includes(selectedVaultId)) {
         setSelectedVaultId(nextSafeSelectedVault)
       }
     }

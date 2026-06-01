@@ -112,8 +112,22 @@ export const useRevalidatePositionData = () => {
       walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
     ].filter(Boolean)
 
+    // The vault-open/manage query keys are [VAULTS_LIST, '<unit>', network, vaultId, ...], so a
+    // `queryKey: tags` prefix match (tags[1] is INTEREST_RATES) would never hit them. Match on the
+    // leading tag instead so the reload button actually refetches the hydrated page data client
+    // side (mirrors useRevalidateVaultsListData), alongside any user-scoped queries.
+    const userDataTag = walletAddress ? getUserDataCacheHandler(walletAddress) : undefined
+
     queryClient.refetchQueries({
-      queryKey: tags,
+      predicate: (query) => {
+        const [leadingTag] = query.queryKey
+
+        return (
+          leadingTag === CACHE_TAGS.VAULTS_LIST ||
+          leadingTag === CACHE_TAGS.INTEREST_RATES ||
+          (!!userDataTag && leadingTag === userDataTag)
+        )
+      },
       type: 'all',
     })
     fetchRevalidate({
