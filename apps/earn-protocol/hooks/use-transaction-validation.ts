@@ -59,15 +59,13 @@ export const useTransactionValidation = ({
       }
     }
     if (isSwitch) {
+      // Check vault selection first; only run the amount-vs-position check when a
+      // vault is selected, so it doesn't overwrite the "select a vault" message.
       if (!selectedSwitchVault) {
         setValidationError('Please select a vault to switch to')
-      } else {
-        setValidationError(undefined)
-      }
-      if (amount && positionAmount && amount.isGreaterThan(positionAmount)) {
+      } else if (amount && positionAmount && amount.isGreaterThan(positionAmount)) {
         setValidationError(errorsMap.insufficientPositionBalanceError)
-      }
-      if (amount && positionAmount && !amount.isGreaterThan(positionAmount)) {
+      } else {
         setValidationError(undefined)
       }
     }

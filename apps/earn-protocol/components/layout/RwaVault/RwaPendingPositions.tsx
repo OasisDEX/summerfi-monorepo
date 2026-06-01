@@ -1,6 +1,7 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import { RoundsVaultType } from '@summerfi/sdk-common'
+import { BigNumber } from 'bignumber.js'
 
 import { getRwaReceiptKey } from '@/hooks/use-rwa-claim'
 import { type RwaReceipt } from '@/hooks/use-rwa-receipts'
@@ -79,7 +80,7 @@ export const RwaPendingPositions = ({
         const isProcessing = actionInProgressKey === key
         const isAnyProcessing = actionInProgressKey !== undefined
         const typeLabel = receipt.vaultType === RoundsVaultType.Input ? 'Deposit' : 'Withdrawal'
-        const humanBalance = Number(receipt.balance) / Number(10n ** BigInt(tokenDecimals))
+        const humanBalance = new BigNumber(receipt.balance.toString()).shiftedBy(-tokenDecimals)
 
         return (
           <Card
