@@ -31,15 +31,15 @@ describe('RWA - getClaimSharesTx', () => {
   const scenarios: {
     fleetAddress: AddressValue
     roundId: bigint
-    /** Receipt token amount to redeem (base units). */
-    amount: bigint
+    /** Human-readable receipt amount to redeem (e.g. "1"); converted via the vault's underlying decimals. */
+    amount: string
     /** Optional alternative receiver of the Fleet shares. */
     receiverAddress?: AddressValue
   }[] = [
     {
       fleetAddress: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
       roundId: 5n,
-      amount: 1000000n,
+      amount: '1',
     },
   ]
 

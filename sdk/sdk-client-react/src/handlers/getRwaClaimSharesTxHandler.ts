@@ -15,7 +15,7 @@ export const getRwaClaimSharesTxHandler =
     chainId: ChainId
     userAddress: AddressValue
     roundId: bigint
-    amount: bigint
+    amount: string
     receiverAddress?: AddressValue
   }) => {
     return sdk.rwa.getClaimSharesTx({

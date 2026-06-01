@@ -52,7 +52,7 @@ export interface IRwaManagerClient {
     fleetAddress: AddressValue
     userAddress: AddressValue
     roundId: bigint
-    amount: bigint
+    amount: string
     receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
@@ -70,7 +70,7 @@ export interface IRwaManagerClient {
     fleetAddress: AddressValue
     userAddress: AddressValue
     roundId: bigint
-    amount: bigint
+    amount: string
     receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
@@ -112,6 +112,13 @@ export interface IRwaManagerClient {
     accountAddress: AddressValue
     vaultType: RoundsVaultType
   }): Promise<{ roundId: bigint; balance: bigint }[]>
+
+  getSetMinimumPositionSizeTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    minimumPositionSize: string
+  }): Promise<TransactionInfo>
 
   // --- Whitelisting ---
 

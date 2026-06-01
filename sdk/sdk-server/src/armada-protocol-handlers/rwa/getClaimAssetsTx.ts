@@ -9,7 +9,7 @@ export const getClaimAssetsTx = publicProcedure
       fleetAddress: z.custom<AddressValue>(isAddressValue),
       userAddress: z.custom<AddressValue>(isAddressValue),
       roundId: z.bigint(),
-      amount: z.bigint(),
+      amount: z.string(),
       receiverAddress: z.custom<AddressValue>(isAddressValue).optional(),
     }),
   )

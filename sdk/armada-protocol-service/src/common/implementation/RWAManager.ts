@@ -3,17 +3,16 @@ import {
   Address,
   getChainInfoByChainId,
   Price,
+  RoundState,
   RoundsVaultType,
   RwaVaultInfo,
   Token,
   TokenAmount,
   type AddressValue,
   type ChainId,
-  type IAddress,
   type IResolvedRoundsVault,
   type IToken,
   type ITokenAmount,
-  type RoundState,
   type TransactionInfo,
 } from '@summerfi/sdk-common'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
@@ -138,7 +137,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
 
     return this._buildVaultDepositTxs({
       vault,
-      userAddress: Address.createFromEthereum({ value: params.userAddress }),
+      userAddress: params.userAddress,
       amount,
     })
   }
@@ -154,14 +153,21 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       RoundsVaultType.Input,
     )
     const contract = await this._getRoundsVaultContract(vault)
-    const owner = Address.createFromEthereum({ value: params.userAddress })
+    await this._assertRoundSettled(contract, params.roundId)
+    // Receipt amount is denominated in the vault's underlying-token decimals.
+    const amount = TokenAmount.createFrom({ token: vault.underlyingToken, amount: params.amount })
+    const amountBaseUnits = amount.toSolidityValue()
+    await this._assertClaimableReceipt({
+      vault,
+      accountAddress: params.userAddress,
+      roundId: params.roundId,
+      amount: amountBaseUnits,
+    })
     return contract.redeemExchangeAsset({
       id: params.roundId,
-      amount: params.amount,
-      receiver: params.receiverAddress
-        ? Address.createFromEthereum({ value: params.receiverAddress })
-        : owner,
-      owner,
+      amount: amountBaseUnits,
+      receiver: params.receiverAddress ?? params.userAddress,
+      owner: params.userAddress,
     })
   }
 
@@ -189,7 +195,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
 
     return this._buildVaultDepositTxs({
       vault,
-      userAddress: Address.createFromEthereum({ value: params.userAddress }),
+      userAddress: params.userAddress,
       amount,
     })
   }
@@ -205,14 +211,21 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       RoundsVaultType.Output,
     )
     const contract = await this._getRoundsVaultContract(vault)
-    const owner = Address.createFromEthereum({ value: params.userAddress })
+    await this._assertRoundSettled(contract, params.roundId)
+    // Receipt amount is denominated in the vault's underlying-token decimals.
+    const amount = TokenAmount.createFrom({ token: vault.underlyingToken, amount: params.amount })
+    const amountBaseUnits = amount.toSolidityValue()
+    await this._assertClaimableReceipt({
+      vault,
+      accountAddress: params.userAddress,
+      roundId: params.roundId,
+      amount: amountBaseUnits,
+    })
     return contract.redeemExchangeAsset({
       id: params.roundId,
-      amount: params.amount,
-      receiver: params.receiverAddress
-        ? Address.createFromEthereum({ value: params.receiverAddress })
-        : owner,
-      owner,
+      amount: amountBaseUnits,
+      receiver: params.receiverAddress ?? params.userAddress,
+      owner: params.userAddress,
     })
   }
 
@@ -232,14 +245,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       token: vault.underlyingToken,
       amount: params.amount,
     })
-    const owner = Address.createFromEthereum({ value: params.userAddress })
     return contract.redeem({
       id: params.roundId,
       amount: amount.toSolidityValue(),
-      receiver: params.receiverAddress
-        ? Address.createFromEthereum({ value: params.receiverAddress })
-        : owner,
-      owner,
+      receiver: params.receiverAddress ?? params.userAddress,
+      owner: params.userAddress,
     })
   }
 
@@ -317,6 +327,24 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     }))
   }
 
+  /** @see IRWAManager.getSetMinimumPositionSizeTx */
+  async getSetMinimumPositionSizeTx(
+    params: Parameters<IRWAManager['getSetMinimumPositionSizeTx']>[0],
+  ): ReturnType<IRWAManager['getSetMinimumPositionSizeTx']> {
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    // Minimum position size is denominated in the vault's underlying-token decimals.
+    const minSize = TokenAmount.createFrom({
+      token: vault.underlyingToken,
+      amount: params.minimumPositionSize,
+    })
+    return contract.setMinPositionSize({ minSize: minSize.toSolidityValue() })
+  }
+
   /** @see IRWAManager.getSetWhitelistedTx */
   async getSetWhitelistedTx(
     params: Parameters<IRWAManager['getSetWhitelistedTx']>[0],
@@ -386,7 +414,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   private async _buildVaultDepositTxs(params: {
     vault: IResolvedRoundsVault
     /** The depositing user — owner of the approval and receiver of the round receipt. */
-    userAddress: IAddress
+    userAddress: AddressValue
     /** Amount of the vault's underlyingToken to deposit (in the token's display units). */
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
@@ -400,7 +428,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       chainInfo: getChainInfoByChainId(vault.chainId),
       spender: Address.createFromEthereum({ value: vault.address }),
       amount,
-      owner: userAddress,
+      owner: Address.createFromEthereum({ value: userAddress }),
     })
     if (approval) {
       transactions.push(approval)
@@ -434,6 +462,61 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       chainInfo,
       address,
     })
+  }
+
+  /**
+   * @name _assertRoundSettled
+   * @description Reads the on-chain round state and throws unless it is `Settled` — exchange-asset
+   *              redemptions (claim shares / claim assets) are only valid for settled rounds.
+   */
+  private async _assertRoundSettled(
+    contract: IRoundsVaultContract,
+    roundId: bigint,
+  ): Promise<void> {
+    const state = await contract.roundState({ roundId })
+    if (state !== RoundState.Settled) {
+      throw new Error(
+        `Round ${roundId} is not settled (state: ${RoundState[state] ?? state}); claim is only available for settled rounds`,
+      )
+    }
+  }
+
+  /**
+   * @name _assertClaimableReceipt
+   * @description Validates a claim against the account's subgraph receipt balances: the amount must be
+   *              positive, the target round must have a receipt held by the account, and the amount must
+   *              not exceed that receipt's balance.
+   */
+  private async _assertClaimableReceipt(params: {
+    vault: IResolvedRoundsVault
+    accountAddress: AddressValue
+    roundId: bigint
+    /** Receipt amount to redeem, in base units. */
+    amount: bigint
+  }): Promise<void> {
+    const { vault, accountAddress, roundId, amount } = params
+    if (amount <= 0n) {
+      throw new Error(`Claim amount must be greater than zero (got ${amount})`)
+    }
+
+    const { receipts } = await this._rwaSubgraphManager.getReceipts({
+      chainId: vault.chainId,
+      account: accountAddress.toLowerCase(),
+      vault: vault.address.toLowerCase(),
+    })
+    const receipt = receipts.find((r) => BigInt(r.round.roundId) === roundId)
+    if (!receipt) {
+      throw new Error(
+        `No round ${roundId} receipt held by ${accountAddress} for RoundsVault ${vault.address}`,
+      )
+    }
+
+    const balance = BigInt(receipt.balance)
+    if (amount > balance) {
+      throw new Error(
+        `Claim amount ${amount} exceeds the round ${roundId} receipt balance ${balance}`,
+      )
+    }
   }
 
   /**

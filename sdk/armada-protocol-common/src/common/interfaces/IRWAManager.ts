@@ -86,7 +86,8 @@ export interface IRWAManager {
    * @param fleetAddress    The Fleet address
    * @param userAddress     The user holding the receipt (owner)
    * @param roundId         The settled round whose receipt is being exchanged
-   * @param amount          Number of ERC-1155 receipt tokens to redeem (base units)
+   * @param amount          Human-readable amount of round receipt to redeem (e.g. "1"). Converted to
+   *                        base units using the Input vault's underlying-token decimals.
    * @param receiverAddress Optional alternative receiver of the Fleet shares
    */
   getClaimSharesTx(params: {
@@ -94,7 +95,7 @@ export interface IRWAManager {
     fleetAddress: AddressValue
     userAddress: AddressValue
     roundId: bigint
-    amount: bigint
+    amount: string
     receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
@@ -129,7 +130,8 @@ export interface IRWAManager {
    * @param fleetAddress    The Fleet address
    * @param userAddress     The user holding the receipt (owner)
    * @param roundId         The settled round whose receipt is being exchanged
-   * @param amount          Number of ERC-1155 receipt tokens to redeem (base units)
+   * @param amount          Human-readable amount of round receipt to redeem (e.g. "1"). Converted to
+   *                        base units using the Output vault's underlying-token decimals.
    * @param receiverAddress Optional alternative receiver of the underlying asset
    */
   getClaimAssetsTx(params: {
@@ -137,7 +139,7 @@ export interface IRWAManager {
     fleetAddress: AddressValue
     userAddress: AddressValue
     roundId: bigint
-    amount: bigint
+    amount: string
     receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
@@ -234,6 +236,24 @@ export interface IRWAManager {
     accountAddress: AddressValue
     vaultType: RoundsVaultType
   }): Promise<{ roundId: bigint; balance: bigint }[]>
+
+  /**
+   * @method getSetMinimumPositionSizeTx
+   * @description Builds the RoundsVaultBase.setMinPositionSize transaction for the Input or Output
+   *              RoundsVault of a Fleet (manager-set config).
+   *
+   * @param chainId             The chain the Fleet is on
+   * @param fleetAddress        The Fleet address
+   * @param vaultType           Whether to target the Input or Output RoundsVault
+   * @param minimumPositionSize Human-readable minimum position size (e.g. "100"). Converted to base
+   *                            units using the target vault's underlying-token decimals.
+   */
+  getSetMinimumPositionSizeTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    minimumPositionSize: string
+  }): Promise<TransactionInfo>
 
   // ---------------------------------------------------------------------------
   // Whitelisting (Manager set) — keyed on the Fleet address as context

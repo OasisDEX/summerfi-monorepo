@@ -111,6 +111,7 @@ import { getRwaCurrentRoundHandler } from '../handlers/getRwaCurrentRoundHandler
 import { getRwaRoundStateHandler } from '../handlers/getRwaRoundStateHandler'
 import { getRwaExchangeRateHandler } from '../handlers/getRwaExchangeRateHandler'
 import { getRwaReceiptBalancesHandler } from '../handlers/getRwaReceiptBalancesHandler'
+import { getRwaSetMinimumPositionSizeTxHandler } from '../handlers/getRwaSetMinimumPositionSizeTxHandler'
 import { getRwaSetWhitelistedTxHandler } from '../handlers/getRwaSetWhitelistedTxHandler'
 import { getRwaSetWhitelistedBatchTxHandler } from '../handlers/getRwaSetWhitelistedBatchTxHandler'
 import { getRwaSetWhitelistOpenTxHandler } from '../handlers/getRwaSetWhitelistOpenTxHandler'
@@ -330,6 +331,10 @@ export const useSDK = (params: UseSdk) => {
   const getRwaRoundState = useMemo(() => getRwaRoundStateHandler(sdk), [sdk])
   const getRwaExchangeRate = useMemo(() => getRwaExchangeRateHandler(sdk), [sdk])
   const getRwaReceiptBalances = useMemo(() => getRwaReceiptBalancesHandler(sdk), [sdk])
+  const getRwaSetMinimumPositionSizeTx = useMemo(
+    () => getRwaSetMinimumPositionSizeTxHandler(sdk),
+    [sdk],
+  )
   const getRwaSetWhitelistedTx = useMemo(() => getRwaSetWhitelistedTxHandler(sdk), [sdk])
   const getRwaSetWhitelistedBatchTx = useMemo(() => getRwaSetWhitelistedBatchTxHandler(sdk), [sdk])
   const getRwaSetWhitelistOpenTx = useMemo(() => getRwaSetWhitelistOpenTxHandler(sdk), [sdk])
@@ -452,6 +457,7 @@ export const useSDK = (params: UseSdk) => {
       getRwaRoundState,
       getRwaExchangeRate,
       getRwaReceiptBalances,
+      getRwaSetMinimumPositionSizeTx,
       getRwaSetWhitelistedTx,
       getRwaSetWhitelistedBatchTx,
       getRwaSetWhitelistOpenTx,
@@ -572,6 +578,7 @@ export const useSDK = (params: UseSdk) => {
       getRwaRoundState,
       getRwaExchangeRate,
       getRwaReceiptBalances,
+      getRwaSetMinimumPositionSizeTx,
       getRwaSetWhitelistedTx,
       getRwaSetWhitelistedBatchTx,
       getRwaSetWhitelistOpenTx,
