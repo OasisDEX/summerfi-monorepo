@@ -5,7 +5,6 @@ import type {
   IChainInfo,
   IPrice,
   IRwaVaultInfo,
-  ITokenAmount,
   IUser,
   RoundState,
   RoundsVaultType,
@@ -45,7 +44,7 @@ export interface IRwaManagerClient {
   getDepositTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    amount: ITokenAmount
+    assetsAmount: string
   }): Promise<TransactionInfo[]>
 
   getClaimSharesTx(params: {
@@ -61,7 +60,7 @@ export interface IRwaManagerClient {
   getWithdrawTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    amount: ITokenAmount
+    sharesAmount: string
   }): Promise<TransactionInfo[]>
 
   getClaimAssetsTx(params: {

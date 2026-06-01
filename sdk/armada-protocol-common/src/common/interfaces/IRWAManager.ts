@@ -5,7 +5,6 @@ import type {
   IChainInfo,
   IRwaVaultInfo,
   IPrice,
-  ITokenAmount,
   IUser,
   RoundState,
   RoundsVaultType,
@@ -66,14 +65,15 @@ export interface IRWAManager {
    * @description Builds the approve + RoundsVaultInput.deposit transaction pair for a whitelisted
    *              user. Mints an ERC-1155 receipt for the current open round.
    *
-   * @param vaultId   The Fleet vault identifier (chainInfo + fleet address)
-   * @param user      The depositing user
-   * @param amount    Amount of the underlying asset (e.g. USDC) to deposit
+   * @param vaultId      The Fleet vault identifier (chainInfo + fleet address)
+   * @param user         The depositing user
+   * @param assetsAmount Human-readable amount of the underlying asset (e.g. "1" = 1 USDC) to deposit.
+   *                     Converted to base units using the vault's underlying-token decimals.
    */
   getDepositTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    amount: ITokenAmount
+    assetsAmount: string
   }): Promise<TransactionInfo[]>
 
   /**
@@ -104,14 +104,15 @@ export interface IRWAManager {
    * @description Builds the approve + RoundsVaultOutput.deposit transaction pair for a whitelisted
    *              user who wants to exit the Fleet. Mints an ERC-1155 receipt for the current round.
    *
-   * @param vaultId   The Fleet vault identifier
-   * @param user      The withdrawing user
-   * @param amount    Amount of Fleet shares to deposit into the Output vault
+   * @param vaultId      The Fleet vault identifier
+   * @param user         The withdrawing user
+   * @param sharesAmount Human-readable amount of Fleet shares to deposit into the Output vault.
+   *                     Converted to base units using the Output vault's underlying-token (share) decimals.
    */
   getWithdrawTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
-    amount: ITokenAmount
+    sharesAmount: string
   }): Promise<TransactionInfo[]>
 
   /**

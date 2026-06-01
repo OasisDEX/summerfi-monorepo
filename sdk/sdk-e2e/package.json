@@ -79,7 +79,12 @@
     "e2e:rwa:getCurrentRound": "jest --roots e2e -- ./e2e/rwa.getCurrentRound.test.ts",
     "e2e:rwa:getRoundState": "jest --roots e2e -- ./e2e/rwa.getRoundState.test.ts",
     "e2e:rwa:getExchangeRate": "jest --roots e2e -- ./e2e/rwa.getExchangeRate.test.ts",
-    "e2e:rwa:getReceiptBalances": "jest --roots e2e -- ./e2e/rwa.getReceiptBalances.test.ts"
+    "e2e:rwa:getReceiptBalances": "jest --roots e2e -- ./e2e/rwa.getReceiptBalances.test.ts",
+    "e2e:rwa:getDepositTx": "jest --roots e2e -- ./e2e/rwa.getDepositTx.test.ts",
+    "e2e:rwa:getClaimSharesTx": "jest --roots e2e -- ./e2e/rwa.getClaimSharesTx.test.ts",
+    "e2e:rwa:getWithdrawTx": "jest --roots e2e -- ./e2e/rwa.getWithdrawTx.test.ts",
+    "e2e:rwa:getClaimAssetsTx": "jest --roots e2e -- ./e2e/rwa.getClaimAssetsTx.test.ts",
+    "e2e:rwa:getCancelRoundDepositTx": "jest --roots e2e -- ./e2e/rwa.getCancelRoundDepositTx.test.ts"
   },
   "devDependencies": {
     "@summerfi/armada-protocol-abis": "workspace:*",

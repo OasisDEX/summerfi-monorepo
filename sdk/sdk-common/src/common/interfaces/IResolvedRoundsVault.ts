@@ -1,6 +1,7 @@
 import type { IAddress } from './IAddress'
 import type { IChainInfo } from './IChainInfo'
 import type { IToken } from './IToken'
+import type { ITokenAmount } from './ITokenAmount'
 
 /**
  * @interface IResolvedRoundsVault
@@ -17,4 +18,6 @@ export interface IResolvedRoundsVault {
   underlyingToken: IToken
   /** Token returned at settlement (Input: Fleet shares; Output: Fleet underlying e.g. USDC) */
   exchangeAssetToken: IToken
+  /** Minimum position size in underlying token for the RoundsVault */
+  minPositionSize: ITokenAmount
 }

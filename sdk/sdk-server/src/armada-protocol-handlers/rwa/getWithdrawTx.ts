@@ -1,11 +1,4 @@
-import {
-  isArmadaVaultId,
-  isTokenAmount,
-  isUser,
-  type IArmadaVaultId,
-  type ITokenAmount,
-  type IUser,
-} from '@summerfi/sdk-common'
+import { isArmadaVaultId, isUser, type IArmadaVaultId, type IUser } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
@@ -14,7 +7,7 @@ export const getWithdrawTx = publicProcedure
     z.object({
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       user: z.custom<IUser>(isUser),
-      amount: z.custom<ITokenAmount>(isTokenAmount),
+      sharesAmount: z.string(),
     }),
   )
   .query(async (opts) => {

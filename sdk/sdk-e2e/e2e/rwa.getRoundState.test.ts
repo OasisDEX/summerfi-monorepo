@@ -30,7 +30,7 @@ describe('RWA - getRoundState', () => {
   }[] = [
     {
       fleetAddressValue: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
-      roundId: 0n,
+      roundId: 4n,
       vaultType: RoundsVaultType.Input,
     },
   ]

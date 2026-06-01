@@ -10,6 +10,7 @@ import {
   type IChainInfo,
   type IResolvedRoundsVault,
   type IToken,
+  type ITokenAmount,
   type RoundState,
   type TransactionInfo,
 } from '@summerfi/sdk-common'
@@ -117,10 +118,22 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   ): ReturnType<IRWAManager['getDepositTx']> {
     // Deposit the Fleet underlying (e.g. USDC) into the Input RoundsVault for the current round.
     const vault = await this._resolveRoundsVault(params.vaultId, RoundsVaultType.Input)
+    // Interpret the human-readable amount in the vault's underlying-token decimals.
+    const amount = TokenAmount.createFrom({
+      token: vault.underlyingToken,
+      amount: params.assetsAmount,
+    })
+
+    if (amount.isLessThan(vault.minPositionSize)) {
+      throw new Error(
+        `Deposit amount ${amount.toString()} is less than the minimum position size ${vault.minPositionSize.toString()}`,
+      )
+    }
+
     return this._buildVaultDepositTxs({
       vault,
       user: params.user,
-      amount: params.amount,
+      amount,
     })
   }
 
@@ -146,10 +159,22 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   ): ReturnType<IRWAManager['getWithdrawTx']> {
     // Deposit Fleet shares into the Output RoundsVault for the current round.
     const vault = await this._resolveRoundsVault(params.vaultId, RoundsVaultType.Output)
+    // Interpret the human-readable amount in the Output vault's underlying-token (share) decimals.
+    const amount = TokenAmount.createFrom({
+      token: vault.underlyingToken,
+      amount: params.sharesAmount,
+    })
+
+    if (amount.isLessThan(vault.minPositionSize)) {
+      throw new Error(
+        `Withdraw amount ${amount.toString()} is less than the minimum position size ${vault.minPositionSize.toString()}`,
+      )
+    }
+
     return this._buildVaultDepositTxs({
       vault,
       user: params.user,
-      amount: params.amount,
+      amount,
     })
   }
 
@@ -309,13 +334,15 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   private async _buildVaultDepositTxs(params: {
     vault: IResolvedRoundsVault
     user: Parameters<IRWAManager['getDepositTx']>[0]['user']
-    amount: Parameters<IRWAManager['getDepositTx']>[0]['amount']
+    /** Amount of the vault's underlyingToken to deposit (in the token's display units). */
+    amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
     const { vault, user, amount } = params
     const contract = await this._getRoundsVaultContract(vault)
 
     const transactions: TransactionInfo[] = []
 
+    // The approval is denominated in the vault's underlying token (Input: USDC; Output: Fleet shares).
     const approval = await this._allowanceManager.getApproval({
       chainInfo: vault.chainInfo,
       spender: vault.address,
@@ -382,15 +409,21 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       vaultId: vaultId.fleetAddress.value.toLowerCase(),
     })
 
-    const pair = vault?.roundsVaultPair
+    if (!vault) {
+      throw new Error(
+        `No vault found for Fleet ${vaultId.fleetAddress.value} on chain ${vaultId.chainInfo.chainId}`,
+      )
+    }
+
+    const pair = vault.roundsVaultPair
     if (!pair) {
       throw new Error(
         `No RoundsVault pair registered for Fleet ${vaultId.fleetAddress.value} on chain ${vaultId.chainInfo.chainId}`,
       )
     }
-
-    const side = vaultType === RoundsVaultType.Input ? pair.inputVault : pair.outputVault
-    if (!side) {
+    const isRoundsVaultInput = vaultType === RoundsVaultType.Input
+    const roundsVault = isRoundsVaultInput ? pair.inputVault : pair.outputVault
+    if (!roundsVault) {
       throw new Error(
         `No ${vaultType} RoundsVault registered for Fleet ${vaultId.fleetAddress.value} on chain ${vaultId.chainInfo.chainId}`,
       )
@@ -398,9 +431,14 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
 
     return {
       chainInfo: vaultId.chainInfo,
-      address: Address.createFromEthereum({ value: side.id }),
-      underlyingToken: this._buildToken(vaultId.chainInfo, side.underlyingToken),
-      exchangeAssetToken: this._buildToken(vaultId.chainInfo, side.exchangeAssetToken),
+      address: Address.createFromEthereum({ value: roundsVault.id }),
+      underlyingToken: this._buildToken(vaultId.chainInfo, roundsVault.underlyingToken),
+      exchangeAssetToken: this._buildToken(vaultId.chainInfo, roundsVault.exchangeAssetToken),
+      minPositionSize: this._buildTokenAmount(
+        vaultId.chainInfo,
+        roundsVault.minPositionSize,
+        roundsVault.underlyingToken,
+      ),
     }
   }
 
@@ -419,5 +457,18 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       symbol: row.symbol,
       name: row.name,
     })
+  }
+
+  /**
+   * @name _buildTokenAmount
+   * @description Builds an ITokenAmount from a subgraph BigInt string (base units) and token row.
+   */
+  private _buildTokenAmount(
+    chainInfo: IChainInfo,
+    amount: string | bigint,
+    tokenRow: { id: string; name: string; symbol: string; decimals: number },
+  ): ITokenAmount {
+    const token = this._buildToken(chainInfo, tokenRow)
+    return TokenAmount.createFromBaseUnit({ token, amount: amount.toString() })
   }
 }
