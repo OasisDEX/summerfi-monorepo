@@ -1,8 +1,8 @@
 import { publicProcedure } from '../../SDKTRPC'
-import { editDcaStrategyTxInputSchema } from './strategyConfigSchema'
+import { editStrategyTxInputSchema } from './strategyConfigSchema'
 
 export const editStrategyTx = publicProcedure
-  .input(editDcaStrategyTxInputSchema)
+  .input(editStrategyTxInputSchema)
   .query(async (opts) => {
     return opts.ctx.armadaManager.dca.editStrategyTx(opts.input)
   })

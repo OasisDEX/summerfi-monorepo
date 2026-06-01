@@ -1,13 +1,13 @@
 import { isChainId, type ChainId } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { dcaStrategySchema } from './strategyConfigSchema'
+import { strategySchema } from './strategyConfigSchema'
 
 export const resumeStrategyTx = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
-      strategy: dcaStrategySchema,
+      strategy: strategySchema,
     }),
   )
   .query(async (opts) => {

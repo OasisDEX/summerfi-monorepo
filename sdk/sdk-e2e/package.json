@@ -70,7 +70,16 @@
     "e2e:dca:strategies:resume": "jest --roots e2e -- ./e2e/dcaStrategies.resume.test.ts",
     "e2e:dca:strategies:cancel": "jest --roots e2e -- ./e2e/dcaStrategies.cancel.test.ts",
     "e2e:rwa:vault": "jest --roots e2e -- ./e2e/rwa.vault.test.ts",
-    "e2e:rwa:vaults": "jest --roots e2e -- ./e2e/rwa.vaults.test.ts"
+    "e2e:rwa:vaults": "jest --roots e2e -- ./e2e/rwa.vaults.test.ts",
+    "e2e:rwa:setWhitelisted": "jest --roots e2e -- ./e2e/rwa.setWhitelisted.test.ts",
+    "e2e:rwa:setWhitelistedBatch": "jest --roots e2e -- ./e2e/rwa.setWhitelistedBatch.test.ts",
+    "e2e:rwa:setWhitelistOpen": "jest --roots e2e -- ./e2e/rwa.setWhitelistOpen.test.ts",
+    "e2e:rwa:isWhitelisted": "jest --roots e2e -- ./e2e/rwa.isWhitelisted.test.ts",
+    "e2e:rwa:isWhitelistOpen": "jest --roots e2e -- ./e2e/rwa.isWhitelistOpen.test.ts",
+    "e2e:rwa:getCurrentRound": "jest --roots e2e -- ./e2e/rwa.getCurrentRound.test.ts",
+    "e2e:rwa:getRoundState": "jest --roots e2e -- ./e2e/rwa.getRoundState.test.ts",
+    "e2e:rwa:getExchangeRate": "jest --roots e2e -- ./e2e/rwa.getExchangeRate.test.ts",
+    "e2e:rwa:getReceiptBalances": "jest --roots e2e -- ./e2e/rwa.getReceiptBalances.test.ts"
   },
   "devDependencies": {
     "@summerfi/armada-protocol-abis": "workspace:*",

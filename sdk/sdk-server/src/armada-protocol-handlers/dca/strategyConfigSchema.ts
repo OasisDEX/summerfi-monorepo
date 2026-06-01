@@ -15,41 +15,13 @@ const nonZeroAddressSchema = addressSchema.refine(
   'Address must not be the zero address',
 )
 
-// Accept either a bigint, a numeric string, or a number and coerce to bigint
-const bigintSchema = z.bigint()
-
 const MIN_INTERVAL_SECONDS = 86400 // 1 day, matching _MIN_INTERVAL in DCAStrategyManager
 const MAX_SLIPPAGE_PERCENTAGE = 100 // 100% = 10000 bps, matching _BPS in DCAStrategyManager
 
-export const dcaStrategySchema: z.ZodType<IDcaStrategy> = z.object({
-  id: z.string(),
-  strategyId: bigintSchema,
-  chainId: z.custom<ChainId>(isChainId),
-  ownerAddress: addressSchema,
-  sourceVault: addressSchema,
-  targetVault: addressSchema,
-  inAsset: addressSchema,
-  outAsset: addressSchema,
-  inAssetFeed: addressSchema,
-  outAssetFeed: addressSchema,
-  tradeAmount: bigintSchema,
-  slippagePercentage: z.number(),
-  intervalSeconds: bigintSchema,
-  nextTriggerAtUnixTimestamp: bigintSchema,
-  lastScheduledAtUnixTimestamp: bigintSchema,
-  deadlineUnixTimestamp: bigintSchema,
-  maxTrades: bigintSchema,
-  // Accept enum values case-insensitively (e.g. 'active' -> 'ACTIVE')
-  status: z.nativeEnum(DcaStrategyStatusEnum),
-  tradesExecuted: bigintSchema,
-  neverBuyAbove: z.string(),
-  neverSellBelow: z.string(),
-  createdAtUnixTimestamp: bigintSchema,
-  updatedAtUnixTimestamp: bigintSchema,
-})
+export const strategyIdSchema = uint256StringSchema
 
-export const createDcaStrategyTxInputSchema = z.object({
-  chainId: z.number() as z.ZodType<ChainId>,
+export const createStrategyTxInputSchema = z.object({
+  chainId: z.custom<ChainId>(isChainId),
   userAddress: addressSchema,
   fromVault: addressSchema,
   toVault: addressSchema,
@@ -74,9 +46,35 @@ export const createDcaStrategyTxInputSchema = z.object({
   deadlineUnixTimestamp: z.number().int(),
 })
 
-export const editDcaStrategyTxInputSchema = z.object({
-  chainId: z.number() as z.ZodType<ChainId>,
-  strategy: dcaStrategySchema.superRefine((s, ctx) => {
+export const strategySchema: z.ZodType<IDcaStrategy> = z.object({
+  id: z.string(),
+  strategyId: z.bigint(),
+  chainId: z.custom<ChainId>(isChainId),
+  ownerAddress: addressSchema,
+  sourceVault: addressSchema,
+  targetVault: addressSchema,
+  inAsset: addressSchema,
+  outAsset: addressSchema,
+  inAssetFeed: addressSchema,
+  outAssetFeed: addressSchema,
+  tradeAmount: z.bigint(),
+  slippagePercentage: z.number(),
+  intervalSeconds: z.bigint(),
+  nextTriggerAtUnixTimestamp: z.bigint(),
+  lastScheduledAtUnixTimestamp: z.bigint(),
+  deadlineUnixTimestamp: z.bigint(),
+  maxTrades: z.bigint(),
+  status: z.nativeEnum(DcaStrategyStatusEnum),
+  tradesExecuted: z.bigint(),
+  neverBuyAbove: z.string(),
+  neverSellBelow: z.string(),
+  createdAtUnixTimestamp: z.bigint(),
+  updatedAtUnixTimestamp: z.bigint(),
+})
+
+export const editStrategyTxInputSchema = z.object({
+  chainId: z.custom<ChainId>(isChainId),
+  strategy: strategySchema.superRefine((s, ctx) => {
     if (s.intervalSeconds < BigInt(MIN_INTERVAL_SECONDS)) {
       ctx.addIssue({
         code: z.ZodIssueCode.too_small,
@@ -87,7 +85,7 @@ export const editDcaStrategyTxInputSchema = z.object({
         path: ['intervalSeconds'],
       })
     }
-    if (s.slippagePercentage < 0 || s.slippagePercentage > MAX_SLIPPAGE_PERCENTAGE) {
+    if (s.slippagePercentage > MAX_SLIPPAGE_PERCENTAGE) {
       ctx.addIssue({
         code: z.ZodIssueCode.too_big,
         maximum: MAX_SLIPPAGE_PERCENTAGE,

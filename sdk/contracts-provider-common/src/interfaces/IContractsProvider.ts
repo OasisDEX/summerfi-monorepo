@@ -8,6 +8,8 @@ import { IArkContract } from './contracts/IArkContract'
 import { IAdmiralsQuartersContract } from './contracts/IAdmiralsQuartersContract'
 import { IConfigurationManagerContract } from './contracts/IConfigurationManagerContract'
 import type { IFleetCommanderWhitelistContract } from './contracts/IFleetCommanderWhitelistContract'
+import type { IRoundsVaultContract } from './contracts/IRoundsVaultContract'
+import type { IProtocolAccessManagerV2Contract } from './contracts/IProtocolAccessManagerV2Contract'
 
 /**
  * @name IContractsProvider
@@ -139,4 +141,33 @@ export interface IContractsProvider {
     chainInfo: IChainInfo
     address: IAddress
   }): Promise<ISummerStakingContract>
+
+  /**
+   * @name getRoundsVaultContract
+   * @description Returns a RoundsVault contract wrapper (used by both Input and Output RWA vaults)
+   *
+   * @param {IChainInfo} chainInfo The chain information where the contract is deployed
+   * @param {IAddress} address The address of the RoundsVault contract
+   *
+   * @returns {IRoundsVaultContract}
+   */
+  getRoundsVaultContract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<IRoundsVaultContract>
+
+  /**
+   * @name getProtocolAccessManagerV2Contract
+   * @description Returns a ProtocolAccessManagerV2 contract wrapper (per-context whitelist used by
+   *              institutional / RWA Fleet variants)
+   *
+   * @param {IChainInfo} chainInfo The chain information where the contract is deployed
+   * @param {IAddress} address The address of the ProtocolAccessManagerV2 contract
+   *
+   * @returns {IProtocolAccessManagerV2Contract}
+   */
+  getProtocolAccessManagerV2Contract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<IProtocolAccessManagerV2Contract>
 }

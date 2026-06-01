@@ -133,6 +133,10 @@ const quickHashCode = (str: string): string => {
 export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
   // check for Client-Id header in request and fetch integrator config if present
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
+  // Institutional deployment-config version (set by makeInstiSdk). Defaults to 'v1' so existing
+  // makeAdminSDK clients (which do not send the header) keep the legacy institutions config path.
+  const instiVersion =
+    opts.event.headers['Insti-Version'] || opts.event.headers['insti-version'] || 'v1'
   LoggingService.log('Request headers', opts.event.headers)
 
   const requestCookies = parseCookies(opts.event)
@@ -146,9 +150,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     configProvider,
     clientId,
   })
-
   const dcaSubgraphManager = SubgraphManagerFactory.newDcaSubgraph({ configProvider })
-
   const rwaSubgraphManager = SubgraphManagerFactory.newRwaSubgraph({ configProvider })
 
   let deploymentProviderConfigs: DeploymentProviderConfig[]
@@ -158,16 +160,23 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     const rawInstiChainIds = configProvider.getConfigurationItem({
       name: 'SUMMER_DEPLOYED_CHAINS_ID_INSTI',
     })
-    if (!rawInstiChainIds) {
-      throw new Error('SUMMER_DEPLOYED_CHAINS_ID_INSTI is not set in configuration')
-    }
+    const rawRwaChainIds = configProvider.getConfigurationItem({
+      name: 'SUMMER_DEPLOYED_CHAINS_ID_RWA',
+    })
     const instiChainIds: ChainId[] = rawInstiChainIds.split(',').map(Number).filter(isChainId)
-    supportedChains = instiChainIds.map(getChainInfoByChainId)
+    const rwaChainIds: ChainId[] = rawRwaChainIds.split(',').map(Number).filter(isChainId)
 
+    // v2 (RWA) sources institution wiring from the RWA / institutions-v2 subgraph and the RWA chains;
+    // v1 keeps the legacy institutions subgraph + insti chains.
+    const useRwaConfig = instiVersion === 'v2'
+    const configChainIds = useRwaConfig ? rwaChainIds : instiChainIds
+    const institutionSubgraphManager = useRwaConfig ? rwaSubgraphManager : armadaSubgraphManager
+
+    supportedChains = configChainIds.map(getChainInfoByChainId)
     try {
       deploymentProviderConfigs = await fetchInstiDeploymentProviderConfig(
-        armadaSubgraphManager,
-        instiChainIds,
+        institutionSubgraphManager,
+        configChainIds,
         clientId,
       )
     } catch (error) {

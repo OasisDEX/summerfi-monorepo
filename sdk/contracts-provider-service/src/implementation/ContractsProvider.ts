@@ -11,6 +11,8 @@ import {
   IConfigurationManagerContract,
   ISummerStakingContract,
   type IFleetCommanderWhitelistContract,
+  type IRoundsVaultContract,
+  type IProtocolAccessManagerV2Contract,
 } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo, getChainInfoByChainId, type ChainId } from '@summerfi/sdk-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
@@ -22,6 +24,8 @@ import { ArkContract } from './contracts/ArkContract'
 import { AdmiralsQuartersContract } from './contracts/AdmiralsQuartersContract/AdmiralsQuartersContract'
 import { ConfigurationManagerContract } from './contracts/ConfigurationManagerContract/ConfigurationManagerContract'
 import { SummerStakingContract } from './contracts/SummerStakingContract/SummerStakingContract'
+import { RoundsVaultContract } from './contracts/RoundsVaultContract/RoundsVaultContract'
+import { ProtocolAccessManagerV2Contract } from './contracts/ProtocolAccessManagerV2Contract/ProtocolAccessManagerV2Contract'
 import { FleetCommanderWhitelistContract } from './contracts/FleetCommanderContract/FleetCommanderWhitelistContract'
 
 /**
@@ -170,6 +174,34 @@ export class ContractsProvider implements IContractsProvider {
     address: IAddress
   }): Promise<ISummerStakingContract> {
     return SummerStakingContract.create({
+      blockchainClient: this._blockchainClientProvider.getBlockchainClient({
+        chainInfo: params.chainInfo,
+      }),
+      chainInfo: params.chainInfo,
+      address: params.address,
+    })
+  }
+
+  /** @see IContractsProvider.getRoundsVaultContract */
+  async getRoundsVaultContract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<IRoundsVaultContract> {
+    return RoundsVaultContract.create({
+      blockchainClient: this._blockchainClientProvider.getBlockchainClient({
+        chainInfo: params.chainInfo,
+      }),
+      chainInfo: params.chainInfo,
+      address: params.address,
+    })
+  }
+
+  /** @see IContractsProvider.getProtocolAccessManagerV2Contract */
+  async getProtocolAccessManagerV2Contract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<IProtocolAccessManagerV2Contract> {
+    return ProtocolAccessManagerV2Contract.create({
       blockchainClient: this._blockchainClientProvider.getBlockchainClient({
         chainInfo: params.chainInfo,
       }),

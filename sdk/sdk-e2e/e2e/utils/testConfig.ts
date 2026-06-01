@@ -163,8 +163,8 @@ export const InstiTestConfigs = {
 export const RwaTestConfig = {
   chainId: ChainIds.Base,
   rpcUrl: RpcUrls[ChainIds.Base],
-  fleetAddressValue: '',
-  aqAddressValue: '',
+  fleetAddressValue: '0xb5a07af4302fa0d2bbb389b4481055ed3f576b73',
+  aqAddressValue: '0x9e74a42efbefb2360b948da27292346321e7ba9e',
   userAddressValue: TestConfigAccounts.testUserAddressValue,
   clientId: 'ExtDemoCorp_v2',
 } as const
