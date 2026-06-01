@@ -1,11 +1,14 @@
 import type { IRWAManager } from '@summerfi/armada-protocol-common'
 import {
   Address,
+  ArmadaVaultId,
+  getChainInfoByChainId,
   Price,
   RoundsVaultType,
   RwaVaultInfo,
   Token,
   TokenAmount,
+  type IAddress,
   type IArmadaVaultId,
   type IChainInfo,
   type IResolvedRoundsVault,
@@ -117,7 +120,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     params: Parameters<IRWAManager['getDepositTx']>[0],
   ): ReturnType<IRWAManager['getDepositTx']> {
     // Deposit the Fleet underlying (e.g. USDC) into the Input RoundsVault for the current round.
-    const vault = await this._resolveRoundsVault(params.vaultId, RoundsVaultType.Input)
+    const vaultId = ArmadaVaultId.createFrom({
+      chainInfo: getChainInfoByChainId(params.chainId),
+      fleetAddress: Address.createFromEthereum({ value: params.fleetAddress }),
+    })
+    const vault = await this._resolveRoundsVault(vaultId, RoundsVaultType.Input)
     // Interpret the human-readable amount in the vault's underlying-token decimals.
     const amount = TokenAmount.createFrom({
       token: vault.underlyingToken,
@@ -132,7 +139,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
 
     return this._buildVaultDepositTxs({
       vault,
-      user: params.user,
+      userAddress: Address.createFromEthereum({ value: params.userAddress }),
       amount,
     })
   }
@@ -158,7 +165,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     params: Parameters<IRWAManager['getWithdrawTx']>[0],
   ): ReturnType<IRWAManager['getWithdrawTx']> {
     // Deposit Fleet shares into the Output RoundsVault for the current round.
-    const vault = await this._resolveRoundsVault(params.vaultId, RoundsVaultType.Output)
+    const vaultId = ArmadaVaultId.createFrom({
+      chainInfo: getChainInfoByChainId(params.chainId),
+      fleetAddress: Address.createFromEthereum({ value: params.fleetAddress }),
+    })
+    const vault = await this._resolveRoundsVault(vaultId, RoundsVaultType.Output)
     // Interpret the human-readable amount in the Output vault's underlying-token (share) decimals.
     const amount = TokenAmount.createFrom({
       token: vault.underlyingToken,
@@ -173,7 +184,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
 
     return this._buildVaultDepositTxs({
       vault,
-      user: params.user,
+      userAddress: Address.createFromEthereum({ value: params.userAddress }),
       amount,
     })
   }
@@ -199,13 +210,24 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     params: Parameters<IRWAManager['getCancelRoundDepositTx']>[0],
   ): ReturnType<IRWAManager['getCancelRoundDepositTx']> {
     // Redeem an open current-round receipt back into the originally deposited asset.
-    const vault = await this._resolveRoundsVault(params.vaultId, params.vaultType)
+    const vaultId = ArmadaVaultId.createFrom({
+      chainInfo: getChainInfoByChainId(params.chainId),
+      fleetAddress: Address.createFromEthereum({ value: params.fleetAddress }),
+    })
+    const vault = await this._resolveRoundsVault(vaultId, params.vaultType)
     const contract = await this._getRoundsVaultContract(vault)
-    const owner = params.user.wallet.address
+    // The receipt amount is denominated in the resolved vault's underlying-token decimals.
+    const amount = TokenAmount.createFrom({
+      token: vault.underlyingToken,
+      amount: params.amount,
+    })
+    const owner = Address.createFromEthereum({ value: params.userAddress })
     return contract.redeem({
       id: params.roundId,
-      amount: params.amount,
-      receiver: params.receiver ?? owner,
+      amount: amount.toSolidityValue(),
+      receiver: params.receiverAddress
+        ? Address.createFromEthereum({ value: params.receiverAddress })
+        : owner,
       owner,
     })
   }
@@ -333,11 +355,12 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
    */
   private async _buildVaultDepositTxs(params: {
     vault: IResolvedRoundsVault
-    user: Parameters<IRWAManager['getDepositTx']>[0]['user']
+    /** The depositing user — owner of the approval and receiver of the round receipt. */
+    userAddress: IAddress
     /** Amount of the vault's underlyingToken to deposit (in the token's display units). */
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
-    const { vault, user, amount } = params
+    const { vault, userAddress, amount } = params
     const contract = await this._getRoundsVaultContract(vault)
 
     const transactions: TransactionInfo[] = []
@@ -347,7 +370,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       chainInfo: vault.chainInfo,
       spender: vault.address,
       amount,
-      owner: user.wallet.address,
+      owner: userAddress,
     })
     if (approval) {
       transactions.push(approval)
@@ -355,7 +378,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
 
     const depositTx = await contract.deposit({
       assets: amount.toSolidityValue(),
-      receiver: user.wallet.address,
+      receiver: userAddress,
     })
     transactions.push(depositTx)
 

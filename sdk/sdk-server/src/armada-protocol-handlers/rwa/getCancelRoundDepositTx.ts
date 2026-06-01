@@ -1,11 +1,9 @@
 import {
-  isAddress,
-  isArmadaVaultId,
-  isUser,
+  isAddressValue,
+  isChainId,
   RoundsVaultType,
-  type IAddress,
-  type IArmadaVaultId,
-  type IUser,
+  type AddressValue,
+  type ChainId,
 } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
@@ -13,11 +11,12 @@ import { publicProcedure } from '../../SDKTRPC'
 export const getCancelRoundDepositTx = publicProcedure
   .input(
     z.object({
-      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
-      user: z.custom<IUser>(isUser),
+      chainId: z.custom<ChainId>(isChainId),
+      fleetAddress: z.custom<AddressValue>(isAddressValue),
+      userAddress: z.custom<AddressValue>(isAddressValue),
       roundId: z.bigint(),
-      amount: z.bigint(),
-      receiver: z.custom<IAddress>(isAddress).optional(),
+      amount: z.string(),
+      receiverAddress: z.custom<AddressValue>(isAddressValue).optional(),
       vaultType: z.nativeEnum(RoundsVaultType),
     }),
   )

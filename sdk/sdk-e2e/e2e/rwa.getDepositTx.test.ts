@@ -1,10 +1,4 @@
-import {
-  Address,
-  ArmadaVaultId,
-  User,
-  getChainInfoByChainId,
-  type AddressValue,
-} from '@summerfi/sdk-common'
+import { type AddressValue } from '@summerfi/sdk-common'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { RwaTestConfig } from './utils/testConfig'
 
@@ -22,7 +16,6 @@ const simulateOnly = true // Set to true to only simulate the transactions witho
  */
 describe('RWA - getDepositTx', () => {
   const { sdk, chainId, userAddress, userSendTxTool } = createInstiSdkTestSetup({ simulateOnly })
-  const chainInfo = getChainInfoByChainId(chainId)
 
   const scenarios: {
     fleetAddressValue: AddressValue
@@ -38,13 +31,12 @@ describe('RWA - getDepositTx', () => {
   test.each(scenarios)(
     'builds deposit tx of $amountValue into fleet $fleetAddressValue',
     async ({ fleetAddressValue, amountValue }) => {
-      const vaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
+      const txs = await sdk.rwa.getDepositTx({
+        chainId,
+        fleetAddress: fleetAddressValue,
+        userAddress: userAddress.value,
+        assetsAmount: amountValue,
       })
-      const user = User.createFromEthereum(chainId, userAddress.value)
-
-      const txs = await sdk.rwa.getDepositTx({ vaultId, user, assetsAmount: amountValue })
       expect(Array.isArray(txs)).toBe(true)
       expect(txs.length).toBeGreaterThan(0)
       console.log(

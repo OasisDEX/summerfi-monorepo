@@ -1,16 +1,9 @@
-import {
-  Address,
-  ArmadaVaultId,
-  RoundsVaultType,
-  User,
-  getChainInfoByChainId,
-  type AddressValue,
-} from '@summerfi/sdk-common'
+import { RoundsVaultType, type AddressValue } from '@summerfi/sdk-common'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { RwaTestConfig } from './utils/testConfig'
 
 jest.setTimeout(300000)
-
+const simulateOnly = false // Set to true to only simulate the transactions without sending them (for testing purposes).
 /**
  * @group e2e
  *
@@ -22,45 +15,36 @@ jest.setTimeout(300000)
  * (simulate-only by default).
  */
 describe('RWA - getCancelRoundDepositTx', () => {
-  const { sdk, chainId, userAddress, userSendTxTool } = createInstiSdkTestSetup()
-  const chainInfo = getChainInfoByChainId(chainId)
+  const { sdk, chainId, userAddress, userSendTxTool } = createInstiSdkTestSetup({ simulateOnly })
 
   const scenarios: {
     fleetAddressValue: AddressValue
     roundId: bigint
     /** Receipt token amount to redeem (base units). */
-    amount: bigint
+    amount: string
     vaultType: RoundsVaultType
     /** Optional alternative receiver of the returned asset. */
-    receiverValue?: AddressValue
+    receiverAddress?: AddressValue
   }[] = [
     {
       fleetAddressValue: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
-      roundId: 0n,
-      amount: 1n,
+      roundId: 5n,
+      amount: '1',
       vaultType: RoundsVaultType.Input,
     },
   ]
 
   test.each(scenarios)(
     'builds cancel-round-deposit tx for fleet $fleetAddressValue round $roundId ($vaultType)',
-    async ({ fleetAddressValue, roundId, amount, vaultType, receiverValue }) => {
-      const vaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
-      })
-      const user = User.createFromEthereum(chainId, userAddress.value)
-      const receiver = receiverValue
-        ? Address.createFromEthereum({ value: receiverValue })
-        : undefined
-
+    async ({ fleetAddressValue, roundId, amount, vaultType, receiverAddress }) => {
       const tx = await sdk.rwa.getCancelRoundDepositTx({
-        vaultId,
-        user,
+        chainId,
+        fleetAddress: fleetAddressValue,
+        userAddress: userAddress.value,
         roundId,
         amount,
         vaultType,
-        receiver,
+        receiverAddress,
       })
       expect(tx).toBeDefined()
       console.log(`[RWA getCancelRoundDepositTx] tx: ${tx.description}`)

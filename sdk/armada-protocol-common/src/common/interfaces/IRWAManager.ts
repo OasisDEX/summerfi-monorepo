@@ -1,4 +1,5 @@
 import type {
+  AddressValue,
   ChainId,
   IArmadaVaultId,
   IAddress,
@@ -65,14 +66,16 @@ export interface IRWAManager {
    * @description Builds the approve + RoundsVaultInput.deposit transaction pair for a whitelisted
    *              user. Mints an ERC-1155 receipt for the current open round.
    *
-   * @param vaultId      The Fleet vault identifier (chainInfo + fleet address)
-   * @param user         The depositing user
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param userAddress  The depositing user (owner + receiver of the round receipt)
    * @param assetsAmount Human-readable amount of the underlying asset (e.g. "1" = 1 USDC) to deposit.
    *                     Converted to base units using the vault's underlying-token decimals.
    */
   getDepositTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     assetsAmount: string
   }): Promise<TransactionInfo[]>
 
@@ -104,14 +107,16 @@ export interface IRWAManager {
    * @description Builds the approve + RoundsVaultOutput.deposit transaction pair for a whitelisted
    *              user who wants to exit the Fleet. Mints an ERC-1155 receipt for the current round.
    *
-   * @param vaultId      The Fleet vault identifier
-   * @param user         The withdrawing user
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param userAddress  The withdrawing user (owner + receiver of the round receipt)
    * @param sharesAmount Human-readable amount of Fleet shares to deposit into the Output vault.
    *                     Converted to base units using the Output vault's underlying-token (share) decimals.
    */
   getWithdrawTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     sharesAmount: string
   }): Promise<TransactionInfo[]>
 
@@ -139,20 +144,24 @@ export interface IRWAManager {
    * @description Builds the RoundsVaultBase.redeem transaction to return an open current-round
    *              receipt before it enters settlement (cancels a pending deposit or withdraw).
    *
-   * @param vaultId      The Fleet vault identifier
-   * @param user         The user cancelling their position (owner)
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param userAddress  The user cancelling their position (owner of the receipt)
    * @param roundId      The current open round id (must equal getCurrentRound)
-   * @param amount       Number of ERC-1155 receipt tokens to redeem
-   * @param receiver     Optional alternative receiver of the returned asset
+   * @param amount       Human-readable amount of the round receipt to redeem (converted to base units
+   *                     using the resolved vault's underlying-token decimals). Generic name because
+   *                     `vaultType` selects whether it is a USDC (Input) or share (Output) deposit.
+   * @param receiverAddress Optional alternative receiver of the returned asset
    * @param vaultType    RoundsVaultType.Input (cancels a USDC deposit) or
    *                     RoundsVaultType.Output (cancels a share deposit)
    */
   getCancelRoundDepositTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
-    amount: bigint
-    receiver?: IAddress
+    amount: string
+    receiverAddress?: AddressValue
     vaultType: RoundsVaultType
   }): Promise<TransactionInfo>
 
