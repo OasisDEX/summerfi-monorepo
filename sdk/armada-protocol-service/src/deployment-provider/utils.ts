@@ -4,10 +4,26 @@ import type {
   DeploymentProviderConfigInsti,
   DeploymentProviderConfigPublic,
 } from './DeploymentProviderConfig'
-import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+
+/**
+ * Minimal structural shape required to source institution wiring. Both IArmadaSubgraphManager
+ * (institutions subgraph) and IRwaSubgraphManager (institutions-v2 / RWA subgraph) satisfy this, so
+ * the same config builder works for both the v1 (insti) and v2 (RWA) deployment paths.
+ */
+export interface IInstitutionByIdProvider {
+  getInstitutionById(params: { chainId: ChainId; id: string }): Promise<{
+    institution?: {
+      active: boolean
+      harborCommand: string
+      admiralsQuarters: string
+      configurationManager: string
+      protocolAccessManager: string
+    } | null
+  }>
+}
 
 export async function fetchInstiDeploymentProviderConfig(
-  subgraphManager: IArmadaSubgraphManager,
+  subgraphManager: IInstitutionByIdProvider,
   instiChainIds: ChainId[],
   clientId: string,
 ): Promise<DeploymentProviderConfigInsti[]> {

@@ -132,5 +132,57 @@ query GetVault($id: ID!) {
     lastUpdateTimestamp
     withdrawableTotalAssets
     withdrawableTotalAssetsUSD
+    isWhitelistOpen
+    roundsVaultPair {
+      id
+      active
+      inputVault {
+        id
+        currentRound
+        minPositionSize
+        underlyingToken {
+          id
+          name
+          symbol
+          decimals
+        }
+        exchangeAssetToken {
+          id
+          name
+          symbol
+          decimals
+        }
+      }
+      outputVault {
+        id
+        currentRound
+        minPositionSize
+        underlyingToken {
+          id
+          name
+          symbol
+          decimals
+        }
+        exchangeAssetToken {
+          id
+          name
+          symbol
+          decimals
+        }
+      }
+    }
+  }
+}
+query GetRwaReceipts($account: String!, $vault: String!) {
+  receipts(where: { account: $account, vault: $vault, balance_gt: "0" }) {
+    id
+    balance
+    round {
+      roundId
+      state
+    }
+    vault {
+      id
+    }
   }
 }

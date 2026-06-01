@@ -205,6 +205,9 @@ export class ArmadaManager implements IArmadaManager {
       clientId: this._clientId,
       rwaSubgraphManager: this._rwaSubgraphManager,
       tokensManager: this._tokensManager,
+      contractsProvider: this._contractsProvider,
+      allowanceManager: this._allowanceManager,
+      deploymentProvider: this._deploymentProvider,
     })
   }
 }

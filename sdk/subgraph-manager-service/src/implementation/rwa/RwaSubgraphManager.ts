@@ -36,6 +36,16 @@ export class RwaSubgraphManager implements IRwaSubgraphManager {
     return this._getClient(chainId).GetVault({ id: vaultId })
   }
 
+  getReceipts({ chainId, account, vault }: Parameters<IRwaSubgraphManager['getReceipts']>[0]) {
+    return this._getClient(chainId).GetRwaReceipts({ account, vault })
+  }
+
+  getInstitutionById({ chainId, id }: Parameters<IRwaSubgraphManager['getInstitutionById']>[0]) {
+    return this._getClient(chainId).GetRwaInstitutionById({
+      id: this._getInstitutionId(id),
+    })
+  }
+
   /** PRIVATE */
   private _getClient(chainId: ChainId): ReturnType<typeof createRwaGraphQLClient> {
     const urlMapForChain = this._urlMap[chainId]
