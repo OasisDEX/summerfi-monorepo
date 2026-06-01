@@ -44,7 +44,9 @@ describe('RWA - getRoundState', () => {
       })
 
       const state = await sdk.rwa.getRoundState({ vaultId, roundId, vaultType })
-      console.log(`[RWA getRoundState] ${vaultType} ${fleetAddressValue} round ${roundId}: ${state}`)
+      console.log(
+        `[RWA getRoundState] ${vaultType} ${fleetAddressValue} round ${roundId}: ${state}`,
+      )
       assert(
         Object.values(RoundState).includes(state),
         `getRoundState should return a RoundState enum value, got ${state}`,
