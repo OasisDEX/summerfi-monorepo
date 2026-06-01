@@ -38,6 +38,8 @@ import {
 } from '@summerfi/app-utils'
 import {
   Address,
+  type AddressValue,
+  type ChainId,
   getChainInfoByChainId,
   type IToken,
   TokenAmount,
@@ -49,6 +51,7 @@ import { useRouter } from 'next/navigation'
 import { type PublicClient } from 'viem'
 
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
+import { buildRwaTransactions } from '@/helpers/build-rwa-transactions'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -58,6 +61,9 @@ import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 type UseTransactionParams = {
   vault: SDKVaultishType
   vaultChainId: SupportedNetworkIds
+  // RWA vaults are rounds-based: deposits/withdrawals are routed through the
+  // dedicated RWA SDK handlers instead of the standard ERC-4626 flow.
+  isRwaVault?: boolean
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
   vaultToken: IToken | undefined
@@ -89,6 +95,7 @@ const errorsMap = {
 export const useTransaction = ({
   vault,
   vaultChainId,
+  isRwaVault = false,
   manualSetAmount,
   amount,
   publicClient,
@@ -110,7 +117,13 @@ export const useTransaction = ({
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const transactionEventHandler = useHandleTransactionEvent()
   const { address: userWalletAddress } = useEarnProtocolWallet()
-  const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
+  const {
+    getDepositTx: getDepositTX,
+    getWithdrawTx: getWithdrawTX,
+    getVaultSwitchTx,
+    getRwaDepositTx: getRwaDepositTX,
+    getRwaWithdrawTx: getRwaWithdrawTX,
+  } = useAppSDK()
   const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain, chain } = useEarnProtocolChain()
@@ -167,23 +180,54 @@ export const useTransaction = ({
 
       setTxStatus('loadingTx')
       try {
-        const transactionsList = await {
-          [TransactionAction.DEPOSIT]: getDepositTX,
-          [TransactionAction.WITHDRAW]: getWithdrawTX,
-        }[sidebarTransactionType]({
-          walletAddress: Address.createFromEthereum({
-            value: userWalletAddress,
-          }),
-          amount: TokenAmount.createFrom({
-            token: fromToken,
-            amount: amount.toString(),
-          }),
-          toToken,
-          fleetAddress: vault.id,
-          chainInfo: getChainInfoByChainId(vaultChainId),
-          slippage: Number(slippageConfig.slippage),
-          referralCode,
+        const fromAmount = TokenAmount.createFrom({
+          token: fromToken,
+          amount: amount.toString(),
         })
+
+        let transactionsList: TransactionWithStatus[]
+
+        if (isRwaVault) {
+          // RWA vaults are rounds-based: route through the dedicated handlers
+          // (no swap, no slippage). They return the bare TransactionInfo[], which
+          // the adapter decorates into the typed TransactionWithStatus the
+          // executor expects.
+          const rwaTransactions = await {
+            [TransactionAction.DEPOSIT]: getRwaDepositTX,
+            [TransactionAction.WITHDRAW]: getRwaWithdrawTX,
+          }[sidebarTransactionType]({
+            fleetAddress: vault.id as AddressValue,
+            chainId: vaultChainId as ChainId,
+            userAddress: userWalletAddress as AddressValue,
+            amount: fromAmount,
+          })
+
+          transactionsList = buildRwaTransactions({
+            transactions: rwaTransactions,
+            action: sidebarTransactionType as
+              | TransactionAction.DEPOSIT
+              | TransactionAction.WITHDRAW,
+            fromAmount,
+          })
+        } else {
+          const standardTransactions = await {
+            [TransactionAction.DEPOSIT]: getDepositTX,
+            [TransactionAction.WITHDRAW]: getWithdrawTX,
+          }[sidebarTransactionType]({
+            walletAddress: Address.createFromEthereum({
+              value: userWalletAddress,
+            }),
+            amount: fromAmount,
+            toToken,
+            fleetAddress: vault.id,
+            chainInfo: getChainInfoByChainId(vaultChainId),
+            slippage: Number(slippageConfig.slippage),
+            referralCode,
+          })
+
+          // Map to TransactionWithStatus and set executed to false
+          transactionsList = standardTransactions.map((tx) => ({ ...tx, executed: false }))
+        }
 
         transactionEventHandler({
           transactionType: isWithdraw ? 'withdraw' : 'deposit',
@@ -196,8 +240,7 @@ export const useTransaction = ({
         if (transactionsList.length <= 0) {
           throw new Error('Error getting the transactions list')
         }
-        // Map to TransactionWithStatus and set executed to false
-        setTransactions(transactionsList.map((tx) => ({ ...tx, executed: false })))
+        setTransactions(transactionsList)
         setTxStatus('txPrepared')
       } catch (err) {
         transactionEventHandler({
@@ -274,8 +317,11 @@ export const useTransaction = ({
     isSwitch,
     selectedSwitchVault,
     sidebarTransactionType,
+    isRwaVault,
     getDepositTX,
     getWithdrawTX,
+    getRwaDepositTX,
+    getRwaWithdrawTX,
     vault,
     vaultChainId,
     slippageConfig.slippage,
