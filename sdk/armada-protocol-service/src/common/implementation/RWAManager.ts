@@ -6,7 +6,6 @@ import {
   RwaVaultInfo,
   Token,
   TokenAmount,
-  type IAddress,
   type IArmadaVaultId,
   type IChainInfo,
   type IResolvedRoundsVault,

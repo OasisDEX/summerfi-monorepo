@@ -52,6 +52,7 @@ export const createSendTransactionTool = (params: {
   ): Promise<
     T extends TransactionInfo ? SendTransactionToolStatus : SendTransactionToolStatus[]
   > => {
+    const simulationStatuses: SendTransactionToolStatus[] = []
     const statuses: SendTransactionToolStatus[] = []
 
     const transactions = Array.isArray(transactionOrTransactions)
@@ -75,6 +76,7 @@ export const createSendTransactionTool = (params: {
           senderAddress: senderAddressValue,
         })
         console.log('  > Simulation successful' + (res.data ? `, with result: ${res.data}` : ''))
+        simulationStatuses.push('success')
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         debugViemError('  > Simulation failed with error:', error)
@@ -97,9 +99,10 @@ export const createSendTransactionTool = (params: {
       }
     }
 
-    console.log('  > Done', statuses)
+    const finalStatuses = simulateOnly ? simulationStatuses : statuses
+    console.log('  > Done', finalStatuses)
     return (
-      Array.isArray(transactionOrTransactions) ? statuses : statuses[0]
+      Array.isArray(transactionOrTransactions) ? finalStatuses : finalStatuses[0]
     ) as T extends TransactionInfo ? SendTransactionToolStatus : SendTransactionToolStatus[]
   }
 }
