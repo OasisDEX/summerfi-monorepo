@@ -47,9 +47,13 @@ export type { GetStrategiesQuery, GetExecutionsQuery } from './generated/dca/cli
 export type {
   GetVaultsQuery as GetVaultsQueryRwa,
   GetVaultQuery as GetVaultQueryRwa,
+  GetRwaReceiptsQuery,
+  GetRwaInstitutionByIdQuery,
 } from './generated/rwa/client'
 export {
   GetVaultsDocument as GetVaultsDocumentRwa,
   GetVaultDocument as GetVaultDocumentRwa,
+  GetRwaReceiptsDocument,
+  GetRwaInstitutionByIdDocument,
 } from './generated/rwa/client'
 export { SubgraphTypes, type SubgraphType } from './types/SubgraphTypes'

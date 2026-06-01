@@ -41,8 +41,15 @@ function getLoggedRequestUrl(params: {
 export function createMainRPCClient(params: {
   apiURL: string
   clientId?: string
+  /** Institutional deployment-config version forwarded as the `Insti-Version` header (e.g. 'v2'). */
+  instiVersion?: string
   logging?: boolean
 }): RPCMainClientType {
+  const customHeaders = () => ({
+    ...(params.clientId && { 'Client-Id': params.clientId }),
+    ...(params.instiVersion && { 'Insti-Version': params.instiVersion }),
+  })
+
   const getBatchLink = httpBatchLink({
     url: params.apiURL,
     transformer: SerializationService.getTransformer(),
@@ -50,9 +57,7 @@ export function createMainRPCClient(params: {
     maxItems: 5,
     fetch: (url, opts) => fetch(url, { ...opts, credentials: 'omit' }),
     headers() {
-      return {
-        ...(params.clientId && { 'Client-Id': params.clientId }),
-      }
+      return customHeaders()
     },
   })
 
@@ -64,9 +69,7 @@ export function createMainRPCClient(params: {
     maxItems: 5,
     fetch: (url, opts) => fetch(url, { ...opts, credentials: 'omit' }),
     headers() {
-      return {
-        ...(params.clientId && { 'Client-Id': params.clientId }),
-      }
+      return customHeaders()
     },
   })
 

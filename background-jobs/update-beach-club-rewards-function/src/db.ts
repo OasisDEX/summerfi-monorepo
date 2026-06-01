@@ -22,17 +22,29 @@ export class DatabaseService {
   public config: ConfigService
   public logger: Logger
 
-  // SUMR token price in USD
-  private readonly SUMR_TOKEN_PRICE_USD = 0.25
+  // SUMR token price in USD — fixed pre-trading price, live CoinGecko price post-trading
+  private readonly SUMR_TOKEN_PRICE_USD_PRE_TRADING = 0.25
+  private readonly SUMR_TOKEN_PRICE_USD_POST_TRADING_FALLBACK = 0.002
+  private readonly JANUARY_27_2026 = new Date('2026-01-27T00:00:00.000Z')
 
   // SUMR rewards tiers configuration
-  private readonly SUMR_REWARD_TIERS = [
-    { maxAmount: 10000, percentage: 0.001 }, // 0.1%
-    { maxAmount: 100000, percentage: 0.002 }, // 0.2%
-    { maxAmount: 250000, percentage: 0.003 }, // 0.3%
-    { maxAmount: 500000, percentage: 0.004 }, // 0.4%
-    { maxAmount: Infinity, percentage: 0.005 }, // 0.5%
+  private readonly SUMR_REWARD_TIERS_PRE_MARCH_2026 = [
+    { maxAmount: 10000, percentage: 0.001 },
+    { maxAmount: 100000, percentage: 0.002 },
+    { maxAmount: 250000, percentage: 0.003 },
+    { maxAmount: 500000, percentage: 0.004 },
+    { maxAmount: Infinity, percentage: 0.005 },
   ]
+
+  private readonly SUMR_REWARD_TIERS_POST_MARCH_2026 = [
+    { maxAmount: 10000, percentage: 0.0002 },
+    { maxAmount: 100000, percentage: 0.0004 },
+    { maxAmount: 250000, percentage: 0.0006 },
+    { maxAmount: 500000, percentage: 0.0008 },
+    { maxAmount: Infinity, percentage: 0.001 },
+  ]
+
+  private readonly MARCH_1_2026 = new Date('2026-03-01T00:00:00.000Z')
 
   constructor(logger: Logger) {
     this.logger = logger
@@ -139,8 +151,9 @@ WHERE u.id = ANY(${userIds});
   /**
    * Update daily rates and accumulate points within a transaction
    */
-  async updateDailyRatesAndPointsInTransaction(trx: Kysely<DB>): Promise<void> {
+  async updateDailyRatesAndPointsInTransaction(trx: Kysely<DB>, periodEnd: Date): Promise<void> {
     const config = await this.config.getConfig()
+    const sumrTokenPriceUsd = await this.getSumrTokenPriceUsd(periodEnd)
 
     // Generate unique batch ID for this processing run
     const batchId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
@@ -195,13 +208,19 @@ WHERE u.id = ANY(${userIds});
     )
 
     // 2. Calculate and distribute SUMR rewards for all referral codes with active users
-    const sumrCaseStatement = this.SUMR_REWARD_TIERS.map((tier) => {
-      if (tier.maxAmount === Infinity) {
-        return `ELSE rc.total_deposits_referred_usd * ${tier.percentage} / ${this.SUMR_TOKEN_PRICE_USD} / 8760`
-      } else {
-        return `WHEN rc.total_deposits_referred_usd <= ${tier.maxAmount} THEN rc.total_deposits_referred_usd * ${tier.percentage} / ${this.SUMR_TOKEN_PRICE_USD} / 8760`
-      }
-    }).join('\n          ')
+    const sumrTiers =
+      periodEnd >= this.MARCH_1_2026
+        ? this.SUMR_REWARD_TIERS_POST_MARCH_2026
+        : this.SUMR_REWARD_TIERS_PRE_MARCH_2026
+    const sumrCaseStatement = sumrTiers
+      .map((tier) => {
+        if (tier.maxAmount === Infinity) {
+          return `ELSE rc.total_deposits_referred_usd * ${tier.percentage} / ${sumrTokenPriceUsd} / 8760`
+        } else {
+          return `WHEN rc.total_deposits_referred_usd <= ${tier.maxAmount} THEN rc.total_deposits_referred_usd * ${tier.percentage} / ${sumrTokenPriceUsd} / 8760`
+        }
+      })
+      .join('\n          ')
 
     await trx.executeQuery(
       sql`
@@ -449,6 +468,36 @@ WHERE u.id = ANY(${userIds});
 
   async close(): Promise<void> {
     await this.db.destroy()
+  }
+
+  private async getSumrTokenPriceUsd(date: Date): Promise<number> {
+    if (date < this.JANUARY_27_2026) {
+      return this.SUMR_TOKEN_PRICE_USD_PRE_TRADING
+    }
+    try {
+      const day = String(date.getUTCDate()).padStart(2, '0')
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+      const year = date.getUTCFullYear()
+      const response = await fetch(
+        `https://api.coingecko.com/api/v3/coins/summer-2/history?date=${day}-${month}-${year}&localization=false`,
+      )
+      if (!response.ok) {
+        throw new Error(`CoinGecko API responded with status ${response.status}`)
+      }
+      const data = (await response.json()) as {
+        market_data?: { current_price?: { usd?: number } }
+      }
+      const price = data.market_data?.current_price?.usd
+      if (!price || price <= 0) {
+        throw new Error(`Invalid SUMR price received: ${price}`)
+      }
+      return price
+    } catch (error) {
+      this.logger.warn('Failed to fetch SUMR price from CoinGecko, using post-trading fallback', {
+        error: error as Error,
+      })
+      return this.SUMR_TOKEN_PRICE_USD_POST_TRADING_FALLBACK
+    }
   }
 
   /**

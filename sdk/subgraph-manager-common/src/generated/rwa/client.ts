@@ -5558,8 +5558,8 @@ export type Query = {
   rebalance?: Maybe<Rebalance>;
   rebalances: Array<Rebalance>;
   receipt?: Maybe<Receipt>;
-  receiptTransfer?: Maybe<ReceiptTransfer>;
-  receiptTransfers: Array<ReceiptTransfer>;
+  receiptActivities: Array<ReceiptActivity>;
+  receiptActivity?: Maybe<ReceiptActivity>;
   receipts: Array<Receipt>;
   referralData?: Maybe<ReferralData>;
   referralDatas: Array<ReferralData>;
@@ -6106,21 +6106,21 @@ export type QueryReceiptArgs = {
 };
 
 
-export type QueryReceiptTransferArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryReceiptTransfersArgs = {
+export type QueryReceiptActivitiesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ReceiptTransfer_OrderBy>;
+  orderBy?: InputMaybe<ReceiptActivity_OrderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ReceiptTransfer_Filter>;
+  where?: InputMaybe<ReceiptActivity_Filter>;
+};
+
+
+export type QueryReceiptActivityArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
@@ -6923,49 +6923,115 @@ export enum Rebalance_OrderBy {
 export type Receipt = {
   __typename?: 'Receipt';
   account: Account;
+  /**  Immutable, append-only activity feed for this receipt holder.  */
+  activities: Array<ReceiptActivity>;
+  /**  Current ERC-1155 receipt balance. Single source of truth, maintained purely from TransferSingle/TransferBatch deltas.  */
   balance: Scalars['BigInt']['output'];
-  exchangeAssetReceived: Scalars['BigInt']['output'];
   /**  {vaultAddr}-{roundId}-{accountAddr}  */
   id: Scalars['ID']['output'];
   lastUpdated: Scalars['BigInt']['output'];
   lastUpdatedBlock: Scalars['BigInt']['output'];
+  /**  The round this receipt belongs to. Read `round.state` for this receipt's lifecycle state and `round.exchangeRateBase/Quote` for its settled rate — never recompute.  */
   round: Round;
-  totalBurned: Scalars['BigInt']['output'];
-  totalMinted: Scalars['BigInt']['output'];
-  totalRedeemedForExchangeAsset: Scalars['BigInt']['output'];
-  /**  Underlying returned to this user via queue-cancel `redeem` against this round. Separate from exchangeAssetReceived (which covers SETTLED-phase redemptions).  */
-  underlyingRedeemed: Scalars['BigInt']['output'];
   vault: RoundsVault;
 };
 
-export type ReceiptTransfer = {
-  __typename?: 'ReceiptTransfer';
-  amount: Scalars['BigInt']['output'];
+
+export type ReceiptActivitiesArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ReceiptActivity_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ReceiptActivity_Filter>;
+};
+
+/**  Immutable, append-only semantic activity row. Replaces running counters: lifetime/volumetric figures are reconstructed by summing these. Carries the realized counter-asset amount straight from the emitting event.  */
+export type ReceiptActivity = {
+  __typename?: 'ReceiptActivity';
+  /**  The receipt owner affected: receiver for DEPOSIT, owner for redemptions, sender for TRANSFER.  */
+  account: Account;
+  /**  Realized counter-asset moved: deposit asset in (DEPOSIT), underlying returned (REDEEM_CURRENT), exchange asset out (REDEEM_EXCHANGE). Null for TRANSFER.  */
+  assetAmount?: Maybe<Scalars['BigInt']['output']>;
+  /**  Token `assetAmount` is denominated in (vault.underlyingToken or vault.exchangeAssetToken). Null for TRANSFER.  */
+  assetToken?: Maybe<Token>;
   blockNumber: Scalars['BigInt']['output'];
-  from: Scalars['Bytes']['output'];
-  /**  {txHash}-{logIndex}-{batchIndex}  */
+  caller: Scalars['Bytes']['output'];
+  /**  {txHash}-{logIndex} (+ -{lineIndex} for batched lines)  */
   id: Scalars['ID']['output'];
-  kind: TransferKind;
-  operator: Scalars['Bytes']['output'];
+  receipt: Receipt;
+  /**  Receipts minted / burned / transferred.  */
+  receiptAmount: Scalars['BigInt']['output'];
+  receiver: Scalars['Bytes']['output'];
   round: Round;
+  /**  Round state at the time of this action.  */
+  roundStateAtAction: RoundState;
   timestamp: Scalars['BigInt']['output'];
-  to: Scalars['Bytes']['output'];
   txHash: Scalars['Bytes']['output'];
+  type: ReceiptActivityType;
   vault: RoundsVault;
 };
 
-export type ReceiptTransfer_Filter = {
+export enum ReceiptActivityType {
+  Deposit = 'DEPOSIT',
+  RedeemCurrent = 'REDEEM_CURRENT',
+  RedeemExchange = 'REDEEM_EXCHANGE',
+  Transfer = 'TRANSFER'
+}
+
+export type ReceiptActivity_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  amount?: InputMaybe<Scalars['BigInt']['input']>;
-  amount_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  amount_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  amount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  amount_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  amount_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  amount_not?: InputMaybe<Scalars['BigInt']['input']>;
-  amount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  and?: InputMaybe<Array<InputMaybe<ReceiptTransfer_Filter>>>;
+  account?: InputMaybe<Scalars['String']['input']>;
+  account_?: InputMaybe<Account_Filter>;
+  account_contains?: InputMaybe<Scalars['String']['input']>;
+  account_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_ends_with?: InputMaybe<Scalars['String']['input']>;
+  account_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_gt?: InputMaybe<Scalars['String']['input']>;
+  account_gte?: InputMaybe<Scalars['String']['input']>;
+  account_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  account_lt?: InputMaybe<Scalars['String']['input']>;
+  account_lte?: InputMaybe<Scalars['String']['input']>;
+  account_not?: InputMaybe<Scalars['String']['input']>;
+  account_not_contains?: InputMaybe<Scalars['String']['input']>;
+  account_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  account_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  account_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  account_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_starts_with?: InputMaybe<Scalars['String']['input']>;
+  account_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  and?: InputMaybe<Array<InputMaybe<ReceiptActivity_Filter>>>;
+  assetAmount?: InputMaybe<Scalars['BigInt']['input']>;
+  assetAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  assetAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  assetAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  assetAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  assetAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  assetAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  assetAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  assetToken?: InputMaybe<Scalars['String']['input']>;
+  assetToken_?: InputMaybe<Token_Filter>;
+  assetToken_contains?: InputMaybe<Scalars['String']['input']>;
+  assetToken_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  assetToken_ends_with?: InputMaybe<Scalars['String']['input']>;
+  assetToken_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  assetToken_gt?: InputMaybe<Scalars['String']['input']>;
+  assetToken_gte?: InputMaybe<Scalars['String']['input']>;
+  assetToken_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  assetToken_lt?: InputMaybe<Scalars['String']['input']>;
+  assetToken_lte?: InputMaybe<Scalars['String']['input']>;
+  assetToken_not?: InputMaybe<Scalars['String']['input']>;
+  assetToken_not_contains?: InputMaybe<Scalars['String']['input']>;
+  assetToken_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  assetToken_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  assetToken_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  assetToken_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  assetToken_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  assetToken_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  assetToken_starts_with?: InputMaybe<Scalars['String']['input']>;
+  assetToken_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -6974,16 +7040,16 @@ export type ReceiptTransfer_Filter = {
   blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  from?: InputMaybe<Scalars['Bytes']['input']>;
-  from_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  from_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  from_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  from_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  from_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  from_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  from_not?: InputMaybe<Scalars['Bytes']['input']>;
-  from_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  from_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  caller?: InputMaybe<Scalars['Bytes']['input']>;
+  caller_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  caller_gt?: InputMaybe<Scalars['Bytes']['input']>;
+  caller_gte?: InputMaybe<Scalars['Bytes']['input']>;
+  caller_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  caller_lt?: InputMaybe<Scalars['Bytes']['input']>;
+  caller_lte?: InputMaybe<Scalars['Bytes']['input']>;
+  caller_not?: InputMaybe<Scalars['Bytes']['input']>;
+  caller_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  caller_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_gt?: InputMaybe<Scalars['ID']['input']>;
   id_gte?: InputMaybe<Scalars['ID']['input']>;
@@ -6992,22 +7058,51 @@ export type ReceiptTransfer_Filter = {
   id_lte?: InputMaybe<Scalars['ID']['input']>;
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  kind?: InputMaybe<TransferKind>;
-  kind_in?: InputMaybe<Array<TransferKind>>;
-  kind_not?: InputMaybe<TransferKind>;
-  kind_not_in?: InputMaybe<Array<TransferKind>>;
-  operator?: InputMaybe<Scalars['Bytes']['input']>;
-  operator_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  operator_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  operator_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  operator_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  operator_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  operator_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  operator_not?: InputMaybe<Scalars['Bytes']['input']>;
-  operator_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  operator_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  or?: InputMaybe<Array<InputMaybe<ReceiptTransfer_Filter>>>;
+  or?: InputMaybe<Array<InputMaybe<ReceiptActivity_Filter>>>;
+  receipt?: InputMaybe<Scalars['String']['input']>;
+  receiptAmount?: InputMaybe<Scalars['BigInt']['input']>;
+  receiptAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  receiptAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  receiptAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  receiptAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  receiptAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  receiptAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  receiptAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  receipt_?: InputMaybe<Receipt_Filter>;
+  receipt_contains?: InputMaybe<Scalars['String']['input']>;
+  receipt_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  receipt_ends_with?: InputMaybe<Scalars['String']['input']>;
+  receipt_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  receipt_gt?: InputMaybe<Scalars['String']['input']>;
+  receipt_gte?: InputMaybe<Scalars['String']['input']>;
+  receipt_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  receipt_lt?: InputMaybe<Scalars['String']['input']>;
+  receipt_lte?: InputMaybe<Scalars['String']['input']>;
+  receipt_not?: InputMaybe<Scalars['String']['input']>;
+  receipt_not_contains?: InputMaybe<Scalars['String']['input']>;
+  receipt_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  receipt_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  receipt_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  receipt_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  receipt_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  receipt_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  receipt_starts_with?: InputMaybe<Scalars['String']['input']>;
+  receipt_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  receiver?: InputMaybe<Scalars['Bytes']['input']>;
+  receiver_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  receiver_gt?: InputMaybe<Scalars['Bytes']['input']>;
+  receiver_gte?: InputMaybe<Scalars['Bytes']['input']>;
+  receiver_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  receiver_lt?: InputMaybe<Scalars['Bytes']['input']>;
+  receiver_lte?: InputMaybe<Scalars['Bytes']['input']>;
+  receiver_not?: InputMaybe<Scalars['Bytes']['input']>;
+  receiver_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  receiver_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
   round?: InputMaybe<Scalars['String']['input']>;
+  roundStateAtAction?: InputMaybe<RoundState>;
+  roundStateAtAction_in?: InputMaybe<Array<RoundState>>;
+  roundStateAtAction_not?: InputMaybe<RoundState>;
+  roundStateAtAction_not_in?: InputMaybe<Array<RoundState>>;
   round_?: InputMaybe<Round_Filter>;
   round_contains?: InputMaybe<Scalars['String']['input']>;
   round_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -7036,16 +7131,6 @@ export type ReceiptTransfer_Filter = {
   timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
   timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  to?: InputMaybe<Scalars['Bytes']['input']>;
-  to_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  to_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  to_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  to_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  to_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  to_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  to_not?: InputMaybe<Scalars['Bytes']['input']>;
-  to_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  to_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
   txHash?: InputMaybe<Scalars['Bytes']['input']>;
   txHash_contains?: InputMaybe<Scalars['Bytes']['input']>;
   txHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -7056,6 +7141,10 @@ export type ReceiptTransfer_Filter = {
   txHash_not?: InputMaybe<Scalars['Bytes']['input']>;
   txHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   txHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  type?: InputMaybe<ReceiptActivityType>;
+  type_in?: InputMaybe<Array<ReceiptActivityType>>;
+  type_not?: InputMaybe<ReceiptActivityType>;
+  type_not_in?: InputMaybe<Array<ReceiptActivityType>>;
   vault?: InputMaybe<Scalars['String']['input']>;
   vault_?: InputMaybe<RoundsVault_Filter>;
   vault_contains?: InputMaybe<Scalars['String']['input']>;
@@ -7079,37 +7168,52 @@ export type ReceiptTransfer_Filter = {
   vault_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
 };
 
-export enum ReceiptTransfer_OrderBy {
-  Amount = 'amount',
+export enum ReceiptActivity_OrderBy {
+  Account = 'account',
+  AccountClaimedSummerToken = 'account__claimedSummerToken',
+  AccountClaimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
+  AccountId = 'account__id',
+  AccountLastUpdateBlock = 'account__lastUpdateBlock',
+  AccountReferralTimestamp = 'account__referralTimestamp',
+  AccountStakedSummerToken = 'account__stakedSummerToken',
+  AccountStakedSummerTokenNormalized = 'account__stakedSummerTokenNormalized',
+  AssetAmount = 'assetAmount',
+  AssetToken = 'assetToken',
+  AssetTokenDecimals = 'assetToken__decimals',
+  AssetTokenId = 'assetToken__id',
+  AssetTokenLastPriceBlockNumber = 'assetToken__lastPriceBlockNumber',
+  AssetTokenLastPriceUsd = 'assetToken__lastPriceUSD',
+  AssetTokenName = 'assetToken__name',
+  AssetTokenSymbol = 'assetToken__symbol',
   BlockNumber = 'blockNumber',
-  From = 'from',
+  Caller = 'caller',
   Id = 'id',
-  Kind = 'kind',
-  Operator = 'operator',
+  Receipt = 'receipt',
+  ReceiptAmount = 'receiptAmount',
+  ReceiptBalance = 'receipt__balance',
+  ReceiptId = 'receipt__id',
+  ReceiptLastUpdated = 'receipt__lastUpdated',
+  ReceiptLastUpdatedBlock = 'receipt__lastUpdatedBlock',
+  Receiver = 'receiver',
   Round = 'round',
+  RoundStateAtAction = 'roundStateAtAction',
   RoundClosedAt = 'round__closedAt',
   RoundClosedAtBlock = 'round__closedAtBlock',
-  RoundDepositsQueued = 'round__depositsQueued',
-  RoundDepositsRedeemed = 'round__depositsRedeemed',
-  RoundExchangeAssetWithdrawn = 'round__exchangeAssetWithdrawn',
   RoundExchangeRateBase = 'round__exchangeRateBase',
-  RoundExchangeRateDecimal = 'round__exchangeRateDecimal',
   RoundExchangeRateQuote = 'round__exchangeRateQuote',
   RoundId = 'round__id',
+  RoundIsEmpty = 'round__isEmpty',
   RoundOpenedAt = 'round__openedAt',
   RoundOpenedAtBlock = 'round__openedAtBlock',
   RoundReceiptSupply = 'round__receiptSupply',
-  RoundRetriedCount = 'round__retriedCount',
   RoundRolledBack = 'round__rolledBack',
   RoundRoundId = 'round__roundId',
   RoundSettledAt = 'round__settledAt',
   RoundSettledAtBlock = 'round__settledAtBlock',
-  RoundSettledExchangeAmount = 'round__settledExchangeAmount',
-  RoundSettledUnderlyingAmount = 'round__settledUnderlyingAmount',
   RoundState = 'round__state',
   Timestamp = 'timestamp',
-  To = 'to',
   TxHash = 'txHash',
+  Type = 'type',
   Vault = 'vault',
   VaultCreatedAt = 'vault__createdAt',
   VaultCreatedAtBlock = 'vault__createdAtBlock',
@@ -7143,6 +7247,7 @@ export type Receipt_Filter = {
   account_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   account_starts_with?: InputMaybe<Scalars['String']['input']>;
   account_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  activities_?: InputMaybe<ReceiptActivity_Filter>;
   and?: InputMaybe<Array<InputMaybe<Receipt_Filter>>>;
   balance?: InputMaybe<Scalars['BigInt']['input']>;
   balance_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -7152,14 +7257,6 @@ export type Receipt_Filter = {
   balance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   balance_not?: InputMaybe<Scalars['BigInt']['input']>;
   balance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  exchangeAssetReceived?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetReceived_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetReceived_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetReceived_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  exchangeAssetReceived_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetReceived_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetReceived_not?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetReceived_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_gt?: InputMaybe<Scalars['ID']['input']>;
   id_gte?: InputMaybe<Scalars['ID']['input']>;
@@ -7206,38 +7303,6 @@ export type Receipt_Filter = {
   round_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   round_starts_with?: InputMaybe<Scalars['String']['input']>;
   round_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  totalBurned?: InputMaybe<Scalars['BigInt']['input']>;
-  totalBurned_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  totalBurned_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  totalBurned_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  totalBurned_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  totalBurned_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  totalBurned_not?: InputMaybe<Scalars['BigInt']['input']>;
-  totalBurned_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  totalMinted?: InputMaybe<Scalars['BigInt']['input']>;
-  totalMinted_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  totalMinted_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  totalMinted_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  totalMinted_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  totalMinted_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  totalMinted_not?: InputMaybe<Scalars['BigInt']['input']>;
-  totalMinted_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  totalRedeemedForExchangeAsset?: InputMaybe<Scalars['BigInt']['input']>;
-  totalRedeemedForExchangeAsset_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  totalRedeemedForExchangeAsset_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  totalRedeemedForExchangeAsset_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  totalRedeemedForExchangeAsset_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  totalRedeemedForExchangeAsset_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  totalRedeemedForExchangeAsset_not?: InputMaybe<Scalars['BigInt']['input']>;
-  totalRedeemedForExchangeAsset_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  underlyingRedeemed?: InputMaybe<Scalars['BigInt']['input']>;
-  underlyingRedeemed_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  underlyingRedeemed_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  underlyingRedeemed_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  underlyingRedeemed_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  underlyingRedeemed_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  underlyingRedeemed_not?: InputMaybe<Scalars['BigInt']['input']>;
-  underlyingRedeemed_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   vault?: InputMaybe<Scalars['String']['input']>;
   vault_?: InputMaybe<RoundsVault_Filter>;
   vault_contains?: InputMaybe<Scalars['String']['input']>;
@@ -7270,36 +7335,26 @@ export enum Receipt_OrderBy {
   AccountReferralTimestamp = 'account__referralTimestamp',
   AccountStakedSummerToken = 'account__stakedSummerToken',
   AccountStakedSummerTokenNormalized = 'account__stakedSummerTokenNormalized',
+  Activities = 'activities',
   Balance = 'balance',
-  ExchangeAssetReceived = 'exchangeAssetReceived',
   Id = 'id',
   LastUpdated = 'lastUpdated',
   LastUpdatedBlock = 'lastUpdatedBlock',
   Round = 'round',
   RoundClosedAt = 'round__closedAt',
   RoundClosedAtBlock = 'round__closedAtBlock',
-  RoundDepositsQueued = 'round__depositsQueued',
-  RoundDepositsRedeemed = 'round__depositsRedeemed',
-  RoundExchangeAssetWithdrawn = 'round__exchangeAssetWithdrawn',
   RoundExchangeRateBase = 'round__exchangeRateBase',
-  RoundExchangeRateDecimal = 'round__exchangeRateDecimal',
   RoundExchangeRateQuote = 'round__exchangeRateQuote',
   RoundId = 'round__id',
+  RoundIsEmpty = 'round__isEmpty',
   RoundOpenedAt = 'round__openedAt',
   RoundOpenedAtBlock = 'round__openedAtBlock',
   RoundReceiptSupply = 'round__receiptSupply',
-  RoundRetriedCount = 'round__retriedCount',
   RoundRolledBack = 'round__rolledBack',
   RoundRoundId = 'round__roundId',
   RoundSettledAt = 'round__settledAt',
   RoundSettledAtBlock = 'round__settledAtBlock',
-  RoundSettledExchangeAmount = 'round__settledExchangeAmount',
-  RoundSettledUnderlyingAmount = 'round__settledUnderlyingAmount',
   RoundState = 'round__state',
-  TotalBurned = 'totalBurned',
-  TotalMinted = 'totalMinted',
-  TotalRedeemedForExchangeAsset = 'totalRedeemedForExchangeAsset',
-  UnderlyingRedeemed = 'underlyingRedeemed',
   Vault = 'vault',
   VaultCreatedAt = 'vault__createdAt',
   VaultCreatedAtBlock = 'vault__createdAtBlock',
@@ -7937,40 +7992,40 @@ export enum Role_OrderBy {
 
 export type Round = {
   __typename?: 'Round';
+  /**  Immutable, append-only activity feed for this round (deposits, cancels, settled exchanges, transfers).  */
+  activities: Array<ReceiptActivity>;
   /**  Set when the round transitions from OPENED -> IN_SETTLEMENT  */
   closedAt?: Maybe<Scalars['BigInt']['output']>;
   closedAtBlock?: Maybe<Scalars['BigInt']['output']>;
-  /**  Running sum of DepositWithReceipt asset amounts attributed to this round. Cumulative across the round's lifetime.  */
-  depositsQueued: Scalars['BigInt']['output'];
-  /**  Running sum of underlying redeemed via queue-cancel `redeem` against this round (gross). Does not include SETTLED-phase exchangeAssetWithdrawn.  */
-  depositsRedeemed: Scalars['BigInt']['output'];
-  /**  Running sum of exchange-asset amount withdrawn via redeemExchangeAsset against this round's receipts.  */
-  exchangeAssetWithdrawn: Scalars['BigInt']['output'];
-  /**  From RoundSettled event's Price tuple. baseAmount = underlying, quoteAmount = exchange asset.  */
+  /**  From RoundSettled event's Price tuple. baseAmount = exchange asset produced, quoteAmount = underlying/receipts frozen. Payout = receiptAmount * base / quote. Null until settlement.  */
   exchangeRateBase?: Maybe<Scalars['BigInt']['output']>;
-  /**  quoteAmount / baseAmount (exchange asset per underlying unit) — null until settlement  */
-  exchangeRateDecimal?: Maybe<Scalars['BigDecimal']['output']>;
   exchangeRateQuote?: Maybe<Scalars['BigInt']['output']>;
   /**  {vaultAddr}-{roundId}  */
   id: Scalars['ID']['output'];
+  /**  True when the round settled with zero receipt supply (a fallback preview rate was snapshotted instead of a real trade).  */
+  isEmpty: Scalars['Boolean']['output'];
   openedAt: Scalars['BigInt']['output'];
   openedAtBlock: Scalars['BigInt']['output'];
   /**  Live ERC-1155 supply for this round's receipt token. Bumped on every mint/burn, stays live after settle (redeemExchangeAsset burns continue to shrink it). Always equals on-chain totalSupply(roundId).  */
   receiptSupply: Scalars['BigInt']['output'];
   receipts: Array<Receipt>;
-  retriedCount: Scalars['Int']['output'];
   /**  True if this round was ever emergency-rolled-back. The on-chain state goes back to Opened post-rollback, so `state` reflects that; this flag preserves the historical fact.  */
   rolledBack: Scalars['Boolean']['output'];
   roundId: Scalars['BigInt']['output'];
   /**  Set when the round transitions to SETTLED  */
   settledAt?: Maybe<Scalars['BigInt']['output']>;
   settledAtBlock?: Maybe<Scalars['BigInt']['output']>;
-  /**  Exchange-asset amount the vault received back from the target on settle (INPUT flavor: shares received; OUTPUT flavor: assets returned). Disambiguate via RoundsVault.flavor.  */
-  settledExchangeAmount?: Maybe<Scalars['BigInt']['output']>;
-  /**  Underlying amount the vault released to the target on settle (INPUT flavor: assets deposited; OUTPUT flavor: shares redeemed). Disambiguate via RoundsVault.flavor.  */
-  settledUnderlyingAmount?: Maybe<Scalars['BigInt']['output']>;
   state: RoundState;
   vault: RoundsVault;
+};
+
+
+export type RoundActivitiesArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ReceiptActivity_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ReceiptActivity_Filter>;
 };
 
 
@@ -7991,6 +8046,7 @@ export enum RoundState {
 export type Round_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  activities_?: InputMaybe<ReceiptActivity_Filter>;
   and?: InputMaybe<Array<InputMaybe<Round_Filter>>>;
   closedAt?: InputMaybe<Scalars['BigInt']['input']>;
   closedAtBlock?: InputMaybe<Scalars['BigInt']['input']>;
@@ -8008,30 +8064,6 @@ export type Round_Filter = {
   closedAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
   closedAt_not?: InputMaybe<Scalars['BigInt']['input']>;
   closedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  depositsQueued?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsQueued_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsQueued_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsQueued_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  depositsQueued_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsQueued_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsQueued_not?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsQueued_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  depositsRedeemed?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsRedeemed_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsRedeemed_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsRedeemed_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  depositsRedeemed_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsRedeemed_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsRedeemed_not?: InputMaybe<Scalars['BigInt']['input']>;
-  depositsRedeemed_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  exchangeAssetWithdrawn?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetWithdrawn_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetWithdrawn_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetWithdrawn_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  exchangeAssetWithdrawn_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetWithdrawn_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetWithdrawn_not?: InputMaybe<Scalars['BigInt']['input']>;
-  exchangeAssetWithdrawn_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   exchangeRateBase?: InputMaybe<Scalars['BigInt']['input']>;
   exchangeRateBase_gt?: InputMaybe<Scalars['BigInt']['input']>;
   exchangeRateBase_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -8040,14 +8072,6 @@ export type Round_Filter = {
   exchangeRateBase_lte?: InputMaybe<Scalars['BigInt']['input']>;
   exchangeRateBase_not?: InputMaybe<Scalars['BigInt']['input']>;
   exchangeRateBase_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  exchangeRateDecimal?: InputMaybe<Scalars['BigDecimal']['input']>;
-  exchangeRateDecimal_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  exchangeRateDecimal_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  exchangeRateDecimal_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  exchangeRateDecimal_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  exchangeRateDecimal_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  exchangeRateDecimal_not?: InputMaybe<Scalars['BigDecimal']['input']>;
-  exchangeRateDecimal_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   exchangeRateQuote?: InputMaybe<Scalars['BigInt']['input']>;
   exchangeRateQuote_gt?: InputMaybe<Scalars['BigInt']['input']>;
   exchangeRateQuote_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -8064,6 +8088,10 @@ export type Round_Filter = {
   id_lte?: InputMaybe<Scalars['ID']['input']>;
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  isEmpty?: InputMaybe<Scalars['Boolean']['input']>;
+  isEmpty_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  isEmpty_not?: InputMaybe<Scalars['Boolean']['input']>;
+  isEmpty_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   openedAt?: InputMaybe<Scalars['BigInt']['input']>;
   openedAtBlock?: InputMaybe<Scalars['BigInt']['input']>;
   openedAtBlock_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -8090,14 +8118,6 @@ export type Round_Filter = {
   receiptSupply_not?: InputMaybe<Scalars['BigInt']['input']>;
   receiptSupply_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   receipts_?: InputMaybe<Receipt_Filter>;
-  retriedCount?: InputMaybe<Scalars['Int']['input']>;
-  retriedCount_gt?: InputMaybe<Scalars['Int']['input']>;
-  retriedCount_gte?: InputMaybe<Scalars['Int']['input']>;
-  retriedCount_in?: InputMaybe<Array<Scalars['Int']['input']>>;
-  retriedCount_lt?: InputMaybe<Scalars['Int']['input']>;
-  retriedCount_lte?: InputMaybe<Scalars['Int']['input']>;
-  retriedCount_not?: InputMaybe<Scalars['Int']['input']>;
-  retriedCount_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
   rolledBack?: InputMaybe<Scalars['Boolean']['input']>;
   rolledBack_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   rolledBack_not?: InputMaybe<Scalars['Boolean']['input']>;
@@ -8126,22 +8146,6 @@ export type Round_Filter = {
   settledAt_lte?: InputMaybe<Scalars['BigInt']['input']>;
   settledAt_not?: InputMaybe<Scalars['BigInt']['input']>;
   settledAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  settledExchangeAmount?: InputMaybe<Scalars['BigInt']['input']>;
-  settledExchangeAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  settledExchangeAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  settledExchangeAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  settledExchangeAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  settledExchangeAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  settledExchangeAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
-  settledExchangeAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  settledUnderlyingAmount?: InputMaybe<Scalars['BigInt']['input']>;
-  settledUnderlyingAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  settledUnderlyingAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  settledUnderlyingAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  settledUnderlyingAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  settledUnderlyingAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  settledUnderlyingAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
-  settledUnderlyingAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   state?: InputMaybe<RoundState>;
   state_in?: InputMaybe<Array<RoundState>>;
   state_not?: InputMaybe<RoundState>;
@@ -8170,26 +8174,21 @@ export type Round_Filter = {
 };
 
 export enum Round_OrderBy {
+  Activities = 'activities',
   ClosedAt = 'closedAt',
   ClosedAtBlock = 'closedAtBlock',
-  DepositsQueued = 'depositsQueued',
-  DepositsRedeemed = 'depositsRedeemed',
-  ExchangeAssetWithdrawn = 'exchangeAssetWithdrawn',
   ExchangeRateBase = 'exchangeRateBase',
-  ExchangeRateDecimal = 'exchangeRateDecimal',
   ExchangeRateQuote = 'exchangeRateQuote',
   Id = 'id',
+  IsEmpty = 'isEmpty',
   OpenedAt = 'openedAt',
   OpenedAtBlock = 'openedAtBlock',
   ReceiptSupply = 'receiptSupply',
   Receipts = 'receipts',
-  RetriedCount = 'retriedCount',
   RolledBack = 'rolledBack',
   RoundId = 'roundId',
   SettledAt = 'settledAt',
   SettledAtBlock = 'settledAtBlock',
-  SettledExchangeAmount = 'settledExchangeAmount',
-  SettledUnderlyingAmount = 'settledUnderlyingAmount',
   State = 'state',
   Vault = 'vault',
   VaultCreatedAt = 'vault__createdAt',
@@ -9138,12 +9137,6 @@ export enum Token_OrderBy {
   LastPriceUsd = 'lastPriceUSD',
   Name = 'name',
   Symbol = 'symbol'
-}
-
-export enum TransferKind {
-  Burn = 'BURN',
-  Mint = 'MINT',
-  Transfer = 'TRANSFER'
 }
 
 export type Unstaked = Event & {
@@ -12736,6 +12729,13 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
+export type GetRwaInstitutionByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetRwaInstitutionByIdQuery = { __typename?: 'Query', institution?: { __typename?: 'Institution', id: string, active: boolean, harborCommand: string, admiralsQuarters: string, configurationManager: string, protocolAccessManager: string } | null };
+
 export type GetVaultsQueryVariables = Exact<{
   institutionId: Scalars['String']['input'];
 }>;
@@ -12748,9 +12748,29 @@ export type GetVaultQueryVariables = Exact<{
 }>;
 
 
-export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, outputTokenSupply: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, minimumBufferBalance: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null } | null };
+export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, outputTokenSupply: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, minimumBufferBalance: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, isWhitelistOpen: boolean, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, roundsVaultPair?: { __typename?: 'RoundsVaultPair', id: string, active: boolean, inputVault?: { __typename?: 'RoundsVault', id: string, currentRound: bigint, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, exchangeAssetToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } } | null, outputVault?: { __typename?: 'RoundsVault', id: string, currentRound: bigint, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, exchangeAssetToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } } | null } | null } | null };
+
+export type GetRwaReceiptsQueryVariables = Exact<{
+  account: Scalars['String']['input'];
+  vault: Scalars['String']['input'];
+}>;
 
 
+export type GetRwaReceiptsQuery = { __typename?: 'Query', receipts: Array<{ __typename?: 'Receipt', id: string, balance: bigint, round: { __typename?: 'Round', roundId: bigint, state: RoundState }, vault: { __typename?: 'RoundsVault', id: string } }> };
+
+
+export const GetRwaInstitutionByIdDocument = gql`
+    query GetRwaInstitutionById($id: ID!) {
+  institution(id: $id) {
+    id
+    active
+    harborCommand
+    admiralsQuarters
+    configurationManager
+    protocolAccessManager
+  }
+}
+    `;
 export const GetVaultsDocument = gql`
     query GetVaults($institutionId: String!) {
   vaults(where: {institution: $institutionId}) {
@@ -12888,6 +12908,60 @@ export const GetVaultDocument = gql`
     lastUpdateTimestamp
     withdrawableTotalAssets
     withdrawableTotalAssetsUSD
+    isWhitelistOpen
+    roundsVaultPair {
+      id
+      active
+      inputVault {
+        id
+        currentRound
+        minPositionSize
+        underlyingToken {
+          id
+          name
+          symbol
+          decimals
+        }
+        exchangeAssetToken {
+          id
+          name
+          symbol
+          decimals
+        }
+      }
+      outputVault {
+        id
+        currentRound
+        minPositionSize
+        underlyingToken {
+          id
+          name
+          symbol
+          decimals
+        }
+        exchangeAssetToken {
+          id
+          name
+          symbol
+          decimals
+        }
+      }
+    }
+  }
+}
+    `;
+export const GetRwaReceiptsDocument = gql`
+    query GetRwaReceipts($account: String!, $vault: String!) {
+  receipts(where: {account: $account, vault: $vault, balance_gt: "0"}) {
+    id
+    balance
+    round {
+      roundId
+      state
+    }
+    vault {
+      id
+    }
   }
 }
     `;
@@ -12899,11 +12973,17 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    GetRwaInstitutionById(variables: GetRwaInstitutionByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRwaInstitutionByIdQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRwaInstitutionByIdQuery>({ document: GetRwaInstitutionByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRwaInstitutionById', 'query', variables);
+    },
     GetVaults(variables: GetVaultsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetVaultsQuery>({ document: GetVaultsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVaults', 'query', variables);
     },
     GetVault(variables: GetVaultQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetVaultQuery>({ document: GetVaultDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVault', 'query', variables);
+    },
+    GetRwaReceipts(variables: GetRwaReceiptsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRwaReceiptsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRwaReceiptsQuery>({ document: GetRwaReceiptsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRwaReceipts', 'query', variables);
     }
   };
 }
