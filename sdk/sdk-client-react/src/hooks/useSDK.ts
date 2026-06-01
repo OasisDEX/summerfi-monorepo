@@ -1,4 +1,4 @@
-import { makeAdminSDK, makeSDK } from '@summerfi/sdk-client'
+import { makeAdminSDK, makeInstiSdk, makeSDK, type InstiVersion } from '@summerfi/sdk-client'
 import { useCallback, useMemo } from 'react'
 import { getDepositTXHandler } from '../handlers/getDepositTXHandler'
 import { getTokenBySymbolHandler } from '../handlers/getTokenBySymbolHandler'
@@ -121,6 +121,15 @@ type UseSdk = {
   walletAddress?: string
   chainId?: number
   clientId?: string
+  /**
+   * Institution client id for RWA (institutional) calls. When set, the RWA namespace is
+   * served by an institutional SDK (`makeInstiSdk`) so requests carry the `Client-Id` and
+   * `Insti-Version` headers the server needs to resolve the RWA deployment config + subgraph.
+   * Other (non-RWA) handlers are unaffected and keep using the standard sdk.
+   */
+  rwaClientId?: string
+  /** Institutional deployment-config version for the RWA SDK. Defaults to 'v2'. */
+  instiVersion?: InstiVersion
 }
 
 export const useSDK = (params: UseSdk) => {
@@ -131,6 +140,21 @@ export const useSDK = (params: UseSdk) => {
     }
     return makeSDK({ apiURL })
   }, [apiURL, params.clientId])
+
+  // RWA methods only resolve correctly when the request carries `Client-Id` + `Insti-Version`
+  // (the server defaults Insti-Version to 'v1' otherwise, selecting the wrong deployment/subgraph),
+  // so the RWA namespace is bound to a dedicated institutional SDK. Falls back to the standard
+  // sdk when no RWA client id is configured, leaving existing consumers unchanged.
+  const rwaSdk = useMemo(() => {
+    if (params.rwaClientId) {
+      return makeInstiSdk({
+        apiURL,
+        clientId: params.rwaClientId,
+        instiVersion: params.instiVersion ?? 'v2',
+      })
+    }
+    return sdk
+  }, [apiURL, params.rwaClientId, params.instiVersion, sdk])
 
   const { chainId, walletAddress: walletAddressString } = params
 
@@ -320,21 +344,27 @@ export const useSDK = (params: UseSdk) => {
   const cancelStrategyTx = useMemo(() => cancelStrategyTxHandler(sdk), [sdk])
   const getStrategy = useMemo(() => getStrategyHandler(sdk), [sdk])
 
-  // RWA HANDLERS
-  const getRwaDepositTx = useMemo(() => getRwaDepositTxHandler(sdk), [sdk])
-  const getRwaWithdrawTx = useMemo(() => getRwaWithdrawTxHandler(sdk), [sdk])
-  const getRwaClaimSharesTx = useMemo(() => getRwaClaimSharesTxHandler(sdk), [sdk])
-  const getRwaClaimAssetsTx = useMemo(() => getRwaClaimAssetsTxHandler(sdk), [sdk])
-  const getRwaCancelRoundDepositTx = useMemo(() => getRwaCancelRoundDepositTxHandler(sdk), [sdk])
-  const getRwaCurrentRound = useMemo(() => getRwaCurrentRoundHandler(sdk), [sdk])
-  const getRwaRoundState = useMemo(() => getRwaRoundStateHandler(sdk), [sdk])
-  const getRwaExchangeRate = useMemo(() => getRwaExchangeRateHandler(sdk), [sdk])
-  const getRwaReceiptBalances = useMemo(() => getRwaReceiptBalancesHandler(sdk), [sdk])
-  const getRwaSetWhitelistedTx = useMemo(() => getRwaSetWhitelistedTxHandler(sdk), [sdk])
-  const getRwaSetWhitelistedBatchTx = useMemo(() => getRwaSetWhitelistedBatchTxHandler(sdk), [sdk])
-  const getRwaSetWhitelistOpenTx = useMemo(() => getRwaSetWhitelistOpenTxHandler(sdk), [sdk])
-  const getRwaIsWhitelisted = useMemo(() => getRwaIsWhitelistedHandler(sdk), [sdk])
-  const getRwaIsWhitelistOpen = useMemo(() => getRwaIsWhitelistOpenHandler(sdk), [sdk])
+  // RWA HANDLERS — bound to the institutional sdk (see `rwaSdk` above).
+  const getRwaDepositTx = useMemo(() => getRwaDepositTxHandler(rwaSdk), [rwaSdk])
+  const getRwaWithdrawTx = useMemo(() => getRwaWithdrawTxHandler(rwaSdk), [rwaSdk])
+  const getRwaClaimSharesTx = useMemo(() => getRwaClaimSharesTxHandler(rwaSdk), [rwaSdk])
+  const getRwaClaimAssetsTx = useMemo(() => getRwaClaimAssetsTxHandler(rwaSdk), [rwaSdk])
+  const getRwaCancelRoundDepositTx = useMemo(
+    () => getRwaCancelRoundDepositTxHandler(rwaSdk),
+    [rwaSdk],
+  )
+  const getRwaCurrentRound = useMemo(() => getRwaCurrentRoundHandler(rwaSdk), [rwaSdk])
+  const getRwaRoundState = useMemo(() => getRwaRoundStateHandler(rwaSdk), [rwaSdk])
+  const getRwaExchangeRate = useMemo(() => getRwaExchangeRateHandler(rwaSdk), [rwaSdk])
+  const getRwaReceiptBalances = useMemo(() => getRwaReceiptBalancesHandler(rwaSdk), [rwaSdk])
+  const getRwaSetWhitelistedTx = useMemo(() => getRwaSetWhitelistedTxHandler(rwaSdk), [rwaSdk])
+  const getRwaSetWhitelistedBatchTx = useMemo(
+    () => getRwaSetWhitelistedBatchTxHandler(rwaSdk),
+    [rwaSdk],
+  )
+  const getRwaSetWhitelistOpenTx = useMemo(() => getRwaSetWhitelistOpenTxHandler(rwaSdk), [rwaSdk])
+  const getRwaIsWhitelisted = useMemo(() => getRwaIsWhitelistedHandler(rwaSdk), [rwaSdk])
+  const getRwaIsWhitelistOpen = useMemo(() => getRwaIsWhitelistOpenHandler(rwaSdk), [rwaSdk])
 
   const memo = useMemo(
     () => ({

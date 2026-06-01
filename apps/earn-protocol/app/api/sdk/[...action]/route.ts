@@ -21,12 +21,19 @@ export async function POST(req: NextRequest) {
   const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
 
   const clientId = req.headers.get('client-id')
+  const instiVersion = req.headers.get('insti-version')
   const headers: { [key: string]: string } = {
     'Content-Type': 'application/json',
   }
 
   if (clientId) {
     headers['Client-Id'] = clientId
+  }
+
+  // Forward the institutional deployment-config version so RWA (institutional) calls resolve
+  // the right deployment/subgraph; the SDK server defaults to 'v1' when it is absent.
+  if (instiVersion) {
+    headers['Insti-Version'] = instiVersion
   }
 
   const response = await fetch(url, {
@@ -59,10 +66,17 @@ export async function GET(req: NextRequest) {
   const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
 
   const clientId = req.headers.get('client-id')
+  const instiVersion = req.headers.get('insti-version')
   const headers: { [key: string]: string } = {}
 
   if (clientId) {
     headers['Client-Id'] = clientId
+  }
+
+  // Forward the institutional deployment-config version so RWA (institutional) calls resolve
+  // the right deployment/subgraph; the SDK server defaults to 'v1' when it is absent.
+  if (instiVersion) {
+    headers['Insti-Version'] = instiVersion
   }
 
   const response = await fetch(url, {
