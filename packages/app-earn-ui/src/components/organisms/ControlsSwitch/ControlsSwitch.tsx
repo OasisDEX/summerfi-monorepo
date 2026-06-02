@@ -15,8 +15,8 @@ import clsx from 'clsx'
 import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
-import { RiskManagedPill } from '@/components/atoms/RiskManagedPill/RiskManagedPill'
 import { Text } from '@/components/atoms/Text/Text'
+import { VaultLabelPill } from '@/components/atoms/VaultLabelPill/VaultLabelPill'
 import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
@@ -86,7 +86,7 @@ const VaultSwitchCard = ({
           )}
         </div>
         <div style={{ width: 'fit-content', marginBottom: '8px' }}>
-          <RiskManagedPill isDaoManagedVault={isDaoManaged} />
+          <VaultLabelPill isDaoManagedVault={isDaoManaged} />
         </div>
         <div className={controlsSwitchStyles.dataRow}>
           <div className={controlsSwitchStyles.dataRowColumn}>

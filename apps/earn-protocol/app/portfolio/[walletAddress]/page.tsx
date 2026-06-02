@@ -158,7 +158,15 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     daoManagedVaultsList,
   })
 
-  const rwaVaultsWithConfig = allVaultsWithConfig.filter((vault) => vault.isRwaVault)
+  // Source of truth for which fleets are RWA: the RWA vaults list (their ids are the fleet
+  // addresses). decorateWithFleetConfig keys the fleet config by vault id and can miss the RWA flag
+  // for list-sourced vaults, so we match on these addresses directly instead of relying on
+  // isRwaVault — this drives both the pending-receipts fetch and the RWA pill on position rows.
+  const rwaFleetAddresses = new Set(rwaVaultsList.vaults.map((vault) => vault.id.toLowerCase()))
+
+  const rwaVaultsWithConfig = allVaultsWithConfig.filter((vault) =>
+    rwaFleetAddresses.has(vault.id.toLowerCase()),
+  )
 
   const vaultsInfoParsed = parseServerResponseToClient(vaultsInfo)
   // IRwaVaultInfo is a structural clone of IArmadaVaultInfo (differs only by the `type` discriminant
@@ -182,11 +190,17 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const allUserPositions = [...userPositionsJsonSafe, ...resolvableRwaPositions]
 
   const positionsWithVault = allUserPositions.map((position) => {
-    return mergePositionWithVault({
+    const merged = mergePositionWithVault({
       position,
       vaultsWithConfig: allVaultsWithConfig,
       vaultsInfo: allVaultsInfo,
     })
+
+    // Guarantee RWA positions are flagged so the "RWA" pill renders, even when the fleet-config
+    // decoration didn't set isRwaVault on this vault instance.
+    return rwaFleetAddresses.has(merged.vault.id.toLowerCase())
+      ? { ...merged, vault: { ...merged.vault, isRwaVault: true } }
+      : merged
   })
 
   const [positionHistoryMap, vaultsApyByNetworkMap, rwaPendingPositions] = await Promise.all([
