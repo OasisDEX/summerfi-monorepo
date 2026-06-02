@@ -1,4 +1,4 @@
-import { ISDKAdminManager, type ISDKManager } from '@summerfi/sdk-client'
+import { ISDKInstiManager, type ISDKManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
@@ -11,7 +11,7 @@ import {
 } from '@summerfi/sdk-common'
 
 export const getVaultSwitchEnsoTxHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     sourceFleetAddress,
     destinationFleetAddress,

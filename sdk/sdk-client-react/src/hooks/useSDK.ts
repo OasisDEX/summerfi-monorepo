@@ -1,4 +1,5 @@
-import { makeAdminSDK, makeSDK } from '@summerfi/sdk-client'
+import { makeAdminSDK, makeInstiSdk, makeSDK } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { useCallback, useMemo } from 'react'
 import { getDepositTXHandler } from '../handlers/getDepositTXHandler'
 import { getTokenBySymbolHandler } from '../handlers/getTokenBySymbolHandler'
@@ -122,19 +123,25 @@ type UseSdk = {
   walletAddress?: string
   chainId?: number
   clientId?: string
+  insti?: boolean
 }
 
-export const useSDK = (params: UseSdk) => {
-  const { apiURL } = useSDKContext()
-  const sdk = useMemo(() => {
-    if (params.clientId) {
-      return makeAdminSDK({ apiURL, clientId: params.clientId })
-    }
-    return makeSDK({ apiURL })
-  }, [apiURL, params.clientId])
+type SdkStateParams = {
+  chainId?: number
+  walletAddress?: string
+}
 
-  const { chainId, walletAddress: walletAddressString } = params
-
+/**
+ * Handlers available on every SDK instance — both the public `makeSDK` instance and the managed
+ * (`makeAdminSDK` / `makeInstiSdk`) instances. These only touch `ISDKManager` members, so an
+ * `ISDKInstiManager` (a structural superset) satisfies the parameter too.
+ */
+const useSDKManagerHandlers = (
+  sdk: ISDKManager,
+  { chainId, walletAddress: walletAddressString }: SdkStateParams,
+) => {
+  // region SDK State
+  const getChain = useMemo(() => getChainHandler(sdk), [sdk, chainId])
   const getChainInfo = useMemo(() => getChainInfoHandler(chainId), [chainId])
   const getTargetChainInfo = useCallback((specificChainId: number) => {
     const chainInfoFn = getChainInfoHandler(specificChainId)
@@ -145,34 +152,57 @@ export const useSDK = (params: UseSdk) => {
     () => getWalletAddressHandler(walletAddressString),
     [walletAddressString],
   )
-
-  // State getters
   const getCurrentUser = useMemo(
     () => getCurrentUserHandler(getChainInfo, getWalletAddress),
     [getCurrentUserHandler, getChainInfo, getWalletAddress],
   )
 
-  // CHAIN HANDLERS
-  const getChain = useMemo(() => getChainHandler(sdk), [sdk, chainId])
+  // region Utils
+  const getSummerToken = useMemo(() => getSummerTokenHandler(sdk), [sdk])
+  const getAddresses = useMemo(() => getAddressesHandler(sdk), [sdk])
+  const getSummerPrice = useMemo(() => getSummerPriceHandler(sdk), [sdk])
+
+  // region Tokens
   const getTokenBySymbol = useMemo(() => getTokenBySymbolHandler(getChain), [getChain])
 
-  // ARMADA HANDLERS
+  // region Swaps
+  const getSwapQuote = useMemo(() => getSwapQuoteHandler(sdk), [sdk])
+
+  // region Intent Swaps
+  const getIntentSwapsSellOrderQuote = useMemo(
+    () => getIntentSwapsSellOrderQuoteHandler(sdk),
+    [sdk],
+  )
+  const getIntentSwapsSendDepositOrder = useMemo(
+    () => getIntentSwapsSendDepositOrderHandler(sdk),
+    [sdk],
+  )
+  const getIntentSwapsCancelOrder = useMemo(() => getIntentSwapsCancelOrderHandler(sdk), [sdk])
+  const getIntentSwapsCheckOrder = useMemo(() => getIntentSwapsCheckOrderHandler(sdk), [sdk])
+  const getIntentSwapsIsPermit2AuthorizationNeeded = useMemo(
+    () => isPermit2AuthorizationNeededHandler(sdk),
+    [sdk],
+  )
+  const getIntentSwapsPermit2AuthorizationTx = useMemo(
+    () => getPermit2AuthorizationTxHandler(sdk),
+    [sdk],
+  )
+  const getIntentSwapsPermit2RevokeTx = useMemo(() => getPermit2RevokeTxHandler(sdk), [sdk])
+
+  // region Oracles
+  const getSpotPrice = useMemo(() => getSpotPriceHandler(sdk), [sdk])
+  const getSpotPrices = useMemo(() => getSpotPricesHandler(sdk), [sdk])
+
+  // region Vaults
   const getWithdrawTx = useMemo(() => getWithdrawTXHandler(sdk), [sdk])
   const getDepositTx = useMemo(() => getDepositTXHandler(sdk), [sdk])
   const getCrossChainDepositTx = useMemo(() => getCrossChainDepositTxHandler(sdk), [sdk])
   const getCrossChainWithdrawTx = useMemo(() => getCrossChainWithdrawTxHandler(sdk), [sdk])
   const getUserPosition = useMemo(() => getUserPositionHandler(sdk), [sdk])
   const getUserPositions = useMemo(() => getUserPositionsHandler(sdk), [sdk])
+  const getBridgeTx = useMemo(() => getBridgeTxHandler(sdk), [sdk])
 
-  // SWAPS
-  const getSwapQuote = useMemo(() => getSwapQuoteHandler(sdk), [sdk])
-
-  // ORACLES
-
-  const getSpotPrice = useMemo(() => getSpotPriceHandler(sdk), [sdk])
-  const getSpotPrices = useMemo(() => getSpotPricesHandler(sdk), [sdk])
-
-  // CLAIMS
+  // region Claims
   const getAggregatedRewards = useMemo(() => getAggregatedRewardsHandler(sdk), [sdk])
   const getAggregatedRewardsIncludingMerkl = useMemo(
     () => getAggregatedRewardsIncludingMerklHandler(sdk),
@@ -183,7 +213,7 @@ export const useSDK = (params: UseSdk) => {
     [sdk],
   )
 
-  const getBridgeTx = useMemo(() => getBridgeTxHandler(sdk), [sdk])
+  // region Governance
   const getDelegateTx = useMemo(() => getDelegateTxHandler(sdk), [sdk])
   const getDelegateTxV2 = useMemo(() => getDelegateTxV2Handler(sdk), [sdk])
   const getStakeTx = useMemo(() => getStakeTxHandler(sdk), [sdk])
@@ -233,7 +263,6 @@ export const useSDK = (params: UseSdk) => {
   const getUserDelegateeV2 = useMemo(() => getUserDelegateeV2Handler(sdk), [sdk])
   const getUserStakedBalance = useMemo(() => getUserStakedBalanceHandler(sdk), [sdk])
   const getUserVotes = useMemo(() => getUserVotesHandler(sdk), [sdk])
-  const getSummerToken = useMemo(() => getSummerTokenHandler(sdk), [sdk])
   const getMigrateTx = useMemo(() => getMigrateTxHandler(sdk), [sdk])
   const getVaultSwitchTx = useMemo(() => getVaultSwitchTXHandler(sdk), [sdk])
   const getVaultSwitchEnsoTx = useMemo(() => getVaultSwitchEnsoTxHandler(sdk), [sdk])
@@ -261,31 +290,11 @@ export const useSDK = (params: UseSdk) => {
   const getPositionHistory = useMemo(() => getPositionHistoryHandler(sdk), [sdk])
   const getDeposits = useMemo(() => getDepositsHandler(sdk), [sdk])
   const getWithdrawals = useMemo(() => getWithdrawalsHandler(sdk), [sdk])
-  const getTipRate = useMemo(() => getTipRateHandler(sdk), [sdk])
   const getUnstakeFleetTokensTx = useMemo(() => getUnstakeFleetTokensTxHandler(sdk), [sdk])
   const getStakedBalance = useMemo(() => getStakedBalanceHandler(sdk), [sdk])
   const getUserBalance = useMemo(() => getUserBalanceHandler(sdk), [sdk])
-  const getSummerPrice = useMemo(() => getSummerPriceHandler(sdk), [sdk])
-  const isWhitelisted = useMemo(() => isWhitelistedHandler(sdk), [sdk])
-  const setWhitelistedTx = useMemo(() => setWhitelistedTxHandler(sdk), [sdk])
-  const setWhitelistedBatchTx = useMemo(() => setWhitelistedBatchTxHandler(sdk), [sdk])
-  const isWhitelistedAQ = useMemo(() => isWhitelistedAQHandler(sdk), [sdk])
-  const setWhitelistedAQTx = useMemo(() => setWhitelistedAQTxHandler(sdk), [sdk])
-  const setWhitelistedBatchAQTx = useMemo(() => setWhitelistedBatchAQTxHandler(sdk), [sdk])
 
-  // region Admin Handlers
-  const grantContractSpecificRole = useMemo(() => grantContractSpecificRoleHandler(sdk), [sdk])
-  const revokeContractSpecificRole = useMemo(() => revokeContractSpecificRoleHandler(sdk), [sdk])
-  const getAllRoles = useMemo(() => getAllRolesHandler(sdk), [sdk])
-  const setFleetDepositCap = useMemo(() => setFleetDepositCapHandler(sdk), [sdk])
-  const setMinimumBufferBalance = useMemo(() => setMinimumBufferBalanceHandler(sdk), [sdk])
-  const setArkDepositCap = useMemo(() => setArkDepositCapHandler(sdk), [sdk])
-  const setArkMaxDepositPercentageOfTVL = useMemo(
-    () => setArkMaxDepositPercentageOfTVLHandler(sdk),
-    [sdk],
-  )
-
-  // PERMIT2 HANDLERS
+  // region Allowances
   const isPermit2AuthorizationNeeded = useMemo(
     () => isPermit2AuthorizationNeededHandler(sdk),
     [sdk],
@@ -293,27 +302,7 @@ export const useSDK = (params: UseSdk) => {
   const getPermit2AuthorizationTx = useMemo(() => getPermit2AuthorizationTxHandler(sdk), [sdk])
   const getPermit2RevokeTx = useMemo(() => getPermit2RevokeTxHandler(sdk), [sdk])
 
-  // INTENT SWAPS HANDLERS
-  const getIntentSwapsSellOrderQuote = useMemo(
-    () => getIntentSwapsSellOrderQuoteHandler(sdk),
-    [sdk],
-  )
-  const getIntentSwapsSendDepositOrder = useMemo(
-    () => getIntentSwapsSendDepositOrderHandler(sdk),
-    [sdk],
-  )
-  const getIntentSwapsCancelOrder = useMemo(() => getIntentSwapsCancelOrderHandler(sdk), [sdk])
-  const getIntentSwapsCheckOrder = useMemo(() => getIntentSwapsCheckOrderHandler(sdk), [sdk])
-  const getIntentSwapsIsPermit2AuthorizationNeeded = useMemo(
-    () => isPermit2AuthorizationNeededHandler(sdk),
-    [sdk],
-  )
-  const getIntentSwapsPermit2AuthorizationTx = useMemo(
-    () => getPermit2AuthorizationTxHandler(sdk),
-    [sdk],
-  )
-  const getIntentSwapsPermit2RevokeTx = useMemo(() => getPermit2RevokeTxHandler(sdk), [sdk])
-  const getAddresses = useMemo(() => getAddressesHandler(sdk), [sdk])
+  // region DCA
   const createStrategyTx = useMemo(() => createStrategyTxHandler(sdk), [sdk])
   const editStrategyTx = useMemo(() => editStrategyTxHandler(sdk), [sdk])
   const pauseStrategyTx = useMemo(() => pauseStrategyTxHandler(sdk), [sdk])
@@ -321,27 +310,7 @@ export const useSDK = (params: UseSdk) => {
   const cancelStrategyTx = useMemo(() => cancelStrategyTxHandler(sdk), [sdk])
   const getStrategy = useMemo(() => getStrategyHandler(sdk), [sdk])
 
-  // RWA HANDLERS
-  const getRwaDepositTx = useMemo(() => getRwaDepositTxHandler(sdk), [sdk])
-  const getRwaWithdrawTx = useMemo(() => getRwaWithdrawTxHandler(sdk), [sdk])
-  const getRwaClaimSharesTx = useMemo(() => getRwaClaimSharesTxHandler(sdk), [sdk])
-  const getRwaClaimAssetsTx = useMemo(() => getRwaClaimAssetsTxHandler(sdk), [sdk])
-  const getRwaCancelRoundDepositTx = useMemo(() => getRwaCancelRoundDepositTxHandler(sdk), [sdk])
-  const getRwaCurrentRound = useMemo(() => getRwaCurrentRoundHandler(sdk), [sdk])
-  const getRwaRoundState = useMemo(() => getRwaRoundStateHandler(sdk), [sdk])
-  const getRwaExchangeRate = useMemo(() => getRwaExchangeRateHandler(sdk), [sdk])
-  const getRwaReceiptBalances = useMemo(() => getRwaReceiptBalancesHandler(sdk), [sdk])
-  const getRwaSetMinimumPositionSizeTx = useMemo(
-    () => getRwaSetMinimumPositionSizeTxHandler(sdk),
-    [sdk],
-  )
-  const getRwaSetWhitelistedTx = useMemo(() => getRwaSetWhitelistedTxHandler(sdk), [sdk])
-  const getRwaSetWhitelistedBatchTx = useMemo(() => getRwaSetWhitelistedBatchTxHandler(sdk), [sdk])
-  const getRwaSetWhitelistOpenTx = useMemo(() => getRwaSetWhitelistOpenTxHandler(sdk), [sdk])
-  const getRwaIsWhitelisted = useMemo(() => getRwaIsWhitelistedHandler(sdk), [sdk])
-  const getRwaIsWhitelistOpen = useMemo(() => getRwaIsWhitelistOpenHandler(sdk), [sdk])
-
-  const memo = useMemo(
+  return useMemo(
     () => ({
       getCurrentUser,
       getWalletAddress,
@@ -416,20 +385,6 @@ export const useSDK = (params: UseSdk) => {
       getUserMerklRewards,
       getUnstakeFleetTokensTx,
       getStakedBalance,
-      getTipRate,
-      isWhitelisted,
-      setWhitelistedTx,
-      setWhitelistedBatchTx,
-      isWhitelistedAQ,
-      setWhitelistedAQTx,
-      setWhitelistedBatchAQTx,
-      grantContractSpecificRole,
-      revokeContractSpecificRole,
-      getAllRoles,
-      setFleetDepositCap,
-      setMinimumBufferBalance,
-      setArkDepositCap,
-      setArkMaxDepositPercentageOfTVL,
       isPermit2AuthorizationNeeded,
       getPermit2AuthorizationTx,
       getPermit2RevokeTx,
@@ -447,22 +402,6 @@ export const useSDK = (params: UseSdk) => {
       resumeStrategyTx,
       cancelStrategyTx,
       getStrategy,
-      // RWA
-      getRwaDepositTx,
-      getRwaWithdrawTx,
-      getRwaClaimSharesTx,
-      getRwaClaimAssetsTx,
-      getRwaCancelRoundDepositTx,
-      getRwaCurrentRound,
-      getRwaRoundState,
-      getRwaExchangeRate,
-      getRwaReceiptBalances,
-      getRwaSetMinimumPositionSizeTx,
-      getRwaSetWhitelistedTx,
-      getRwaSetWhitelistedBatchTx,
-      getRwaSetWhitelistOpenTx,
-      getRwaIsWhitelisted,
-      getRwaIsWhitelistOpen,
     }),
     [
       getCurrentUser,
@@ -536,21 +475,6 @@ export const useSDK = (params: UseSdk) => {
       getUserMerklRewards,
       getUnstakeFleetTokensTx,
       getStakedBalance,
-      getTipRate,
-      isWhitelisted,
-      setWhitelistedTx,
-      setWhitelistedBatchTx,
-      isWhitelistedAQ,
-      setWhitelistedAQTx,
-      setWhitelistedBatchAQTx,
-      // region Admin Handlers
-      grantContractSpecificRole,
-      revokeContractSpecificRole,
-      getAllRoles,
-      setFleetDepositCap,
-      setMinimumBufferBalance,
-      setArkDepositCap,
-      setArkMaxDepositPercentageOfTVL,
       isPermit2AuthorizationNeeded,
       getPermit2AuthorizationTx,
       getPermit2RevokeTx,
@@ -568,7 +492,104 @@ export const useSDK = (params: UseSdk) => {
       resumeStrategyTx,
       cancelStrategyTx,
       getStrategy,
+    ],
+  )
+}
+
+/**
+ * Admin + RWA handlers. These touch `ISDKInstiManager`-only members (`sdk.armada.admin`,
+ * `sdk.armada.accessControl`, `sdk.rwa`) and are therefore exposed only for managed instances
+ * created via `makeAdminSDK` / `makeInstiSdk`.
+ */
+const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
+  // region Admin Handlers
+  const isWhitelisted = useMemo(() => isWhitelistedHandler(sdk), [sdk])
+  const setWhitelistedTx = useMemo(() => setWhitelistedTxHandler(sdk), [sdk])
+  const setWhitelistedBatchTx = useMemo(() => setWhitelistedBatchTxHandler(sdk), [sdk])
+  const isWhitelistedAQ = useMemo(() => isWhitelistedAQHandler(sdk), [sdk])
+  const setWhitelistedAQTx = useMemo(() => setWhitelistedAQTxHandler(sdk), [sdk])
+  const setWhitelistedBatchAQTx = useMemo(() => setWhitelistedBatchAQTxHandler(sdk), [sdk])
+  const grantContractSpecificRole = useMemo(() => grantContractSpecificRoleHandler(sdk), [sdk])
+  const revokeContractSpecificRole = useMemo(() => revokeContractSpecificRoleHandler(sdk), [sdk])
+  const getAllRoles = useMemo(() => getAllRolesHandler(sdk), [sdk])
+  const setFleetDepositCap = useMemo(() => setFleetDepositCapHandler(sdk), [sdk])
+  const setMinimumBufferBalance = useMemo(() => setMinimumBufferBalanceHandler(sdk), [sdk])
+  const setArkDepositCap = useMemo(() => setArkDepositCapHandler(sdk), [sdk])
+  const setArkMaxDepositPercentageOfTVL = useMemo(
+    () => setArkMaxDepositPercentageOfTVLHandler(sdk),
+    [sdk],
+  )
+  const getTipRate = useMemo(() => getTipRateHandler(sdk), [sdk])
+
+  // region RWA
+  const getRwaDepositTx = useMemo(() => getRwaDepositTxHandler(sdk), [sdk])
+  const getRwaWithdrawTx = useMemo(() => getRwaWithdrawTxHandler(sdk), [sdk])
+  const getRwaClaimSharesTx = useMemo(() => getRwaClaimSharesTxHandler(sdk), [sdk])
+  const getRwaClaimAssetsTx = useMemo(() => getRwaClaimAssetsTxHandler(sdk), [sdk])
+  const getRwaCancelRoundDepositTx = useMemo(() => getRwaCancelRoundDepositTxHandler(sdk), [sdk])
+  const getRwaCurrentRound = useMemo(() => getRwaCurrentRoundHandler(sdk), [sdk])
+  const getRwaRoundState = useMemo(() => getRwaRoundStateHandler(sdk), [sdk])
+  const getRwaExchangeRate = useMemo(() => getRwaExchangeRateHandler(sdk), [sdk])
+  const getRwaReceiptBalances = useMemo(() => getRwaReceiptBalancesHandler(sdk), [sdk])
+  const getRwaSetMinimumPositionSizeTx = useMemo(
+    () => getRwaSetMinimumPositionSizeTxHandler(sdk),
+    [sdk],
+  )
+  const getRwaSetWhitelistedTx = useMemo(() => getRwaSetWhitelistedTxHandler(sdk), [sdk])
+  const getRwaSetWhitelistedBatchTx = useMemo(() => getRwaSetWhitelistedBatchTxHandler(sdk), [sdk])
+  const getRwaSetWhitelistOpenTx = useMemo(() => getRwaSetWhitelistOpenTxHandler(sdk), [sdk])
+  const getRwaIsWhitelisted = useMemo(() => getRwaIsWhitelistedHandler(sdk), [sdk])
+  const getRwaIsWhitelistOpen = useMemo(() => getRwaIsWhitelistOpenHandler(sdk), [sdk])
+
+  return useMemo(
+    () => ({
+      // Admin
+      getTipRate,
+      isWhitelisted,
+      setWhitelistedTx,
+      setWhitelistedBatchTx,
+      isWhitelistedAQ,
+      setWhitelistedAQTx,
+      setWhitelistedBatchAQTx,
+      grantContractSpecificRole,
+      revokeContractSpecificRole,
+      getAllRoles,
+      setFleetDepositCap,
+      setMinimumBufferBalance,
+      setArkDepositCap,
+      setArkMaxDepositPercentageOfTVL,
       // RWA
+      getRwaDepositTx,
+      getRwaWithdrawTx,
+      getRwaClaimSharesTx,
+      getRwaClaimAssetsTx,
+      getRwaCancelRoundDepositTx,
+      getRwaCurrentRound,
+      getRwaRoundState,
+      getRwaExchangeRate,
+      getRwaReceiptBalances,
+      getRwaSetMinimumPositionSizeTx,
+      getRwaSetWhitelistedTx,
+      getRwaSetWhitelistedBatchTx,
+      getRwaSetWhitelistOpenTx,
+      getRwaIsWhitelisted,
+      getRwaIsWhitelistOpen,
+    }),
+    [
+      getTipRate,
+      isWhitelisted,
+      setWhitelistedTx,
+      setWhitelistedBatchTx,
+      isWhitelistedAQ,
+      setWhitelistedAQTx,
+      setWhitelistedBatchAQTx,
+      grantContractSpecificRole,
+      revokeContractSpecificRole,
+      getAllRoles,
+      setFleetDepositCap,
+      setMinimumBufferBalance,
+      setArkDepositCap,
+      setArkMaxDepositPercentageOfTVL,
       getRwaDepositTx,
       getRwaWithdrawTx,
       getRwaClaimSharesTx,
@@ -586,8 +607,48 @@ export const useSDK = (params: UseSdk) => {
       getRwaIsWhitelistOpen,
     ],
   )
-
-  return memo
 }
 
-export type SdkClient = ReturnType<typeof useSDK>
+/**
+ * Managed (admin / institutional) clients expose the full surface: every `ISDKManager` method plus
+ * the admin + RWA handlers. A `clientId` (passed by `makeAdminSDK` / `makeInstiSdk`) selects this.
+ */
+export function useSDK(params: UseSdk & { clientId: string }): SdkInstiManagerClient
+/** Public clients (`makeSDK`, no `clientId`) expose only the `ISDKManager` surface. */
+export function useSDK(params: UseSdk): SdkManagerClient
+export function useSDK(params: UseSdk): SdkManagerClient | SdkInstiManagerClient {
+  const { apiURL } = useSDKContext()
+  const sdk = useMemo(() => {
+    if (params.insti && params.clientId) {
+      return makeInstiSdk({ apiURL, clientId: params.clientId })
+    } else if (params.clientId) {
+      return makeAdminSDK({ apiURL, clientId: params.clientId })
+    }
+    return makeSDK({ apiURL })
+  }, [apiURL, params.clientId, params.insti])
+
+  // A `clientId` is only ever present for managed (admin/insti) instances, which are
+  // `ISDKInstiManager`s. Public `makeSDK` instances have no `clientId`.
+  const isManaged = Boolean(params.clientId)
+
+  const managerHandlers = useSDKManagerHandlers(sdk, {
+    chainId: params.chainId,
+    walletAddress: params.walletAddress,
+  })
+  // Hooks must run unconditionally. For public instances the admin/RWA handlers are built but never
+  // returned, so they are never invoked — the cast is safe because their factories only capture the
+  // sdk reference (they touch `sdk.rwa` etc. lazily, at call time, which only happens when managed).
+  const instiManagerHandlers = useSDKInstiManagerHandlers(sdk as ISDKInstiManager)
+
+  return useMemo(
+    () => (isManaged ? { ...managerHandlers, ...instiManagerHandlers } : managerHandlers),
+    [isManaged, managerHandlers, instiManagerHandlers],
+  )
+}
+
+/** Surface returned for a public (`makeSDK`) instance — `ISDKManager` handlers only. */
+export type SdkManagerClient = ReturnType<typeof useSDKManagerHandlers>
+/** Surface returned for a managed (admin / institutional) instance — all handlers. */
+export type SdkInstiManagerClient = SdkManagerClient & ReturnType<typeof useSDKInstiManagerHandlers>
+/** Backwards-compatible alias for the full (managed) client surface. */
+export type SdkClient = SdkInstiManagerClient

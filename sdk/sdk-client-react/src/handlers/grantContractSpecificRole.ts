@@ -1,8 +1,8 @@
-import type { ChainId, ContractSpecificRoleName, ISDKAdminManager } from '@summerfi/sdk-client'
+import type { ChainId, ContractSpecificRoleName, ISDKInstiManager } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
 
 export const grantContractSpecificRoleHandler =
-  (sdk: ISDKAdminManager) =>
+  (sdk: ISDKInstiManager) =>
   async ({
     contractAddress,
     chainId,

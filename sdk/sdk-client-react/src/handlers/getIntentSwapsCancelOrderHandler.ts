@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { ChainId } from '@summerfi/sdk-common'
 import type { PublicClient, WalletClient } from 'viem'
 
@@ -12,7 +12,7 @@ import type { PublicClient, WalletClient } from 'viem'
  * @returns The result of the cancellation request
  */
 export const getIntentSwapsCancelOrderHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     chainId,
     orderId,

@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { User, type AddressValue } from '@summerfi/sdk-common'
 
 /**
@@ -8,7 +8,7 @@ import { User, type AddressValue } from '@summerfi/sdk-common'
  * @param params.chainId The chain ID
  */
 export const getUserBalanceHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({ userAddress, chainId }: { userAddress: AddressValue; chainId: number }) => {
     const user = User.createFromEthereum(chainId, userAddress)
     return sdk.armada.users.getUserBalance({ user })

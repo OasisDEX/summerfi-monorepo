@@ -1,8 +1,8 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId, RoundsVaultType } from '@summerfi/sdk-common'
 
 export const getRwaReceiptBalancesHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKInstiManager) =>
   async ({
     fleetAddress,
     chainId,

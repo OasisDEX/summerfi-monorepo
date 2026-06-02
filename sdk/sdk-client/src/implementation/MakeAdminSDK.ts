@@ -1,7 +1,7 @@
 import { createMainRPCClient } from '../rpc/SDKMainClient'
-import { SDKAdminManager } from './SDKAdminManager'
 import type { MakeSDKParams } from './MakeSDK'
 import { getApiVersion } from '../utils/getApiVersion'
+import { SDKInstiManager } from './SDKInstiManager'
 
 export type MakeAdminSDKParams = MakeSDKParams & { clientId: string }
 
@@ -28,8 +28,9 @@ export function makeAdminSDK(params: MakeAdminSDKParams) {
   const rpcClient = createMainRPCClient({
     apiURL: versionedURL,
     clientId: params.clientId,
+    instiVersion: 'v1',
     logging: params.logging,
   })
 
-  return new SDKAdminManager({ rpcClient })
+  return new SDKInstiManager({ rpcClient })
 }

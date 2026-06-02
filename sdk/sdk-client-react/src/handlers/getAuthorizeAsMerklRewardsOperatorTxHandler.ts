@@ -1,8 +1,8 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { ChainInfo, type IUser } from '@summerfi/sdk-common'
 
 export const getAuthorizeAsMerklRewardsOperatorTxHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({ user, chainInfo }: { user: IUser; chainInfo: ChainInfo }) => {
     const tx = await sdk.armada.users.getAuthorizeAsMerklRewardsOperatorTx({
       user: user.wallet.address.value,

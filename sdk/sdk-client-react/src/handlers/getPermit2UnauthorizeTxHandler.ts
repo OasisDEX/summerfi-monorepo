@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 /**
@@ -9,7 +9,7 @@ import type { AddressValue, ChainId } from '@summerfi/sdk-common'
  * @returns A TransactionInfo for the approve(Permit2, 0) transaction
  */
 export const getPermit2RevokeTxHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   ({ chainId, tokenAddress }: { chainId: ChainId; tokenAddress: AddressValue }) => {
     return sdk.allowance.getPermit2RevokeTx({ chainId, tokenAddress })
   }

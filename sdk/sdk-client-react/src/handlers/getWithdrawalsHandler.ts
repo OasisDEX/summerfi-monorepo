@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { IArmadaPositionId } from '@summerfi/sdk-common'
 
 /**
@@ -9,7 +9,7 @@ import type { IArmadaPositionId } from '@summerfi/sdk-common'
  * @param params.skip Optional number of items to skip for pagination
  */
 export const getWithdrawalsHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     positionId,
     first,

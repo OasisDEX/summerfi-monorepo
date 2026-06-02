@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 /**
@@ -11,7 +11,7 @@ import type { AddressValue, ChainId } from '@summerfi/sdk-common'
  * @returns True if the current Permit2 allowance is less than the required amount
  */
 export const isPermit2AuthorizationNeededHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   ({
     chainId,
     ownerAddress,

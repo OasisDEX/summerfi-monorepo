@@ -41,7 +41,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
           subgraphType: SubgraphTypes.protocol,
         }
 
-    const envName = params.clientId ? 'SDK_SUBGRAPH_CONFIG_INSTI' : 'SDK_SUBGRAPH_CONFIG'
+    const envName = 'SDK_SUBGRAPH_CONFIG'
     let urlMap
     try {
       urlMap = JSON.parse(params.configProvider.getConfigurationItem({ name: envName }))

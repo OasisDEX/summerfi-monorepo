@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 /**
@@ -12,7 +12,7 @@ import type { AddressValue, ChainId } from '@summerfi/sdk-common'
  * @param params.owner Optional owner address filter
  */
 export const getAllRolesHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKInstiManager) =>
   async ({
     chainId,
     first,

@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { ChainId } from '@summerfi/sdk-common'
 
 /**
@@ -9,7 +9,7 @@ import type { ChainId } from '@summerfi/sdk-common'
  * @returns The enriched order info if found, otherwise null
  */
 export const getIntentSwapsCheckOrderHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({ chainId, orderId }: { chainId: ChainId; orderId: string }) => {
     return sdk.intentSwaps.checkOrder({
       chainId,

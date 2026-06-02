@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { type AddressValue, Address } from '@summerfi/sdk-common'
 
 /**
@@ -10,7 +10,7 @@ import { type AddressValue, Address } from '@summerfi/sdk-common'
  * @param params.authorizedCallerAddress The address to check authorization for (optional; defaults to deployed AdmiralsQuarters)
  */
 export const isAuthorizedStakingRewardsCallerV2Handler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     ownerAddress,
     authorizedCallerAddress,

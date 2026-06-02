@@ -1,5 +1,5 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 
-export const getProtocolTvlHandler = (sdk: ISDKManager | ISDKAdminManager) => async () => {
+export const getProtocolTvlHandler = (sdk: ISDKManager | ISDKInstiManager) => async () => {
   return sdk.armada.users.getProtocolTvl()
 }
