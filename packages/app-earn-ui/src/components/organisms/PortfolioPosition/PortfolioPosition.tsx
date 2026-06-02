@@ -14,6 +14,7 @@ import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
+import { NavPrice } from '@/components/molecules/NavPrice/NavPrice'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getDisplayToken } from '@/helpers/get-display-token'
@@ -77,6 +78,11 @@ export const PortfolioPosition = ({
     id: vaultId,
     customFields,
     createdTimestamp,
+    pricePerShare,
+    // RWA (rounds-based) vaults accrue value as NAV per share, not a yield APY, so the "Live APY"
+    // header value shows NAV Price instead. The portfolio page force-sets isRwaVault on RWA
+    // position vaults, so this flag is reliable here.
+    isRwaVault,
   } = portfolioPosition.vault
   const {
     id: {
@@ -176,38 +182,47 @@ export const PortfolioPosition = ({
             value={tokenBonus}
           />
           <PortfolioPositionHeaderValue title="30d APY" value={apy30dParsed} />
-          <PortfolioPositionHeaderValue
-            title={
-              <Tooltip
-                tooltipName={`portfolio-overview-live-apy-info-${slugifyVault(portfolioPosition.vault)}`}
-                onTooltipOpen={tooltipEventHandler}
-                tooltip={
-                  <LiveApyInfo
-                    apyCurrent={apyCurrent}
-                    apyUpdatedAt={apyUpdatedAt}
-                    isAltPressed={isAltPressed}
-                  />
-                }
-                tooltipWrapperStyles={{
-                  maxWidth: '455px',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                  <Text
-                    variant="p4semi"
-                    style={{
-                      marginRight: 'var(--general-space-4)',
-                    }}
-                  >
-                    Live&nbsp;APY&nbsp;(
-                    {apyUpdatedAt.apyUpdatedAtLabel})
-                  </Text>
-                  <Icon iconName="info" size={16} />
-                </div>
-              </Tooltip>
-            }
-            value={apyCurrent}
-          />
+          {isRwaVault ? (
+            <PortfolioPositionHeaderValue
+              title="NAV Price"
+              value={
+                <NavPrice pricePerShare={pricePerShare} inputTokenSymbol={inputToken.symbol} />
+              }
+            />
+          ) : (
+            <PortfolioPositionHeaderValue
+              title={
+                <Tooltip
+                  tooltipName={`portfolio-overview-live-apy-info-${slugifyVault(portfolioPosition.vault)}`}
+                  onTooltipOpen={tooltipEventHandler}
+                  tooltip={
+                    <LiveApyInfo
+                      apyCurrent={apyCurrent}
+                      apyUpdatedAt={apyUpdatedAt}
+                      isAltPressed={isAltPressed}
+                    />
+                  }
+                  tooltipWrapperStyles={{
+                    maxWidth: '455px',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                    <Text
+                      variant="p4semi"
+                      style={{
+                        marginRight: 'var(--general-space-4)',
+                      }}
+                    >
+                      Live&nbsp;APY&nbsp;(
+                      {apyUpdatedAt.apyUpdatedAtLabel})
+                    </Text>
+                    <Icon iconName="info" size={16} />
+                  </div>
+                </Tooltip>
+              }
+              value={apyCurrent}
+            />
+          )}
           {!isMobile && buttonsWrapper}
         </div>
         <div className={portfolioPositionStyles.graphWrapper}>{positionGraph}</div>

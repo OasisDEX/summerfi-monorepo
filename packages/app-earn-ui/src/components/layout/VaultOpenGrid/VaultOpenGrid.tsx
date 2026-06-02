@@ -35,6 +35,7 @@ import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
+import { NavPrice } from '@/components/molecules/NavPrice/NavPrice'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
@@ -140,6 +141,10 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   const apyUpdatedAt = useApyUpdatedAt({
     vaultApyData,
   })
+  // RWA (rounds-based) vaults accrue value as NAV per share, not a yield APY, so the "Live APY"
+  // slot shows NAV Price instead. `vault.isRwaVault` is reliable here (open view receives the RWA
+  // detail vault, which the fleet-config decoration flags).
+  const isRwaVault = vault.isRwaVault ?? false
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
   const totalValueLockedTokenParsed = formatCryptoBalance(
     new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
@@ -460,64 +465,78 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               />
             </Box>
             <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                tooltipName="vault-open-live-apy"
-                onTooltipOpen={tooltipEventHandler}
-                title={
-                  <Tooltip
-                    tooltipName="vault-open-live-apy-info"
-                    onTooltipOpen={tooltipEventHandler}
-                    tooltip={
-                      <LiveApyInfo
-                        apyCurrent={apyCurrent}
-                        apyUpdatedAt={apyUpdatedAt}
-                        isAltPressed={isAltPressed}
-                      />
-                    }
-                    tooltipWrapperStyles={{
-                      maxWidth: '455px',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                      <Text
-                        variant="p3semi"
-                        style={{
-                          marginRight: 'var(--general-space-4)',
-                        }}
-                      >
-                        Live&nbsp;Native&nbsp;APY&nbsp;(
-                        {apyUpdatedAt.apyUpdatedAtLabel})
-                      </Text>
-                      <Icon iconName="info" size={16} />
-                    </div>
-                  </Tooltip>
-                }
-                value={apyCurrent}
-                subValue={
-                  medianBN && medianDefiYieldLiveDifference ? (
+              {isRwaVault ? (
+                <DataBlock
+                  size="large"
+                  titleSize="small"
+                  title="NAV Price"
+                  value={
+                    <NavPrice
+                      pricePerShare={vault.pricePerShare}
+                      inputTokenSymbol={vault.inputToken.symbol}
+                    />
+                  }
+                />
+              ) : (
+                <DataBlock
+                  size="large"
+                  titleSize="small"
+                  tooltipName="vault-open-live-apy"
+                  onTooltipOpen={tooltipEventHandler}
+                  title={
                     <Tooltip
-                      tooltipName="vault-open-live-apy-median"
+                      tooltipName="vault-open-live-apy-info"
                       onTooltipOpen={tooltipEventHandler}
                       tooltip={
-                        <>
-                          Median&nbsp;DeFi&nbsp;Yield:&nbsp;
-                          {formatDecimalAsPercent(medianBN.div(100))}
-                        </>
+                        <LiveApyInfo
+                          apyCurrent={apyCurrent}
+                          apyUpdatedAt={apyUpdatedAt}
+                          isAltPressed={isAltPressed}
+                        />
                       }
+                      tooltipWrapperStyles={{
+                        maxWidth: '455px',
+                      }}
                     >
-                      <div>
-                        {`${medianDefiYieldLiveDifference.gt(0) ? '+' : ''}${formatDecimalAsPercent(
-                          medianDefiYieldLiveDifference.div(100),
-                        )} vs Median DeFi Yield`}
+                      <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <Text
+                          variant="p3semi"
+                          style={{
+                            marginRight: 'var(--general-space-4)',
+                          }}
+                        >
+                          Live&nbsp;Native&nbsp;APY&nbsp;(
+                          {apyUpdatedAt.apyUpdatedAtLabel})
+                        </Text>
+                        <Icon iconName="info" size={16} />
                       </div>
                     </Tooltip>
-                  ) : null
-                }
-                subValueType={medianDefiYieldLiveDifference?.gt(0) ? 'positive' : 'neutral'}
-                subValueSize="small"
-              />
+                  }
+                  value={apyCurrent}
+                  subValue={
+                    medianBN && medianDefiYieldLiveDifference ? (
+                      <Tooltip
+                        tooltipName="vault-open-live-apy-median"
+                        onTooltipOpen={tooltipEventHandler}
+                        tooltip={
+                          <>
+                            Median&nbsp;DeFi&nbsp;Yield:&nbsp;
+                            {formatDecimalAsPercent(medianBN.div(100))}
+                          </>
+                        }
+                      >
+                        <div>
+                          {`${medianDefiYieldLiveDifference.gt(0) ? '+' : ''}${formatDecimalAsPercent(
+                            medianDefiYieldLiveDifference.div(100),
+                          )} vs Median DeFi Yield`}
+                        </div>
+                      </Tooltip>
+                    ) : null
+                  }
+                  subValueType={medianDefiYieldLiveDifference?.gt(0) ? 'positive' : 'neutral'}
+                  subValueSize="small"
+                />
+              )}
             </Box>
           </SimpleGrid>
           {isMobileOrTablet && rightExtraContent && (

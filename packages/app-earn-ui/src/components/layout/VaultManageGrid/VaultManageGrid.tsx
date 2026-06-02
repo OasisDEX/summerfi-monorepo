@@ -35,6 +35,7 @@ import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
+import { NavPrice } from '@/components/molecules/NavPrice/NavPrice'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
@@ -146,6 +147,10 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   const apyUpdatedAt = useApyUpdatedAt({
     vaultApyData,
   })
+  // RWA (rounds-based) vaults accrue value as NAV per share, not a yield APY. The 30d block's "Live
+  // APY" subValue is replaced with NAV Price (the 30d value stays). `vault.isRwaVault` is reliable
+  // here (manage view receives the RWA detail vault, which the fleet-config decoration flags).
+  const isRwaVault = vault.isRwaVault ?? false
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -420,34 +425,44 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   </div>
                 }
                 subValue={
-                  <Tooltip
-                    tooltip={
-                      <LiveApyInfo
-                        apyCurrent={apyCurrent}
-                        apyUpdatedAt={apyUpdatedAt}
-                        isAltPressed={isAltPressed}
+                  isRwaVault ? (
+                    <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                      NAV&nbsp;Price:&nbsp;
+                      <NavPrice
+                        pricePerShare={vault.pricePerShare}
+                        inputTokenSymbol={vault.inputToken.symbol}
                       />
-                    }
-                    tooltipName="vault-manage-live-apy-info"
-                    onTooltipOpen={tooltipEventHandler}
-                    tooltipWrapperStyles={{
-                      maxWidth: '455px',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                      <Text
-                        variant="p4semi"
-                        style={{
-                          marginRight: 'var(--general-space-4)',
-                          color: 'var(--color-text-success)',
-                        }}
-                      >
-                        Live&nbsp;Native&nbsp;APY:&nbsp;{apyCurrent}&nbsp;(
-                        {apyUpdatedAt.apyUpdatedAtLabel})
-                      </Text>
-                      <Icon iconName="info" size={16} color="var(--color-text-success)" />
-                    </div>
-                  </Tooltip>
+                    </Text>
+                  ) : (
+                    <Tooltip
+                      tooltip={
+                        <LiveApyInfo
+                          apyCurrent={apyCurrent}
+                          apyUpdatedAt={apyUpdatedAt}
+                          isAltPressed={isAltPressed}
+                        />
+                      }
+                      tooltipName="vault-manage-live-apy-info"
+                      onTooltipOpen={tooltipEventHandler}
+                      tooltipWrapperStyles={{
+                        maxWidth: '455px',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <Text
+                          variant="p4semi"
+                          style={{
+                            marginRight: 'var(--general-space-4)',
+                            color: 'var(--color-text-success)',
+                          }}
+                        >
+                          Live&nbsp;Native&nbsp;APY:&nbsp;{apyCurrent}&nbsp;(
+                          {apyUpdatedAt.apyUpdatedAtLabel})
+                        </Text>
+                        <Icon iconName="info" size={16} color="var(--color-text-success)" />
+                      </div>
+                    </Tooltip>
+                  )
                 }
                 subValueSize="small"
               />

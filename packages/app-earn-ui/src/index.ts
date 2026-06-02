@@ -113,6 +113,7 @@ export { IconWithBackground } from './components/molecules/IconWithBackground/Ic
 export { FaqSection } from './components/molecules/FaqSection/FaqSection'
 export { DataModule } from './components/molecules/DataModule/DataModule'
 export { LiveApyInfo } from './components/molecules/LiveApyInfo/LiveApyInfo'
+export { NavPrice } from './components/molecules/NavPrice/NavPrice'
 export { Badge } from './components/molecules/Badge/Badge'
 export { HighestQualityYieldsDisclaimer } from './components/molecules/HighestQualityYieldsDisclaimer/HighestQualityYieldsDisclaimer.tsx'
 export { CookieBanner } from './components/molecules/CookieBanner/CookieBanner'
