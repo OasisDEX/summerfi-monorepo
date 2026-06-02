@@ -352,7 +352,6 @@ export const VaultOpenViewComponent = ({
   const {
     roundId: rwaRoundId,
     roundState: rwaRoundState,
-    exchangeRate: rwaExchangeRate,
     isLoading: isRwaRoundLoading,
   } = useRwaRoundInfo({
     enabled: isRwaVault && isWhitelisted,
@@ -558,7 +557,6 @@ export const VaultOpenViewComponent = ({
           <RwaRoundNotice
             roundId={rwaRoundId}
             roundState={rwaRoundState}
-            exchangeRate={rwaExchangeRate}
             isLoading={isRwaRoundLoading}
           />
         ) : beachClubEnabled ? (

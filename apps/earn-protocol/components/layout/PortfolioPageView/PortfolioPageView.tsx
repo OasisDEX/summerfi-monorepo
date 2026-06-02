@@ -29,6 +29,7 @@ import { usePortfolioRewardsDataQuery } from '@/features/portfolio/api/get-portf
 import { PortfolioBeachClub } from '@/features/portfolio/components/PortfolioBeachClub/PortfolioBeachClub'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
+import { type PortfolioRwaPendingPosition } from '@/features/portfolio/components/PortfolioOverview/PortfolioRwaPendingPositions'
 import { PortfolioRebalanceActivity } from '@/features/portfolio/components/PortfolioRebalanceActivity/PortfolioRebalanceActivity'
 import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewards/PortfolioRewards'
 import { PortfolioRewardsV2 } from '@/features/portfolio/components/PortfolioRewardsV2/PortfolioRewardsV2'
@@ -52,6 +53,7 @@ interface PortfolioPageViewProps {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
   dcaOrders: IDcaStrategy[]
+  rwaPendingPositions: PortfolioRwaPendingPosition[]
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -62,6 +64,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   vaultsApyByNetworkMap,
   rewardTokenPrices,
   dcaOrders,
+  rwaPendingPositions,
 }) => {
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
@@ -133,6 +136,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           rewardTokenPrices={rewardTokenPrices}
           dcaOrders={dcaOrders}
           dcaEnabled={dcaEnabled}
+          rwaPendingPositions={rwaPendingPositions}
+          viewWalletAddress={viewWalletAddress}
         />
       ),
     },

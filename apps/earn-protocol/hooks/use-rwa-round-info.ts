@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { type SdkClient } from '@summerfi/sdk-client-react'
-import { type ChainId, type IPrice, type RoundState, RoundsVaultType } from '@summerfi/sdk-common'
+import { type ChainId, type RoundState, RoundsVaultType } from '@summerfi/sdk-common'
 
 type UseRwaRoundInfoProps = {
   // Only fetch when the vault is RWA and the round context is relevant
@@ -28,7 +28,6 @@ export const useRwaRoundInfo = ({
 }: UseRwaRoundInfoProps) => {
   const [roundId, setRoundId] = useState<bigint | undefined>(undefined)
   const [roundState, setRoundState] = useState<RoundState | undefined>(undefined)
-  const [exchangeRate, setExchangeRate] = useState<IPrice | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export const useRwaRoundInfo = ({
     if (!enabled) {
       setRoundId(undefined)
       setRoundState(undefined)
-      setExchangeRate(undefined)
       setIsLoading(false)
 
       return () => {
@@ -55,29 +53,18 @@ export const useRwaRoundInfo = ({
           vaultType,
         })
 
-        const [state, rate] = await Promise.all([
+        const [state] = await Promise.all([
           sdk.getRwaRoundState({
             fleetAddress: fleetAddress as `0x${string}`,
             chainId: chainId as ChainId,
             roundId: currentRound,
             vaultType,
           }),
-          // The exchange rate is only finalised at settlement; tolerate failures
-          // for rounds that are still open.
-          sdk
-            .getRwaExchangeRate({
-              fleetAddress: fleetAddress as `0x${string}`,
-              chainId: chainId as ChainId,
-              roundId: currentRound,
-              vaultType,
-            })
-            .catch(() => undefined),
         ])
 
         if (!cancelled) {
           setRoundId(currentRound)
           setRoundState(state)
-          setExchangeRate(rate)
         }
       } catch (error) {
         if (!cancelled) {
@@ -85,7 +72,6 @@ export const useRwaRoundInfo = ({
           console.error('Failed to fetch RWA round info', error)
           setRoundId(undefined)
           setRoundState(undefined)
-          setExchangeRate(undefined)
         }
       } finally {
         if (!cancelled) {
@@ -104,7 +90,6 @@ export const useRwaRoundInfo = ({
   return {
     roundId,
     roundState,
-    exchangeRate,
     isLoading,
   }
 }

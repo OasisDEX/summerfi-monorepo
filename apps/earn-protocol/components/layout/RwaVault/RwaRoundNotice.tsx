@@ -1,10 +1,9 @@
 import { Card, Text } from '@summerfi/app-earn-ui'
-import { type IPrice, RoundState } from '@summerfi/sdk-common'
+import { RoundState } from '@summerfi/sdk-common'
 
 type RwaRoundNoticeProps = {
   roundId?: bigint
   roundState?: RoundState
-  exchangeRate?: IPrice
   isLoading: boolean
 }
 
@@ -22,12 +21,7 @@ const roundStateLabel: { [key in RoundState]: string } = {
  * (once available) the round exchange rate. Mirrors the simple Card/Text style
  * used across the app.
  */
-export const RwaRoundNotice = ({
-  roundId,
-  roundState,
-  exchangeRate,
-  isLoading,
-}: RwaRoundNoticeProps) => {
+export const RwaRoundNotice = ({ roundId, roundState, isLoading }: RwaRoundNoticeProps) => {
   const isOpen = roundState === RoundState.Opened
   const roundLabel = roundId !== undefined ? `#${roundId.toString()}` : ''
 
@@ -65,17 +59,6 @@ export const RwaRoundNotice = ({
       <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
         {description}
       </Text>
-
-      {exchangeRate ? (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text as="span" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-            Exchange rate
-          </Text>
-          <Text as="span" variant="p3semi">
-            {exchangeRate.toString()}
-          </Text>
-        </div>
-      ) : null}
     </Card>
   )
 }

@@ -10,6 +10,7 @@ import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { type IDcaStrategy } from '@summerfi/sdk-common'
 
 import { sdkApiUrl } from '@/constants/sdk'
+import { type PortfolioRwaPendingPosition } from '@/features/portfolio/components/PortfolioOverview/PortfolioRwaPendingPositions'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 
 import { PortfolioPageView } from './PortfolioPageView'
@@ -24,6 +25,7 @@ interface PortfolioPageViewComponentProps {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
   dcaOrders: IDcaStrategy[]
+  rwaPendingPositions: PortfolioRwaPendingPosition[]
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
@@ -34,6 +36,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   vaultsApyByNetworkMap,
   rewardTokenPrices,
   dcaOrders,
+  rwaPendingPositions,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -45,6 +48,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         rewardTokenPrices={rewardTokenPrices}
         dcaOrders={dcaOrders}
+        rwaPendingPositions={rwaPendingPositions}
       />
     </SDKContextProvider>
   )

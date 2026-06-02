@@ -220,7 +220,6 @@ export const VaultManageViewComponent = ({
   const {
     roundId: rwaRoundId,
     roundState: rwaRoundState,
-    exchangeRate: rwaExchangeRate,
     isLoading: isRwaRoundLoading,
   } = useRwaRoundInfo({
     enabled: isRwaVault && isWhitelisted,
@@ -697,7 +696,6 @@ export const VaultManageViewComponent = ({
                   <RwaRoundNotice
                     roundId={rwaRoundId}
                     roundState={rwaRoundState}
-                    exchangeRate={rwaExchangeRate}
                     isLoading={isRwaRoundLoading}
                   />
                 ) : null
@@ -820,7 +818,6 @@ export const VaultManageViewComponent = ({
     isDeposit,
     rwaRoundId,
     rwaRoundState,
-    rwaExchangeRate,
     isRwaRoundLoading,
     switchAmountDisplay,
     switchManualSetAmount,
