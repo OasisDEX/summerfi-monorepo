@@ -1,0 +1,50 @@
+query GetGlobalRebalances {
+  rebalances(orderBy: timestamp, orderDirection: desc) {
+    id
+    amount
+    amountUSD
+    asset {
+      id
+      symbol
+      decimals
+    }
+    from {
+      name
+      depositLimit
+      calculatedApr
+      totalValueLockedUSD
+    }
+    to {
+      name
+      depositLimit
+      calculatedApr
+      totalValueLockedUSD
+    }
+    toPostAction {
+      totalValueLockedUSD
+      depositLimit
+    }
+    fromPostAction {
+      totalValueLockedUSD
+      depositLimit
+    }
+    protocol {
+      name
+      network
+    }
+    timestamp
+    vault {
+      outputTokenPriceUSD
+      inputTokenPriceUSD
+      id
+      name
+      inputToken {
+        id
+        symbol
+      }
+      protocol {
+        network
+      }
+    }
+  }
+}

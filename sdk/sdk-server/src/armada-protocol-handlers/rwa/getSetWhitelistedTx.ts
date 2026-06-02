@@ -12,5 +12,5 @@ export const getSetWhitelistedTx = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getSetWhitelistedTx(opts.input)
+    return opts.ctx.rwaManager.getSetWhitelistedTx(opts.input)
   })

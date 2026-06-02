@@ -1,0 +1,35 @@
+query GetUsersActivity($where: Position_filter) {
+  positions(where: $where, first: 1000) {
+    account {
+      id
+    }
+    inputTokenBalance
+    deposits {
+      timestamp
+      amount
+      hash
+      inputTokenBalance
+    }
+    withdrawals {
+      timestamp
+      amount
+      hash
+      inputTokenBalance
+    }
+    vault {
+      id
+      name
+      outputTokenPriceUSD
+      inputTokenPriceUSD
+      inputToken {
+        id
+        symbol
+        decimals
+      }
+      protocol {
+        network
+      }
+      apr365d
+    }
+  }
+}

@@ -18,5 +18,5 @@ export const getSetMinimumPositionSizeTx = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getSetMinimumPositionSizeTx(opts.input)
+    return opts.ctx.rwaManager.getSetMinimumPositionSizeTx(opts.input)
   })

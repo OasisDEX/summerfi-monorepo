@@ -21,7 +21,7 @@ export class DcaSubgraphManager implements IDcaSubgraphManager {
     if (!urlMap) {
       throw new Error('No subgraph config in env')
     }
-    LoggingService.log(`Loaded DCA subgraph config from env ${envName}: ${JSON.stringify(urlMap)}`)
+    LoggingService.log(`Loaded DCA subgraph config from env ${envName} for dca key`)
 
     this._urlMap = urlMap
   }

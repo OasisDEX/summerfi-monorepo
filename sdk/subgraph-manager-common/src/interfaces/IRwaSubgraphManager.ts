@@ -5,12 +5,13 @@ import type {
   GetRwaReceiptsQuery,
   GetRwaInstitutionByIdQuery,
 } from '../generated/rwa/client'
+import type { IArmadaSubgraphManager } from './IArmadaSubgraphManager'
 
 /**
  * @name IRwaSubgraphManager
  * @description Interface for the RWA subgraph manager
  */
-export interface IRwaSubgraphManager {
+export interface IRwaSubgraphManager extends IArmadaSubgraphManager {
   /**
    * @name getVaults
    * @description Get all RWA vaults for a given institution on a given chain.

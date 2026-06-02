@@ -16,5 +16,5 @@ export const getSetWhitelistedBatchTx = publicProcedure
       }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getSetWhitelistedBatchTx(opts.input)
+    return opts.ctx.rwaManager.getSetWhitelistedBatchTx(opts.input)
   })

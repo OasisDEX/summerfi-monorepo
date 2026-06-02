@@ -12,5 +12,5 @@ export const getWithdrawTx = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getWithdrawTx(opts.input)
+    return opts.ctx.rwaManager.getWithdrawTx(opts.input)
   })

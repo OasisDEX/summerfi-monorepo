@@ -10,5 +10,5 @@ export const getVaultInfoListPerChain = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getVaultInfoListPerChain(opts.input)
+    return opts.ctx.rwaManager.getVaultInfoListPerChain(opts.input)
   })

@@ -3,6 +3,7 @@ import {
   IArmadaSubgraphManager,
   createProtocolGraphQLClient,
   createInstitutionsGraphQLClient,
+  createRwaGraphQLClient,
   SubgraphType,
   SubgraphTypes,
 } from '@summerfi/subgraph-manager-common'
@@ -15,31 +16,48 @@ import { GraphQLClient } from 'graphql-request'
  * @implements IArmadaSubgraphManager
  */
 export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
-  private readonly _config:
+  readonly clientId?: string
+  readonly instiVersion?: 'v1' | 'v2'
+  readonly config:
     | {
         subgraphType: typeof SubgraphTypes.protocol
       }
     | {
         subgraphType: typeof SubgraphTypes.institutions
       }
+    | {
+        subgraphType: typeof SubgraphTypes.rwa
+      }
 
-  private readonly _urlMap: Record<
+  readonly urlMap: Record<
     ChainId,
     {
       protocol: string
-      institutions?: string
+      institutions: string
+      rwa: string
     }
   >
 
   /** CONSTRUCTOR */
-  constructor(params: { configProvider: IConfigurationProvider; clientId?: string }) {
-    this._config = params.clientId
-      ? {
-          subgraphType: SubgraphTypes.institutions,
-        }
-      : {
-          subgraphType: SubgraphTypes.protocol,
-        }
+  constructor(params: {
+    configProvider: IConfigurationProvider
+    clientId?: string
+    instiVersion?: 'v1' | 'v2'
+  }) {
+    if (params.clientId && !params.instiVersion) {
+      throw new Error('instiVersion must be provided when clientId is specified')
+    }
+    this.clientId = params.clientId
+    this.instiVersion = params.instiVersion
+    this.config =
+      params.clientId && params.instiVersion
+        ? {
+            subgraphType:
+              params.instiVersion === 'v1' ? SubgraphTypes.institutions : SubgraphTypes.rwa,
+          }
+        : {
+            subgraphType: SubgraphTypes.protocol,
+          }
 
     const envName = 'SDK_SUBGRAPH_CONFIG'
     let urlMap
@@ -51,19 +69,31 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     if (!urlMap) {
       throw new Error('No subgraph config in env')
     }
-    LoggingService.log(`Loaded subgraph config from env ${envName}: ${JSON.stringify(urlMap)}`)
+    LoggingService.log(
+      `Loaded Armada subgraph config from env ${envName} for ${this.config.subgraphType} with clientId ${this.clientId} and instiVersion ${this.instiVersion}`,
+    )
 
-    this._urlMap = urlMap
+    this.urlMap = urlMap
   }
 
   getVaults({ chainId, clientId }: Parameters<IArmadaSubgraphManager['getVaults']>[0]) {
     try {
-      if (clientId) {
-        return this._getClient(SubgraphTypes.institutions, chainId).GetVaults({
-          institutionId: this._getInstitutionId(clientId),
+      const clientIdToUse = clientId || this.clientId
+      if (
+        this.config.subgraphType === SubgraphTypes.institutions ||
+        this.config.subgraphType === SubgraphTypes.rwa
+      ) {
+        if (!clientIdToUse) {
+          throw new Error(
+            'clientId must be provided to fetch vaults for institutions or rwa subgraph' +
+              ` (provided: ${clientId}, instance: ${this.clientId})`,
+          )
+        }
+        return this.getClient(this.config.subgraphType, chainId).GetVaults({
+          institutionId: this.getInstitutionId(clientIdToUse),
         })
       } else {
-        return this._getClient(SubgraphTypes.protocol, chainId).GetVaults()
+        return this.getClient(SubgraphTypes.protocol, chainId).GetVaults()
       }
     } catch (error) {
       console.error(
@@ -76,13 +106,13 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   getVault({ chainId, vaultId }: Parameters<IArmadaSubgraphManager['getVault']>[0]) {
-    return this._getClient(this._config.subgraphType, chainId).GetVault({
+    return this.getClient(this.config.subgraphType, chainId).GetVault({
       id: vaultId,
     })
   }
 
   getUserPositions({ user }: Parameters<IArmadaSubgraphManager['getUserPositions']>[0]) {
-    return this._getClient(this._config.subgraphType, user.chainInfo.chainId).GetUserPositions({
+    return this.getClient(this.config.subgraphType, user.chainInfo.chainId).GetUserPositions({
       accountAddress: user.wallet.address.toSolidityValue(),
     })
   }
@@ -91,15 +121,15 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     user,
     fleetAddress,
   }: Parameters<IArmadaSubgraphManager['getUserPosition']>[0]) {
-    return this._getClient(this._config.subgraphType, user.chainInfo.chainId).GetUserPosition({
+    return this.getClient(this.config.subgraphType, user.chainInfo.chainId).GetUserPosition({
       accountAddress: user.wallet.address.toSolidityValue(),
       vaultId: fleetAddress.toSolidityValue(),
     })
   }
 
   getPosition(params: Parameters<IArmadaSubgraphManager['getPosition']>[0]) {
-    return this._getClient(
-      this._config.subgraphType,
+    return this.getClient(
+      this.config.subgraphType,
       params.positionId.user.chainInfo.chainId,
     ).GetPosition({
       id: params.positionId.id.toLowerCase(),
@@ -107,8 +137,8 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   getPositionHistory(params: Parameters<IArmadaSubgraphManager['getPositionHistory']>[0]) {
-    return this._getClient(
-      this._config.subgraphType,
+    return this.getClient(
+      this.config.subgraphType,
       params.positionId.user.chainInfo.chainId,
     ).GetPositionHistory({
       positionId: params.positionId.id.toLowerCase(),
@@ -116,17 +146,17 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   getInstitutions(params: Parameters<IArmadaSubgraphManager['getInstitutions']>[0]) {
-    return this._getClient(SubgraphTypes.institutions, params.chainId).GetInstitutions()
+    return this.getClient(SubgraphTypes.institutions, params.chainId).GetInstitutions()
   }
 
   getInstitutionById(params: Parameters<IArmadaSubgraphManager['getInstitutionById']>[0]) {
-    return this._getClient(SubgraphTypes.institutions, params.chainId).GetInstitutionById({
+    return this.getClient(SubgraphTypes.institutions, params.chainId).GetInstitutionById({
       id: toBytes32InHex(params.id),
     })
   }
 
   async getAllRoles(params: Parameters<IArmadaSubgraphManager['getAllRoles']>[0]) {
-    const institutionId = this._getInstitutionId(params.clientId)
+    const institutionId = this.getInstitutionId(params.clientId)
     const first = params.first ?? 1000
     const skip = params.skip ?? 0
 
@@ -182,7 +212,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
       }
     `
 
-    const urlMapForChain = this._urlMap[params.chainId]
+    const urlMapForChain = this.urlMap[params.chainId]
     if (!urlMapForChain?.institutions) {
       throw new Error(`No institutions subgraph url found for chainId: ${params.chainId}`)
     }
@@ -192,11 +222,11 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   getGlobalRebalances({ chainId }: Parameters<IArmadaSubgraphManager['getGlobalRebalances']>[0]) {
-    return this._getClient(SubgraphTypes.protocol, chainId).GetGlobalRebalances()
+    return this.getClient(SubgraphTypes.protocol, chainId).GetGlobalRebalances()
   }
 
   getUsersActivity({ chainId, where }: Parameters<IArmadaSubgraphManager['getUsersActivity']>[0]) {
-    return this._getClient(SubgraphTypes.protocol, chainId).GetUsersActivity({ where })
+    return this.getClient(SubgraphTypes.protocol, chainId).GetUsersActivity({ where })
   }
 
   getUserActivity({
@@ -204,15 +234,15 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     vaultId,
     accountAddress,
   }: Parameters<IArmadaSubgraphManager['getUserActivity']>[0]) {
-    return this._getClient(SubgraphTypes.protocol, chainId).GetUserActivity({
+    return this.getClient(SubgraphTypes.protocol, chainId).GetUserActivity({
       id: vaultId,
       accountId: accountAddress,
     })
   }
 
   getDeposits(params: Parameters<IArmadaSubgraphManager['getDeposits']>[0]) {
-    return this._getClient(
-      this._config.subgraphType,
+    return this.getClient(
+      this.config.subgraphType,
       params.positionId.user.chainInfo.chainId,
     ).GetDeposits({
       id: params.positionId.id.toLowerCase(),
@@ -222,8 +252,8 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   getWithdrawals(params: Parameters<IArmadaSubgraphManager['getWithdrawals']>[0]) {
-    return this._getClient(
-      this._config.subgraphType,
+    return this.getClient(
+      this.config.subgraphType,
       params.positionId.user.chainInfo.chainId,
     ).GetWithdrawals({
       id: params.positionId.id.toLowerCase(),
@@ -233,7 +263,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   getStakingStatsV2({ chainId, id }: Parameters<IArmadaSubgraphManager['getStakingStatsV2']>[0]) {
-    return this._getClient(SubgraphTypes.protocol, chainId).GetStakingStatsV2({
+    return this.getClient(SubgraphTypes.protocol, chainId).GetStakingStatsV2({
       id: id.toLowerCase(),
     })
   }
@@ -244,7 +274,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     first,
     skip,
   }: Parameters<IArmadaSubgraphManager['getStakingStakesV2']>[0]) {
-    return this._getClient(SubgraphTypes.protocol, chainId)
+    return this.getClient(SubgraphTypes.protocol, chainId)
       .GetStakingStakesV2({
         first,
         skip,
@@ -256,21 +286,24 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
       }))
   }
 
-  /** PRIVATE */
-  _getClient<T extends typeof SubgraphTypes.protocol | typeof SubgraphTypes.institutions>(
+  getClient<
+    T extends
+      | typeof SubgraphTypes.protocol
+      | typeof SubgraphTypes.institutions
+      | typeof SubgraphTypes.rwa,
+  >(
     subgraphType: T,
     chainId: ChainId,
   ): ReturnType<
     {
       [SubgraphTypes.protocol]: typeof createProtocolGraphQLClient
       [SubgraphTypes.institutions]: typeof createInstitutionsGraphQLClient
+      [SubgraphTypes.rwa]: typeof createRwaGraphQLClient
     }[T]
   > {
-    if (subgraphType === SubgraphTypes.institutions) {
-      this._assertSubgraphAccess(SubgraphTypes.institutions)
-    }
+    this.assertSubgraphAccess(subgraphType)
 
-    const urlMapForChain = this._urlMap[chainId]
+    const urlMapForChain = this.urlMap[chainId]
     if (!urlMapForChain) {
       throw new Error(`No subgraph urls found for chainId: ${chainId}`)
     }
@@ -278,8 +311,12 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     const client = {
       [SubgraphTypes.protocol]: createProtocolGraphQLClient(urlMapForChain.protocol),
       [SubgraphTypes.institutions]:
-        this._config.subgraphType === SubgraphTypes.institutions
-          ? createInstitutionsGraphQLClient(urlMapForChain.institutions!)
+        this.config.subgraphType === SubgraphTypes.institutions
+          ? createInstitutionsGraphQLClient(urlMapForChain.institutions)
+          : undefined,
+      [SubgraphTypes.rwa]:
+        this.config.subgraphType === SubgraphTypes.rwa
+          ? createRwaGraphQLClient(urlMapForChain.rwa)
           : undefined,
     }[subgraphType]
 
@@ -287,28 +324,31 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
       {
         [SubgraphTypes.protocol]: typeof createProtocolGraphQLClient
         [SubgraphTypes.institutions]: typeof createInstitutionsGraphQLClient
+        [SubgraphTypes.rwa]: typeof createRwaGraphQLClient
       }[T]
     >
   }
 
-  _getSubgraphTypeByIsAdminSdk() {
-    return this._config.subgraphType
+  getInstitutionId(clientId: string): HexData {
+    return toBytes32InHex(clientId)
   }
 
-  _assertSubgraphAccess(subgraphType: SubgraphType): void {
-    const typeToClient = {
+  getSubgraphTypeByIsAdminSdk() {
+    return this.config.subgraphType
+  }
+
+  assertSubgraphAccess(subgraphType: SubgraphType): void {
+    const typeToClientMessage = {
       [SubgraphTypes.protocol]: 'makeSdk',
-      [SubgraphTypes.institutions]: 'makeAdminSdk',
-      [SubgraphTypes.dca]: 'makeDcaSdk',
-      [SubgraphTypes.rwa]: 'makeRwaSdk',
+      [SubgraphTypes.dca]: 'makeSdk',
+      [SubgraphTypes.institutions]: 'makeInstiSdk',
+      [SubgraphTypes.rwa]: 'makeInstiSdk',
     } as const
 
-    if (this._config.subgraphType !== subgraphType) {
-      throw new Error(`This method is only available using '${typeToClient[subgraphType]}'`)
+    if (this.config.subgraphType !== subgraphType) {
+      throw new Error(
+        `This method is only available using '${typeToClientMessage[subgraphType]}'. Current subgraph type: ${this.config.subgraphType} which does not have access to ${subgraphType} subgraph`,
+      )
     }
-  }
-
-  _getInstitutionId(clientId: string): HexData {
-    return toBytes32InHex(clientId)
   }
 }

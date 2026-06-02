@@ -2,6 +2,7 @@ import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { ArmadaSubgraphManager } from './armada/ArmadaSubgraphManager'
 import { DcaSubgraphManager } from './dca/DcaSubgraphManager'
 import { RwaSubgraphManager } from './rwa/RwaSubgraphManager'
+import type { InstiVersion } from '../types'
 
 /**
  * @name SubgraphManagerFactory
@@ -11,6 +12,7 @@ export class SubgraphManagerFactory {
   public static newArmadaSubgraph(params: {
     configProvider: IConfigurationProvider
     clientId?: string
+    instiVersion?: InstiVersion
   }): ArmadaSubgraphManager {
     return new ArmadaSubgraphManager(params)
   }
@@ -23,6 +25,8 @@ export class SubgraphManagerFactory {
 
   public static newRwaSubgraph(params: {
     configProvider: IConfigurationProvider
+    clientId?: string
+    instiVersion?: InstiVersion
   }): RwaSubgraphManager {
     return new RwaSubgraphManager(params)
   }

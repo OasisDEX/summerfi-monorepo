@@ -21,5 +21,5 @@ export const getCancelRoundDepositTx = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getCancelRoundDepositTx(opts.input)
+    return opts.ctx.rwaManager.getCancelRoundDepositTx(opts.input)
   })

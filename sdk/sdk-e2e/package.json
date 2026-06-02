@@ -71,6 +71,7 @@
     "e2e:dca:strategies:cancel": "jest --roots e2e -- ./e2e/dcaStrategies.cancel.test.ts",
     "e2e:rwa:vault": "jest --roots e2e -- ./e2e/rwa.vault.test.ts",
     "e2e:rwa:vaults": "jest --roots e2e -- ./e2e/rwa.vaults.test.ts",
+    "e2e:rwa:positions": "jest --roots e2e -- ./e2e/rwa.positions.test.ts",
     "e2e:rwa:setWhitelisted": "jest --roots e2e -- ./e2e/rwa.setWhitelisted.test.ts",
     "e2e:rwa:setWhitelistedBatch": "jest --roots e2e -- ./e2e/rwa.setWhitelistedBatch.test.ts",
     "e2e:rwa:setWhitelistOpen": "jest --roots e2e -- ./e2e/rwa.setWhitelistOpen.test.ts",

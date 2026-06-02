@@ -18,5 +18,5 @@ export const getReceiptBalances = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getReceiptBalances(opts.input)
+    return opts.ctx.rwaManager.getReceiptBalances(opts.input)
   })
