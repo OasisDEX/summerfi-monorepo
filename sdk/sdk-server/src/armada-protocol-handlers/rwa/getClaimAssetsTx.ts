@@ -14,5 +14,5 @@ export const getClaimAssetsTx = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getClaimAssetsTx(opts.input)
+    return opts.ctx.rwaManager.getClaimAssetsTx(opts.input)
   })

@@ -10,5 +10,5 @@ export const isWhitelistOpen = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.isWhitelistOpen(opts.input)
+    return opts.ctx.rwaManager.isWhitelistOpen(opts.input)
   })

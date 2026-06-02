@@ -4,9 +4,14 @@ import { IAddressBookManager } from '@summerfi/address-book-common'
 import { AddressBookManagerFactory } from '@summerfi/address-book-service'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { AllowanceManagerFactory } from '@summerfi/allowance-manager-service'
-import { IArmadaManager, setTestDeployment } from '@summerfi/armada-protocol-common'
+import {
+  IArmadaManager,
+  type IRWAManager,
+  setTestDeployment,
+} from '@summerfi/armada-protocol-common'
 import {
   ArmadaManagerFactory,
+  RWAManager,
   DeploymentProvider,
   fetchPublicDeploymentProviderConfig,
   fetchInstiDeploymentProviderConfig,
@@ -62,6 +67,7 @@ export type SDKAppContext = {
   orderPlannerService: IOrderPlannerService
   allowanceManager: IAllowanceManager
   armadaManager: IArmadaManager
+  rwaManager: IRWAManager
   intentSwapsManager: CowSwapProvider
   earnAppCookieVerifier: EarnAppCookieVerifier
 }
@@ -131,13 +137,23 @@ const quickHashCode = (str: string): string => {
 
 // context for each request
 export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
+  LoggingService.log('Request headers', opts.event.headers)
+
   // check for Client-Id header in request and fetch integrator config if present
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
+
   // Institutional deployment-config version (set by makeInstiSdk). Defaults to 'v1' so existing
   // makeAdminSDK clients (which do not send the header) keep the legacy institutions config path.
-  const instiVersion =
-    opts.event.headers['Insti-Version'] || opts.event.headers['insti-version'] || 'v1'
-  LoggingService.log('Request headers', opts.event.headers)
+  const assertInstiVersion = (unknownInstiVersion: string): 'v1' | 'v2' => {
+    if (unknownInstiVersion && !['v1', 'v2'].includes(unknownInstiVersion)) {
+      throw new Error(`Invalid InstiVersion header: ${unknownInstiVersion}`)
+    }
+    return unknownInstiVersion as 'v1' | 'v2'
+  }
+
+  const instiVersion = assertInstiVersion(
+    opts.event.headers['Insti-Version'] || opts.event.headers['insti-version'] || 'v1',
+  )
 
   const requestCookies = parseCookies(opts.event)
   const configProvider = new ConfigurationProvider()
@@ -149,9 +165,17 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
   const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({
     configProvider,
     clientId,
+    instiVersion,
   })
   const dcaSubgraphManager = SubgraphManagerFactory.newDcaSubgraph({ configProvider })
-  const rwaSubgraphManager = SubgraphManagerFactory.newRwaSubgraph({ configProvider })
+  // RWA is institutional-only: the subgraph manager is only constructed when a Client-Id is present.
+  // Public requests leave it unset (RWA routes are unreachable for them); typed non-optional so the
+  // institutional RWAManager wiring below stays clean.
+  const rwaSubgraphManager = SubgraphManagerFactory.newRwaSubgraph({
+    configProvider,
+    clientId,
+    instiVersion,
+  })
 
   let deploymentProviderConfigs: DeploymentProviderConfig[]
   let supportedChains: IChainInfo[]
@@ -169,6 +193,11 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     // v2 (RWA) sources institution wiring from the RWA / institutions-v2 subgraph and the RWA chains;
     // v1 keeps the legacy institutions subgraph + insti chains.
     const useRwaConfig = instiVersion === 'v2'
+    LoggingService.log(
+      `Client-Id ${clientId} ${instiVersion} - using ${useRwaConfig ? 'RWA' : 'insti'} deployment config with chainIds ${
+        useRwaConfig ? rwaChainIds : instiChainIds
+      }`,
+    )
     const configChainIds = useRwaConfig ? rwaChainIds : instiChainIds
     const institutionSubgraphManager = useRwaConfig ? rwaSubgraphManager : armadaSubgraphManager
 
@@ -258,14 +287,24 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     blockchainClientProvider,
     allowanceManager,
     contractsProvider,
-    subgraphManager: armadaSubgraphManager,
     swapManager,
     oracleManager,
     tokensManager,
     supportedChains,
     clientId,
+    subgraphManager: armadaSubgraphManager,
     dcaSubgraphManager,
+  })
+
+  // RWA is a first-class SDK module (not part of Armada). Its subgraph manager is only
+  // wired for institutional (Client-Id) requests;
+  const rwaManager = new RWAManager({
+    clientId,
     rwaSubgraphManager,
+    tokensManager,
+    contractsProvider,
+    allowanceManager,
+    deploymentProvider,
   })
 
   return {
@@ -284,6 +323,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     orderPlannerService,
     allowanceManager,
     armadaManager,
+    rwaManager,
     intentSwapsManager,
     earnAppCookieVerifier,
   }

@@ -1,5 +1,6 @@
 export { ArmadaManager } from './common/implementation/ArmadaManager'
 export { ArmadaManagerFactory } from './common/implementation/ArmadaManagerFactory'
+export { RWAManager } from './common/implementation/RWAManager'
 export { ArmadaSimulation } from './common/implementation/ArmadaSimulation'
 export type { ArmadaSimulationParameters } from './common/implementation/ArmadaSimulation'
 export { ArmadaParameters } from './simulator/implementation/ArmadaParameters'

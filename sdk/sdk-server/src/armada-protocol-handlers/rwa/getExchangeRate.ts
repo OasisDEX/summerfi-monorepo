@@ -18,5 +18,5 @@ export const getExchangeRate = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getExchangeRate(opts.input)
+    return opts.ctx.rwaManager.getExchangeRate(opts.input)
   })

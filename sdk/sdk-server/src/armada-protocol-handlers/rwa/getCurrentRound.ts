@@ -17,5 +17,5 @@ export const getCurrentRound = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getCurrentRound(opts.input)
+    return opts.ctx.rwaManager.getCurrentRound(opts.input)
   })

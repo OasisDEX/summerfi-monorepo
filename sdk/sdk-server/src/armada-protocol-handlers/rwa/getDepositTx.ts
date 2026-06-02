@@ -12,5 +12,5 @@ export const getDepositTx = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.rwa.getDepositTx(opts.input)
+    return opts.ctx.rwaManager.getDepositTx(opts.input)
   })
