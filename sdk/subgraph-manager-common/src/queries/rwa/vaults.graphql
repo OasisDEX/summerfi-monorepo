@@ -65,7 +65,7 @@ query GetVaults($institutionId: String!) {
     withdrawableTotalAssets
     withdrawableTotalAssetsUSD
   }
-  roundsVaultPair {
+  roundsVaultPairs {
     id
     active
     inputVault {
