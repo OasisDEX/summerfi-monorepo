@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 
 /**
  * @name getSummerPriceHandler
@@ -7,6 +7,6 @@ import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
  * @param params.override - Optional price override value
  */
 export const getSummerPriceHandler =
-  (sdk: ISDKManager | ISDKAdminManager) => async (params?: { override?: number }) => {
+  (sdk: ISDKManager | ISDKInstiManager) => async (params?: { override?: number }) => {
     return sdk.armada.users.getSummerPrice(params)
   }

@@ -65,6 +65,44 @@ query GetVaults($institutionId: String!) {
     withdrawableTotalAssets
     withdrawableTotalAssetsUSD
   }
+  roundsVaultPair {
+    id
+    active
+    inputVault {
+      id
+      currentRound
+      minPositionSize
+      underlyingToken {
+        id
+        name
+        symbol
+        decimals
+      }
+      exchangeAssetToken {
+        id
+        name
+        symbol
+        decimals
+      }
+    }
+    outputVault {
+      id
+      currentRound
+      minPositionSize
+      underlyingToken {
+        id
+        name
+        symbol
+        decimals
+      }
+      exchangeAssetToken {
+        id
+        name
+        symbol
+        decimals
+      }
+    }
+  }
 }
 query GetVault($id: ID!) {
   vault(id: $id) {

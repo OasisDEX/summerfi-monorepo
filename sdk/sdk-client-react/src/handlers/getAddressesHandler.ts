@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { ChainId } from '@summerfi/sdk-common'
 
 /**
@@ -8,7 +8,7 @@ import type { ChainId } from '@summerfi/sdk-common'
  * @returns Record containing the admiralsQuarters contract address
  */
 export const getAddressesHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({ chainId }: { chainId: ChainId }) => {
     return sdk.armada.users.getProtocolAddresses({ chainId })
   }

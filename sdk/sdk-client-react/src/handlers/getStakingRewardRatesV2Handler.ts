@@ -1,8 +1,8 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { IAddress } from '@summerfi/sdk-common'
 
 export const getStakingRewardRatesV2Handler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     rewardTokenAddress,
     sumrPriceUsd,

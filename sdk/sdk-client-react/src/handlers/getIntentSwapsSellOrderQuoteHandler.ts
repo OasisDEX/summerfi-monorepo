@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { Address, type AddressValue, type IToken, type ITokenAmount } from '@summerfi/sdk-common'
 
 /**
@@ -13,7 +13,7 @@ import { Address, type AddressValue, type IToken, type ITokenAmount } from '@sum
  * @returns The quote data including the order to sign and send
  */
 export const getIntentSwapsSellOrderQuoteHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     fromAmount,
     toToken,

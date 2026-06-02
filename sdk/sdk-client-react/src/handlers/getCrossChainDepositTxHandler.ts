@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type {
   ChainId,
   IArmadaVaultId,
@@ -18,7 +18,7 @@ import type {
  * @param params.slippage Maximum slippage allowed for the operation
  */
 export const getCrossChainDepositTxHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     fromChainId,
     vaultId,

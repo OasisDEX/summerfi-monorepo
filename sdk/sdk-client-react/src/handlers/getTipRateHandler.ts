@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { IArmadaVaultId } from '@summerfi/sdk-common'
 
 /**
@@ -8,7 +8,7 @@ import type { IArmadaVaultId } from '@summerfi/sdk-common'
  * @returns Promise<bigint> The tip rate as a bigint
  */
 export const getTipRateHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKInstiManager) =>
   async ({ vaultId }: { vaultId: IArmadaVaultId }) => {
     return sdk.armada.admin.tipRate({ vaultId })
   }

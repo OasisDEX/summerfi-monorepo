@@ -83,6 +83,12 @@ export class RwaManagerClient extends IRPCClient implements IRwaManagerClient {
     return this.rpcClient.armada.rwa.getReceiptBalances.query(params)
   }
 
+  async getSetMinimumPositionSizeTx(
+    params: Parameters<IRwaManagerClient['getSetMinimumPositionSizeTx']>[0],
+  ): ReturnType<IRwaManagerClient['getSetMinimumPositionSizeTx']> {
+    return this.rpcClient.armada.rwa.getSetMinimumPositionSizeTx.query(params)
+  }
+
   async getSetWhitelistedTx(
     params: Parameters<IRwaManagerClient['getSetWhitelistedTx']>[0],
   ): ReturnType<IRwaManagerClient['getSetWhitelistedTx']> {

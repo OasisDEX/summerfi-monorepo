@@ -1,14 +1,8 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import {
-  ArmadaVaultId,
-  Address,
-  getChainInfoByChainId,
-  RoundsVaultType,
-} from '@summerfi/sdk-common'
-import type { AddressValue, ChainId } from '@summerfi/sdk-common'
+import type { ISDKInstiManager } from '@summerfi/sdk-client'
+import type { AddressValue, ChainId, RoundsVaultType } from '@summerfi/sdk-common'
 
 export const getRwaRoundStateHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKInstiManager) =>
   async ({
     fleetAddress,
     chainId,
@@ -20,10 +14,5 @@ export const getRwaRoundStateHandler =
     roundId: bigint
     vaultType: RoundsVaultType
   }) => {
-    const chainInfo = getChainInfoByChainId(chainId)
-    const vaultId = ArmadaVaultId.createFrom({
-      chainInfo,
-      fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
-    })
-    return sdk.rwa.getRoundState({ vaultId, roundId, vaultType })
+    return sdk.rwa.getRoundState({ chainId, fleetAddress, roundId, vaultType })
   }

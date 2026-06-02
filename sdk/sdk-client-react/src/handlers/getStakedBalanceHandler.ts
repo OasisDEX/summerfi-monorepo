@@ -1,8 +1,8 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { IUser, ArmadaVaultId, Address, IChainInfo } from '@summerfi/sdk-common'
 
 export const getStakedBalanceHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     user,
     fleetAddress,

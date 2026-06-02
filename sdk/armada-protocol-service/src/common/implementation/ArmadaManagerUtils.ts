@@ -25,7 +25,7 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { BigNumber } from 'bignumber.js'
-import type { IDeploymentProvider } from '../..'
+import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 
 /**

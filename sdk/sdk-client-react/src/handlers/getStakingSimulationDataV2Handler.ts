@@ -1,8 +1,8 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { AddressValue } from '@summerfi/sdk-common'
 
 export const getStakingSimulationDataV2Handler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async (params: {
     amount: bigint
     period: bigint

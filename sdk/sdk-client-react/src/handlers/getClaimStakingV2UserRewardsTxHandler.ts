@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { type AddressValue, type ChainId, User } from '@summerfi/sdk-common'
 
 /**
@@ -8,7 +8,7 @@ import { type AddressValue, type ChainId, User } from '@summerfi/sdk-common'
  * @param params.chainId The chain ID
  */
 export const getClaimStakingV2UserRewardsTxHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({ address, chainId }: { address: AddressValue; chainId: ChainId }) => {
     const user = User.createFromEthereum(chainId, address)
     const transaction = await sdk.armada.users.getClaimStakingV2UserRewardsTx({

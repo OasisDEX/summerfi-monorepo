@@ -1,15 +1,8 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import {
-  ArmadaVaultId,
-  Address,
-  getChainInfoByChainId,
-  RoundsVaultType,
-  User,
-} from '@summerfi/sdk-common'
-import type { AddressValue, ChainId } from '@summerfi/sdk-common'
+import type { ISDKInstiManager } from '@summerfi/sdk-client'
+import type { AddressValue, ChainId, RoundsVaultType } from '@summerfi/sdk-common'
 
 export const getRwaCancelRoundDepositTxHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKInstiManager) =>
   async ({
     fleetAddress,
     chainId,
@@ -23,18 +16,17 @@ export const getRwaCancelRoundDepositTxHandler =
     chainId: ChainId
     userAddress: AddressValue
     roundId: bigint
-    amount: bigint
+    amount: string
     receiverAddress?: AddressValue
     vaultType: RoundsVaultType
   }) => {
-    const chainInfo = getChainInfoByChainId(chainId)
-    const vaultId = ArmadaVaultId.createFrom({
-      chainInfo,
-      fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
+    return sdk.rwa.getCancelRoundDepositTx({
+      chainId,
+      fleetAddress,
+      userAddress,
+      roundId,
+      amount,
+      receiverAddress,
+      vaultType,
     })
-    const user = User.createFromEthereum(chainId, userAddress)
-    const receiver = receiverAddress
-      ? Address.createFromEthereum({ value: receiverAddress })
-      : undefined
-    return sdk.rwa.getCancelRoundDepositTx({ vaultId, user, roundId, amount, receiver, vaultType })
   }

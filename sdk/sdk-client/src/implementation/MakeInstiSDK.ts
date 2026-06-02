@@ -1,5 +1,5 @@
 import { createMainRPCClient } from '../rpc/SDKMainClient'
-import { SDKAdminManager } from './SDKAdminManager'
+import { SDKInstiManager } from './SDKInstiManager'
 import type { MakeSDKParams } from './MakeSDK'
 import { getApiVersion } from '../utils/getApiVersion'
 
@@ -45,5 +45,5 @@ export function makeInstiSdk(params: MakeInstiSDKParams) {
     logging: params.logging,
   })
 
-  return new SDKAdminManager({ rpcClient })
+  return new SDKInstiManager({ rpcClient })
 }

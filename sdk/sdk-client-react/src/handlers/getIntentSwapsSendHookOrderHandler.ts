@@ -1,4 +1,4 @@
-import type { IPrice, ISDKAdminManager, ISDKManager, UnsignedOrder } from '@summerfi/sdk-client'
+import type { IPrice, ISDKInstiManager, ISDKManager, UnsignedOrder } from '@summerfi/sdk-client'
 import { Address, type AddressValue, type ChainId, type ITokenAmount } from '@summerfi/sdk-common'
 import {
   encodeFunctionData,
@@ -23,7 +23,7 @@ import {
  * @returns The order ID of the submitted order
  */
 export const getIntentSwapsSendDepositOrderHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     chainId,
     fleetAddressValue,

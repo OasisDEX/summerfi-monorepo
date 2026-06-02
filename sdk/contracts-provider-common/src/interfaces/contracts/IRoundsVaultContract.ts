@@ -1,4 +1,4 @@
-import { IAddress, TransactionInfo } from '@summerfi/sdk-common'
+import { AddressValue, TransactionInfo } from '@summerfi/sdk-common'
 import { IContractWrapper } from './IContractWrapper'
 
 /**
@@ -21,7 +21,7 @@ export interface IRoundsVaultContract extends IContractWrapper {
    *
    * @returns The transaction information
    */
-  deposit(params: { assets: bigint; receiver: IAddress }): Promise<TransactionInfo>
+  deposit(params: { assets: bigint; receiver: AddressValue }): Promise<TransactionInfo>
 
   /**
    * @name redeem
@@ -38,8 +38,8 @@ export interface IRoundsVaultContract extends IContractWrapper {
   redeem(params: {
     id: bigint
     amount: bigint
-    receiver: IAddress
-    owner: IAddress
+    receiver: AddressValue
+    owner: AddressValue
   }): Promise<TransactionInfo>
 
   /**
@@ -57,9 +57,20 @@ export interface IRoundsVaultContract extends IContractWrapper {
   redeemExchangeAsset(params: {
     id: bigint
     amount: bigint
-    receiver: IAddress
-    owner: IAddress
+    receiver: AddressValue
+    owner: AddressValue
   }): Promise<TransactionInfo>
+
+  /**
+   * @name setMinPositionSize
+   * @description Sets the minimum position size (in the vault's underlying-token base units) required
+   *              to hold a position in this RoundsVault.
+   *
+   * @param minSize The new minimum position size (base units)
+   *
+   * @returns The transaction information
+   */
+  setMinPositionSize(params: { minSize: bigint }): Promise<TransactionInfo>
 
   /** READ METHODS */
 

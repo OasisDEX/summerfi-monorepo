@@ -1,8 +1,8 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { Address, ArmadaVaultId, IUser, IChainInfo } from '@summerfi/sdk-common'
 
 export const getUnstakeFleetTokensTxHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     user,
     fleetAddress,

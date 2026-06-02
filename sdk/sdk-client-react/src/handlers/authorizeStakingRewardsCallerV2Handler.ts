@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { type AddressValue, type ChainId, User, Address } from '@summerfi/sdk-common'
 
 /**
@@ -12,7 +12,7 @@ import { type AddressValue, type ChainId, User, Address } from '@summerfi/sdk-co
  * @param params.isAuthorized Whether to authorize or revoke authorization
  */
 export const authorizeStakingRewardsCallerV2Handler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     userAddress,
     chainId,

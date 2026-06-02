@@ -1,12 +1,10 @@
 import type {
+  AddressValue,
   ChainId,
-  IAddress,
   IArmadaVaultId,
   IChainInfo,
   IPrice,
   IRwaVaultInfo,
-  ITokenAmount,
-  IUser,
   RoundState,
   RoundsVaultType,
   TransactionInfo,
@@ -43,86 +41,112 @@ export interface IRwaManagerClient {
   // --- Deposit flow ---
 
   getDepositTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
-    amount: ITokenAmount
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
+    assetsAmount: string
   }): Promise<TransactionInfo[]>
 
   getClaimSharesTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
-    amount: bigint
-    receiver?: IAddress
+    amount: string
+    receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
   // --- Withdraw flow ---
 
   getWithdrawTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
-    amount: ITokenAmount
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
+    sharesAmount: string
   }): Promise<TransactionInfo[]>
 
   getClaimAssetsTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
-    amount: bigint
-    receiver?: IAddress
+    amount: string
+    receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
   getCancelRoundDepositTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
-    amount: bigint
-    receiver?: IAddress
+    amount: string
+    receiverAddress?: AddressValue
     vaultType: RoundsVaultType
   }): Promise<TransactionInfo>
 
   // --- Round state reads ---
 
-  getCurrentRound(params: { vaultId: IArmadaVaultId; vaultType: RoundsVaultType }): Promise<bigint>
+  getCurrentRound(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+  }): Promise<bigint>
 
   getRoundState(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     roundId: bigint
     vaultType: RoundsVaultType
   }): Promise<RoundState>
 
   getExchangeRate(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     roundId: bigint
     vaultType: RoundsVaultType
   }): Promise<IPrice>
 
   getReceiptBalances(params: {
-    vaultId: IArmadaVaultId
-    account: IAddress
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
     vaultType: RoundsVaultType
   }): Promise<{ roundId: bigint; balance: bigint }[]>
+
+  getSetMinimumPositionSizeTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    minimumPositionSize: string
+  }): Promise<TransactionInfo>
 
   // --- Whitelisting ---
 
   getSetWhitelistedTx(params: {
-    vaultId: IArmadaVaultId
-    account: IAddress
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
     allowed: boolean
   }): Promise<TransactionInfo>
 
   getSetWhitelistedBatchTx(params: {
-    vaultId: IArmadaVaultId
-    accounts: IAddress[]
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddresses: AddressValue[]
     allowed: boolean[]
   }): Promise<TransactionInfo>
 
   getSetWhitelistOpenTx(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     isOpen: boolean
   }): Promise<TransactionInfo>
 
-  isWhitelisted(params: { vaultId: IArmadaVaultId; account: IAddress }): Promise<boolean>
+  isWhitelisted(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
+  }): Promise<boolean>
 
-  isWhitelistOpen(params: { vaultId: IArmadaVaultId }): Promise<boolean>
+  isWhitelistOpen(params: { chainId: ChainId; fleetAddress: AddressValue }): Promise<boolean>
 }

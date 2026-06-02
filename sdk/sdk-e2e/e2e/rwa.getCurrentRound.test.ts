@@ -1,10 +1,4 @@
-import {
-  Address,
-  ArmadaVaultId,
-  RoundsVaultType,
-  getChainInfoByChainId,
-  type AddressValue,
-} from '@summerfi/sdk-common'
+import { RoundsVaultType, type AddressValue } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { RwaTestConfig } from './utils/testConfig'
@@ -21,7 +15,6 @@ jest.setTimeout(300000)
  */
 describe('RWA - getCurrentRound', () => {
   const { sdk, chainId } = createInstiSdkTestSetup()
-  const chainInfo = getChainInfoByChainId(chainId)
 
   const scenarios: {
     fleetAddressValue: AddressValue
@@ -36,12 +29,11 @@ describe('RWA - getCurrentRound', () => {
   test.each(scenarios)(
     'reads current round for fleet $fleetAddressValue ($vaultType)',
     async ({ fleetAddressValue, vaultType }) => {
-      const vaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
+      const currentRound = await sdk.rwa.getCurrentRound({
+        chainId,
+        fleetAddress: fleetAddressValue,
+        vaultType,
       })
-
-      const currentRound = await sdk.rwa.getCurrentRound({ vaultId, vaultType })
       console.log(`[RWA getCurrentRound] ${vaultType} ${fleetAddressValue}: ${currentRound}`)
       assert(typeof currentRound === 'bigint', 'getCurrentRound should return a bigint')
     },

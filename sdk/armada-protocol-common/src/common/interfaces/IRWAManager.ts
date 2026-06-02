@@ -1,12 +1,10 @@
 import type {
+  AddressValue,
   ChainId,
   IArmadaVaultId,
-  IAddress,
   IChainInfo,
   IRwaVaultInfo,
   IPrice,
-  ITokenAmount,
-  IUser,
   RoundState,
   RoundsVaultType,
   TransactionInfo,
@@ -66,14 +64,17 @@ export interface IRWAManager {
    * @description Builds the approve + RoundsVaultInput.deposit transaction pair for a whitelisted
    *              user. Mints an ERC-1155 receipt for the current open round.
    *
-   * @param vaultId   The Fleet vault identifier (chainInfo + fleet address)
-   * @param user      The depositing user
-   * @param amount    Amount of the underlying asset (e.g. USDC) to deposit
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param userAddress  The depositing user (owner + receiver of the round receipt)
+   * @param assetsAmount Human-readable amount of the underlying asset (e.g. "1" = 1 USDC) to deposit.
+   *                     Converted to base units using the vault's underlying-token decimals.
    */
   getDepositTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
-    amount: ITokenAmount
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
+    assetsAmount: string
   }): Promise<TransactionInfo[]>
 
   /**
@@ -81,18 +82,21 @@ export interface IRWAManager {
    * @description Builds the RoundsVaultInput.redeemExchangeAsset transaction to exchange a
    *              settled-round receipt for Fleet shares.
    *
-   * @param vaultId   The Fleet vault identifier
-   * @param user      The user holding the receipt (owner)
-   * @param roundId   The settled round whose receipt is being exchanged
-   * @param amount    Number of ERC-1155 receipt tokens to redeem
-   * @param receiver  Optional alternative receiver of the Fleet shares
+   * @param chainId         The chain the Fleet is on
+   * @param fleetAddress    The Fleet address
+   * @param userAddress     The user holding the receipt (owner)
+   * @param roundId         The settled round whose receipt is being exchanged
+   * @param amount          Human-readable amount of round receipt to redeem (e.g. "1"). Converted to
+   *                        base units using the Input vault's underlying-token decimals.
+   * @param receiverAddress Optional alternative receiver of the Fleet shares
    */
   getClaimSharesTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
-    amount: bigint
-    receiver?: IAddress
+    amount: string
+    receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
   // ---------------------------------------------------------------------------
@@ -104,14 +108,17 @@ export interface IRWAManager {
    * @description Builds the approve + RoundsVaultOutput.deposit transaction pair for a whitelisted
    *              user who wants to exit the Fleet. Mints an ERC-1155 receipt for the current round.
    *
-   * @param vaultId   The Fleet vault identifier
-   * @param user      The withdrawing user
-   * @param amount    Amount of Fleet shares to deposit into the Output vault
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param userAddress  The withdrawing user (owner + receiver of the round receipt)
+   * @param sharesAmount Human-readable amount of Fleet shares to deposit into the Output vault.
+   *                     Converted to base units using the Output vault's underlying-token (share) decimals.
    */
   getWithdrawTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
-    amount: ITokenAmount
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
+    sharesAmount: string
   }): Promise<TransactionInfo[]>
 
   /**
@@ -119,18 +126,21 @@ export interface IRWAManager {
    * @description Builds the RoundsVaultOutput.redeemExchangeAsset transaction to exchange a
    *              settled-round receipt for the underlying asset (e.g. USDC).
    *
-   * @param vaultId   The Fleet vault identifier
-   * @param user      The user holding the receipt (owner)
-   * @param roundId   The settled round whose receipt is being exchanged
-   * @param amount    Number of ERC-1155 receipt tokens to redeem
-   * @param receiver  Optional alternative receiver of the underlying asset
+   * @param chainId         The chain the Fleet is on
+   * @param fleetAddress    The Fleet address
+   * @param userAddress     The user holding the receipt (owner)
+   * @param roundId         The settled round whose receipt is being exchanged
+   * @param amount          Human-readable amount of round receipt to redeem (e.g. "1"). Converted to
+   *                        base units using the Output vault's underlying-token decimals.
+   * @param receiverAddress Optional alternative receiver of the underlying asset
    */
   getClaimAssetsTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
-    amount: bigint
-    receiver?: IAddress
+    amount: string
+    receiverAddress?: AddressValue
   }): Promise<TransactionInfo>
 
   /**
@@ -138,20 +148,24 @@ export interface IRWAManager {
    * @description Builds the RoundsVaultBase.redeem transaction to return an open current-round
    *              receipt before it enters settlement (cancels a pending deposit or withdraw).
    *
-   * @param vaultId      The Fleet vault identifier
-   * @param user         The user cancelling their position (owner)
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param userAddress  The user cancelling their position (owner of the receipt)
    * @param roundId      The current open round id (must equal getCurrentRound)
-   * @param amount       Number of ERC-1155 receipt tokens to redeem
-   * @param receiver     Optional alternative receiver of the returned asset
+   * @param amount       Human-readable amount of the round receipt to redeem (converted to base units
+   *                     using the resolved vault's underlying-token decimals). Generic name because
+   *                     `vaultType` selects whether it is a USDC (Input) or share (Output) deposit.
+   * @param receiverAddress Optional alternative receiver of the returned asset
    * @param vaultType    RoundsVaultType.Input (cancels a USDC deposit) or
    *                     RoundsVaultType.Output (cancels a share deposit)
    */
   getCancelRoundDepositTx(params: {
-    vaultId: IArmadaVaultId
-    user: IUser
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
     roundId: bigint
-    amount: bigint
-    receiver?: IAddress
+    amount: string
+    receiverAddress?: AddressValue
     vaultType: RoundsVaultType
   }): Promise<TransactionInfo>
 
@@ -163,21 +177,28 @@ export interface IRWAManager {
    * @method getCurrentRound
    * @description Returns the current (open) round number for the given RoundsVault.
    *
-   * @param vaultId      The Fleet vault identifier
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
    * @param vaultType    Whether to query the Input or Output RoundsVault
    */
-  getCurrentRound(params: { vaultId: IArmadaVaultId; vaultType: RoundsVaultType }): Promise<bigint>
+  getCurrentRound(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+  }): Promise<bigint>
 
   /**
    * @method getRoundState
    * @description Returns the on-chain state of a specific round.
    *
-   * @param vaultId      The Fleet vault identifier
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
    * @param roundId      The round number to query
    * @param vaultType    Whether to query the Input or Output RoundsVault
    */
   getRoundState(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     roundId: bigint
     vaultType: RoundsVaultType
   }): Promise<RoundState>
@@ -187,30 +208,52 @@ export interface IRWAManager {
    * @description Returns the snapshotted exchange rate for a settled round
    *              (output-asset amount per unit of receipt token).
    *
-   * @param vaultId      The Fleet vault identifier
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
    * @param roundId      A settled round number
    * @param vaultType    Whether to query the Input or Output RoundsVault
    */
   getExchangeRate(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     roundId: bigint
     vaultType: RoundsVaultType
   }): Promise<IPrice>
 
   /**
    * @method getReceiptBalances
-   * @description Returns all ERC-1155 receipt token balances held by an account across
-   *              every round id (via balanceOfAll).
+   * @description Returns all ERC-1155 receipt token balances held by an account across every round id
+   *              (sourced from the RWA subgraph).
    *
-   * @param vaultId      The Fleet vault identifier
-   * @param account      The account to query
-   * @param vaultType    Whether to query the Input or Output RoundsVault
+   * @param chainId        The chain the Fleet is on
+   * @param fleetAddress   The Fleet address
+   * @param accountAddress The account to query
+   * @param vaultType      Whether to query the Input or Output RoundsVault
    */
   getReceiptBalances(params: {
-    vaultId: IArmadaVaultId
-    account: IAddress
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
     vaultType: RoundsVaultType
   }): Promise<{ roundId: bigint; balance: bigint }[]>
+
+  /**
+   * @method getSetMinimumPositionSizeTx
+   * @description Builds the RoundsVaultBase.setMinPositionSize transaction for the Input or Output
+   *              RoundsVault of a Fleet (manager-set config).
+   *
+   * @param chainId             The chain the Fleet is on
+   * @param fleetAddress        The Fleet address
+   * @param vaultType           Whether to target the Input or Output RoundsVault
+   * @param minimumPositionSize Human-readable minimum position size (e.g. "100"). Converted to base
+   *                            units using the target vault's underlying-token decimals.
+   */
+  getSetMinimumPositionSizeTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    minimumPositionSize: string
+  }): Promise<TransactionInfo>
 
   // ---------------------------------------------------------------------------
   // Whitelisting (Manager set) — keyed on the Fleet address as context
@@ -221,13 +264,15 @@ export interface IRWAManager {
    * @description Builds the transaction to set or revoke whitelist status for a single account
    *              on the Fleet's ProtocolAccessManagerV2 context.
    *
-   * @param vaultId  The Fleet vault identifier (fleet address is the whitelist context)
-   * @param account  The account to whitelist or de-list
-   * @param allowed  true to whitelist, false to revoke
+   * @param chainId        The chain the Fleet is on
+   * @param fleetAddress   The Fleet address (the whitelist context)
+   * @param accountAddress The account to whitelist or de-list
+   * @param allowed        true to whitelist, false to revoke
    */
   getSetWhitelistedTx(params: {
-    vaultId: IArmadaVaultId
-    account: IAddress
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
     allowed: boolean
   }): Promise<TransactionInfo>
 
@@ -236,13 +281,15 @@ export interface IRWAManager {
    * @description Builds the transaction to set or revoke whitelist status for multiple accounts
    *              in a single on-chain call.
    *
-   * @param vaultId  The Fleet vault identifier
-   * @param accounts Array of accounts to update
-   * @param allowed  Parallel array of allowed flags
+   * @param chainId          The chain the Fleet is on
+   * @param fleetAddress     The Fleet address (the whitelist context)
+   * @param accountAddresses Array of accounts to update
+   * @param allowed          Parallel array of allowed flags
    */
   getSetWhitelistedBatchTx(params: {
-    vaultId: IArmadaVaultId
-    accounts: IAddress[]
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddresses: AddressValue[]
     allowed: boolean[]
   }): Promise<TransactionInfo>
 
@@ -251,11 +298,13 @@ export interface IRWAManager {
    * @description Builds the transaction to toggle the open-whitelist flag for the Fleet context.
    *              When open, any address is considered whitelisted regardless of individual entries.
    *
-   * @param vaultId  The Fleet vault identifier
-   * @param isOpen   true to open the whitelist globally, false to close it
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address (the whitelist context)
+   * @param isOpen       true to open the whitelist globally, false to close it
    */
   getSetWhitelistOpenTx(params: {
-    vaultId: IArmadaVaultId
+    chainId: ChainId
+    fleetAddress: AddressValue
     isOpen: boolean
   }): Promise<TransactionInfo>
 
@@ -264,17 +313,23 @@ export interface IRWAManager {
    * @description Returns whether an account is whitelisted on the Fleet context
    *              (either individually or because the whitelist is open).
    *
-   * @param vaultId  The Fleet vault identifier
-   * @param account  The account to check
+   * @param chainId        The chain the Fleet is on
+   * @param fleetAddress   The Fleet address (the whitelist context)
+   * @param accountAddress The account to check
    */
-  isWhitelisted(params: { vaultId: IArmadaVaultId; account: IAddress }): Promise<boolean>
+  isWhitelisted(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    accountAddress: AddressValue
+  }): Promise<boolean>
 
   /**
    * @method isWhitelistOpen
    * @description Returns whether the Fleet's whitelist is globally open
    *              (i.e. _isWhitelistOpen[fleetAddress] == true).
    *
-   * @param vaultId  The Fleet vault identifier
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address (the whitelist context)
    */
-  isWhitelistOpen(params: { vaultId: IArmadaVaultId }): Promise<boolean>
+  isWhitelistOpen(params: { chainId: ChainId; fleetAddress: AddressValue }): Promise<boolean>
 }

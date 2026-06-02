@@ -43,7 +43,6 @@ import {
   type ChainId,
   NATIVE_CURRENCY_ADDRESS_LOWERCASE,
   type TransactionPriceImpact,
-  Token,
   type AddressValue,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
@@ -52,7 +51,7 @@ import { encodeFunctionData } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { calculateRewardApy } from './utils/calculate-summer-yield'
-import type { IDeploymentProvider } from '../..'
+import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import { getMerklRewardsByFleetAddressFallback } from './utils/merklRewardsFallback'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { mapSubgraphVaultToVaultInfoParams } from './extensions/mapSubgraphVaultToVaultInfoParams'

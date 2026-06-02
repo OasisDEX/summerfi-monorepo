@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type {
   ChainId,
   IArmadaVaultId,
@@ -17,7 +17,7 @@ import type {
  * @param params.toChainId Destination chain ID where user wants to receive tokens
  */
 export const getCrossChainWithdrawTxHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     vaultId,
     user,

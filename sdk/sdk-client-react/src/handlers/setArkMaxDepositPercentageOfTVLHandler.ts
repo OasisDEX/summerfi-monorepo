@@ -1,4 +1,4 @@
-import type { IChainInfo, ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { IChainInfo, ISDKInstiManager } from '@summerfi/sdk-client'
 import { Address, ArmadaVaultId, Percentage } from '@summerfi/sdk-common'
 
 /**
@@ -10,7 +10,7 @@ import { Address, ArmadaVaultId, Percentage } from '@summerfi/sdk-common'
  * @param params.maxDepositPercentage The new maximum deposit percentage
  */
 export const setArkMaxDepositPercentageOfTVLHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKInstiManager) =>
   async ({
     arkAddress,
     fleetAddress,

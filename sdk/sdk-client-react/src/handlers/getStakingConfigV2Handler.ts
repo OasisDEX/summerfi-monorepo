@@ -1,9 +1,9 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 
 /**
  * @name getStakingConfigV2Handler
  * @description Returns the staking configuration including the staking contract address
  */
-export const getStakingConfigV2Handler = (sdk: ISDKManager | ISDKAdminManager) => async () => {
+export const getStakingConfigV2Handler = (sdk: ISDKManager | ISDKInstiManager) => async () => {
   return sdk.armada.users.getStakingConfigV2()
 }

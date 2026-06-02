@@ -1,13 +1,10 @@
 import type { IArmadaManagerClient } from './ArmadaManager/IArmadaManagerClient'
 import type { IDcaManagerClient } from './ArmadaManager/IDcaManagerClient'
-import type { IRwaManagerClient } from './ArmadaManager/IRwaManagerClient'
 import type { IChainsManagerClient } from './IChainsManager'
 import type { IOracleManagerClient } from './IOracleManagerClient'
-import type { IPortfolioManager } from './IPortfolioManager'
 import type { ISwapManagerClient } from './ISwapManagerClient'
 import type { ITokensManagerClient2 } from './ITokensManagerClient2'
 import type { IUsersManager } from './IUsersManager'
-import type { ISimulationManager } from './simulations/ISimulationManager'
 import type { IIntentSwapClient } from './IIntentSwapClient'
 import type { IAllowanceManagerClient } from './IAllowanceManagerClient'
 
@@ -17,20 +14,12 @@ import type { IAllowanceManagerClient } from './IAllowanceManagerClient'
  * It contains all the available services that can be used to interact with the SDK
  */
 export interface ISDKManager {
-  /** Simulator for all the different operations supported in the SDK */
-  readonly simulator: ISimulationManager
   /** Chains Manager for interacting with the different chains supported in the SDK */
   readonly chains: IChainsManagerClient
   /** Tokens Manager for interacting with the different tokens supported in the SDK */
   readonly tokens: ITokensManagerClient2
   /** Users Manager for retrieving information about a user */
   readonly users: IUsersManager
-  /** Portfolio Manager for retrieving information about a user's portfolio */
-  readonly portfolio: IPortfolioManager
-  /** DCA Manager for interacting with DCA strategies and buy orders */
-  readonly dca: IDcaManagerClient
-  /** RWA Manager for interacting with Real-World Asset vaults */
-  readonly rwa: IRwaManagerClient
   /** Armada Manager for interacting with the Armada protocol */
   readonly armada: IArmadaManagerClient
   /** Swap Manager for interacting with the swaps */
@@ -41,4 +30,6 @@ export interface ISDKManager {
   readonly intentSwaps: IIntentSwapClient
   /** Allowance Manager Client for Permit2 authorization checks, transactions and typed data */
   readonly allowance: IAllowanceManagerClient
+  /** DCA Manager for interacting with DCA strategies and buy orders */
+  readonly dca: IDcaManagerClient
 }

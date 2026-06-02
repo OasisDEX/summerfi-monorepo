@@ -4,11 +4,11 @@ import {
   IChainInfo,
   IToken,
   TokenAmount,
-  type ISDKAdminManager,
+  type ISDKInstiManager,
 } from '@summerfi/sdk-client'
 
 export const setArkDepositCapHandler =
-  (sdk: ISDKAdminManager) =>
+  (sdk: ISDKInstiManager) =>
   async ({
     cap,
     arkAddress,

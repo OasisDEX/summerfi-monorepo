@@ -1,25 +1,18 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
-import { ArmadaVaultId, Address, getChainInfoByChainId, User } from '@summerfi/sdk-common'
-import type { AddressValue, ChainId, ITokenAmount } from '@summerfi/sdk-common'
+import type { ISDKInstiManager } from '@summerfi/sdk-client'
+import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 export const getRwaWithdrawTxHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKInstiManager) =>
   async ({
     fleetAddress,
     chainId,
     userAddress,
-    amount,
+    sharesAmount,
   }: {
     fleetAddress: AddressValue
     chainId: ChainId
     userAddress: AddressValue
-    amount: ITokenAmount
+    sharesAmount: string
   }) => {
-    const chainInfo = getChainInfoByChainId(chainId)
-    const vaultId = ArmadaVaultId.createFrom({
-      chainInfo,
-      fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
-    })
-    const user = User.createFromEthereum(chainId, userAddress)
-    return sdk.rwa.getWithdrawTx({ vaultId, user, amount })
+    return sdk.rwa.getWithdrawTx({ chainId, fleetAddress, userAddress, sharesAmount })
   }

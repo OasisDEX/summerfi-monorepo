@@ -1,7 +1,7 @@
-import type { ISDKAdminManager, ISDKManager, UserStakeV2, IPercentage } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager, UserStakeV2, IPercentage } from '@summerfi/sdk-client'
 
 export const getCalculatePenaltyPercentageHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({ userStakes }: { userStakes: UserStakeV2[] }): Promise<IPercentage[]> => {
     const userStakesFormatted = userStakes.map((stake) => ({
       lockupEndTime: Number(stake.lockupEndTime),

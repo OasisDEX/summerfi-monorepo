@@ -1,10 +1,4 @@
-import {
-  Address,
-  ArmadaVaultId,
-  RoundsVaultType,
-  getChainInfoByChainId,
-  type AddressValue,
-} from '@summerfi/sdk-common'
+import { RoundsVaultType, type AddressValue } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { RwaTestConfig } from './utils/testConfig'
@@ -21,7 +15,6 @@ jest.setTimeout(300000)
  */
 describe('RWA - getExchangeRate', () => {
   const { sdk, chainId } = createInstiSdkTestSetup()
-  const chainInfo = getChainInfoByChainId(chainId)
 
   const scenarios: {
     fleetAddressValue: AddressValue
@@ -38,12 +31,12 @@ describe('RWA - getExchangeRate', () => {
   test.each(scenarios)(
     'reads exchange rate for fleet $fleetAddressValue round $roundId ($vaultType)',
     async ({ fleetAddressValue, roundId, vaultType }) => {
-      const vaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
+      const price = await sdk.rwa.getExchangeRate({
+        chainId,
+        fleetAddress: fleetAddressValue,
+        roundId,
+        vaultType,
       })
-
-      const price = await sdk.rwa.getExchangeRate({ vaultId, roundId, vaultType })
       console.log(
         `[RWA getExchangeRate] ${vaultType} ${fleetAddressValue} round ${roundId}: ${price.toString()}`,
       )

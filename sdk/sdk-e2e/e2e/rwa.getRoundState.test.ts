@@ -1,11 +1,4 @@
-import {
-  Address,
-  ArmadaVaultId,
-  RoundState,
-  RoundsVaultType,
-  getChainInfoByChainId,
-  type AddressValue,
-} from '@summerfi/sdk-common'
+import { RoundState, RoundsVaultType, type AddressValue } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { RwaTestConfig } from './utils/testConfig'
@@ -21,7 +14,6 @@ jest.setTimeout(300000)
  */
 describe('RWA - getRoundState', () => {
   const { sdk, chainId } = createInstiSdkTestSetup()
-  const chainInfo = getChainInfoByChainId(chainId)
 
   const scenarios: {
     fleetAddressValue: AddressValue
@@ -30,7 +22,7 @@ describe('RWA - getRoundState', () => {
   }[] = [
     {
       fleetAddressValue: (RwaTestConfig.fleetAddressValue || '0x0') as AddressValue,
-      roundId: 0n,
+      roundId: 4n,
       vaultType: RoundsVaultType.Input,
     },
   ]
@@ -38,12 +30,12 @@ describe('RWA - getRoundState', () => {
   test.each(scenarios)(
     'reads round state for fleet $fleetAddressValue round $roundId ($vaultType)',
     async ({ fleetAddressValue, roundId, vaultType }) => {
-      const vaultId = ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
+      const state = await sdk.rwa.getRoundState({
+        chainId,
+        fleetAddress: fleetAddressValue,
+        roundId,
+        vaultType,
       })
-
-      const state = await sdk.rwa.getRoundState({ vaultId, roundId, vaultType })
       console.log(
         `[RWA getRoundState] ${vaultType} ${fleetAddressValue} round ${roundId}: ${state}`,
       )

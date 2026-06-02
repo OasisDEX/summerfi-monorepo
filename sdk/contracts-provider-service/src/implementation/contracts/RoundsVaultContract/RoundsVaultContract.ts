@@ -76,8 +76,8 @@ export class RoundsVaultContract<const TClient extends IBlockchainClient, TAddre
   ): ReturnType<IRoundsVaultContract['deposit']> {
     return this._createTransaction({
       functionName: 'deposit',
-      args: [params.assets, params.receiver.value],
-      description: `Deposit ${params.assets} into RoundsVault ${this.address.value} for ${params.receiver.value}`,
+      args: [params.assets, params.receiver],
+      description: `Deposit ${params.assets} into RoundsVault ${this.address.value} for ${params.receiver}`,
     })
   }
 
@@ -87,7 +87,7 @@ export class RoundsVaultContract<const TClient extends IBlockchainClient, TAddre
   ): ReturnType<IRoundsVaultContract['redeem']> {
     return this._createTransaction({
       functionName: 'redeem',
-      args: [params.id, params.amount, params.receiver.value, params.owner.value],
+      args: [params.id, params.amount, params.receiver, params.owner],
       description: `Redeem ${params.amount} of round ${params.id} receipt from RoundsVault ${this.address.value}`,
     })
   }
@@ -98,8 +98,19 @@ export class RoundsVaultContract<const TClient extends IBlockchainClient, TAddre
   ): ReturnType<IRoundsVaultContract['redeemExchangeAsset']> {
     return this._createTransaction({
       functionName: 'redeemExchangeAsset',
-      args: [params.id, params.amount, params.receiver.value, params.owner.value],
+      args: [params.id, params.amount, params.receiver, params.owner],
       description: `Redeem exchange asset for ${params.amount} of round ${params.id} receipt from RoundsVault ${this.address.value}`,
+    })
+  }
+
+  /** @see IRoundsVaultContract.setMinPositionSize */
+  async setMinPositionSize(
+    params: Parameters<IRoundsVaultContract['setMinPositionSize']>[0],
+  ): ReturnType<IRoundsVaultContract['setMinPositionSize']> {
+    return this._createTransaction({
+      functionName: 'setMinPositionSize',
+      args: [params.minSize],
+      description: `Set minimum position size to ${params.minSize} for RoundsVault ${this.address.value}`,
     })
   }
 }

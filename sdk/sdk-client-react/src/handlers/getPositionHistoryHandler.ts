@@ -1,4 +1,4 @@
-import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { IArmadaPositionId } from '@summerfi/sdk-common'
 
 /**
@@ -8,7 +8,7 @@ import type { IArmadaPositionId } from '@summerfi/sdk-common'
  * @returns GetPositionHistoryQuery with position history snapshots
  */
 export const getPositionHistoryHandler =
-  (sdk: ISDKManager | ISDKAdminManager) =>
+  (sdk: ISDKManager | ISDKInstiManager) =>
   async ({ positionId }: { positionId: IArmadaPositionId }) => {
     const positionHistory = await sdk.armada.users.getPositionHistory({
       positionId,
