@@ -44,6 +44,7 @@ import {
   TransactionAction,
 } from '@summerfi/app-types'
 import {
+  sdkNetworkToHumanNetwork,
   slugify,
   slugifyVault,
   subgraphNetworkToId,
@@ -51,12 +52,15 @@ import {
   supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
-import { TransactionType } from '@summerfi/sdk-common'
+import { RoundState, TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
+import { RwaPendingPositions } from '@/components/layout/RwaVault/RwaPendingPositions'
+import { RwaRoundNotice } from '@/components/layout/RwaVault/RwaRoundNotice'
+import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
 import { RewardTokenClaimBox } from '@/components/layout/VaultManageView/RewardTokenClaimBox'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
@@ -71,6 +75,7 @@ import { UnstakeVaultToken } from '@/features/unstake-vault-token/components/Uns
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useIsWhitelisted } from '@/hooks/use-is-whitelisted'
 import {
   useHandleButtonClickEvent,
   useHandleDropdownChangeEvent,
@@ -79,6 +84,10 @@ import {
 } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
+import { useRwaClaim } from '@/hooks/use-rwa-claim'
+import { useRwaReceipts } from '@/hooks/use-rwa-receipts'
+import { useRwaRoundInfo } from '@/hooks/use-rwa-round-info'
+import { useRwaSDK } from '@/hooks/use-rwa-sdk'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -188,6 +197,72 @@ export const VaultManageViewComponent = ({
   const revalidatePositionData = useRevalidatePositionData()
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
+
+  // RWA (rounds-based) vaults: the manage view mirrors the open view's deposit experience
+  // (round notice + deposit routed through the RWA SDK) and surfaces pending receipts + access
+  // info alongside the user's claimed position.
+  const isRwaVault = vault.isRwaVault ?? false
+
+  // RWA (rounds-based) calls go through the institutional SDK; standard vault calls use `sdk`.
+  // Defined ahead of useTransaction so its success callback can refresh the pending receipts.
+  const rwaSdk = useRwaSDK()
+
+  const { isWhitelisted } = useIsWhitelisted({
+    isRwaVault,
+    sdk: rwaSdk,
+    walletAddress: userWalletAddress,
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
+  })
+
+  // Surface the current deposit (Input) round so the user knows which round a deposit enters and
+  // so deposits can be blocked when that round is not open.
+  const {
+    roundId: rwaRoundId,
+    roundState: rwaRoundState,
+    isLoading: isRwaRoundLoading,
+  } = useRwaRoundInfo({
+    enabled: isRwaVault && isWhitelisted,
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
+  })
+
+  // Pending RWA positions (ERC-1155 receipts) the user can claim once settled or cancel while the
+  // round is still open.
+  const {
+    receipts: rwaReceipts,
+    isLoading: isRwaReceiptsLoading,
+    refresh: refreshRwaReceipts,
+  } = useRwaReceipts({
+    enabled: isRwaVault && isWhitelisted,
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    walletAddress: userWalletAddress,
+    chainId: vaultChainId,
+  })
+
+  const {
+    executeAction: executeRwaAction,
+    actionInProgressKey: rwaActionInProgressKey,
+    error: rwaActionError,
+  } = useRwaClaim({
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
+    tokenDecimals: vault.inputToken.decimals,
+    walletAddress: userWalletAddress,
+    onSuccess: () => {
+      refreshRwaReceipts()
+      if (userWalletAddress) {
+        revalidatePositionData({
+          chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
+          vaultId: vault.id,
+          walletAddress: userWalletAddress,
+        })
+      }
+    },
+  })
 
   // const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
   //   migratablePositions[0]?.id,
@@ -328,6 +403,7 @@ export const VaultManageViewComponent = ({
   } = useTransaction({
     vault,
     vaultChainId,
+    isRwaVault,
     amount: transactionAmount,
     manualSetAmount: transactionManualSetAmount,
     publicClient,
@@ -343,9 +419,12 @@ export const VaultManageViewComponent = ({
     setSidebarTransactionType,
     isDepositWithSwap,
     setIsDepositWithSwap,
+    // Reload the pending RWA receipts once a deposit/withdraw settles so the new round entry appears.
+    onTransactionSuccess: refreshRwaReceipts,
   })
 
   const sdk = useAppSDK()
+
   const {
     state: { slippageConfig },
   } = useLocalConfig()
@@ -498,19 +577,35 @@ export const VaultManageViewComponent = ({
         const disabledByConfig = !systemConfig.features?.VaultSwitching
         const noVaults = potentialVaultsToSwitchTo.length === 0
 
-        if (disabledByConfig || noVaults || netValueUSD.lt(0.1)) {
+        // RWA vaults are single, permissioned and rounds-based — switching to another vault does
+        // not apply, so the Switch tab is never offered.
+        if (disabledByConfig || noVaults || netValueUSD.lt(0.1) || isRwaVault) {
           return action !== TransactionAction.SWITCH
         }
 
         return true
       },
     )
-  }, [netValueUSD, potentialVaultsToSwitchTo.length, systemConfig.features?.VaultSwitching])
+  }, [
+    netValueUSD,
+    potentialVaultsToSwitchTo.length,
+    systemConfig.features?.VaultSwitching,
+    isRwaVault,
+  ])
 
   const isSwitch = sidebarTransactionType === TransactionAction.SWITCH
   const isDeposit = sidebarTransactionType === TransactionAction.DEPOSIT
   const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
   const isDepositOrWithdraw = isDeposit || isWithdraw
+
+  // While the RWA deposit (Input) round is not Opened, deposits cannot be accepted — disable the
+  // deposit button (withdrawals/redemptions are unaffected).
+  const blockRwaDeposit =
+    isRwaVault &&
+    isWhitelisted &&
+    isDeposit &&
+    !isRwaRoundLoading &&
+    rwaRoundState !== RoundState.Opened
 
   const sidebarContent = useMemo(() => {
     // TODO: this hook needs a rework after vault switching is done
@@ -595,7 +690,19 @@ export const VaultManageViewComponent = ({
             }
             tokenBalanceLoading={selectedTokenBalanceLoading}
             manualSetAmount={manualSetAmount}
-            contentAfterInput={considerSwitchingContent}
+            contentAfterInput={
+              isRwaVault ? (
+                isDeposit ? (
+                  <RwaRoundNotice
+                    roundId={rwaRoundId}
+                    roundState={rwaRoundState}
+                    isLoading={isRwaRoundLoading}
+                  />
+                ) : null
+              ) : (
+                considerSwitchingContent
+              )
+            }
           />
         )
       } else {
@@ -707,6 +814,11 @@ export const VaultManageViewComponent = ({
     selectedTokenBalanceLoading,
     manualSetAmount,
     considerSwitchingContent,
+    isRwaVault,
+    isDeposit,
+    rwaRoundId,
+    rwaRoundState,
+    isRwaRoundLoading,
     switchAmountDisplay,
     switchManualSetAmount,
     sidebar.primaryButton.loading,
@@ -791,7 +903,12 @@ export const VaultManageViewComponent = ({
       ) : undefined,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
     goBackAction: (nextTransaction?.type ?? isDepositWithSwap) ? backToInit : undefined,
-    primaryButton: { ...sidebar.primaryButton, hidden: isDepositWithSwap },
+    primaryButton: {
+      ...sidebar.primaryButton,
+      hidden: isDepositWithSwap,
+      // Block deposits while the RWA round is not open; otherwise keep the executor's disabled state.
+      disabled: blockRwaDeposit ? true : sidebar.primaryButton.disabled,
+    },
     secondaryButton: sidebar.secondaryButton,
     footnote: (
       <>
@@ -870,30 +987,47 @@ export const VaultManageViewComponent = ({
         }
         sidebarContent={<Sidebar {...resovledSidebarProps} />}
         rightExtraContent={
-          <>
-            <RewardTokenClaimBox
-              vaultChainId={vaultChainId}
-              rewardTokensClaimableNow={rewardTokensClaimableNow}
-              rewardTokenPrices={rewardTokenPrices}
-              viewWalletAddress={viewWalletAddress}
-            />
-            {/* {migrationsEnabled && migratablePositions.length > 0 && (
-              <MigrationBox
-                migratablePositions={migratablePositions}
-                selectedPosition={selectedPosition}
-                onSelectPosition={handleSelectPosition}
-                cta={{
-                  link: getMigrationLandingPageUrl({
-                    walletAddress: viewWalletAddress,
-                    selectedPosition,
-                  }),
-                  disabled: !selectedPosition,
-                }}
-                migrationBestVaultApy={migrationBestVaultApy}
+          isRwaVault ? (
+            <>
+              {isWhitelisted ? (
+                <RwaPendingPositions
+                  receipts={rwaReceipts}
+                  isLoading={isRwaReceiptsLoading}
+                  tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
+                  tokenDecimals={vault.inputToken.decimals}
+                  actionInProgressKey={rwaActionInProgressKey}
+                  error={rwaActionError}
+                  onAction={executeRwaAction}
+                />
+              ) : null}
+              <RwaSidebarInfo />
+            </>
+          ) : (
+            <>
+              <RewardTokenClaimBox
+                vaultChainId={vaultChainId}
+                rewardTokensClaimableNow={rewardTokensClaimableNow}
+                rewardTokenPrices={rewardTokenPrices}
+                viewWalletAddress={viewWalletAddress}
               />
-            )} */}
-            <UnstakeVaultToken vault={vault} walletAddress={viewWalletAddress} />
-          </>
+              {/* {migrationsEnabled && migratablePositions.length > 0 && (
+                <MigrationBox
+                  migratablePositions={migratablePositions}
+                  selectedPosition={selectedPosition}
+                  onSelectPosition={handleSelectPosition}
+                  cta={{
+                    link: getMigrationLandingPageUrl({
+                      walletAddress: viewWalletAddress,
+                      selectedPosition,
+                    }),
+                    disabled: !selectedPosition,
+                  }}
+                  migrationBestVaultApy={migrationBestVaultApy}
+                />
+              )} */}
+              <UnstakeVaultToken vault={vault} walletAddress={viewWalletAddress} />
+            </>
+          )
         }
         isMobile={isMobile}
         noOfDeposits={noOfDeposits}

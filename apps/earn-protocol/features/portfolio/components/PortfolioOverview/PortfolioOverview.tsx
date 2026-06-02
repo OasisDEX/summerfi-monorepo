@@ -40,6 +40,10 @@ import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/ty
 // import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
 import { PortfolioDcaPosition } from '@/features/portfolio/components/PortfolioOverview/PortfolioDcaPosition'
+import {
+  type PortfolioRwaPendingPosition,
+  PortfolioRwaPendingPositions,
+} from '@/features/portfolio/components/PortfolioOverview/PortfolioRwaPendingPositions'
 // import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSummerPro/PortfolioSummerPro'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
@@ -65,6 +69,8 @@ type PortfolioOverviewProps = {
   rewardTokenPrices: RewardTokenPrices
   dcaOrders: IDcaStrategy[]
   dcaEnabled?: boolean
+  rwaPendingPositions: PortfolioRwaPendingPosition[]
+  viewWalletAddress: string
 }
 
 const PositionsListView = ({
@@ -205,6 +211,8 @@ export const PortfolioOverview = ({
   rewardTokenPrices,
   dcaOrders,
   dcaEnabled,
+  rwaPendingPositions,
+  viewWalletAddress,
 }: PortfolioOverviewProps) => {
   const [positionsTab, setPositionsTab] = useState<string>('positions')
   const buttonClickEventHandler = useHandleButtonClickEvent()
@@ -331,25 +339,29 @@ export const PortfolioOverview = ({
         <Card className={portfolioOverviewStyles.portfolioPositionsList} variant="cardSecondary">
           <div className={portfolioOverviewStyles.portfolioPositionsListHeader}>
             <TabBarSimple
-              tabs={
-                dcaEnabled
+              tabs={[
+                {
+                  id: 'positions',
+                  label: <Text variant="p2semi">Positions</Text>,
+                },
+                ...(dcaEnabled
                   ? [
-                      {
-                        id: 'positions',
-                        label: <Text variant="p2semi">Positions</Text>,
-                      },
                       {
                         id: 'dca-strategies',
                         label: <Text variant="p2semi">DCA&nbsp;Strategies</Text>,
                       },
                     ]
-                  : [
+                  : []),
+                // Only surface the Pending tab when the wallet actually has un-settled RWA receipts.
+                ...(rwaPendingPositions.length
+                  ? [
                       {
-                        id: 'positions',
-                        label: <Text variant="p2semi">Positions</Text>,
+                        id: 'rwa-pending',
+                        label: <Text variant="p2semi">Pending</Text>,
                       },
                     ]
-              }
+                  : []),
+              ]}
               tabBarStyle={{
                 width: 'fit-content',
               }}
@@ -404,6 +416,12 @@ export const PortfolioOverview = ({
               dcaOrders={filteredDcaOrders}
               vaultsList={vaultsList}
               buttonClickEventHandler={buttonClickEventHandler}
+            />
+          ) : null}
+          {positionsTab === 'rwa-pending' ? (
+            <PortfolioRwaPendingPositions
+              pendingPositions={rwaPendingPositions}
+              viewWalletAddress={viewWalletAddress}
             />
           ) : null}
 

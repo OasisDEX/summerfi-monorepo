@@ -8,10 +8,10 @@ import {
 
 import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon'
 import { Icon } from '@/components/atoms/Icon/Icon'
-import { RiskManagedPill } from '@/components/atoms/RiskManagedPill/RiskManagedPill'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import type TextVariants from '@/components/atoms/Text/Text.module.css'
+import { VaultLabelPill } from '@/components/atoms/VaultLabelPill/VaultLabelPill'
 import { Emphasis } from '@/components/molecules/Emphasis/Emphasis'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { networkWarnings } from '@/constants/earn-protocol'
@@ -94,8 +94,8 @@ export const VaultTitle: FC<VaultTitleProps> = ({
           >
             {isLoading ? <SkeletonLine height={40} width={70} /> : resolvedSymbol}
             {isNewVault && !isLoading && <Emphasis variant="p2semiColorful">New!</Emphasis>}
-            {!isLoading && !isRwaVault && typeof isDaoManagedVault !== 'undefined' ? (
-              <RiskManagedPill isDaoManagedVault={isDaoManagedVault} />
+            {!isLoading && (!!isRwaVault || typeof isDaoManagedVault !== 'undefined') ? (
+              <VaultLabelPill isDaoManagedVault={isDaoManagedVault} isRwaVault={isRwaVault} />
             ) : null}
           </Text>
           {selected && (

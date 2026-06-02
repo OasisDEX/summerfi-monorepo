@@ -11,6 +11,7 @@ import {
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
+  formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
@@ -287,7 +288,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
             </Text>
           </Link>
           <Text as="p" variant="p3" color="white" className={vaultOpenGridStyles.vaultId}>
-            {vault.customFields?.name ?? vault.id}
+            {vault.customFields?.name ?? formatAddress(vault.id)}
           </Text>
           <div
             onClick={handleUserRefresh}

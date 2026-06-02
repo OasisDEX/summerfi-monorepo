@@ -7,12 +7,15 @@ import {
 import { isAddress } from 'viem'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedRwaVaultDetails } from '@/app/server-handlers/cached/get-rwa-vault-details'
+import { getCachedRwaVaultsList } from '@/app/server-handlers/cached/get-rwa-vaults-list'
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import {
   decorateVaultsWithConfig,
+  getVaultCuratedBy,
   getVaultIdByVaultCustomName,
 } from '@/helpers/vault-custom-value-helpers'
 
@@ -42,12 +45,18 @@ export const resolveVaultManageContext = async ({
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
+  // RWA (rounds-based) vaults live in a separate subgraph, so they must be resolved through the RWA
+  // detail/list handlers (mirroring resolveVaultOpenContext) — otherwise the standard handlers
+  // return nothing and the page reports "no such vault".
+  const isRwaVault = !!getVaultCuratedBy(parsedVaultId ?? '', parsedNetworkId, systemConfig)
+
   if (!parsedVaultId || !isAddress(walletAddress)) {
     return {
       systemConfig,
       parsedNetwork,
       parsedNetworkId,
       parsedVaultId,
+      isRwaVault,
       vault: null,
       position: null,
       vaultWithConfig: null,
@@ -55,27 +64,35 @@ export const resolveVaultManageContext = async ({
     }
   }
 
-  const [vault, { vaults }, position] = await Promise.all([
-    getCachedVaultDetails({
+  const [vault, { vaults }, { vaults: rwaVaults }, position] = await Promise.all([
+    (isRwaVault ? getCachedRwaVaultDetails : getCachedVaultDetails)({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getCachedVaultsList(),
+    isRwaVault ? getCachedRwaVaultsList() : Promise.resolve({ vaults: [] }),
     withPosition
       ? getUserPosition({
           vaultAddress: parsedVaultId,
           network: parsedNetwork,
           walletAddress,
+          isRwaVault,
         })
       : Promise.resolve(null),
   ])
 
-  if (!vault || (withPosition && !position)) {
+  const allVaults = [...vaults, ...rwaVaults]
+
+  // For RWA vaults a user only holds a Fleet position (shares) after the round settles and they
+  // claim; until then they hold receipts and have no position. So we do not bail on a missing
+  // position for RWA — the page decides whether to show the position or the deposit view.
+  if (!vault || (withPosition && !position && !isRwaVault)) {
     return {
       systemConfig,
       parsedNetwork,
       parsedNetworkId,
       parsedVaultId,
+      isRwaVault,
       vault: vault ?? null,
       position: position ?? null,
       vaultWithConfig: null,
@@ -83,7 +100,7 @@ export const resolveVaultManageContext = async ({
     }
   }
 
-  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(allVaults)
 
   const [vaultWithConfig] = decorateVaultsWithConfig({
     vaults: [vault],
@@ -93,7 +110,7 @@ export const resolveVaultManageContext = async ({
   })
 
   const allVaultsWithConfig = decorateVaultsWithConfig({
-    vaults,
+    vaults: allVaults,
     systemConfig,
     daoManagedVaultsList,
   })
@@ -103,6 +120,7 @@ export const resolveVaultManageContext = async ({
     parsedNetwork,
     parsedNetworkId,
     parsedVaultId,
+    isRwaVault,
     vault,
     position,
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

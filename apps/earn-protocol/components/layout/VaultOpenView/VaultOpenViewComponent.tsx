@@ -35,17 +35,25 @@ import {
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { slugify, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
+import {
+  sdkNetworkToHumanNetwork,
+  slugify,
+  subgraphNetworkToSDKId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 import {
   // getChainInfoByChainId,
   type IArmadaVaultInfo,
   type IToken,
+  RoundState,
   TransactionType,
 } from '@summerfi/sdk-common'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
+import { RwaPendingPositions } from '@/components/layout/RwaVault/RwaPendingPositions'
+import { RwaRoundNotice } from '@/components/layout/RwaVault/RwaRoundNotice'
 import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
 import { useVaultOpenDetailsQuery } from '@/components/layout/VaultOpenView/useVaultOpenQuery'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
@@ -73,6 +81,10 @@ import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
+import { useRwaClaim } from '@/hooks/use-rwa-claim'
+import { useRwaReceipts } from '@/hooks/use-rwa-receipts'
+import { useRwaRoundInfo } from '@/hooks/use-rwa-round-info'
+import { useRwaSDK } from '@/hooks/use-rwa-sdk'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -146,6 +158,8 @@ export const VaultOpenViewComponent = ({
     state: { slippageConfig },
   } = useLocalConfig()
   const sdk = useAppSDK()
+  // RWA (rounds-based) calls go through the institutional SDK; standard vault calls use `sdk`.
+  const rwaSdk = useRwaSDK()
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   // const [migratablePositions, setMigratablePositions] = useState<MigratablePosition[]>([])
@@ -326,10 +340,65 @@ export const VaultOpenViewComponent = ({
 
   const { isWhitelisted, isLoading: isWhitelistedLoading } = useIsWhitelisted({
     isRwaVault,
-    sdk,
+    sdk: rwaSdk,
     walletAddress: userWalletAddress,
     fleetAddress: vault.id,
     chainId: vaultChainId,
+  })
+
+  // RWA vaults are rounds-based: surface the current deposit round so the user
+  // knows which round their deposit enters, and block deposits when that round
+  // is not currently open.
+  const {
+    roundId: rwaRoundId,
+    roundState: rwaRoundState,
+    isLoading: isRwaRoundLoading,
+  } = useRwaRoundInfo({
+    enabled: isRwaVault && isWhitelisted,
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
+  })
+
+  // While the round is not Opened (NotOpened / InSettlement / Settled) deposits
+  // cannot be accepted, so we disable the deposit button.
+  const blockRwaDeposit =
+    isRwaVault && isWhitelisted && !isRwaRoundLoading && rwaRoundState !== RoundState.Opened
+
+  // Pending RWA positions (ERC-1155 receipts) the user can claim once settled or
+  // cancel while the round is still open.
+  const {
+    receipts: rwaReceipts,
+    isLoading: isRwaReceiptsLoading,
+    refresh: refreshRwaReceipts,
+  } = useRwaReceipts({
+    enabled: isRwaVault && isWhitelisted,
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    walletAddress: userWalletAddress,
+    chainId: vaultChainId,
+  })
+
+  const {
+    executeAction: executeRwaAction,
+    actionInProgressKey: rwaActionInProgressKey,
+    error: rwaActionError,
+  } = useRwaClaim({
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
+    tokenDecimals: vault.inputToken.decimals,
+    walletAddress: userWalletAddress,
+    onSuccess: () => {
+      refreshRwaReceipts()
+      if (userWalletAddress) {
+        revalidatePositionData({
+          chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
+          vaultId: vault.id,
+          walletAddress: userWalletAddress,
+        })
+      }
+    },
   })
 
   const {
@@ -344,6 +413,7 @@ export const VaultOpenViewComponent = ({
   } = useTransaction({
     vault,
     vaultChainId,
+    isRwaVault,
     amount: amountParsed,
     manualSetAmount,
     publicClient,
@@ -357,11 +427,16 @@ export const VaultOpenViewComponent = ({
     sidebarTransactionType: TransactionAction.DEPOSIT,
     referralCode,
     referralCodeError,
+    // Reload the pending RWA receipts once a deposit settles so the new round entry appears.
+    onTransactionSuccess: refreshRwaReceipts,
   })
 
   const { position } = usePosition({
     chainId: vaultChainId,
     vaultId: vault.id,
+    // RWA Fleet positions live in the institutional subgraph; read them via the RWA SDK so a
+    // whitelisted holder who has claimed shares is redirected from the open page to their position.
+    isRwaVault,
   })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
@@ -478,7 +553,13 @@ export const VaultOpenViewComponent = ({
       manualSetAmount={manualSetAmount}
       ownerView
       contentAfterInput={
-        beachClubEnabled ? (
+        isRwaVault && isWhitelisted ? (
+          <RwaRoundNotice
+            roundId={rwaRoundId}
+            roundState={rwaRoundState}
+            isLoading={isRwaRoundLoading}
+          />
+        ) : beachClubEnabled ? (
           <BeachClubReferralForm
             onError={handleReferralCodeError}
             onChange={handleReferralCodeChange}
@@ -505,7 +586,9 @@ export const VaultOpenViewComponent = ({
     goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: {
       ...sidebar.primaryButton,
-      disabled: sidebar.primaryButton.disabled,
+      // Block deposits while the RWA round is not open; otherwise keep the
+      // executor's own disabled state.
+      disabled: blockRwaDeposit ? true : sidebar.primaryButton.disabled,
     },
     footnote: (
       <>
@@ -641,7 +724,24 @@ export const VaultOpenViewComponent = ({
         //     />
         //   )
         // }
-        rightExtraContent={isRwaVault ? <RwaSidebarInfo /> : null}
+        rightExtraContent={
+          isRwaVault ? (
+            <>
+              {isWhitelisted ? (
+                <RwaPendingPositions
+                  receipts={rwaReceipts}
+                  isLoading={isRwaReceiptsLoading}
+                  tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
+                  tokenDecimals={vault.inputToken.decimals}
+                  actionInProgressKey={rwaActionInProgressKey}
+                  error={rwaActionError}
+                  onAction={executeRwaAction}
+                />
+              ) : null}
+              <RwaSidebarInfo />
+            </>
+          ) : null
+        }
       />
     </>
   )

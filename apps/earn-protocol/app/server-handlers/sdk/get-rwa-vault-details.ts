@@ -3,7 +3,7 @@ import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
-import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { backendInstiSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
 export async function getRwaVaultDetails({
   vaultAddress,
@@ -27,7 +27,7 @@ export async function getRwaVaultDetails({
       chainInfo,
       fleetAddress,
     })
-    const { vault } = await backendSDK.rwa.getVaultRaw({
+    const { vault } = await backendInstiSDK.rwa.getVaultRaw({
       vaultId: poolId,
     })
 
