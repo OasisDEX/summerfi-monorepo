@@ -17,15 +17,22 @@ import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedRwaVaultDetails } from '@/app/server-handlers/cached/get-rwa-vault-details'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultManageCoreData } from '@/app/server-handlers/vault-manage/get-vault-manage-core-data'
+import { getVaultOpenCoreData } from '@/app/server-handlers/vault-open/get-vault-open-core-data'
 import { getVaultManageCoreQueryKey } from '@/components/layout/VaultManageView/vault-manage-query-keys'
 import { VaultManageLoadingView } from '@/components/layout/VaultManageView/VaultManageLoadingView'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
+import { getVaultOpenCoreQueryKey } from '@/components/layout/VaultOpenView/vault-open-query-keys'
+import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
 import { getServerQueryClient } from '@/helpers/get-server-query-client'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
-import { getVaultIdByVaultCustomName } from '@/helpers/vault-custom-value-helpers'
+import {
+  getVaultCuratedBy,
+  getVaultIdByVaultCustomName,
+} from '@/helpers/vault-custom-value-helpers'
 
 type EarnVaultManagePageProps = {
   params: Promise<{
@@ -45,6 +52,50 @@ const VaultManageWithData = async ({
   walletAddress: string
 }) => {
   const queryClient = getServerQueryClient()
+
+  // RWA (rounds-based) vaults: a deposit mints ERC-1155 receipts, not Fleet shares — the user only
+  // holds a real position once the round settles and they claim. Until then there is no position to
+  // show, so the position page mirrors the open view (deposit sidebar + pending receipts). Once the
+  // user holds shares, the normal position view is shown below.
+  //
+  // The RWA check is the same cheap/cached lookup the open page uses; we only pay for the extra
+  // position fetch on RWA vaults so the common (non-RWA) path is unchanged.
+  const systemConfig = parseServerResponseToClient(await getCachedConfig())
+  const parsedNetwork = humanNetworktoSDKNetwork(network)
+  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
+  const parsedVaultId = isAddress(vaultId)
+    ? vaultId.toLowerCase()
+    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
+  const isRwaVault =
+    !!parsedVaultId && !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
+
+  if (isRwaVault) {
+    const position = parsedVaultId
+      ? await getUserPosition({
+          vaultAddress: parsedVaultId,
+          network: parsedNetwork,
+          walletAddress,
+          isRwaVault,
+        })
+      : undefined
+    const hasShares = !!position && new BigNumber(position.amount.amount).gt(0)
+
+    if (!hasShares) {
+      // No Fleet shares yet (receipts only) — render the open/deposit view (same sidebar + pending
+      // positions). `resolveVaultManageContext` is RWA-aware so the manage path below also works
+      // once the user does hold shares.
+      await queryClient.prefetchQuery({
+        queryKey: getVaultOpenCoreQueryKey(network, vaultId),
+        queryFn: () => getVaultOpenCoreData({ network, vaultId }),
+      })
+
+      return (
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <VaultOpenView network={network} vaultId={vaultId} />
+        </HydrationBoundary>
+      )
+    }
+  }
 
   // Only the core (shell) is prefetched + hydrated so the header + deposit/withdraw/switch sidebar
   // paint instantly from the server cache. The heavier details island (performance + yield charts,
@@ -119,13 +170,18 @@ export async function generateMetadata({
     }
   }
 
+  // RWA vaults are sourced from the RWA subgraph; use the matching detail handler so the title
+  // resolves (mirrors the open page metadata).
+  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
+
   const [position, vault] = await Promise.all([
     getUserPosition({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
       walletAddress,
+      isRwaVault,
     }),
-    getCachedVaultDetails({
+    (isRwaVault ? getCachedRwaVaultDetails : getCachedVaultDetails)({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),

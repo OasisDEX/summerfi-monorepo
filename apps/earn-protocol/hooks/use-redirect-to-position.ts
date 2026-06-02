@@ -40,6 +40,18 @@ export const useRedirectToPositionView = ({
       walletAddress: userWalletAddress,
     })
 
+    // RWA (rounds-based) vaults: a user with only receipts (no Fleet shares) is shown the deposit
+    // view on BOTH urls, so the position page must never be bounced back to the open page. We still
+    // forward the open page to the position page once the user actually holds shares (a Fleet
+    // position read via the RWA SDK), so claimed holders land on their manage view.
+    if (vault.isRwaVault) {
+      if (pathname === vaultUrl && !emptyPosition) {
+        replace(vaultPositionUrl)
+      }
+
+      return
+    }
+
     if (pathname === vaultUrl && !emptyPosition) {
       replace(vaultPositionUrl)
     } else if (pathname === vaultPositionUrl && emptyPosition) {

@@ -28,6 +28,7 @@ import { transactionErrorsMap as errorsMap } from '@/helpers/transaction-errors'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleButtonClickEvent, useHandleTransactionEvent } from '@/hooks/use-mixpanel-event'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
+import { useRwaSDK } from '@/hooks/use-rwa-sdk'
 import { useTransactionCore } from '@/hooks/use-transaction-core'
 import { useTransactionSidebar } from '@/hooks/use-transaction-sidebar'
 import { useTransactionValidation } from '@/hooks/use-transaction-validation'
@@ -54,6 +55,9 @@ type UseTransactionParams = {
   setSidebarTransactionType?: Dispatch<SetStateAction<TransactionAction>>
   referralCode?: string
   referralCodeError?: string | null
+  // Called once a deposit/withdraw completes successfully. RWA views use it to refresh the
+  // client-side pending receipts, which the server-side revalidation does not cover.
+  onTransactionSuccess?: () => void
 }
 
 export const useTransaction = ({
@@ -75,19 +79,16 @@ export const useTransaction = ({
   setSidebarTransactionType,
   referralCode,
   referralCodeError,
+  onTransactionSuccess,
 }: UseTransactionParams) => {
   const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const transactionEventHandler = useHandleTransactionEvent()
   const { address: userWalletAddress } = useEarnProtocolWallet()
-  const {
-    getDepositTx: getDepositTX,
-    getWithdrawTx: getWithdrawTX,
-    getVaultSwitchTx,
-    getRwaDepositTx: getRwaDepositTX,
-    getRwaWithdrawTx: getRwaWithdrawTX,
-  } = useAppSDK()
+  const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
+  // RWA tx builders live only on the institutional SDK surface.
+  const { getRwaDepositTx: getRwaDepositTX, getRwaWithdrawTx: getRwaWithdrawTX } = useRwaSDK()
   const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain, chain } = useEarnProtocolChain()
@@ -358,6 +359,10 @@ export const useTransaction = ({
           walletAddress: userWalletAddress,
         })
 
+        // lets RWA views reload their client-side pending receipts (server revalidation above only
+        // covers server-fetched data, not the on-chain receipt balances read via the RWA SDK).
+        onTransactionSuccess?.()
+
         // makes sure the user is redirected to the correct page
         // after closing or opening
         const isOpening = isDeposit && flow === 'open'
@@ -394,6 +399,7 @@ export const useTransaction = ({
     isDeposit,
     isWithdraw,
     transactions,
+    onTransactionSuccess,
   ])
 
   // refresh the transactions list when the amount changes, while is switching

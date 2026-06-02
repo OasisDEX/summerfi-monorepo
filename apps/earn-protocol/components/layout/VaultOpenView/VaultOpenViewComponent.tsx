@@ -84,6 +84,7 @@ import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 import { useRwaClaim } from '@/hooks/use-rwa-claim'
 import { useRwaReceipts } from '@/hooks/use-rwa-receipts'
 import { useRwaRoundInfo } from '@/hooks/use-rwa-round-info'
+import { useRwaSDK } from '@/hooks/use-rwa-sdk'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -157,6 +158,8 @@ export const VaultOpenViewComponent = ({
     state: { slippageConfig },
   } = useLocalConfig()
   const sdk = useAppSDK()
+  // RWA (rounds-based) calls go through the institutional SDK; standard vault calls use `sdk`.
+  const rwaSdk = useRwaSDK()
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   // const [migratablePositions, setMigratablePositions] = useState<MigratablePosition[]>([])
@@ -337,7 +340,7 @@ export const VaultOpenViewComponent = ({
 
   const { isWhitelisted, isLoading: isWhitelistedLoading } = useIsWhitelisted({
     isRwaVault,
-    sdk,
+    sdk: rwaSdk,
     walletAddress: userWalletAddress,
     fleetAddress: vault.id,
     chainId: vaultChainId,
@@ -353,7 +356,7 @@ export const VaultOpenViewComponent = ({
     isLoading: isRwaRoundLoading,
   } = useRwaRoundInfo({
     enabled: isRwaVault && isWhitelisted,
-    sdk,
+    sdk: rwaSdk,
     fleetAddress: vault.id,
     chainId: vaultChainId,
   })
@@ -371,7 +374,7 @@ export const VaultOpenViewComponent = ({
     refresh: refreshRwaReceipts,
   } = useRwaReceipts({
     enabled: isRwaVault && isWhitelisted,
-    sdk,
+    sdk: rwaSdk,
     fleetAddress: vault.id,
     walletAddress: userWalletAddress,
     chainId: vaultChainId,
@@ -382,9 +385,10 @@ export const VaultOpenViewComponent = ({
     actionInProgressKey: rwaActionInProgressKey,
     error: rwaActionError,
   } = useRwaClaim({
-    sdk,
+    sdk: rwaSdk,
     fleetAddress: vault.id,
     chainId: vaultChainId,
+    tokenDecimals: vault.inputToken.decimals,
     walletAddress: userWalletAddress,
     onSuccess: () => {
       refreshRwaReceipts()
@@ -424,11 +428,16 @@ export const VaultOpenViewComponent = ({
     sidebarTransactionType: TransactionAction.DEPOSIT,
     referralCode,
     referralCodeError,
+    // Reload the pending RWA receipts once a deposit settles so the new round entry appears.
+    onTransactionSuccess: refreshRwaReceipts,
   })
 
   const { position } = usePosition({
     chainId: vaultChainId,
     vaultId: vault.id,
+    // RWA Fleet positions live in the institutional subgraph; read them via the RWA SDK so a
+    // whitelisted holder who has claimed shares is redirected from the open page to their position.
+    isRwaVault,
   })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({

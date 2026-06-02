@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { useEarnProtocolSendUserOperation } from '@summerfi/app-earn-ui'
 import { type SdkClient } from '@summerfi/sdk-client-react'
 import { type ChainId, RoundsVaultType } from '@summerfi/sdk-common'
+import { BigNumber } from 'bignumber.js'
 
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
@@ -11,6 +12,9 @@ type UseRwaClaimProps = {
   sdk: SdkClient
   fleetAddress: string
   chainId: number
+  // Receipt balances are denominated in the vault's underlying-token base units; the SDK handlers
+  // expect a human-readable amount, so we shift by these decimals.
+  tokenDecimals: number
   walletAddress?: string
   // Called after a claim/cancel transaction confirms (e.g. to reload receipts).
   onSuccess?: () => void
@@ -30,6 +34,7 @@ export const useRwaClaim = ({
   sdk,
   fleetAddress,
   chainId,
+  tokenDecimals,
   walletAddress,
   onSuccess,
 }: UseRwaClaimProps) => {
@@ -56,7 +61,8 @@ export const useRwaClaim = ({
           chainId: chainId as ChainId,
           userAddress: walletAddress as `0x${string}`,
           roundId: receipt.roundId,
-          amount: receipt.balance,
+          // Convert the raw receipt balance to the human-readable amount the SDK expects.
+          amount: new BigNumber(receipt.balance.toString()).shiftedBy(-tokenDecimals).toString(),
         }
 
         const txInfo =
@@ -86,7 +92,16 @@ export const useRwaClaim = ({
         setActionInProgressKey(undefined)
       }
     },
-    [sdk, fleetAddress, chainId, walletAddress, sendUserOperationAsync, publicClient, onSuccess],
+    [
+      sdk,
+      fleetAddress,
+      chainId,
+      tokenDecimals,
+      walletAddress,
+      sendUserOperationAsync,
+      publicClient,
+      onSuccess,
+    ],
   )
 
   return {

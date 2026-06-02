@@ -17,10 +17,17 @@ type RwaPendingPositionsProps = {
   onAction: (receipt: RwaReceipt) => void
 }
 
-const statusLabel = {
-  claimable: 'Claimable',
-  cancellable: 'Pending deposit',
-  pending: 'Settling',
+// The "cancellable" (round still open) label depends on the rounds-vault side: an Input receipt is
+// a pending deposit, an Output receipt a pending withdrawal.
+const statusLabel = (receipt: RwaReceipt): string => {
+  if (receipt.status === 'claimable') {
+    return 'Claimable'
+  }
+  if (receipt.status === 'pending') {
+    return 'Settling'
+  }
+
+  return receipt.vaultType === RoundsVaultType.Input ? 'Pending deposit' : 'Pending withdrawal'
 }
 
 const statusColor = {
@@ -63,7 +70,7 @@ export const RwaPendingPositions = ({
   return (
     <Card
       variant="cardSecondary"
-      style={{ flexDirection: 'column', gap: 'var(--general-space-12)', marginTop: '16px' }}
+      style={{ flexDirection: 'column', gap: 'var(--general-space-12)' }}
     >
       <Text as="p" variant="h5">
         Your pending positions
@@ -93,7 +100,7 @@ export const RwaPendingPositions = ({
                 Round #{receipt.roundId.toString()} · {typeLabel}
               </Text>
               <Text as="span" variant="p4semi" style={{ color: statusColor[receipt.status] }}>
-                {statusLabel[receipt.status]}
+                {statusLabel(receipt)}
               </Text>
             </div>
 

@@ -70,15 +70,23 @@ export const buildDepositWithdrawTransactions = async ({
   })
 
   if (isRwaVault) {
-    const rwaTransactions = await {
-      [TransactionAction.DEPOSIT]: getRwaDepositTx,
-      [TransactionAction.WITHDRAW]: getRwaWithdrawTx,
-    }[action]({
-      fleetAddress: fleetAddress as AddressValue,
-      chainId: vaultChainId as ChainId,
-      userAddress: userWalletAddress as AddressValue,
-      amount: fromAmount,
-    })
+    // The RWA handlers take a human-readable amount (string, in the vault token's decimals): the
+    // deposit side as `assetsAmount`, the withdraw side as `sharesAmount`.
+    const humanAmount = amount.toString()
+    const rwaTransactions =
+      action === TransactionAction.DEPOSIT
+        ? await getRwaDepositTx({
+            fleetAddress: fleetAddress as AddressValue,
+            chainId: vaultChainId as ChainId,
+            userAddress: userWalletAddress as AddressValue,
+            assetsAmount: humanAmount,
+          })
+        : await getRwaWithdrawTx({
+            fleetAddress: fleetAddress as AddressValue,
+            chainId: vaultChainId as ChainId,
+            userAddress: userWalletAddress as AddressValue,
+            sharesAmount: humanAmount,
+          })
 
     return buildRwaTransactions({
       transactions: rwaTransactions,
