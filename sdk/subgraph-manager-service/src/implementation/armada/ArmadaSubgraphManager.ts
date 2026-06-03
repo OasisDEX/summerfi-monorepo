@@ -198,11 +198,6 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
       ...(params.owner !== undefined ? [`$owner: String!`] : []),
     ]
 
-    console.log('=== getAllRoles Query Parameters ===')
-    console.log('variableDeclarations', variableDeclarations)
-    console.log('whereConditions', whereConditions)
-    console.log('variables', variables)
-
     const query = gql`
       query GetRoles(${variableDeclarations.join(', ')}) {
         roles(
@@ -223,8 +218,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
       }
     `
 
-    const urlMapForChain = this.urlMap[params.chainId]
-    const rawClient = new GraphQLClient(urlMapForChain[this.config.subgraphType])
+    const rawClient = this.getRawClient(params.chainId)
     return rawClient.request(query, variables)
   }
 
@@ -357,5 +351,10 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
         `This method is only available using '${typeToClientMessage[subgraphType]}'. Current subgraph type: ${this.config.subgraphType} which does not have access to ${subgraphType} subgraph`,
       )
     }
+  }
+
+  getRawClient(chainId: ChainId) {
+    const urlMapForChain = this.urlMap[chainId]
+    return new GraphQLClient(urlMapForChain[this.config.subgraphType])
   }
 }
