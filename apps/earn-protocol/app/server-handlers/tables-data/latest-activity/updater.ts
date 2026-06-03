@@ -3,6 +3,7 @@ import { type GraphQLClient } from 'graphql-request'
 
 import { getLatestTimestamp } from '@/app/server-handlers/tables-data/helpers'
 
+import { fetchAllLatestActivities } from './fetcher'
 import { getAllLatestActivities } from './getter'
 import { insertLatestActivitiesInBatches } from './inserter'
 
@@ -33,6 +34,7 @@ export const updateLatestActivities = async ({
   arbitrumGraphQlClient,
   sonicGraphQlClient,
   hyperliquidGraphQlClient,
+  baseRwaGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
@@ -40,6 +42,7 @@ export const updateLatestActivities = async ({
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
   hyperliquidGraphQlClient: GraphQLClient
+  baseRwaGraphQlClient?: GraphQLClient
 }) => {
   const startTime = Date.now()
   const [
@@ -73,7 +76,29 @@ export const updateLatestActivities = async ({
     },
   })
 
-  const { updated } = await insertLatestActivitiesInBatches(db, allLatestActivities)
+  // RWA (Base) activity from its clone deployment. RWA rows aren't network-distinguishable in the DB
+  // (they're tagged network='base'), so they can't share the Base watermark — we full-scan from 0 and
+  // rely on the idempotent insert (onConflict doNothing). Fault-tolerant: a RWA failure must not break
+  // the standard ingestion. `network='base'` is derived from the subgraph data in the inserter.
+  const rwaLatestActivities =
+    baseRwaGraphQlClient !== undefined
+      ? await fetchAllLatestActivities(baseRwaGraphQlClient, '0')
+          .then((rwa) => [
+            ...rwa.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
+            ...rwa.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
+          ])
+          .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error('Failed to fetch RWA latest activities', error)
+
+            return []
+          })
+      : []
+
+  const { updated } = await insertLatestActivitiesInBatches(db, [
+    ...allLatestActivities,
+    ...rwaLatestActivities,
+  ])
 
   const endTime = Date.now()
   const duration = `${((endTime - startTime) / 1000).toFixed(2)}s`

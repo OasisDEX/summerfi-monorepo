@@ -40,6 +40,10 @@ export const updateTablesData = async ({
       [SupportedSDKNetworks.Hyperliquid]: `${baseUrl}/summer-protocol-hyperliquid`,
     }
 
+    const rwaSubgraphsMap = {
+      [SupportedSDKNetworks.Base]: `${baseUrl}/summer-institutions-v2-base`,
+    }
+
     const mainnetGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.Mainnet])
     const baseGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.Base])
     const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.ArbitrumOne])
@@ -47,6 +51,9 @@ export const updateTablesData = async ({
     const hyperliquidGraphQlClient = new GraphQLClient(
       subgraphsMap[SupportedSDKNetworks.Hyperliquid],
     )
+
+    // RWA (rounds-based)
+    const baseRwaGraphQlClient = new GraphQLClient(rwaSubgraphsMap[SupportedSDKNetworks.Base])
 
     let updatedLatestActivities
     let updatedTopDepositors
@@ -61,6 +68,7 @@ export const updateTablesData = async ({
         arbitrumGraphQlClient,
         sonicGraphQlClient,
         hyperliquidGraphQlClient,
+        baseRwaGraphQlClient,
       })
     }
 
@@ -72,6 +80,7 @@ export const updateTablesData = async ({
         arbitrumGraphQlClient,
         sonicGraphQlClient,
         hyperliquidGraphQlClient,
+        baseRwaGraphQlClient,
       })
     }
 
@@ -83,6 +92,7 @@ export const updateTablesData = async ({
         arbitrumGraphQlClient,
         sonicGraphQlClient,
         hyperliquidGraphQlClient,
+        baseRwaGraphQlClient,
       })
     }
 

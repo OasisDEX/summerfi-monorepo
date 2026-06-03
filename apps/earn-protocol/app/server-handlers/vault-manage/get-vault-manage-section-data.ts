@@ -75,7 +75,7 @@ export const getVaultManagePerformanceData = async ({
     return null
   }
 
-  const { parsedNetworkId, vault, position, vaultWithConfig } = ctx
+  const { parsedNetworkId, vault, position, vaultWithConfig, isRwaVault } = ctx
   const { netValue } = getPositionValues({ position, vault })
 
   const [positionHistory, positionForecastResponse] = await Promise.all([
@@ -83,6 +83,7 @@ export const getVaultManagePerformanceData = async ({
       network: ctx.parsedNetwork,
       address: walletAddress.toLowerCase(),
       vault,
+      isRwaVault,
     }),
     fetchForecastData({
       fleetAddress: vault.id as `0x${string}`,

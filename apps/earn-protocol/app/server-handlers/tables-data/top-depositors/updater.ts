@@ -10,6 +10,7 @@ import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { BigNumber } from 'bignumber.js'
 import { type GraphQLClient } from 'graphql-request'
 
+import { fetchTopDepositors } from './fetcher'
 import { getTopDepositors } from './getter'
 import { calculateTopDepositors7daysChange, getEarningStreakResetTimestamp } from './helpers'
 import { insertTopDepositorsInBatches } from './inserter'
@@ -34,6 +35,7 @@ export const updateTopDepositors = async ({
   arbitrumGraphQlClient,
   sonicGraphQlClient,
   hyperliquidGraphQlClient,
+  baseRwaGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
@@ -41,15 +43,33 @@ export const updateTopDepositors = async ({
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
   hyperliquidGraphQlClient: GraphQLClient
+  baseRwaGraphQlClient?: GraphQLClient
 }) => {
   const startTime = Date.now()
-  const topDepositors = await getTopDepositors({
+  const standardTopDepositors = await getTopDepositors({
     mainnetGraphQlClient,
     baseGraphQlClient,
     arbitrumGraphQlClient,
     sonicGraphQlClient,
     hyperliquidGraphQlClient,
   })
+
+  // RWA (Base) positions from its clone deployment, merged into the same combined set so the
+  // delete-reconcile below preserves them. Fault-tolerant: a RWA failure must not break the standard
+  // top-depositors update (the getter above uses Promise.all, so RWA is fetched separately here).
+  const rwaTopDepositors =
+    baseRwaGraphQlClient !== undefined
+      ? await fetchTopDepositors(baseRwaGraphQlClient)
+          .then((positions) => positions.filter((position) => position.deposits.length > 0))
+          .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error('Failed to fetch RWA top depositors', error)
+
+            return []
+          })
+      : []
+
+  const topDepositors = [...standardTopDepositors, ...rwaTopDepositors]
 
   // TEMPORARY: USE getVaultsApy instead of reading it from the db since it's not available in new dbs
   const uniqueFleets = Array.from(
@@ -119,9 +139,21 @@ export const updateTopDepositors = async ({
 
     // const fleetRate = vaultsApyData[fleetId]
 
+    // RWA vaults (and any vault without a standard APY entry) have no fleet rate at runtime (the index
+    // access is typed as always-present, but is undefined for RWA fleets). Default projected earnings
+    // to 0 and move on rather than throwing, so a missing rate never breaks the whole update.
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!fleetRate) {
-      throw new Error(`No fleet rate found for fleetId: ${fleetId}`)
+      // eslint-disable-next-line no-console
+      console.warn(`No fleet rate for fleetId: ${fleetId}; defaulting projected earnings to 0`)
+
+      return {
+        ...position,
+        changeSevenDays,
+        earningsStreak,
+        projectedOneYearEarnings: '0',
+        projectedOneYearEarningsUsd: '0',
+      }
     }
 
     const projectedOneYearEarnings = new BigNumber(fleetRate.apy)

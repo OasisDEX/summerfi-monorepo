@@ -7,3 +7,7 @@ export const subgraphsMap = {
   [SupportedSDKNetworks.SonicMainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol-sonic`,
   [SupportedSDKNetworks.Hyperliquid]: `${process.env.SUBGRAPH_BASE}/summer-protocol-hyperliquid`,
 }
+
+export const rwaSubgraphsMap = {
+  [SupportedSDKNetworks.Base]: `${process.env.SUBGRAPH_BASE}/summer-institutions-v2-base`,
+}

@@ -3,7 +3,9 @@ import { type GraphQLClient } from 'graphql-request'
 
 import { getLatestTimestamp } from '@/app/server-handlers/tables-data/helpers'
 
+import { fetchAllRebalanceActivities } from './fetcher'
 import { getAllRebalanceActivities } from './getter'
+import { rebalancesActionTypeMapper } from './helpers'
 import { insertRebalanceActivitiesInBatches } from './inserter'
 
 const table = 'rebalanceActivity'
@@ -31,6 +33,7 @@ export const updateRebalanceActivity = async ({
   arbitrumGraphQlClient,
   sonicGraphQlClient,
   hyperliquidGraphQlClient,
+  baseRwaGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
@@ -38,6 +41,7 @@ export const updateRebalanceActivity = async ({
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
   hyperliquidGraphQlClient: GraphQLClient
+  baseRwaGraphQlClient?: GraphQLClient
 }) => {
   const startTime = Date.now()
   const [
@@ -71,7 +75,30 @@ export const updateRebalanceActivity = async ({
     },
   })
 
-  const { updated } = await insertRebalanceActivitiesInBatches(db, allRebalanceActivities)
+  // RWA (Base) rebalances from its clone deployment — full-scan from 0 (RWA rows aren't
+  // network-distinguishable to share the Base watermark) + idempotent insert. Fault-tolerant so a
+  // RWA failure never breaks standard ingestion. Likely few/none for rounds-based RWA vaults.
+  const rwaRebalanceActivities =
+    baseRwaGraphQlClient !== undefined
+      ? await fetchAllRebalanceActivities(baseRwaGraphQlClient, '0')
+          .then((rwa) =>
+            rwa.rebalances.map((rebalance) => ({
+              ...rebalance,
+              actionType: rebalancesActionTypeMapper(rebalance),
+            })),
+          )
+          .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error('Failed to fetch RWA rebalance activities', error)
+
+            return []
+          })
+      : []
+
+  const { updated } = await insertRebalanceActivitiesInBatches(db, [
+    ...allRebalanceActivities,
+    ...rwaRebalanceActivities,
+  ])
 
   const endTime = Date.now()
   const duration = `${((endTime - startTime) / 1000).toFixed(2)}s`

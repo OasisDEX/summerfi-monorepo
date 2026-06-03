@@ -71,6 +71,8 @@ export async function insertLatestActivitiesInBatches(
           timestamp: activity.timestamp,
         })),
       )
+      // Activity rows are immutable events; ignore re-inserts (the RWA path full-scans each run).
+      .onConflict((oc) => oc.column('id').doNothing())
       .execute()
 
     updated += Number(result[0].numInsertedOrUpdatedRows ?? 0)

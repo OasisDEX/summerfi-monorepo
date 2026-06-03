@@ -80,6 +80,8 @@ export async function insertRebalanceActivitiesInBatches(
           timestamp: activity.timestamp,
         })),
       )
+      // Rebalance rows are immutable events; ignore re-inserts (the RWA path full-scans each run).
+      .onConflict((oc) => oc.column('id').doNothing())
       .execute()
 
     updated += Number(result[0].numInsertedOrUpdatedRows ?? 0)

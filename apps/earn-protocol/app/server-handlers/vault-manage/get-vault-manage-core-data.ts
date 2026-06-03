@@ -59,8 +59,15 @@ export const getVaultManageCoreData = async ({
     return null
   }
 
-  const { systemConfig, parsedNetwork, parsedNetworkId, parsedVaultId, vault, vaultWithConfig } =
-    ctx
+  const {
+    systemConfig,
+    parsedNetwork,
+    parsedNetworkId,
+    parsedVaultId,
+    vault,
+    vaultWithConfig,
+    isRwaVault,
+  } = ctx
 
   const [
     vaultsApyByNetworkMap,
@@ -80,6 +87,7 @@ export const getVaultManageCoreData = async ({
       network: parsedNetwork,
       address: walletAddress.toLowerCase(),
       vault,
+      isRwaVault,
     }),
     getCachedRewardTokenPrice(),
     getCachedClaimableWSTETHMerkleRewards(walletAddress),

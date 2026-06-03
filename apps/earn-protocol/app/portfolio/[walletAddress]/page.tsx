@@ -210,6 +210,9 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
           network: supportedSDKNetwork(vault.protocol.network),
           address: walletAddress.toLowerCase(),
           vault,
+          // RWA position history comes from the institutional subgraph; rwaFleetAddresses is the
+          // reliable RWA source of truth (vault.isRwaVault is unreliable for list-sourced vaults).
+          isRwaVault: rwaFleetAddresses.has(vault.id.toLowerCase()),
         }),
       ),
     ).then(mapPortfolioVaultsApy),
