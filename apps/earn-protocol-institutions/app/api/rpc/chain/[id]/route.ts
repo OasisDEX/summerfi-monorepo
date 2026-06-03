@@ -1,6 +1,7 @@
 import { SupportedNetworkIds } from '@summerfi/app-types'
 
 import { INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
+import { isSameOrigin } from '@/helpers/validate-same-origin'
 
 const rpcUrlMap: {
   [key in SupportedNetworkIds]: string
@@ -13,6 +14,10 @@ const rpcUrlMap: {
 }
 
 export async function POST(req: Request) {
+  if (!isSameOrigin(req)) {
+    return new Response('Forbidden', { status: 403 })
+  }
+
   const id = Number(req.url.split('/').pop())
 
   if (!id || !Object.values(SupportedNetworkIds).includes(id as SupportedNetworkIds)) {

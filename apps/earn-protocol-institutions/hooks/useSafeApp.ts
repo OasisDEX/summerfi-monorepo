@@ -129,10 +129,7 @@ export function useSafeAutoConnect() {
   useEffect(() => {
     if (!isIframe || isConnected) return
 
-    connectSafe(() => {
-      // eslint-disable-next-line no-console
-      console.log('Safe auto-connect finished')
-    })
+    connectSafe()
   }, [connectSafe, isConnected, isIframe])
 
   return { connectSafe }

@@ -29,7 +29,7 @@ export default function InstitutionVaultsLoadingTab() {
                 <SkeletonLine
                   key={index}
                   height={14}
-                  width={Math.round(Number(Math.random() * 80) + 100)}
+                  width={140}
                   style={{ margin: '0 0', opacity: 0.6 }}
                 />
               ))}
@@ -55,7 +55,7 @@ export default function InstitutionVaultsLoadingTab() {
                 <SkeletonLine
                   key={index}
                   height={14}
-                  width={Math.round(Number(Math.random() * 80) + 100)}
+                  width={140}
                   style={{ margin: '0 0', opacity: 0.6 }}
                 />
               ))}

@@ -1,11 +1,4 @@
-import { supportedSDKNetwork, ten } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
-
-import {
-  getCachedInstitutionVaultPerformanceData,
-  getCachedInstitutionVaults,
-} from '@/app/server-handlers/institution/institution-vaults'
-import { mapMultiVaultChartData } from '@/features/charts/mappers/mapMultiVaultChartData'
+import { getCachedInstitutionVaults } from '@/app/server-handlers/institution/institution-vaults'
 import { PanelInstitutionOverview } from '@/features/panels/overview/components/PanelInstitutionOverview/PanelInstitutionOverview'
 
 export default async function InstitutionOverviewTab({
@@ -24,34 +17,14 @@ export default async function InstitutionOverviewTab({
     return <div>No vaults found for this institution.</div>
   }
 
-  const vaultsPerformanceDataMap = await Promise.all(
-    institutionVaults.vaults.map(
-      async (vault) =>
-        await getCachedInstitutionVaultPerformanceData({
-          vaultAddress: vault.id.toString(),
-          network: supportedSDKNetwork(vault.protocol.network),
-          institutionName,
-        }),
-    ),
-  )
-
-  const vaultsTvlChartData = mapMultiVaultChartData({
-    institutionName,
-    performanceDataArray: vaultsPerformanceDataMap.map((performanceData) => ({
-      performanceData,
-      pointName: 'netValue',
-      currentPointValue: new BigNumber(performanceData.vault.inputTokenBalance)
-        .div(ten.pow(performanceData.vault.inputToken.decimals))
-        .toString(),
-    })),
-  })
-
+  // The vault table renders immediately from the (tab-layout-cached) vault list. The multi-vault
+  // TVL chart — which needs one heavy performance fetch per vault — is deferred to a client query
+  // gated on scroll-into-view (LazyTvlChart), so this page no longer blocks on that O(n) waterfall.
   return (
     <PanelInstitutionOverview
       institutionName={institutionName}
       institutionVaults={institutionVaults.vaults}
       vaultsAdditionalInfo={institutionVaults.vaultsAdditionalInfo}
-      vaultsTvlChartData={vaultsTvlChartData}
     />
   )
 }

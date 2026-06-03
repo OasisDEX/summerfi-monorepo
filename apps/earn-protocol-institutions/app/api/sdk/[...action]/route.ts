@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
+import { isSameOrigin } from '@/helpers/validate-same-origin'
 
 // Rewrite the path to remove the /api/sdk/ prefix
 // This is necessary to use sdkApiUrl correctly
@@ -10,6 +11,10 @@ function rewriteSdkPath(pathname: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  if (!isSameOrigin(req)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const sdkApiUrl = `${process.env.SDK_API_URL}/sdk/trpc`
 
   if (!sdkApiUrl) {
@@ -22,7 +27,7 @@ export async function POST(req: NextRequest) {
   const headers: { [key: string]: string } = {
     'client-id': req.headers.get('client-id') ?? '',
   }
-  const authorization = req.headers.get('Authorization') || req.headers.get('authorization')
+  const authorization = req.headers.get('Authorization') ?? req.headers.get('authorization')
 
   if (authorization) {
     headers.Authorization = authorization
@@ -47,6 +52,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  if (!isSameOrigin(req)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const sdkApiUrl = `${process.env.SDK_API_URL}/sdk/trpc`
 
   if (!sdkApiUrl) {
@@ -59,7 +68,7 @@ export async function GET(req: NextRequest) {
   const headers: { [key: string]: string } = {
     'client-id': req.headers.get('client-id') ?? '',
   }
-  const authorization = req.headers.get('Authorization') || req.headers.get('authorization')
+  const authorization = req.headers.get('Authorization') ?? req.headers.get('authorization')
 
   if (authorization) {
     headers.Authorization = authorization

@@ -70,6 +70,12 @@ export const readSession = async (): Promise<SessionPayload | null> => {
   try {
     const { payload } = await jwtVerify(token, encoder.encode(secret), { audience: SESSION_AUD })
 
+    // Reject tokens minted under a previous session version (bump SESSION_VERSION to force re-login
+    // after a breaking change to the session shape).
+    if (payload.ver !== SESSION_VERSION) {
+      return null
+    }
+
     return {
       user: payload.user as SignInResponse['user'],
       sub: payload.sub as string,

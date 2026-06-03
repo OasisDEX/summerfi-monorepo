@@ -37,8 +37,6 @@ export const useUpdateAANetwork = (overrideNetwork?: string) => {
   useEffect(() => {
     if (chain.id === appChainId) {
       setChain({ chain: appChain })
-      // eslint-disable-next-line no-console
-      console.info(`Updated app network to: ${appChain.id}`)
     }
   }, [appChain, setChain, chain.id, appChainId])
 

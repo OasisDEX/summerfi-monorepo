@@ -2,6 +2,7 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { getRpcGatewayUrl } from '@/helpers/rpc-gateway'
+import { isSameOrigin } from '@/helpers/validate-same-origin'
 
 /**
  * Handles RPC requests.
@@ -9,6 +10,10 @@ import { getRpcGatewayUrl } from '@/helpers/rpc-gateway'
  * @returns The resolved response from the RPC gateway.
  */
 export async function POST(req: NextRequest) {
+  if (!isSameOrigin(req)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const networkQuery = req.nextUrl.searchParams.get('network')
 
   if (!networkQuery) {

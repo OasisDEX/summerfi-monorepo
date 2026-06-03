@@ -7,7 +7,7 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type MultipleSourceChartData, type SDKVaultishType } from '@summerfi/app-types'
+import { type SDKVaultishType } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatPercent,
@@ -18,6 +18,7 @@ import Link from 'next/link'
 
 import { type VaultAdditionalInfo } from '@/app/server-handlers/institution/institution-vaults/types'
 import { vaultsListColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/constants'
+import { LazyTvlChart } from '@/features/panels/overview/components/PanelInstitutionOverview/LazyTvlChart'
 import { TvlChartIntermediary } from '@/features/panels/overview/components/PanelInstitutionOverview/TvlChartIntermediary'
 import { type VaultsListTableColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/types'
 import { getInstiVaultNiceName } from '@/helpers/get-insti-vault-nice-name'
@@ -99,13 +100,11 @@ export const PanelInstitutionOverview = ({
   institutionVaults,
   vaultsAdditionalInfo,
   isLoading,
-  vaultsTvlChartData,
 }: {
   institutionName: string
   institutionVaults?: SDKVaultishType[]
   vaultsAdditionalInfo?: VaultAdditionalInfo
   isLoading?: boolean
-  vaultsTvlChartData?: MultipleSourceChartData
 }) => {
   const vaultsTableList = useMemo(
     () => mapVaultTableRows({ institutionVaults, institutionName, vaultsAdditionalInfo }),
@@ -114,7 +113,11 @@ export const PanelInstitutionOverview = ({
 
   return (
     <div className={panelInstitutionOverviewStyles.wrapper}>
-      <TvlChartIntermediary vaultsTvlChartData={vaultsTvlChartData} isLoading={isLoading} />
+      {isLoading ? (
+        <TvlChartIntermediary isLoading />
+      ) : (
+        <LazyTvlChart institutionName={institutionName} />
+      )}
       <Card variant="cardSecondary" className={panelInstitutionOverviewStyles.yourVaultsWrapper}>
         <Text variant="h5">Your Vaults</Text>
         <Card variant="cardPrimary">
