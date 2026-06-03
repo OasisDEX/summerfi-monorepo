@@ -1,7 +1,7 @@
 import { Text } from '@summerfi/app-earn-ui'
 import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
-import { isAddress } from '@summerfi/sdk-common'
 import { redirect } from 'next/navigation'
+import { isAddress } from 'viem'
 
 import {
   getCachedInstitutionBasicData,
