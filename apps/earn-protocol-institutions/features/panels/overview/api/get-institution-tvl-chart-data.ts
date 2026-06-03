@@ -1,22 +1,22 @@
 'use client'
 
-import { type MultipleSourceChartData } from '@summerfi/app-types'
 import { useQuery } from '@tanstack/react-query'
 
+import { type InstitutionOverviewChartData } from '@/app/server-handlers/institution/get-institution-tvl-chart-data'
 import { getInstitutionTvlChartQueryKey } from '@/features/panels/overview/api/institution-overview-query-keys'
 
 const encodeSegment = (value: string) => encodeURIComponent(value)
 
 export const fetchInstitutionTvlChart = async (
   institutionName: string,
-): Promise<MultipleSourceChartData | null> => {
+): Promise<InstitutionOverviewChartData | null> => {
   const response = await fetch(`/api/institution/${encodeSegment(institutionName)}/tvl-chart`)
 
   if (!response.ok) {
     throw new Error(`institution-tvl-chart ${response.status}`)
   }
 
-  return response.json() as Promise<MultipleSourceChartData | null>
+  return response.json() as Promise<InstitutionOverviewChartData | null>
 }
 
 const sharedQueryOptions = {
