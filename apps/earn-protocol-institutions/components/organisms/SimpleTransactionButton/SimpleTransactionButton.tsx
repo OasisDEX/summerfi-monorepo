@@ -105,9 +105,6 @@ export const SimpleTransactionButton = ({
     ) {
       executeTransaction(txItem)
     }
-
-    // eslint-disable-next-line no-console
-    console.log('Action not mapped')
   }, [executeTransaction, isLoading, txItem, txStatus])
 
   const buttonVariant = useMemo(() => {

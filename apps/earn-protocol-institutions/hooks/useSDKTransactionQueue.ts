@@ -72,11 +72,6 @@ export const useSDKTransactionQueue = () => {
     setTransactionQueue((prevQueue) => prevQueue.filter((item) => item.id !== id))
   }
 
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('Transaction Queue Updated:', transactionQueue)
-  }, [transactionQueue])
-
   return {
     transactionQueue,
     addTransaction,

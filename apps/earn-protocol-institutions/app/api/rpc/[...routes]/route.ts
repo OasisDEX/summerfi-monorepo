@@ -1,7 +1,24 @@
 import { NextResponse } from 'next/server'
 
+import { isSameOrigin } from '@/helpers/validate-same-origin'
+
 export async function POST(req: Request, { params }: { params: Promise<{ routes: string[] }> }) {
+  if (!isSameOrigin(req)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const { routes } = await params
+
+  // Reject path-traversal / separator-bearing segments so the upstream path can't be steered to an
+  // arbitrary Alchemy endpoint with our key.
+  if (
+    routes.some(
+      (segment) => !segment || segment === '.' || segment === '..' || /[/\\]/u.test(segment),
+    )
+  ) {
+    return NextResponse.json({ error: 'Invalid path' }, { status: 400 })
+  }
+
   const apiUrl = 'https://api.g.alchemy.com'
   const apiKey = process.env.ACCOUNT_KIT_API_KEY
 

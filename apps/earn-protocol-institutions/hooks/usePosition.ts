@@ -67,10 +67,13 @@ export const usePosition = ({
   const [isLoading, setIsLoading] = useState(false)
 
   const reFetchPosition = useCallback(async () => {
-    setIsLoading(true)
     if (!userWalletAddress) {
+      setIsLoading(false)
+
       return Promise.resolve(undefined)
     }
+
+    setIsLoading(true)
 
     return await updateUserPosition({
       vaultId,

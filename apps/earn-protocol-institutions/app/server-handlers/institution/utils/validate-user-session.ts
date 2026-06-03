@@ -18,23 +18,21 @@ export const validateInstitutionUserSession = async ({
     throw new Error('institutionId or institutionName is required')
   }
 
-  const isUserInInstitutionId = session?.user?.institutionsList
-    ?.map(({ name: iName }) => iName)
-    .includes(institutionName ?? '')
+  const institutionsList = session?.user?.institutionsList ?? []
 
-  const isUserInInstitutionName = session?.user?.institutionsList
-    ?.map(({ id: iId }) => iId)
-    .includes(Number(institutionId))
+  // Match on whichever identifier the caller supplied. Compare ids as strings so a non-numeric
+  // institutionId doesn't become NaN and silently fail to match.
+  const matchesByName =
+    institutionName !== undefined &&
+    institutionsList.some(({ name: entryName }) => entryName === institutionName)
 
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  const isUserInInstitution = isUserInInstitutionId || isUserInInstitutionName
+  const matchesById =
+    institutionId !== undefined &&
+    institutionsList.some(({ id }) => String(id) === String(institutionId))
+
+  const isUserInInstitution = matchesByName || matchesById
 
   if (!hasValidSession || !isUserInInstitution) {
-    // eslint-disable-next-line no-console
-    console.log(
-      `User is not authorized to manage institution (${institutionId}) users, user institutions:`,
-      JSON.stringify(session?.user?.institutionsList),
-    )
     try {
       await logout()
     } catch (error) {

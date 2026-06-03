@@ -28,7 +28,7 @@ export default async function InstitutionVaultVaultExposurePage({
     revalidate: INSTITUTIONS_CACHE_TIMES.VAULT_DETAILS,
     tags: [
       INSTITUTIONS_CACHE_TAGS.VAULT_DETAILS,
-      `vault-details-${institutionName}-${vaultAddress}`,
+      `vault-details-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}`,
     ],
   }
 

@@ -13,11 +13,15 @@ import {
   getSummerProtocolInstitutionDB,
   type UserRole,
 } from '@summerfi/summer-protocol-institutions-db'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { getCachedInstitutionRoles } from '@/app/server-handlers/institution/institution-data'
-import { getAllUsersInGroup } from '@/app/server-handlers/institution/institution-users/helpers'
+import {
+  cognitoGroupTag,
+  getCachedCognitoGroupUsers,
+} from '@/app/server-handlers/institution/institution-users/cached-cognito-users'
+import { escapeCognitoFilterValue } from '@/app/server-handlers/institution/institution-users/helpers'
 import { validateInstitutionUserSession } from '@/app/server-handlers/institution/utils/validate-user-session'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
@@ -32,24 +36,9 @@ const getAttr = (u: any | undefined, key: string) => {
 export const getInstitutionUsers = async (institutionName: string) => {
   'use server'
   await validateInstitutionUserSession({ institutionName })
-  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
-  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
-  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
-  const region = COGNITO_USER_POOL_REGION
-
-  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
-  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
-  })
-
-  const cognitoAdminClient = new CognitoIdentityProviderClient({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
   })
 
   try {
@@ -69,14 +58,12 @@ export const getInstitutionUsers = async (institutionName: string) => {
         ])
         .where('institutions.name', '=', institutionName)
         .execute(),
-      await getAllUsersInGroup(cognitoAdminClient, userPoolId, 'institution-user'),
+      getCachedCognitoGroupUsers('institution-user'),
     ])
 
     // enriched with cognito data
     const users = dbUsers.map(({ userSub, ...dbUser }) => {
-      const user = cognitoUsers.find((u) =>
-        u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
-      )
+      const user = cognitoUsers.find((cognitoUser) => cognitoUser.sub === userSub)
 
       if (!user) {
         // eslint-disable-next-line no-console
@@ -84,16 +71,13 @@ export const getInstitutionUsers = async (institutionName: string) => {
           `Warning: Cognito user with sub ${userSub} not found for institution ${institutionName}`,
         )
       }
-      const cognitoEmail = user?.Attributes?.find((a) => a.Name === 'email')?.Value
-      const cognitoUserName = user?.Username
-      const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
 
       return {
         ...dbUser,
         userSub,
-        cognitoEmail,
-        cognitoUserName,
-        cognitoName,
+        cognitoEmail: user?.email,
+        cognitoUserName: user?.username,
+        cognitoName: user?.name,
       }
     })
 
@@ -108,31 +92,15 @@ export const getInstitutionUsers = async (institutionName: string) => {
     throw new Error('Failed to fetch users list')
   } finally {
     db.destroy()
-    cognitoAdminClient.destroy()
   }
 }
 
 export const getInstitutionUser = async (institutionName: string, userId: string) => {
   'use server'
   await validateInstitutionUserSession({ institutionName })
-  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
-  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
-  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
-  const region = COGNITO_USER_POOL_REGION
-
-  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
-  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
-  })
-
-  const cognitoAdminClient = new CognitoIdentityProviderClient({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
   })
 
   try {
@@ -153,7 +121,7 @@ export const getInstitutionUser = async (institutionName: string, userId: string
         .where('institutions.name', '=', institutionName)
         .where('institutionUsers.id', '=', Number(userId))
         .executeTakeFirst(),
-      await getAllUsersInGroup(cognitoAdminClient, userPoolId, 'institution-user'),
+      getCachedCognitoGroupUsers('institution-user'),
     ])
 
     if (!dbUsers) {
@@ -162,19 +130,14 @@ export const getInstitutionUser = async (institutionName: string, userId: string
 
     // enriched with cognito data
     const users = [dbUsers].map(({ userSub, ...dbUser }) => {
-      const user = cognitoUsers.find((u) =>
-        u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
-      )
-      const cognitoEmail = user?.Attributes?.find((a) => a.Name === 'email')?.Value
-      const cognitoUserName = user?.Username
-      const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
+      const user = cognitoUsers.find((cognitoUser) => cognitoUser.sub === userSub)
 
       return {
         ...dbUser,
         userSub,
-        cognitoEmail,
-        cognitoUserName,
-        cognitoName,
+        cognitoEmail: user?.email,
+        cognitoUserName: user?.username,
+        cognitoName: user?.name,
       }
     })
 
@@ -189,7 +152,6 @@ export const getInstitutionUser = async (institutionName: string, userId: string
     throw new Error('Failed to fetch user')
   } finally {
     db.destroy()
-    cognitoAdminClient.destroy()
   }
 }
 
@@ -231,7 +193,7 @@ export const addInstitutionUser = async (_prevState: unknown, formData: FormData
     const found = await cognitoClient.send(
       new ListUsersCommand({
         UserPoolId: userPoolId,
-        Filter: `email = "${email}"`,
+        Filter: `email = "${escapeCognitoFilterValue(email)}"`,
         Limit: 1,
       }),
     )
@@ -310,6 +272,7 @@ export const addInstitutionUser = async (_prevState: unknown, formData: FormData
         .values({ userSub: sub, institutionId: institutionId.id, role })
         .execute()
 
+      revalidateTag(cognitoGroupTag('institution-user'), { expire: 0 })
       revalidatePath(`/${institutionName}/overview/manage-internal-users`)
 
       return { success: true }
@@ -377,7 +340,7 @@ export const updateInstitutionUser = async (_prevState: unknown, formData: FormD
         cognitoClient.send(
           new ListUsersCommand({
             UserPoolId: userPoolId,
-            Filter: `sub = "${userSub}"`,
+            Filter: `sub = "${escapeCognitoFilterValue(userSub)}"`,
             Limit: 1,
           }),
         ),
@@ -428,6 +391,7 @@ export const updateInstitutionUser = async (_prevState: unknown, formData: FormD
         ),
       )
 
+      revalidateTag(cognitoGroupTag('institution-user'), { expire: 0 })
       revalidatePath(`/${institutionName.name}/overview/manage-internal-users`)
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -469,7 +433,11 @@ export async function institutionDeleteCognitoUser(userSub: string, institutionI
 
   try {
     const userData = await cognitoAdminClient.send(
-      new ListUsersCommand({ UserPoolId: userPoolId, Filter: `sub = "${userSub}"`, Limit: 1 }),
+      new ListUsersCommand({
+        UserPoolId: userPoolId,
+        Filter: `sub = "${escapeCognitoFilterValue(userSub)}"`,
+        Limit: 1,
+      }),
     )
 
     if (!userData.Users || userData.Users.length === 0) {
@@ -557,6 +525,7 @@ export const removeInstitutionUser = async (_prevState: unknown, formData: FormD
   } finally {
     db.destroy()
     cognitoAdminClient.destroy()
+    revalidateTag(cognitoGroupTag('institution-user'), { expire: 0 })
     redirect(`/${institutionName}/overview/manage-internal-users`)
   }
 }

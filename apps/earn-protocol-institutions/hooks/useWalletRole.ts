@@ -41,8 +41,6 @@ export const useWalletGlobalRole = ({ institutionName }: { institutionName: stri
         if (data?.walletAddressRoles) {
           setConnectedRoles(data.walletAddressRoles)
         } else {
-          // eslint-disable-next-line no-console
-          console.log('No role found for wallet address')
           setConnectedRoles(null)
         }
       })

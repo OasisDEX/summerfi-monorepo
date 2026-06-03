@@ -14,11 +14,15 @@ import {
   getSummerProtocolInstitutionDB,
   type UserRole,
 } from '@summerfi/summer-protocol-institutions-db'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { rootAdminValidateAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
-import { getAllUsersInGroup } from '@/app/server-handlers/institution/institution-users/helpers'
+import {
+  cognitoGroupTag,
+  getCachedCognitoGroupUsers,
+} from '@/app/server-handlers/institution/institution-users/cached-cognito-users'
+import { escapeCognitoFilterValue } from '@/app/server-handlers/institution/institution-users/helpers'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
 // this is just a simple helper function to extract user attributes
@@ -51,7 +55,11 @@ export async function rootAdminActionDeleteCognitoUser(userSub: string) {
   try {
     const userData = await cognitoAdminClient
       .send(
-        new ListUsersCommand({ UserPoolId: userPoolId, Filter: `sub = "${userSub}"`, Limit: 1 }),
+        new ListUsersCommand({
+          UserPoolId: userPoolId,
+          Filter: `sub = "${escapeCognitoFilterValue(userSub)}"`,
+          Limit: 1,
+        }),
       )
       .catch((error) => {
         throw new Error(`Error fetching user with sub ${userSub}: ${error}`)
@@ -124,7 +132,7 @@ export async function rootAdminActionCreateUser(formData: FormData) {
     .send(
       new ListUsersCommand({
         UserPoolId: userPoolId,
-        Filter: `email = "${email}"`,
+        Filter: `email = "${escapeCognitoFilterValue(email)}"`,
         Limit: 1,
       }),
     )
@@ -206,6 +214,7 @@ export async function rootAdminActionCreateUser(formData: FormData) {
   try {
     await db.insertInto('institutionUsers').values({ userSub: sub, institutionId, role }).execute()
 
+    revalidateTag(cognitoGroupTag('institution-user'), { expire: 0 })
     revalidatePath('/admin/users')
   } catch (error) {
     // Handle errors
@@ -271,6 +280,7 @@ export async function rootAdminActionDeleteWholeUser(formData: FormData) {
   } finally {
     db.destroy()
     cognitoAdminClient.destroy()
+    revalidateTag(cognitoGroupTag('institution-user'), { expire: 0 })
     redirect('/admin/users')
   }
 }
@@ -320,7 +330,7 @@ export async function rootAdminActionUpdateUser(formData: FormData) {
       .send(
         new ListUsersCommand({
           UserPoolId: userPoolId,
-          Filter: `sub = "${userSub}"`,
+          Filter: `sub = "${escapeCognitoFilterValue(userSub)}"`,
           Limit: 1,
         }),
       )
@@ -374,6 +384,7 @@ export async function rootAdminActionUpdateUser(formData: FormData) {
   } finally {
     cognitoClient.destroy()
     db.destroy()
+    revalidateTag(cognitoGroupTag('institution-user'), { expire: 0 })
     redirect('/admin/users')
   }
 }
@@ -381,28 +392,13 @@ export async function rootAdminActionUpdateUser(formData: FormData) {
 export async function rootAdminActionGetUsersList() {
   'use server'
   await rootAdminValidateAdminSession()
-  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
-  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
-  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
-  const region = COGNITO_USER_POOL_REGION
-
-  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
-  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
   })
 
-  const cognitoAdminClient = new CognitoIdentityProviderClient({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  })
-
   try {
-    const [dbUsers] = await Promise.all([
+    const [dbUsers, cognitoUsers] = await Promise.all([
       db
         .selectFrom('institutionUsers')
         .leftJoin('institutions', 'institutions.id', 'institutionUsers.institutionId')
@@ -415,29 +411,19 @@ export async function rootAdminActionGetUsersList() {
           'institutions.displayName as institutionDisplayName',
         ])
         .execute(),
+      getCachedCognitoGroupUsers('institution-user'),
     ])
-
-    const cognitoUsers = await getAllUsersInGroup(
-      cognitoAdminClient,
-      userPoolId,
-      'institution-user',
-    )
 
     // enriched with cognito data
     const users = dbUsers.map(({ userSub, ...dbUser }) => {
-      const user = cognitoUsers.find((u) =>
-        u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
-      )
-      const cognitoEmail = user?.Attributes?.find((a) => a.Name === 'email')?.Value
-      const cognitoUserName = user?.Username
-      const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
+      const user = cognitoUsers.find((cognitoUser) => cognitoUser.sub === userSub)
 
       return {
         ...dbUser,
         userSub,
-        cognitoEmail,
-        cognitoUserName,
-        cognitoName,
+        cognitoEmail: user?.email,
+        cognitoUserName: user?.username,
+        cognitoName: user?.name,
       }
     })
 
@@ -452,7 +438,6 @@ export async function rootAdminActionGetUsersList() {
     throw new Error('Failed to fetch users list')
   } finally {
     db.destroy()
-    cognitoAdminClient.destroy()
   }
 }
 
@@ -503,7 +488,7 @@ export async function rootAdminActionGetUserData(userDbId: number) {
     .send(
       new ListUsersCommand({
         UserPoolId: userPoolId,
-        Filter: `sub = "${dbUser.userSub}"`,
+        Filter: `sub = "${escapeCognitoFilterValue(dbUser.userSub)}"`,
         Limit: 1,
       }),
     )
@@ -529,49 +514,27 @@ export async function rootAdminActionGetUserData(userDbId: number) {
 export async function rootAdminActionGetGlobalAdminsList() {
   'use server'
   await rootAdminValidateAdminSession()
-  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
-  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
-  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
-  const region = COGNITO_USER_POOL_REGION
-
-  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
-  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
   })
-  const cognitoAdminClient = new CognitoIdentityProviderClient({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  })
 
   try {
-    const [globalAdmins] = await Promise.all([db.selectFrom('globalAdmins').selectAll().execute()])
-
-    const cognitoUsers = await getAllUsersInGroup(
-      cognitoAdminClient,
-      userPoolId,
-      'institution-user',
-    )
+    const [globalAdmins, cognitoUsers] = await Promise.all([
+      db.selectFrom('globalAdmins').selectAll().execute(),
+      getCachedCognitoGroupUsers('institution-user'),
+    ])
 
     // enriched with cognito data
     const admins = globalAdmins.map(({ userSub, ...dbUser }) => {
-      const user = cognitoUsers.find((u) =>
-        u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
-      )
-      const cognitoUserName = user?.Username
-      const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
-      const cognitoEmail = user?.Attributes?.find((a) => a.Name === 'email')?.Value
+      const user = cognitoUsers.find((cognitoUser) => cognitoUser.sub === userSub)
 
       return {
         ...dbUser,
         userSub,
-        cognitoEmail,
-        cognitoUserName,
-        cognitoName,
+        cognitoEmail: user?.email,
+        cognitoUserName: user?.username,
+        cognitoName: user?.name,
       }
     })
 
@@ -585,7 +548,6 @@ export async function rootAdminActionGetGlobalAdminsList() {
 
     throw new Error('Failed to fetch global admins')
   } finally {
-    cognitoAdminClient.destroy()
     db.destroy()
   }
 }
@@ -623,7 +585,7 @@ export async function rootAdminActionGetGlobalAdminData(userDbId: number) {
       .send(
         new ListUsersCommand({
           UserPoolId: userPoolId,
-          Filter: `sub = "${globalAdmin.userSub}"`,
+          Filter: `sub = "${escapeCognitoFilterValue(globalAdmin.userSub)}"`,
           Limit: 1,
         }),
       )

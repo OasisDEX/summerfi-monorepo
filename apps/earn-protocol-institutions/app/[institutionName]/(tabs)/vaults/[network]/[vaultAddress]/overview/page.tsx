@@ -1,18 +1,12 @@
 import { Text } from '@summerfi/app-earn-ui'
-import { getArksInterestRates, getVaultsHistoricalApy } from '@summerfi/app-server-handlers'
-import { humanNetworktoSDKNetwork, subgraphNetworkToId, ten } from '@summerfi/app-utils'
-import { Address, ArmadaVaultId, getChainInfoByChainId, isAddress } from '@summerfi/sdk-common'
-import BigNumber from 'bignumber.js'
+import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
+import { isAddress } from '@summerfi/sdk-common'
 import { redirect } from 'next/navigation'
 
 import {
   getCachedInstitutionBasicData,
-  getCachedInstitutionVaultPerformanceData,
   getCachedVaultDetails,
 } from '@/app/server-handlers/institution/institution-vaults'
-import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
-import { getArkHistoricalChartData } from '@/features/charts/mappers/mapApyChartData'
-import { mapSinglePointChartData } from '@/features/charts/mappers/mapSinglePointChartData'
 import { PanelOverview } from '@/features/panels/vaults/components/PanelOverview/PanelOverview'
 import { getInstiVaultNiceName } from '@/helpers/get-insti-vault-nice-name'
 
@@ -24,23 +18,14 @@ export default async function InstitutionVaultOverviewPage({
   const { institutionName, vaultAddress, network } = await params
 
   const parsedNetwork = humanNetworktoSDKNetwork(network)
-  const institutionSdk = getInstitutionsSDK(institutionName)
-  const chainId = subgraphNetworkToId(parsedNetwork)
-  const chainInfo = getChainInfoByChainId(chainId)
-  const fleetAddress = Address.createFromEthereum({
-    value: vaultAddress,
-  })
-
-  const vaultId = ArmadaVaultId.createFrom({
-    chainInfo,
-    fleetAddress,
-  })
   const parsedVaultAddress = vaultAddress.toLowerCase()
 
   if (!parsedVaultAddress && !isAddress(vaultAddress)) {
     redirect('/not-found')
   }
 
+  // Core / above-the-fold only: the vault name + the contracts table. The NAV / AUM / ARK charts
+  // (which need four heavy fetches) are deferred to a scroll-gated client query inside PanelOverview.
   const [vault, institutionBasicData] = await Promise.all([
     getCachedVaultDetails({
       institutionName,
@@ -61,48 +46,6 @@ export default async function InstitutionVaultOverviewPage({
     )
   }
 
-  const [arkInterestRatesMap, performanceData, vaultInfo, vaultInterestRates] = await Promise.all([
-    getArksInterestRates({
-      network: parsedNetwork,
-      arksList: vault.arks,
-    }),
-    getCachedInstitutionVaultPerformanceData({
-      vaultAddress,
-      network: parsedNetwork,
-      institutionName,
-    }),
-    institutionSdk.armada.users.getVaultInfo({
-      vaultId,
-    }),
-    getVaultsHistoricalApy({
-      // just the vault displayed
-      fleets: [
-        {
-          fleetAddress: vaultAddress,
-          chainId,
-        },
-      ],
-    }),
-  ])
-
-  const navChartData = mapSinglePointChartData({
-    performanceData,
-    currentPointValue: vaultInfo.sharePrice.value.toString(),
-    pointName: 'navPrice',
-  })
-  const aumChartData = mapSinglePointChartData({
-    performanceData,
-    currentPointValue: new BigNumber(vault.inputTokenBalance.toString())
-      .div(ten.pow(vault.inputToken.decimals))
-      .toString(),
-    pointName: 'netValue',
-  })
-  const arksHistoricalChartData = getArkHistoricalChartData({
-    vault,
-    arkInterestRatesMap,
-    vaultInterestRates,
-    institutionName,
-  })
   const summerVaultName = getInstiVaultNiceName({
     network: parsedNetwork,
     symbol: vault.inputToken.symbol,
@@ -112,11 +55,10 @@ export default async function InstitutionVaultOverviewPage({
   return (
     <PanelOverview
       vaultAddress={parsedVaultAddress}
-      navChartData={navChartData}
-      aumChartData={aumChartData}
-      arksHistoricalChartData={arksHistoricalChartData}
       summerVaultName={summerVaultName}
       institutionBasicData={institutionBasicData}
+      institutionName={institutionName}
+      network={network}
     />
   )
 }

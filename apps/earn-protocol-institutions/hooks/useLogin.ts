@@ -74,9 +74,6 @@ export const useLogin = () => {
       replace('/admin/institutions')
     } else if (userData?.institutionsList?.[0]?.name) {
       replace(`${userData.institutionsList[0].name}/overview/institution`)
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('No valid redirection path found for the user.')
     }
   }
 
@@ -120,8 +117,7 @@ export const useLogin = () => {
         setSuccessfulLogin(true)
         handleRedirect(me.user)
       } else {
-        // eslint-disable-next-line no-console
-        console.log('No user data returned after sign in.')
+        setError('No user data returned after sign in.')
         setIsLoadingLoginView(false)
       }
     } catch (err) {

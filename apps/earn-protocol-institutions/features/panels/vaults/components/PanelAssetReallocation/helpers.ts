@@ -1,4 +1,5 @@
 import { type SDKVaultType } from '@summerfi/app-types'
+import BigNumber from 'bignumber.js'
 
 /**
  * Returns an object with the initial balance state for each Ark in the vault.
@@ -28,17 +29,19 @@ export const getAssetReallocationModifiedVault = (
   balanceRemoveChange: { [key: string]: string },
 ) => {
   const modifiedArks = vault.arks.map((ark) => {
-    const addAmount = Number(balanceAddChange[ark.id] || 0)
-    const removeAmount = Number(balanceRemoveChange[ark.id] || 0)
-    const netChange = addAmount - removeAmount
+    const addAmount = new BigNumber(balanceAddChange[ark.id] || 0)
+    const removeAmount = new BigNumber(balanceRemoveChange[ark.id] || 0)
 
-    // Convert the net change to wei (multiply by 10^decimals)
-    // eslint-disable-next-line no-mixed-operators
-    const netChangeInWei = netChange * 10 ** vault.inputToken.decimals
+    // Convert the net change to wei (multiply by 10^decimals) and add to the existing balance,
+    // doing all arithmetic in BigNumber so 18-decimal values don't lose precision in JS floats
+    // before the BigInt conversion.
+    const nextBalanceWei = new BigNumber(ark.inputTokenBalance.toString()).plus(
+      addAmount.minus(removeAmount).times(new BigNumber(10).pow(vault.inputToken.decimals)),
+    )
 
     return {
       ...ark,
-      inputTokenBalance: BigInt(Number(ark.inputTokenBalance) + netChangeInWei),
+      inputTokenBalance: BigInt(nextBalanceWei.toFixed(0)),
     }
   })
 
