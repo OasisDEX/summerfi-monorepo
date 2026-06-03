@@ -20,7 +20,7 @@ export default async function InstitutionVaultOverviewPage({
   const parsedNetwork = humanNetworktoSDKNetwork(network)
   const parsedVaultAddress = vaultAddress.toLowerCase()
 
-  if (!parsedVaultAddress && !isAddress(vaultAddress)) {
+  if (!isAddress(vaultAddress)) {
     redirect('/not-found')
   }
 

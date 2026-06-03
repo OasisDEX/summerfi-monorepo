@@ -32,14 +32,16 @@ export const getVaultOverviewChartsData = async ({
   network: string
 }): Promise<VaultOverviewChartsData | null> => {
   const parsedNetwork = humanNetworktoSDKNetwork(network)
+  // Normalise once and reuse for every keyed call so the vault-details / performance / historical
+  // caches and the SDK vault id all key off the same lowercased address (no cache misses).
+  const parsedVaultAddress = vaultAddress.toLowerCase()
   const institutionSdk = getInstitutionsSDK(institutionName)
   const chainId = subgraphNetworkToId(parsedNetwork)
   const chainInfo = getChainInfoByChainId(chainId)
   const vaultId = ArmadaVaultId.createFrom({
     chainInfo,
-    fleetAddress: Address.createFromEthereum({ value: vaultAddress }),
+    fleetAddress: Address.createFromEthereum({ value: parsedVaultAddress }),
   })
-  const parsedVaultAddress = vaultAddress.toLowerCase()
 
   const vault = await getCachedVaultDetails({
     institutionName,
@@ -57,7 +59,7 @@ export const getVaultOverviewChartsData = async ({
       arksList: vault.arks,
     }),
     getCachedInstitutionVaultPerformanceData({
-      vaultAddress,
+      vaultAddress: parsedVaultAddress,
       network: parsedNetwork,
       institutionName,
     }),
@@ -68,7 +70,7 @@ export const getVaultOverviewChartsData = async ({
       // just the vault displayed
       fleets: [
         {
-          fleetAddress: vaultAddress,
+          fleetAddress: parsedVaultAddress,
           chainId,
         },
       ],

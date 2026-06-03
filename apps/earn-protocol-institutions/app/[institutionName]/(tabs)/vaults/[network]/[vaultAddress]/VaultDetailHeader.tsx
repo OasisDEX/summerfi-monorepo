@@ -49,6 +49,13 @@ export const VaultDetailHeader = async ({
     .toNumber()
   const vaultSelector = `${institutionVault.vault.id}-${subgraphNetworkToId(supportedSDKNetwork(institutionVault.vault.protocol.network))}`
 
+  const { vaultApyMap, vaultSharePriceMap } = institutionVaults.vaultsAdditionalInfo
+  // Index access hides `undefined` from the type, but the selector can genuinely be absent at
+  // runtime; the `in` guard makes `apyEntry` `... | undefined` so the optional access is real.
+  const apyEntry = vaultSelector in vaultApyMap ? vaultApyMap[vaultSelector] : undefined
+  const liveApy = apyEntry?.apyLive ? apyEntry.apyLive / 100 : undefined
+  const sharePrice = vaultSharePriceMap[vaultSelector]
+
   return (
     <DashboardVaultHeader
       vaultName={getInstiVaultNiceName({
@@ -56,18 +63,8 @@ export const VaultDetailHeader = async ({
         network: institutionVault.vault.protocol.network,
         institutionName,
       })}
-      liveApy={
-        institutionVaults.vaultsAdditionalInfo.vaultApyMap[vaultSelector].apyLive
-          ? institutionVaults.vaultsAdditionalInfo.vaultApyMap[vaultSelector].apyLive / 100
-          : undefined
-      }
-      nav={
-        institutionVaults.vaultsAdditionalInfo.vaultSharePriceMap[vaultSelector]
-          ? formatCryptoBalance(
-              institutionVaults.vaultsAdditionalInfo.vaultSharePriceMap[vaultSelector],
-            )
-          : 'n/a'
-      }
+      liveApy={liveApy}
+      nav={sharePrice ? formatCryptoBalance(sharePrice) : 'n/a'}
       aum={aum}
       fee={(institutionVaultFeeRevenueConfig?.vaultFeeAmount.value.valueOf() ?? 0) / 100}
       inception={inception}

@@ -25,7 +25,7 @@ const TOP_BLOCK_KEYS = ['total-value', 'vault-count', 'apy-30d', 'all-time']
 export const InstitutionTabsHeader = async ({ institutionName }: { institutionName: string }) => {
   const institutionVaults = await getCachedInstitutionVaults({ institutionName })
 
-  if (!institutionVaults?.vaults) {
+  if (!institutionVaults?.vaults.length) {
     return <div>Institution not found.</div>
   }
 

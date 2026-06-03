@@ -23,19 +23,20 @@ export default async function InstitutionVaultVaultExposurePage({
   const { institutionName, vaultAddress, network } = await params
 
   const parsedNetwork = humanNetworktoSDKNetwork(network)
+  const parsedVaultAddress = vaultAddress.toLowerCase()
 
   const cacheConfig = {
     revalidate: INSTITUTIONS_CACHE_TIMES.VAULT_DETAILS,
     tags: [
       INSTITUTIONS_CACHE_TAGS.VAULT_DETAILS,
-      `vault-details-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}`,
+      `vault-details-${institutionName.toLowerCase()}-${parsedVaultAddress}`,
     ],
   }
 
   const [vault, config, arksDeployedOnChain] = await Promise.all([
     getCachedVaultDetails({
       institutionName,
-      vaultAddress,
+      vaultAddress: parsedVaultAddress,
       network: parsedNetwork,
     }),
     getCachedConfig(),

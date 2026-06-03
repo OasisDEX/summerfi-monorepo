@@ -522,7 +522,9 @@ export async function rootAdminActionGetGlobalAdminsList() {
   try {
     const [globalAdmins, cognitoUsers] = await Promise.all([
       db.selectFrom('globalAdmins').selectAll().execute(),
-      getCachedCognitoGroupUsers('institution-user'),
+      // Global admins are added to the 'global-admin' Cognito group (see rootAdminActionCreateGlobalAdmin),
+      // so enrich against that group rather than 'institution-user'.
+      getCachedCognitoGroupUsers('global-admin'),
     ])
 
     // enriched with cognito data
@@ -689,6 +691,8 @@ export async function rootAdminActionCreateGlobalAdmin(formData: FormData) {
       })
       .execute()
 
+    revalidateTag(cognitoGroupTag('global-admin'), { expire: 0 })
+
     // eslint-disable-next-line no-console
     console.log(`Global admin created successfully: ${userSub}`)
   } catch (error) {
@@ -749,6 +753,7 @@ export async function rootAdminActionDeleteGlobalAdmin(formData: FormData) {
   } finally {
     cognitoAdminClient.destroy()
     db.destroy()
+    revalidateTag(cognitoGroupTag('global-admin'), { expire: 0 })
     redirect('/admin/global-admins')
   }
 }
@@ -803,6 +808,7 @@ export async function rootAdminActionUpdateGlobalAdmin(formData: FormData) {
     throw new Error('Failed to update global admin')
   } finally {
     cognitoAdminClient.destroy()
+    revalidateTag(cognitoGroupTag('global-admin'), { expire: 0 })
     redirect('/admin/global-admins')
   }
 }
