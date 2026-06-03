@@ -8,9 +8,9 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Contract Role Grant/Revoke', () => {
-  const { sdk, chainId, userAddress, fleetAddress, governorSendTxTool } = createAdminSdkTestSetup(
-    TestClientIds.ACME,
-  )
+  const { sdk, chainId, userAddress, fleetAddress, governorSendTxTool } = createAdminSdkTestSetup({
+    clientId: TestClientIds.ACME,
+  })
 
   const contractAddress = fleetAddress
   const targetAddress = userAddress

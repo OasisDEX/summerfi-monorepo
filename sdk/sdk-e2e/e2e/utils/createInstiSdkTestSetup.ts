@@ -1,7 +1,13 @@
-import { makeInstiSdk } from '@summerfi/sdk-client'
+import { makeAdminSDK, makeInstiSdk } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
-import type { InstiVersion } from '@summerfi/sdk-client'
-import { SDKApiUrl, TestConfigAccounts, RwaTestConfig } from './testConfig'
+import type { ChainId, InstiVersion } from '@summerfi/sdk-client'
+import {
+  SDKApiUrl,
+  TestConfigAccounts,
+  RwaTestConfig,
+  TestClientIds,
+  InstiTestConfigs,
+} from './testConfig'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 
 /**
@@ -20,17 +26,39 @@ export function createInstiSdkTestSetup(
     simulateOnly?: boolean
   } = {},
 ) {
-  const { clientId = RwaTestConfig.clientId, instiVersion = 'v2', simulateOnly = true } = params
+  const { clientId, instiVersion, simulateOnly = true } = params
 
-  const chainId = RwaTestConfig.chainId
-  const rpcUrl = RwaTestConfig.rpcUrl
+  let sdk: ReturnType<typeof makeInstiSdk> | ReturnType<typeof makeAdminSDK>
+  let chainId: ChainId
+  let rpcUrl: string
+  let fleetAddress: Address
 
-  const sdk = makeInstiSdk({
-    clientId,
-    instiVersion,
-    apiDomainUrl: SDKApiUrl,
-    logging: process.env.SDK_LOGGING_ENABLED === 'true',
-  })
+  if (instiVersion) {
+    sdk = makeInstiSdk({
+      clientId: clientId ?? RwaTestConfig.clientId,
+      instiVersion,
+      apiDomainUrl: SDKApiUrl,
+      logging: process.env.SDK_LOGGING_ENABLED === 'true',
+    })
+    chainId = RwaTestConfig.chainId
+    rpcUrl = RwaTestConfig.rpcUrl
+    fleetAddress = Address.createFromEthereum({
+      value: RwaTestConfig.fleetAddressValue,
+    })
+  } else {
+    const _clientId = clientId ?? TestClientIds.ACME
+    const config = InstiTestConfigs[_clientId as TestClientIds]
+    sdk = makeAdminSDK({
+      clientId: _clientId,
+      apiDomainUrl: SDKApiUrl,
+      logging: process.env.SDK_LOGGING_ENABLED === 'true',
+    })
+    chainId = config.chainId
+    rpcUrl = config.rpcUrl
+    fleetAddress = Address.createFromEthereum({
+      value: config.fleetAddressValue,
+    })
+  }
 
   const userAddress = Address.createFromEthereum({
     value: TestConfigAccounts.testUserAddressValue,
@@ -60,6 +88,7 @@ export function createInstiSdkTestSetup(
     chainId,
     clientId,
     instiVersion,
+    fleetAddress,
     userAddress,
     governorAddress,
     userSendTxTool,

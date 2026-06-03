@@ -63,7 +63,7 @@ describe('Armada Protocol - Positions', () => {
     it('should get user positions', async () => {
       // Choose SDK setup based on scenario
       const setup = testClientId
-        ? createAdminSdkTestSetup(testClientId)
+        ? createAdminSdkTestSetup({ clientId: testClientId })
         : createSdkTestSetup({ chainId: scenarioChainId ?? ChainIds.Base })
       const { sdk, chainId, userAddress } = setup
 

@@ -38,7 +38,7 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
 
     it('should check contract-specific role', async () => {
       const { sdk, chainId, fleetAddress, governorAddress, governorSendTxTool } =
-        createAdminSdkTestSetup(TestClientIds.ACME)
+        createAdminSdkTestSetup({ clientId: TestClientIds.ACME })
       const contractAddress = fleetAddress
 
       // Resolve targetAddress from key

@@ -1,5 +1,6 @@
-import { makeAdminSDK, makeSDK } from '@summerfi/sdk-client'
+import { makeAdminSDK, makeInstiSdk, makeSDK } from '@summerfi/sdk-client'
 import { SDKApiUrl } from './testConfig'
+import type { InstiVersion } from '@summerfi/sdk-common'
 
 /**
  * Creates a configured SDK instance for e2e tests
@@ -7,14 +8,24 @@ import { SDKApiUrl } from './testConfig'
  */
 export function createTestSdkInstance(
   clientId?: string,
-): ReturnType<typeof makeSDK> | ReturnType<typeof makeAdminSDK> {
+  instiVersion?: InstiVersion,
+): ReturnType<typeof makeSDK> | ReturnType<typeof makeAdminSDK> | ReturnType<typeof makeInstiSdk> {
   if (clientId) {
-    return makeAdminSDK({
-      apiDomainUrl: SDKApiUrl,
-      clientId,
-      // version: 'v1',
-      logging: process.env.SDK_LOGGING_ENABLED === 'true',
-    })
+    if (instiVersion) {
+      return makeInstiSdk({
+        apiDomainUrl: SDKApiUrl,
+        clientId,
+        instiVersion,
+        logging: process.env.SDK_LOGGING_ENABLED === 'true',
+      })
+    } else {
+      return makeAdminSDK({
+        apiDomainUrl: SDKApiUrl,
+        clientId,
+        // version: 'v1',
+        logging: process.env.SDK_LOGGING_ENABLED === 'true',
+      })
+    }
   }
 
   return makeSDK({

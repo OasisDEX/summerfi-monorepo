@@ -2,7 +2,7 @@ import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { ArmadaSubgraphManager } from './armada/ArmadaSubgraphManager'
 import { DcaSubgraphManager } from './dca/DcaSubgraphManager'
 import { RwaSubgraphManager } from './rwa/RwaSubgraphManager'
-import type { InstiVersion } from '../types'
+import type { InstiVersion } from '@summerfi/sdk-common'
 
 /**
  * @name SubgraphManagerFactory

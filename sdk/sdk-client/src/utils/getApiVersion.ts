@@ -1,4 +1,6 @@
-const getApiVersion = (version?: 'v1' | 'v2') => {
+import type { SDKApiVersion } from '../implementation/MakeSDK'
+
+const getApiVersion = (version?: SDKApiVersion) => {
   if (version) {
     // validate version with regex
     if (!/^v[1-2]$/.test(version)) {

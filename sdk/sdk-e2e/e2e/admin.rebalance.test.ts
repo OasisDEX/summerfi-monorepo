@@ -1,6 +1,5 @@
 import { Address, ArmadaVaultId, getChainInfoByChainId, TokenAmount } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
-import type { RebalanceScenario } from './utils/types'
 
 jest.setTimeout(5 * 60 * 1000) // 5 minutes
 
@@ -23,7 +22,13 @@ describe('Armada Protocol - Admin Rebalance E2E Tests', () => {
     value: '0xC01348b33Dd2431980688DBd0D1956BA1e642172',
   })
 
-  const rebalanceScenarios: RebalanceScenario[] = [
+  const rebalanceScenarios: {
+    description: string
+    fromArk: Address
+    toArk: Address
+    amount: string
+    tokenSymbol: string
+  }[] = [
     {
       description: 'Buffer ark to Aave ark',
       fromArk: bufferArk,

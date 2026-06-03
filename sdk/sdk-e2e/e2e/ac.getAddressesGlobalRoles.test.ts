@@ -8,7 +8,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Get Addresses with General Role', () => {
-  const { sdk, chainId } = createAdminSdkTestSetup(TestClientIds.ACME)
+  const { sdk, chainId } = createAdminSdkTestSetup({ clientId: TestClientIds.ACME })
 
   test('should get all addresses for each general role', async () => {
     const roles = Object.values(GlobalRoles) as GlobalRoles[]

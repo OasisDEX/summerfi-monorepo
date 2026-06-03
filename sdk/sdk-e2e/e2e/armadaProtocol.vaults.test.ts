@@ -49,7 +49,7 @@ describe('Armada Protocol - All Vaults', () => {
     it('should get all vaults with info', async () => {
       // Choose SDK setup based on scenario
       const setup = testClientId
-        ? createAdminSdkTestSetup(testClientId)
+        ? createAdminSdkTestSetup({ clientId: testClientId })
         : createSdkTestSetup({ chainId })
       const { sdk } = setup
 

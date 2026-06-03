@@ -37,9 +37,9 @@ describe('Armada Protocol - Access Control Global Role Checking', () => {
     } = scenario
 
     it('should check if address has global role', async () => {
-      const { sdk, chainId, governorAddress, governorSendTxTool } = createAdminSdkTestSetup(
-        TestClientIds.ACME,
-      )
+      const { sdk, chainId, governorAddress, governorSendTxTool } = createAdminSdkTestSetup({
+        clientId: TestClientIds.ACME,
+      })
 
       // Resolve targetAddress from key
       const targetAddress =

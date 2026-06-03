@@ -471,3 +471,4 @@ export { NATIVE_CURRENCY_ADDRESS_LOWERCASE } from './common/utils/nativeCurrency
 export type { VaultApys } from './common/types/VaultApys'
 export { MAX_UINT256_STRING } from './common/utils/constants'
 export { toBytes32InHex } from './common/utils/toBytes32InHex'
+export type { InstiVersion } from './common/types/InstiVersion'

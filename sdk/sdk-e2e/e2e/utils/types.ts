@@ -5,7 +5,6 @@ import type {
   AddressValue,
   GraphRoleName,
   ChainId,
-  FiatCurrency,
   Percentage,
 } from '@summerfi/sdk-common'
 import type { TestConfigs, TestClientIds } from './testConfig'
@@ -36,14 +35,6 @@ export type GetAllRolesScenario = {
   first?: number
   skip?: number
   expectedMinimumCount?: number
-}
-
-export type RebalanceScenario = {
-  description: string
-  fromArk: Address
-  toArk: Address
-  amount: string
-  tokenSymbol: string
 }
 
 export type PositionsScenario = {

@@ -1,4 +1,4 @@
-import { LoggingService, SerializationService } from '@summerfi/sdk-common'
+import { LoggingService, SerializationService, type InstiVersion } from '@summerfi/sdk-common'
 import type { SDKAppRouter } from '@summerfi/sdk-server'
 import { createTRPCClient, httpBatchLink, loggerLink, splitLink } from '@trpc/client'
 
@@ -42,7 +42,7 @@ export function createMainRPCClient(params: {
   apiURL: string
   clientId?: string
   /** Institutional deployment-config version forwarded as the `Insti-Version` header (e.g. 'v2'). */
-  instiVersion?: string
+  instiVersion?: InstiVersion
   logging?: boolean
 }): RPCMainClientType {
   const customHeaders = () => ({

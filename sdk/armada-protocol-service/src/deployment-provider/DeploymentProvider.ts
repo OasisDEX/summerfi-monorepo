@@ -33,7 +33,9 @@ export const DeploymentProvider = (
       checkSupportedChainId(supportedChainIds, params.chainId)
       const config = configs.find((c) => c.chainId === params.chainId)
       if (!config) {
-        throw new Error(`No deployment config found for chainId ${params.chainId}`)
+        throw new Error(
+          `No deployment config found for chainId ${params.chainId}. Supported chainIds: ${supportedChainIds.join(', ')} and configs for chainIds: ${configs.map((c) => c.chainId).join(', ')}`,
+        )
       }
       return getDeployedContractAddress({
         config,

@@ -44,6 +44,7 @@ import {
   type ChainId,
   type EarnAppCookieVerifier,
   type IChainInfo,
+  type InstiVersion,
 } from '@summerfi/sdk-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { TokensManagerFactory } from '@summerfi/tokens-service'
@@ -144,11 +145,11 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
 
   // Institutional deployment-config version (set by makeInstiSdk). Defaults to 'v1' so existing
   // makeAdminSDK clients (which do not send the header) keep the legacy institutions config path.
-  const assertInstiVersion = (unknownInstiVersion: string): 'v1' | 'v2' => {
+  const assertInstiVersion = (unknownInstiVersion: string): InstiVersion => {
     if (unknownInstiVersion && !['v1', 'v2'].includes(unknownInstiVersion)) {
       throw new Error(`Invalid InstiVersion header: ${unknownInstiVersion}`)
     }
-    return unknownInstiVersion as 'v1' | 'v2'
+    return unknownInstiVersion as InstiVersion
   }
 
   const instiVersion = assertInstiVersion(
@@ -181,36 +182,49 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
   let supportedChains: IChainInfo[]
 
   if (clientId) {
-    const rawInstiChainIds = configProvider.getConfigurationItem({
+    const rawDeployedInstiChainIds = configProvider.getConfigurationItem({
       name: 'SUMMER_DEPLOYED_CHAINS_ID_INSTI',
     })
-    const rawRwaChainIds = configProvider.getConfigurationItem({
+    const rawDeployedRwaChainIds = configProvider.getConfigurationItem({
       name: 'SUMMER_DEPLOYED_CHAINS_ID_RWA',
     })
-    const instiChainIds: ChainId[] = rawInstiChainIds.split(',').map(Number).filter(isChainId)
-    const rwaChainIds: ChainId[] = rawRwaChainIds.split(',').map(Number).filter(isChainId)
+    const instiDeployedChainIds: ChainId[] = rawDeployedInstiChainIds
+      .split(',')
+      .map(Number)
+      .filter(isChainId)
+    const rwaDeployedChainIds: ChainId[] = rawDeployedRwaChainIds
+      .split(',')
+      .map(Number)
+      .filter(isChainId)
 
     // v2 (RWA) sources institution wiring from the RWA / institutions-v2 subgraph and the RWA chains;
     // v1 keeps the legacy institutions subgraph + insti chains.
-    const useRwaConfig = instiVersion === 'v2'
+    const useInstiV2 = instiVersion === 'v2'
     LoggingService.log(
-      `Client-Id ${clientId} ${instiVersion} - using ${useRwaConfig ? 'RWA' : 'insti'} deployment config with chainIds ${
-        useRwaConfig ? rwaChainIds : instiChainIds
+      `Client-Id ${clientId} ${instiVersion} - using ${useInstiV2 ? 'RWA' : 'insti'} deployment config with chainIds ${
+        useInstiV2 ? rwaDeployedChainIds : instiDeployedChainIds
       }`,
     )
-    const configChainIds = useRwaConfig ? rwaChainIds : instiChainIds
-    const institutionSubgraphManager = useRwaConfig ? rwaSubgraphManager : armadaSubgraphManager
+    const deployedChainIds = useInstiV2 ? rwaDeployedChainIds : instiDeployedChainIds
+    const instiSubgraphManager = useInstiV2 ? rwaSubgraphManager : armadaSubgraphManager
 
-    supportedChains = configChainIds.map(getChainInfoByChainId)
+    supportedChains = deployedChainIds.map(getChainInfoByChainId)
     try {
       deploymentProviderConfigs = await fetchInstiDeploymentProviderConfig(
-        institutionSubgraphManager,
-        configChainIds,
+        instiSubgraphManager,
+        deployedChainIds,
         clientId,
       )
     } catch (error) {
-      console.error(`Failed to fetch integrator config:`, error)
-      throw new Error(`Failed to fetch integrator config for Client-Id ${clientId}`)
+      console.error(`Failed to fetch insti deploy config:`, error)
+      throw new Error(
+        `Failed to fetch insti deploy config for Client-Id ${clientId}: ${error instanceof Error ? error.message : String(error)}`,
+      )
+    }
+    if (deploymentProviderConfigs.length === 0) {
+      throw new Error(
+        `No deployment configs exist for Client-Id ${clientId} on deployed chains ${deployedChainIds.join(', ')}`,
+      )
     }
   } else {
     // if no Client-Id header, use default deployment provider config

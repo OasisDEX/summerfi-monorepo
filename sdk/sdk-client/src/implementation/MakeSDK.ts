@@ -2,7 +2,9 @@ import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKManager } from './SDKManager'
 import { getApiVersion } from '../utils/getApiVersion'
 
-export type MakeSDKParams = { logging?: boolean; version?: 'v1' | 'v2' } & (
+export type SDKApiVersion = 'v1' | 'v2'
+
+export type MakeSDKParams = { logging?: boolean; version?: SDKApiVersion } & (
   | { apiDomainUrl: string }
   | { apiURL: string }
 )

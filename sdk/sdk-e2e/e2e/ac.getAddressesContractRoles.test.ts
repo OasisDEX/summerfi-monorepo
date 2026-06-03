@@ -8,7 +8,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Get Addresses with Contract-Specific Role', () => {
-  const { sdk, chainId, fleetAddress } = createAdminSdkTestSetup(TestClientIds.ACME)
+  const { sdk, chainId, fleetAddress } = createAdminSdkTestSetup({ clientId: TestClientIds.ACME })
   const contractAddress = fleetAddress
 
   test('should get all addresses for each contract-specific role for a specific contract', async () => {

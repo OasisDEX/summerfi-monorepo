@@ -9,9 +9,9 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control AdmiralsQuarters Whitelist', () => {
-  const { sdk, chainId, userAddress, governorSendTxTool } = createAdminSdkTestSetup(
-    TestClientIds.ACME,
-  )
+  const { sdk, chainId, userAddress, governorSendTxTool } = createAdminSdkTestSetup({
+    clientId: TestClientIds.ACME,
+  })
 
   const whitelistModificationScenarios: {
     targetAddress: AddressValue

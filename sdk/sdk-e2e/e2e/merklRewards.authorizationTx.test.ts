@@ -2,6 +2,7 @@ import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 import { makeSDK } from '@summerfi/sdk-client'
 import { SDKApiUrl, RpcUrls, TestConfigAccounts } from './utils/testConfig'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 
 jest.setTimeout(300000)
 
@@ -29,7 +30,8 @@ describe('Merkl Rewards - Authorization Transaction', () => {
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { userAddress, chainId, authorization } = scenario
 
-    const sdk = makeSDK({ apiDomainUrl: SDKApiUrl })
+    const sdk = createTestSdkInstance()
+
     const userSendTxTool = createSendTransactionTool({
       chainId,
       rpcUrl: RpcUrls[chainId as keyof typeof RpcUrls],

@@ -38,7 +38,7 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
       it('should retrieve deposits for a valid position', async () => {
         // Choose SDK setup based on scenario
         const testSetup = testClientId
-          ? createAdminSdkTestSetup(testClientId)
+          ? createAdminSdkTestSetup({ clientId: testClientId })
           : scenarioChainId
             ? createSdkTestSetup({ chainId: scenarioChainId! })
             : (() => {
@@ -109,7 +109,7 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
 
       it('should support pagination parameters', async () => {
         const setup = testClientId
-          ? createAdminSdkTestSetup(testClientId)
+          ? createAdminSdkTestSetup({ clientId: testClientId })
           : scenarioChainId
             ? createSdkTestSetup({ chainId: scenarioChainId! })
             : (() => {
@@ -149,7 +149,7 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
 
       it('should handle non-existent position gracefully', async () => {
         const setup = testClientId
-          ? createAdminSdkTestSetup(testClientId)
+          ? createAdminSdkTestSetup({ clientId: testClientId })
           : scenarioChainId
             ? createSdkTestSetup({ chainId: scenarioChainId! })
             : (() => {
@@ -189,7 +189,7 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
     describe('getWithdrawals', () => {
       it('should retrieve withdrawals for a valid position', async () => {
         const setup = testClientId
-          ? createAdminSdkTestSetup(testClientId)
+          ? createAdminSdkTestSetup({ clientId: testClientId })
           : scenarioChainId
             ? createSdkTestSetup({ chainId: scenarioChainId! })
             : (() => {
@@ -260,7 +260,7 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
 
       it('should support pagination parameters', async () => {
         const setup = testClientId
-          ? createAdminSdkTestSetup(testClientId)
+          ? createAdminSdkTestSetup({ clientId: testClientId })
           : scenarioChainId
             ? createSdkTestSetup({ chainId: scenarioChainId! })
             : (() => {
@@ -300,7 +300,7 @@ describe('Armada Protocol - Position Deposits and Withdrawals', () => {
 
       it('should handle non-existent position gracefully', async () => {
         const setup = testClientId
-          ? createAdminSdkTestSetup(testClientId)
+          ? createAdminSdkTestSetup({ clientId: testClientId })
           : scenarioChainId
             ? createSdkTestSetup({ chainId: scenarioChainId! })
             : (() => {

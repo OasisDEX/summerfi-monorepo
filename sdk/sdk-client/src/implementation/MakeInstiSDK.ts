@@ -2,13 +2,12 @@ import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKInstiManager } from './SDKInstiManager'
 import type { MakeSDKParams } from './MakeSDK'
 import { getApiVersion } from '../utils/getApiVersion'
-
+import type { InstiVersion } from '@summerfi/sdk-common'
 /**
  * Institutional deployment-config version. Selects how the server resolves the institution's
  * deployment config (chains + access manager): 'v1' = legacy institutions subgraph, 'v2' = RWA /
  * institutions-v2 subgraph. Sent as the `Insti-Version` header.
  */
-export type InstiVersion = 'v1' | 'v2'
 
 export type MakeInstiSDKParams = MakeSDKParams & {
   clientId: string

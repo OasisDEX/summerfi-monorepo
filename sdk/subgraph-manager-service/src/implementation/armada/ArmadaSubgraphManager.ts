@@ -7,7 +7,13 @@ import {
   SubgraphType,
   SubgraphTypes,
 } from '@summerfi/subgraph-manager-common'
-import { LoggingService, toBytes32InHex, type ChainId, type HexData } from '@summerfi/sdk-common'
+import {
+  LoggingService,
+  toBytes32InHex,
+  type ChainId,
+  type HexData,
+  type InstiVersion,
+} from '@summerfi/sdk-common'
 import gql from 'graphql-tag'
 import { GraphQLClient } from 'graphql-request'
 
@@ -17,7 +23,7 @@ import { GraphQLClient } from 'graphql-request'
  */
 export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   readonly clientId?: string
-  readonly instiVersion?: 'v1' | 'v2'
+  readonly instiVersion?: InstiVersion
   readonly config:
     | {
         subgraphType: typeof SubgraphTypes.protocol
@@ -42,7 +48,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   constructor(params: {
     configProvider: IConfigurationProvider
     clientId?: string
-    instiVersion?: 'v1' | 'v2'
+    instiVersion?: InstiVersion
   }) {
     if (params.clientId && !params.instiVersion) {
       throw new Error('instiVersion must be provided when clientId is specified')

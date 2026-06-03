@@ -42,7 +42,9 @@ describe('Armada Protocol - Access Control Get All Roles', () => {
     const { roleName, targetContract: targetContractKey, owner, first, skip } = scenario
 
     it('should fetch roles', async () => {
-      const { sdk, chainId, fleetAddress, aqAddress } = createAdminSdkTestSetup(TestClientIds.ACME)
+      const { sdk, chainId, fleetAddress, aqAddress } = createAdminSdkTestSetup({
+        clientId: TestClientIds.ACME,
+      })
 
       // Resolve targetContract from key
       const targetContract =

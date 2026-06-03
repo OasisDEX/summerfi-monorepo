@@ -6,7 +6,14 @@ import { createSendTransactionTool } from '@summerfi/testing-utils'
 /**
  * Shared setup for Armada Protocol Access Control tests
  */
-export function createAdminSdkTestSetup(clientId: TestClientIds) {
+export function createAdminSdkTestSetup(
+  params: {
+    clientId?: TestClientIds
+    simulateOnly?: boolean
+  } = {},
+) {
+  const { clientId = TestClientIds.ACME, simulateOnly = true } = params
+
   const sdk = makeAdminSDK({
     clientId,
     apiDomainUrl: SDKApiUrl,
@@ -35,7 +42,7 @@ export function createAdminSdkTestSetup(clientId: TestClientIds) {
     rpcUrl,
     senderAddressValue: userAddress.value,
     signerPrivateKey: TestConfigAccounts.testUserPrivateKey,
-    simulateOnly: true,
+    simulateOnly,
   })
 
   const governorSendTxTool = createSendTransactionTool({
@@ -43,12 +50,13 @@ export function createAdminSdkTestSetup(clientId: TestClientIds) {
     rpcUrl,
     senderAddressValue: governorAddress.value,
     signerPrivateKey: TestConfigAccounts.testUserPrivateKey,
-    simulateOnly: true,
+    simulateOnly,
   })
 
   return {
     sdk,
     chainId,
+    clientId,
     fleetAddress,
     aqAddress,
     userAddress,
