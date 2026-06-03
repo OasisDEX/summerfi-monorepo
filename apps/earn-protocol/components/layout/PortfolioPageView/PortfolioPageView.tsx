@@ -12,7 +12,6 @@ import {
   type GetVaultsApyResponse,
   type RewardTokenPrices,
   type SDKVaultishType,
-  type SingleSourceChartData,
 } from '@summerfi/app-types'
 import { type IDcaStrategy } from '@summerfi/sdk-common'
 
@@ -47,9 +46,6 @@ interface PortfolioPageViewProps {
   viewWalletAddress: string
   vaultsList: SDKVaultishType[]
   positions: PositionWithVault[]
-  positionsHistoricalChartMap: {
-    [key: string]: SingleSourceChartData
-  }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
   dcaOrders: IDcaStrategy[]
@@ -60,7 +56,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   viewWalletAddress,
   vaultsList,
   positions,
-  positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
   rewardTokenPrices,
   dcaOrders,
@@ -131,7 +126,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           vaultsList={vaultsList}
           rewardsData={rewardsData}
           isRewardsDataPending={isRewardsDataPending}
-          positionsHistoricalChartMap={positionsHistoricalChartMap}
           vaultsApyByNetworkMap={vaultsApyByNetworkMap}
           rewardTokenPrices={rewardTokenPrices}
           dcaOrders={dcaOrders}

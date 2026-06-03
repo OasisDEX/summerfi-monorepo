@@ -3,9 +3,7 @@ import {
   Button,
   Card,
   DataBlock,
-  getDisplayToken,
   getPositionValues,
-  getUniqueVaultId,
   PortfolioPosition,
   SkeletonLine,
   TabBarSimple,
@@ -19,9 +17,8 @@ import {
   type GetVaultsApyResponse,
   type RewardTokenPrices,
   type SDKVaultsListType,
-  type SingleSourceChartData,
+  SupportedSDKNetworks,
   type TimeframesType,
-  type TokenSymbolsList,
 } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
@@ -33,12 +30,13 @@ import { DcaStrategyStatusEnum, type IDcaStrategy } from '@summerfi/sdk-common'
 import Link from 'next/link'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 // import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 // import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
+import { usePortfolioPositionHistoryQuery } from '@/features/portfolio/api/get-portfolio-position-history-data'
+import { LazyPositionHistoryChart } from '@/features/portfolio/components/PortfolioOverview/LazyPositionHistoryChart'
 import { PortfolioDcaPosition } from '@/features/portfolio/components/PortfolioOverview/PortfolioDcaPosition'
 import {
   type PortfolioRwaPendingPosition,
@@ -62,9 +60,6 @@ type PortfolioOverviewProps = {
   positions: PositionWithVault[] | []
   rewardsData: ClaimDelegateExternalData
   isRewardsDataPending: boolean
-  positionsHistoricalChartMap: {
-    [key: string]: SingleSourceChartData
-  }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
   dcaOrders: IDcaStrategy[]
@@ -75,7 +70,7 @@ type PortfolioOverviewProps = {
 
 const PositionsListView = ({
   sortedPositions,
-  positionsHistoricalChartMap,
+  walletAddress,
   vaultsApyByNetworkMap,
   rewardTokenPrices,
   timeframe,
@@ -87,9 +82,7 @@ const PositionsListView = ({
   dcaOrders,
 }: {
   sortedPositions: PositionWithVault[]
-  positionsHistoricalChartMap: {
-    [key: string]: SingleSourceChartData
-  }
+  walletAddress: string
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
   timeframe: TimeframesType
@@ -130,11 +123,10 @@ const PositionsListView = ({
         dcaOrderId={getDcaOrderForVault(position.vault.id)?.id}
         dcaOrderType={getDcaOrderForVault(position.vault.id)?.type}
         positionGraph={
-          <PositionHistoricalChart
-            chartData={positionsHistoricalChartMap[getUniqueVaultId(position.vault)]}
+          <LazyPositionHistoryChart
+            walletAddress={walletAddress}
             position={position}
             timeframe={timeframe}
-            tokenSymbol={getDisplayToken(position.vault.inputToken.symbol) as TokenSymbolsList}
           />
         }
         vaultApyData={
@@ -206,7 +198,6 @@ export const PortfolioOverview = ({
   positions,
   rewardsData,
   isRewardsDataPending,
-  positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
   rewardTokenPrices,
   dcaOrders,
@@ -253,12 +244,23 @@ export const PortfolioOverview = ({
   }, [dcaOrders, showInactiveDcaPositions])
 
   const hasPositions = !!sortedPositions.length
+  const firstPosition = hasPositions ? sortedPositions[0] : undefined
+
+  // The shared timeframe selector's availability is driven by the top position's history. That
+  // position is above the fold, so we eagerly load its (deferred) chart data here; the matching
+  // per-card query shares this query key and is served straight from cache.
+  const { data: firstPositionHistory } = usePortfolioPositionHistoryQuery(
+    viewWalletAddress,
+    firstPosition
+      ? supportedSDKNetwork(firstPosition.vault.protocol.network)
+      : SupportedSDKNetworks.Base,
+    firstPosition?.vault.id ?? '',
+    hasPositions,
+  )
 
   const { timeframe, setTimeframe } = useTimeframes({
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    chartData: hasPositions
-      ? positionsHistoricalChartMap[getUniqueVaultId(sortedPositions[0].vault)].data
-      : undefined,
+    chartData: firstPositionHistory?.data,
+    customDefaultTimeframe: hasPositions ? '90d' : undefined,
   })
 
   const handleSetNextTimeframe = (nextTimeframe: string) => {
@@ -399,7 +401,7 @@ export const PortfolioOverview = ({
           {positionsTab === 'positions' ? (
             <PositionsListView
               sortedPositions={sortedPositions}
-              positionsHistoricalChartMap={positionsHistoricalChartMap}
+              walletAddress={viewWalletAddress}
               vaultsApyByNetworkMap={vaultsApyByNetworkMap}
               rewardTokenPrices={rewardTokenPrices}
               timeframe={timeframe}

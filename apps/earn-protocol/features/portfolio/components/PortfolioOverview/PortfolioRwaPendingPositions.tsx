@@ -1,4 +1,4 @@
-import { Button, Card, getVaultPositionUrl, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, getVaultPositionUrl, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import { type RoundState, RoundsVaultType } from '@summerfi/sdk-common'
@@ -104,13 +104,9 @@ export const PortfolioRwaPendingPositions = ({
               </Text>
 
               <Link href={manageUrl}>
-                <Button
-                  variant={position.status === 'claimable' ? 'primarySmall' : 'secondarySmall'}
-                >
-                  <WithArrow as="span" variant="p4semi">
-                    Manage
-                  </WithArrow>
-                </Button>
+                <WithArrow as="span" variant="p4semi" style={{ marginRight: '18px' }}>
+                  Manage
+                </WithArrow>
               </Link>
             </div>
           </Card>

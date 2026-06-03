@@ -1,55 +1,39 @@
 'use client'
 import { type FC } from 'react'
-import {
-  type GetVaultsApyResponse,
-  type RewardTokenPrices,
-  type SDKVaultishType,
-  type SingleSourceChartData,
-} from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
-import { type IDcaStrategy } from '@summerfi/sdk-common'
 
+import { PortfolioPageViewLoadingState } from '@/components/layout/PortfolioPageView/PortfolioPageViewLoadingState'
 import { sdkApiUrl } from '@/constants/sdk'
-import { type PortfolioRwaPendingPosition } from '@/features/portfolio/components/PortfolioOverview/PortfolioRwaPendingPositions'
-import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
+import { usePortfolioCoreDataQuery } from '@/features/portfolio/api/get-portfolio-core-data'
 
 import { PortfolioPageView } from './PortfolioPageView'
 
 interface PortfolioPageViewComponentProps {
   viewWalletAddress: string
-  vaultsList: SDKVaultishType[]
-  positions: PositionWithVault[]
-  positionsHistoricalChartMap: {
-    [key: string]: SingleSourceChartData
-  }
-  vaultsApyByNetworkMap: GetVaultsApyResponse
-  rewardTokenPrices: RewardTokenPrices
-  dcaOrders: IDcaStrategy[]
-  rwaPendingPositions: PortfolioRwaPendingPosition[]
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
   viewWalletAddress,
-  vaultsList,
-  positions,
-  positionsHistoricalChartMap,
-  vaultsApyByNetworkMap,
-  rewardTokenPrices,
-  dcaOrders,
-  rwaPendingPositions,
 }) => {
+  // Reads straight from the server-hydrated cache on first render; only ever hits the API route
+  // fallback if the prefetch failed to dehydrate (then the loading state covers the gap).
+  const { data, isPending } = usePortfolioCoreDataQuery(viewWalletAddress)
+
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <PortfolioPageView
-        positions={positions}
-        viewWalletAddress={viewWalletAddress}
-        vaultsList={vaultsList}
-        positionsHistoricalChartMap={positionsHistoricalChartMap}
-        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-        rewardTokenPrices={rewardTokenPrices}
-        dcaOrders={dcaOrders}
-        rwaPendingPositions={rwaPendingPositions}
-      />
+      {isPending || !data ? (
+        <PortfolioPageViewLoadingState />
+      ) : (
+        <PortfolioPageView
+          positions={data.positions}
+          viewWalletAddress={viewWalletAddress}
+          vaultsList={data.vaultsList}
+          vaultsApyByNetworkMap={data.vaultsApyByNetworkMap}
+          rewardTokenPrices={data.rewardTokenPrices}
+          dcaOrders={data.dcaOrders}
+          rwaPendingPositions={data.rwaPendingPositions}
+        />
+      )}
     </SDKContextProvider>
   )
 }

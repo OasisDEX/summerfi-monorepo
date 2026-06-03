@@ -26,15 +26,15 @@ export const formatChartCryptoValue = (amount: number) => {
   }
 
   if (amount < 0.01 && amount > 0) {
-    return amount.toPrecision(5)
+    return amount.toPrecision(3)
   }
 
   if (amount < one) {
-    return amount.toPrecision(4)
+    return amount.toPrecision(3)
   }
 
   if (amount < ten) {
-    return amount.toPrecision(4)
+    return amount.toPrecision(3)
   }
 
   if (amount < hundred) {
