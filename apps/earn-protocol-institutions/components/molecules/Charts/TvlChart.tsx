@@ -47,7 +47,7 @@ export const TvlChart = ({ chartData, timeframe, syncId, stacked }: TvlChartProp
           dataKey={chartData.dataNames[index]}
           stroke={color}
           strokeWidth={2}
-          fill={color}
+          fill={`url(#gradient_${color})`}
           fillOpacity={0.5}
           stackId={stacked ? 'Tvl_Stack_ID' : undefined}
           dot={false}
@@ -72,6 +72,23 @@ export const TvlChart = ({ chartData, timeframe, syncId, stacked }: TvlChartProp
             }}
             dataKey="netValue"
           >
+            {chartData?.colors ? (
+              <defs>
+                {chartData.colors.map((color) => (
+                  <linearGradient
+                    key={`gradient_${color}`}
+                    id={`gradient_${color}`}
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="0%" stopColor={color} stopOpacity={0.35} />
+                    <stop offset="100%" stopColor={color} stopOpacity={0} />
+                  </linearGradient>
+                ))}
+              </defs>
+            ) : null}
             <XAxis
               dataKey="timestampParsed"
               fontSize={12}
@@ -90,10 +107,10 @@ export const TvlChart = ({ chartData, timeframe, syncId, stacked }: TvlChartProp
               width={65}
               domain={[
                 (dataMin: number) => {
-                  return Math.max(dataMin - Number(dataMin * 0.001), 0)
+                  return Math.max(dataMin - Number(dataMin * 0.1), 0)
                 },
                 (dataMax: number) => {
-                  return dataMax + Number(dataMax * 0.001)
+                  return dataMax + Number(dataMax * 0.1)
                 },
               ]}
             />
