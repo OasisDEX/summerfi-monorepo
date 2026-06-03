@@ -45,6 +45,7 @@ export const FleetAddresses = {
     USDC: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
     EURC: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
     AcmeUSDC: '0x1db644c6077912cf5dab0b5a7f2d8efb5b61df5c',
+    AcmeUSDC_v2: '0xb5a07af4302fa0d2bbb389b4481055ed3f576b73',
   },
   [ChainIds.ArbitrumOne]: {
     USDT: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
@@ -130,6 +131,7 @@ export const TestConfigKeys: TestConfigKey[] = Object.keys(TestConfigs) as TestC
 /** INSTI CONFIG */
 export enum TestClientIds {
   'ACME' = 'ExtDemoCorp',
+  'ACME_v2' = 'ExtDemoCorp_v2',
   'Targen' = 'Targen',
 }
 
@@ -150,21 +152,17 @@ export const InstiTestConfigs = {
     userAddressValue: '0x43d2c9786e8f5a960e75d6141e44411d065a4615',
     symbol: 'USDT',
   },
+  [TestClientIds.ACME_v2]: {
+    rpcUrl: RpcUrls[ChainIds.Base],
+    chainId: ChainIds.Base,
+    fleetAddressValue: FleetAddresses[ChainIds.Base].AcmeUSDC_v2,
+    aqAddressValue: '0x477285d524628faa3ed62d8086be56810a34795e',
+    userAddressValue: TestConfigAccounts.testUserAddressValue,
+    symbol: 'ETH',
+  },
 } satisfies Record<
   TestClientIds,
   ChainConfig & { aqAddressValue: AddressValue; userAddressValue: AddressValue }
 >
 
-/** RWA CONFIG
- *  institutionId used by the RWA subgraph query (where institution: $institutionId).
- *  Replace with a real institutionId from the deployed RWA subgraph when available.
- */
-
-export const RwaTestConfig = {
-  chainId: ChainIds.Base,
-  rpcUrl: RpcUrls[ChainIds.Base],
-  fleetAddressValue: '0xb5a07af4302fa0d2bbb389b4481055ed3f576b73',
-  aqAddressValue: '0x9e74a42efbefb2360b948da27292346321e7ba9e',
-  userAddressValue: TestConfigAccounts.testUserAddressValue,
-  clientId: 'ExtDemoCorp_v2',
-} as const
+export const RwaTestConfig = InstiTestConfigs[TestClientIds.ACME_v2]

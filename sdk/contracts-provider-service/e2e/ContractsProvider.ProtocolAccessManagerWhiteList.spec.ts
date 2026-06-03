@@ -7,7 +7,7 @@ import {
   Address,
   ChainFamilyMap,
   ChainInfo,
-  ContractSpecificRoleName,
+  InstiContractRoles,
   type HexData,
 } from '@summerfi/sdk-common'
 import { Tenderly, type Vnet } from '@summerfi/tenderly-utils'
@@ -199,7 +199,7 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
       value: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17',
     })
     const commanderRole = await protocolAccessManagerWhiteListContract.generateRole({
-      roleName: ContractSpecificRoleName.COMMANDER_ROLE,
+      roleName: InstiContractRoles.COMMANDER_ROLE,
       roleTargetContract,
     })
     const isCommanderInitially = await protocolAccessManagerWhiteListContract.hasRole({

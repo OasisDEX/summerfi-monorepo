@@ -1,5 +1,5 @@
-import { Address, type AddressValue } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
+import { type AddressValue, type InstiVersion } from '@summerfi/sdk-common'
+import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { zeroAddress } from 'viem'
 import { TestClientIds } from './utils/testConfig'
 
@@ -9,8 +9,13 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control AdmiralsQuarters Whitelist', () => {
-  const { sdk, chainId, userAddress, governorSendTxTool } = createAdminSdkTestSetup({
-    clientId: TestClientIds.ACME,
+  const clientId: string = TestClientIds.ACME
+  const instiVersion: InstiVersion | undefined = undefined
+  // const instiVersion: InstiVersion | undefined = 'v2'
+
+  const { sdk, chainId, userAddress, governorSendTxTool } = createInstiSdkTestSetup({
+    clientId,
+    instiVersion,
   })
 
   const whitelistModificationScenarios: {

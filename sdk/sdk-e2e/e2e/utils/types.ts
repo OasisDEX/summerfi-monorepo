@@ -1,16 +1,16 @@
 import type {
   Address,
-  ContractSpecificRoleName,
+  InstiContractRoles,
   GlobalRoles,
   AddressValue,
-  InstiRoleName,
+  InstiGlobalRoles,
   ChainId,
   Percentage,
 } from '@summerfi/sdk-common'
 import type { TestConfigs, TestClientIds } from './testConfig'
 
 export type ContractRoleScenario = {
-  role: ContractSpecificRoleName
+  role: InstiContractRoles
   targetAddress: Address
   shouldGrant?: boolean
   shouldRevoke?: boolean

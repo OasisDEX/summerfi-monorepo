@@ -1,5 +1,5 @@
-import { InstiV2RoleName, AddressValue, type InstiVersion } from '@summerfi/sdk-common'
-import { InstiTestConfigs, RwaTestConfig, TestClientIds } from './utils/testConfig'
+import { InstiGlobalRoles, AddressValue, type InstiVersion } from '@summerfi/sdk-common'
+import { TestClientIds } from './utils/testConfig'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 
 jest.setTimeout(300000)
@@ -11,7 +11,7 @@ describe('Armada Protocol - Access Control Get All Roles', () => {
   const scenarios: {
     clientId: string
     instiVersion?: InstiVersion
-    roleName?: InstiV2RoleName
+    roleName?: InstiGlobalRoles
     targetContract?: 'fleetAddress'
     owner?: AddressValue
     first?: number
@@ -20,14 +20,12 @@ describe('Armada Protocol - Access Control Get All Roles', () => {
     // {},
     {
       clientId: TestClientIds.ACME,
-      // clientId: RwaTestConfig.clientId,
       // instiVersion: 'v2',
-      // roleName: InstiV2RoleName.GOVERNOR_ROLE,
+      // roleName: InstiGlobalRoles.GOVERNOR_ROLE,
       // targetContract: 'fleetAddress',
-      // owner: RwaTestConfig.userAddressValue,
     },
     // {
-    //   roleName: InstiV2RoleName.WHITELIST_ROLE,
+    //   roleName: InstiGlobalRoles.WHITELIST_ROLE,
     //   targetContract: 'fleetAddress',
     // },
     // {

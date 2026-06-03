@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import { Button, Dropdown, Input, Text } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
-import { ContractSpecificRoleName } from '@summerfi/sdk-common'
+import { InstiContractRoles } from '@summerfi/sdk-common'
 
 import { vaultSpecificRolesList } from '@/constants/vaults'
 import { isValidAddress } from '@/helpers/is-valid-address'
@@ -34,7 +34,7 @@ export const AddNewRoleForm = ({
 
   const handleRoleChange = (option: DropdownRawOption) => {
     const selectedRole = vaultSpecificRolesList.find(
-      ({ role }) => String(role) === (option.value as keyof typeof ContractSpecificRoleName),
+      ({ role }) => String(role) === (option.value as keyof typeof InstiContractRoles),
     )
 
     if (selectedRole) {
@@ -87,9 +87,7 @@ export const AddNewRoleForm = ({
                   {newRoleName}
                 </Text>
               ),
-              value: String(
-                ContractSpecificRoleName[newRoleName as keyof typeof ContractSpecificRoleName],
-              ),
+              value: String(InstiContractRoles[newRoleName as keyof typeof InstiContractRoles]),
             }}
             dropdownChildrenStyle={{
               padding: 'var(--general-space-12) var(--general-space-16)',

@@ -1,5 +1,5 @@
-import { GlobalRoles } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
+import { GlobalRoles, type InstiVersion } from '@summerfi/sdk-common'
+import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
@@ -8,11 +8,17 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
-  const { sdk, chainId, aqAddress, governorSendTxTool } = createAdminSdkTestSetup({
-    clientId: TestClientIds.ACME,
+  const clientId: string = TestClientIds.ACME
+  // const clientId = .clientId
+  const instiVersion: InstiVersion | undefined = undefined
+  // const instiVersion: InstiVersion | undefined = 'v2'
+
+  const { sdk, chainId, userAddress, governorSendTxTool } = createInstiSdkTestSetup({
+    clientId,
+    instiVersion,
   })
 
-  const targetAddress = aqAddress
+  const targetAddress = userAddress
   const role = GlobalRoles.ADMIRALS_QUARTERS_ROLE
 
   test('should grant and revoke general role', async () => {

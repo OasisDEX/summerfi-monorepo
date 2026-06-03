@@ -1,5 +1,5 @@
-import { GlobalRoles } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
+import { GlobalRoles, type InstiVersion } from '@summerfi/sdk-common'
+import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
@@ -9,18 +9,26 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - Access Control Global Role Checking', () => {
   const scenarios: {
+    clientId: string
+    instiVersion?: InstiVersion
     role: GlobalRoles
     targetAddress?: 'governorAddress'
     shouldGrant?: boolean
     shouldRevoke?: boolean
   }[] = [
     {
+      clientId: TestClientIds.ACME,
+      // clientId: RwaTestConfig.clientId,
+      // instiVersion: 'v2',
       role: GlobalRoles.GOVERNOR_ROLE,
       targetAddress: 'governorAddress',
       shouldGrant: false,
       shouldRevoke: false,
     },
     {
+      clientId: TestClientIds.ACME,
+      // clientId: RwaTestConfig.clientId,
+      // instiVersion: 'v2',
       role: GlobalRoles.SUPER_KEEPER_ROLE,
       targetAddress: 'governorAddress',
       shouldGrant: true,
@@ -30,6 +38,8 @@ describe('Armada Protocol - Access Control Global Role Checking', () => {
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const {
+      clientId,
+      instiVersion,
       role,
       targetAddress: targetAddressKey,
       shouldGrant = false,
@@ -37,8 +47,9 @@ describe('Armada Protocol - Access Control Global Role Checking', () => {
     } = scenario
 
     it('should check if address has global role', async () => {
-      const { sdk, chainId, governorAddress, governorSendTxTool } = createAdminSdkTestSetup({
-        clientId: TestClientIds.ACME,
+      const { sdk, chainId, governorAddress, governorSendTxTool } = createInstiSdkTestSetup({
+        clientId,
+        instiVersion,
       })
 
       // Resolve targetAddress from key

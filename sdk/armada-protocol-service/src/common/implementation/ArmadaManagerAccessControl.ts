@@ -14,7 +14,7 @@ import {
   LoggingService,
   GlobalRoles,
   GLOBAL_ROLE_HASHES,
-  ContractSpecificRoleName,
+  InstiContractRoles,
 } from '@summerfi/sdk-common'
 
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
@@ -322,17 +322,17 @@ export class ArmadaManagerAccessControl
       })
 
     switch (params.role) {
-      case ContractSpecificRoleName.KEEPER_ROLE:
+      case InstiContractRoles.KEEPER_ROLE:
         return protocolAccessManagerContract.grantKeeperRole({
           account: params.targetAddress,
           fleetCommanderAddress: params.contractAddress,
         })
-      case ContractSpecificRoleName.COMMANDER_ROLE:
+      case InstiContractRoles.COMMANDER_ROLE:
         return protocolAccessManagerContract.grantCommanderRole({
           account: params.targetAddress,
           fleetCommanderAddress: params.contractAddress,
         })
-      case ContractSpecificRoleName.CURATOR_ROLE:
+      case InstiContractRoles.CURATOR_ROLE:
         return protocolAccessManagerContract.grantCuratorRole({
           account: params.targetAddress,
           fleetCommanderAddress: params.contractAddress,
@@ -358,17 +358,17 @@ export class ArmadaManagerAccessControl
       })
 
     switch (params.role) {
-      case ContractSpecificRoleName.KEEPER_ROLE:
+      case InstiContractRoles.KEEPER_ROLE:
         return protocolAccessManagerContract.revokeKeeperRole({
           account: params.targetAddress,
           fleetCommanderAddress: params.contractAddress,
         })
-      case ContractSpecificRoleName.COMMANDER_ROLE:
+      case InstiContractRoles.COMMANDER_ROLE:
         return protocolAccessManagerContract.revokeCommanderRole({
           account: params.targetAddress,
           fleetCommanderAddress: params.contractAddress,
         })
-      case ContractSpecificRoleName.CURATOR_ROLE:
+      case InstiContractRoles.CURATOR_ROLE:
         return protocolAccessManagerContract.revokeCuratorRole({
           account: params.targetAddress,
           fleetCommanderAddress: params.contractAddress,

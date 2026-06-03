@@ -1,5 +1,5 @@
-import { ContractSpecificRoleName } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
+import { InstiContractRoles, type InstiVersion } from '@summerfi/sdk-common'
+import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
@@ -9,19 +9,24 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - Access Control Contract Role Checking', () => {
   const scenarios: {
-    role: ContractSpecificRoleName
+    clientId: string
+    instiVersion?: InstiVersion
+    role: InstiContractRoles
     targetAddress?: 'fleetAddress' | 'governorAddress'
     shouldGrant?: boolean
     shouldRevoke?: boolean
   }[] = [
     {
-      role: ContractSpecificRoleName.COMMANDER_ROLE,
+      clientId: TestClientIds.ACME,
+      role: InstiContractRoles.CURATOR_ROLE,
       targetAddress: 'fleetAddress',
       shouldGrant: false,
       shouldRevoke: false,
     },
     {
-      role: ContractSpecificRoleName.CURATOR_ROLE,
+      clientId: TestClientIds.ACME_v2,
+      instiVersion: 'v2',
+      role: InstiContractRoles.CURATOR_ROLE,
       targetAddress: 'governorAddress',
       shouldGrant: false,
       shouldRevoke: false,
@@ -30,6 +35,8 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const {
+      clientId,
+      instiVersion,
       role,
       targetAddress: targetAddressKey,
       shouldGrant = false,
@@ -38,7 +45,7 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
 
     it('should check contract-specific role', async () => {
       const { sdk, chainId, fleetAddress, governorAddress, governorSendTxTool } =
-        createAdminSdkTestSetup({ clientId: TestClientIds.ACME })
+        createInstiSdkTestSetup({ clientId, instiVersion })
       const contractAddress = fleetAddress
 
       // Resolve targetAddress from key
@@ -83,10 +90,10 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
           role,
           contractAddress,
         })
-      console.log(`All addresses with role ${ContractSpecificRoleName[role]}:`, allRoleAddresses)
+      console.log(`All addresses with role ${InstiContractRoles[role]}:`, allRoleAddresses)
 
       console.log(
-        `Address ${targetAddress.value} ${hasContractSpecificRole ? 'has' : 'does not have'} ${ContractSpecificRoleName[role]} for contract ${contractAddress.value}`,
+        `Address ${targetAddress.value} ${hasContractSpecificRole ? 'has' : 'does not have'} ${InstiContractRoles[role]} for contract ${contractAddress.value}`,
       )
     })
   })

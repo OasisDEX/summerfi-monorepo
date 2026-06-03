@@ -1,5 +1,5 @@
 import { ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
-import { RwaTestConfig, TestClientIds } from './utils/testConfig'
+import { TestClientIds } from './utils/testConfig'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import type { InstiVersion } from '@summerfi/sdk-client'
 
@@ -10,9 +10,8 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - Admin Fee Revenue Config', () => {
   const scenarios: { clientId: string; instiVersion?: InstiVersion }[] = [
-    { clientId: TestClientIds.ACME },
     { clientId: TestClientIds.ACME, instiVersion: 'v1' },
-    { clientId: RwaTestConfig.clientId, instiVersion: 'v2' },
+    { clientId: TestClientIds.ACME_v2, instiVersion: 'v2' },
   ]
 
   test.each(scenarios)(
@@ -45,7 +44,7 @@ describe('Armada Protocol - Admin Fee Revenue Config', () => {
       expect(config.vaultFeeAmount.value).toBeDefined()
 
       // Log for debugging
-      console.log('Fee Revenue Config for ArbitrumOne:', {
+      console.log(`Fee Revenue Config for chain ${chainId}:`, {
         vaultFeeReceiverAddress: config.vaultFeeReceiverAddress,
         vaultFeeAmount: config.vaultFeeAmount.toString(),
       })

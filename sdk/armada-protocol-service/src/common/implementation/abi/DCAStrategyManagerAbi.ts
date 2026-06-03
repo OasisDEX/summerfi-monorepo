@@ -699,7 +699,7 @@ export const DCAStrategyManagerAbi = [
       {
         name: 'roleName',
         type: 'uint8',
-        internalType: 'enum ContractSpecificRoles',
+        internalType: 'enum InstiContractRoles',
       },
       {
         name: 'roleTargetContract',

@@ -3,7 +3,7 @@ import type {
   IAddress,
   TransactionInfo,
   AddressValue,
-  ContractSpecificRoleName,
+  InstiContractRoles,
   GlobalRoles,
   RolesResponse,
 } from '@summerfi/sdk-common'
@@ -42,7 +42,7 @@ export interface IArmadaManagerClientAccessControl {
    */
   hasContractSpecificRole(params: {
     chainId: ChainId
-    role: ContractSpecificRoleName
+    role: InstiContractRoles
     contractAddress: IAddress
     targetAddress: IAddress
   }): Promise<boolean>
@@ -92,7 +92,7 @@ export interface IArmadaManagerClientAccessControl {
    */
   grantContractSpecificRole(params: {
     chainId: ChainId
-    role: ContractSpecificRoleName
+    role: InstiContractRoles
     contractAddress: IAddress
     targetAddress: IAddress
   }): Promise<TransactionInfo>
@@ -110,7 +110,7 @@ export interface IArmadaManagerClientAccessControl {
    */
   revokeContractSpecificRole(params: {
     chainId: ChainId
-    role: ContractSpecificRoleName
+    role: InstiContractRoles
     contractAddress: IAddress
     targetAddress: IAddress
   }): Promise<TransactionInfo>
@@ -141,7 +141,7 @@ export interface IArmadaManagerClientAccessControl {
    */
   getAllAddressesWithContractSpecificRole(params: {
     chainId: ChainId
-    role: ContractSpecificRoleName
+    role: InstiContractRoles
     contractAddress: IAddress
   }): Promise<AddressValue[]>
 

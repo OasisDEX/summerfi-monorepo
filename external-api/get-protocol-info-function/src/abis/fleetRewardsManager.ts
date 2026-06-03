@@ -640,7 +640,7 @@ export const fleetRewardsManagerAbi = [
     {
         "inputs": [
             {
-                "internalType": "enum ContractSpecificRoles",
+                "internalType": "enum InstiContractRoles",
                 "name": "roleName",
                 "type": "uint8"
             },

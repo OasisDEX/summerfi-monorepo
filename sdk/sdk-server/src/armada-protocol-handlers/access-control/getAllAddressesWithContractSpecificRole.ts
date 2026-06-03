@@ -5,14 +5,14 @@ import {
   isChainId,
   type ChainId,
   type IAddress,
-  ContractSpecificRoleName,
+  InstiContractRoles,
 } from '@summerfi/sdk-common'
 
 export const getAllAddressesWithContractSpecificRole = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
-      role: z.nativeEnum(ContractSpecificRoleName),
+      role: z.nativeEnum(InstiContractRoles),
       contractAddress: z.custom<IAddress>(isAddress),
     }),
   )

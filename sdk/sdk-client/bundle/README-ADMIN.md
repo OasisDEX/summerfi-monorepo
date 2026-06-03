@@ -87,7 +87,13 @@ This flow includes:
 **Example:**
 
 ```typescript
-import { Address, ArmadaVaultId, getChainInfoByChainId, TokenAmount, MAX_UINT256_STRING } from '@summer_fi/sdk-client'
+import {
+  Address,
+  ArmadaVaultId,
+  getChainInfoByChainId,
+  TokenAmount,
+  MAX_UINT256_STRING,
+} from '@summer_fi/sdk-client'
 import { sdk } from './sdk'
 
 const chainId = ChainIds.Base
@@ -270,11 +276,11 @@ const txInfo = await sdk.armada.admin.setArkMaxRebalanceInflow({
 - To grant the KEEPER role, use the Access Control methods (see Access Control section):
 
 ```typescript
-import { ContractSpecificRoleName } from '@summer_fi/sdk-client'
+import { InstiContractRoles } from '@summer_fi/sdk-client'
 
 const txInfo = await sdk.armada.accessControl.grantContractSpecificRole({
   chainId: ChainIds.Base,
-  role: ContractSpecificRoleName.KEEPER_ROLE,
+  role: InstiContractRoles.KEEPER_ROLE,
   contractAddress: fleetAddress, // The fleet (FleetCommander) address
   targetAddress: keeperAddress, // The address to grant the role to
 })
@@ -333,7 +339,7 @@ certain actions.
 **Example:**
 
 ```typescript
-import { ChainIds, Address, ContractSpecificRoleName } from '@summer_fi/sdk-client'
+import { ChainIds, Address, InstiContractRoles } from '@summer_fi/sdk-client'
 import { sdk } from './sdk'
 
 // Fleet (vault) deployment address
@@ -345,7 +351,7 @@ const userAddress = Address.createFromEthereum({ value: '0xUSERADDRESS...' })
 // Check for curator role
 const hasCuratorRole = await sdk.armada.accessControl.hasContractSpecificRole({
   chainId: ChainIds.Base,
-  role: ContractSpecificRoleName.CURATOR_ROLE,
+  role: InstiContractRoles.CURATOR_ROLE,
   contractAddress: fleetAddress,
   targetAddress: userAddress,
 })
@@ -388,7 +394,7 @@ other addresses.
 **Example:**
 
 ```typescript
-import { ChainIds, Address, ContractSpecificRoleName } from '@summer_fi/sdk-client'
+import { ChainIds, Address, InstiContractRoles } from '@summer_fi/sdk-client'
 import { sdk } from './sdk'
 
 // Fleet (vault) deployment address
@@ -400,7 +406,7 @@ const userAddress = Address.createFromEthereum({ value: '0xUSERADDRESS...' })
 // Grant curator role
 const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
   chainId: ChainIds.Base,
-  role: ContractSpecificRoleName.CURATOR_ROLE,
+  role: InstiContractRoles.CURATOR_ROLE,
   contractAddress: fleetAddress,
   targetAddress: userAddress,
 })
@@ -439,7 +445,7 @@ other addresses.
 **Example:**
 
 ```typescript
-import { ChainIds, Address, ContractSpecificRoleName } from '@summer_fi/sdk-client'
+import { ChainIds, Address, InstiContractRoles } from '@summer_fi/sdk-client'
 import { sdk } from './sdk'
 
 // Fleet (vault) deployment address
@@ -451,7 +457,7 @@ const userAddress = Address.createFromEthereum({ value: '0xUSERADDRESS...' })
 // Revoke curator role
 const revokeTxInfo = await sdk.armada.accessControl.revokeContractSpecificRole({
   chainId: ChainIds.Base,
-  role: ContractSpecificRoleName.CURATOR_ROLE,
+  role: InstiContractRoles.CURATOR_ROLE,
   contractAddress: fleetAddress,
   targetAddress: userAddress,
 })

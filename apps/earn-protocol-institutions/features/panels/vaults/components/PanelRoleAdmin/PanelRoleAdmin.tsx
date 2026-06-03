@@ -13,7 +13,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { chainIdToSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
-import { ContractSpecificRoleName } from '@summerfi/sdk-common'
+import { InstiContractRoles } from '@summerfi/sdk-common'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { AddNewRoleForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddNewRoleForm'
@@ -85,7 +85,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
           revokeContractSpecificRole({
             contractAddress: vaultAddress,
             chainId,
-            role: ContractSpecificRoleName[role],
+            role: InstiContractRoles[role],
             targetAddress: address,
           }),
         )
@@ -125,7 +125,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
           grantContractSpecificRole({
             contractAddress: vaultAddress,
             chainId,
-            role: ContractSpecificRoleName[role],
+            role: InstiContractRoles[role],
             targetAddress: address,
           }),
         )

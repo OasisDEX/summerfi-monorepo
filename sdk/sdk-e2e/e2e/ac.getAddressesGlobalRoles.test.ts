@@ -1,5 +1,5 @@
-import { GlobalRoles } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
+import { GlobalRoles, type InstiVersion } from '@summerfi/sdk-common'
+import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
@@ -8,7 +8,11 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Get Addresses with General Role', () => {
-  const { sdk, chainId } = createAdminSdkTestSetup({ clientId: TestClientIds.ACME })
+  const clientId: string = TestClientIds.ACME
+  const instiVersion: InstiVersion | undefined = undefined
+  // const instiVersion: InstiVersion | undefined = 'v2'
+
+  const { sdk, chainId } = createInstiSdkTestSetup({ clientId, instiVersion })
 
   test('should get all addresses for each general role', async () => {
     const roles = Object.values(GlobalRoles) as GlobalRoles[]

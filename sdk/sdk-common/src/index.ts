@@ -18,8 +18,7 @@ export type { Maybe } from './common/types/Maybe'
 export type { ArmadaMigratablePosition } from './common/types/ArmadaMigratablePosition'
 export type { ArmadaMigratablePositionApy } from './common/types/ArmadaMigratablePositionApy'
 export type { Role, RolesResponse } from './common/types/Role'
-export { InstiRoleName } from './common/types/InstiRoleName'
-export { InstiV2RoleName } from './common/types/InstiV2RoleName'
+export { InstiGlobalRoles } from './common/types/InstiGlobalRoles'
 export type { StakingStake } from './common/types/StakingStake'
 export type {
   HistoricalFleetRateResult,
@@ -33,7 +32,7 @@ export type { IFeeRevenueConfig } from './common/types/IFeeRevenueConfig'
 export { RebalanceDataSchema, isRebalanceData } from './common/types/IRebalanceData'
 export type { IRebalanceData, IRebalanceDataData } from './common/types/IRebalanceData'
 export { GlobalRoles, GLOBAL_ROLE_HASHES } from './common/types/GlobalRoles'
-export { ContractSpecificRoleName } from './common/types/ContractSpecificRoleName'
+export { InstiContractRoles } from './common/types/InstiContractRoles'
 export { AddressType } from './common/enums/AddressType'
 export { CommonTokenSymbols } from './common/enums/CommonTokenSymbols'
 export {

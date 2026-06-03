@@ -1,5 +1,5 @@
-import { ContractSpecificRoleName } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
+import { InstiContractRoles, type InstiVersion } from '@summerfi/sdk-common'
+import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
@@ -8,13 +8,18 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Contract Role Grant/Revoke', () => {
-  const { sdk, chainId, userAddress, fleetAddress, governorSendTxTool } = createAdminSdkTestSetup({
-    clientId: TestClientIds.ACME,
+  const clientId: string = TestClientIds.ACME
+  const instiVersion: InstiVersion | undefined = undefined
+  // const instiVersion: InstiVersion | undefined = 'v2'
+
+  const { sdk, chainId, userAddress, fleetAddress, governorSendTxTool } = createInstiSdkTestSetup({
+    clientId,
+    instiVersion,
   })
 
   const contractAddress = fleetAddress
   const targetAddress = userAddress
-  const role = ContractSpecificRoleName.COMMANDER_ROLE
+  const role = InstiContractRoles.COMMANDER_ROLE
 
   test('should grant and revoke contract-specific role', async () => {
     // Check if the address has the commander role initially

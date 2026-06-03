@@ -2,7 +2,7 @@ import {
   IAddress,
   TransactionInfo,
   type HexData,
-  type ContractSpecificRoleName,
+  type InstiContractRoles,
 } from '@summerfi/sdk-common'
 import { IContractWrapper } from './IContractWrapper'
 
@@ -30,7 +30,7 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @returns The generated role identifier
    */
   generateRole(params: {
-    roleName: ContractSpecificRoleName
+    roleName: InstiContractRoles
     roleTargetContract: IAddress
   }): Promise<HexData>
 
@@ -216,7 +216,7 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @returns Promise<TransactionInfo> The transaction information
    */
   selfRevokeContractSpecificRole(params: {
-    roleName: ContractSpecificRoleName
+    roleName: InstiContractRoles
     roleTargetContract: IAddress
   }): Promise<TransactionInfo>
 }

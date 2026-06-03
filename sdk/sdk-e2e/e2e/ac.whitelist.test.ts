@@ -1,5 +1,5 @@
-import type { AddressValue } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
+import type { AddressValue, InstiVersion } from '@summerfi/sdk-common'
+import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
@@ -8,19 +8,20 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Whitelist', () => {
-  const { sdk, chainId, fleetAddress, userAddress, aqAddress, governorSendTxTool } =
-    createAdminSdkTestSetup({ clientId: TestClientIds.ACME })
+  const clientId: string = TestClientIds.ACME
+  const instiVersion: InstiVersion | undefined = undefined
+  // const instiVersion: InstiVersion | undefined = 'v2'
+
+  const { sdk, chainId, fleetAddress, userAddress, governorSendTxTool } = createInstiSdkTestSetup({
+    clientId,
+    instiVersion,
+  })
 
   const whitelistModificationScenarios: {
     targetAddress: AddressValue
     shouldWhitelist?: boolean
     shouldRemoveFromWhitelist?: boolean
   }[] = [
-    {
-      targetAddress: aqAddress.toSolidityValue(),
-      shouldWhitelist: true,
-      shouldRemoveFromWhitelist: false,
-    },
     {
       targetAddress: userAddress.toSolidityValue(),
       shouldWhitelist: true,
@@ -33,11 +34,9 @@ describe('Armada Protocol - Access Control Whitelist', () => {
       'should handle whitelist operations for $targetAddress',
       async ({ targetAddress, shouldWhitelist = false, shouldRemoveFromWhitelist = false }) => {
         const description =
-          targetAddress === aqAddress.toSolidityValue()
-            ? 'aq address'
-            : targetAddress === userAddress.toSolidityValue()
-              ? 'user address'
-              : `address ${targetAddress}`
+          targetAddress === userAddress.toSolidityValue()
+            ? 'user address'
+            : `address ${targetAddress}`
 
         // Get initial status
         const isAlreadyWhitelisted = await sdk.armada.accessControl.isWhitelisted({

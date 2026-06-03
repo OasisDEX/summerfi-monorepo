@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 import {
-  ContractSpecificRoleName,
+  InstiContractRoles,
   isAddress,
   isChainId,
   type ChainId,
@@ -12,7 +12,7 @@ export const revokeContractSpecificRole = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
-      role: z.nativeEnum(ContractSpecificRoleName),
+      role: z.nativeEnum(InstiContractRoles),
       contractAddress: z.custom<IAddress>(isAddress),
       targetAddress: z.custom<IAddress>(isAddress),
     }),
