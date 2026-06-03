@@ -198,6 +198,11 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
       ...(params.owner !== undefined ? [`$owner: String!`] : []),
     ]
 
+    console.log('=== getAllRoles Query Parameters ===')
+    console.log('variableDeclarations', variableDeclarations)
+    console.log('whereConditions', whereConditions)
+    console.log('variables', variables)
+
     const query = gql`
       query GetRoles(${variableDeclarations.join(', ')}) {
         roles(
@@ -219,11 +224,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     `
 
     const urlMapForChain = this.urlMap[params.chainId]
-    if (!urlMapForChain?.institutions) {
-      throw new Error(`No institutions subgraph url found for chainId: ${params.chainId}`)
-    }
-
-    const rawClient = new GraphQLClient(urlMapForChain.institutions)
+    const rawClient = new GraphQLClient(urlMapForChain[this.config.subgraphType])
     return rawClient.request(query, variables)
   }
 

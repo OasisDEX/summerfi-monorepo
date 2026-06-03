@@ -3,7 +3,7 @@ import type {
   ContractSpecificRoleName,
   GlobalRoles,
   AddressValue,
-  GraphRoleName,
+  InstiRoleName,
   ChainId,
   Percentage,
 } from '@summerfi/sdk-common'
@@ -25,16 +25,6 @@ export type GlobalRoleScenario = {
 
 export type GovTestScenario = {
   chainConfigKey: keyof typeof TestConfigs
-}
-
-export type GetAllRolesScenario = {
-  description: string
-  roleName?: GraphRoleName
-  targetContract?: AddressValue
-  owner?: AddressValue
-  first?: number
-  skip?: number
-  expectedMinimumCount?: number
 }
 
 export type PositionsScenario = {

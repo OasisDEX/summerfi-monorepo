@@ -138,8 +138,6 @@ const quickHashCode = (str: string): string => {
 
 // context for each request
 export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
-  LoggingService.log('Request headers', opts.event.headers)
-
   // check for Client-Id header in request and fetch integrator config if present
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
 

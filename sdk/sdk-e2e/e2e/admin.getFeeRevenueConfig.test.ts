@@ -9,7 +9,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Admin Fee Revenue Config', () => {
-  const scenarios: { clientId?: string; instiVersion?: InstiVersion }[] = [
+  const scenarios: { clientId: string; instiVersion?: InstiVersion }[] = [
     { clientId: TestClientIds.ACME },
     { clientId: TestClientIds.ACME, instiVersion: 'v1' },
     { clientId: RwaTestConfig.clientId, instiVersion: 'v2' },

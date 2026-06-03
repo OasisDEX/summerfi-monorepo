@@ -1,6 +1,6 @@
-import { GraphRoleName, AddressValue } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
-import { TestClientIds } from './utils/testConfig'
+import { InstiV2RoleName, AddressValue, type InstiVersion } from '@summerfi/sdk-common'
+import { InstiTestConfigs, RwaTestConfig, TestClientIds } from './utils/testConfig'
+import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 
 jest.setTimeout(300000)
 
@@ -9,24 +9,25 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - Access Control Get All Roles', () => {
   const scenarios: {
-    roleName?: GraphRoleName
-    targetContract?: 'fleetAddress' | 'aqAddress'
+    clientId: string
+    instiVersion?: InstiVersion
+    roleName?: InstiV2RoleName
+    targetContract?: 'fleetAddress'
     owner?: AddressValue
     first?: number
     skip?: number
   }[] = [
     // {},
     {
-      roleName: GraphRoleName.WHITELIST_ROLE,
+      clientId: TestClientIds.ACME,
+      // clientId: RwaTestConfig.clientId,
+      // instiVersion: 'v2',
+      // roleName: InstiV2RoleName.GOVERNOR_ROLE,
+      // targetContract: 'fleetAddress',
+      // owner: RwaTestConfig.userAddressValue,
     },
     // {
-    //   targetContract: 'fleetAddress',
-    // },
-    // {
-    //   targetContract: 'aqAddress',
-    // },
-    // {
-    //   roleName: GraphRoleName.WHITELIST_ROLE,
+    //   roleName: InstiV2RoleName.WHITELIST_ROLE,
     //   targetContract: 'fleetAddress',
     // },
     // {
@@ -39,20 +40,24 @@ describe('Armada Protocol - Access Control Get All Roles', () => {
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { roleName, targetContract: targetContractKey, owner, first, skip } = scenario
+    const {
+      clientId,
+      instiVersion,
+      roleName,
+      targetContract: targetContractKey,
+      owner,
+      first,
+      skip,
+    } = scenario
 
     it('should fetch roles', async () => {
-      const { sdk, chainId, fleetAddress, aqAddress } = createAdminSdkTestSetup({
-        clientId: TestClientIds.ACME,
+      const { sdk, chainId, fleetAddress } = createInstiSdkTestSetup({
+        clientId,
+        instiVersion,
       })
 
       // Resolve targetContract from key
-      const targetContract =
-        targetContractKey === 'fleetAddress'
-          ? fleetAddress.value
-          : targetContractKey === 'aqAddress'
-            ? aqAddress.value
-            : undefined
+      const targetContract = targetContractKey === 'fleetAddress' ? fleetAddress.value : undefined // default to fleetAddress
 
       console.log(
         '=== Getting all roles' +
@@ -67,8 +72,8 @@ describe('Armada Protocol - Access Control Get All Roles', () => {
       const result = await sdk.armada.accessControl.getAllRoles({
         chainId,
         name: roleName,
-        targetContract,
         owner,
+        targetContract,
         first,
         skip,
       })

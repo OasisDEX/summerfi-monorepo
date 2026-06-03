@@ -19,7 +19,7 @@ import {
   Address,
   ArmadaVaultId,
   getChainInfoByChainId,
-  GraphRoleName,
+  InstiRoleName,
   type Role,
 } from '@summerfi/sdk-common'
 import dayjs from 'dayjs'
@@ -485,7 +485,7 @@ const getVaultWhitelist: ({
   const { roles } = await institutionSDK.armada.accessControl.getAllRoles({
     chainId,
     targetContract: vaultAddress as `0x${string}`,
-    name: GraphRoleName.WHITELIST_ROLE,
+    name: InstiRoleName.WHITELIST_ROLE,
   })
 
   return roles
