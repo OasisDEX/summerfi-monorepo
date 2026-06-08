@@ -114,14 +114,18 @@ const mapPositionHistory = (
         depositedValue: pointDepositedValue,
       })
     } else {
-      const backfillPointData = {
+      chartBaseData['7d'].push({
         timestamp: timestampUnix,
         timestampParsed,
-        netValue: 0,
-        depositedValue: 0,
-      }
-
-      chartBaseData['7d'].push(backfillPointData)
+        netValue:
+          isSameHour && positionValues
+            ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
+            : 0,
+        depositedValue:
+          isSameHour && positionValues
+            ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
+            : 0,
+      })
     }
   }
 
@@ -151,14 +155,18 @@ const mapPositionHistory = (
         depositedValue: pointDepositedValue,
       })
     } else {
-      const backfillPointData = {
+      chartBaseData['30d'].push({
         timestamp: timestampUnix,
         timestampParsed,
-        netValue: 0,
-        depositedValue: 0,
-      }
-
-      chartBaseData['30d'].push(backfillPointData)
+        netValue:
+          isSameHour && positionValues
+            ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
+            : 0,
+        depositedValue:
+          isSameHour && positionValues
+            ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
+            : 0,
+      })
     }
   }
 
@@ -189,14 +197,18 @@ const mapPositionHistory = (
           depositedValue: pointDepositedValue,
         })
       } else {
-        const backfillPointData = {
+        chartBaseData[timeframe].push({
           timestamp: timestampUnix,
           timestampParsed,
-          netValue: 0,
-          depositedValue: 0,
-        }
-
-        chartBaseData[timeframe].push(backfillPointData)
+          netValue:
+            isSameDay && positionValues
+              ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
+              : 0,
+          depositedValue:
+            isSameDay && positionValues
+              ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
+              : 0,
+        })
       }
     }
   }
@@ -233,14 +245,18 @@ const mapPositionHistory = (
         depositedValue: pointDepositedValue,
       })
     } else {
-      const backfillPointData = {
+      chartBaseData['3y'].push({
         timestamp: timestampUnix,
         timestampParsed,
-        netValue: 0,
-        depositedValue: 0,
-      }
-
-      chartBaseData['3y'].push(backfillPointData)
+        netValue:
+          isSameWeek && positionValues
+            ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
+            : 0,
+        depositedValue:
+          isSameWeek && positionValues
+            ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
+            : 0,
+      })
     }
   }
 

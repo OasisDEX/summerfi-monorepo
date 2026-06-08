@@ -5,12 +5,11 @@ import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
 
 import { rwaSubgraphsMap, subgraphsMap } from '@/app/server-handlers/subgraphs-map'
-import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
+import { CACHE_TIMES } from '@/constants/revalidation'
 import {
   GetPositionHistoryDocument,
   type GetPositionHistoryQuery,
 } from '@/graphql/clients/position-history/client'
-import { getPositionHistoryTag } from '@/helpers/get-cache-handler-name'
 
 type GetPositionHistoryParams = {
   network: SupportedSDKNetworks
@@ -18,6 +17,17 @@ type GetPositionHistoryParams = {
   vault: SDKVaultishType | SDKVaultType
   isRwaVault?: boolean
 }
+
+type GetPositionHistoryResult = {
+  positionHistory: GetPositionHistoryQuery
+  vault: SDKVaultishType | SDKVaultType
+  noOfDeposits: number
+}
+
+const _positionHistoryCache = new Map<
+  string,
+  { data: GetPositionHistoryResult; expiresAt: number }
+>()
 
 const networkDbNameMap = {
   [SupportedSDKNetworks.Mainnet]: 'mainnet' as const,
@@ -33,6 +43,14 @@ export async function getCachedPositionHistory({
   vault,
   isRwaVault = false,
 }: GetPositionHistoryParams) {
+  const cacheKey = `${network}:${address}:${vault.id}`
+  const now = Date.now()
+  const cached = _positionHistoryCache.get(cacheKey)
+
+  if (cached && cached.expiresAt > now) {
+    return cached.data
+  }
+
   const positionId = `${address}-${vault.id}`
 
   let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
@@ -51,16 +69,6 @@ export async function getCachedPositionHistory({
   }
 
   try {
-    // passing next.js fetcher with cache duration
-    const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) =>
-      await fetch(url, {
-        ...params,
-        next: {
-          revalidate: CACHE_TIMES.POSITION_HISTORY,
-          tags: [CACHE_TAGS.POSITION_HISTORY, getPositionHistoryTag(address)],
-        },
-      })
-
     const isProperNetwork = (net: string): net is keyof typeof subgraphsMap => net in subgraphsMap
 
     const isProperRwaNetwork = (net: string): net is keyof typeof rwaSubgraphsMap =>
@@ -72,9 +80,6 @@ export async function getCachedPositionHistory({
 
     const networkGraphQlClient = new GraphQLClient(
       isRwaVault && isProperRwaNetwork(network) ? rwaSubgraphsMap[network] : subgraphsMap[network],
-      {
-        fetch: customFetchCache,
-      },
     )
 
     const [positionHistory, noOfDepositsQueryResult] = await Promise.all([
@@ -97,14 +102,21 @@ export async function getCachedPositionHistory({
         .executeTakeFirst(),
     ])
 
-    return {
+    const result: GetPositionHistoryResult = {
       positionHistory,
       vault,
       noOfDeposits: Number(noOfDepositsQueryResult?.noOfDeposits ?? 0),
     }
+
+    _positionHistoryCache.set(cacheKey, {
+      data: result,
+      expiresAt: now + Number(CACHE_TIMES.POSITION_HISTORY * 1000),
+    })
+
+    return result
   } finally {
     await dbInstance.db.destroy()
   }
 }
 
-export type GetPositionHistoryReturnType = Awaited<ReturnType<typeof getCachedPositionHistory>>
+export type GetPositionHistoryReturnType = GetPositionHistoryResult
