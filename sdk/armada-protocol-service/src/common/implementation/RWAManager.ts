@@ -156,7 +156,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     const resultingBalance = inputTokenBalance.add(pendingDeposits).add(amount)
     if (resultingBalance.isLessThan(vault.minPositionSize)) {
       throw new Error(
-        `Deposit of ${amount.toString()} plus existing balance ${inputTokenBalance.toString()} and pending deposits ${pendingDeposits.toString()} (total ${resultingBalance.toString()}) is below the minimum position size ${vault.minPositionSize.toString()}`,
+        `Deposit of ${this._formatAmount(amount)} plus existing balance ${this._formatAmount(inputTokenBalance)} and pending deposits ${this._formatAmount(pendingDeposits)} (total ${this._formatAmount(resultingBalance)}) is below the minimum position size ${this._formatAmount(vault.minPositionSize)}`,
       )
     }
 
@@ -253,7 +253,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     const remainingBalance = inputTokenBalance.subtract(withdrawInputValue)
     if (remainingBalance.isLessThan(minPositionSize)) {
       throw new Error(
-        `Withdrawing ${params.sharesAmount} shares (~${withdrawInputValue.toString()}) would leave ${remainingBalance.toString()}, below the minimum position size ${minPositionSize.toString()}`,
+        `Withdrawing ${BigNumber(params.sharesAmount).toFixed(6)} shares (~${this._formatAmount(withdrawInputValue)}) would leave ${this._formatAmount(remainingBalance)}, below the minimum position size ${this._formatAmount(minPositionSize)}`,
       )
     }
 
@@ -673,6 +673,15 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       vault: vault.address.toLowerCase(),
     })
     return receipts.reduce((sum, receipt) => sum + BigInt(receipt.balance), 0n)
+  }
+
+  /**
+   * @name _formatAmount
+   * @description Formats a token amount for human-readable error messages — rounds to 6 decimal
+   *              places and appends the token symbol (display only, not used in any on-chain math).
+   */
+  private _formatAmount(value: ITokenAmount): string {
+    return `${value.toBigNumber().toFixed(6)} ${value.token.symbol}`
   }
 
   /**
