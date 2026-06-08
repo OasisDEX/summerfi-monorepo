@@ -8,6 +8,7 @@ import {
   RwaVaultInfo,
   Token,
   TokenAmount,
+  User,
   type AddressValue,
   type ChainId,
   type IResolvedRoundsVault,
@@ -15,13 +16,14 @@ import {
   type ITokenAmount,
   type TransactionInfo,
 } from '@summerfi/sdk-common'
+import { BigNumber } from 'bignumber.js'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import type {
   IContractsProvider,
   IRoundsVaultContract,
   IProtocolAccessManagerV2Contract,
 } from '@summerfi/contracts-provider-common'
-import type { IRwaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import type { IRwaSubgraphManager, GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { mapSubgraphVaultToVaultInfoParams } from './extensions/mapSubgraphVaultToVaultInfoParams'
@@ -129,9 +131,23 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       amount: params.assetsAmount,
     })
 
-    if (amount.isLessThan(vault.minPositionSize)) {
+    // minPositionSize is a constraint on the resulting position balance, not on a single deposit.
+    // For the Input vault the underlyingToken IS the Fleet input asset, so the deposit amount, the
+    // position's inputTokenBalance and minPositionSize are all already in that denomination. A
+    // missing position means a first-time deposit, so it counts as a zero existing balance.
+    const position = await this._getUserPosition(
+      params.chainId,
+      params.userAddress,
+      params.fleetAddress,
+    )
+    const inputTokenBalance = TokenAmount.createFromBaseUnit({
+      token: vault.underlyingToken,
+      amount: (position?.inputTokenBalance ?? 0n).toString(),
+    })
+    const resultingBalance = inputTokenBalance.add(amount)
+    if (resultingBalance.isLessThan(vault.minPositionSize)) {
       throw new Error(
-        `Deposit amount ${amount.toString()} is less than the minimum position size ${vault.minPositionSize.toString()}`,
+        `Deposit of ${amount.toString()} plus existing balance ${inputTokenBalance.toString()} (total ${resultingBalance.toString()}) is below the minimum position size ${vault.minPositionSize.toString()}`,
       )
     }
 
@@ -187,9 +203,48 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       amount: params.sharesAmount,
     })
 
-    if (amount.isLessThan(vault.minPositionSize)) {
+    // minPositionSize is a constraint on the resulting position balance and is always denominated in
+    // the Fleet input asset, whereas the withdraw amount is in Fleet shares. Read the user's position,
+    // convert the withdrawn shares to the input asset via pricePerShare, and reject the withdrawal if
+    // the remaining balance would fall below minPositionSize.
+    const position = await this._getUserPosition(
+      params.chainId,
+      params.userAddress,
+      params.fleetAddress,
+    )
+    if (!position) {
+      throw new Error(`No position found for ${params.userAddress} in Fleet ${params.fleetAddress}`)
+    }
+
+    // The Fleet input asset (e.g. USDC) — the denomination of inputTokenBalance and minPositionSize.
+    const inputToken = this._buildToken(params.chainId, position.vault.inputToken)
+    const inputTokenBalance = TokenAmount.createFromBaseUnit({
+      token: inputToken,
+      amount: position.inputTokenBalance.toString(),
+    })
+
+    // pricePerShare is a BigDecimal: input-asset amount per full share.
+    const pricePerShare = position.vault.pricePerShare
+    if (pricePerShare == null) {
       throw new Error(
-        `Withdraw amount ${amount.toString()} is less than the minimum position size ${vault.minPositionSize.toString()}`,
+        `Vault ${params.fleetAddress} is missing pricePerShare; cannot validate withdrawal`,
+      )
+    }
+    const withdrawInputValue = TokenAmount.createFrom({
+      token: inputToken,
+      amount: BigNumber(params.sharesAmount).times(pricePerShare).toFixed(),
+    })
+
+    // Re-express minPositionSize (resolved with the share token) in the input-asset denomination.
+    const minPositionSize = TokenAmount.createFromBaseUnit({
+      token: inputToken,
+      amount: vault.minPositionSize.toSolidityValue().toString(),
+    })
+
+    const remainingBalance = inputTokenBalance.subtract(withdrawInputValue)
+    if (remainingBalance.isLessThan(minPositionSize)) {
+      throw new Error(
+        `Withdrawing ${params.sharesAmount} shares (~${withdrawInputValue.toString()}) would leave ${remainingBalance.toString()}, below the minimum position size ${minPositionSize.toString()}`,
       )
     }
 
@@ -559,8 +614,9 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
 
     const underlyingToken = this._buildToken(chainId, roundsVault.underlyingToken)
     const exchangeAssetToken = this._buildToken(chainId, roundsVault.exchangeAssetToken)
+    // The minimum position size is in fleet asset token, on input that's underlying and on output that's exchange asset
     const minPositionSize = TokenAmount.createFromBaseUnit({
-      token: underlyingToken,
+      token: vaultType === RoundsVaultType.Input ? underlyingToken : exchangeAssetToken,
       amount: roundsVault.minPositionSize.toString(),
     })
 
@@ -571,6 +627,24 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       exchangeAssetToken,
       minPositionSize,
     }
+  }
+
+  /**
+   * @name _getUserPosition
+   * @description Reads the user's Fleet position from the RWA subgraph (via the inherited
+   *              `getUserPosition`). Returns the single position row, or `undefined` when the user
+   *              holds no position in the Fleet.
+   */
+  private async _getUserPosition(
+    chainId: ChainId,
+    userAddress: AddressValue,
+    fleetAddress: AddressValue,
+  ): Promise<GetUserPositionQuery['positions'][number] | undefined> {
+    const { positions } = await this._rwaSubgraphManager.getUserPosition({
+      user: User.createFromEthereum(chainId, userAddress),
+      fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
+    })
+    return positions[0]
   }
 
   /**
