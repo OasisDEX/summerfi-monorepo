@@ -52,7 +52,7 @@ import {
   supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
-import { RoundState, TransactionType } from '@summerfi/sdk-common'
+import { RoundState, RoundsVaultType, TransactionType } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import dynamic from 'next/dynamic'
 
@@ -216,8 +216,9 @@ export const VaultManageViewComponent = ({
     chainId: vaultChainId,
   })
 
-  // Surface the current deposit (Input) round so the user knows which round a deposit enters and
-  // so deposits can be blocked when that round is not open.
+  // Surface the current round so the user knows which round a deposit/withdrawal enters and
+  // so the action can be blocked when that round is not open. Input vault for deposits,
+  // Output vault for withdrawals — they are independent rounds.
   const {
     roundId: rwaRoundId,
     roundState: rwaRoundState,
@@ -227,6 +228,10 @@ export const VaultManageViewComponent = ({
     sdk: rwaSdk,
     fleetAddress: vault.id,
     chainId: vaultChainId,
+    vaultType:
+      sidebarTransactionType === TransactionAction.WITHDRAW
+        ? RoundsVaultType.Output
+        : RoundsVaultType.Input,
   })
 
   // Pending RWA positions (ERC-1155 receipts) the user can claim once settled or cancel while the

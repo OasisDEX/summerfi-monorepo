@@ -1,4 +1,4 @@
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { Card, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { RoundState } from '@summerfi/sdk-common'
 
 type RwaRoundNoticeProps = {
@@ -38,6 +38,30 @@ export const RwaRoundNotice = ({
         ? `${isDeposit ? 'Deposits' : 'Withdrawals'} enter round ${roundLabel} and become claimable once the round settles.`
         : `Round ${roundLabel} is not currently accepting ${isDeposit ? 'deposits' : 'withdrawals'}. Please check back once the next round opens.`
 
+  if (isLoading) {
+    return (
+      <Card
+        variant="cardSecondarySmallPaddings"
+        style={{ flexDirection: 'column', gap: 'var(--general-space-8)', marginTop: '16px' }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: '6px',
+            marginBottom: '10px',
+          }}
+        >
+          <SkeletonLine width="120px" height="14px" />
+          <SkeletonLine width="50px" height="14px" />
+        </div>
+        <SkeletonLine width="100%" height="14px" />
+        <SkeletonLine width="30%" height="14px" />
+      </Card>
+    )
+  }
+
   return (
     <Card
       variant="cardSecondarySmallPaddings"
@@ -57,7 +81,7 @@ export const RwaRoundNotice = ({
                 : 'var(--earn-protocol-secondary-60)',
             }}
           >
-            {isLoading ? 'Loading…' : roundStateLabel[roundState]}
+            {roundStateLabel[roundState]}
           </Text>
         ) : null}
       </div>
