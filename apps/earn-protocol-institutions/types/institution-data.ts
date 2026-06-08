@@ -1,4 +1,4 @@
-import { type InstiContractRoles, type GlobalRoles } from '@summerfi/sdk-client'
+import { type GlobalRoles, type InstiContractRoles } from '@summerfi/sdk-client'
 
 import {
   type getCachedInstitutionData,
