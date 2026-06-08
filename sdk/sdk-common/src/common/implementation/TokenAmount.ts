@@ -40,11 +40,27 @@ export class TokenAmount implements ITokenAmount {
   /** FACTORY */
 
   static createFrom(params: TokenAmountParameters): ITokenAmount {
-    return new TokenAmount(params)
+    return new TokenAmount({
+      token: params.token,
+      amount: TokenAmount._normalizeAmount(params.token, params.amount),
+    })
   }
 
   static createFromEthereum(params: TokenAmountParameters): ITokenAmount {
-    return new TokenAmount(params)
+    return new TokenAmount({
+      token: params.token,
+      amount: TokenAmount._normalizeAmount(params.token, params.amount),
+    })
+  }
+
+  /**
+   * @name _normalizeAmount
+   * @description Clamps a human-readable amount to the token's decimals, rounding down — a token
+   *              amount cannot carry more precision than the token supports. Also renders the value in
+   *              plain (non-exponential) notation.
+   */
+  private static _normalizeAmount(token: IToken, amount: string): string {
+    return new BigNumber(amount).decimalPlaces(token.decimals, BigNumber.ROUND_DOWN).toFixed()
   }
 
   /**
