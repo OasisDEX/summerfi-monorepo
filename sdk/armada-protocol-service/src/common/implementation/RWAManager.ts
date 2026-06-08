@@ -149,7 +149,9 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     // position's inputTokenBalance, so they must contribute to the resulting balance.
     const pendingDeposits = TokenAmount.createFromBaseUnit({
       token: vault.underlyingToken,
-      amount: (await this._sumReceiptBalances(params.chainId, params.userAddress, vault)).toString(),
+      amount: (
+        await this._sumReceiptBalances(params.chainId, params.userAddress, vault)
+      ).toString(),
     })
     const resultingBalance = inputTokenBalance.add(pendingDeposits).add(amount)
     if (resultingBalance.isLessThan(vault.minPositionSize)) {
