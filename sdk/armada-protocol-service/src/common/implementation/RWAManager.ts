@@ -144,10 +144,17 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       token: vault.underlyingToken,
       amount: (position?.inputTokenBalance ?? 0n).toString(),
     })
-    const resultingBalance = inputTokenBalance.add(amount)
+    // Count the user's open Input-round receipts as assets already in-flight: they are pending
+    // deposits (denominated in the Input vault underlying = input asset) not yet settled into the
+    // position's inputTokenBalance, so they must contribute to the resulting balance.
+    const pendingDeposits = TokenAmount.createFromBaseUnit({
+      token: vault.underlyingToken,
+      amount: (await this._sumReceiptBalances(params.chainId, params.userAddress, vault)).toString(),
+    })
+    const resultingBalance = inputTokenBalance.add(pendingDeposits).add(amount)
     if (resultingBalance.isLessThan(vault.minPositionSize)) {
       throw new Error(
-        `Deposit of ${amount.toString()} plus existing balance ${inputTokenBalance.toString()} (total ${resultingBalance.toString()}) is below the minimum position size ${vault.minPositionSize.toString()}`,
+        `Deposit of ${amount.toString()} plus existing balance ${inputTokenBalance.toString()} and pending deposits ${pendingDeposits.toString()} (total ${resultingBalance.toString()}) is below the minimum position size ${vault.minPositionSize.toString()}`,
       )
     }
 
@@ -645,6 +652,25 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
       fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
     })
     return positions[0]
+  }
+
+  /**
+   * @name _sumReceiptBalances
+   * @description Sums the account's open (non-zero) RoundsVault receipt balances for a resolved vault,
+   *              in the vault's underlying-token base units. Used to count pending deposits that have
+   *              not yet settled into the Fleet position.
+   */
+  private async _sumReceiptBalances(
+    chainId: ChainId,
+    accountAddress: AddressValue,
+    vault: IResolvedRoundsVault,
+  ): Promise<bigint> {
+    const { receipts } = await this._rwaSubgraphManager.getReceipts({
+      chainId,
+      account: accountAddress.toLowerCase(),
+      vault: vault.address.toLowerCase(),
+    })
+    return receipts.reduce((sum, receipt) => sum + BigInt(receipt.balance), 0n)
   }
 
   /**
