@@ -55,6 +55,9 @@ type UseTransactionParams = {
   setSidebarTransactionType?: Dispatch<SetStateAction<TransactionAction>>
   referralCode?: string
   referralCodeError?: string | null
+  // For RWA withdraw: fleet shares in the current position, used to convert the
+  // user-entered USDC amount into the shares amount the SDK expects.
+  positionShares?: BigNumber
   // Called once a deposit/withdraw completes successfully. RWA views use it to refresh the
   // client-side pending receipts, which the server-side revalidation does not cover.
   onTransactionSuccess?: () => void
@@ -74,6 +77,7 @@ export const useTransaction = ({
   flow,
   ownerView, // on non-owner views we dont want to make all of these calls
   positionAmount,
+  positionShares,
   approvalCustomValue,
   sidebarTransactionType,
   setSidebarTransactionType,
@@ -184,6 +188,8 @@ export const useTransaction = ({
           getWithdrawTx: getWithdrawTX,
           getRwaDepositTx: getRwaDepositTX,
           getRwaWithdrawTx: getRwaWithdrawTX,
+          rwaPositionShares: positionShares,
+          rwaPositionAssets: positionAmount,
         })
 
         transactionEventHandler({
@@ -261,22 +267,23 @@ export const useTransaction = ({
     userWalletAddress,
     isSwitch,
     selectedSwitchVault,
+    setTxStatus,
     sidebarTransactionType,
     isRwaVault,
-    getDepositTX,
-    getWithdrawTX,
-    getRwaDepositTX,
-    getRwaWithdrawTX,
     vault,
     vaultChainId,
     slippageConfig.slippage,
     referralCode,
-    transactionEventHandler,
-    getVaultSwitchTx,
+    getDepositTX,
+    getWithdrawTX,
+    getRwaDepositTX,
+    getRwaWithdrawTX,
+    positionShares,
     positionAmount,
+    transactionEventHandler,
     setTransactions,
-    setTxStatus,
     setSidebarTransactionError,
+    getVaultSwitchTx,
   ])
 
   getTransactionsListRef.current = getTransactionsList

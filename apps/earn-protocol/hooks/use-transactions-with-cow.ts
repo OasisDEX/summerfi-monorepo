@@ -63,6 +63,9 @@ type UseTransactionParams = {
   referralCodeError?: string | null
   isDepositWithSwap: boolean
   setIsDepositWithSwap: Dispatch<SetStateAction<boolean>>
+  // For RWA withdraw: fleet shares in the current position, used to convert the
+  // user-entered USDC amount into the shares amount the SDK expects.
+  positionShares?: BigNumber
   // Called once a deposit/withdraw completes successfully. RWA views use it to refresh the
   // client-side pending receipts, which the server-side revalidation does not cover.
   onTransactionSuccess?: () => void
@@ -82,6 +85,7 @@ export const useTransaction = ({
   flow,
   ownerView, // on non-owner views we dont want to make all of these calls
   positionAmount,
+  positionShares,
   approvalCustomValue,
   sidebarTransactionType,
   setSidebarTransactionType,
@@ -206,6 +210,8 @@ export const useTransaction = ({
             getWithdrawTx: getWithdrawTX,
             getRwaDepositTx: getRwaDepositTX,
             getRwaWithdrawTx: getRwaWithdrawTX,
+            rwaPositionShares: positionShares,
+            rwaPositionAssets: positionAmount,
           })
 
           transactionEventHandler({
@@ -392,8 +398,8 @@ export const useTransaction = ({
       }
     }
   }, [
-    isWithdraw,
     isDeposit,
+    isWithdraw,
     ownerView,
     token,
     vaultToken,
@@ -401,28 +407,29 @@ export const useTransaction = ({
     userWalletAddress,
     isSwitch,
     selectedSwitchVault,
-    sidebarTransactionType,
     isRwaVault,
+    setTxStatus,
+    sidebarTransactionType,
+    vault,
+    vaultChainId,
+    slippageConfig.slippage,
     getDepositTX,
     getWithdrawTX,
     getRwaDepositTX,
     getRwaWithdrawTX,
-    vault,
-    vaultChainId,
-    slippageConfig.slippage,
-    referralCode,
+    positionShares,
+    positionAmount,
     transactionEventHandler,
-    getVaultSwitchTx,
+    setTransactions,
+    setSidebarTransactionError,
+    getIntentSwapsSellOrderQuote,
+    publicClient,
     isPermit2AuthorizationNeeded,
     getPermit2AuthorizationTx,
-    getIntentSwapsSellOrderQuote,
-    positionAmount,
     isDepositWithSwap,
     setIsDepositWithSwap,
-    publicClient,
-    setTransactions,
-    setTxStatus,
-    setSidebarTransactionError,
+    referralCode,
+    getVaultSwitchTx,
   ])
 
   getTransactionsListRef.current = getTransactionsList

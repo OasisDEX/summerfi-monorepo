@@ -65,7 +65,7 @@ export const RwaSidebarInfo = () => {
           If you are not a user of one of the above Custodians or Wallet Providers, you can still
           get access to the RWA Vaults through Summer.fi. Please contact our institutional team{' '}
           <Link
-            href="mailto:institutional@summer.fi"
+            href="mailto:institutions@summer.fi"
             style={{ color: 'var(--earn-protocol-primary-100)' }}
           >
             here

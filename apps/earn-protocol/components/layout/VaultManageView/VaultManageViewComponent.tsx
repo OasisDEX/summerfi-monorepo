@@ -53,6 +53,7 @@ import {
   zero,
 } from '@summerfi/app-utils'
 import { RoundState, TransactionType } from '@summerfi/sdk-common'
+import BigNumber from 'bignumber.js'
 import dynamic from 'next/dynamic'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
@@ -414,6 +415,7 @@ export const VaultManageViewComponent = ({
     flow: 'manage',
     ownerView,
     positionAmount: netValue,
+    positionShares: new BigNumber(position.shares.amount),
     approvalCustomValue: approvalAmountParsed,
     sidebarTransactionType,
     setSidebarTransactionType,
@@ -692,13 +694,12 @@ export const VaultManageViewComponent = ({
             manualSetAmount={manualSetAmount}
             contentAfterInput={
               isRwaVault ? (
-                isDeposit ? (
-                  <RwaRoundNotice
-                    roundId={rwaRoundId}
-                    roundState={rwaRoundState}
-                    isLoading={isRwaRoundLoading}
-                  />
-                ) : null
+                <RwaRoundNotice
+                  roundId={rwaRoundId}
+                  roundState={rwaRoundState}
+                  isLoading={isRwaRoundLoading}
+                  isDeposit={isDeposit}
+                />
               ) : (
                 considerSwitchingContent
               )
@@ -995,6 +996,11 @@ export const VaultManageViewComponent = ({
                   isLoading={isRwaReceiptsLoading}
                   tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
                   tokenDecimals={vault.inputToken.decimals}
+                  vaultSharePrice={
+                    new BigNumber(position.shares.amount).gt(0)
+                      ? netValue.div(new BigNumber(position.shares.amount))
+                      : undefined
+                  }
                   actionInProgressKey={rwaActionInProgressKey}
                   error={rwaActionError}
                   onAction={executeRwaAction}

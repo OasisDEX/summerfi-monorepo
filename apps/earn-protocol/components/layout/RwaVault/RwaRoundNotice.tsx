@@ -5,6 +5,7 @@ type RwaRoundNoticeProps = {
   roundId?: bigint
   roundState?: RoundState
   isLoading: boolean
+  isDeposit?: boolean
 }
 
 // Short human label per round state.
@@ -21,25 +22,30 @@ const roundStateLabel: { [key in RoundState]: string } = {
  * (once available) the round exchange rate. Mirrors the simple Card/Text style
  * used across the app.
  */
-export const RwaRoundNotice = ({ roundId, roundState, isLoading }: RwaRoundNoticeProps) => {
+export const RwaRoundNotice = ({
+  roundId,
+  roundState,
+  isLoading,
+  isDeposit,
+}: RwaRoundNoticeProps) => {
   const isOpen = roundState === RoundState.Opened
   const roundLabel = roundId !== undefined ? `#${roundId.toString()}` : ''
 
   const description =
     roundState === undefined
-      ? 'Deposits enter the current round and become claimable once the round settles.'
+      ? `${isDeposit ? 'Deposits' : 'Withdrawals'} enter the current round and become claimable once the round settles.`
       : isOpen
-        ? `Deposits enter round ${roundLabel} and become claimable once the round settles.`
-        : `Round ${roundLabel} is not currently accepting deposits. Please check back once the next round opens.`
+        ? `${isDeposit ? 'Deposits' : 'Withdrawals'} enter round ${roundLabel} and become claimable once the round settles.`
+        : `Round ${roundLabel} is not currently accepting ${isDeposit ? 'deposits' : 'withdrawals'}. Please check back once the next round opens.`
 
   return (
     <Card
-      variant="cardSecondary"
+      variant="cardSecondarySmallPaddings"
       style={{ flexDirection: 'column', gap: 'var(--general-space-8)', marginTop: '16px' }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Text as="p" variant="p3semi">
-          Deposit round {roundLabel}
+          {isDeposit ? 'Deposit' : 'Withdrawal'} round {roundLabel}
         </Text>
         {roundState !== undefined ? (
           <Text

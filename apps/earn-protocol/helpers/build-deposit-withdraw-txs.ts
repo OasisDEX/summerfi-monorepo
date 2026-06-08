@@ -31,6 +31,10 @@ type BuildDepositWithdrawParams = {
   getWithdrawTx: SdkClient['getWithdrawTx']
   getRwaDepositTx: SdkClient['getRwaDepositTx']
   getRwaWithdrawTx: SdkClient['getRwaWithdrawTx']
+  // RWA withdraw: position data to convert user-entered USDC amount into fleet shares.
+  // The SDK's getWithdrawTx expects shares, but the UI amount is in USDC.
+  rwaPositionShares?: BigNumber
+  rwaPositionAssets?: BigNumber
 }
 
 /**
@@ -54,6 +58,8 @@ export const buildDepositWithdrawTransactions = async ({
   getWithdrawTx,
   getRwaDepositTx,
   getRwaWithdrawTx,
+  rwaPositionShares,
+  rwaPositionAssets,
 }: BuildDepositWithdrawParams): Promise<TransactionWithStatus[]> => {
   const fromToken = {
     [TransactionAction.DEPOSIT]: token,
@@ -73,6 +79,21 @@ export const buildDepositWithdrawTransactions = async ({
     // The RWA handlers take a human-readable amount (string, in the vault token's decimals): the
     // deposit side as `assetsAmount`, the withdraw side as `sharesAmount`.
     const humanAmount = amount.toString()
+
+    // For withdrawals the SDK expects fleet shares, but the user enters an amount in the
+    // underlying asset (USDC). Convert using the position's current exchange rate:
+    //   shares = USDCAmount * (positionShares / positionAssets)
+    let sharesAmount = humanAmount
+
+    if (
+      action === TransactionAction.WITHDRAW &&
+      rwaPositionShares &&
+      rwaPositionAssets &&
+      rwaPositionAssets.gt(0)
+    ) {
+      sharesAmount = amount.times(rwaPositionShares).div(rwaPositionAssets).toString()
+    }
+
     const rwaTransactions =
       action === TransactionAction.DEPOSIT
         ? await getRwaDepositTx({
@@ -85,7 +106,7 @@ export const buildDepositWithdrawTransactions = async ({
             fleetAddress: fleetAddress as AddressValue,
             chainId: vaultChainId as ChainId,
             userAddress: userWalletAddress as AddressValue,
-            sharesAmount: humanAmount,
+            sharesAmount,
           })
 
     return buildRwaTransactions({

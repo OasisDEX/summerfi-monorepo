@@ -12,6 +12,9 @@ type RwaPendingPositionsProps = {
   // Receipt amounts are displayed in the vault's underlying asset terms (see note below).
   tokenSymbol: string
   tokenDecimals: number
+  // Current vault share price in underlying-asset terms. Used to estimate the USDC
+  // value of Output vault receipts that have not yet settled (no exchange rate available).
+  vaultSharePrice?: BigNumber
   actionInProgressKey?: string
   error?: string
   onAction: (receipt: RwaReceipt) => void
@@ -58,6 +61,7 @@ export const RwaPendingPositions = ({
   isLoading,
   tokenSymbol,
   tokenDecimals,
+  vaultSharePrice,
   actionInProgressKey,
   error,
   onAction,
@@ -87,7 +91,20 @@ export const RwaPendingPositions = ({
         const isProcessing = actionInProgressKey === key
         const isAnyProcessing = actionInProgressKey !== undefined
         const typeLabel = receipt.vaultType === RoundsVaultType.Input ? 'Deposit' : 'Withdrawal'
-        const humanBalance = new BigNumber(receipt.balance.toString()).shiftedBy(-tokenDecimals)
+        const sharesBalance = new BigNumber(receipt.balance.toString()).shiftedBy(-tokenDecimals)
+        // Output vault receipts hold fleet shares, not underlying assets. Convert to USDC
+        // using the settlement exchange rate (settled rounds) or the current share price
+        // (unsettled estimate) so the display is consistent with the rest of the UI.
+        const humanBalance =
+          receipt.vaultType === RoundsVaultType.Output
+            ? receipt.exchangeRate && !new BigNumber(receipt.exchangeRate.value).isZero()
+              ? // On-chain IPrice value is shares/USDC (receipt units per asset), so divide to get USDC.
+                sharesBalance.div(new BigNumber(receipt.exchangeRate.value))
+              : vaultSharePrice
+                ? // vaultSharePrice is USDC/shares (position netValue / positionShares), so multiply.
+                  sharesBalance.times(vaultSharePrice)
+                : sharesBalance
+            : sharesBalance
 
         return (
           <Card
