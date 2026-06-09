@@ -12,30 +12,22 @@ import {
 } from '@summerfi/app-types'
 import {
   formatAddress,
-  formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
   slugifyVault,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
-  ten,
 } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
-import { ChartBar } from '@/components/atoms/ChartBar/ChartBar'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
-import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
-import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
-import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
-import { NavPrice } from '@/components/molecules/NavPrice/NavPrice'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
@@ -44,8 +36,9 @@ import { getManagementFee } from '@/helpers/get-management-fee'
 import { getRewardsTokenBonus } from '@/helpers/get-reward-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
-import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
-import { useHoldAlt } from '@/hooks/use-hold-alt'
+
+import { RwaVaultStatsGrid } from './RwaVaultStatsGrid'
+import { StandardVaultStatsGrid } from './StandardVaultStatsGrid'
 
 import vaultOpenGridStyles from './VaultOpenGrid.module.css'
 
@@ -108,7 +101,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     useState(displaySimulationGraph)
 
   const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
-  const isAltPressed = useHoldAlt()
 
   const { totalAnnualRewardsPerToken } = getRewardsTokenBonus({
     merklRewards: vaultInfo?.merklRewards,
@@ -137,36 +129,10 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
       <span>New&nbsp;strategy</span>
     </Tooltip>
   )
-  const apyCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
-  const apyUpdatedAt = useApyUpdatedAt({
-    vaultApyData,
-  })
   // RWA (rounds-based) vaults accrue value as NAV per share, not a yield APY, so the "Live APY"
   // slot shows NAV Price instead. `vault.isRwaVault` is reliable here (open view receives the RWA
   // detail vault, which the fleet-config decoration flags).
   const isRwaVault = vault.isRwaVault ?? false
-  const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
-  const totalValueLockedTokenParsed = formatCryptoBalance(
-    new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
-  )
-  const withdrawableTotalAssetsUSDParsed = formatCryptoBalance(
-    new BigNumber(vault.withdrawableTotalAssetsUSD.toString()),
-  )
-  const withdrawableTotalAssetsParsed = formatCryptoBalance(
-    new BigNumber(vault.withdrawableTotalAssets.toString()).div(ten.pow(vault.inputToken.decimals)),
-  )
-
-  const withdrawablePercentage = new BigNumber(vault.withdrawableTotalAssets.toString())
-    .div(vault.inputTokenBalance.toString())
-    .toFixed(8)
-
-  const medianBN = medianDefiYield ? new BigNumber(medianDefiYield) : null
-  const medianDefiYield30DDifference =
-    medianBN && vaultApyData.sma30d
-      ? new BigNumber(vaultApyData.sma30d * 100).minus(medianBN)
-      : null
-  const medianDefiYieldLiveDifference =
-    medianBN && vaultApyData.apy ? new BigNumber(vaultApyData.apy * 100).minus(medianBN) : null
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -195,14 +161,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
       setIsRefreshing(false)
     }, 5000)
   }
-
-  const depositCapInToken = new BigNumber(vault.depositCap.toString()).div(
-    ten.pow(vault.inputToken.decimals),
-  )
-
-  const depositCapUsed = new BigNumber(vault.inputTokenBalance.toString())
-    .div(ten.pow(vault.inputToken.decimals))
-    .div(depositCapInToken)
 
   const vaultInceptionDate = dayjs(Number(vault.createdTimestamp) * 1000)
   const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
@@ -351,194 +309,23 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
           <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>
             {simulationGraph}
           </AnimateHeight>
-          <SimpleGrid
-            columns={isMobileOrTablet ? 1 : 3}
-            rows={isMobileOrTablet ? 2 : 1}
-            gap="var(--general-space-16)"
-            style={{ marginBottom: 'var(--general-space-16)' }}
-          >
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="Assets in vault"
-                value={
-                  <>
-                    {totalValueLockedTokenParsed}&nbsp;{getDisplayToken(vault.inputToken.symbol)}
-                  </>
-                }
-                subValue={`$${totalValueLockedUSDParsed}`}
-                subValueSize="small"
-              />
-            </Box>
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="Instant liquidity"
-                value={
-                  <>
-                    {withdrawableTotalAssetsParsed}&nbsp;
-                    {getDisplayToken(vault.inputToken.symbol)}
-                  </>
-                }
-                subValue={`$${withdrawableTotalAssetsUSDParsed} (${formatDecimalAsPercent(
-                  withdrawablePercentage,
-                  {
-                    plus: false,
-                  },
-                )})`}
-                subValueSize="small"
-              />
-            </Box>
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="Deposit Cap"
-                value={
-                  <>
-                    {formatCryptoBalance(depositCapInToken)}&nbsp;
-                    {getDisplayToken(vault.inputToken.symbol)}
-                  </>
-                }
-                subValue={
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 'var(--general-space-20)',
-                      flexWrap: 'wrap',
-                    }}
-                  >
-                    {formatDecimalAsPercent(BigNumber.min(depositCapUsed, 1))} filled
-                    <ChartBar value={formatDecimalAsPercent(depositCapUsed)} />
-                  </div>
-                }
-                subValueSize="small"
-              />
-            </Box>
-          </SimpleGrid>
-          <SimpleGrid
-            columns={isMobileOrTablet ? 1 : 2}
-            rows={isMobileOrTablet ? 2 : 1}
-            gap="var(--general-space-16)"
-            style={{ marginBottom: 'var(--general-space-16)' }}
-          >
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="30d Native Yield APY"
-                tooltipName="vault-open-30d-apy"
-                onTooltipOpen={tooltipEventHandler}
-                value={
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Text variant="h4" style={{ marginRight: 'var(--general-space-8)' }}>
-                      {apy30d}
-                    </Text>
-                    <Icon iconName="stars_colorful" size={20} />
-                  </div>
-                }
-                subValue={
-                  medianBN && medianDefiYield30DDifference && isVaultAtLeast30dOld ? (
-                    <Tooltip
-                      tooltipName="vault-open-30d-apy-median"
-                      onTooltipOpen={tooltipEventHandler}
-                      tooltip={
-                        <>
-                          Median&nbsp;DeFi&nbsp;Yield:&nbsp;
-                          {formatDecimalAsPercent(medianBN.div(100))}
-                        </>
-                      }
-                    >
-                      <div>
-                        {`${medianDefiYield30DDifference.gt(0) ? '+' : ''}${formatDecimalAsPercent(
-                          medianDefiYield30DDifference.div(100),
-                        )} vs Median DeFi Yield`}
-                      </div>
-                    </Tooltip>
-                  ) : null
-                }
-                subValueType={medianDefiYield30DDifference?.gt(0) ? 'positive' : 'neutral'}
-                subValueSize="small"
-              />
-            </Box>
-            <Box>
-              {isRwaVault ? (
-                <DataBlock
-                  size="large"
-                  titleSize="small"
-                  title="NAV Price"
-                  value={
-                    <NavPrice
-                      pricePerShare={vault.pricePerShare}
-                      inputTokenSymbol={vault.inputToken.symbol}
-                    />
-                  }
-                />
-              ) : (
-                <DataBlock
-                  size="large"
-                  titleSize="small"
-                  tooltipName="vault-open-live-apy"
-                  onTooltipOpen={tooltipEventHandler}
-                  title={
-                    <Tooltip
-                      tooltipName="vault-open-live-apy-info"
-                      onTooltipOpen={tooltipEventHandler}
-                      tooltip={
-                        <LiveApyInfo
-                          apyCurrent={apyCurrent}
-                          apyUpdatedAt={apyUpdatedAt}
-                          isAltPressed={isAltPressed}
-                        />
-                      }
-                      tooltipWrapperStyles={{
-                        maxWidth: '455px',
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                        <Text
-                          variant="p3semi"
-                          style={{
-                            marginRight: 'var(--general-space-4)',
-                          }}
-                        >
-                          Live&nbsp;Native&nbsp;APY&nbsp;(
-                          {apyUpdatedAt.apyUpdatedAtLabel})
-                        </Text>
-                        <Icon iconName="info" size={16} />
-                      </div>
-                    </Tooltip>
-                  }
-                  value={apyCurrent}
-                  subValue={
-                    medianBN && medianDefiYieldLiveDifference ? (
-                      <Tooltip
-                        tooltipName="vault-open-live-apy-median"
-                        onTooltipOpen={tooltipEventHandler}
-                        tooltip={
-                          <>
-                            Median&nbsp;DeFi&nbsp;Yield:&nbsp;
-                            {formatDecimalAsPercent(medianBN.div(100))}
-                          </>
-                        }
-                      >
-                        <div>
-                          {`${medianDefiYieldLiveDifference.gt(0) ? '+' : ''}${formatDecimalAsPercent(
-                            medianDefiYieldLiveDifference.div(100),
-                          )} vs Median DeFi Yield`}
-                        </div>
-                      </Tooltip>
-                    ) : null
-                  }
-                  subValueType={medianDefiYieldLiveDifference?.gt(0) ? 'positive' : 'neutral'}
-                  subValueSize="small"
-                />
-              )}
-            </Box>
-          </SimpleGrid>
+          {isRwaVault ? (
+            <RwaVaultStatsGrid
+              vault={vault}
+              isMobileOrTablet={isMobileOrTablet}
+              tooltipEventHandler={tooltipEventHandler}
+              apy30d={apy30d}
+            />
+          ) : (
+            <StandardVaultStatsGrid
+              vault={vault}
+              vaultApyData={vaultApyData}
+              medianDefiYield={medianDefiYield}
+              isMobileOrTablet={isMobileOrTablet}
+              tooltipEventHandler={tooltipEventHandler}
+              apy30d={apy30d}
+            />
+          )}
           {isMobileOrTablet && rightExtraContent && (
             <div className={vaultOpenGridStyles.rightExtraBlockMobileWrapper}>
               {rightExtraContent}

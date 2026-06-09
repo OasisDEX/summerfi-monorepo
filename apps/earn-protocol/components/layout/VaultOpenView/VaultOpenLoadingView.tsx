@@ -15,13 +15,14 @@ import { detailsLinks } from './vault-details-links'
 
 import vaultOpenViewStyles from './VaultOpenView.module.css'
 
-export const VaultOpenLoadingView = () => {
+export const VaultOpenLoadingView = ({ isRwaVault = false }: { isRwaVault?: boolean }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
   return (
     <VaultOpenLoadingGrid
       isMobile={isMobile}
+      isRwaVault={isRwaVault}
       detailsContent={
         <div className={vaultOpenViewStyles.leftContentWrapper}>
           <VaultOpenHeaderBlock detailsLinks={detailsLinks} />

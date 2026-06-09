@@ -19,11 +19,12 @@ export const VaultOpenView = ({
   // Reads straight from the server-hydrated cache on first render; only ever hits the API route
   // fallback if the prefetch failed to dehydrate (then VaultOpenLoadingView covers the gap).
   const { data, isPending } = useVaultOpenCoreQuery(network, vaultId)
+  const isRwaVault = data?.vault.isRwaVault ?? false
 
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       {isPending ? (
-        <VaultOpenLoadingView />
+        <VaultOpenLoadingView isRwaVault={isRwaVault} />
       ) : data ? (
         <VaultOpenViewComponent
           network={network}

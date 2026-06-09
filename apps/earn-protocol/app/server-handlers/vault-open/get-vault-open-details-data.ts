@@ -46,7 +46,7 @@ export const getVaultOpenDetailsData = async ({
     return null
   }
 
-  const { parsedNetwork, parsedVaultId, vaultWithConfig } = ctx
+  const { parsedNetwork, parsedVaultId, vaultWithConfig, isRwaVault } = ctx
   const strategy = `${parsedVaultId}-${parsedNetwork}`
 
   const [
@@ -85,6 +85,7 @@ export const getVaultOpenDetailsData = async ({
       network: parsedNetwork,
       vault: vaultWithConfig,
       timestampFrom: dayjs().subtract(30, 'days').unix(),
+      isRwaVault,
     }),
     getPaginatedTopDepositors({
       page: 1,

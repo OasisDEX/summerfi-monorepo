@@ -7,7 +7,7 @@ import {
 } from '@summerfi/app-types'
 import { gql, GraphQLClient } from 'graphql-request'
 
-import { subgraphsMap } from '@/app/server-handlers/subgraphs-map'
+import { rwaSubgraphsMap, subgraphsMap } from '@/app/server-handlers/subgraphs-map'
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { type VaultCurationEvent } from '@/features/curation-activity/types'
 import { getVaultDetailsTag } from '@/helpers/get-cache-handler-name'
@@ -16,6 +16,7 @@ type GetVaultCurationEventsParams = {
   network: SupportedSDKNetworks
   vault: SDKVaultishType | SDKVaultType
   timestampFrom: number
+  isRwaVault?: boolean
 }
 
 type GetVaultCurationEventsQuery = {
@@ -45,6 +46,7 @@ export async function getCachedVaultCurationEvents({
   network,
   vault,
   timestampFrom,
+  isRwaVault = false,
 }: GetVaultCurationEventsParams) {
   const targetContractsList = [vault.id, ...vault.arks.map((ark) => ark.id)]
 
@@ -59,13 +61,19 @@ export async function getCachedVaultCurationEvents({
 
   const isProperNetwork = (net: string): net is keyof typeof subgraphsMap => net in subgraphsMap
 
-  if (!isProperNetwork(network)) {
+  const isProperRwaNetwork = (net: string): net is keyof typeof rwaSubgraphsMap =>
+    net in rwaSubgraphsMap
+
+  if (isRwaVault ? !isProperRwaNetwork(network) : !isProperNetwork(network)) {
     throw new Error(`getCachedVaultCurationEvents: No endpoint found for network: ${network}`)
   }
 
-  const networkGraphQlClient = new GraphQLClient(subgraphsMap[network], {
-    fetch: customFetchCache,
-  })
+  const networkGraphQlClient = new GraphQLClient(
+    isRwaVault && isProperRwaNetwork(network) ? rwaSubgraphsMap[network] : subgraphsMap[network],
+    {
+      fetch: customFetchCache,
+    },
+  )
 
   const response = await networkGraphQlClient.request<GetVaultCurationEventsQuery>(
     GetVaultCurationEventsDocument,

@@ -4,6 +4,7 @@ import {
   GetVaultQuery,
   GetGlobalRebalancesQuery,
   GetUsersActivityQuery,
+  GetVaultsQueryRwa,
 } from '@summerfi/subgraph-manager-common'
 import {
   IArmadaPosition,
@@ -76,6 +77,7 @@ type VaultCustomFields = {
 }
 
 export type SDKVaultsListType = (GetVaultsQuery['vaults'][number] & VaultCustomFields)[]
+export type SDKRWAVaultsListType = (GetVaultsQueryRwa['vaults'][number] & VaultCustomFields)[]
 export type SDKVaultType = Exclude<GetVaultQuery['vault'] & VaultCustomFields, null | undefined>
 export type SDKGlobalRebalancesType = GetGlobalRebalancesQuery['rebalances']
 export type SDKGlobalRebalanceType = SDKGlobalRebalancesType[0]
@@ -83,7 +85,12 @@ export type SDKUsersActivityType = GetUsersActivityQuery['positions']
 export type SDKUserActivityType = SDKUsersActivityType[0]
 
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
-export type SDKVaultishType = (SDKVaultType | SDKVaultsListType[number]) & VaultCustomFields
+export type SDKVaultishType = (
+  | SDKVaultType
+  | SDKVaultsListType[number]
+  | SDKRWAVaultsListType[number]
+) &
+  VaultCustomFields
 
 export type EarnTransactionViewStates =
   | 'idle'

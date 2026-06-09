@@ -235,6 +235,7 @@ export const getVaultManageCurationData = async ({
       network: ctx.parsedNetwork,
       vault: ctx.vault,
       timestampFrom: dayjs().subtract(30, 'days').unix(),
+      isRwaVault: ctx.isRwaVault,
     }),
   }
 }
