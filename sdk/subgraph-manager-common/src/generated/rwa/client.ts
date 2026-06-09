@@ -12834,7 +12834,7 @@ export type GetVaultsQueryVariables = Exact<{
 }>;
 
 
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, outputTokenSupply: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, minimumBufferBalance: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null }>, roundsVaultPairs: Array<{ __typename?: 'RoundsVaultPair', id: string, active: boolean, inputVault?: { __typename?: 'RoundsVault', id: string, currentRound: bigint, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, exchangeAssetToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } } | null, outputVault?: { __typename?: 'RoundsVault', id: string, currentRound: bigint, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, exchangeAssetToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } } | null }> };
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, outputTokenSupply: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, minimumBufferBalance: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, roundsVaultPair?: { __typename?: 'RoundsVaultPair', id: string, active: boolean, inputVault?: { __typename?: 'RoundsVault', id: string, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, decimals: number } } | null } | null }>, roundsVaultPairs: Array<{ __typename?: 'RoundsVaultPair', id: string, active: boolean, inputVault?: { __typename?: 'RoundsVault', id: string, currentRound: bigint, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, exchangeAssetToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } } | null, outputVault?: { __typename?: 'RoundsVault', id: string, currentRound: bigint, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, exchangeAssetToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } } | null }> };
 
 export type GetVaultQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -13436,6 +13436,18 @@ export const GetVaultsDocument = gql`
     lastUpdateTimestamp
     withdrawableTotalAssets
     withdrawableTotalAssetsUSD
+    roundsVaultPair {
+      id
+      active
+      inputVault {
+        id
+        minPositionSize
+        underlyingToken {
+          id
+          decimals
+        }
+      }
+    }
   }
   roundsVaultPairs {
     id

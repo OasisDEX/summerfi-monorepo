@@ -64,6 +64,18 @@ query GetVaults($institutionId: String!) {
     lastUpdateTimestamp
     withdrawableTotalAssets
     withdrawableTotalAssetsUSD
+    roundsVaultPair {
+      id
+      active
+      inputVault {
+        id
+        minPositionSize
+        underlyingToken {
+          id
+          decimals
+        }
+      }
+    }
   }
   roundsVaultPairs {
     id
