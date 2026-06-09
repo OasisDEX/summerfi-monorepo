@@ -6,6 +6,7 @@ import {
   useEarnProtocolSendUserOperation,
 } from '@summerfi/app-earn-ui'
 import { NetworkIds, type TransactionWithStatus } from '@summerfi/app-types'
+import { ten } from '@summerfi/app-utils'
 import { User } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { debounce } from 'lodash-es'
@@ -106,9 +107,7 @@ export const useUnstakeV2SumrTransaction = ({
   buttonLabel?: string
   prepareTransactions: () => Promise<void>
 } => {
-  const amountParsed = BigInt(
-    new BigNumber(amount).multipliedBy(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(0),
-  )
+  const amountParsed = BigInt(new BigNumber(amount).multipliedBy(ten.pow(SUMR_DECIMALS)).toFixed(0))
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(false)
   const [isLocalTxLoading, setIsLocalTxLoading] = useState(false)
   const [transactionQueue, setTransactionQueue] = useState<TransactionWithStatus[]>()

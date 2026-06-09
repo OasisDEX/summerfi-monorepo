@@ -14,7 +14,12 @@ import {
   Text,
   Tooltip,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatDecimalAsPercent, SortDirection } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  SortDirection,
+  ten,
+} from '@summerfi/app-utils'
 import { BigNumber } from 'bignumber.js'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
@@ -102,9 +107,7 @@ const YourLockedSumrPositionsCards = ({
     if (!sortedStakes || sortedStakes.length === 0) {
       return 'n/a'
     }
-    const nextUnlockAmount = new BigNumber(sortedStakes[0].amount).div(
-      new BigNumber(10).pow(SUMR_DECIMALS),
-    )
+    const nextUnlockAmount = new BigNumber(sortedStakes[0].amount).div(ten.pow(SUMR_DECIMALS))
     const [nextStake] = sortedStakes
 
     return `${formatCryptoBalance(nextUnlockAmount)} SUMR @ ${dayjs().add(Number(nextStake.lockupPeriod), 'seconds').format('MMM D, YYYY')}`

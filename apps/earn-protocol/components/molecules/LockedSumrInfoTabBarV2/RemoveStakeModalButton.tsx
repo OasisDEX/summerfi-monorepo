@@ -16,7 +16,7 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { NetworkIds, SupportedNetworkIds } from '@summerfi/app-types'
-import { formatPercent } from '@summerfi/app-utils'
+import { formatPercent, hundred, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
@@ -50,7 +50,7 @@ const RemoveStakeModal: FC<{
   const isCorrectNetwork = chain.id === SupportedNetworkIds.Base
   const { onBlur, onFocus, manualSetAmount, amountDisplay, amountRaw, amountParsed } = useAmount({
     tokenDecimals: SUMR_DECIMALS,
-    initialAmount: new BigNumber(stakedAmount).div(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(2),
+    initialAmount: new BigNumber(stakedAmount).div(ten.pow(SUMR_DECIMALS)).toFixed(2),
     inputChangeHandler,
     inputName: 'unstake-sumr-amount',
   })
@@ -73,12 +73,10 @@ const RemoveStakeModal: FC<{
     if (ev.target.value) {
       if (
         new BigNumber(ev.target.value).isGreaterThan(
-          new BigNumber(stakedAmount).div(new BigNumber(10).pow(SUMR_DECIMALS)),
+          new BigNumber(stakedAmount).div(ten.pow(SUMR_DECIMALS)),
         )
       ) {
-        manualSetAmount(
-          new BigNumber(stakedAmount).div(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(2),
-        )
+        manualSetAmount(new BigNumber(stakedAmount).div(ten.pow(SUMR_DECIMALS)).toFixed(2))
 
         return
       }
@@ -103,7 +101,7 @@ const RemoveStakeModal: FC<{
         .minus(
           new BigNumber(
             new BigNumber(amountParsed)
-              .multipliedBy(new BigNumber(penaltyPercentage).div(new BigNumber(100)))
+              .multipliedBy(new BigNumber(penaltyPercentage).div(hundred))
               .toFixed(2),
           ),
         )
@@ -129,8 +127,7 @@ const RemoveStakeModal: FC<{
         <Text variant="p3" style={{ marginBottom: 'var(--general-space-20)', textAlign: 'center' }}>
           You can unstake up to{' '}
           <strong>
-            {new BigNumber(stakedAmount).div(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(2)}{' '}
-            $SUMR.
+            {new BigNumber(stakedAmount).div(ten.pow(SUMR_DECIMALS)).toFixed(2)} $SUMR.
           </strong>
         </Text>
         <Input
@@ -152,7 +149,7 @@ const RemoveStakeModal: FC<{
               disabled={isLoadingTransactions || isSendingTransaction}
               onClick={() => {
                 const calculatedValue = new BigNumber(stakedAmount)
-                  .div(new BigNumber(10).pow(SUMR_DECIMALS))
+                  .div(ten.pow(SUMR_DECIMALS))
                   .multipliedBy(item)
                   .toFixed(2)
 
@@ -161,7 +158,7 @@ const RemoveStakeModal: FC<{
               isActive={
                 amountRaw ===
                 new BigNumber(stakedAmount)
-                  .div(new BigNumber(10).pow(SUMR_DECIMALS))
+                  .div(ten.pow(SUMR_DECIMALS))
                   .multipliedBy(item)
                   .toFixed(2)
               }

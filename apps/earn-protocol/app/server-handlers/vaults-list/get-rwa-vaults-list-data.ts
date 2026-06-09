@@ -3,7 +3,9 @@ import {
   parseServerResponseToClient,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
+  ten,
 } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedRwaVaultsInfo } from '@/app/server-handlers/cached/get-rwa-vaults-info'
@@ -18,6 +20,19 @@ import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 export const getRwaVaultsListData = async (walletAddress?: string) => {
   const { vaults } = await getRwaVaultsListRaw()
 
+  // Build a live minPositionSize map before decoration (base units → display value).
+  const liveMinDeposit: { [key: string]: number } = {}
+
+  for (const vault of vaults) {
+    const inputVault = vault.roundsVaultPair?.inputVault
+
+    if (inputVault?.minPositionSize != null && inputVault.underlyingToken?.decimals != null) {
+      liveMinDeposit[vault.id] = new BigNumber(inputVault.minPositionSize.toString())
+        .div(ten.pow(inputVault.underlyingToken.decimals))
+        .toNumber()
+    }
+  }
+
   const [configRaw, vaultsInfoRaw, walletAssets] = await Promise.all([
     getCachedConfig(),
     getCachedRwaVaultsInfo(),
@@ -30,6 +45,17 @@ export const getRwaVaultsListData = async (walletAddress?: string) => {
     systemConfig,
     vaults,
     daoManagedVaultsList: [],
+  }).map((vault) => {
+    // special case for RWA vaults - we want to override the minimumDeposit from config with the live one fetched from subgraph
+    const minDeposit = liveMinDeposit[vault.id]
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (minDeposit == null || vault.customFields == null) return vault
+
+    return {
+      ...vault,
+      customFields: { ...vault.customFields, minimumDeposit: minDeposit },
+    }
   })
 
   const filteredWalletAssetsVaults = walletAddress
