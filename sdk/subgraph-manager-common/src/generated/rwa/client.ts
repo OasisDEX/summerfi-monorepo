@@ -13517,7 +13517,7 @@ export const GetVaultDocument = gql`
     rewardTokenEmissionsUSD
     rebalanceCount
     pricePerShare
-    dailySnapshots(first: 2, orderBy: timestamp, orderDirection: desc) {
+    dailySnapshots(first: 31, orderBy: timestamp, orderDirection: desc) {
       pricePerShare
       timestamp
     }
