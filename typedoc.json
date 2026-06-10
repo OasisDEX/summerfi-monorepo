@@ -1,0 +1,26 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "sdk/sdk-common",
+    "sdk/sdk-client",
+    "sdk/sdk-client-react"
+  ],
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
+  "out": "docs/generated/sdk",
+  "name": "Summer.fi SDK",
+  "router": "member",
+  "entryFileName": "README",
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "useCodeBlocks": true,
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "readme": "none",
+  "githubPages": false,
+  "includeVersion": false,
+  "disableGit": true,
+  "sourceLinkTemplate": "https://github.com/OasisDEX/summerfi-monorepo/blob/dev/{path}#L{line}"
+}

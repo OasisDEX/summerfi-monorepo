@@ -38,7 +38,9 @@
     "armada:generate": "zx bin/generate.mjs",
     "armada:genindex": "cd armada-protocol/abis && pnpm run genindex",
     "armada:upconfig": "cd armada-protocol/contracts/packages/deployment/config && cp -r index.json ../../../../../sdk/armada-protocol-common/src/deployments/config.json",
-    "cicheck:earn-frontend": "turbo run cicheck --cache-dir=.turbo --filter=@summerfi/earn-protocol... --filter=@summerfi/earn-protocol-landing-page... --filter=@summerfi/earn-protocol-institutions..."
+    "cicheck:earn-frontend": "turbo run cicheck --cache-dir=.turbo --filter=@summerfi/earn-protocol... --filter=@summerfi/earn-protocol-landing-page... --filter=@summerfi/earn-protocol-institutions...",
+    "docs:gen": "pnpm build:sdk && typedoc",
+    "docs:check": "pnpm docs:gen && git diff --exit-code -- docs/generated"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.732.0",
@@ -73,6 +75,8 @@
     "tsc-alias": "^1.8.8",
     "tsx": "^4.16.5",
     "turbo": "2.9.6",
+    "typedoc": "0.28.14",
+    "typedoc-plugin-markdown": "4.9.0",
     "typescript": "^5.7.3",
     "zx": "^8.3.0"
   },
