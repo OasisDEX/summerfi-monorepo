@@ -1,6 +1,6 @@
 # Interface: ISwapError
 
-Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L15)
+Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L15)
 
 ## Name
 
@@ -22,7 +22,7 @@ Represents a custom error of the SDK for the Swap service
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L17)
+Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L17)
 
 Signature to differentiate from similar interfaces
 
@@ -38,7 +38,7 @@ Signature to differentiate from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ISDKError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ISDKError.ts#L16)
+Defined in: [sdk/sdk-common/src/common/interfaces/ISDKError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ISDKError.ts#L16)
 
 Signature to differentiate from similar interfaces
 
@@ -56,7 +56,7 @@ ISDKError.[___signature__]
 readonly apiQuery: string;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L22)
+Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L22)
 
 Full URL of the API query that generated the error
 
@@ -74,7 +74,7 @@ ISwapErrorData.apiQuery
 readonly message: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ISDKError.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ISDKError.ts#L22)
+Defined in: [sdk/sdk-common/src/common/interfaces/ISDKError.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ISDKError.ts#L22)
 
 Free form debug message, used to debug the issue through the console
 
@@ -90,7 +90,7 @@ Free form debug message, used to debug the issue through the console
 readonly reason: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ISDKError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ISDKError.ts#L20)
+Defined in: [sdk/sdk-common/src/common/interfaces/ISDKError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ISDKError.ts#L20)
 
 Free form reason message, used to provide a short description of the problem
 
@@ -106,7 +106,7 @@ Free form reason message, used to provide a short description of the problem
 readonly statusCode: number;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L24)
+Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L24)
 
 GET or POST status code
 
@@ -124,7 +124,7 @@ ISwapErrorData.statusCode
 readonly subtype: SwapErrorType;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L20)
+Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L20)
 
 Specific error for the swap service
 
@@ -142,7 +142,7 @@ ISwapErrorData.subtype
 readonly type: SwapError;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L18)
+Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L18)
 
 Error type main category
 
@@ -158,7 +158,7 @@ Error type main category
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

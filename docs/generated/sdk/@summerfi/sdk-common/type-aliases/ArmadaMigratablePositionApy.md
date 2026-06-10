@@ -4,7 +4,9 @@
 type ArmadaMigratablePositionApy = object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts#L3)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts#L4)
+
+APY figures (current, 7-day and 30-day SMA) for a migratable Armada position.
 
 ## Properties
 
@@ -14,7 +16,7 @@ Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:3](h
 apy: IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts#L7)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts#L8)
 
 ***
 
@@ -24,7 +26,7 @@ Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:7](h
 apy30d: IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts#L11)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts#L12)
 
 ***
 
@@ -34,7 +36,7 @@ Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:11](
 apy7d: IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts#L9)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts#L10)
 
 ***
 
@@ -44,4 +46,4 @@ Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:9](h
 positionId: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts#L5)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePositionApy.ts#L6)

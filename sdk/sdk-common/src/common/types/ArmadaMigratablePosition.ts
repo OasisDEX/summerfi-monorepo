@@ -3,6 +3,7 @@ import type { IFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
 import type { ITokenAmount } from '../interfaces/ITokenAmount'
 import type { AddressValue } from './AddressValue'
 
+/** A position in another protocol that can be migrated into an Armada vault. */
 export type ArmadaMigratablePosition = {
   // id is an address of the position
   id: AddressValue

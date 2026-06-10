@@ -1,6 +1,6 @@
 # Interface: IArmadaVault
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVault.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVault.ts#L15)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVault.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVault.ts#L15)
 
 IArmadaVault
 
@@ -20,7 +20,7 @@ Interface for an ID of an Armada Protocol vault (fleet)
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVault.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVault.ts#L17)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVault.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVault.ts#L17)
 
 Signature used to differentiate it from similar interfaces
 
@@ -36,7 +36,7 @@ Signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPool.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IPool.ts#L20)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPool.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPool.ts#L20)
 
 Signature to differentiate from similar interfaces
 
@@ -54,7 +54,7 @@ IPool.[___signature__]
 readonly id: IArmadaVaultId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVault.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVault.ts#L19)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVault.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVault.ts#L19)
 
 ID of the vault
 
@@ -70,7 +70,7 @@ ID of the vault
 readonly type: Armada;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVault.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVault.ts#L22)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVault.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVault.ts#L22)
 
 Type of the pool
 
@@ -86,7 +86,7 @@ Type of the pool
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

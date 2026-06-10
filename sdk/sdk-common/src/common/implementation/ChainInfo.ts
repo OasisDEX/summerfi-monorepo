@@ -30,10 +30,21 @@ export class ChainInfo implements IChainInfo {
     this.name = params.name
   }
 
+  /**
+   * Determines whether this chain refers to the same network as another.
+   *
+   * @param chainInfo - The other chain to compare against.
+   * @returns `true` if both have the same chain id.
+   */
   equals(chainInfo: ChainInfo): boolean {
     return this.chainId === chainInfo.chainId
   }
 
+  /**
+   * Returns a human-readable representation of the chain (its name and id).
+   *
+   * @returns A string in the form `"<name> (ID: <chainId>)"`.
+   */
   toString(): string {
     return `${this.name} (ID: ${this.chainId})`
   }

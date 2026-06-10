@@ -5,6 +5,7 @@ import type { ChainId } from '../types/ChainId'
 // Make sure the names are unique
 
 // TODO: rethink the family enums / hierachy if we need to separate them into separate familiites or independant list of chains
+/** Named groups of related chains (an L1 and its associated networks) supported by the SDK. */
 export enum ChainFamilyName {
   Ethereum = 'Ethereum',
   Arbitrum = 'Arbitrum',
@@ -73,11 +74,13 @@ export const ChainFamilyMap = {
   [ChainFamilyName.Hyperliquid]: HyperliquidFamily,
 }
 
+/** Pairs a chain with the family it belongs to. */
 export type ChainFamilyInfo = {
   familyName: ChainFamilyName
   chainInfo: ChainInfo
 }
 
+/** Lookup of {@link ChainFamilyInfo} keyed by numeric chain id. */
 export type ChainFamilyInfoById = Record<number, ChainFamilyInfo>
 
 /**
@@ -132,6 +135,12 @@ export function getChainInfoByChainId(chainId: number): ChainInfo {
   return chainFamilyInfo.chainInfo
 }
 
+/**
+ * Collects every {@link ChainInfo} belonging to the given chain families.
+ *
+ * @param families - The chain families whose chains should be collected.
+ * @returns The flattened list of {@link ChainInfo} for the requested families.
+ */
 export function valuesOfChainFamilyMap(families: ChainFamilyName[]): ChainInfo[] {
   return families.flatMap((family) => {
     const familyMap = ChainFamilyMap[family]

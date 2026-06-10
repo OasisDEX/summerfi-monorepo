@@ -4,7 +4,13 @@
 function makeAdminSDK(params): SDKAdminManager;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/MakeAdminSDK.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/MakeAdminSDK.ts#L13)
+Defined in: [sdk/sdk-client/src/implementation/MakeAdminSDK.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/MakeAdminSDK.ts#L19)
+
+Creates a managed (admin) Summer.fi SDK client ([SDKInstiManager](../classes/SDKAdminManager.md)) scoped to a client id.
+
+Behaves like [makeSDK](makeSDK.md) but forwards the `clientId` as the `Client-Id` header, unlocking the
+admin/access-control surface. Accepts either an `apiDomainUrl` or a direct `apiURL`; prefer
+`apiDomainUrl` for automatic versioning and routing.
 
 ## Parameters
 
@@ -12,6 +18,14 @@ Defined in: [sdk/sdk-client/src/implementation/MakeAdminSDK.ts:13](https://githu
 
 `MakeAdminSDKParams`
 
+MakeSDKParams connection options plus the `clientId` to authenticate as.
+
 ## Returns
 
 [`SDKAdminManager`](../classes/SDKAdminManager.md)
+
+A configured [SDKInstiManager](../classes/SDKAdminManager.md) instance.
+
+## Throws
+
+Error if neither `apiDomainUrl` nor `apiURL` is provided.

@@ -1,6 +1,6 @@
 # Class: Percentage
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L19)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L19)
 
 Percentage
 
@@ -20,7 +20,7 @@ IPercentage
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L21)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L21)
 
 SIGNATURE
 
@@ -36,7 +36,7 @@ SIGNATURE
 readonly value: number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L37)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L37)
 
 ATTRIBUTES
 
@@ -52,7 +52,7 @@ ATTRIBUTES
 static Percent100: Percentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L32)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L32)
 
 The percentage of 100% with the given `PERCENTAGE_DECIMALS`
 
@@ -64,7 +64,7 @@ The percentage of 100% with the given `PERCENTAGE_DECIMALS`
 static PERCENTAGE_DECIMALS: number = 6;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L26)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L26)
 
 The number of decimals used to represent the percentage in Solidity
 
@@ -76,7 +76,7 @@ The number of decimals used to represent the percentage in Solidity
 static PERCENTAGE_FACTOR: number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L29)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L29)
 
 The factor used to scale the percentage
 
@@ -88,7 +88,7 @@ The factor used to scale the percentage
 add(percentage): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L67)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L67)
 
 #### Parameters
 
@@ -116,7 +116,7 @@ IPercentage.add
 divide(divisor): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L86)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L86)
 
 #### Parameters
 
@@ -144,7 +144,7 @@ IPercentage.divide
 multiply(multiplier): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:77](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L77)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:77](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L77)
 
 #### Parameters
 
@@ -172,7 +172,7 @@ IPercentage.multiply
 subtract(percentage): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L72)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L72)
 
 #### Parameters
 
@@ -200,7 +200,7 @@ IPercentage.subtract
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:113](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L113)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:113](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L113)
 
 #### Returns
 
@@ -222,7 +222,7 @@ IValueConverter.toBigNumber
 toComplement(): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:100](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L100)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:100](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L100)
 
 #### Returns
 
@@ -244,7 +244,7 @@ IPercentage.toComplement
 toProportion(): number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:95](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L95)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:95](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L95)
 
 #### Returns
 
@@ -266,7 +266,7 @@ IPercentage.toProportion
 toSolidityValue(params): bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:105](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L105)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:105](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L105)
 
 #### Parameters
 
@@ -296,7 +296,7 @@ IValueConverter.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:118](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L118)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:118](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L118)
 
 #### Returns
 
@@ -318,7 +318,7 @@ IPrintable.toString
 static createFrom(params): Percentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L40)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L40)
 
 FACTORY
 
@@ -340,7 +340,7 @@ FACTORY
 static createFromSolidityValue(params): Percentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Percentage.ts#L49)
+Defined in: [sdk/sdk-common/src/common/implementation/Percentage.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Percentage.ts#L49)
 
 Creates a Percentage instance from a Solidity value with PERCENTAGE_DECIMALS decimals
 

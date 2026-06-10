@@ -4,7 +4,7 @@
 function isTokenAmountData(maybeTokenAmount): maybeTokenAmount is Readonly<{ amount: string; token: ITokenStanalone }>;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:162](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L162)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:164](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L164)
 
 ## Parameters
 

@@ -4,7 +4,7 @@
 function isChainInfo(maybeChainInfo, returnedErrors?): maybeChainInfo is IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IChainInfo.ts:51](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IChainInfo.ts#L51)
+Defined in: [sdk/sdk-common/src/common/interfaces/IChainInfo.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IChainInfo.ts#L52)
 
 ## Parameters
 
@@ -12,9 +12,13 @@ Defined in: [sdk/sdk-common/src/common/interfaces/IChainInfo.ts:51](https://gith
 
 `unknown`
 
+The value to check
+
 ### returnedErrors?
 
 `string`[]
+
+Optional array that, on failure, is populated with validation error messages
 
 ## Returns
 

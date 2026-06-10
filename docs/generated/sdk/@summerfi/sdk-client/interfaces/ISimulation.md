@@ -1,6 +1,6 @@
 # Interface: ISimulation
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/ISimulation.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/simulation/interfaces/ISimulation.ts#L13)
+Defined in: [sdk/sdk-common/src/simulation/interfaces/ISimulation.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/simulation/interfaces/ISimulation.ts#L13)
 
 ISimulation
 
@@ -21,7 +21,7 @@ Generic simulation interface, defines the simulation type for all simulations
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/ISimulation.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/simulation/interfaces/ISimulation.ts#L15)
+Defined in: [sdk/sdk-common/src/simulation/interfaces/ISimulation.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/simulation/interfaces/ISimulation.ts#L15)
 
 Signature used to differentiate it from similar interfaces
 
@@ -33,6 +33,6 @@ Signature used to differentiate it from similar interfaces
 readonly type: SimulationType;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/ISimulation.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/simulation/interfaces/ISimulation.ts#L17)
+Defined in: [sdk/sdk-common/src/simulation/interfaces/ISimulation.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/simulation/interfaces/ISimulation.ts#L17)
 
 The type of the simulation

@@ -1,6 +1,6 @@
 # Interface: MerklApiOpportunityRewardsRecordBreakdownToken
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L68)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L68)
 
 Token information for rewards
 
@@ -12,7 +12,7 @@ Token information for rewards
 address: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:76](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L76)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:76](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L76)
 
 Contract address of the token
 
@@ -24,7 +24,7 @@ Contract address of the token
 chainId: number;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:74](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L74)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:74](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L74)
 
 Chain ID where the token exists
 
@@ -36,7 +36,7 @@ Chain ID where the token exists
 decimals: number;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:78](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L78)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:78](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L78)
 
 Number of decimal places for the token
 
@@ -48,7 +48,7 @@ Number of decimal places for the token
 displaySymbol: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:82](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L82)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:82](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L82)
 
 Display symbol for UI purposes
 
@@ -60,7 +60,7 @@ Display symbol for UI purposes
 icon: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:84](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L84)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:84](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L84)
 
 URL to the token's icon image
 
@@ -72,7 +72,7 @@ URL to the token's icon image
 id: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:70](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L70)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:70](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L70)
 
 Unique identifier for the token
 
@@ -84,7 +84,7 @@ Unique identifier for the token
 isNative: boolean;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:92](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L92)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:92](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L92)
 
 Whether this is a native blockchain token
 
@@ -96,7 +96,7 @@ Whether this is a native blockchain token
 isTest: boolean;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:88](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L88)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:88](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L88)
 
 Whether this is a test token
 
@@ -108,7 +108,7 @@ Whether this is a test token
 name: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L72)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L72)
 
 Human-readable name of the token
 
@@ -120,7 +120,7 @@ Human-readable name of the token
 price: number | null;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:94](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L94)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:94](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L94)
 
 Current price of the token (can be null)
 
@@ -132,7 +132,7 @@ Current price of the token (can be null)
 symbol: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:80](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L80)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:80](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L80)
 
 Token symbol (e.g., "SUMR")
 
@@ -144,7 +144,7 @@ Token symbol (e.g., "SUMR")
 type: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:90](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L90)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:90](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L90)
 
 Token type classification
 
@@ -156,6 +156,6 @@ Token type classification
 verified: boolean;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L86)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L86)
 
 Whether the token is verified

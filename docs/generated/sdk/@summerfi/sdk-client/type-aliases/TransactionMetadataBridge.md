@@ -4,7 +4,9 @@
 type TransactionMetadataBridge = object;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:105](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts#L105)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:124](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L124)
+
+Metadata for a bridge transaction: source/destination amounts and the LayerZero fee.
 
 ## Properties
 
@@ -14,7 +16,7 @@ Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:1
 fromAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:106](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts#L106)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:125](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L125)
 
 ***
 
@@ -24,7 +26,7 @@ Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:1
 lzFee: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:108](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts#L108)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:127](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L127)
 
 ***
 
@@ -34,4 +36,4 @@ Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:1
 toAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:107](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts#L107)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:126](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L126)

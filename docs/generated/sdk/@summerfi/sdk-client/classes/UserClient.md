@@ -1,6 +1,6 @@
 # Class: UserClient
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/UserClient.ts#L22)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L22)
 
 UserClient
 
@@ -24,7 +24,7 @@ IUserClient
 new UserClient(params): UserClient;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/UserClient.ts#L26)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L26)
 
 Constructor
 
@@ -62,7 +62,7 @@ IRPCClient.constructor
 user: IUser;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/UserClient.ts#L23)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L23)
 
 #### Implementation of
 
@@ -78,7 +78,7 @@ Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:23](https://github.
 get protected rpcClient(): TRPCClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
+Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
 
 ##### Returns
 
@@ -98,27 +98,27 @@ IRPCClient.rpcClient
 getPosition(params): Promise<Maybe<Position>>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/UserClient.ts#L49)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:70](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L70)
+
+Returns a single position owned by the user, by its id.
 
 #### Parameters
 
 ##### params
 
+Parameters object.
+
 ###### id
 
 [`PositionId`](PositionId.md)
+
+The id of the position to return.
 
 #### Returns
 
 `Promise`\<[`Maybe`](../type-aliases/Maybe.md)\<[`Position`](Position.md)\>\>
 
-#### Method
-
-getPosition
-
-#### Description
-
-Retrieves a position of the user by its ID
+A promise resolving to the position, or a nullish [Maybe](../type-aliases/Maybe.md) if not found.
 
 #### Implementation of
 
@@ -132,7 +132,9 @@ Retrieves a position of the user by its ID
 getPositionsByIds(_params): Promise<Position[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/UserClient.ts#L43)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:57](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L57)
+
+Returns the user's positions matching the given position ids.
 
 #### Parameters
 
@@ -146,13 +148,7 @@ Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:43](https://github.
 
 `Promise`\<[`Position`](Position.md)[]\>
 
-#### Method
-
-getPositionsByIds
-
-#### Description
-
-Retrieves the list of positions of the user for the given IDs
+A promise resolving to the matching positions.
 
 #### Implementation of
 
@@ -166,7 +162,9 @@ Retrieves the list of positions of the user for the given IDs
 getPositionsByProtocol(_params): Promise<Position[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/UserClient.ts#L37)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L44)
+
+Returns the user's positions for a given protocol.
 
 #### Parameters
 
@@ -180,13 +178,7 @@ Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:37](https://github.
 
 `Promise`\<[`Position`](Position.md)[]\>
 
-#### Method
-
-getPositionsByProtocol
-
-#### Description
-
-Retrieves the list of positions of the user for a given protocol
+A promise resolving to the user's positions in that protocol.
 
 #### Implementation of
 
@@ -200,33 +192,33 @@ Retrieves the list of positions of the user for a given protocol
 newOrder(params): Promise<Maybe<Order>>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/UserClient.ts#L56)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:85](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L85)
+
+Builds an executable order for this user from a simulation.
 
 #### Parameters
 
 ##### params
 
+Parameters object.
+
 ###### positionsManager?
 
 [`IPositionsManager`](../interfaces/IPositionsManager.md)
+
+Optional positions manager, required only for DMA orders.
 
 ###### simulation
 
 [`ISimulation`](../interfaces/ISimulation.md)
 
+The simulation describing the desired position change.
+
 #### Returns
 
 `Promise`\<[`Maybe`](../type-aliases/Maybe.md)\<[`Order`](../interfaces/Order.md)\>\>
 
-The new order created for the user
-
-#### Method
-
-newOrder
-
-#### Description
-
-Creates a new order for the user based on the given simulation
+A promise resolving to the built order, or a nullish [Maybe](../type-aliases/Maybe.md) if none could be built.
 
 #### Implementation of
 

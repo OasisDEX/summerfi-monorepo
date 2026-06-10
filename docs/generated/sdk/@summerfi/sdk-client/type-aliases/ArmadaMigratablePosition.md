@@ -4,7 +4,9 @@
 type ArmadaMigratablePosition = object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L6)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L7)
+
+A position in another protocol that can be migrated into an Armada vault.
 
 ## Properties
 
@@ -14,7 +16,7 @@ Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:6](http
 id: AddressValue;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L8)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L9)
 
 ***
 
@@ -24,7 +26,7 @@ Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:8](http
 migrationType: ArmadaMigrationType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L10)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L11)
 
 ***
 
@@ -34,7 +36,7 @@ Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:10](htt
 positionTokenAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L12)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L13)
 
 ***
 
@@ -44,7 +46,7 @@ Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:12](htt
 underlyingTokenAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L14)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L15)
 
 ***
 
@@ -54,4 +56,4 @@ Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:14](htt
 usdValue: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L16)
+Defined in: [sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ArmadaMigratablePosition.ts#L17)

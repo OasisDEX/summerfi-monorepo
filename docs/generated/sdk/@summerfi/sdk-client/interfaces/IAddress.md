@@ -1,6 +1,6 @@
 # Interface: IAddress
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IAddress.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IAddress.ts#L19)
+Defined in: [sdk/sdk-common/src/common/interfaces/IAddress.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IAddress.ts#L19)
 
 ## Name
 
@@ -24,7 +24,7 @@ Currently only Ethereum type is supported
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IAddress.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IAddress.ts#L21)
+Defined in: [sdk/sdk-common/src/common/interfaces/IAddress.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IAddress.ts#L21)
 
 Signature to differentiate from similar interfaces
 
@@ -36,7 +36,7 @@ Signature to differentiate from similar interfaces
 readonly type: AddressType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IAddress.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IAddress.ts#L25)
+Defined in: [sdk/sdk-common/src/common/interfaces/IAddress.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IAddress.ts#L25)
 
 The type of the address
 
@@ -54,7 +54,7 @@ IAddressData.type
 readonly value: `0x${string}`;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IAddress.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IAddress.ts#L23)
+Defined in: [sdk/sdk-common/src/common/interfaces/IAddress.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IAddress.ts#L23)
 
 The address value in the format specified by type
 
@@ -72,7 +72,7 @@ IAddressData.value
 equals(address): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IAddress.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IAddress.ts#L35)
+Defined in: [sdk/sdk-common/src/common/interfaces/IAddress.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IAddress.ts#L35)
 
 #### Parameters
 
@@ -106,7 +106,7 @@ Checks if two addresses are equal
 toSolidityValue(): `0x${string}`;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ISolidityValue.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ISolidityValue.ts#L9)
+Defined in: [sdk/sdk-common/src/common/interfaces/ISolidityValue.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ISolidityValue.ts#L9)
 
 Converts the instance into a Solidity value
 
@@ -128,7 +128,7 @@ ISolidityValue.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

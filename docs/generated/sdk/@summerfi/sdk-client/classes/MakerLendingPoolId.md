@@ -1,6 +1,6 @@
 # Class: MakerLendingPoolId
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L19)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L19)
 
 MakerLendingPoolId
 
@@ -25,7 +25,7 @@ IMakerLendingPoolIdData
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L21)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L21)
 
 SIGNATURE
 
@@ -45,7 +45,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L18)
+Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L18)
 
 SIGNATURE
 
@@ -69,7 +69,7 @@ LendingPoolId.[___signature__]
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/PoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/PoolId.ts#L18)
+Defined in: [sdk/sdk-common/src/common/implementation/PoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/PoolId.ts#L18)
 
 SIGNATURE
 
@@ -93,7 +93,7 @@ LendingPoolId.[___signature__]
 readonly collateralToken: ITokenStanalone;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L26)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L26)
 
 The token used to collateralize the position
 
@@ -109,7 +109,7 @@ The token used to collateralize the position
 readonly debtToken: ITokenStanalone;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L27)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L27)
 
 The token used to borrow funds
 
@@ -125,7 +125,7 @@ The token used to borrow funds
 readonly ilkType: ILKType;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L25)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L25)
 
 The ILK type of the pool
 
@@ -141,7 +141,7 @@ The ILK type of the pool
 readonly protocol: MakerProtocol;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L24)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L24)
 
 ATTRIBUTES
 
@@ -161,7 +161,7 @@ ATTRIBUTES
 readonly type: Lending = PoolType.Lending;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L21)
+Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L21)
 
 ATTRIBUTES
 
@@ -181,7 +181,7 @@ ATTRIBUTES
 toString(): string;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L47)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L47)
 
 #### Returns
 
@@ -207,7 +207,7 @@ IPrintable.toString
 static createFrom(params): MakerLendingPoolId;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L30)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/implementation/MakerLendingPoolId.ts#L30)
 
 FACTORY
 

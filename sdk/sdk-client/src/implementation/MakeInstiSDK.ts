@@ -15,11 +15,17 @@ export type MakeInstiSDKParams = MakeSDKParams & {
   instiVersion?: InstiVersion
 }
 
-/*
- * makeInstiSdk is a factory function that creates an admin SDK instance scoped to an institution.
- * It behaves like makeAdminSDK (passes the clientId as the `Client-Id` header) but also forwards an
- * institutional deployment-config version as the `Insti-Version` header (defaults to 'v2'), which the
- * server uses to resolve the institution's deployment config and access manager.
+/**
+ * Creates an institutional Summer.fi SDK client ({@link SDKInstiManager}) scoped to an institution.
+ *
+ * Behaves like {@link makeAdminSDK} (sending `clientId` as the `Client-Id` header) but additionally
+ * forwards an institutional deployment-config version as the `Insti-Version` header (defaults to
+ * `'v2'`), which the server uses to resolve the institution's deployment config and access manager.
+ *
+ * @param params - {@link MakeInstiSDKParams}: standard connection options, `clientId`, and an
+ *   optional `instiVersion` (defaults to `'v2'`).
+ * @returns A configured {@link SDKInstiManager} instance.
+ * @throws Error if neither `apiDomainUrl` nor `apiURL` is provided.
  */
 export function makeInstiSdk(params: MakeInstiSDKParams) {
   const apiVersion = getApiVersion(params.version)

@@ -1,6 +1,6 @@
 # Interface: IProtocol
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L16)
+Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L16)
 
 IProtocol
 
@@ -30,7 +30,7 @@ This interface is used to add all the methods that the interface supports
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L18)
+Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L18)
 
 Signature used to differentiate it from similar interfaces
 
@@ -42,7 +42,7 @@ Signature used to differentiate it from similar interfaces
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L22)
+Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L22)
 
 The chain information
 
@@ -60,7 +60,7 @@ IProtocolData.chainInfo
 readonly name: ProtocolName;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L20)
+Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L20)
 
 The name of the protocol
 
@@ -78,7 +78,7 @@ IProtocolData.name
 equals(protocol): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L31)
+Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L31)
 
 Compare if the passed protocol is equal to the current protocol
 

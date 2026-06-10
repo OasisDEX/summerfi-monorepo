@@ -1,13 +1,9 @@
 # Class: PortfolioManager
 
-Defined in: [sdk/sdk-client/src/implementation/PortfolioManager.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/PortfolioManager.ts#L6)
+Defined in: [sdk/sdk-client/src/implementation/PortfolioManager.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/PortfolioManager.ts#L10)
 
-IPortfolioManager
-
-## Description
-
-Allows to retrieve a wallet's positions by their wallet and network. This is meant to be used in isolation
-             without having to retrieve a User or a Network
+Client-side implementation of [IPortfolioManager](../interfaces/IPortfolioManager.md) that aggregates a wallet's positions
+across the requested networks.
 
 ## Extends
 
@@ -25,7 +21,7 @@ Allows to retrieve a wallet's positions by their wallet and network. This is mea
 new PortfolioManager(params): PortfolioManager;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/PortfolioManager.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/PortfolioManager.ts#L7)
+Defined in: [sdk/sdk-client/src/implementation/PortfolioManager.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/PortfolioManager.ts#L11)
 
 #### Parameters
 
@@ -55,7 +51,7 @@ IRPCClient.constructor
 get protected rpcClient(): TRPCClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
+Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
 
 ##### Returns
 
@@ -75,7 +71,9 @@ IRPCClient.rpcClient
 getPositions(_params): Promise<Position[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/PortfolioManager.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/PortfolioManager.ts#L12)
+Defined in: [sdk/sdk-client/src/implementation/PortfolioManager.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/PortfolioManager.ts#L24)
+
+Returns the wallet's positions across the requested networks.
 
 #### Parameters
 
@@ -93,16 +91,7 @@ Defined in: [sdk/sdk-client/src/implementation/PortfolioManager.ts:12](https://g
 
 `Promise`\<[`Position`](Position.md)[]\>
 
-The list of positions for the given wallet and networks
-
-#### Method
-
-getPositions
-
-#### Description
-
-Retrieves all positions of the given wallet for the given networks. The positions can be filtered by
-             their IDs
+A promise resolving to the wallet's positions across the given networks.
 
 #### Implementation of
 

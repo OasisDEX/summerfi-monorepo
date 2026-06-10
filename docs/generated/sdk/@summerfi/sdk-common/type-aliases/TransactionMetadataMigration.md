@@ -4,7 +4,9 @@
 type TransactionMetadataMigration = object;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:96](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts#L96)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:113](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L113)
+
+Metadata for a migration transaction: per-position swap amounts and price impacts.
 
 ## Properties
 
@@ -14,7 +16,7 @@ Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:9
 priceImpactByPositionId: Record<string, TransactionPriceImpact>;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:98](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts#L98)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:115](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L115)
 
 ***
 
@@ -24,4 +26,4 @@ Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:9
 swapAmountByPositionId: Record<string, ITokenAmount>;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:97](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts#L97)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:114](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L114)

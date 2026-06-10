@@ -1,3 +1,4 @@
+/** Global (protocol-wide) access-control roles for institutional deployments. */
 export enum InstiGlobalRoles {
   GOVERNOR_ROLE = 'GOVERNOR_ROLE',
   KEEPER_ROLE = 'KEEPER_ROLE',

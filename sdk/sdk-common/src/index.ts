@@ -464,6 +464,7 @@ export type { IUser, IUserData } from './user/interfaces/IUser'
 export * from './common/utils/chainIdToGraphChain'
 
 export { Simulation } from './simulation/implementation/Simulation'
+/** Namespace bundling the typed step definitions used to build simulation strategies. */
 export * as steps from './simulation/interfaces/Steps'
 export { FETCH_CONFIG, createTimeoutSignal, fetchWithTimeout } from './configs/fetch'
 

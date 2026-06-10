@@ -1,6 +1,6 @@
 # Class: ProtocolsManagerClient
 
-Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L11)
+Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L11)
 
 ProtocolsManagerClient
 
@@ -24,7 +24,7 @@ IProtocolsManagerClient
 new ProtocolsManagerClient(params): ProtocolsManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L14)
+Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L14)
 
 #### Parameters
 
@@ -58,7 +58,7 @@ IRPCClient.constructor
 get protected rpcClient(): TRPCClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
+Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
 
 ##### Returns
 
@@ -78,31 +78,27 @@ IRPCClient.rpcClient
 getLendingPool(params): Promise<Maybe<ILendingPool>>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L20)
+Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L27)
+
+Fetches a lending pool by its identifier.
 
 #### Parameters
 
 ##### params
 
-The pool id data
+Parameters object.
 
 ###### poolId
 
 [`ILendingPoolIdData`](../type-aliases/ILendingPoolIdData.md)
 
+Identifying data of the lending pool to fetch.
+
 #### Returns
 
 `Promise`\<[`Maybe`](../type-aliases/Maybe.md)\<[`ILendingPool`](../interfaces/ILendingPool.md)\>\>
 
-The lending pool
-
-#### Method
-
-getLendingPool
-
-#### Description
-
-Get the lending pool from the protocol
+A promise resolving to the lending pool, or a nullish [Maybe](../type-aliases/Maybe.md) if not found.
 
 #### Implementation of
 
@@ -116,31 +112,27 @@ Get the lending pool from the protocol
 getLendingPoolInfo(params): Promise<Maybe<ILendingPoolInfo>>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L24)
+Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L38)
+
+Fetches extended information (rates, caps, etc.) for a lending pool by its identifier.
 
 #### Parameters
 
 ##### params
 
-The pool id data
+Parameters object.
 
 ###### poolId
 
 [`ILendingPoolIdData`](../type-aliases/ILendingPoolIdData.md)
 
+Identifying data of the lending pool to fetch info for.
+
 #### Returns
 
 `Promise`\<[`Maybe`](../type-aliases/Maybe.md)\<[`ILendingPoolInfo`](../interfaces/ILendingPoolInfo.md)\>\>
 
-The lending pool info
-
-#### Method
-
-getLendingPoolInfo
-
-#### Description
-
-Get the lending pool info from the protocol
+A promise resolving to the lending pool info, or a nullish [Maybe](../type-aliases/Maybe.md) if not found.
 
 #### Implementation of
 

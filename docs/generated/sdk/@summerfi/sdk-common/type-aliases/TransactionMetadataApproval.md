@@ -4,7 +4,9 @@
 type TransactionMetadataApproval = object;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts#L52)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:61](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L61)
+
+Metadata for an approval transaction: the amount approved and the spender.
 
 ## Properties
 
@@ -14,7 +16,7 @@ Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:5
 approvalAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:53](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts#L53)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L62)
 
 ***
 
@@ -24,4 +26,4 @@ Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:5
 approvalSpender: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/types/ExtendedTransactionInfo.ts#L54)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:63](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L63)

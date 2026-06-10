@@ -9,10 +9,22 @@ export type MakeSDKParams = { logging?: boolean; version?: SDKApiVersion } & (
   | { apiURL: string }
 )
 
-/*
- * makeSDK is a factory function that creates an instance of SDKManager.
- * It can take either an apiDomainUrl or a direct apiURL, along with an optional logging flag.
- * Best to use apiDomainUrl as it provide automatic versioning and routing depending on the client version.
+/**
+ * Creates a public Summer.fi SDK client ({@link SDKManager}).
+ *
+ * Accepts either an `apiDomainUrl` or a direct `apiURL`, plus an optional `logging` flag and API
+ * `version`. Prefer `apiDomainUrl`, which enables automatic versioning and routing based on the
+ * client version.
+ *
+ * @param params - Connection options: `apiDomainUrl` or `apiURL`, optional `version` and `logging`.
+ * @returns A configured {@link SDKManager} instance.
+ * @throws Error if neither `apiDomainUrl` nor `apiURL` is provided.
+ *
+ * @example
+ * ```ts
+ * const sdk = makeSDK({ apiDomainUrl: 'https://summer.fi' })
+ * const chains = await sdk.chains.getSupportedChains()
+ * ```
  */
 export function makeSDK(params: MakeSDKParams) {
   const apiVersion = getApiVersion(params.version)

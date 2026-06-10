@@ -4,7 +4,10 @@
 function getValueFromReference<T>(reference): T;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/simulation/interfaces/ValueReference.ts#L12)
+Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/simulation/interfaces/ValueReference.ts#L30)
+
+Resolves a [ReferenceableField](../type-aliases/ReferenceableField.md) to its concrete value, returning the estimated value when
+it is a [ValueReference](../interfaces/ValueReference.md).
 
 ## Type Parameters
 
@@ -18,6 +21,10 @@ Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:12](http
 
 [`ReferenceableField`](../type-aliases/ReferenceableField.md)\<`T`\>
 
+The field to resolve.
+
 ## Returns
 
 `T`
+
+The concrete value of type `T`.

@@ -1,6 +1,6 @@
 # Interface: IPositionsManager
 
-Defined in: [sdk/sdk-common/src/orders/common/interfaces/IPositionsManager.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/interfaces/IPositionsManager.ts#L10)
+Defined in: [sdk/sdk-common/src/orders/common/interfaces/IPositionsManager.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/interfaces/IPositionsManager.ts#L10)
 
 ## Name
 
@@ -24,7 +24,7 @@ The Positions Manager is the proxy used to interact with the Summer.fi system. I
 readonly address: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/interfaces/IPositionsManager.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/orders/common/interfaces/IPositionsManager.ts#L12)
+Defined in: [sdk/sdk-common/src/orders/common/interfaces/IPositionsManager.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/interfaces/IPositionsManager.ts#L12)
 
 Address of the Positions Manager
 

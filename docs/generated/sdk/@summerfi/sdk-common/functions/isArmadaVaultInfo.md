@@ -4,7 +4,7 @@
 function isArmadaVaultInfo(maybeArmadaVaultInfo): maybeArmadaVaultInfo is IArmadaVaultInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:112](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L112)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:112](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L112)
 
 ## Parameters
 

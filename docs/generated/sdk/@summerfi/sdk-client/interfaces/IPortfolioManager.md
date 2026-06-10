@@ -1,6 +1,6 @@
 # Interface: IPortfolioManager
 
-Defined in: [sdk/sdk-client/src/interfaces/IPortfolioManager.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/IPortfolioManager.ts#L8)
+Defined in: [sdk/sdk-client/src/interfaces/IPortfolioManager.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IPortfolioManager.ts#L8)
 
 IPortfolioManager
 
@@ -17,7 +17,7 @@ Allows to retrieve a wallet's positions by their wallet and network. This is mea
 getPositions(params): Promise<Position[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IPortfolioManager.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/IPortfolioManager.ts#L19)
+Defined in: [sdk/sdk-client/src/interfaces/IPortfolioManager.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IPortfolioManager.ts#L19)
 
 #### Parameters
 

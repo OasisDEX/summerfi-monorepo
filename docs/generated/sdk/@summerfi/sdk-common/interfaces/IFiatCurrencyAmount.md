@@ -1,6 +1,6 @@
 # Interface: IFiatCurrencyAmount
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L34)
+Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L35)
 
 ## Name
 
@@ -26,7 +26,7 @@ like Price or Percentage
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L36)
+Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L37)
 
 Signature to differentiate from similar interfaces
 
@@ -38,7 +38,7 @@ Signature to differentiate from similar interfaces
 readonly amount: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L40)
+Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L41)
 
 The amount in floating point format
 
@@ -56,7 +56,7 @@ IFiatCurrencyAmountData.amount
 readonly fiat: FiatCurrency;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L38)
+Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L39)
 
 Fiat currency for the amount
 
@@ -74,7 +74,7 @@ IFiatCurrencyAmountData.fiat
 add(fiatToAdd): IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L47)
+Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L48)
 
 #### Parameters
 
@@ -102,7 +102,7 @@ add
 divide<InputParams, ReturnType>(divisor): ReturnType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:73](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L73)
+Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:74](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L74)
 
 #### Type Parameters
 
@@ -140,7 +140,7 @@ divide
 multiply<InputParams, ReturnType>(multiplier): ReturnType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:61](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L61)
+Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L62)
 
 #### Type Parameters
 
@@ -178,7 +178,7 @@ multiply
 subtract(fiatToSubtract): IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L54)
+Defined in: [sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:55](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts#L55)
 
 #### Parameters
 
@@ -204,7 +204,7 @@ subtract
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IValueConverter.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IValueConverter.ts#L37)
+Defined in: [sdk/sdk-common/src/common/interfaces/IValueConverter.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IValueConverter.ts#L37)
 
 Converts the instance into a BigNumber
 
@@ -235,7 +235,7 @@ IValueConverter.toBigNumber
 toSolidityValue(params?): bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IValueConverter.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IValueConverter.ts#L23)
+Defined in: [sdk/sdk-common/src/common/interfaces/IValueConverter.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IValueConverter.ts#L23)
 
 Converts the instance into a Solidity value
 
@@ -272,7 +272,7 @@ IValueConverter.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

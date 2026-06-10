@@ -4,4 +4,6 @@
 type SimulationStrategy = readonly StrategyStep[];
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts#L9)
+Defined in: [sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts#L11)
+
+An ordered, read-only sequence of [StrategyStep](../interfaces/StrategyStep.md)s defining a simulation strategy.

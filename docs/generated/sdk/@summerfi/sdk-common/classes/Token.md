@@ -1,6 +1,6 @@
 # Class: Token
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Token.ts#L17)
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L18)
 
 ## Name
 
@@ -22,7 +22,7 @@ IToken
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Token.ts#L19)
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L20)
 
 SIGNATURE
 
@@ -38,7 +38,7 @@ SIGNATURE
 readonly address: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Token.ts#L25)
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L26)
 
 Token address
 
@@ -54,7 +54,7 @@ Token address
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Token.ts#L24)
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L25)
 
 Chain where the token is deployed
 
@@ -70,7 +70,7 @@ Chain where the token is deployed
 readonly decimals: number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Token.ts#L26)
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L27)
 
 Number of decimals for the token
 
@@ -86,7 +86,7 @@ Number of decimals for the token
 readonly name: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Token.ts#L23)
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L24)
 
 Full token name
 
@@ -102,7 +102,7 @@ Full token name
 readonly symbol: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Token.ts#L22)
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L23)
 
 ATTRIBUTES
 
@@ -118,7 +118,7 @@ ATTRIBUTES
 equals(token): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Token.ts#L45)
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:57](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L57)
 
 #### Parameters
 
@@ -146,7 +146,7 @@ IToken.equals
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Token.ts#L50)
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L62)
 
 #### Returns
 
@@ -168,7 +168,7 @@ IPrintable.toString
 static createFrom(params): Token;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Token.ts#L29)
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L30)
 
 FACTORY
 
@@ -177,6 +177,26 @@ FACTORY
 ##### params
 
 [`TokenParameters`](../type-aliases/TokenParameters.md)
+
+#### Returns
+
+`Token`
+
+***
+
+### createFromEthereum()
+
+```ts
+static createFromEthereum(params): Token;
+```
+
+Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Token.ts#L34)
+
+#### Parameters
+
+##### params
+
+`Omit`\<[`TokenParameters`](../type-aliases/TokenParameters.md), `"chainInfo"` \| `"address"`\> & `object`
 
 #### Returns
 

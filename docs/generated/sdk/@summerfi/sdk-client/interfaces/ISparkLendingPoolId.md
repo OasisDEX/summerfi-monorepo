@@ -1,6 +1,6 @@
 # Interface: ISparkLendingPoolId
 
-Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L18)
+Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L18)
 
 ISparkLendingPoolId
 
@@ -23,7 +23,7 @@ This may be fixed eventually, there is a discussion on the topic here: https://g
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L20)
+Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L20)
 
 Signature used to differentiate it from similar interfaces
 
@@ -39,7 +39,7 @@ Signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts#L23)
+Defined in: [sdk/sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts#L23)
 
 Signature to differentiate it from other interfaces
 
@@ -57,7 +57,7 @@ ILendingPoolId.[___signature__]
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPoolId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IPoolId.ts#L19)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPoolId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPoolId.ts#L19)
 
 Signature to differentiate from similar interfaces
 
@@ -75,7 +75,7 @@ ILendingPoolId.[___signature__]
 readonly collateralToken: ITokenStanalone;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L26)
+Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L26)
 
 The token used to collateralize the position
 
@@ -93,7 +93,7 @@ ISparkLendingPoolIdData.collateralToken
 readonly debtToken: ITokenStanalone;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L28)
+Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L28)
 
 The token used to borrow funds
 
@@ -111,7 +111,7 @@ ISparkLendingPoolIdData.debtToken
 readonly emodeType: EmodeType;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L24)
+Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L24)
 
 The efficiency mode of the pool
 
@@ -129,7 +129,7 @@ ISparkLendingPoolIdData.emodeType
 readonly protocol: ISparkProtocol;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L22)
+Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L22)
 
 The protocol to which the pool belongs
 
@@ -145,7 +145,7 @@ The protocol to which the pool belongs
 readonly type: Lending;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts#L36)
+Defined in: [sdk/sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts#L36)
 
 Pool type
 

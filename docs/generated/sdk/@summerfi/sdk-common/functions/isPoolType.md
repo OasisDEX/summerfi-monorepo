@@ -4,7 +4,7 @@
 function isPoolType(maybePoolType): maybePoolType is PoolType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/PoolType.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/enums/PoolType.ts#L26)
+Defined in: [sdk/sdk-common/src/common/enums/PoolType.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/PoolType.ts#L28)
 
 Type guard for PoolType
 

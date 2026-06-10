@@ -4,7 +4,9 @@
 function valuesOfChainFamilyMap(families): ChainInfo[];
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ChainFamilies.ts:135](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ChainFamilies.ts#L135)
+Defined in: [sdk/sdk-common/src/common/implementation/ChainFamilies.ts:144](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ChainFamilies.ts#L144)
+
+Collects every [ChainInfo](../classes/ChainInfo.md) belonging to the given chain families.
 
 ## Parameters
 
@@ -12,6 +14,10 @@ Defined in: [sdk/sdk-common/src/common/implementation/ChainFamilies.ts:135](http
 
 [`ChainFamilyName`](../enumerations/ChainFamilyName.md)[]
 
+The chain families whose chains should be collected.
+
 ## Returns
 
 [`ChainInfo`](../classes/ChainInfo.md)[]
+
+The flattened list of [ChainInfo](../classes/ChainInfo.md) for the requested families.

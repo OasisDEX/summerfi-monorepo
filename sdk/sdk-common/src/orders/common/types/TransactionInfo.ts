@@ -34,6 +34,7 @@ export enum TransactionType {
   CancelStrategy = 'CancelStrategy',
 }
 
+/** Price and percentage impact of a transaction on the traded asset's price. */
 export type TransactionPriceImpact = {
   price: IPrice | null
   impact: IPercentage | null
@@ -51,19 +52,23 @@ export interface TransactionInfo {
   description: string
 }
 
+/** Transaction info for an ERC-20 token approval. */
 export type ApproveTransactionInfo = TransactionInfo & {
   type: TransactionType.Approve
   metadata: TransactionMetadataApproval
 }
+/** Metadata for an approval transaction: the amount approved and the spender. */
 export type TransactionMetadataApproval = {
   approvalAmount: ITokenAmount
   approvalSpender: IAddress
 }
 
+/** Transaction info for a vault deposit. */
 export type DepositTransactionInfo = TransactionInfo & {
   type: TransactionType.Deposit
   metadata: TransactionMetadataDeposit
 }
+/** Metadata for a deposit transaction: amounts, optional price impact and slippage. */
 export type TransactionMetadataDeposit = {
   fromAmount: ITokenAmount
   toAmount?: ITokenAmount
@@ -71,10 +76,12 @@ export type TransactionMetadataDeposit = {
   slippage: IPercentage
 }
 
+/** Transaction info for a vault withdrawal. */
 export type WithdrawTransactionInfo = TransactionInfo & {
   type: TransactionType.Withdraw
   metadata: TransactionMetadataWithdraw
 }
+/** Metadata for a withdrawal transaction: amounts, optional price impact and slippage. */
 export type TransactionMetadataWithdraw = {
   fromAmount: ITokenAmount
   toAmount?: ITokenAmount
@@ -82,10 +89,12 @@ export type TransactionMetadataWithdraw = {
   slippage: IPercentage
 }
 
+/** Transaction info for moving funds from one vault to another. */
 export type VaultSwitchTransactionInfo = TransactionInfo & {
   type: TransactionType.VaultSwitch
   metadata: TransactionMetadataVaultSwitch
 }
+/** Metadata for a vault-switch transaction: source/target vaults, amounts, price impact and slippage. */
 export type TransactionMetadataVaultSwitch = {
   fromVault: IArmadaVaultId
   toVault: IArmadaVaultId
@@ -95,71 +104,87 @@ export type TransactionMetadataVaultSwitch = {
   slippage: IPercentage
 }
 
+/** Transaction info for migrating positions into an Armada vault. */
 export type MigrationTransactionInfo = TransactionInfo & {
   type: TransactionType.Migration
   metadata: TransactionMetadataMigration
 }
+/** Metadata for a migration transaction: per-position swap amounts and price impacts. */
 export type TransactionMetadataMigration = {
   swapAmountByPositionId: Record<string, ITokenAmount>
   priceImpactByPositionId: Record<string, TransactionPriceImpact>
 }
 
+/** Transaction info for a cross-chain bridge transfer. */
 export type BridgeTransactionInfo = TransactionInfo & {
   type: TransactionType.Bridge
   metadata: TransactionMetadataBridge
 }
+/** Metadata for a bridge transaction: source/destination amounts and the LayerZero fee. */
 export type TransactionMetadataBridge = {
   fromAmount: ITokenAmount
   toAmount: ITokenAmount
   lzFee: ITokenAmount
 }
 
+/** Transaction info for claiming rewards. */
 export type ClaimTransactionInfo = TransactionInfo & {
   type: TransactionType.Claim
 }
 
+/** Transaction info for delegating voting power. */
 export type DelegateTransactionInfo = TransactionInfo & {
   type: TransactionType.Delegate
 }
 
+/** Transaction info for staking tokens. */
 export type StakeTransactionInfo = TransactionInfo & {
   type: TransactionType.Stake
 }
 
+/** Transaction info for unstaking tokens. */
 export type UnstakeTransactionInfo = TransactionInfo & {
   type: TransactionType.Unstake
 }
 
+/** Transaction info for claiming Merkl rewards. */
 export type MerklClaimTransactionInfo = TransactionInfo & {
   type: TransactionType.MerklClaim
 }
 
+/** Transaction info for toggling Admirals Quarters as a Merkl rewards operator. */
 export type ToggleAQasMerklRewardsOperatorTransactionInfo = TransactionInfo & {
   type: TransactionType.ToggleAQasMerklRewardsOperator
 }
 
+/** Transaction info for a plain ERC-20 token transfer. */
 export type Erc20TransferTransactionInfo = TransactionInfo & {
   type: TransactionType.Erc20Transfer
   metadata: TransactionMetadataErc20Transfer
 }
+/** Metadata for an ERC-20 transfer transaction: token, recipient and amount. */
 export type TransactionMetadataErc20Transfer = {
   token: IAddress
   recipient: IAddress
   amount: ITokenAmount
 }
 
+/** Transaction info for granting a Permit2 authorization. */
 export type Permit2AuthorizationTransactionInfo = TransactionInfo & {
   type: TransactionType.Permit2Authorization
 }
 
+/** Transaction info for revoking a Permit2 authorization. */
 export type Permit2RevokeTransactionInfo = TransactionInfo & {
   type: TransactionType.Permit2Revoke
 }
 
+/** Transaction info for creating a DCA strategy. */
 export type CreateDcaStrategyTransactionInfo = TransactionInfo & {
   type: TransactionType.CreateStrategy
 }
 
+/** Transaction info for editing a DCA strategy, carrying the updated strategy. */
 export type EditDcaStrategyTransactionInfo = TransactionInfo & {
   type: TransactionType.EditStrategy
   metadata: {
@@ -167,10 +192,12 @@ export type EditDcaStrategyTransactionInfo = TransactionInfo & {
   }
 }
 
+/** Transaction info for pausing a DCA strategy. */
 export type PauseDcaStrategyTransactionInfo = TransactionInfo & {
   type: TransactionType.PauseStrategy
 }
 
+/** Transaction info for resuming a DCA strategy, carrying the affected strategy. */
 export type ResumeDcaStrategyTransactionInfo = TransactionInfo & {
   type: TransactionType.ResumeStrategy
   metadata: {
@@ -178,6 +205,7 @@ export type ResumeDcaStrategyTransactionInfo = TransactionInfo & {
   }
 }
 
+/** Transaction info for cancelling a DCA strategy. */
 export type CancelDcaStrategyTransactionInfo = TransactionInfo & {
   type: TransactionType.CancelStrategy
 }

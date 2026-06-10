@@ -1,6 +1,6 @@
 # Interface: ISparkProtocol
 
-Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts#L18)
+Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts#L18)
 
 ISparkProtocol
 
@@ -25,7 +25,7 @@ This may be fixed eventually, there is a discussion on the topic here: https://g
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts#L20)
+Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts#L20)
 
 Interface signature used to differentiate it from similar interfaces
 
@@ -41,7 +41,7 @@ Interface signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L18)
+Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L18)
 
 Signature used to differentiate it from similar interfaces
 
@@ -59,7 +59,7 @@ IProtocol.[___signature__]
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L39)
+Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L39)
 
 The chain information
 
@@ -75,7 +75,7 @@ The chain information
 readonly name: Spark;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts#L23)
+Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol.ts#L23)
 
 The name of the protocol
 
@@ -91,7 +91,7 @@ The name of the protocol
 equals(protocol): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L31)
+Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L31)
 
 Compare if the passed protocol is equal to the current protocol
 

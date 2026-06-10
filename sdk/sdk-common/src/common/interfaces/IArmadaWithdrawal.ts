@@ -27,6 +27,7 @@ export type IArmadaWithdrawal = Readonly<z.infer<typeof ArmadaWithdrawalDataSche
 /**
  * @description Type guard for IArmadaWithdrawal
  * @param maybeArmadaWithdrawal Object to be checked
+ * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is an IArmadaWithdrawal
  */
 export function isArmadaWithdrawal(

@@ -4,14 +4,22 @@
 function useSDKContext(): object;
 ```
 
-Defined in: [sdk/sdk-client-react/src/components/SDKContext.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client-react/src/components/SDKContext.ts#L14)
+Defined in: [sdk/sdk-client-react/src/components/SDKContext.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client-react/src/components/SDKContext.ts#L25)
+
+Reads the SDK configuration from the surrounding [SDKContextProvider](../variables/SDKContextProvider.md).
 
 ## Returns
 
 `object`
+
+The initialized SDK context value containing the configured `apiURL`.
 
 ### apiURL
 
 ```ts
 apiURL: string;
 ```
+
+## Throws
+
+Error if used outside of an initialized provider (i.e. when `apiURL` is missing).

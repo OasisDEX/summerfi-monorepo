@@ -1,6 +1,9 @@
 # Interface: ValueReference\<T\>
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:1](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/simulation/interfaces/ValueReference.ts#L1)
+Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/simulation/interfaces/ValueReference.ts#L5)
+
+A deferred reference to a value produced by an earlier simulation step, carrying an estimated
+value plus the `path` used to resolve the real value at execution time.
 
 ## Type Parameters
 
@@ -16,7 +19,7 @@ Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:1](https
 estimatedValue: T;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/simulation/interfaces/ValueReference.ts#L2)
+Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/simulation/interfaces/ValueReference.ts#L6)
 
 ***
 
@@ -26,4 +29,4 @@ Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:2](https
 path: [string, string];
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/simulation/interfaces/ValueReference.ts#L3)
+Defined in: [sdk/sdk-common/src/simulation/interfaces/ValueReference.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/simulation/interfaces/ValueReference.ts#L7)

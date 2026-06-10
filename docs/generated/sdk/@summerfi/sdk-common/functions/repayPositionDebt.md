@@ -4,7 +4,9 @@
 function repayPositionDebt(position, amount): ILendingPosition;
 ```
 
-Defined in: [sdk/sdk-common/src/common/utils/PositionUtils.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/utils/PositionUtils.ts#L68)
+Defined in: [sdk/sdk-common/src/common/utils/PositionUtils.ts:102](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/utils/PositionUtils.ts#L102)
+
+Returns a copy of the position with the repaid amount subtracted from its debt.
 
 ## Parameters
 
@@ -12,10 +14,16 @@ Defined in: [sdk/sdk-common/src/common/utils/PositionUtils.ts:68](https://github
 
 [`ILendingPosition`](../interfaces/ILendingPosition.md)
 
+The position to repay.
+
 ### amount
 
 [`ITokenAmount`](../interfaces/ITokenAmount.md)
 
+The debt amount to remove.
+
 ## Returns
 
 [`ILendingPosition`](../interfaces/ILendingPosition.md)
+
+A new position with decreased debt.

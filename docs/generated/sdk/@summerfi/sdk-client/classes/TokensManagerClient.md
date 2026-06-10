@@ -1,6 +1,6 @@
 # Class: TokensManagerClient
 
-Defined in: [sdk/sdk-client/src/implementation/TokensManagerClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/TokensManagerClient.ts#L10)
+Defined in: [sdk/sdk-client/src/implementation/TokensManagerClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/TokensManagerClient.ts#L10)
 
 ## Name
 
@@ -26,7 +26,7 @@ Implementation of the ITokensManager interface for the SDK Client
 new TokensManagerClient(params): TokensManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/TokensManagerClient.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/TokensManagerClient.ts#L13)
+Defined in: [sdk/sdk-client/src/implementation/TokensManagerClient.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/TokensManagerClient.ts#L13)
 
 #### Parameters
 
@@ -60,7 +60,7 @@ IRPCClient.constructor
 get protected rpcClient(): TRPCClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
+Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
 
 ##### Returns
 
@@ -80,7 +80,7 @@ IRPCClient.rpcClient
 getTokenByAddress(params): Promise<ITokenStanalone>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/TokensManagerClient.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/TokensManagerClient.ts#L28)
+Defined in: [sdk/sdk-client/src/implementation/TokensManagerClient.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/TokensManagerClient.ts#L28)
 
 #### Parameters
 
@@ -110,7 +110,7 @@ ITokensManagerClient.getTokenByAddress
 getTokenByName(_params): Promise<ITokenStanalone>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/TokensManagerClient.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/TokensManagerClient.ts#L36)
+Defined in: [sdk/sdk-client/src/implementation/TokensManagerClient.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/TokensManagerClient.ts#L36)
 
 #### Parameters
 
@@ -140,7 +140,7 @@ ITokensManagerClient.getTokenByName
 getTokenBySymbol(params): Promise<ITokenStanalone>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/TokensManagerClient.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/TokensManagerClient.ts#L20)
+Defined in: [sdk/sdk-client/src/implementation/TokensManagerClient.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/TokensManagerClient.ts#L20)
 
 #### Parameters
 

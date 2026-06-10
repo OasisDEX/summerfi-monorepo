@@ -2,6 +2,7 @@ import type { DcaStrategyStatusEnum } from '../enums/DcaStrategyStatus'
 import type { AddressValue } from '../types/AddressValue'
 import type { ChainId } from '../types/ChainId'
 
+/** A configured DCA (dollar-cost-averaging) strategy and its current on-chain execution state. */
 export interface IDcaStrategy {
   /** Unique identifier for the DCA strategy in graph */
   id: string

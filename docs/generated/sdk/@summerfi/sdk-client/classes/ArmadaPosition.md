@@ -1,6 +1,6 @@
 # Class: ArmadaPosition
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L20)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L20)
 
 ArmadaPosition
 
@@ -24,7 +24,7 @@ IArmadaPosition
 protected new ArmadaPosition(params): ArmadaPosition;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L60)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L60)
 
 SEALED CONSTRUCTOR
 
@@ -50,7 +50,7 @@ SEALED CONSTRUCTOR
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L22)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L22)
 
 SIGNATURE
 
@@ -70,7 +70,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Position.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/Position.ts#L18)
+Defined in: [sdk/sdk-common/src/common/implementation/Position.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Position.ts#L18)
 
 SIGNATURE
 
@@ -94,7 +94,7 @@ Position.[___signature__]
 readonly amount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L48)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L48)
 
 #### Deprecated
 
@@ -112,7 +112,7 @@ Use assets instead
 readonly assetPriceUSD: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L29)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L29)
 
 Asset price in USD
 
@@ -128,7 +128,7 @@ Asset price in USD
 readonly assets: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L28)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L28)
 
 Assets balance
 
@@ -144,7 +144,7 @@ Assets balance
 readonly assetsUSD: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L30)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L30)
 
 Assets value in USD
 
@@ -160,7 +160,7 @@ Assets value in USD
 readonly claimableSummerToken: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L41)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L41)
 
 Claimable SUMR rewards
 
@@ -176,7 +176,7 @@ Claimable SUMR rewards
 readonly claimedSummerToken: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L40)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L40)
 
 Claimed SUMR rewards
 
@@ -192,7 +192,7 @@ Claimed SUMR rewards
 readonly deposits: object[];
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L50)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L50)
 
 #### ~~amount~~
 
@@ -222,7 +222,7 @@ do not use
 readonly depositsAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L32)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L32)
 
 Total assets deposited in the Fleet
 
@@ -238,7 +238,7 @@ Total assets deposited in the Fleet
 readonly depositsAmountUSD: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L33)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L33)
 
 Total assets deposited in the Fleet in USD
 
@@ -254,7 +254,7 @@ Total assets deposited in the Fleet in USD
 readonly earnings: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L38)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L38)
 
 Earnings (amount - netDeposits)
 
@@ -270,7 +270,7 @@ Earnings (amount - netDeposits)
 readonly earningsUSD: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L39)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L39)
 
 Earnings in USD
 
@@ -286,7 +286,7 @@ Earnings in USD
 readonly id: IArmadaPositionId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L26)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L26)
 
 ID of the position
 
@@ -306,7 +306,7 @@ ID of the position
 readonly netDeposits: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L36)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L36)
 
 Net deposits (deposits - withdrawals)
 
@@ -322,7 +322,7 @@ Net deposits (deposits - withdrawals)
 readonly netDepositsUSD: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L37)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L37)
 
 Net deposits in USD
 
@@ -338,7 +338,7 @@ Net deposits in USD
 readonly pool: IArmadaVault;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L27)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L27)
 
 Pool where the position is opened
 
@@ -358,7 +358,7 @@ Pool where the position is opened
 readonly rewards: object[];
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L42)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L42)
 
 Reward assets for this position
 
@@ -386,7 +386,7 @@ claimed: ITokenAmount;
 readonly shares: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L31)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L31)
 
 Number of shares allocated to this position
 
@@ -402,7 +402,7 @@ Number of shares allocated to this position
 readonly type: Armada = PositionType.Armada;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L25)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L25)
 
 ATTRIBUTES
 
@@ -422,7 +422,7 @@ ATTRIBUTES
 readonly withdrawals: object[];
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L52)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L52)
 
 #### ~~amount~~
 
@@ -452,7 +452,7 @@ do not use
 readonly withdrawalsAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L34)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L34)
 
 Total assets withdrawn from the Fleet
 
@@ -468,7 +468,7 @@ Total assets withdrawn from the Fleet
 readonly withdrawalsAmountUSD: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L35)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L35)
 
 Total assets withdrawn from the Fleet in USD
 
@@ -484,7 +484,7 @@ Total assets withdrawn from the Fleet in USD
 static createFrom(params): ArmadaPosition;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:55](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L55)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaPosition.ts:55](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaPosition.ts#L55)
 
 FACTORY
 

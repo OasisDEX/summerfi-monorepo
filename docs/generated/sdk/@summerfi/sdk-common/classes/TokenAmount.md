@@ -1,6 +1,6 @@
 # Class: TokenAmount
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L28)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L28)
 
 TokenAmount
 
@@ -20,7 +20,7 @@ ITokenAmount
 protected readonly _baseUnitFactor: BigNumber;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L38)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L38)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:38](https:/
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L30)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L30)
 
 SIGNATURE
 
@@ -46,7 +46,7 @@ SIGNATURE
 readonly amount: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L34)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L34)
 
 Amount in floating point format without taking into account the token decimals
 
@@ -62,7 +62,7 @@ Amount in floating point format without taking into account the token decimals
 readonly token: ITokenStanalone;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L33)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L33)
 
 ATTRIBUTES
 
@@ -78,7 +78,7 @@ ATTRIBUTES
 add(tokenToAdd): ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:74](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L74)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:94](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L94)
 
 #### Parameters
 
@@ -106,7 +106,7 @@ ITokenAmount.add
 divide<InputParams, ReturnType>(divisor): ReturnType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:122](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L122)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:142](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L142)
 
 #### Type Parameters
 
@@ -144,7 +144,7 @@ ITokenAmount.divide
 isEqualTo(tokenAmount): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:167](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L167)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:187](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L187)
 
 #### Parameters
 
@@ -172,7 +172,7 @@ ITokenAmount.isEqualTo
 isGreaterOrEqualThan(tokenAmount): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:157](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L157)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:177](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L177)
 
 #### Parameters
 
@@ -200,7 +200,7 @@ ITokenAmount.isGreaterOrEqualThan
 isGreaterThan(tokenAmount): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:143](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L143)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:163](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L163)
 
 #### Parameters
 
@@ -228,7 +228,7 @@ ITokenAmount.isGreaterThan
 isLessOrEqualThan(tokenAmount): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:162](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L162)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:182](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L182)
 
 #### Parameters
 
@@ -256,7 +256,7 @@ ITokenAmount.isLessOrEqualThan
 isLessThan(tokenAmount): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:150](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L150)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:170](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L170)
 
 #### Parameters
 
@@ -284,7 +284,7 @@ ITokenAmount.isLessThan
 isZero(): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:138](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L138)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:158](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L158)
 
 #### Returns
 
@@ -306,7 +306,7 @@ ITokenAmount.isZero
 multiply<InputParams, ReturnType>(multiplier): ReturnType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:103](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L103)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:123](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L123)
 
 #### Type Parameters
 
@@ -344,7 +344,7 @@ ITokenAmount.multiply
 subtract(tokenToSubstract): ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:84](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L84)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:104](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L104)
 
 #### Parameters
 
@@ -372,7 +372,7 @@ ITokenAmount.subtract
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:184](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L184)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:204](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L204)
 
 #### Returns
 
@@ -394,7 +394,7 @@ IValueConverter.toBigNumber
 toSolidityValue(params): bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:177](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L177)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:197](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L197)
 
 #### Parameters
 
@@ -424,7 +424,7 @@ IValueConverter.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:172](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L172)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:192](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L192)
 
 #### Returns
 
@@ -446,7 +446,7 @@ IPrintable.toString
 static createFrom(params): ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L42)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L42)
 
 FACTORY
 
@@ -468,7 +468,7 @@ FACTORY
 static createFromBaseUnit(params): ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:55](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L55)
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:75](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L75)
 
 #### Parameters
 
@@ -491,3 +491,23 @@ i.e.: amount in base unit (1eth = 1000000000000000000, 1btc = 100000000, etc...)
 #### Name
 
 createFromBaseUnit
+
+***
+
+### createFromEthereum()
+
+```ts
+static createFromEthereum(params): ITokenAmount;
+```
+
+Defined in: [sdk/sdk-common/src/common/implementation/TokenAmount.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/TokenAmount.ts#L49)
+
+#### Parameters
+
+##### params
+
+[`TokenAmountParameters`](../type-aliases/TokenAmountParameters.md)
+
+#### Returns
+
+[`ITokenAmount`](../interfaces/ITokenAmount.md)

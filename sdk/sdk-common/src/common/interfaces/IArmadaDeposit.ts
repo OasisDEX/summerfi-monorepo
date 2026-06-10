@@ -27,6 +27,7 @@ export type IArmadaDeposit = Readonly<z.infer<typeof ArmadaDepositDataSchema>>
 /**
  * @description Type guard for IArmadaDeposit
  * @param maybeArmadaDeposit Object to be checked
+ * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is an IArmadaDeposit
  */
 export function isArmadaDeposit(

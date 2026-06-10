@@ -11,10 +11,14 @@ export enum RoundsVaultType {
   Output = 'Output',
 }
 
+/** Zod schema validating a value against the {@link RoundsVaultType} enum. */
 export const RoundsVaultTypeSchema = z.nativeEnum(RoundsVaultType)
 
 /**
- * Type guard for RoundsVaultType
+ * Type guard that checks whether a value is a valid {@link RoundsVaultType}.
+ *
+ * @param maybeRoundsVaultType - The value to test.
+ * @returns `true` if the value is a {@link RoundsVaultType}, narrowing its type.
  */
 export function isRoundsVaultType(
   maybeRoundsVaultType: unknown,

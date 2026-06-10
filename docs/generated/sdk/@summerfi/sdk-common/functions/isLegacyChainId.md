@@ -4,7 +4,9 @@
 function isLegacyChainId(maybeChainId): maybeChainId is LegacyChainId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/ChainId.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/ChainId.ts#L44)
+Defined in: [sdk/sdk-common/src/common/types/ChainId.ts:59](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/ChainId.ts#L59)
+
+Type guard that checks whether a value is a [LegacyChainId](../type-aliases/LegacyChainId.md).
 
 ## Parameters
 
@@ -12,6 +14,10 @@ Defined in: [sdk/sdk-common/src/common/types/ChainId.ts:44](https://github.com/O
 
 `unknown`
 
+The value to test.
+
 ## Returns
 
 `maybeChainId is LegacyChainId`
+
+`true` if the value is a legacy chain id.

@@ -45,7 +45,8 @@ export type IChainInfoData = Readonly<z.infer<typeof ChainInfoDataSchema>>
 
 /**
  * @description Type guard for IChainInfo
- * @param maybeChainInfo
+ * @param maybeChainInfo The value to check
+ * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is an IChainInfo
  */
 export function isChainInfo(

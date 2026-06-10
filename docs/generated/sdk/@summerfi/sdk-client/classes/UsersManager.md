@@ -1,12 +1,9 @@
 # Class: UsersManager
 
-Defined in: [sdk/sdk-client/src/implementation/UsersManager.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/UsersManager.ts#L8)
+Defined in: [sdk/sdk-client/src/implementation/UsersManager.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UsersManager.ts#L12)
 
-IUsersManager
-
-## Description
-
-Allows to retrieve a user by their wallet and network
+Client-side implementation of [IUsersManager](../interfaces/IUsersManager.md) that creates per-wallet [UserClient](UserClient.md)
+instances scoped to a chain.
 
 ## Extends
 
@@ -24,7 +21,7 @@ Allows to retrieve a user by their wallet and network
 new UsersManager(params): UsersManager;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UsersManager.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/UsersManager.ts#L9)
+Defined in: [sdk/sdk-client/src/implementation/UsersManager.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UsersManager.ts#L13)
 
 #### Parameters
 
@@ -54,7 +51,7 @@ IRPCClient.constructor
 get protected rpcClient(): TRPCClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
+Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
 
 ##### Returns
 
@@ -74,33 +71,33 @@ IRPCClient.rpcClient
 getUserClient(params): Promise<UserClient>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UsersManager.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/implementation/UsersManager.ts#L13)
+Defined in: [sdk/sdk-client/src/implementation/UsersManager.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UsersManager.ts#L25)
+
+Creates a [UserClient](UserClient.md) for a wallet on a specific chain.
 
 #### Parameters
 
 ##### params
 
+Parameters object.
+
 ###### chainInfo
 
 [`ChainInfo`](ChainInfo.md)
+
+The chain the user client should operate on.
 
 ###### walletAddress
 
 [`Address`](Address.md)
 
+The wallet address to scope the client to.
+
 #### Returns
 
 `Promise`\<[`UserClient`](UserClient.md)\>
 
-The user for the given wallet and network
-
-#### Method
-
-getUserClient
-
-#### Description
-
-Retrieves a user by their wallet and network
+A promise resolving to the wallet-scoped [UserClient](UserClient.md).
 
 #### Implementation of
 

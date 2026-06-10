@@ -1,6 +1,6 @@
 # Interface: IArmadaVaultInfo
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L21)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L21)
 
 IArmadaVaultInfo
 
@@ -20,7 +20,7 @@ Interface for an the extended info of an Armada Protocol vault (fleet)
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L23)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L23)
 
 Signature used to differentiate it from similar interfaces
 
@@ -36,7 +36,7 @@ Signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L18)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L18)
 
 Signature to differentiate from similar interfaces
 
@@ -54,7 +54,7 @@ IPoolInfo.[___signature__]
 readonly apy: IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L39)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L39)
 
 Vault apy
 
@@ -72,7 +72,7 @@ IArmadaVaultInfoData.apy
 readonly apys: VaultApys;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L41)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L41)
 
 Vault apys for different time periods
 
@@ -90,7 +90,7 @@ IArmadaVaultInfoData.apys
 readonly assetToken: ITokenStanalone;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L29)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L29)
 
 Underlying asset token that can be deposited into the vault
 
@@ -108,7 +108,7 @@ IArmadaVaultInfoData.assetToken
 readonly depositCap: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L31)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L31)
 
 Maximum amount that can be deposited into the vault at this moment
 
@@ -126,7 +126,7 @@ IArmadaVaultInfoData.depositCap
 readonly id: IArmadaVaultId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L25)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L25)
 
 ID of the vault
 
@@ -142,7 +142,7 @@ ID of the vault
 readonly merklRewards: object[] | undefined;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L50)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L50)
 
 Vault Merkl rewards apy
 
@@ -160,7 +160,7 @@ IArmadaVaultInfoData.merklRewards
 readonly rewardsApys: object[] | undefined;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L43)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L43)
 
 Vault SUMR rewards apy
 
@@ -178,7 +178,7 @@ IArmadaVaultInfoData.rewardsApys
 readonly sharePrice: IPrice;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L37)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L37)
 
 Current price per share of the vault
 
@@ -196,7 +196,7 @@ IArmadaVaultInfoData.sharePrice
 readonly token: ITokenStanalone;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L27)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L27)
 
 Token of the vault
 
@@ -214,7 +214,7 @@ IArmadaVaultInfoData.token
 readonly totalDeposits: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L33)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L33)
 
 Total amount of assets currently deposited in the vault
 
@@ -232,7 +232,7 @@ IArmadaVaultInfoData.totalDeposits
 readonly totalShares: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L35)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L35)
 
 Total amount of shares currently minted in the vault
 
@@ -250,7 +250,7 @@ IArmadaVaultInfoData.totalShares
 readonly tvlUsd: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:57](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L57)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:57](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L57)
 
 Total value locked in USD
 
@@ -268,7 +268,7 @@ IArmadaVaultInfoData.tvlUsd
 readonly type: Armada;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L60)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaVaultInfo.ts#L60)
 
 Type of the pool
 

@@ -33,18 +33,39 @@ export class UserClient extends IRPCClient implements IUserClient {
     this.user = User.createFrom({ wallet: params.wallet, chainInfo: params.chainInfo })
   }
 
+  /**
+   * Returns the user's positions for a given protocol.
+   *
+   * @param params - Parameters object.
+   * @param params.protocol - The protocol whose positions should be returned.
+   * @returns A promise resolving to the user's positions in that protocol.
+   */
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getPositionsByProtocol(_params: { protocol: IProtocol }): Promise<Position[]> {
     // TODO: Implement
     return []
   }
 
+  /**
+   * Returns the user's positions matching the given position ids.
+   *
+   * @param params - Parameters object.
+   * @param params.positionIds - The ids of the positions to return.
+   * @returns A promise resolving to the matching positions.
+   */
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getPositionsByIds(_params: { positionIds: PositionId[] }): Promise<Position[]> {
     // TODO: Implement
     return []
   }
 
+  /**
+   * Returns a single position owned by the user, by its id.
+   *
+   * @param params - Parameters object.
+   * @param params.id - The id of the position to return.
+   * @returns A promise resolving to the position, or a nullish {@link Maybe} if not found.
+   */
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getPosition(params: { id: PositionId }): Promise<Maybe<Position>> {
     // TODO: Implement
@@ -53,6 +74,14 @@ export class UserClient extends IRPCClient implements IUserClient {
 
   // TODO: the positions manager should only be passed when generating DMA orders, which
   // TODO: breaks the flow for other simulations. Need to refactor this
+  /**
+   * Builds an executable order for this user from a simulation.
+   *
+   * @param params - Parameters object.
+   * @param params.simulation - The simulation describing the desired position change.
+   * @param params.positionsManager - Optional positions manager, required only for DMA orders.
+   * @returns A promise resolving to the built order, or a nullish {@link Maybe} if none could be built.
+   */
   public async newOrder(params: {
     simulation: ISimulation
     positionsManager?: IPositionsManager

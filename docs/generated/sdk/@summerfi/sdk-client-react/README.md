@@ -8,6 +8,8 @@
 
 - [SdkClient](type-aliases/SdkClient.md)
 - [SDKContextType](type-aliases/SDKContextType.md)
+- [SdkInstiManagerClient](type-aliases/SdkInstiManagerClient.md)
+- [SdkManagerClient](type-aliases/SdkManagerClient.md)
 
 ## Variables
 

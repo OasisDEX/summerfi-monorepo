@@ -1,5 +1,7 @@
 # steps
 
+Namespace bundling the typed step definitions used to build simulation strategies.
+
 ## Interfaces
 
 - [DepositBorrowStep](interfaces/DepositBorrowStep.md)

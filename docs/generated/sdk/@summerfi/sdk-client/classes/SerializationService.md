@@ -1,6 +1,9 @@
 # Class: SerializationService
 
-Defined in: [sdk/sdk-common/src/services/SerializationService.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/services/SerializationService.ts#L9)
+Defined in: [sdk/sdk-common/src/services/SerializationService.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/services/SerializationService.ts#L14)
+
+Static facade over SuperJSON for registering classes and custom transformers so SDK domain
+objects can be serialized and deserialized across the RPC boundary.
 
 ## Constructors
 
@@ -22,7 +25,7 @@ new SerializationService(): SerializationService;
 static getTransformer(): object;
 ```
 
-Defined in: [sdk/sdk-common/src/services/SerializationService.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/services/SerializationService.ts#L31)
+Defined in: [sdk/sdk-common/src/services/SerializationService.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/services/SerializationService.ts#L36)
 
 #### Returns
 
@@ -112,7 +115,7 @@ serialize: (obj) => string;
 static parse<T>(v): T;
 ```
 
-Defined in: [sdk/sdk-common/src/services/SerializationService.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/services/SerializationService.ts#L27)
+Defined in: [sdk/sdk-common/src/services/SerializationService.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/services/SerializationService.ts#L32)
 
 #### Type Parameters
 
@@ -138,7 +141,7 @@ Defined in: [sdk/sdk-common/src/services/SerializationService.ts:27](https://git
 static registerClass(v, options?): void;
 ```
 
-Defined in: [sdk/sdk-common/src/services/SerializationService.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/services/SerializationService.ts#L10)
+Defined in: [sdk/sdk-common/src/services/SerializationService.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/services/SerializationService.ts#L15)
 
 #### Parameters
 
@@ -162,7 +165,7 @@ Defined in: [sdk/sdk-common/src/services/SerializationService.ts:10](https://git
 static registerCustom<I, O>(transformer, name): void;
 ```
 
-Defined in: [sdk/sdk-common/src/services/SerializationService.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/services/SerializationService.ts#L15)
+Defined in: [sdk/sdk-common/src/services/SerializationService.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/services/SerializationService.ts#L20)
 
 #### Type Parameters
 
@@ -196,7 +199,7 @@ Defined in: [sdk/sdk-common/src/services/SerializationService.ts:15](https://git
 static stringify(v): string;
 ```
 
-Defined in: [sdk/sdk-common/src/services/SerializationService.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/services/SerializationService.ts#L23)
+Defined in: [sdk/sdk-common/src/services/SerializationService.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/services/SerializationService.ts#L28)
 
 #### Parameters
 

@@ -4,7 +4,9 @@
 type RolesResponse = object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Role.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/Role.ts#L11)
+Defined in: [sdk/sdk-common/src/common/types/Role.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/Role.ts#L13)
+
+Response wrapper carrying a list of [Role](Role.md)s.
 
 ## Properties
 
@@ -14,4 +16,4 @@ Defined in: [sdk/sdk-common/src/common/types/Role.ts:11](https://github.com/Oasi
 roles: Role[];
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Role.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/Role.ts#L12)
+Defined in: [sdk/sdk-common/src/common/types/Role.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/Role.ts#L14)

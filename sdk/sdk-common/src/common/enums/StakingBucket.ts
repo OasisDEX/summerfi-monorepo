@@ -14,6 +14,7 @@ export enum StakingBucket {
   TwoToThreeYears = 6,
 }
 
+/** The numeric values of the {@link StakingBucket} enum (excluding reverse-mapping keys). */
 export const StakingBucketValues = Object.values(StakingBucket).filter(
   (value) => typeof value === 'number',
 )

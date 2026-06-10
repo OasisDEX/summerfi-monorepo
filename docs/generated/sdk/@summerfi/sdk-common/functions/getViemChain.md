@@ -441,13 +441,17 @@ function getViemChain(chainId):
 };
 ```
 
-Defined in: [sdk/sdk-common/src/common/utils/getViemChain.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/utils/getViemChain.ts#L29)
+Defined in: [sdk/sdk-common/src/common/utils/getViemChain.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/utils/getViemChain.ts#L36)
+
+Resolves the viem chain definition for a supported chain id.
 
 ## Parameters
 
 ### chainId
 
 [`ChainId`](../type-aliases/ChainId.md)
+
+The chain id to resolve.
 
 ## Returns
 
@@ -2926,3 +2930,5 @@ optional verifyHash: ChainVerifyHashFn;
 ```
 
 Chain-specific signature verification.
+
+The matching viem chain definition.

@@ -1,6 +1,6 @@
 # Enumeration: StakingBucket
 
-Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/enums/StakingBucket.ts#L7)
+Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/StakingBucket.ts#L7)
 
 ## Name
 
@@ -18,7 +18,7 @@ Enumerates the staking bucket types based on lockup periods
 NoLockup: 0;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/enums/StakingBucket.ts#L8)
+Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/StakingBucket.ts#L8)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:8](https://github.
 OneToTwoYears: 5;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/enums/StakingBucket.ts#L13)
+Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/StakingBucket.ts#L13)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:13](https://github
 ShortTerm: 1;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/enums/StakingBucket.ts#L9)
+Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/StakingBucket.ts#L9)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:9](https://github.
 SixToTwelveMonths: 4;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/enums/StakingBucket.ts#L12)
+Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/StakingBucket.ts#L12)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:12](https://github
 ThreeToSixMonths: 3;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/enums/StakingBucket.ts#L11)
+Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/StakingBucket.ts#L11)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:11](https://github
 TwoToThreeYears: 6;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/enums/StakingBucket.ts#L14)
+Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/StakingBucket.ts#L14)
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:14](https://github
 TwoWeeksToThreeMonths: 2;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/enums/StakingBucket.ts#L10)
+Defined in: [sdk/sdk-common/src/common/enums/StakingBucket.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/StakingBucket.ts#L10)

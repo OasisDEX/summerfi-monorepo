@@ -1,6 +1,6 @@
 # Interface: ITokenAmount
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L32)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L33)
 
 ## Name
 
@@ -24,7 +24,7 @@ This interface is used to add all the methods that the interface supports
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L34)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L35)
 
 Signature to differentiate from similar interfaces
 
@@ -36,7 +36,7 @@ Signature to differentiate from similar interfaces
 readonly amount: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L38)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L39)
 
 Amount in floating point format without taking into account the token decimals
 
@@ -54,7 +54,7 @@ ITokenAmountData.amount
 readonly token: ITokenStanalone;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L36)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L37)
 
 Token this amount refers to
 
@@ -72,7 +72,7 @@ ITokenAmountData.token
 add(tokenToAdd): ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L45)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L46)
 
 #### Parameters
 
@@ -100,7 +100,7 @@ add
 divide<InputParams, ReturnType>(divisor): ReturnType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:71](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L71)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L72)
 
 #### Type Parameters
 
@@ -138,7 +138,7 @@ divide
 isEqualTo(tokenAmount): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:123](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L123)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:124](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L124)
 
 #### Parameters
 
@@ -170,7 +170,7 @@ Checks if the amount is equal to the provided TokenAmount
 isGreaterOrEqualThan(tokenAmount): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:107](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L107)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:108](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L108)
 
 #### Parameters
 
@@ -202,7 +202,7 @@ Checks if the amount is greater or equal than the provided TokenAmount
 isGreaterThan(tokenAmount): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:91](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L91)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:92](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L92)
 
 #### Parameters
 
@@ -234,7 +234,7 @@ Checks if the amount is greater than the provided TokenAmount
 isLessOrEqualThan(tokenAmount): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:115](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L115)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:116](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L116)
 
 #### Parameters
 
@@ -266,7 +266,7 @@ Checks if the amount is less or equal than the provided TokenAmount
 isLessThan(tokenAmount): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:99](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L99)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:100](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L100)
 
 #### Parameters
 
@@ -298,7 +298,7 @@ Checks if the amount is less than the provided TokenAmount
 isZero(): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:83](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L83)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:84](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L84)
 
 #### Returns
 
@@ -322,7 +322,7 @@ Checks if the amount is zero
 multiply<InputParams, ReturnType>(multiplier): ReturnType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:59](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L59)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L60)
 
 #### Type Parameters
 
@@ -360,7 +360,7 @@ multiply
 subtract(tokenToSubstract): ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L52)
+Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:53](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L53)
 
 #### Parameters
 
@@ -388,7 +388,7 @@ subtract
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IValueConverter.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IValueConverter.ts#L37)
+Defined in: [sdk/sdk-common/src/common/interfaces/IValueConverter.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IValueConverter.ts#L37)
 
 Converts the instance into a BigNumber
 
@@ -419,7 +419,7 @@ IValueConverter.toBigNumber
 toSolidityValue(params?): bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IValueConverter.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IValueConverter.ts#L23)
+Defined in: [sdk/sdk-common/src/common/interfaces/IValueConverter.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IValueConverter.ts#L23)
 
 Converts the instance into a Solidity value
 
@@ -456,7 +456,7 @@ IValueConverter.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

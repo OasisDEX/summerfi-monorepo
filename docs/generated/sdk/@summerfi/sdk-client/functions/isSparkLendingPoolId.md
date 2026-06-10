@@ -4,7 +4,7 @@
 function isSparkLendingPoolId(maybeLendingPoolId): maybeLendingPoolId is ISparkLendingPoolId;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L52)
+Defined in: [sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L52)
 
 ## Parameters
 

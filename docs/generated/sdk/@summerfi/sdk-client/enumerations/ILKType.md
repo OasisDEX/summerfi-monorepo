@@ -1,6 +1,6 @@
 # Enumeration: ILKType
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L7)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L7)
 
 ILKType
 
@@ -16,7 +16,7 @@ Enum for the different ILK types in the Maker protocol
 ETH_A: "ETH-A";
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L8)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L8)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:8](https://
 ETH_B: "ETH-B";
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L9)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L9)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:9](https://
 ETH_C: "ETH-C";
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L10)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L10)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:10](https:/
 RETH_A: "RETH-A";
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L16)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L16)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:16](https:/
 WBTC_A: "WBTC-A";
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L11)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L11)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:11](https:/
 WBTC_B: "WBTC-B";
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L12)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L12)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:12](https:/
 WBTC_C: "WBTC-C";
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L13)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L13)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:13](https:/
 WSTETH_A: "WSTETH-A";
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L14)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L14)
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:14](https:/
 WSTETH_B: "WSTETH-B";
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L15)
+Defined in: [sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/maker/enums/ILKType.ts#L15)

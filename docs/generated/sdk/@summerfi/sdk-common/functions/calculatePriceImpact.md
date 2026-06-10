@@ -4,7 +4,10 @@
 function calculatePriceImpact(spotPrice, quotePrice): IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/calculatePriceImpact.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/swap/calculatePriceImpact.ts#L12)
+Defined in: [sdk/sdk-common/src/swap/calculatePriceImpact.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/calculatePriceImpact.ts#L16)
+
+Computes the price impact of a swap as the percentage by which the quoted price deviates from the
+spot price.
 
 ## Parameters
 
@@ -25,3 +28,6 @@ The offer price is price quoted to us by a liquidity provider and takes
 ## Returns
 
 [`IPercentage`](../interfaces/IPercentage.md) \| `null`
+
+The price impact as a percentage (never negative), or `null` when either price is zero
+     or negative.

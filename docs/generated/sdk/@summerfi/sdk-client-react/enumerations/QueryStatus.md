@@ -1,6 +1,9 @@
 # Enumeration: QueryStatus
 
-Defined in: [sdk/sdk-client-react/src/types.ts:1](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client-react/src/types.ts#L1)
+Defined in: [sdk/sdk-client-react/src/types.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client-react/src/types.ts#L5)
+
+Lifecycle states of an asynchronous query, mirroring the conventional pending/error/success
+status reported by data-fetching hooks.
 
 ## Enumeration Members
 
@@ -10,7 +13,7 @@ Defined in: [sdk/sdk-client-react/src/types.ts:1](https://github.com/OasisDEX/su
 Error: "error";
 ```
 
-Defined in: [sdk/sdk-client-react/src/types.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client-react/src/types.ts#L3)
+Defined in: [sdk/sdk-client-react/src/types.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client-react/src/types.ts#L7)
 
 ***
 
@@ -20,7 +23,7 @@ Defined in: [sdk/sdk-client-react/src/types.ts:3](https://github.com/OasisDEX/su
 Pending: "pending";
 ```
 
-Defined in: [sdk/sdk-client-react/src/types.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client-react/src/types.ts#L2)
+Defined in: [sdk/sdk-client-react/src/types.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client-react/src/types.ts#L6)
 
 ***
 
@@ -30,4 +33,4 @@ Defined in: [sdk/sdk-client-react/src/types.ts:2](https://github.com/OasisDEX/su
 Success: "success";
 ```
 
-Defined in: [sdk/sdk-client-react/src/types.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client-react/src/types.ts#L4)
+Defined in: [sdk/sdk-client-react/src/types.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client-react/src/types.ts#L8)

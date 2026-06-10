@@ -46,6 +46,7 @@ export type IArmadaVaultIdData = Readonly<z.infer<typeof ArmadaVaultIdDataSchema
 /**
  * @description Type guard for IArmadaVaultId
  * @param maybeArmadaVaultId Object to be checked
+ * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is a IMakerLendingPosition
  */
 export function isArmadaVaultId(

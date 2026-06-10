@@ -1,6 +1,6 @@
 # Class: ChainInfo
 
-Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L14)
+Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L14)
 
 ## Name
 
@@ -22,7 +22,7 @@ IChainInfo
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L16)
+Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L16)
 
 SIGNATURE
 
@@ -38,7 +38,7 @@ SIGNATURE
 readonly chainId: ChainId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L19)
+Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L19)
 
 ATTRIBUTES
 
@@ -54,7 +54,7 @@ ATTRIBUTES
 readonly name: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L20)
+Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L20)
 
 The name of the network
 
@@ -70,7 +70,9 @@ The name of the network
 equals(chainInfo): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L33)
+Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L39)
+
+Determines whether this chain refers to the same network as another.
 
 #### Parameters
 
@@ -78,23 +80,13 @@ Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:33](https://g
 
 `ChainInfo`
 
-The chain info to compare
+The other chain to compare against.
 
 #### Returns
 
 `boolean`
 
-true if the chain infos are equal
-
-Equality is determined by the chain ID
-
-#### Name
-
-equals
-
-#### Description
-
-Checks if two chain infos are equal
+`true` if both have the same chain id.
 
 #### Implementation of
 
@@ -108,23 +100,15 @@ Checks if two chain infos are equal
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L37)
+Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L48)
+
+Returns a human-readable representation of the chain (its name and id).
 
 #### Returns
 
 `string`
 
-string
-
-The string representation should have enough info to debug the object
-
-#### Name
-
-toString
-
-#### Description
-
-Returns a string representation of the object
+A string in the form `"<name> (ID: <chainId>)"`.
 
 #### Implementation of
 
@@ -138,7 +122,7 @@ Returns a string representation of the object
 static createFrom(params): ChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L23)
+Defined in: [sdk/sdk-common/src/common/implementation/ChainInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ChainInfo.ts#L23)
 
 FACTORY METHODS
 

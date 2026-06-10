@@ -1,6 +1,8 @@
 # Interface: HistoricalFleetRateResult
 
-Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:1](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L1)
+Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L2)
+
+Historical interest-rate data for a fleet on a given chain.
 
 ## Properties
 
@@ -10,7 +12,7 @@ Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:1](htt
 chainId: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L2)
+Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L3)
 
 ***
 
@@ -20,7 +22,7 @@ Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:2](htt
 fleetAddress: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L3)
+Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L4)
 
 ***
 
@@ -30,4 +32,4 @@ Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:3](htt
 rates: HistoricalFleetRates;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L4)
+Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L5)

@@ -4,7 +4,7 @@
 function isPercentage(maybePercentage, returnedErrors?): maybePercentage is IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:82](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L82)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:83](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L83)
 
 ## Parameters
 
@@ -12,9 +12,13 @@ Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:82](https://git
 
 `unknown`
 
+The value to check
+
 ### returnedErrors?
 
 `string`[]
+
+Optional array that, on failure, is populated with validation error messages
 
 ## Returns
 

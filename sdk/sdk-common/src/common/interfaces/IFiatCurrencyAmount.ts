@@ -17,6 +17,7 @@ export const __signature__: unique symbol = Symbol()
  * This helps callers to know what to expect from the result of the operation
  */
 export type FiatCurrencyAmountMulDivParamType = string | number | IPrice | IPercentage
+/** Infers the result type of multiplying/dividing a fiat currency amount by an operand of type `T`. */
 export type FiatCurrencyAmountMulDivReturnType<T> = T extends IPrice
   ? ITokenAmount | IFiatCurrencyAmount
   : T extends IPercentage | string | number

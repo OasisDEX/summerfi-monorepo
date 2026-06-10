@@ -1,6 +1,6 @@
 # Interface: IArmadaManagerClient
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts#L11)
+Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts#L10)
 
 IArmadaManagerClient
 
@@ -17,7 +17,7 @@ Interface of the FleetCommander manager for the SDK Client. Allows to instantiat
 accessControl: IArmadaManagerClientAccessControl;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts#L17)
+Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts#L16)
 
 Access Control API for the Armada protocol - role-based access control operations
 
@@ -29,21 +29,9 @@ Access Control API for the Armada protocol - role-based access control operation
 admin: IArmadaManagerAdminClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts#L15)
+Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts#L14)
 
 Admin API for the Armada protocol - consolidated administrative operations
-
-***
-
-### dca
-
-```ts
-dca: IArmadaManagerDCAClient;
-```
-
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts#L19)
-
-DCA API for Armada recurring buy orders
 
 ***
 
@@ -53,6 +41,6 @@ DCA API for Armada recurring buy orders
 users: IArmadaManagerUsersClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1402deca577ac262b618bb0671f1c1173a1fd152/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts#L13)
+Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClient.ts#L12)
 
 Users API for the Armada protocol
