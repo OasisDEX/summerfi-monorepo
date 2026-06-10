@@ -136,6 +136,10 @@ query GetVault($id: ID!) {
     rewardTokenEmissionsUSD
     rebalanceCount
     pricePerShare
+    dailySnapshots(first: 2, orderBy: timestamp, orderDirection: desc) {
+      pricePerShare
+      timestamp
+    }
     arks {
       id
       productId
