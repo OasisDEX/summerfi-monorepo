@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode } from 'react'
+import { type FC } from 'react'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -18,14 +18,12 @@ interface RwaVaultStatsGridProps {
   vault: SDKVaultishType
   isMobileOrTablet?: boolean
   tooltipEventHandler: (tooltipName: string) => void
-  apy30d: ReactNode
 }
 
 export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
   vault,
   isMobileOrTablet,
   tooltipEventHandler,
-  apy30d,
 }) => {
   const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
   const totalValueLockedTokenParsed = formatCryptoBalance(
@@ -130,10 +128,16 @@ export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
             title="30D Net APY"
             tooltipName="vault-open-30d-apy"
             onTooltipOpen={tooltipEventHandler}
+            tooltipIconName="info"
+            titleTooltip={
+              vault.navApy30dPartialDays != null
+                ? `Vault has been deployed recently and the value is calculated using the last ${vault.navApy30dPartialDays} days`
+                : undefined
+            }
             value={
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Text variant="h4" style={{ marginRight: 'var(--general-space-8)' }}>
-                  {apy30d}
+                  {vault.navApy30d != null ? formatDecimalAsPercent(vault.navApy30d) : 'n/a'}
                 </Text>
                 <Icon iconName="stars_colorful" size={20} />
               </div>

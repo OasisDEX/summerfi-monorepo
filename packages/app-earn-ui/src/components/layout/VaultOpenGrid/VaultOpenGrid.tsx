@@ -314,7 +314,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               vault={vault}
               isMobileOrTablet={isMobileOrTablet}
               tooltipEventHandler={tooltipEventHandler}
-              apy30d={apy30d}
             />
           ) : (
             <StandardVaultStatsGrid

@@ -77,6 +77,12 @@ type VaultCustomFields = {
   // day-over-day change of pricePerShare (NAV) as a decimal fraction (e.g. 0.0034 = +0.34%)
   // computed server-side for RWA vaults from the vault's daily snapshots; null when unavailable
   navPriceChange24h?: number | null
+  // annualized APY derived from the ~30-day pricePerShare (NAV) change, as a decimal fraction
+  // (((latest - past) / past) / daysUsed * 365); computed server-side for RWA vaults
+  navApy30d?: number | null
+  // when the APY spans a shorter window (vault younger than 30d), the number of days actually used
+  // (so the UI can explain the partial value); null/undefined when a full 30d window is available
+  navApy30dPartialDays?: number | null
 }
 
 export type SDKVaultsListType = (GetVaultsQuery['vaults'][number] & VaultCustomFields)[]
