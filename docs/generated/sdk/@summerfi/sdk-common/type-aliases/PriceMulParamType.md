@@ -10,7 +10,7 @@ type PriceMulParamType =
   | IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrice.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPrice.ts#L19)
+Defined in: [src/common/interfaces/IPrice.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L19)
 
 Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
 

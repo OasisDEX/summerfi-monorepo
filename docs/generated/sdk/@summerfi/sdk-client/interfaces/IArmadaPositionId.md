@@ -1,6 +1,6 @@
 # Interface: IArmadaPositionId
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaPositionId.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaPositionId.ts#L15)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaPositionId.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaPositionId.ts#L15)
 
 IArmadaPositionId
 
@@ -20,7 +20,7 @@ Interface for an ID of an Armada Protocol position
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaPositionId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaPositionId.ts#L17)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaPositionId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaPositionId.ts#L17)
 
 Signature used to differentiate it from similar interfaces
 
@@ -36,7 +36,7 @@ Signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPositionId.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPositionId.ts#L15)
+Defined in: [../sdk-common/src/common/interfaces/IPositionId.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L15)
 
 Signature to differentiate from similar interfaces
 
@@ -54,7 +54,7 @@ IPositionId.[___signature__]
 readonly id: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPositionId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPositionId.ts#L17)
+Defined in: [../sdk-common/src/common/interfaces/IPositionId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L17)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [sdk/sdk-common/src/common/interfaces/IPositionId.ts:17](https://git
 readonly type: Armada;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaPositionId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaPositionId.ts#L22)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaPositionId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaPositionId.ts#L22)
 
 Type of the position
 
@@ -84,7 +84,7 @@ Type of the position
 readonly user: IUser;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaPositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaPositionId.ts#L19)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaPositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaPositionId.ts#L19)
 
 User that opened the position, used to identify the position in a Fleet Commander
 

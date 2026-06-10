@@ -4,7 +4,7 @@
 const ChainFamilyMap: object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ChainFamilies.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ChainFamilies.ts#L68)
+Defined in: [src/common/implementation/ChainFamilies.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainFamilies.ts#L68)
 
 ## Type Declaration
 

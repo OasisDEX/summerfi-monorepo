@@ -4,7 +4,7 @@
 function isSwapError(maybeSwapErrorData): maybeSwapErrorData is Readonly<{ apiQuery: string; message: string; reason: string; statusCode: number; subtype: SwapErrorType; type: SwapError }>;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/interfaces/ISwapError.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/interfaces/ISwapError.ts#L48)
+Defined in: [src/swap/interfaces/ISwapError.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/interfaces/ISwapError.ts#L48)
 
 ## Parameters
 

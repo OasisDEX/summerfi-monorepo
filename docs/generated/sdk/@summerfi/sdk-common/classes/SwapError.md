@@ -1,6 +1,6 @@
 # Class: SwapError
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapError.ts#L16)
+Defined in: [src/swap/implementation/SwapError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L16)
 
 SwapError
 
@@ -24,7 +24,7 @@ ISwapError
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapError.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapError.ts#L18)
+Defined in: [src/swap/implementation/SwapError.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L18)
 
 SIGNATURE
 
@@ -44,7 +44,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/SDKError.ts#L16)
+Defined in: [src/common/implementation/SDKError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/SDKError.ts#L16)
 
 SIGNATURE
 
@@ -68,7 +68,7 @@ SDKError.[___signature__]
 readonly apiQuery: string;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapError.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapError.ts#L23)
+Defined in: [src/swap/implementation/SwapError.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L23)
 
 Full URL of the API query that generated the error
 
@@ -84,7 +84,7 @@ Full URL of the API query that generated the error
 optional cause: unknown;
 ```
 
-Defined in: node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript/lib/lib.es2022.error.d.ts:26
+Defined in: [../../node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript/lib/lib.es2022.error.d.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/typescript@5.9.3/node_modules/typescript/lib/lib.es2022.error.d.ts#L26)
 
 #### Inherited from
 
@@ -98,7 +98,7 @@ Defined in: node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript/lib/li
 readonly message: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/SDKError.ts#L21)
+Defined in: [src/common/implementation/SDKError.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/SDKError.ts#L21)
 
 Free form debug message, used to debug the issue through the console
 
@@ -118,7 +118,7 @@ Free form debug message, used to debug the issue through the console
 name: string;
 ```
 
-Defined in: node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript/lib/lib.es5.d.ts:1076
+Defined in: [../../node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript/lib/lib.es5.d.ts:1076](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/typescript@5.9.3/node_modules/typescript/lib/lib.es5.d.ts#L1076)
 
 #### Inherited from
 
@@ -132,7 +132,7 @@ Defined in: node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript/lib/li
 readonly reason: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/SDKError.ts#L20)
+Defined in: [src/common/implementation/SDKError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/SDKError.ts#L20)
 
 Free form reason message, used to provide a short description of the problem
 
@@ -152,7 +152,7 @@ Free form reason message, used to provide a short description of the problem
 optional stack: string;
 ```
 
-Defined in: node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript/lib/lib.es5.d.ts:1078
+Defined in: [../../node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript/lib/lib.es5.d.ts:1078](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/typescript@5.9.3/node_modules/typescript/lib/lib.es5.d.ts#L1078)
 
 #### Inherited from
 
@@ -166,7 +166,7 @@ Defined in: node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript/lib/li
 readonly statusCode: number;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapError.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapError.ts#L24)
+Defined in: [src/swap/implementation/SwapError.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L24)
 
 GET or POST status code
 
@@ -182,7 +182,7 @@ GET or POST status code
 readonly subtype: SwapErrorType;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapError.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapError.ts#L22)
+Defined in: [src/swap/implementation/SwapError.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L22)
 
 Specific error for the swap service
 
@@ -198,7 +198,7 @@ Specific error for the swap service
 readonly type: SwapError;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapError.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapError.ts#L21)
+Defined in: [src/swap/implementation/SwapError.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L21)
 
 ATTRIBUTES
 
@@ -218,7 +218,7 @@ ATTRIBUTES
 static stackTraceLimit: number;
 ```
 
-Defined in: node\_modules/.pnpm/@types+node@20.19.37/node\_modules/@types/node/globals.d.ts:68
+Defined in: [../../node\_modules/.pnpm/@types+node@20.19.37/node\_modules/@types/node/globals.d.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@types+node@20.19.37/node_modules/@types/node/globals.d.ts#L68)
 
 The `Error.stackTraceLimit` property specifies the number of stack frames
 collected by a stack trace (whether generated by `new Error().stack` or
@@ -242,7 +242,7 @@ not capture any frames.
 static captureStackTrace(targetObject, constructorOpt?): void;
 ```
 
-Defined in: node\_modules/.pnpm/@types+node@20.19.37/node\_modules/@types/node/globals.d.ts:52
+Defined in: [../../node\_modules/.pnpm/@types+node@20.19.37/node\_modules/@types/node/globals.d.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@types+node@20.19.37/node_modules/@types/node/globals.d.ts#L52)
 
 Creates a `.stack` property on `targetObject`, which when accessed returns
 a string representing the location in the code at which
@@ -314,7 +314,7 @@ a();
 static createFrom(params): SwapError;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapError.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapError.ts#L27)
+Defined in: [src/swap/implementation/SwapError.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L27)
 
 FACTORY
 
@@ -340,7 +340,7 @@ FACTORY
 static prepareStackTrace(err, stackTraces): any;
 ```
 
-Defined in: node\_modules/.pnpm/@types+node@20.19.37/node\_modules/@types/node/globals.d.ts:56
+Defined in: [../../node\_modules/.pnpm/@types+node@20.19.37/node\_modules/@types/node/globals.d.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@types+node@20.19.37/node_modules/@types/node/globals.d.ts#L56)
 
 #### Parameters
 

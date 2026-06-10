@@ -1,6 +1,6 @@
 # Class: RiskRatio
 
-Defined in: [sdk/sdk-common/src/common/implementation/RiskRatio.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/RiskRatio.ts#L15)
+Defined in: [../sdk-common/src/common/implementation/RiskRatio.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RiskRatio.ts#L15)
 
 RiskRatio
 
@@ -20,7 +20,7 @@ IRiskRatio
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/RiskRatio.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/RiskRatio.ts#L17)
+Defined in: [../sdk-common/src/common/implementation/RiskRatio.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RiskRatio.ts#L17)
 
 SIGNATURE
 
@@ -36,7 +36,7 @@ SIGNATURE
 readonly type: RiskRatioType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/RiskRatio.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/RiskRatio.ts#L20)
+Defined in: [../sdk-common/src/common/implementation/RiskRatio.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RiskRatio.ts#L20)
 
 ATTRIBUTES
 
@@ -52,7 +52,7 @@ ATTRIBUTES
 readonly value: number | IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/RiskRatio.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/RiskRatio.ts#L21)
+Defined in: [../sdk-common/src/common/implementation/RiskRatio.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RiskRatio.ts#L21)
 
 The risk ratio value, a percentage for LTV and Collateralization Ratio, a number for Multiple
 
@@ -68,7 +68,7 @@ The risk ratio value, a percentage for LTV and Collateralization Ratio, a number
 toCollateralizationRatio(): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/RiskRatio.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/RiskRatio.ts#L67)
+Defined in: [../sdk-common/src/common/implementation/RiskRatio.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RiskRatio.ts#L67)
 
 #### Returns
 
@@ -90,7 +90,7 @@ IRiskRatio.toCollateralizationRatio
 toLTV(): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/RiskRatio.ts:81](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/RiskRatio.ts#L81)
+Defined in: [../sdk-common/src/common/implementation/RiskRatio.ts:81](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RiskRatio.ts#L81)
 
 #### Returns
 
@@ -112,7 +112,7 @@ IRiskRatio.toLTV
 toMultiple(): number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/RiskRatio.ts:74](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/RiskRatio.ts#L74)
+Defined in: [../sdk-common/src/common/implementation/RiskRatio.ts:74](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RiskRatio.ts#L74)
 
 #### Returns
 
@@ -134,7 +134,7 @@ IRiskRatio.toMultiple
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/RiskRatio.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/RiskRatio.ts#L86)
+Defined in: [../sdk-common/src/common/implementation/RiskRatio.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RiskRatio.ts#L86)
 
 #### Returns
 
@@ -156,7 +156,7 @@ IPrintable.toString
 static createFrom(params): RiskRatio;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/RiskRatio.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/RiskRatio.ts#L26)
+Defined in: [../sdk-common/src/common/implementation/RiskRatio.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RiskRatio.ts#L26)
 
 FACTORY
 

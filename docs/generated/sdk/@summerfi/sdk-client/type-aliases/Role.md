@@ -4,7 +4,7 @@
 type Role = object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Role.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/Role.ts#L2)
+Defined in: [../sdk-common/src/common/types/Role.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Role.ts#L2)
 
 A granted access-control role: who holds it, on which contract, and for which institution.
 
@@ -16,7 +16,7 @@ A granted access-control role: who holds it, on which contract, and for which in
 id: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Role.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/Role.ts#L3)
+Defined in: [../sdk-common/src/common/types/Role.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Role.ts#L3)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [sdk/sdk-common/src/common/types/Role.ts:3](https://github.com/Oasis
 institution: object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Role.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/Role.ts#L7)
+Defined in: [../sdk-common/src/common/types/Role.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Role.ts#L7)
 
 #### id
 
@@ -42,7 +42,7 @@ id: string;
 name: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Role.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/Role.ts#L4)
+Defined in: [../sdk-common/src/common/types/Role.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Role.ts#L4)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [sdk/sdk-common/src/common/types/Role.ts:4](https://github.com/Oasis
 owner: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Role.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/Role.ts#L5)
+Defined in: [../sdk-common/src/common/types/Role.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Role.ts#L5)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: [sdk/sdk-common/src/common/types/Role.ts:5](https://github.com/Oasis
 targetContract: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Role.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/Role.ts#L6)
+Defined in: [../sdk-common/src/common/types/Role.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Role.ts#L6)

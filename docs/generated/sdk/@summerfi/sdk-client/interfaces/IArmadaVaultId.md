@@ -1,6 +1,6 @@
 # Interface: IArmadaVaultId
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts#L17)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaVaultId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaVaultId.ts#L17)
 
 IArmadaVaultId
 
@@ -20,7 +20,7 @@ Interface for an ID of an Armada Protocol pool (fleet)
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts#L19)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaVaultId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaVaultId.ts#L19)
 
 Signature used to differentiate it from similar interfaces
 
@@ -36,7 +36,7 @@ Signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPoolId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPoolId.ts#L19)
+Defined in: [../sdk-common/src/common/interfaces/IPoolId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolId.ts#L19)
 
 Signature to differentiate from similar interfaces
 
@@ -54,7 +54,7 @@ IPoolId.[___signature__]
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts#L21)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaVaultId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaVaultId.ts#L21)
 
 Chain where the fleet is deployed
 
@@ -72,7 +72,7 @@ IArmadaVaultIdData.chainInfo
 readonly fleetAddress: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts#L23)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaVaultId.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaVaultId.ts#L23)
 
 Address of the fleet commander that gives access to the pool
 
@@ -90,7 +90,7 @@ IArmadaVaultIdData.fleetAddress
 readonly protocol: IArmadaProtocol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts#L27)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaVaultId.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaVaultId.ts#L27)
 
 Protocol where the pool is
 
@@ -106,7 +106,7 @@ Protocol where the pool is
 readonly type: Armada;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaVaultId.ts#L26)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaVaultId.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaVaultId.ts#L26)
 
 Pool type
 

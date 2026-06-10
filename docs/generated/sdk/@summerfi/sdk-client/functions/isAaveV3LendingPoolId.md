@@ -4,7 +4,7 @@
 function isAaveV3LendingPoolId(maybePoolId): maybePoolId is IAaveV3LendingPoolId;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L52)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L52)
 
 ## Parameters
 

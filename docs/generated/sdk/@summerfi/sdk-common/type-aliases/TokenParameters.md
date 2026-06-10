@@ -4,6 +4,6 @@
 type TokenParameters = Omit<ITokenData, "">;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Token.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Token.ts#L12)
+Defined in: [src/common/implementation/Token.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L12)
 
 Type for the parameters of Token

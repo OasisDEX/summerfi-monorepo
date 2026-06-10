@@ -1,6 +1,6 @@
 # Enumeration: InstiGlobalRoles
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L2)
+Defined in: [src/common/types/InstiGlobalRoles.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L2)
 
 Global (protocol-wide) access-control roles for institutional deployments.
 
@@ -12,7 +12,7 @@ Global (protocol-wide) access-control roles for institutional deployments.
 ADMIRALS_QUARTERS_ROLE: "ADMIRALS_QUARTERS_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L9)
+Defined in: [src/common/types/InstiGlobalRoles.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L9)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:9](https://gith
 COMMANDER_ROLE: "COMMANDER_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L8)
+Defined in: [src/common/types/InstiGlobalRoles.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L8)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:8](https://gith
 CURATOR_ROLE: "CURATOR_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L6)
+Defined in: [src/common/types/InstiGlobalRoles.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L6)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:6](https://gith
 DECAY_CONTROLLER_ROLE: "DECAY_CONTROLLER_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L10)
+Defined in: [src/common/types/InstiGlobalRoles.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L10)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:10](https://git
 FOUNDATION_ROLE: "FOUNDATION_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L12)
+Defined in: [src/common/types/InstiGlobalRoles.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L12)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:12](https://git
 GOVERNOR_ROLE: "GOVERNOR_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L3)
+Defined in: [src/common/types/InstiGlobalRoles.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L3)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:3](https://gith
 GUARDIAN_ROLE: "GUARDIAN_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L7)
+Defined in: [src/common/types/InstiGlobalRoles.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L7)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:7](https://gith
 KEEPER_ROLE: "KEEPER_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L4)
+Defined in: [src/common/types/InstiGlobalRoles.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L4)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:4](https://gith
 SUPER_KEEPER_ROLE: "SUPER_KEEPER_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L5)
+Defined in: [src/common/types/InstiGlobalRoles.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L5)
 
 ***
 
@@ -102,4 +102,4 @@ Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:5](https://gith
 WHITELIST_ROLE: "WHITELIST_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiGlobalRoles.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiGlobalRoles.ts#L11)
+Defined in: [src/common/types/InstiGlobalRoles.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiGlobalRoles.ts#L11)

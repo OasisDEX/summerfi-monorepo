@@ -1,6 +1,6 @@
 # Enumeration: FiatCurrency
 
-Defined in: [sdk/sdk-common/src/common/enums/FiatCurrency.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/FiatCurrency.ts#L9)
+Defined in: [src/common/enums/FiatCurrency.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L9)
 
 FiatCurrency
 
@@ -18,7 +18,7 @@ It is the counterpart of a Token in real world assets
 EUR: "EUR";
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/FiatCurrency.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/FiatCurrency.ts#L11)
+Defined in: [src/common/enums/FiatCurrency.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L11)
 
 ***
 
@@ -28,4 +28,4 @@ Defined in: [sdk/sdk-common/src/common/enums/FiatCurrency.ts:11](https://github.
 USD: "USD";
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/FiatCurrency.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/FiatCurrency.ts#L10)
+Defined in: [src/common/enums/FiatCurrency.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L10)

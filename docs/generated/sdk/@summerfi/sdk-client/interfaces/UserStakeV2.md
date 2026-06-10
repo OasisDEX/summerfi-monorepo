@@ -1,6 +1,6 @@
 # Interface: UserStakeV2
 
-Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L25)
+Defined in: [../armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L25)
 
 ## Description
 
@@ -14,7 +14,7 @@ User stake position details (V2)
 amount: bigint;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L28)
+Defined in: [../armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L28)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGove
 id: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L26)
+Defined in: [../armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L26)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGove
 index: number;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L27)
+Defined in: [../armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L27)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGove
 lockupEndTime: bigint;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L30)
+Defined in: [../armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L30)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGove
 lockupPeriod: bigint;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L31)
+Defined in: [../armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L31)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGove
 multiplier: number;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L32)
+Defined in: [../armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L32)
 
 ***
 
@@ -74,4 +74,4 @@ Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGove
 weightedAmount: bigint;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L29)
+Defined in: [../armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L29)

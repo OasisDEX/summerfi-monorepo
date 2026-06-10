@@ -4,7 +4,7 @@
 function isPosition(maybePosition): maybePosition is IPosition;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPosition.ts#L45)
+Defined in: [../sdk-common/src/common/interfaces/IPosition.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L45)
 
 ## Parameters
 

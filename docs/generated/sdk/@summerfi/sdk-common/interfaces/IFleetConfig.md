@@ -1,6 +1,6 @@
 # Interface: IFleetConfig
 
-Defined in: [sdk/sdk-common/src/common/types/IFleetConfig.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IFleetConfig.ts#L8)
+Defined in: [src/common/types/IFleetConfig.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFleetConfig.ts#L8)
 
 ## Name
 
@@ -18,7 +18,7 @@ Data structure for rebalancing assets, used by Keepers of a fleet
 readonly bufferArk: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IFleetConfig.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IFleetConfig.ts#L10)
+Defined in: [src/common/types/IFleetConfig.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFleetConfig.ts#L10)
 
 The address of the buffer Ark associated with this Fleet
 
@@ -30,7 +30,7 @@ The address of the buffer Ark associated with this Fleet
 readonly depositCap: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IFleetConfig.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IFleetConfig.ts#L14)
+Defined in: [src/common/types/IFleetConfig.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFleetConfig.ts#L14)
 
 The maximum total value of assets that can be deposited into the fleet
 
@@ -42,7 +42,7 @@ The maximum total value of assets that can be deposited into the fleet
 readonly maxRebalanceOperations: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IFleetConfig.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IFleetConfig.ts#L16)
+Defined in: [src/common/types/IFleetConfig.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFleetConfig.ts#L16)
 
 The maximum number of rebalance operations that can be performed in a single rebalance transaction
 
@@ -54,7 +54,7 @@ The maximum number of rebalance operations that can be performed in a single reb
 readonly minimumBufferBalance: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IFleetConfig.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IFleetConfig.ts#L12)
+Defined in: [src/common/types/IFleetConfig.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFleetConfig.ts#L12)
 
 The minimum balance that should be maintained in the buffer Ark
 
@@ -66,6 +66,6 @@ The minimum balance that should be maintained in the buffer Ark
 readonly stakingRewardsManager: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IFleetConfig.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IFleetConfig.ts#L18)
+Defined in: [src/common/types/IFleetConfig.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFleetConfig.ts#L18)
 
 The address of the staking rewards manager contract

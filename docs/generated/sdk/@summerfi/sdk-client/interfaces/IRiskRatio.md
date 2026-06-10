@@ -1,6 +1,6 @@
 # Interface: IRiskRatio
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRiskRatio.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRiskRatio.ts#L27)
+Defined in: [../sdk-common/src/common/interfaces/IRiskRatio.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L27)
 
 ## Name
 
@@ -22,7 +22,7 @@ Interface for the implementors of the risk ratio
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRiskRatio.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRiskRatio.ts#L29)
+Defined in: [../sdk-common/src/common/interfaces/IRiskRatio.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L29)
 
 Signature to differentiate from similar interfaces
 
@@ -34,7 +34,7 @@ Signature to differentiate from similar interfaces
 readonly type: RiskRatioType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRiskRatio.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRiskRatio.ts#L31)
+Defined in: [../sdk-common/src/common/interfaces/IRiskRatio.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L31)
 
 The type of the risk ratio
 
@@ -52,7 +52,7 @@ IRiskRatioData.type
 readonly value: number | IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRiskRatio.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRiskRatio.ts#L33)
+Defined in: [../sdk-common/src/common/interfaces/IRiskRatio.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L33)
 
 The risk ratio value, a percentage for LTV and Collateralization Ratio, a number for Multiple
 
@@ -70,7 +70,7 @@ IRiskRatioData.value
 toCollateralizationRatio(): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRiskRatio.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRiskRatio.ts#L36)
+Defined in: [../sdk-common/src/common/interfaces/IRiskRatio.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L36)
 
 Gets the LTV value as a collateralization ratio
 
@@ -86,7 +86,7 @@ Gets the LTV value as a collateralization ratio
 toLTV(): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRiskRatio.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRiskRatio.ts#L42)
+Defined in: [../sdk-common/src/common/interfaces/IRiskRatio.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L42)
 
 Gets the LTV value
 
@@ -102,7 +102,7 @@ Gets the LTV value
 toMultiple(): number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRiskRatio.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRiskRatio.ts#L39)
+Defined in: [../sdk-common/src/common/interfaces/IRiskRatio.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L39)
 
 Gets the LTV value as a multiply factor
 
@@ -118,7 +118,7 @@ Gets the LTV value as a multiply factor
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [../sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

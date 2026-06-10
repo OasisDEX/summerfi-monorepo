@@ -1,6 +1,6 @@
 # Interface: IRwaVaultInfo
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L23)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L23)
 
 IRwaVaultInfo
 
@@ -22,7 +22,7 @@ Extended info of a Real-World Asset (RWA) vault.
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L25)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L25)
 
 Signature used to differentiate it from similar interfaces
 
@@ -38,7 +38,7 @@ Signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L18)
+Defined in: [../sdk-common/src/common/interfaces/IPoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L18)
 
 Signature to differentiate from similar interfaces
 
@@ -56,7 +56,7 @@ IPoolInfo.[___signature__]
 readonly apy: IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L41)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L41)
 
 Vault apy
 
@@ -74,7 +74,7 @@ IRwaVaultInfoData.apy
 readonly apys: VaultApys;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L43)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L43)
 
 Vault apys for different time periods
 
@@ -92,7 +92,7 @@ IRwaVaultInfoData.apys
 readonly assetToken: ITokenStanalone;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L31)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L31)
 
 Underlying asset token that can be deposited into the vault
 
@@ -110,7 +110,7 @@ IRwaVaultInfoData.assetToken
 readonly depositCap: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L33)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L33)
 
 Maximum amount that can be deposited into the vault at this moment
 
@@ -128,7 +128,7 @@ IRwaVaultInfoData.depositCap
 readonly id: IArmadaVaultId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L27)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L27)
 
 ID of the vault
 
@@ -144,7 +144,7 @@ ID of the vault
 readonly merklRewards: object[] | undefined;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L52)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L52)
 
 Vault Merkl rewards apy
 
@@ -162,7 +162,7 @@ IRwaVaultInfoData.merklRewards
 readonly rewardsApys: object[] | undefined;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L45)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L45)
 
 Vault SUMR rewards apy
 
@@ -180,7 +180,7 @@ IRwaVaultInfoData.rewardsApys
 readonly sharePrice: IPrice;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L39)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L39)
 
 Current price per share of the vault
 
@@ -198,7 +198,7 @@ IRwaVaultInfoData.sharePrice
 readonly token: ITokenStanalone;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L29)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L29)
 
 Token of the vault
 
@@ -216,7 +216,7 @@ IRwaVaultInfoData.token
 readonly totalDeposits: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L35)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L35)
 
 Total amount of assets currently deposited in the vault
 
@@ -234,7 +234,7 @@ IRwaVaultInfoData.totalDeposits
 readonly totalShares: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L37)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L37)
 
 Total amount of shares currently minted in the vault
 
@@ -252,7 +252,7 @@ IRwaVaultInfoData.totalShares
 readonly tvlUsd: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:59](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L59)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:59](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L59)
 
 Total value locked in USD
 
@@ -270,7 +270,7 @@ IRwaVaultInfoData.tvlUsd
 readonly type: Rwa;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IRwaVaultInfo.ts#L62)
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L62)
 
 Type of the pool
 

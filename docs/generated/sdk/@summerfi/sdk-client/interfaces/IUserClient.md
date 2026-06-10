@@ -1,6 +1,6 @@
 # Interface: IUserClient
 
-Defined in: [sdk/sdk-client/src/interfaces/IUserClient.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IUserClient.ts#L18)
+Defined in: [src/interfaces/IUserClient.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L18)
 
 IUserClient
 
@@ -25,7 +25,7 @@ PortfolioManager
 user: IUser;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IUserClient.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IUserClient.ts#L19)
+Defined in: [src/interfaces/IUserClient.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L19)
 
 ## Methods
 
@@ -35,7 +35,7 @@ Defined in: [sdk/sdk-client/src/interfaces/IUserClient.ts:19](https://github.com
 getPosition(params): Promise<Maybe<Position>>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IUserClient.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IUserClient.ts#L37)
+Defined in: [src/interfaces/IUserClient.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L37)
 
 #### Parameters
 
@@ -65,7 +65,7 @@ Retrieves a position of the user by its ID
 getPositionsByIds(params): Promise<Position[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IUserClient.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IUserClient.ts#L31)
+Defined in: [src/interfaces/IUserClient.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L31)
 
 #### Parameters
 
@@ -95,7 +95,7 @@ Retrieves the list of positions of the user for the given IDs
 getPositionsByProtocol(params): Promise<Position[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IUserClient.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IUserClient.ts#L25)
+Defined in: [src/interfaces/IUserClient.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L25)
 
 #### Parameters
 
@@ -125,7 +125,7 @@ Retrieves the list of positions of the user for a given protocol
 newOrder(params): Promise<Maybe<Order>>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IUserClient.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IUserClient.ts#L47)
+Defined in: [src/interfaces/IUserClient.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L47)
 
 #### Parameters
 

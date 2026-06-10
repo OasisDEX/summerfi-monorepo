@@ -22,7 +22,7 @@ const ExternalLendingPositionIdDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/importing/interfaces/IExternalLendingPositionId.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/importing/interfaces/IExternalLendingPositionId.ts#L38)
+Defined in: [src/orders/importing/interfaces/IExternalLendingPositionId.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/interfaces/IExternalLendingPositionId.ts#L38)
 
 ## Description
 

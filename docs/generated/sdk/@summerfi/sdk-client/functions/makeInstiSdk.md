@@ -4,7 +4,7 @@
 function makeInstiSdk(params): SDKAdminManager;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/MakeInstiSDK.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/MakeInstiSDK.ts#L30)
+Defined in: [src/implementation/MakeInstiSDK.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/MakeInstiSDK.ts#L30)
 
 Creates an institutional Summer.fi SDK client ([SDKInstiManager](../classes/SDKAdminManager.md)) scoped to an institution.
 

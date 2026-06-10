@@ -1,6 +1,6 @@
 # Enumeration: RoundsVaultType
 
-Defined in: [sdk/sdk-common/src/common/enums/RoundsVaultType.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/RoundsVaultType.ts#L9)
+Defined in: [../sdk-common/src/common/enums/RoundsVaultType.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/RoundsVaultType.ts#L9)
 
 RoundsVaultType
 
@@ -18,7 +18,7 @@ Distinguishes between the two RoundsVault flavors.
 Input: "Input";
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/RoundsVaultType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/RoundsVaultType.ts#L10)
+Defined in: [../sdk-common/src/common/enums/RoundsVaultType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/RoundsVaultType.ts#L10)
 
 ***
 
@@ -28,4 +28,4 @@ Defined in: [sdk/sdk-common/src/common/enums/RoundsVaultType.ts:10](https://gith
 Output: "Output";
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/RoundsVaultType.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/RoundsVaultType.ts#L11)
+Defined in: [../sdk-common/src/common/enums/RoundsVaultType.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/RoundsVaultType.ts#L11)

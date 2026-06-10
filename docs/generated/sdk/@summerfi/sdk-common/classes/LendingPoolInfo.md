@@ -1,6 +1,6 @@
 # Abstract Class: LendingPoolInfo
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts#L26)
+Defined in: [src/lending-protocols/implementation/LendingPoolInfo.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolInfo.ts#L26)
 
 LendingPoolInfo
 
@@ -28,7 +28,7 @@ customizing the PoolId
 protected new LendingPoolInfo(params): LendingPoolInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts#L37)
+Defined in: [src/lending-protocols/implementation/LendingPoolInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolInfo.ts#L37)
 
 SEALED CONSTRUCTOR
 
@@ -56,7 +56,7 @@ PoolInfo.constructor
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts#L28)
+Defined in: [src/lending-protocols/implementation/LendingPoolInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolInfo.ts#L28)
 
 SIGNATURE
 
@@ -72,7 +72,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/PoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/PoolInfo.ts#L18)
+Defined in: [src/common/implementation/PoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolInfo.ts#L18)
 
 SIGNATURE
 
@@ -96,7 +96,7 @@ PoolInfo.[___signature__]
 readonly collateral: ICollateralInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts#L32)
+Defined in: [src/lending-protocols/implementation/LendingPoolInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolInfo.ts#L32)
 
 The collateral information of the pool
 
@@ -112,7 +112,7 @@ The collateral information of the pool
 readonly debt: IDebtInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts#L33)
+Defined in: [src/lending-protocols/implementation/LendingPoolInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolInfo.ts#L33)
 
 The debt information of the pool
 
@@ -128,7 +128,7 @@ The debt information of the pool
 abstract readonly id: ILendingPoolId;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts#L31)
+Defined in: [src/lending-protocols/implementation/LendingPoolInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolInfo.ts#L31)
 
 ATTRIBUTES
 
@@ -150,7 +150,7 @@ PoolInfo.id
 readonly type: Lending = PoolType.Lending;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts#L34)
+Defined in: [src/lending-protocols/implementation/LendingPoolInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolInfo.ts#L34)
 
 ATTRIBUTES
 
@@ -172,7 +172,7 @@ PoolInfo.type
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolInfo.ts#L47)
+Defined in: [src/lending-protocols/implementation/LendingPoolInfo.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolInfo.ts#L47)
 
 #### Returns
 

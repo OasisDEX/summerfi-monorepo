@@ -4,7 +4,7 @@
 function makeAdminSDK(params): SDKAdminManager;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/MakeAdminSDK.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/MakeAdminSDK.ts#L19)
+Defined in: [src/implementation/MakeAdminSDK.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/MakeAdminSDK.ts#L19)
 
 Creates a managed (admin) Summer.fi SDK client ([SDKInstiManager](../classes/SDKAdminManager.md)) scoped to a client id.
 

@@ -4,7 +4,7 @@
 function multiplyFiatCurrencyAmountByPercentage(fiatCurrencyAmount, percentage): IFiatCurrencyAmountData;
 ```
 
-Defined in: [sdk/sdk-common/src/common/utils/PercentageUtils.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/utils/PercentageUtils.ts#L44)
+Defined in: [../sdk-common/src/common/utils/PercentageUtils.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/utils/PercentageUtils.ts#L44)
 
 ## Parameters
 

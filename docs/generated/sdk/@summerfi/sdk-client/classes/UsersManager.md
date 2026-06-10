@@ -1,6 +1,6 @@
 # Class: UsersManager
 
-Defined in: [sdk/sdk-client/src/implementation/UsersManager.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/UsersManager.ts#L12)
+Defined in: [src/implementation/UsersManager.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UsersManager.ts#L12)
 
 Client-side implementation of [IUsersManager](../interfaces/IUsersManager.md) that creates per-wallet [UserClient](UserClient.md)
 instances scoped to a chain.
@@ -21,7 +21,7 @@ instances scoped to a chain.
 new UsersManager(params): UsersManager;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UsersManager.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/UsersManager.ts#L13)
+Defined in: [src/implementation/UsersManager.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UsersManager.ts#L13)
 
 #### Parameters
 
@@ -51,7 +51,7 @@ IRPCClient.constructor
 get protected rpcClient(): TRPCClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
+Defined in: [src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IRPCClient.ts#L10)
 
 ##### Returns
 
@@ -71,7 +71,7 @@ IRPCClient.rpcClient
 getUserClient(params): Promise<UserClient>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UsersManager.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/UsersManager.ts#L25)
+Defined in: [src/implementation/UsersManager.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UsersManager.ts#L25)
 
 Creates a [UserClient](UserClient.md) for a wallet on a specific chain.
 

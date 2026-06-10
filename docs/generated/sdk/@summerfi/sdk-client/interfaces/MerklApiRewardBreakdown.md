@@ -1,6 +1,6 @@
 # Interface: MerklApiRewardBreakdown
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:123](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L123)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:123](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L123)
 
 ## Properties
 
@@ -10,7 +10,7 @@ Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:123](http
 amount: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:125](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L125)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:125](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L125)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:125](http
 campaignId: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:128](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L128)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:128](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L128)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:128](http
 claimed: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:126](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L126)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:126](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L126)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:126](http
 pending: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:127](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L127)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:127](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L127)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:127](http
 reason: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:124](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L124)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:124](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L124)
 
 ***
 
@@ -60,4 +60,4 @@ Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:124](http
 optional subCampaignId: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:129](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L129)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:129](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L129)

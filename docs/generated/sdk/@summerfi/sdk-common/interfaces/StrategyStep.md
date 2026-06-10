@@ -1,6 +1,6 @@
 # Interface: StrategyStep
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts#L4)
+Defined in: [src/simulation/interfaces/SimulationStrategy.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/SimulationStrategy.ts#L4)
 
 A single named step within a simulation strategy, and whether it is optional.
 
@@ -12,7 +12,7 @@ A single named step within a simulation strategy, and whether it is optional.
 name: string;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts#L5)
+Defined in: [src/simulation/interfaces/SimulationStrategy.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/SimulationStrategy.ts#L5)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts:5](h
 optional: boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts#L7)
+Defined in: [src/simulation/interfaces/SimulationStrategy.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/SimulationStrategy.ts#L7)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts:7](h
 step: SimulationSteps;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/simulation/interfaces/SimulationStrategy.ts#L6)
+Defined in: [src/simulation/interfaces/SimulationStrategy.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/SimulationStrategy.ts#L6)

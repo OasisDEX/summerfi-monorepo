@@ -1,6 +1,6 @@
 # Class: MorphoLendingPoolId
 
-Defined in: [sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L18)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L18)
 
 MorphoLendingPoolId
 
@@ -25,7 +25,7 @@ IMorphoLendingPoolIdData
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L20)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L20)
 
 SIGNATURE
 
@@ -45,7 +45,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L18)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolId.ts#L18)
 
 SIGNATURE
 
@@ -69,7 +69,7 @@ LendingPoolId.[___signature__]
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/PoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/PoolId.ts#L18)
+Defined in: [../sdk-common/src/common/implementation/PoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolId.ts#L18)
 
 SIGNATURE
 
@@ -93,7 +93,7 @@ LendingPoolId.[___signature__]
 readonly marketId: `0x${string}`;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L24)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L24)
 
 The encoded market ID used to access the market parameters
 
@@ -109,7 +109,7 @@ The encoded market ID used to access the market parameters
 readonly protocol: IMorphoProtocol;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L23)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L23)
 
 ATTRIBUTES
 
@@ -129,7 +129,7 @@ ATTRIBUTES
 readonly type: Lending = PoolType.Lending;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L21)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolId.ts#L21)
 
 ATTRIBUTES
 
@@ -149,7 +149,7 @@ ATTRIBUTES
 toString(): string;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L42)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L42)
 
 #### Returns
 
@@ -175,7 +175,7 @@ IPrintable.toString
 static createFrom(params): MorphoLendingPoolId;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L27)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPoolId.ts#L27)
 
 FACTORY
 

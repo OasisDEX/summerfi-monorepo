@@ -4,7 +4,7 @@
 function isTokenSymbol(maybeTokenSymbol): maybeTokenSymbol is string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/TokenSymbol.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/TokenSymbol.ts#L19)
+Defined in: [src/common/enums/TokenSymbol.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/TokenSymbol.ts#L19)
 
 ## Parameters
 

@@ -61,7 +61,7 @@ const RebalanceDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IRebalanceData.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IRebalanceData.ts#L29)
+Defined in: [src/common/types/IRebalanceData.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IRebalanceData.ts#L29)
 
 ## Description
 

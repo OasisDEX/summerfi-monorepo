@@ -1,6 +1,6 @@
 # Enumeration: QueryStatus
 
-Defined in: [sdk/sdk-client-react/src/types.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client-react/src/types.ts#L5)
+Defined in: [src/types.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/types.ts#L5)
 
 Lifecycle states of an asynchronous query, mirroring the conventional pending/error/success
 status reported by data-fetching hooks.
@@ -13,7 +13,7 @@ status reported by data-fetching hooks.
 Error: "error";
 ```
 
-Defined in: [sdk/sdk-client-react/src/types.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client-react/src/types.ts#L7)
+Defined in: [src/types.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/types.ts#L7)
 
 ***
 
@@ -23,7 +23,7 @@ Defined in: [sdk/sdk-client-react/src/types.ts:7](https://github.com/OasisDEX/su
 Pending: "pending";
 ```
 
-Defined in: [sdk/sdk-client-react/src/types.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client-react/src/types.ts#L6)
+Defined in: [src/types.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/types.ts#L6)
 
 ***
 
@@ -33,4 +33,4 @@ Defined in: [sdk/sdk-client-react/src/types.ts:6](https://github.com/OasisDEX/su
 Success: "success";
 ```
 
-Defined in: [sdk/sdk-client-react/src/types.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client-react/src/types.ts#L8)
+Defined in: [src/types.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/types.ts#L8)

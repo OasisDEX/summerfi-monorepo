@@ -1,6 +1,6 @@
 # Interface: IAaveV3Protocol
 
-Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts#L17)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts#L17)
 
 IAaveV3Protocol
 
@@ -23,7 +23,7 @@ This may be fixed eventually, there is a discussion on the topic here: https://g
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts#L19)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts#L19)
 
 Interface signature used to differentiate it from similar interfaces
 
@@ -39,7 +39,7 @@ Interface signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L18)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L18)
 
 Signature used to differentiate it from similar interfaces
 
@@ -57,7 +57,7 @@ IProtocol.[___signature__]
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L22)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L22)
 
 The chain information
 
@@ -73,7 +73,7 @@ The chain information
 readonly name: AaveV3;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts#L22)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3Protocol.ts#L22)
 
 The name of the protocol
 
@@ -89,7 +89,7 @@ The name of the protocol
 equals(protocol): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IProtocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IProtocol.ts#L31)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L31)
 
 Compare if the passed protocol is equal to the current protocol
 

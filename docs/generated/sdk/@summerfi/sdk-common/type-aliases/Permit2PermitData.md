@@ -4,7 +4,7 @@
 type Permit2PermitData = object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Permit2PermitData.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/Permit2PermitData.ts#L7)
+Defined in: [src/common/types/Permit2PermitData.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Permit2PermitData.ts#L7)
 
 ## Name
 
@@ -22,7 +22,7 @@ The PermitTransferFrom payload consumed by AdmiralsQuarters permit2 calldata
 deadline: bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Permit2PermitData.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/Permit2PermitData.ts#L10)
+Defined in: [src/common/types/Permit2PermitData.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Permit2PermitData.ts#L10)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [sdk/sdk-common/src/common/types/Permit2PermitData.ts:10](https://gi
 nonce: bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Permit2PermitData.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/Permit2PermitData.ts#L9)
+Defined in: [src/common/types/Permit2PermitData.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Permit2PermitData.ts#L9)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [sdk/sdk-common/src/common/types/Permit2PermitData.ts:9](https://git
 permitted: object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/Permit2PermitData.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/Permit2PermitData.ts#L8)
+Defined in: [src/common/types/Permit2PermitData.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Permit2PermitData.ts#L8)
 
 #### amount
 

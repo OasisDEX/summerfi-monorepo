@@ -4,7 +4,7 @@
 type SpotPricesInfo = object;
 ```
 
-Defined in: [sdk/sdk-common/src/oracle/ISpotPriceInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/oracle/ISpotPriceInfo.ts#L32)
+Defined in: [src/oracle/ISpotPriceInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L32)
 
 ## Name
 
@@ -22,7 +22,7 @@ Gives the current market price for a specific list of assets
 priceByAddress: Record<string, IPrice>;
 ```
 
-Defined in: [sdk/sdk-common/src/oracle/ISpotPriceInfo.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/oracle/ISpotPriceInfo.ts#L36)
+Defined in: [src/oracle/ISpotPriceInfo.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L36)
 
 Price by addresses
 
@@ -34,6 +34,6 @@ Price by addresses
 provider: OracleProviderType;
 ```
 
-Defined in: [sdk/sdk-common/src/oracle/ISpotPriceInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/oracle/ISpotPriceInfo.ts#L34)
+Defined in: [src/oracle/ISpotPriceInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L34)
 
 The oracle provider type

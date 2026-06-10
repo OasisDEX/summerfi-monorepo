@@ -4,7 +4,7 @@
 function isUser(maybeUser, returnedErrors?): maybeUser is IUser;
 ```
 
-Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/interfaces/IUser.ts#L42)
+Defined in: [src/user/interfaces/IUser.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/interfaces/IUser.ts#L42)
 
 Type guard for IUser
 

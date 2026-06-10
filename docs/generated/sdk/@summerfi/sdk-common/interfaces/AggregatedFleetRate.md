@@ -1,6 +1,6 @@
 # Interface: AggregatedFleetRate
 
-Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L25)
+Defined in: [src/common/types/HistoricalFleetRateResult.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/HistoricalFleetRateResult.ts#L25)
 
 A fleet rate averaged over a time bucket (day, hour or week).
 
@@ -12,7 +12,7 @@ A fleet rate averaged over a time bucket (day, hour or week).
 averageRate: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L27)
+Defined in: [src/common/types/HistoricalFleetRateResult.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/HistoricalFleetRateResult.ts#L27)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:27](ht
 date: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L28)
+Defined in: [src/common/types/HistoricalFleetRateResult.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/HistoricalFleetRateResult.ts#L28)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:28](ht
 fleetAddress: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L29)
+Defined in: [src/common/types/HistoricalFleetRateResult.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/HistoricalFleetRateResult.ts#L29)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:29](ht
 id: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/HistoricalFleetRateResult.ts#L26)
+Defined in: [src/common/types/HistoricalFleetRateResult.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/HistoricalFleetRateResult.ts#L26)

@@ -4,7 +4,7 @@
 function isLendingPosition(maybeLendingPosition): maybeLendingPosition is ILendingPosition;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/interfaces/ILendingPosition.ts:61](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/interfaces/ILendingPosition.ts#L61)
+Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:61](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L61)
 
 ## Parameters
 

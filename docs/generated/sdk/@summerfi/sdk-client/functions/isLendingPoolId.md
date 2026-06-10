@@ -4,7 +4,7 @@
 function isLendingPoolId(maybePoolId): maybePoolId is ILendingPoolId;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts#L52)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L52)
 
 ## Parameters
 

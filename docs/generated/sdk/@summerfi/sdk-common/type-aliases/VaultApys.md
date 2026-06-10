@@ -4,7 +4,7 @@
 type VaultApys = object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/VaultApys.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/VaultApys.ts#L4)
+Defined in: [src/common/types/VaultApys.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/VaultApys.ts#L4)
 
 A vault's APY figures: live plus 24-hour, 7-day and 30-day simple moving averages.
 
@@ -16,7 +16,7 @@ A vault's APY figures: live plus 24-hour, 7-day and 30-day simple moving average
 live: IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/VaultApys.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/VaultApys.ts#L5)
+Defined in: [src/common/types/VaultApys.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/VaultApys.ts#L5)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [sdk/sdk-common/src/common/types/VaultApys.ts:5](https://github.com/
 sma24h: IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/VaultApys.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/VaultApys.ts#L6)
+Defined in: [src/common/types/VaultApys.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/VaultApys.ts#L6)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [sdk/sdk-common/src/common/types/VaultApys.ts:6](https://github.com/
 sma30day: IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/VaultApys.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/VaultApys.ts#L8)
+Defined in: [src/common/types/VaultApys.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/VaultApys.ts#L8)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [sdk/sdk-common/src/common/types/VaultApys.ts:8](https://github.com/
 sma7day: IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/VaultApys.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/VaultApys.ts#L7)
+Defined in: [src/common/types/VaultApys.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/VaultApys.ts#L7)

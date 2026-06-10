@@ -4,7 +4,7 @@
 function calculatePriceImpact(spotPrice, quotePrice): IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/calculatePriceImpact.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/calculatePriceImpact.ts#L16)
+Defined in: [../sdk-common/src/swap/calculatePriceImpact.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/calculatePriceImpact.ts#L16)
 
 Computes the price impact of a swap as the percentage by which the quoted price deviates from the
 spot price.

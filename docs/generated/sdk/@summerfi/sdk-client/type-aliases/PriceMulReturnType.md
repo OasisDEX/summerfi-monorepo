@@ -8,7 +8,7 @@ type PriceMulReturnType<T> = T extends ITokenAmount ?
   | ITokenAmount : IPrice;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrice.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPrice.ts#L27)
+Defined in: [../sdk-common/src/common/interfaces/IPrice.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L27)
 
 Infers the result type of multiplying a price by an operand of type `T`.
 

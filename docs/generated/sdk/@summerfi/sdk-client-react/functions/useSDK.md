@@ -6,7 +6,7 @@
 function useSDK(params): SdkInstiManagerClient;
 ```
 
-Defined in: [sdk/sdk-client-react/src/hooks/useSDK.ts:627](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client-react/src/hooks/useSDK.ts#L627)
+Defined in: [src/hooks/useSDK.ts:627](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L627)
 
 Builds and memoizes a Summer.fi SDK client bound to the current React context, exposing the set
 of handlers (vaults, swaps, governance, claims, and — for managed instances — admin/RWA) suited
@@ -35,7 +35,7 @@ The full managed client surface ([SdkInstiManagerClient](../type-aliases/SdkInst
 function useSDK(params): object;
 ```
 
-Defined in: [sdk/sdk-client-react/src/hooks/useSDK.ts:634](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client-react/src/hooks/useSDK.ts#L634)
+Defined in: [src/hooks/useSDK.ts:634](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L634)
 
 Public clients (`makeSDK`, no `clientId`) expose only the `ISDKManager` surface.
 

@@ -1,6 +1,6 @@
 # Abstract Class: LendingPoolId
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L16)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolId.ts#L16)
 
 LendingPoolId
 
@@ -32,7 +32,7 @@ ILendingPoolId
 protected new LendingPoolId(params): LendingPoolId;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L24)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolId.ts#L24)
 
 SEALED CONSTRUCTOR
 
@@ -60,7 +60,7 @@ PoolId.constructor
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L18)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolId.ts#L18)
 
 SIGNATURE
 
@@ -76,7 +76,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/PoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/PoolId.ts#L18)
+Defined in: [../sdk-common/src/common/implementation/PoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolId.ts#L18)
 
 SIGNATURE
 
@@ -98,7 +98,7 @@ ILendingPoolId.[___signature__]
 abstract readonly protocol: IProtocol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/PoolId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/PoolId.ts#L22)
+Defined in: [../sdk-common/src/common/implementation/PoolId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolId.ts#L22)
 
 Protocol where the pool is
 
@@ -120,7 +120,7 @@ PoolId.protocol
 readonly type: Lending = PoolType.Lending;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L21)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolId.ts#L21)
 
 ATTRIBUTES
 
@@ -142,7 +142,7 @@ PoolId.type
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/implementation/LendingPoolId.ts#L31)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPoolId.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPoolId.ts#L31)
 
 #### Returns
 

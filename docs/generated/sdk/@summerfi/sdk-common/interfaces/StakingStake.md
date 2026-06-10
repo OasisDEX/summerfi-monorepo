@@ -1,6 +1,6 @@
 # Interface: StakingStake
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L6)
+Defined in: [src/common/types/StakingStake.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L6)
 
 ## Description
 
@@ -14,7 +14,7 @@ Staking stake position details
 amount: bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L10)
+Defined in: [src/common/types/StakingStake.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L10)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:10](https://github.
 id: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L7)
+Defined in: [src/common/types/StakingStake.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L7)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:7](https://github.c
 index: number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L9)
+Defined in: [src/common/types/StakingStake.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L9)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:9](https://github.c
 lockupEndTime: bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L14)
+Defined in: [src/common/types/StakingStake.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L14)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:14](https://github.
 lockupPeriod: bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L15)
+Defined in: [src/common/types/StakingStake.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L15)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:15](https://github.
 lockupStartTime: bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L13)
+Defined in: [src/common/types/StakingStake.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L13)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:13](https://github.
 multiplier: number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L16)
+Defined in: [src/common/types/StakingStake.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L16)
 
 ***
 
@@ -84,7 +84,7 @@ Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:16](https://github.
 owner: `0x${string}`;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L8)
+Defined in: [src/common/types/StakingStake.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L8)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:8](https://github.c
 weightedAmount: bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L11)
+Defined in: [src/common/types/StakingStake.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L11)
 
 ***
 
@@ -104,4 +104,4 @@ Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:11](https://github.
 weightedAmountNormalized: number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/StakingStake.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/StakingStake.ts#L12)
+Defined in: [src/common/types/StakingStake.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L12)

@@ -1,6 +1,6 @@
 # Enumeration: GlobalRoles
 
-Defined in: [sdk/sdk-common/src/common/types/GlobalRoles.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/GlobalRoles.ts#L7)
+Defined in: [../sdk-common/src/common/types/GlobalRoles.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L7)
 
 ## Name
 
@@ -18,7 +18,7 @@ Enum for all global protocol roles
 ADMIRALS_QUARTERS_ROLE: "ADMIRALS_QUARTERS_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/GlobalRoles.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/GlobalRoles.ts#L11)
+Defined in: [../sdk-common/src/common/types/GlobalRoles.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L11)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [sdk/sdk-common/src/common/types/GlobalRoles.ts:11](https://github.c
 DECAY_CONTROLLER_ROLE: "DECAY_CONTROLLER_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/GlobalRoles.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/GlobalRoles.ts#L10)
+Defined in: [../sdk-common/src/common/types/GlobalRoles.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L10)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [sdk/sdk-common/src/common/types/GlobalRoles.ts:10](https://github.c
 GOVERNOR_ROLE: "GOVERNOR_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/GlobalRoles.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/GlobalRoles.ts#L8)
+Defined in: [../sdk-common/src/common/types/GlobalRoles.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L8)
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: [sdk/sdk-common/src/common/types/GlobalRoles.ts:8](https://github.co
 SUPER_KEEPER_ROLE: "SUPER_KEEPER_ROLE";
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/GlobalRoles.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/GlobalRoles.ts#L9)
+Defined in: [../sdk-common/src/common/types/GlobalRoles.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L9)

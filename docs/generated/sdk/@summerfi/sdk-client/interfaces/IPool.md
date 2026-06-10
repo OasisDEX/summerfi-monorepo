@@ -1,6 +1,6 @@
 # Interface: IPool
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPool.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPool.ts#L18)
+Defined in: [../sdk-common/src/common/interfaces/IPool.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L18)
 
 ## Name
 
@@ -30,7 +30,7 @@ It is meant to be specialized for each type of pool
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPool.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPool.ts#L20)
+Defined in: [../sdk-common/src/common/interfaces/IPool.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L20)
 
 Signature to differentiate from similar interfaces
 
@@ -42,7 +42,7 @@ Signature to differentiate from similar interfaces
 readonly id: IPoolId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPool.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPool.ts#L24)
+Defined in: [../sdk-common/src/common/interfaces/IPool.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L24)
 
 Unique identifier for the pool, to be specialized for each protocol
 
@@ -60,7 +60,7 @@ IPoolData.id
 readonly type: PoolType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPool.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPool.ts#L22)
+Defined in: [../sdk-common/src/common/interfaces/IPool.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L22)
 
 Type of the pool
 
@@ -78,7 +78,7 @@ IPoolData.type
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [../sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

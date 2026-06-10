@@ -1,6 +1,6 @@
 # Enumeration: ArmadaMigrationType
 
-Defined in: [sdk/sdk-common/src/common/enums/ArmadaMigrationType.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/ArmadaMigrationType.ts#L7)
+Defined in: [src/common/enums/ArmadaMigrationType.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ArmadaMigrationType.ts#L7)
 
 ## Name
 
@@ -18,7 +18,7 @@ Enumerates the names of the protocols that are migratable by the Armada
 AaveV3: "AaveV3";
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/ArmadaMigrationType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/ArmadaMigrationType.ts#L8)
+Defined in: [src/common/enums/ArmadaMigrationType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ArmadaMigrationType.ts#L8)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [sdk/sdk-common/src/common/enums/ArmadaMigrationType.ts:8](https://g
 Compound: "Compound";
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/ArmadaMigrationType.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/ArmadaMigrationType.ts#L9)
+Defined in: [src/common/enums/ArmadaMigrationType.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ArmadaMigrationType.ts#L9)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [sdk/sdk-common/src/common/enums/ArmadaMigrationType.ts:9](https://g
 Morpho: "Morpho";
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/ArmadaMigrationType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/ArmadaMigrationType.ts#L10)
+Defined in: [src/common/enums/ArmadaMigrationType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ArmadaMigrationType.ts#L10)

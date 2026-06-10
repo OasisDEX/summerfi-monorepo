@@ -4,7 +4,7 @@
 type SwapData = object;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapData.ts#L10)
+Defined in: [../sdk-common/src/swap/implementation/SwapData.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapData.ts#L10)
 
 ## Name
 
@@ -22,7 +22,7 @@ Represents the data needed to perform a swap between two tokens
 calldata: HexData;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapData.ts#L14)
+Defined in: [../sdk-common/src/swap/implementation/SwapData.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapData.ts#L14)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:14](https://gith
 fromTokenAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapData.ts#L12)
+Defined in: [../sdk-common/src/swap/implementation/SwapData.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapData.ts#L12)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:12](https://gith
 gasPrice: string;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapData.ts#L18)
+Defined in: [../sdk-common/src/swap/implementation/SwapData.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapData.ts#L18)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:18](https://gith
 provider: SwapProviderType;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapData.ts#L11)
+Defined in: [../sdk-common/src/swap/implementation/SwapData.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapData.ts#L11)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:11](https://gith
 targetContract: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapData.ts#L15)
+Defined in: [../sdk-common/src/swap/implementation/SwapData.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapData.ts#L15)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:15](https://gith
 toTokenAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapData.ts#L13)
+Defined in: [../sdk-common/src/swap/implementation/SwapData.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapData.ts#L13)
 
 ***
 
@@ -82,4 +82,4 @@ Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:13](https://gith
 value: string;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/SwapData.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/SwapData.ts#L16)
+Defined in: [../sdk-common/src/swap/implementation/SwapData.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapData.ts#L16)

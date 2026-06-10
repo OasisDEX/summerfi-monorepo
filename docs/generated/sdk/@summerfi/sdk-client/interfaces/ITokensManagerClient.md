@@ -1,6 +1,6 @@
 # Interface: ITokensManagerClient
 
-Defined in: [sdk/sdk-client/src/interfaces/ITokensManagerClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ITokensManagerClient.ts#L10)
+Defined in: [src/interfaces/ITokensManagerClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ITokensManagerClient.ts#L10)
 
 ## Name
 
@@ -24,7 +24,7 @@ ITokensManager
 getTokenByAddress(params): Promise<Token>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ITokensManagerClient.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ITokensManagerClient.ts#L29)
+Defined in: [src/interfaces/ITokensManagerClient.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ITokensManagerClient.ts#L29)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Retrieves a token by its address
 getTokenByName(params): Promise<Token>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ITokensManagerClient.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ITokensManagerClient.ts#L39)
+Defined in: [src/interfaces/ITokensManagerClient.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ITokensManagerClient.ts#L39)
 
 #### Parameters
 
@@ -88,7 +88,7 @@ Retrieves a token by its name
 getTokenBySymbol(params): Promise<Token>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ITokensManagerClient.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ITokensManagerClient.ts#L19)
+Defined in: [src/interfaces/ITokensManagerClient.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ITokensManagerClient.ts#L19)
 
 #### Parameters
 

@@ -4,7 +4,7 @@
 function borrowFromPosition(position, amount): ILendingPosition;
 ```
 
-Defined in: [sdk/sdk-common/src/common/utils/PositionUtils.ts:81](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/utils/PositionUtils.ts#L81)
+Defined in: [src/common/utils/PositionUtils.ts:81](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/utils/PositionUtils.ts#L81)
 
 Returns a copy of the position with the borrowed amount added to its debt.
 

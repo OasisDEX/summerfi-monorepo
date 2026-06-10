@@ -1,6 +1,6 @@
 # Interface: IPercentage
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L14)
+Defined in: [src/common/interfaces/IPercentage.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L14)
 
 ## Name
 
@@ -22,7 +22,7 @@ Percentage type that can be used for calculations with other types like TokenAmo
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L16)
+Defined in: [src/common/interfaces/IPercentage.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L16)
 
 Signature to differentiate from similar interfaces
 
@@ -34,7 +34,7 @@ Signature to differentiate from similar interfaces
 readonly value: number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L18)
+Defined in: [src/common/interfaces/IPercentage.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L18)
 
 The percentage in floating point format
 
@@ -52,7 +52,7 @@ IPercentageData.value
 add(percentage): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L25)
+Defined in: [src/common/interfaces/IPercentage.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L25)
 
 #### Parameters
 
@@ -80,7 +80,7 @@ add
 divide(divisor): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L46)
+Defined in: [src/common/interfaces/IPercentage.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L46)
 
 #### Parameters
 
@@ -108,7 +108,7 @@ divide
 multiply(multiplier): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L39)
+Defined in: [src/common/interfaces/IPercentage.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L39)
 
 #### Parameters
 
@@ -136,7 +136,7 @@ multiply
 subtract(percentage): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L32)
+Defined in: [src/common/interfaces/IPercentage.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L32)
 
 #### Parameters
 
@@ -164,7 +164,7 @@ subtract
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IValueConverter.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IValueConverter.ts#L37)
+Defined in: [src/common/interfaces/IValueConverter.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L37)
 
 Converts the instance into a BigNumber
 
@@ -195,7 +195,7 @@ IValueConverter.toBigNumber
 toComplement(): IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L62)
+Defined in: [src/common/interfaces/IPercentage.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L62)
 
 #### Returns
 
@@ -217,7 +217,7 @@ toComplement
 toProportion(): number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L54)
+Defined in: [src/common/interfaces/IPercentage.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L54)
 
 #### Returns
 
@@ -239,7 +239,7 @@ toProportion
 toSolidityValue(params?): bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IValueConverter.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IValueConverter.ts#L23)
+Defined in: [src/common/interfaces/IValueConverter.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L23)
 
 Converts the instance into a Solidity value
 
@@ -276,7 +276,7 @@ IValueConverter.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

@@ -1,6 +1,6 @@
 # Interface: ISDKManager
 
-Defined in: [sdk/sdk-client/src/interfaces/ISDKManager.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ISDKManager.ts#L16)
+Defined in: [src/interfaces/ISDKManager.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ISDKManager.ts#L16)
 
 SDKManager is the main entry point for interacting with the SDK in the client side
 
@@ -18,7 +18,7 @@ It contains all the available services that can be used to interact with the SDK
 readonly allowance: IAllowanceManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ISDKManager.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ISDKManager.ts#L32)
+Defined in: [src/interfaces/ISDKManager.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ISDKManager.ts#L32)
 
 Allowance Manager Client for Permit2 authorization checks, transactions and typed data
 
@@ -30,7 +30,7 @@ Allowance Manager Client for Permit2 authorization checks, transactions and type
 readonly armada: IArmadaManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ISDKManager.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ISDKManager.ts#L24)
+Defined in: [src/interfaces/ISDKManager.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ISDKManager.ts#L24)
 
 Armada Manager for interacting with the Armada protocol
 
@@ -42,7 +42,7 @@ Armada Manager for interacting with the Armada protocol
 readonly chains: IChainsManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ISDKManager.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ISDKManager.ts#L18)
+Defined in: [src/interfaces/ISDKManager.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ISDKManager.ts#L18)
 
 Chains Manager for interacting with the different chains supported in the SDK
 
@@ -54,7 +54,7 @@ Chains Manager for interacting with the different chains supported in the SDK
 readonly dca: IDcaManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ISDKManager.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ISDKManager.ts#L34)
+Defined in: [src/interfaces/ISDKManager.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ISDKManager.ts#L34)
 
 DCA Manager for interacting with DCA strategies and buy orders
 
@@ -66,7 +66,7 @@ DCA Manager for interacting with DCA strategies and buy orders
 readonly intentSwaps: IIntentSwapClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ISDKManager.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ISDKManager.ts#L30)
+Defined in: [src/interfaces/ISDKManager.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ISDKManager.ts#L30)
 
 Intent Swap Client for interacting with CoW Protocol intent swaps
 
@@ -78,7 +78,7 @@ Intent Swap Client for interacting with CoW Protocol intent swaps
 readonly oracle: IOracleManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ISDKManager.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ISDKManager.ts#L28)
+Defined in: [src/interfaces/ISDKManager.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ISDKManager.ts#L28)
 
 Swap Manager for interacting with the swaps
 
@@ -90,7 +90,7 @@ Swap Manager for interacting with the swaps
 readonly swaps: ISwapManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ISDKManager.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ISDKManager.ts#L26)
+Defined in: [src/interfaces/ISDKManager.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ISDKManager.ts#L26)
 
 Swap Manager for interacting with the swaps
 
@@ -102,7 +102,7 @@ Swap Manager for interacting with the swaps
 readonly tokens: ITokensManagerClient2;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ISDKManager.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ISDKManager.ts#L20)
+Defined in: [src/interfaces/ISDKManager.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ISDKManager.ts#L20)
 
 Tokens Manager for interacting with the different tokens supported in the SDK
 
@@ -114,6 +114,6 @@ Tokens Manager for interacting with the different tokens supported in the SDK
 readonly users: IUsersManager;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ISDKManager.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ISDKManager.ts#L22)
+Defined in: [src/interfaces/ISDKManager.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ISDKManager.ts#L22)
 
 Users Manager for retrieving information about a user

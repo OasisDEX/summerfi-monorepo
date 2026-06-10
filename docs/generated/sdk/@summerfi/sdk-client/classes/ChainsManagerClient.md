@@ -1,6 +1,6 @@
 # Class: ChainsManagerClient
 
-Defined in: [sdk/sdk-client/src/implementation/ChainsManager.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/ChainsManager.ts#L19)
+Defined in: [src/implementation/ChainsManager.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ChainsManager.ts#L19)
 
 ## Name
 
@@ -26,7 +26,7 @@ Implementation of the IChainsManager interface for the SDK Client
 new ChainsManagerClient(params): ChainsManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/ChainsManager.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/ChainsManager.ts#L20)
+Defined in: [src/implementation/ChainsManager.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ChainsManager.ts#L20)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ IRPCClient.constructor
 get protected rpcClient(): TRPCClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
+Defined in: [src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IRPCClient.ts#L10)
 
 ##### Returns
 
@@ -76,7 +76,7 @@ IRPCClient.rpcClient
 getChain(params): Promise<Chain>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/ChainsManager.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/ChainsManager.ts#L42)
+Defined in: [src/implementation/ChainsManager.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ChainsManager.ts#L42)
 
 Builds a [Chain](Chain.md) instance (with its tokens and protocols managers) from chain info.
 
@@ -110,7 +110,7 @@ A promise resolving to the configured [Chain](Chain.md).
 getChainById(params): Promise<Chain>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/ChainsManager.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/ChainsManager.ts#L62)
+Defined in: [src/implementation/ChainsManager.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ChainsManager.ts#L62)
 
 Builds a [Chain](Chain.md) instance by resolving chain info from a numeric chain id.
 
@@ -144,7 +144,7 @@ A promise resolving to the configured [Chain](Chain.md).
 getSupportedChains(): Promise<ChainInfo[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/ChainsManager.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/ChainsManager.ts#L29)
+Defined in: [src/implementation/ChainsManager.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ChainsManager.ts#L29)
 
 Returns information for every chain supported by the SDK.
 

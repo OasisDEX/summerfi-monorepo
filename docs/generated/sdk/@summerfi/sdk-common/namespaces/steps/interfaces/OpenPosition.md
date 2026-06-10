@@ -1,6 +1,6 @@
 # Interface: OpenPosition
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/Steps.ts:130](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/simulation/interfaces/Steps.ts#L130)
+Defined in: [src/simulation/interfaces/Steps.ts:130](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/Steps.ts#L130)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [sdk/sdk-common/src/simulation/interfaces/Steps.ts:130](https://gith
 inputs: object;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/Steps.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/simulation/interfaces/Steps.ts#L26)
+Defined in: [src/simulation/interfaces/Steps.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/Steps.ts#L26)
 
 #### pool
 
@@ -38,7 +38,7 @@ pool: ILendingPool;
 name: string;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/Steps.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/simulation/interfaces/Steps.ts#L25)
+Defined in: [src/simulation/interfaces/Steps.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/Steps.ts#L25)
 
 #### Inherited from
 
@@ -52,7 +52,7 @@ Defined in: [sdk/sdk-common/src/simulation/interfaces/Steps.ts:25](https://githu
 outputs: object;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/Steps.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/simulation/interfaces/Steps.ts#L27)
+Defined in: [src/simulation/interfaces/Steps.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/Steps.ts#L27)
 
 #### position
 
@@ -72,7 +72,7 @@ position: ILendingPosition;
 optional skip: boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/Steps.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/simulation/interfaces/Steps.ts#L28)
+Defined in: [src/simulation/interfaces/Steps.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/Steps.ts#L28)
 
 #### Inherited from
 
@@ -86,7 +86,7 @@ Defined in: [sdk/sdk-common/src/simulation/interfaces/Steps.ts:28](https://githu
 type: OpenPosition;
 ```
 
-Defined in: [sdk/sdk-common/src/simulation/interfaces/Steps.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/simulation/interfaces/Steps.ts#L24)
+Defined in: [src/simulation/interfaces/Steps.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/Steps.ts#L24)
 
 #### Inherited from
 

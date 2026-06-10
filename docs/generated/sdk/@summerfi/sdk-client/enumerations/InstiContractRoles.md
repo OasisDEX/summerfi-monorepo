@@ -1,6 +1,6 @@
 # Enumeration: InstiContractRoles
 
-Defined in: [sdk/sdk-common/src/common/types/InstiContractRoles.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiContractRoles.ts#L2)
+Defined in: [../sdk-common/src/common/types/InstiContractRoles.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiContractRoles.ts#L2)
 
 Numeric, per-contract access-control roles for institutional deployments.
 
@@ -12,7 +12,7 @@ Numeric, per-contract access-control roles for institutional deployments.
 COMMANDER_ROLE: 2;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiContractRoles.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiContractRoles.ts#L5)
+Defined in: [../sdk-common/src/common/types/InstiContractRoles.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiContractRoles.ts#L5)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [sdk/sdk-common/src/common/types/InstiContractRoles.ts:5](https://gi
 CURATOR_ROLE: 0;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiContractRoles.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiContractRoles.ts#L3)
+Defined in: [../sdk-common/src/common/types/InstiContractRoles.ts:3](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiContractRoles.ts#L3)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [sdk/sdk-common/src/common/types/InstiContractRoles.ts:3](https://gi
 KEEPER_ROLE: 1;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiContractRoles.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiContractRoles.ts#L4)
+Defined in: [../sdk-common/src/common/types/InstiContractRoles.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiContractRoles.ts#L4)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: [sdk/sdk-common/src/common/types/InstiContractRoles.ts:4](https://gi
 OPERATOR_ROLE: 3;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/InstiContractRoles.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/InstiContractRoles.ts#L6)
+Defined in: [../sdk-common/src/common/types/InstiContractRoles.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/InstiContractRoles.ts#L6)

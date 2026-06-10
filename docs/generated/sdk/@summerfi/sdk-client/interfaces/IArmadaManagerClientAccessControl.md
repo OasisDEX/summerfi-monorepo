@@ -1,6 +1,6 @@
 # Interface: IArmadaManagerClientAccessControl
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L15)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L15)
 
 ## Name
 
@@ -18,7 +18,7 @@ Interface for the Armada Manager Access Control client - handles role-based acce
 getAllAddressesWithContractSpecificRole(params): Promise<`0x${string}`[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:142](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L142)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:142](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L142)
 
 #### Parameters
 
@@ -58,7 +58,7 @@ Gets all addresses that currently have a specific contract-specific role
 getAllAddressesWithGlobalRole(params): Promise<`0x${string}`[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:127](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L127)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:127](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L127)
 
 #### Parameters
 
@@ -94,7 +94,7 @@ Gets all addresses that currently have a specific global protocol role
 getAllRoles(params): Promise<RolesResponse>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:256](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L256)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:256](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L256)
 
 #### Parameters
 
@@ -146,7 +146,7 @@ Gets all roles for a given chainId with pagination and filtering support
 grantContractSpecificRole(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:93](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L93)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:93](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L93)
 
 #### Parameters
 
@@ -190,7 +190,7 @@ Grants a contract-specific role to an address
 grantGlobalRole(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L60)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L60)
 
 #### Parameters
 
@@ -230,7 +230,7 @@ Grants a global protocol role to an address
 hasContractSpecificRole(params): Promise<boolean>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L43)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L43)
 
 #### Parameters
 
@@ -274,7 +274,7 @@ Checks if an address has a specific contract-specific role
 hasGlobalRole(params): Promise<boolean>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L26)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L26)
 
 #### Parameters
 
@@ -314,7 +314,7 @@ Checks if an address has a specific global protocol role
 isWhitelisted(params): Promise<boolean>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:158](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L158)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:158](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L158)
 
 #### Parameters
 
@@ -354,7 +354,7 @@ Checks if an address is whitelisted in the FleetCommander contract
 isWhitelistedAQ(params): Promise<boolean>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:209](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L209)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:209](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L209)
 
 #### Parameters
 
@@ -390,7 +390,7 @@ Checks if an address is whitelisted in the AdmiralsQuarters contract
 revokeContractSpecificRole(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:111](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L111)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:111](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L111)
 
 #### Parameters
 
@@ -434,7 +434,7 @@ Revokes a contract-specific role from an address
 revokeGlobalRole(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:76](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L76)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:76](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L76)
 
 #### Parameters
 
@@ -474,7 +474,7 @@ Revokes a global protocol role from an address
 setWhitelisted(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:175](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L175)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:175](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L175)
 
 #### Parameters
 
@@ -518,7 +518,7 @@ Sets the whitelist status for an address in the FleetCommander contract
 setWhitelistedAQ(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:221](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L221)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:221](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L221)
 
 #### Parameters
 
@@ -558,7 +558,7 @@ Sets the whitelist status for an address in the AdmiralsQuarters contract
 setWhitelistedBatch(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:193](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L193)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:193](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L193)
 
 #### Parameters
 
@@ -602,7 +602,7 @@ Sets the whitelist status for multiple addresses in the FleetCommander contract
 setWhitelistedBatchAQ(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:237](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L237)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts:237](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerClientAccessControl.ts#L237)
 
 #### Parameters
 

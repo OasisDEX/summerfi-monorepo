@@ -4,7 +4,7 @@
 function newEmptyPositionFromPool(pool): ILendingPosition;
 ```
 
-Defined in: [sdk/sdk-common/src/common/utils/PositionUtils.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/utils/PositionUtils.ts#L18)
+Defined in: [../sdk-common/src/common/utils/PositionUtils.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/utils/PositionUtils.ts#L18)
 
 Creates an empty lending position (zero collateral and debt) for a given pool.
 

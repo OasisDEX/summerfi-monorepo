@@ -1,6 +1,6 @@
 # Class: User
 
-Defined in: [sdk/sdk-common/src/user/implementation/User.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/implementation/User.ts#L19)
+Defined in: [../sdk-common/src/user/implementation/User.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L19)
 
 ## Name
 
@@ -22,7 +22,7 @@ IUser
 protected new User(params): User;
 ```
 
-Defined in: [sdk/sdk-common/src/user/implementation/User.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/implementation/User.ts#L42)
+Defined in: [../sdk-common/src/user/implementation/User.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L42)
 
 SEALED CONSTRUCTOR
 
@@ -44,7 +44,7 @@ SEALED CONSTRUCTOR
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/user/implementation/User.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/implementation/User.ts#L21)
+Defined in: [../sdk-common/src/user/implementation/User.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L21)
 
 SIGNATURE
 
@@ -60,7 +60,7 @@ SIGNATURE
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/user/implementation/User.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/implementation/User.ts#L25)
+Defined in: [../sdk-common/src/user/implementation/User.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L25)
 
 The chain the user is connected to
 
@@ -76,7 +76,7 @@ The chain the user is connected to
 readonly wallet: IWallet;
 ```
 
-Defined in: [sdk/sdk-common/src/user/implementation/User.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/implementation/User.ts#L24)
+Defined in: [../sdk-common/src/user/implementation/User.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L24)
 
 ATTRIBUTES
 
@@ -92,7 +92,7 @@ ATTRIBUTES
 equals(token): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/user/implementation/User.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/implementation/User.ts#L50)
+Defined in: [../sdk-common/src/user/implementation/User.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L50)
 
 #### Parameters
 
@@ -116,7 +116,7 @@ IUser.equals
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/user/implementation/User.ts:55](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/implementation/User.ts#L55)
+Defined in: [../sdk-common/src/user/implementation/User.ts:55](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L55)
 
 #### Returns
 
@@ -138,7 +138,7 @@ IPrintable.toString
 static createFrom(params): User;
 ```
 
-Defined in: [sdk/sdk-common/src/user/implementation/User.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/implementation/User.ts#L28)
+Defined in: [../sdk-common/src/user/implementation/User.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L28)
 
 FACTORY
 
@@ -160,7 +160,7 @@ FACTORY
 static createFromEthereum(chainId, addressValue): User;
 ```
 
-Defined in: [sdk/sdk-common/src/user/implementation/User.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/implementation/User.ts#L32)
+Defined in: [../sdk-common/src/user/implementation/User.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L32)
 
 #### Parameters
 

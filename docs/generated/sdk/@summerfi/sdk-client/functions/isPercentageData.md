@@ -4,7 +4,7 @@
 function isPercentageData(maybePercentageData, returnedErrors?): maybePercentageData is Readonly<{ value: number }>;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPercentage.ts:96](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPercentage.ts#L96)
+Defined in: [../sdk-common/src/common/interfaces/IPercentage.ts:96](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L96)
 
 ## Parameters
 

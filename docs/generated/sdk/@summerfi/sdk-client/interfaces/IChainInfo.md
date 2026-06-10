@@ -1,6 +1,6 @@
 # Interface: IChainInfo
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IChainInfo.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IChainInfo.ts#L14)
+Defined in: [../sdk-common/src/common/interfaces/IChainInfo.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IChainInfo.ts#L14)
 
 ## Name
 
@@ -22,7 +22,7 @@ Information used to identify a blockchain network
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IChainInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IChainInfo.ts#L16)
+Defined in: [../sdk-common/src/common/interfaces/IChainInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IChainInfo.ts#L16)
 
 Signature to differentiate from similar interfaces
 
@@ -34,7 +34,7 @@ Signature to differentiate from similar interfaces
 readonly chainId: ChainId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IChainInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IChainInfo.ts#L18)
+Defined in: [../sdk-common/src/common/interfaces/IChainInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IChainInfo.ts#L18)
 
 The chain ID of the network
 
@@ -52,7 +52,7 @@ IChainInfoData.chainId
 readonly name: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IChainInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IChainInfo.ts#L20)
+Defined in: [../sdk-common/src/common/interfaces/IChainInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IChainInfo.ts#L20)
 
 The name of the network
 
@@ -70,7 +70,7 @@ IChainInfoData.name
 equals(chainInfo): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IChainInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IChainInfo.ts#L30)
+Defined in: [../sdk-common/src/common/interfaces/IChainInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IChainInfo.ts#L30)
 
 #### Parameters
 
@@ -104,7 +104,7 @@ Checks if two chain infos are equal
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [../sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

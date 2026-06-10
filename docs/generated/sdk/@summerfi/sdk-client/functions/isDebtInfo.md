@@ -4,7 +4,7 @@
 function isDebtInfo(maybeDebtInfo): maybeDebtInfo is Readonly<{ debtAvailable: ITokenAmount; debtCeiling: ITokenAmount; dustLimit: ITokenAmount; interestRate: IPercentage; originationFee: IPercentage; price: IPrice; priceUSD: IPrice; token: ITokenStanalone; totalBorrowed: ITokenAmount }>;
 ```
 
-Defined in: [sdk/sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts#L67)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L67)
 
 ## Parameters
 

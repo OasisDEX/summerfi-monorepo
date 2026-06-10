@@ -1,6 +1,6 @@
 # Interface: EnrichedOrder
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:1028
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:1028](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L1028)
 
 An order with the total fee added.
 
@@ -16,7 +16,7 @@ An order with the total fee added.
 appData: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:475
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:475](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L475)
 
 This field comes in two forms for backward compatibility. The hash form will eventually stop being accepted.
 
@@ -34,7 +34,7 @@ Order.appData
 optional appDataHash: string | null;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:480
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:480](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L480)
 
 May be set for debugging purposes. If set, this field is compared to what the backend internally calculates as the app data hash based on the contents of `appData`. If the hash does not match, an error is returned. If this field is set, then `appData` **MUST** be a string encoding of a JSON object.
 
@@ -52,7 +52,7 @@ Order.appDataHash
 optional availableBalance: string | null;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:511
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:511](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L511)
 
 Unused field that is currently always set to `null` and will be removed in the future.
 
@@ -72,7 +72,7 @@ Order.availableBalance
 buyAmount: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:434
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:434](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L434)
 
 see `OrderParameters::buyAmount`
 
@@ -90,7 +90,7 @@ Order.buyAmount
 buyToken: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:422
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:422](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L422)
 
 see `OrderParameters::buyToken`
 
@@ -108,7 +108,7 @@ Order.buyToken
 optional buyTokenBalance: BuyTokenDestination;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:458
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:458](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L458)
 
 see `OrderParameters::buyTokenBalance`
 
@@ -126,7 +126,7 @@ Order.buyTokenBalance
 class: OrderClass;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:503
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:503](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L503)
 
 #### Inherited from
 
@@ -142,7 +142,7 @@ Order.class
 creationDate: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:502
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:502](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L502)
 
 Creation time of the order. Encoded as ISO 8601 UTC.
 
@@ -160,7 +160,7 @@ Order.creationDate
 optional ethflowData: EthflowData;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:552
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:552](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L552)
 
 #### Inherited from
 
@@ -176,7 +176,7 @@ Order.ethflowData
 executedBuyAmount: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:526
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:526](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L526)
 
 The total amount of `buyToken` that has been executed for this order.
 
@@ -194,7 +194,7 @@ Order.executedBuyAmount
 optional executedFee: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:569
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:569](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L569)
 
 Total fee charged for execution of the order. Contains network fee and protocol fees. This takes into account the historic static fee signed by the user and the new dynamic fee computed by solvers.
 
@@ -212,7 +212,7 @@ Order.executedFee
 executedFeeAmount: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:531
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:531](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L531)
 
 [DEPRECATED] The total amount of the user signed `fee` that have been executed for this order. This value is only non-negative for very old orders.
 
@@ -230,7 +230,7 @@ Order.executedFeeAmount
 optional executedFeeToken: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:573
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:573](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L573)
 
 Token the executed fee was captured in.
 
@@ -248,7 +248,7 @@ Order.executedFeeToken
 executedSellAmount: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:516
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:516](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L516)
 
 The total amount of `sellToken` that has been transferred from the user for this order so far.
 
@@ -266,7 +266,7 @@ Order.executedSellAmount
 executedSellAmountBeforeFees: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:521
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:521](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L521)
 
 The total amount of `sellToken` that has been transferred from the user for this order so far minus tokens that were transferred as part of the signed `fee` of the order. This is only relevant for old orders because now all orders have a signed `fee` of 0 and solvers compute an appropriate fee dynamically at the time of the order execution.
 
@@ -284,7 +284,7 @@ Order.executedSellAmountBeforeFees
 feeAmount: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:442
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:442](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L442)
 
 see `OrderParameters::feeAmount`
 
@@ -302,7 +302,7 @@ Order.feeAmount
 optional from: string | null;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:465
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:465](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L465)
 
 If set, the backend enforces that this address matches what is decoded as the *signer* of the signature. This helps catch errors with invalid signature encodings as the backend might otherwise silently work with an unexpected address that for example does not have any balance.
 
@@ -320,7 +320,7 @@ Order.from
 optional fullAppData: string | null;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:578
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:578](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L578)
 
 Full `appData`, which the contract-level `appData` is a hash of. See `OrderCreation` for more information.
 
@@ -338,7 +338,7 @@ Order.fullAppData
 invalidated: boolean;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:535
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:535](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L535)
 
 Has this order been invalidated?
 
@@ -356,7 +356,7 @@ Order.invalidated
 optional isLiquidityOrder: boolean;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:551
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:551](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L551)
 
 Liquidity orders are functionally the same as normal smart contract
 orders but are not placed with the intent of actively getting
@@ -382,7 +382,7 @@ Order.isLiquidityOrder
 kind: OrderKind;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:446
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:446](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L446)
 
 see `OrderParameters::kind`
 
@@ -400,7 +400,7 @@ Order.kind
 optional onchainOrderData: OnchainOrderData;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:564
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:564](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L564)
 
 There is some data only available for orders that are placed on-chain. This data can be found in this object.
 
@@ -418,7 +418,7 @@ Order.onchainOrderData
 optional onchainUser: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:559
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:559](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L559)
 
 This represents the actual trader of an on-chain order.
 ### ethflow orders
@@ -438,7 +438,7 @@ Order.onchainUser
 owner: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:504
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:504](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L504)
 
 #### Inherited from
 
@@ -454,7 +454,7 @@ Order.owner
 partiallyFillable: boolean;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:450
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:450](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L450)
 
 see `OrderParameters::partiallyFillable`
 
@@ -472,7 +472,7 @@ Order.partiallyFillable
 optional quoteId: number | null;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:470
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:470](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L470)
 
 Orders can optionally include a quote ID. This way the order can be linked to a quote and enable providing more metadata when analysing order slippage.
 
@@ -490,7 +490,7 @@ Order.quoteId
 optional receiver: string | null;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:426
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:426](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L426)
 
 see `OrderParameters::receiver`
 
@@ -508,7 +508,7 @@ Order.receiver
 sellAmount: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:430
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:430](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L430)
 
 see `OrderParameters::sellAmount`
 
@@ -526,7 +526,7 @@ Order.sellAmount
 sellToken: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:418
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:418](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L418)
 
 see `OrderParameters::sellToken`
 
@@ -544,7 +544,7 @@ Order.sellToken
 optional sellTokenBalance: SellTokenSource;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:454
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:454](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L454)
 
 see `OrderParameters::sellTokenBalance`
 
@@ -562,7 +562,7 @@ Order.sellTokenBalance
 signature: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:460
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:460](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L460)
 
 #### Inherited from
 
@@ -578,7 +578,7 @@ Order.signature
 signingScheme: SigningScheme;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:459
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:459](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L459)
 
 #### Inherited from
 
@@ -594,7 +594,7 @@ Order.signingScheme
 status: OrderStatus;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:539
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:539](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L539)
 
 Order status.
 
@@ -612,7 +612,7 @@ Order.status
 totalFee: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:1029
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:1029](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L1029)
 
 ***
 
@@ -622,7 +622,7 @@ Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/
 uid: string;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:505
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:505](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L505)
 
 #### Inherited from
 
@@ -638,7 +638,7 @@ Order.uid
 validTo: number;
 ```
 
-Defined in: node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:438
+Defined in: [../../node\_modules/.pnpm/@cowprotocol+sdk-order-book@2.1.0/node\_modules/@cowprotocol/sdk-order-book/dist/index.d.ts:438](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/npm/@cowprotocol+sdk-order-book@2.1.0/node_modules/@cowprotocol/sdk-order-book/dist/index.d.ts#L438)
 
 see `OrderParameters::validTo`
 

@@ -4,7 +4,7 @@
 function isTokenAmount(maybeTokenAmount, returnedErrors?): maybeTokenAmount is ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/ITokenAmount.ts:146](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/ITokenAmount.ts#L146)
+Defined in: [src/common/interfaces/ITokenAmount.ts:146](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L146)
 
 ## Parameters
 

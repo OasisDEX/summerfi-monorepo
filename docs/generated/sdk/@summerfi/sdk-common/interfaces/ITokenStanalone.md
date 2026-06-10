@@ -1,6 +1,6 @@
 # Interface: ITokenStanalone
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IToken.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IToken.ts#L15)
+Defined in: [src/common/interfaces/IToken.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L15)
 
 ## Name
 
@@ -22,7 +22,7 @@ Represents an token in a Chain, typically used to represent ERC-20 tokens
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IToken.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IToken.ts#L17)
+Defined in: [src/common/interfaces/IToken.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L17)
 
 Signature to differentiate from similar interfaces
 
@@ -34,7 +34,7 @@ Signature to differentiate from similar interfaces
 readonly address: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IToken.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IToken.ts#L21)
+Defined in: [src/common/interfaces/IToken.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L21)
 
 Token address
 
@@ -52,7 +52,7 @@ ITokenData.address
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IToken.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IToken.ts#L19)
+Defined in: [src/common/interfaces/IToken.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L19)
 
 Chain where the token is deployed
 
@@ -70,7 +70,7 @@ ITokenData.chainInfo
 readonly decimals: number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IToken.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IToken.ts#L27)
+Defined in: [src/common/interfaces/IToken.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L27)
 
 Number of decimals for the token
 
@@ -88,7 +88,7 @@ ITokenData.decimals
 readonly name: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IToken.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IToken.ts#L25)
+Defined in: [src/common/interfaces/IToken.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L25)
 
 Full token name
 
@@ -106,7 +106,7 @@ ITokenData.name
 readonly symbol: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IToken.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IToken.ts#L23)
+Defined in: [src/common/interfaces/IToken.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L23)
 
 Token symbol, usually a short representation of name and used in tickers
 
@@ -124,7 +124,7 @@ ITokenData.symbol
 equals(token): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IToken.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IToken.ts#L37)
+Defined in: [src/common/interfaces/IToken.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L37)
 
 #### Parameters
 
@@ -158,7 +158,7 @@ Checks if two tokens are equal
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

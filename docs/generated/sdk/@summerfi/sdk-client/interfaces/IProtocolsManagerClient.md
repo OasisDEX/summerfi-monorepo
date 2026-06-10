@@ -1,6 +1,6 @@
 # Interface: IProtocolsManagerClient
 
-Defined in: [sdk/sdk-client/src/interfaces/IProtocolsManagerClient.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IProtocolsManagerClient.ts#L8)
+Defined in: [src/interfaces/IProtocolsManagerClient.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IProtocolsManagerClient.ts#L8)
 
 IProtocolsManagerClient
 
@@ -20,7 +20,7 @@ IProtocolsManager
 getLendingPool(params): Promise<Maybe<ILendingPool>>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IProtocolsManagerClient.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IProtocolsManagerClient.ts#L15)
+Defined in: [src/interfaces/IProtocolsManagerClient.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IProtocolsManagerClient.ts#L15)
 
 #### Parameters
 
@@ -54,7 +54,7 @@ Get the lending pool from the protocol
 getLendingPoolInfo(params): Promise<Maybe<ILendingPoolInfo>>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IProtocolsManagerClient.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IProtocolsManagerClient.ts#L23)
+Defined in: [src/interfaces/IProtocolsManagerClient.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IProtocolsManagerClient.ts#L23)
 
 #### Parameters
 

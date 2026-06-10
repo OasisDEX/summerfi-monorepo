@@ -4,7 +4,7 @@
 function isMorphoLendingPoolId(maybeLendingPoolId): maybeLendingPoolId is IMorphoLendingPoolId;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoLendingPoolId.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoLendingPoolId.ts#L46)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoLendingPoolId.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/interfaces/IMorphoLendingPoolId.ts#L46)
 
 ## Parameters
 

@@ -1,6 +1,6 @@
 # Class: ArmadaProtocol
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaProtocol.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ArmadaProtocol.ts#L16)
+Defined in: [../sdk-common/src/common/implementation/ArmadaProtocol.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ArmadaProtocol.ts#L16)
 
 ArmadaProtocol
 
@@ -24,7 +24,7 @@ IArmadaProtocol
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ArmadaProtocol.ts#L18)
+Defined in: [../sdk-common/src/common/implementation/ArmadaProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ArmadaProtocol.ts#L18)
 
 SIGNATURE
 
@@ -44,7 +44,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Protocol.ts#L18)
+Defined in: [../sdk-common/src/common/implementation/Protocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L18)
 
 SIGNATURE
 
@@ -68,7 +68,7 @@ Protocol.[___signature__]
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Protocol.ts#L22)
+Defined in: [../sdk-common/src/common/implementation/Protocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L22)
 
 The chain information
 
@@ -88,7 +88,7 @@ The chain information
 readonly name: Armada = ProtocolName.Armada;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaProtocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ArmadaProtocol.ts#L21)
+Defined in: [../sdk-common/src/common/implementation/ArmadaProtocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ArmadaProtocol.ts#L21)
 
 ATTRIBUTES
 
@@ -108,7 +108,7 @@ ATTRIBUTES
 equals(protocol): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Protocol.ts#L32)
+Defined in: [../sdk-common/src/common/implementation/Protocol.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L32)
 
 #### Parameters
 
@@ -140,7 +140,7 @@ IProtocol.equals
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Protocol.ts#L37)
+Defined in: [../sdk-common/src/common/implementation/Protocol.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L37)
 
 #### Returns
 
@@ -162,7 +162,7 @@ IPrintable.toString
 static createFrom(params): ArmadaProtocol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaProtocol.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ArmadaProtocol.ts#L24)
+Defined in: [../sdk-common/src/common/implementation/ArmadaProtocol.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ArmadaProtocol.ts#L24)
 
 FACTORY
 

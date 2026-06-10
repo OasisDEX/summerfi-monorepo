@@ -4,7 +4,7 @@
 function isWallet(maybeWallet): maybeWallet is IWallet;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IWallet.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IWallet.ts#L50)
+Defined in: [src/common/interfaces/IWallet.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L50)
 
 ## Parameters
 

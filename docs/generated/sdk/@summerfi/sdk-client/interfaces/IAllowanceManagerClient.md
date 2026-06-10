@@ -1,6 +1,6 @@
 # Interface: IAllowanceManagerClient
 
-Defined in: [sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts#L17)
+Defined in: [src/interfaces/IAllowanceManagerClient.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IAllowanceManagerClient.ts#L17)
 
 ## Name
 
@@ -21,7 +21,7 @@ getApproval(params): Promise<
 | undefined>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts#L23)
+Defined in: [src/interfaces/IAllowanceManagerClient.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IAllowanceManagerClient.ts#L23)
 
 #### Parameters
 
@@ -66,7 +66,7 @@ if the owner already has a sufficient allowance (owner must be provided for that
 getPermit2AuthorizationTx(params): Promise<[Permit2AuthorizationTransactionInfo]>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts#L45)
+Defined in: [src/interfaces/IAllowanceManagerClient.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IAllowanceManagerClient.ts#L45)
 
 #### Parameters
 
@@ -103,7 +103,7 @@ getPermit2Data(params): Promise<{
 }>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts:63](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts#L63)
+Defined in: [src/interfaces/IAllowanceManagerClient.ts:63](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IAllowanceManagerClient.ts#L63)
 
 #### Parameters
 
@@ -152,7 +152,7 @@ Builds the EIP-712 typed data for a PermitTransferFrom operation, ready to be si
 getPermit2RevokeTx(params): Promise<[Permit2RevokeTransactionInfo]>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts#L54)
+Defined in: [src/interfaces/IAllowanceManagerClient.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IAllowanceManagerClient.ts#L54)
 
 #### Parameters
 
@@ -186,7 +186,7 @@ Creates a transaction to revoke the Permit2 contract authorization for a specifi
 isPermit2AuthorizationNeeded(params): Promise<boolean>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IAllowanceManagerClient.ts#L34)
+Defined in: [src/interfaces/IAllowanceManagerClient.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IAllowanceManagerClient.ts#L34)
 
 #### Parameters
 

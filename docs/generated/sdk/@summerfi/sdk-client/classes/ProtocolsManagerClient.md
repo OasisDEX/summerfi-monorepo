@@ -1,6 +1,6 @@
 # Class: ProtocolsManagerClient
 
-Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L11)
+Defined in: [src/implementation/ProtocolsManagerClient.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ProtocolsManagerClient.ts#L11)
 
 ProtocolsManagerClient
 
@@ -24,7 +24,7 @@ IProtocolsManagerClient
 new ProtocolsManagerClient(params): ProtocolsManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L14)
+Defined in: [src/implementation/ProtocolsManagerClient.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ProtocolsManagerClient.ts#L14)
 
 #### Parameters
 
@@ -58,7 +58,7 @@ IRPCClient.constructor
 get protected rpcClient(): TRPCClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
+Defined in: [src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IRPCClient.ts#L10)
 
 ##### Returns
 
@@ -78,7 +78,7 @@ IRPCClient.rpcClient
 getLendingPool(params): Promise<Maybe<ILendingPool>>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L27)
+Defined in: [src/implementation/ProtocolsManagerClient.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ProtocolsManagerClient.ts#L27)
 
 Fetches a lending pool by its identifier.
 
@@ -112,7 +112,7 @@ A promise resolving to the lending pool, or a nullish [Maybe](../type-aliases/Ma
 getLendingPoolInfo(params): Promise<Maybe<ILendingPoolInfo>>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/ProtocolsManagerClient.ts#L38)
+Defined in: [src/implementation/ProtocolsManagerClient.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ProtocolsManagerClient.ts#L38)
 
 Fetches extended information (rates, caps, etc.) for a lending pool by its identifier.
 

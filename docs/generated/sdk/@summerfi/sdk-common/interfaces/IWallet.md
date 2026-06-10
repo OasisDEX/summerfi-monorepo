@@ -1,6 +1,6 @@
 # Interface: IWallet
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IWallet.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IWallet.ts#L16)
+Defined in: [src/common/interfaces/IWallet.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L16)
 
 ## Name
 
@@ -25,7 +25,7 @@ wallet type
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IWallet.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IWallet.ts#L18)
+Defined in: [src/common/interfaces/IWallet.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L18)
 
 Signature to differentiate from similar interfaces
 
@@ -37,7 +37,7 @@ Signature to differentiate from similar interfaces
 readonly address: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IWallet.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IWallet.ts#L20)
+Defined in: [src/common/interfaces/IWallet.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L20)
 
 Address of the wallet, valid for the different chains
 
@@ -55,7 +55,7 @@ IWalletData.address
 equals(token): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IWallet.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IWallet.ts#L30)
+Defined in: [src/common/interfaces/IWallet.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L30)
 
 #### Parameters
 

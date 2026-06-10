@@ -12,7 +12,7 @@ function multiplyTokenAmountByPrice(tokenAmount, price):
 }>;
 ```
 
-Defined in: [sdk/sdk-common/src/common/utils/PriceUtils.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/utils/PriceUtils.ts#L19)
+Defined in: [src/common/utils/PriceUtils.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/utils/PriceUtils.ts#L19)
 
 Multiply a token amount by a price
 

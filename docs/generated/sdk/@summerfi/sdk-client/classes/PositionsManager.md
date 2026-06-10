@@ -1,6 +1,6 @@
 # Class: PositionsManager
 
-Defined in: [sdk/sdk-common/src/orders/common/implementation/PositionsManager.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/implementation/PositionsManager.ts#L10)
+Defined in: [../sdk-common/src/orders/common/implementation/PositionsManager.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L10)
 
 PositionsManager
 
@@ -21,7 +21,7 @@ IPositionsManager
 address: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/implementation/PositionsManager.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/implementation/PositionsManager.ts#L11)
+Defined in: [../sdk-common/src/orders/common/implementation/PositionsManager.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L11)
 
 Address of the Positions Manager
 
@@ -37,7 +37,7 @@ Address of the Positions Manager
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/implementation/PositionsManager.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/implementation/PositionsManager.ts#L23)
+Defined in: [../sdk-common/src/orders/common/implementation/PositionsManager.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L23)
 
 Returns a string representation of an object.
 
@@ -57,7 +57,7 @@ Returns a string representation of an object.
 static createFrom(params): PositionsManager;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/implementation/PositionsManager.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/implementation/PositionsManager.ts#L14)
+Defined in: [../sdk-common/src/orders/common/implementation/PositionsManager.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L14)
 
 Factory method
 

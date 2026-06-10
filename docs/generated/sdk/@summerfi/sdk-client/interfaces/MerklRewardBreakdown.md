@@ -1,6 +1,6 @@
 # Interface: MerklRewardBreakdown
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:156](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L156)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:156](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L156)
 
 ## Properties
 
@@ -10,7 +10,7 @@ Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:156](http
 amount: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:157](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L157)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:157](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L157)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:157](http
 claimed: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:158](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L158)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:158](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L158)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:158](http
 pending: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:159](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L159)
+Defined in: [../armada-protocol-common/src/common/types/MerklTypes.ts:159](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/types/MerklTypes.ts#L159)
