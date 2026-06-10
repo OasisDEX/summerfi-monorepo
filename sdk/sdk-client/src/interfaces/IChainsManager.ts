@@ -8,14 +8,6 @@ import { Chain } from '../implementation/Chain'
  */
 export interface IChainsManagerClient {
   /**
-   * @method getSupportedChains
-   * @description Retrieves the list of supported chains
-   *
-   * @returns The list of supported chains
-   */
-  getSupportedChains(): Promise<ChainInfo[]>
-
-  /**
    * @method getChain
    * @description Retrieves a chain by its chain info
    *

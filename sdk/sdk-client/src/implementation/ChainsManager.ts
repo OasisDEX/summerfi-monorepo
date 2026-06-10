@@ -21,12 +21,6 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
     super(params)
   }
 
-  public async getSupportedChains(): Promise<ChainInfo[]> {
-    return Object.values(ChainIds).map((chainId) => {
-      return getChainInfoByChainId(chainId)
-    })
-  }
-
   public async getChain(params: { chainInfo: IChainInfoData }): Promise<Chain> {
     const chainInfo = ChainInfo.createFrom(params.chainInfo)
 
