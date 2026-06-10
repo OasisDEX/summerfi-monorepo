@@ -236,3 +236,12 @@ query GetRwaReceipts($account: String!, $vault: String!) {
     }
   }
 }
+query GetRwaVaultRounds($vault: String!) {
+  rounds(first: 1000, where: { vault: $vault }) {
+    roundId
+    state
+    receiptSupply
+    exchangeRateBase
+    exchangeRateQuote
+  }
+}

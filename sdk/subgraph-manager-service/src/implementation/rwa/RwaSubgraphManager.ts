@@ -40,6 +40,10 @@ export class RwaSubgraphManager extends ArmadaSubgraphManager implements IRwaSub
     return this.getRwaClient(chainId).GetRwaReceipts({ account, vault })
   }
 
+  getVaultRounds({ chainId, vault }: Parameters<IRwaSubgraphManager['getVaultRounds']>[0]) {
+    return this.getRwaClient(chainId).GetRwaVaultRounds({ vault })
+  }
+
   async getInstitutionById({
     chainId,
     id,

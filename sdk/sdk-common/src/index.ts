@@ -200,6 +200,8 @@ export {
 } from './common/interfaces/IRwaVaultInfo'
 export type { IRwaVaultInfo, IRwaVaultInfoData } from './common/interfaces/IRwaVaultInfo'
 export type { IResolvedRoundsVault } from './common/interfaces/IResolvedRoundsVault'
+export type { IRwaUserVaultExposure } from './common/interfaces/IRwaUserVaultExposure'
+export type { IRwaVaultMarketValue } from './common/interfaces/IRwaVaultMarketValue'
 export {
   ArmadaPositionDataSchema,
   __signature__ as __iarmadaposition__,

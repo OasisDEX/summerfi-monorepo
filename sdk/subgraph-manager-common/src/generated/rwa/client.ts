@@ -12851,6 +12851,13 @@ export type GetRwaReceiptsQueryVariables = Exact<{
 
 export type GetRwaReceiptsQuery = { __typename?: 'Query', receipts: Array<{ __typename?: 'Receipt', id: string, balance: bigint, round: { __typename?: 'Round', roundId: bigint, state: RoundState }, vault: { __typename?: 'RoundsVault', id: string } }> };
 
+export type GetRwaVaultRoundsQueryVariables = Exact<{
+  vault: Scalars['String']['input'];
+}>;
+
+
+export type GetRwaVaultRoundsQuery = { __typename?: 'Query', rounds: Array<{ __typename?: 'Round', roundId: bigint, state: RoundState, receiptSupply: bigint, exchangeRateBase?: bigint | null, exchangeRateQuote?: bigint | null }> };
+
 
 export const GetGlobalRebalancesDocument = gql`
     query GetGlobalRebalances {
@@ -13613,6 +13620,17 @@ export const GetRwaReceiptsDocument = gql`
   }
 }
     `;
+export const GetRwaVaultRoundsDocument = gql`
+    query GetRwaVaultRounds($vault: String!) {
+  rounds(first: 1000, where: {vault: $vault}) {
+    roundId
+    state
+    receiptSupply
+    exchangeRateBase
+    exchangeRateQuote
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -13668,6 +13686,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetRwaReceipts(variables: GetRwaReceiptsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRwaReceiptsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetRwaReceiptsQuery>({ document: GetRwaReceiptsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRwaReceipts', 'query', variables);
+    },
+    GetRwaVaultRounds(variables: GetRwaVaultRoundsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRwaVaultRoundsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRwaVaultRoundsQuery>({ document: GetRwaVaultRoundsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRwaVaultRounds', 'query', variables);
     }
   };
 }

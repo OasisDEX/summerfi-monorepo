@@ -3,6 +3,7 @@ import type {
   GetVaultQuery,
   GetVaultsQuery,
   GetRwaReceiptsQuery,
+  GetRwaVaultRoundsQuery,
   GetRwaInstitutionByIdQuery,
 } from '../generated/rwa/client'
 import type { IArmadaSubgraphManager } from './IArmadaSubgraphManager'
@@ -58,6 +59,22 @@ export interface IRwaSubgraphManager extends IArmadaSubgraphManager {
     account: string
     vault: string
   }): Promise<GetRwaReceiptsQuery>
+
+  /**
+   * @name getVaultRounds
+   * @description Get all rounds (vault-wide, across every account) for a given RoundsVault on a
+   *              given chain, with each round's live receipt supply and settled exchange-rate
+   *              snapshot. Used to compute vault-wide pending deposits / claimable withdrawals for
+   *              the RWA vault market value (TVL); per-account `getReceipts` is not sufficient.
+   *
+   * @param chainId target chain
+   * @param vault the RoundsVault contract address (lowercased hex string)
+   *
+   * @returns GetRwaVaultRoundsQuery
+   *
+   * @throws Error
+   */
+  getVaultRounds(params: { chainId: ChainId; vault: string }): Promise<GetRwaVaultRoundsQuery>
 
   /**
    * @name getInstitutionById

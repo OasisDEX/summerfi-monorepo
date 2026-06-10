@@ -159,6 +159,8 @@ import { getCurrentRound as getRwaCurrentRound } from './armada-protocol-handler
 import { getRoundState as getRwaRoundState } from './armada-protocol-handlers/rwa/getRoundState'
 import { getExchangeRate as getRwaExchangeRate } from './armada-protocol-handlers/rwa/getExchangeRate'
 import { getReceiptBalances as getRwaReceiptBalances } from './armada-protocol-handlers/rwa/getReceiptBalances'
+import { getUserVaultExposure as getRwaUserVaultExposure } from './armada-protocol-handlers/rwa/getUserVaultExposure'
+import { getVaultMarketValue as getRwaVaultMarketValue } from './armada-protocol-handlers/rwa/getVaultMarketValue'
 import { getSetMinimumPositionSizeTx as getRwaSetMinimumPositionSizeTx } from './armada-protocol-handlers/rwa/getSetMinimumPositionSizeTx'
 import { getSetWhitelistedTx as getRwaSetWhitelistedTx } from './armada-protocol-handlers/rwa/getSetWhitelistedTx'
 import { getSetWhitelistedBatchTx as getRwaSetWhitelistedBatchTx } from './armada-protocol-handlers/rwa/getSetWhitelistedBatchTx'
@@ -360,6 +362,8 @@ export const sdkAppRouter = router({
     getRoundState: getRwaRoundState,
     getExchangeRate: getRwaExchangeRate,
     getReceiptBalances: getRwaReceiptBalances,
+    getUserVaultExposure: getRwaUserVaultExposure,
+    getVaultMarketValue: getRwaVaultMarketValue,
     getSetMinimumPositionSizeTx: getRwaSetMinimumPositionSizeTx,
     getSetWhitelistedTx: getRwaSetWhitelistedTx,
     getSetWhitelistedBatchTx: getRwaSetWhitelistedBatchTx,

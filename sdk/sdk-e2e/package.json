@@ -81,6 +81,8 @@
     "e2e:rwa:getRoundState": "jest --roots e2e -- ./e2e/rwa.getRoundState.test.ts",
     "e2e:rwa:getExchangeRate": "jest --roots e2e -- ./e2e/rwa.getExchangeRate.test.ts",
     "e2e:rwa:getReceiptBalances": "jest --roots e2e -- ./e2e/rwa.getReceiptBalances.test.ts",
+    "e2e:rwa:getUserVaultExposure": "jest --roots e2e -- ./e2e/rwa.getUserVaultExposure.test.ts",
+    "e2e:rwa:getVaultMarketValue": "jest --roots e2e -- ./e2e/rwa.getVaultMarketValue.test.ts",
     "e2e:rwa:getSetMinimumPositionSizeTx": "jest --roots e2e -- ./e2e/rwa.getSetMinimumPositionSizeTx.test.ts",
     "e2e:rwa:getDepositTx": "jest --roots e2e -- ./e2e/rwa.getDepositTx.test.ts",
     "e2e:rwa:getClaimSharesTx": "jest --roots e2e -- ./e2e/rwa.getClaimSharesTx.test.ts",

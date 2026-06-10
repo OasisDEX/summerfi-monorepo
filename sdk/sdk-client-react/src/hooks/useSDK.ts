@@ -112,6 +112,8 @@ import { getRwaCurrentRoundHandler } from '../handlers/getRwaCurrentRoundHandler
 import { getRwaRoundStateHandler } from '../handlers/getRwaRoundStateHandler'
 import { getRwaExchangeRateHandler } from '../handlers/getRwaExchangeRateHandler'
 import { getRwaReceiptBalancesHandler } from '../handlers/getRwaReceiptBalancesHandler'
+import { getRwaUserVaultExposureHandler } from '../handlers/getRwaUserVaultExposureHandler'
+import { getRwaVaultMarketValueHandler } from '../handlers/getRwaVaultMarketValueHandler'
 import { getRwaSetMinimumPositionSizeTxHandler } from '../handlers/getRwaSetMinimumPositionSizeTxHandler'
 import { getRwaSetWhitelistedTxHandler } from '../handlers/getRwaSetWhitelistedTxHandler'
 import { getRwaSetWhitelistedBatchTxHandler } from '../handlers/getRwaSetWhitelistedBatchTxHandler'
@@ -531,6 +533,8 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
   const getRwaRoundState = useMemo(() => getRwaRoundStateHandler(sdk), [sdk])
   const getRwaExchangeRate = useMemo(() => getRwaExchangeRateHandler(sdk), [sdk])
   const getRwaReceiptBalances = useMemo(() => getRwaReceiptBalancesHandler(sdk), [sdk])
+  const getRwaUserVaultExposure = useMemo(() => getRwaUserVaultExposureHandler(sdk), [sdk])
+  const getRwaVaultMarketValue = useMemo(() => getRwaVaultMarketValueHandler(sdk), [sdk])
   const getRwaSetMinimumPositionSizeTx = useMemo(
     () => getRwaSetMinimumPositionSizeTxHandler(sdk),
     [sdk],
@@ -568,6 +572,8 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       getRwaRoundState,
       getRwaExchangeRate,
       getRwaReceiptBalances,
+      getRwaUserVaultExposure,
+      getRwaVaultMarketValue,
       getRwaSetMinimumPositionSizeTx,
       getRwaSetWhitelistedTx,
       getRwaSetWhitelistedBatchTx,
@@ -599,6 +605,8 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       getRwaRoundState,
       getRwaExchangeRate,
       getRwaReceiptBalances,
+      getRwaUserVaultExposure,
+      getRwaVaultMarketValue,
       getRwaSetMinimumPositionSizeTx,
       getRwaSetWhitelistedTx,
       getRwaSetWhitelistedBatchTx,
