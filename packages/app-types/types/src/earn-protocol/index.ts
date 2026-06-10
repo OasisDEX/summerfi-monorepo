@@ -74,6 +74,9 @@ type VaultCustomFields = {
   customFields?: EarnAppFleetCustomConfigType
   isDaoManaged?: boolean
   isRwaVault?: boolean
+  // day-over-day change of pricePerShare (NAV) as a decimal fraction (e.g. 0.0034 = +0.34%)
+  // computed server-side for RWA vaults from the vault's daily snapshots; null when unavailable
+  navPriceChange24h?: number | null
 }
 
 export type SDKVaultsListType = (GetVaultsQuery['vaults'][number] & VaultCustomFields)[]

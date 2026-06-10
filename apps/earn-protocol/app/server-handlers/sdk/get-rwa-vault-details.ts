@@ -4,6 +4,7 @@ import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-com
 
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendInstiSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { getNavPriceChange24h } from '@/helpers/get-nav-price-change-24h'
 
 export async function getRwaVaultDetails({
   vaultAddress,
@@ -31,7 +32,15 @@ export async function getRwaVaultDetails({
       vaultId: poolId,
     })
 
-    return vault as SDKVaultType | undefined
+    if (!vault) {
+      return undefined
+    }
+
+    // day-over-day NAV (pricePerShare) change, computed here where the raw RWA query shape still
+    // carries the typed `dailySnapshots`. Survives the later `decorateWithFleetConfig` spread.
+    const navPriceChange24h = getNavPriceChange24h(vault)
+
+    return { ...vault, navPriceChange24h } as SDKVaultType
   } catch (error) {
     return serverOnlyErrorHandler(
       'getRwaVaultDetails',

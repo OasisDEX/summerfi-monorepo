@@ -2,7 +2,7 @@
 
 import { type FC, type ReactNode } from 'react'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { formatCryptoBalance, ten } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -101,7 +101,18 @@ export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
                 inputTokenSymbol={vault.inputToken.symbol}
               />
             }
-            subValue="n/a"
+            subValue={
+              vault.navPriceChange24h != null
+                ? `${formatDecimalAsPercent(vault.navPriceChange24h, { plus: true, precision: 4 })} (24h)`
+                : 'n/a'
+            }
+            subValueType={
+              vault.navPriceChange24h == null || vault.navPriceChange24h === 0
+                ? 'neutral'
+                : vault.navPriceChange24h > 0
+                  ? 'positive'
+                  : 'negative'
+            }
             subValueSize="small"
           />
         </Box>
