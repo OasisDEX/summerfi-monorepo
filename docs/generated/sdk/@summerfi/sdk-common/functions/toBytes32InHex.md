@@ -4,7 +4,7 @@
 function toBytes32InHex(value): `0x${string}`;
 ```
 
-Defined in: [sdk/sdk-common/src/common/utils/toBytes32InHex.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/utils/toBytes32InHex.ts#L10)
+Defined in: [sdk/sdk-common/src/common/utils/toBytes32InHex.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/utils/toBytes32InHex.ts#L10)
 
 Encodes a string as a right-padded 32-byte hex value (`bytes32`).
 

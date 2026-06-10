@@ -1,6 +1,6 @@
 # Class: Chain
 
-Defined in: [sdk/sdk-client/src/implementation/Chain.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/Chain.ts#L12)
+Defined in: [sdk/sdk-client/src/implementation/Chain.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/Chain.ts#L12)
 
 ## Name
 
@@ -22,7 +22,7 @@ Implementation of the IChain interface for the SDK Client
 new Chain(params): Chain;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/Chain.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/Chain.ts#L17)
+Defined in: [sdk/sdk-client/src/implementation/Chain.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/Chain.ts#L17)
 
 #### Parameters
 
@@ -52,7 +52,7 @@ Defined in: [sdk/sdk-client/src/implementation/Chain.ts:17](https://github.com/O
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/Chain.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/Chain.ts#L13)
+Defined in: [sdk/sdk-client/src/implementation/Chain.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/Chain.ts#L13)
 
 The information of the chain
 
@@ -68,7 +68,7 @@ The information of the chain
 readonly protocols: IProtocolsManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/Chain.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/Chain.ts#L15)
+Defined in: [sdk/sdk-client/src/implementation/Chain.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/Chain.ts#L15)
 
 The protocols manager client for the chain, allows to retrieve protocols on the chain
 
@@ -84,7 +84,7 @@ The protocols manager client for the chain, allows to retrieve protocols on the 
 readonly tokens: ITokensManagerClient;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/Chain.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/Chain.ts#L14)
+Defined in: [sdk/sdk-client/src/implementation/Chain.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/Chain.ts#L14)
 
 The tokens manager client for the chain, allows to retrieve tokens on the chain
 
@@ -100,7 +100,7 @@ The tokens manager client for the chain, allows to retrieve tokens on the chain
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/Chain.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/Chain.ts#L27)
+Defined in: [sdk/sdk-client/src/implementation/Chain.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/Chain.ts#L27)
 
 Returns a string representation of an object.
 

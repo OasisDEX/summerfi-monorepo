@@ -1,6 +1,6 @@
 # Interface: IChainsManagerClient
 
-Defined in: [sdk/sdk-client/src/interfaces/IChainsManager.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IChainsManager.ts#L9)
+Defined in: [sdk/sdk-client/src/interfaces/IChainsManager.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IChainsManager.ts#L9)
 
 IChainsManagerClient
 
@@ -17,7 +17,7 @@ Interface for the ChainsManager client implementation. Allows to retrieve inform
 getChain(params): Promise<Chain>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IChainsManager.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IChainsManager.ts#L26)
+Defined in: [sdk/sdk-client/src/interfaces/IChainsManager.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IChainsManager.ts#L26)
 
 #### Parameters
 
@@ -49,7 +49,7 @@ Retrieves a chain by its chain info
 getChainById(params): Promise<Maybe<Chain>>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IChainsManager.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IChainsManager.ts#L36)
+Defined in: [sdk/sdk-client/src/interfaces/IChainsManager.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IChainsManager.ts#L36)
 
 #### Parameters
 
@@ -81,7 +81,7 @@ Retrieves a network by its chain ID
 getSupportedChains(): Promise<ChainInfo[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IChainsManager.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IChainsManager.ts#L16)
+Defined in: [sdk/sdk-client/src/interfaces/IChainsManager.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IChainsManager.ts#L16)
 
 #### Returns
 

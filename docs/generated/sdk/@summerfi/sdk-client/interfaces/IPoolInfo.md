@@ -1,6 +1,6 @@
 # Interface: IPoolInfo
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L16)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L16)
 
 ## Name
 
@@ -30,7 +30,7 @@ It is meant to be specialized for each type of pool, like a lending pool, a stak
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L18)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L18)
 
 Signature to differentiate from similar interfaces
 
@@ -42,7 +42,7 @@ Signature to differentiate from similar interfaces
 readonly id: IPoolId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L22)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L22)
 
 Unique identifier for the pool, to be specialized for each protocol
 
@@ -60,7 +60,7 @@ IPoolInfoData.id
 readonly type: PoolType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L20)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPoolInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPoolInfo.ts#L20)
 
 Type of the pool
 

@@ -4,7 +4,7 @@
 const ChainIds: object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ChainIds.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ChainIds.ts#L2)
+Defined in: [sdk/sdk-common/src/common/implementation/ChainIds.ts:2](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ChainIds.ts#L2)
 
 Numeric chain ids of the networks currently supported by the SDK, keyed by network name.
 

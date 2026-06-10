@@ -4,7 +4,7 @@
 type TransactionPriceImpact = object;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L38)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L38)
 
 Price and percentage impact of a transaction on the traded asset's price.
 
@@ -16,7 +16,7 @@ Price and percentage impact of a transaction on the traded asset's price.
 impact: IPercentage | null;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L40)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L40)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:40](https
 price: IPrice | null;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L39)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L39)

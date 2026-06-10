@@ -1,6 +1,6 @@
 # Interface: IUser
 
-Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/user/interfaces/IUser.ts#L14)
+Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/interfaces/IUser.ts#L14)
 
 Represents a user of the system connected with a wallet on a particular chain
 
@@ -16,7 +16,7 @@ Represents a user of the system connected with a wallet on a particular chain
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/user/interfaces/IUser.ts#L16)
+Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/interfaces/IUser.ts#L16)
 
 Signature to differentiate from similar interfaces
 
@@ -28,7 +28,7 @@ Signature to differentiate from similar interfaces
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/user/interfaces/IUser.ts#L20)
+Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/interfaces/IUser.ts#L20)
 
 The chain the user is connected to
 
@@ -46,7 +46,7 @@ IUserData.chainInfo
 readonly wallet: IWallet;
 ```
 
-Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/user/interfaces/IUser.ts#L18)
+Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/interfaces/IUser.ts#L18)
 
 The wallet of the user
 
@@ -64,7 +64,7 @@ IUserData.wallet
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPrintable.ts#L15)
 
 #### Returns
 

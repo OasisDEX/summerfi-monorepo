@@ -4,7 +4,7 @@
 const FETCH_CONFIG: object;
 ```
 
-Defined in: [sdk/sdk-common/src/configs/fetch.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/configs/fetch.ts#L4)
+Defined in: [sdk/sdk-common/src/configs/fetch.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/configs/fetch.ts#L4)
 
 Standard fetch configuration for the SDK
 

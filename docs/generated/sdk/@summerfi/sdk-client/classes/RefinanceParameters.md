@@ -1,6 +1,6 @@
 # Class: RefinanceParameters
 
-Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L20)
+Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L20)
 
 ## Name
 
@@ -22,7 +22,7 @@ IRefinanceParameters
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L22)
+Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L22)
 
 SIGNATURE
 
@@ -38,7 +38,7 @@ SIGNATURE
 readonly slippage: IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L27)
+Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L27)
 
 Maximum slippage allowed for the simulation
 
@@ -54,7 +54,7 @@ Maximum slippage allowed for the simulation
 readonly sourcePosition: ILendingPosition;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L25)
+Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L25)
 
 ATTRIBUTES
 
@@ -70,7 +70,7 @@ ATTRIBUTES
 readonly targetPool: ILendingPool;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L26)
+Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L26)
 
 Target pool where the source position will be moved
 
@@ -86,7 +86,7 @@ Target pool where the source position will be moved
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L44)
+Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L44)
 
 #### Returns
 
@@ -104,7 +104,7 @@ IPrintable.toString
 static createFrom(params): RefinanceParameters;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L30)
+Defined in: [sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/refinance/implementation/RefinanceParameters.ts#L30)
 
 FACTORY
 

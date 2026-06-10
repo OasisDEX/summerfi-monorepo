@@ -1,6 +1,6 @@
 # Class: ArmadaVault
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaVault.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaVault.ts#L17)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaVault.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ArmadaVault.ts#L17)
 
 ArmadaVault
 
@@ -24,7 +24,7 @@ IArmadaVault
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaVault.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaVault.ts#L19)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaVault.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ArmadaVault.ts#L19)
 
 SIGNATURE
 
@@ -40,7 +40,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Pool.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Pool.ts#L18)
+Defined in: [sdk/sdk-common/src/common/implementation/Pool.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Pool.ts#L18)
 
 SIGNATURE
 
@@ -62,7 +62,7 @@ IArmadaVault.[___signature__]
 readonly id: IArmadaVaultId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaVault.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaVault.ts#L23)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaVault.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ArmadaVault.ts#L23)
 
 ID of the vault
 
@@ -84,7 +84,7 @@ Pool.id
 readonly type: Armada = PoolType.Armada;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaVault.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaVault.ts#L22)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaVault.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ArmadaVault.ts#L22)
 
 ATTRIBUTES
 
@@ -106,7 +106,7 @@ Pool.type
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Pool.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Pool.ts#L32)
+Defined in: [sdk/sdk-common/src/common/implementation/Pool.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Pool.ts#L32)
 
 #### Returns
 
@@ -134,7 +134,7 @@ Pool.toString
 static createFrom(params): ArmadaVault;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/ArmadaVault.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/ArmadaVault.ts#L26)
+Defined in: [sdk/sdk-common/src/common/implementation/ArmadaVault.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/ArmadaVault.ts#L26)
 
 FACTORY
 

@@ -1,6 +1,6 @@
 # Interface: MerklReward
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:135](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L135)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:135](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L135)
 
 Represents a Merkl reward for a user
 
@@ -12,7 +12,7 @@ Represents a Merkl reward for a user
 amount: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:143](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L143)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:143](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L143)
 
 The reward amount
 
@@ -24,7 +24,7 @@ The reward amount
 breakdowns: Record<ChainId, Record<AddressValue, MerklRewardBreakdown>>;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:151](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L151)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:151](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L151)
 
 Breakdown of the reward into components
 
@@ -36,7 +36,7 @@ Breakdown of the reward into components
 claimed: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:145](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L145)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:145](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L145)
 
 The claimed amount
 
@@ -48,7 +48,7 @@ The claimed amount
 pending: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:147](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L147)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:147](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L147)
 
 The pending amount
 
@@ -60,7 +60,7 @@ The pending amount
 proofs: string[];
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:149](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L149)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:149](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L149)
 
 The merkle proofs for claiming
 
@@ -72,7 +72,7 @@ The merkle proofs for claiming
 recipient: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:141](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L141)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:141](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L141)
 
 The recipient address
 
@@ -84,7 +84,7 @@ The recipient address
 root: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:139](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L139)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:139](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L139)
 
 The merkle root for the reward
 
@@ -96,7 +96,7 @@ The merkle root for the reward
 token: MerklApiToken;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:137](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L137)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:137](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L137)
 
 The token address for the reward
 
@@ -108,6 +108,6 @@ The token address for the reward
 unknownCampaigns: MerklApiRewardBreakdown[];
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:153](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L153)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:153](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L153)
 
 List of unknown campaign breakdowns

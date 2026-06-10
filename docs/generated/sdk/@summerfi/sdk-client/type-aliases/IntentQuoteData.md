@@ -4,7 +4,7 @@
 type IntentQuoteData = object;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L10)
+Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L10)
 
 ## Name
 
@@ -22,7 +22,7 @@ Represents the requested quote data for a swap between two tokens
 fromAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L12)
+Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L12)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:12](https
 limitPrice: IPrice;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L14)
+Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L14)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:14](https
 order: UnsignedOrder;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L16)
+Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L16)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:16](https
 providerType: IntentSwapProviderType;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L11)
+Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L11)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:11](https
 toAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L13)
+Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L13)
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:13](https
 validTo: number;
 ```
 
-Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L15)
+Defined in: [sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/implementation/IntentQuoteData.ts#L15)

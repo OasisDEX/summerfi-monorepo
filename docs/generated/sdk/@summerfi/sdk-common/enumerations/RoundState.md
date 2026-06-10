@@ -1,6 +1,6 @@
 # Enumeration: RoundState
 
-Defined in: [sdk/sdk-common/src/common/enums/RoundState.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/RoundState.ts#L8)
+Defined in: [sdk/sdk-common/src/common/enums/RoundState.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/RoundState.ts#L8)
 
 RoundState
 
@@ -17,7 +17,7 @@ Represents the lifecycle state of a RoundsVault round.
 InSettlement: 2;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/RoundState.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/RoundState.ts#L14)
+Defined in: [sdk/sdk-common/src/common/enums/RoundState.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/RoundState.ts#L14)
 
 Round has been closed by the Keeper, pending settlement
 
@@ -29,7 +29,7 @@ Round has been closed by the Keeper, pending settlement
 NotOpened: 0;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/RoundState.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/RoundState.ts#L10)
+Defined in: [sdk/sdk-common/src/common/enums/RoundState.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/RoundState.ts#L10)
 
 EVM default — the round has never been opened
 
@@ -41,7 +41,7 @@ EVM default — the round has never been opened
 Opened: 1;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/RoundState.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/RoundState.ts#L12)
+Defined in: [sdk/sdk-common/src/common/enums/RoundState.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/RoundState.ts#L12)
 
 Round is accepting deposits and current-round redemptions
 
@@ -53,6 +53,6 @@ Round is accepting deposits and current-round redemptions
 Settled: 3;
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/RoundState.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/RoundState.ts#L16)
+Defined in: [sdk/sdk-common/src/common/enums/RoundState.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/RoundState.ts#L16)
 
 Settlement complete — exchange-asset redemptions are now available

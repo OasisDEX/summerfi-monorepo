@@ -13,6 +13,6 @@ const UserDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/user/interfaces/IUser.ts#L26)
+Defined in: [sdk/sdk-common/src/user/interfaces/IUser.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/user/interfaces/IUser.ts#L26)
 
 Zod schema for the data part of IUser

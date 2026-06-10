@@ -1,6 +1,6 @@
 # Interface: IPosition
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPosition.ts#L15)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPosition.ts#L15)
 
 ## Name
 
@@ -27,7 +27,7 @@ Represents a Summer position in a pool/protocol
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPosition.ts#L17)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPosition.ts#L17)
 
 Signature to differentiate from similar interfaces
 
@@ -39,7 +39,7 @@ Signature to differentiate from similar interfaces
 readonly id: IPositionId;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPosition.ts#L21)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPosition.ts#L21)
 
 Unique identifier for the position inside the Summer.fi system
 
@@ -57,7 +57,7 @@ IPositionData.id
 readonly pool: IPool;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPosition.ts#L23)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPosition.ts#L23)
 
 Pool where the position is opened
 
@@ -75,7 +75,7 @@ IPositionData.pool
 readonly type: PositionType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IPosition.ts#L19)
+Defined in: [sdk/sdk-common/src/common/interfaces/IPosition.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IPosition.ts#L19)
 
 Type of the position in the Summer.fi system
 

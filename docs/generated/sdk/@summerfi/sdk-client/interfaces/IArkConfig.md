@@ -1,6 +1,6 @@
 # Interface: IArkConfig
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L8)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L8)
 
 ## Name
 
@@ -18,7 +18,7 @@ Data structure for ark configuration
 asset: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L11)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L11)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:11](https://github.co
 commander: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L9)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L9)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:9](https://github.com
 depositCap: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L12)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L12)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:12](https://github.co
 details: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L16)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L16)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:16](https://github.co
 maxDepositPercentageOfTVL: IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L18)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L18)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:18](https://github.co
 maxRebalanceInflow: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L14)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L14)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:14](https://github.co
 maxRebalanceOutflow: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L13)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L13)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:13](https://github.co
 name: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L15)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L15)
 
 ***
 
@@ -98,7 +98,7 @@ Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:15](https://github.co
 raft: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L10)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L10)
 
 ***
 
@@ -108,4 +108,4 @@ Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:10](https://github.co
 requiresKeeperData: boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/types/IArkConfig.ts#L17)
+Defined in: [sdk/sdk-common/src/common/types/IArkConfig.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/types/IArkConfig.ts#L17)

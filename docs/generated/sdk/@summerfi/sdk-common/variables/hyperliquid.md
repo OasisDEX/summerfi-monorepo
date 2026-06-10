@@ -4,7 +4,7 @@
 const hyperliquid: object;
 ```
 
-Defined in: [sdk/sdk-common/src/common/utils/getViemChain.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/utils/getViemChain.ts#L6)
+Defined in: [sdk/sdk-common/src/common/utils/getViemChain.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/utils/getViemChain.ts#L6)
 
 viem chain definition for HyperEVM (Hyperliquid), which is not bundled in `viem/chains`.
 

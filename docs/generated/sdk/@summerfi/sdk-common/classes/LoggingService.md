@@ -1,6 +1,6 @@
 # Class: LoggingService
 
-Defined in: [sdk/sdk-common/src/services/LoggingService.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/services/LoggingService.ts#L5)
+Defined in: [sdk/sdk-common/src/services/LoggingService.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/services/LoggingService.ts#L5)
 
 Static logging helper whose `log`/`debug` output is gated by the `SDK_LOGGING_ENABLED` and
 `SDK_DEBUG_ENABLED` environment variables; errors are always emitted.
@@ -25,7 +25,7 @@ new LoggingService(): LoggingService;
 static debug(...messages): void;
 ```
 
-Defined in: [sdk/sdk-common/src/services/LoggingService.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/services/LoggingService.ts#L12)
+Defined in: [sdk/sdk-common/src/services/LoggingService.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/services/LoggingService.ts#L12)
 
 #### Parameters
 
@@ -45,7 +45,7 @@ Defined in: [sdk/sdk-common/src/services/LoggingService.ts:12](https://github.co
 static error(...messages): void;
 ```
 
-Defined in: [sdk/sdk-common/src/services/LoggingService.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/services/LoggingService.ts#L18)
+Defined in: [sdk/sdk-common/src/services/LoggingService.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/services/LoggingService.ts#L18)
 
 #### Parameters
 
@@ -65,7 +65,7 @@ Defined in: [sdk/sdk-common/src/services/LoggingService.ts:18](https://github.co
 static log(...messages): void;
 ```
 
-Defined in: [sdk/sdk-common/src/services/LoggingService.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/services/LoggingService.ts#L6)
+Defined in: [sdk/sdk-common/src/services/LoggingService.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/services/LoggingService.ts#L6)
 
 #### Parameters
 

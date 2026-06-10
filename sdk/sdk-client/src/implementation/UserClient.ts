@@ -39,6 +39,7 @@ export class UserClient extends IRPCClient implements IUserClient {
    * @param params - Parameters object.
    * @param params.protocol - The protocol whose positions should be returned.
    * @returns A promise resolving to the user's positions in that protocol.
+   * @remarks Not yet implemented — currently returns an empty array.
    */
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getPositionsByProtocol(_params: { protocol: IProtocol }): Promise<Position[]> {
@@ -52,6 +53,7 @@ export class UserClient extends IRPCClient implements IUserClient {
    * @param params - Parameters object.
    * @param params.positionIds - The ids of the positions to return.
    * @returns A promise resolving to the matching positions.
+   * @remarks Not yet implemented — currently returns an empty array.
    */
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getPositionsByIds(_params: { positionIds: PositionId[] }): Promise<Position[]> {
@@ -65,6 +67,7 @@ export class UserClient extends IRPCClient implements IUserClient {
    * @param params - Parameters object.
    * @param params.id - The id of the position to return.
    * @returns A promise resolving to the position, or a nullish {@link Maybe} if not found.
+   * @remarks Not yet implemented — currently returns a placeholder value.
    */
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getPosition(params: { id: PositionId }): Promise<Maybe<Position>> {

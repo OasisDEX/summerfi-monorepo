@@ -1,6 +1,6 @@
 # Interface: MerklApiOpportunityRewardsRecordBreakdown
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L46)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L46)
 
 Individual reward breakdown entry
 
@@ -12,7 +12,7 @@ Individual reward breakdown entry
 amount: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L50)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L50)
 
 Amount of tokens as string (to handle large numbers)
 
@@ -24,7 +24,7 @@ Amount of tokens as string (to handle large numbers)
 campaignId: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L60)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L60)
 
 ID of the campaign this reward belongs to
 
@@ -36,7 +36,7 @@ ID of the campaign this reward belongs to
 dailyRewardsRecordId: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L62)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L62)
 
 ID of the daily rewards record this belongs to
 
@@ -48,7 +48,7 @@ ID of the daily rewards record this belongs to
 distributionType: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L54)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L54)
 
 Type of distribution mechanism
 
@@ -60,7 +60,7 @@ Type of distribution mechanism
 id: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L56)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L56)
 
 Unique identifier for this breakdown
 
@@ -72,7 +72,7 @@ Unique identifier for this breakdown
 timestamp: string;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:58](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L58)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:58](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L58)
 
 Timestamp when this reward was recorded
 
@@ -84,7 +84,7 @@ Timestamp when this reward was recorded
 token: MerklApiOpportunityRewardsRecordBreakdownToken;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L48)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L48)
 
 Token information for this reward
 
@@ -96,6 +96,6 @@ Token information for this reward
 value: number;
 ```
 
-Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L52)
+Defined in: [sdk/armada-protocol-common/src/common/types/MerklTypes.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/armada-protocol-common/src/common/types/MerklTypes.ts#L52)
 
 USD value of the reward amount

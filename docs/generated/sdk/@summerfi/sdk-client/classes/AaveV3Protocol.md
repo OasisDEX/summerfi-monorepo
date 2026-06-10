@@ -1,6 +1,6 @@
 # Class: AaveV3Protocol
 
-Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts#L13)
+Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts#L13)
 
 AaveV3Protocol
 
@@ -24,7 +24,7 @@ IAaveV3ProtocolData
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts#L15)
+Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts#L15)
 
 SIGNATURE
 
@@ -44,7 +44,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Protocol.ts#L18)
+Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Protocol.ts#L18)
 
 SIGNATURE
 
@@ -66,7 +66,7 @@ IAaveV3Protocol.[___signature__]
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Protocol.ts#L22)
+Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Protocol.ts#L22)
 
 The chain information
 
@@ -86,7 +86,7 @@ The chain information
 readonly name: AaveV3 = ProtocolName.AaveV3;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts#L18)
+Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts#L18)
 
 ATTRIBUTES
 
@@ -106,7 +106,7 @@ ATTRIBUTES
 equals(protocol): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Protocol.ts#L32)
+Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Protocol.ts#L32)
 
 #### Parameters
 
@@ -138,7 +138,7 @@ IProtocol.equals
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Protocol.ts#L37)
+Defined in: [sdk/sdk-common/src/common/implementation/Protocol.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Protocol.ts#L37)
 
 #### Returns
 
@@ -160,7 +160,7 @@ IPrintable.toString
 static createFrom(params): AaveV3Protocol;
 ```
 
-Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts#L21)
+Defined in: [sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/protocol-plugins/src/plugins/aave-v3/implementation/AaveV3Protocol.ts#L21)
 
 FACTORY
 

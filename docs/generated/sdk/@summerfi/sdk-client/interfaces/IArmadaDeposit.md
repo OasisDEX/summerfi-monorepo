@@ -1,6 +1,6 @@
 # Interface: IArmadaDeposit
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L25)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L25)
 
 IArmadaDeposit
 
@@ -16,7 +16,7 @@ Interface for an Armada Protocol deposit transaction
 readonly amount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L13)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L13)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:13](https://
 readonly amountUsd: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L14)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L14)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:14](https://
 readonly from: `0x${string}`;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L11)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L11)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:11](https://
 readonly timestamp: number;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L15)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L15)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:15](https://
 readonly to: `0x${string}`;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L12)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L12)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:12](https://
 readonly txHash: `0x${string}`;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L16)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L16)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:16](https://
 readonly vaultBalance: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L17)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L17)
 
 ***
 
@@ -86,4 +86,4 @@ Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:17](https://
 readonly vaultBalanceUsd: IFiatCurrencyAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L18)
+Defined in: [sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/interfaces/IArmadaDeposit.ts#L18)

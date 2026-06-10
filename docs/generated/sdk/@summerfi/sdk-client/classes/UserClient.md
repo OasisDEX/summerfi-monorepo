@@ -1,6 +1,6 @@
 # Class: UserClient
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L22)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/UserClient.ts#L22)
 
 UserClient
 
@@ -24,7 +24,7 @@ IUserClient
 new UserClient(params): UserClient;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L26)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/UserClient.ts#L26)
 
 Constructor
 
@@ -62,7 +62,7 @@ IRPCClient.constructor
 user: IUser;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L23)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/UserClient.ts#L23)
 
 #### Implementation of
 
@@ -78,7 +78,7 @@ Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:23](https://github.
 get protected rpcClient(): TRPCClient;
 ```
 
-Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
+Defined in: [sdk/sdk-client/src/interfaces/IRPCClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/interfaces/IRPCClient.ts#L10)
 
 ##### Returns
 
@@ -98,7 +98,7 @@ IRPCClient.rpcClient
 getPosition(params): Promise<Maybe<Position>>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:70](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L70)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:73](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/UserClient.ts#L73)
 
 Returns a single position owned by the user, by its id.
 
@@ -120,6 +120,10 @@ The id of the position to return.
 
 A promise resolving to the position, or a nullish [Maybe](../type-aliases/Maybe.md) if not found.
 
+#### Remarks
+
+Not yet implemented — currently returns a placeholder value.
+
 #### Implementation of
 
 [`IUserClient`](../interfaces/IUserClient.md).[`getPosition`](../interfaces/IUserClient.md#getposition)
@@ -132,7 +136,7 @@ A promise resolving to the position, or a nullish [Maybe](../type-aliases/Maybe.
 getPositionsByIds(_params): Promise<Position[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:57](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L57)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:59](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/UserClient.ts#L59)
 
 Returns the user's positions matching the given position ids.
 
@@ -150,6 +154,10 @@ Returns the user's positions matching the given position ids.
 
 A promise resolving to the matching positions.
 
+#### Remarks
+
+Not yet implemented — currently returns an empty array.
+
 #### Implementation of
 
 [`IUserClient`](../interfaces/IUserClient.md).[`getPositionsByIds`](../interfaces/IUserClient.md#getpositionsbyids)
@@ -162,7 +170,7 @@ A promise resolving to the matching positions.
 getPositionsByProtocol(_params): Promise<Position[]>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L44)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/UserClient.ts#L45)
 
 Returns the user's positions for a given protocol.
 
@@ -180,6 +188,10 @@ Returns the user's positions for a given protocol.
 
 A promise resolving to the user's positions in that protocol.
 
+#### Remarks
+
+Not yet implemented — currently returns an empty array.
+
 #### Implementation of
 
 [`IUserClient`](../interfaces/IUserClient.md).[`getPositionsByProtocol`](../interfaces/IUserClient.md#getpositionsbyprotocol)
@@ -192,7 +204,7 @@ A promise resolving to the user's positions in that protocol.
 newOrder(params): Promise<Maybe<Order>>;
 ```
 
-Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:85](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/implementation/UserClient.ts#L85)
+Defined in: [sdk/sdk-client/src/implementation/UserClient.ts:88](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/implementation/UserClient.ts#L88)
 
 Builds an executable order for this user from a simulation.
 

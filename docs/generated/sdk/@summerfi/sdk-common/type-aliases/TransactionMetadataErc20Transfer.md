@@ -4,7 +4,7 @@
 type TransactionMetadataErc20Transfer = object;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:166](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L166)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:166](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L166)
 
 Metadata for an ERC-20 transfer transaction: token, recipient and amount.
 
@@ -16,7 +16,7 @@ Metadata for an ERC-20 transfer transaction: token, recipient and amount.
 amount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:169](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L169)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:169](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L169)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:169](http
 recipient: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:168](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L168)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:168](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L168)
 
 ***
 
@@ -36,4 +36,4 @@ Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:168](http
 token: IAddress;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:167](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L167)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:167](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L167)

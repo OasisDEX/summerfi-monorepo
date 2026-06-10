@@ -1,6 +1,6 @@
 # Enumeration: ArmadaOperationType
 
-Defined in: [sdk/sdk-common/src/common/enums/ArmadaOperationType.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/ArmadaOperationType.ts#L4)
+Defined in: [sdk/sdk-common/src/common/enums/ArmadaOperationType.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/ArmadaOperationType.ts#L4)
 
 Armada operation type for the simulation
 
@@ -12,7 +12,7 @@ Armada operation type for the simulation
 Deposit: "Deposit";
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/ArmadaOperationType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/ArmadaOperationType.ts#L6)
+Defined in: [sdk/sdk-common/src/common/enums/ArmadaOperationType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/ArmadaOperationType.ts#L6)
 
 Deposit into the protocol
 
@@ -24,6 +24,6 @@ Deposit into the protocol
 Withdraw: "Withdraw";
 ```
 
-Defined in: [sdk/sdk-common/src/common/enums/ArmadaOperationType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/enums/ArmadaOperationType.ts#L8)
+Defined in: [sdk/sdk-common/src/common/enums/ArmadaOperationType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/enums/ArmadaOperationType.ts#L8)
 
 Withdraw from the protocol

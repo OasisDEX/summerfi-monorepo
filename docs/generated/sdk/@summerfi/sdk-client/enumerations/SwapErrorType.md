@@ -1,6 +1,6 @@
 # Enumeration: SwapErrorType
 
-Defined in: [sdk/sdk-common/src/swap/enums/SwapErrorType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/enums/SwapErrorType.ts#L6)
+Defined in: [sdk/sdk-common/src/swap/enums/SwapErrorType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/enums/SwapErrorType.ts#L6)
 
 ## Description
 
@@ -16,7 +16,7 @@ Error types for the swap service
 NoLiquidity: "NoLiquidity";
 ```
 
-Defined in: [sdk/sdk-common/src/swap/enums/SwapErrorType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/enums/SwapErrorType.ts#L10)
+Defined in: [sdk/sdk-common/src/swap/enums/SwapErrorType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/enums/SwapErrorType.ts#L10)
 
 The swap provider indicates that there is not enough liquidity for the swap
 
@@ -28,6 +28,6 @@ The swap provider indicates that there is not enough liquidity for the swap
 Unknown: "Unknown";
 ```
 
-Defined in: [sdk/sdk-common/src/swap/enums/SwapErrorType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/swap/enums/SwapErrorType.ts#L8)
+Defined in: [sdk/sdk-common/src/swap/enums/SwapErrorType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/swap/enums/SwapErrorType.ts#L8)
 
 The error is not known or could not be decoded

@@ -1,6 +1,6 @@
 # Class: PositionUtils
 
-Defined in: [sdk/sdk-client/src/utils/PositionUtils.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/utils/PositionUtils.ts#L11)
+Defined in: [sdk/sdk-client/src/utils/PositionUtils.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/utils/PositionUtils.ts#L11)
 
 Stateless helpers for deriving lending-position metrics such as loan-to-value and liquidation
 price from token amounts and USD prices.
@@ -25,7 +25,7 @@ new PositionUtils(): PositionUtils;
 static getLiquidationPriceInDebtTokens(__namedParameters): string;
 ```
 
-Defined in: [sdk/sdk-client/src/utils/PositionUtils.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/utils/PositionUtils.ts#L39)
+Defined in: [sdk/sdk-client/src/utils/PositionUtils.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/utils/PositionUtils.ts#L39)
 
 This code calculates the value of one collateral token expressed in debt tokens at which the loan-to-value (LTV) ratio will be at liquidationThreshold
 
@@ -57,7 +57,7 @@ This code calculates the value of one collateral token expressed in debt tokens 
 static getLTV(__namedParameters): IPercentage;
 ```
 
-Defined in: [sdk/sdk-client/src/utils/PositionUtils.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-client/src/utils/PositionUtils.ts#L12)
+Defined in: [sdk/sdk-client/src/utils/PositionUtils.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-client/src/utils/PositionUtils.ts#L12)
 
 #### Parameters
 

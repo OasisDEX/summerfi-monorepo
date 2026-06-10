@@ -1,6 +1,6 @@
 # Class: Price
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L37)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L37)
 
 Price
 
@@ -20,7 +20,7 @@ IPrice
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L39)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L39)
 
 SIGNATURE
 
@@ -36,7 +36,7 @@ SIGNATURE
 readonly base: Denomination;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L46)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L46)
 
 The token for the base of the price
 
@@ -52,7 +52,7 @@ The token for the base of the price
 readonly quote: Denomination;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L47)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L47)
 
 The token for the quote of the price
 
@@ -68,7 +68,7 @@ The token for the quote of the price
 readonly value: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L45)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L45)
 
 ATTRIBUTES
 
@@ -84,7 +84,7 @@ ATTRIBUTES
 readonly static PRICE_DECIMALS: 18 = 18;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L42)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L42)
 
 CONSTANTS
 
@@ -96,7 +96,7 @@ CONSTANTS
 add(otherPrice): IPrice;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:136](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L136)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:136](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L136)
 
 #### Parameters
 
@@ -124,7 +124,7 @@ IPrice.add
 divide(divider): IPrice;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:191](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L191)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:191](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L191)
 
 #### Parameters
 
@@ -152,7 +152,7 @@ IPrice.divide
 hasSameBase(otherPrice): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:122](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L122)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:122](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L122)
 
 #### Parameters
 
@@ -180,7 +180,7 @@ IPrice.hasSameBase
 hasSameDenominations(otherPrice): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:131](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L131)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:131](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L131)
 
 #### Parameters
 
@@ -208,7 +208,7 @@ IPrice.hasSameDenominations
 hasSameQuote(otherPrice): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:113](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L113)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:113](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L113)
 
 #### Parameters
 
@@ -236,7 +236,7 @@ IPrice.hasSameQuote
 invert(): IPrice;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:210](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L210)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:210](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L210)
 
 #### Returns
 
@@ -258,7 +258,7 @@ IPrice.invert
 isEqual(otherPrice): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:252](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L252)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:252](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L252)
 
 #### Parameters
 
@@ -286,7 +286,7 @@ IPrice.isEqual
 isGreaterThan(otherPrice): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:233](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L233)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:233](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L233)
 
 #### Parameters
 
@@ -314,7 +314,7 @@ IPrice.isGreaterThan
 isGreaterThanOrEqual(otherPrice): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:240](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L240)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:240](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L240)
 
 #### Parameters
 
@@ -342,7 +342,7 @@ IPrice.isGreaterThanOrEqual
 isLessThan(otherPrice): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:219](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L219)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:219](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L219)
 
 #### Parameters
 
@@ -370,7 +370,7 @@ IPrice.isLessThan
 isLessThanOrEqual(otherPrice): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:226](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L226)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:226](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L226)
 
 #### Parameters
 
@@ -398,7 +398,7 @@ IPrice.isLessThanOrEqual
 isZero(): boolean;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:247](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L247)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:247](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L247)
 
 #### Returns
 
@@ -420,7 +420,7 @@ IPrice.isZero
 multiply<InputParams, ReturnType>(multiplier): ReturnType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:158](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L158)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:158](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L158)
 
 #### Type Parameters
 
@@ -458,7 +458,7 @@ IPrice.multiply
 subtract(otherPrice): IPrice;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:147](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L147)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:147](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L147)
 
 #### Parameters
 
@@ -486,7 +486,7 @@ IPrice.subtract
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:270](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L270)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:270](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L270)
 
 #### Returns
 
@@ -508,7 +508,7 @@ IValueConverter.toBigNumber
 toSolidityValue(params): bigint;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:264](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L264)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:264](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L264)
 
 #### Parameters
 
@@ -538,7 +538,7 @@ IValueConverter.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:259](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L259)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:259](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L259)
 
 #### Returns
 
@@ -560,7 +560,7 @@ IPrice.toString
 static createFrom(params): IPrice;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L56)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L56)
 
 FACTORY
 
@@ -582,7 +582,7 @@ FACTORY
 static createFromAmountsRatio(params): IPrice;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:69](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/Price.ts#L69)
+Defined in: [sdk/sdk-common/src/common/implementation/Price.ts:69](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/Price.ts#L69)
 
 Creates a price from the ratio of two token amounts
 

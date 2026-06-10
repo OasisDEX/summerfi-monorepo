@@ -1,6 +1,6 @@
 # Class: SDKError
 
-Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/SDKError.ts#L14)
+Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/SDKError.ts#L14)
 
 SDKError
 
@@ -28,7 +28,7 @@ ISDKError
 protected new SDKError(params): SDKError;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/SDKError.ts#L29)
+Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/SDKError.ts#L29)
 
 CONSTRUCTOR
 
@@ -56,7 +56,7 @@ Error.constructor
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/SDKError.ts#L16)
+Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/SDKError.ts#L16)
 
 SIGNATURE
 
@@ -88,7 +88,7 @@ Error.cause
 readonly message: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/SDKError.ts#L21)
+Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/SDKError.ts#L21)
 
 Free form debug message, used to debug the issue through the console
 
@@ -126,7 +126,7 @@ Error.name
 readonly reason: string;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/SDKError.ts#L20)
+Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/SDKError.ts#L20)
 
 Free form reason message, used to provide a short description of the problem
 
@@ -158,7 +158,7 @@ Error.stack
 readonly type: SDKErrorType;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/SDKError.ts#L19)
+Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/SDKError.ts#L19)
 
 ATTRIBUTES
 
@@ -274,7 +274,7 @@ Error.captureStackTrace
 static createFrom(params): ISDKError;
 ```
 
-Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/common/implementation/SDKError.ts#L24)
+Defined in: [sdk/sdk-common/src/common/implementation/SDKError.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/common/implementation/SDKError.ts#L24)
 
 FACTORY
 

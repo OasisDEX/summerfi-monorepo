@@ -4,7 +4,7 @@
 type TransactionMetadataWithdraw = object;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:85](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L85)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:85](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L85)
 
 Metadata for a withdrawal transaction: amounts, optional price impact and slippage.
 
@@ -16,7 +16,7 @@ Metadata for a withdrawal transaction: amounts, optional price impact and slippa
 fromAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L86)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L86)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:86](https
 optional priceImpact: TransactionPriceImpact;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:88](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L88)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:88](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L88)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:88](https
 slippage: IPercentage;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:89](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L89)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:89](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L89)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:89](https
 optional toAmount: ITokenAmount;
 ```
 
-Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:87](https://github.com/OasisDEX/summerfi-monorepo/blob/1ef6231288fcd880252de20d0ddd07a0cdcc78fa/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L87)
+Defined in: [sdk/sdk-common/src/orders/common/types/TransactionInfo.ts:87](https://github.com/OasisDEX/summerfi-monorepo/blob/c90dd64090f5d38a9f718ea2493feda7b50f1be9/sdk/sdk-common/src/orders/common/types/TransactionInfo.ts#L87)
