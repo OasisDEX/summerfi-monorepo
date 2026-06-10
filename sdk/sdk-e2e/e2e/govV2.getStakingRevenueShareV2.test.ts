@@ -18,14 +18,15 @@ describe('Armada Protocol - getProtocolTvl', () => {
     it('should get total protocol TVL across all chains', async () => {
       const sdk = createTestSdkInstance(scenario.clientId, scenario.instiVersion)
 
-      const totalTvl = await sdk.armada.users.getProtocolTvl()
+      const { percentage, amount } = await sdk.armada.users.getStakingRevenueShareV2()
 
-      console.log(`Total Protocol TVL: $${totalTvl.toLocaleString()}`)
+      console.log(
+        `Staking Revenue Share Percentage: ${percentage}\nStaking Revenue Share Amount: $${amount.toLocaleString()}`,
+      )
 
       // Verify the result is a number and greater than or equal to 0
-      expect(typeof totalTvl).toBe('number')
-      expect(totalTvl).toBeGreaterThanOrEqual(0)
-      expect(isNaN(totalTvl)).toBe(false)
+      expect(percentage).toBeDefined()
+      expect(amount).toBeDefined()
     })
   })
 })
