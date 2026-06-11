@@ -6,6 +6,7 @@ import {
   type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
+  type SingleSourceChartData,
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
@@ -21,6 +22,7 @@ import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-d
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
+import { RwaNavPriceChart } from '@/components/organisms/Charts/RwaNavPriceChart'
 import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { CurationActivity } from '@/features/curation-activity/components/CurationActivity/CurationActivity'
 import { type VaultCurationEvent } from '@/features/curation-activity/types'
@@ -40,7 +42,8 @@ interface VaultOpenViewDetailsProps {
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
   curationEvents?: VaultCurationEvent[]
-  arksHistoricalChartData: ArksHistoricalChartData
+  arksHistoricalChartData?: ArksHistoricalChartData
+  rwaNavHistoricalChartData?: SingleSourceChartData
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   isDaoManaged?: boolean
@@ -54,6 +57,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   rebalanceActivity,
   curationEvents = [],
   arksHistoricalChartData,
+  rwaNavHistoricalChartData,
   arksInterestRates,
   vaultApyData,
   isDaoManaged,
@@ -85,21 +89,50 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         isDaoManaged={isDaoManaged}
         isRwaVault={isRwaVault}
       />
+      {isRwaVault ? (
+        <Expander
+          onExpand={handleExpanderToggle('vault-asset-manager')}
+          title={
+            <Text as="p" variant="p1semi">
+              Avantgarde Asset Management (Vault Curator)
+            </Text>
+          }
+          defaultExpanded
+        >
+          <Text
+            as="p"
+            variant="p3"
+            style={{
+              color: 'var(--color-text-secondary)',
+              margin: '0 10px',
+            }}
+          >
+            This Vault is curated and managed by Avantgarde Asset Managment. Avantgarde have over 8
+            years of experience....blah blah blah
+          </Text>
+        </Expander>
+      ) : null}
       <Expander
         onExpand={handleExpanderToggle('historical-yield')}
         title={
           <Text as="p" variant="p1semi">
-            Historical yield
+            {isRwaVault ? 'Historical NAV price' : 'Historical yield'}
           </Text>
         }
         defaultExpanded
       >
-        <ArkHistoricalYieldChart
-          chartId="open-view"
-          chartData={arksHistoricalChartData}
-          summerVaultName={summerVaultName}
-          vaultBenchmarkName={vaultBenchmarkName}
-        />
+        {isRwaVault ? (
+          <RwaNavPriceChart chartId="open-view" chartData={rwaNavHistoricalChartData} />
+        ) : (
+          arksHistoricalChartData && (
+            <ArkHistoricalYieldChart
+              chartId="open-view"
+              chartData={arksHistoricalChartData}
+              summerVaultName={summerVaultName}
+              vaultBenchmarkName={vaultBenchmarkName}
+            />
+          )
+        )}
       </Expander>
       <Expander
         onExpand={handleExpanderToggle('vault-exposure')}

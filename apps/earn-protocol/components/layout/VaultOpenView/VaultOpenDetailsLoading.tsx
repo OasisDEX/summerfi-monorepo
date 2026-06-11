@@ -8,8 +8,8 @@ import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 
 import styles from './VaultOpenViewDetails.module.css'
 
-const detailsExpanderLabels = [
-  'Historical yield',
+const getDetailsExpanderLabels = (isRwaVault: boolean) => [
+  isRwaVault ? 'Historical NAV price' : 'Historical yield',
   'Vault exposure',
   'Rebalancing activity',
   'Curation activity',
@@ -22,25 +22,34 @@ const detailsExpanderLabels = [
 export const VaultOpenDetailsLoading: FC<{
   vault?: SDKVaultType | SDKVaultishType
   isDaoManaged?: boolean
-}> = ({ vault, isDaoManaged }) => (
-  <div className={styles.vaultOpenViewDetailsWrapper}>
-    <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} isDaoManaged={isDaoManaged} />
-    {detailsExpanderLabels.map((expanderLabel) => (
-      <Expander
-        key={expanderLabel}
-        title={
-          <Text as="p" variant="p1semi">
-            {expanderLabel}
-          </Text>
-        }
-        defaultExpanded
-      >
-        <SkeletonLine
-          height={448}
-          radius="var(--radius-roundish)"
-          style={{ marginTop: 'var(--spacing-space-medium)' }}
-        />
-      </Expander>
-    ))}
-  </div>
-)
+}> = ({ vault, isDaoManaged }) => {
+  const isRwaVault = vault?.isRwaVault ?? false
+
+  return (
+    <div className={styles.vaultOpenViewDetailsWrapper}>
+      <VaultOpenHeaderBlock
+        detailsLinks={detailsLinks}
+        vault={vault}
+        isDaoManaged={isDaoManaged}
+        isRwaVault={isRwaVault}
+      />
+      {getDetailsExpanderLabels(isRwaVault).map((expanderLabel) => (
+        <Expander
+          key={expanderLabel}
+          title={
+            <Text as="p" variant="p1semi">
+              {expanderLabel}
+            </Text>
+          }
+          defaultExpanded
+        >
+          <SkeletonLine
+            height={448}
+            radius="var(--radius-roundish)"
+            style={{ marginTop: 'var(--spacing-space-medium)' }}
+          />
+        </Expander>
+      ))}
+    </div>
+  )
+}

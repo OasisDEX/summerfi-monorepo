@@ -25,9 +25,9 @@ export const VaultOpenLoadingView = ({ isRwaVault = false }: { isRwaVault?: bool
       isRwaVault={isRwaVault}
       detailsContent={
         <div className={vaultOpenViewStyles.leftContentWrapper}>
-          <VaultOpenHeaderBlock detailsLinks={detailsLinks} />
+          <VaultOpenHeaderBlock detailsLinks={detailsLinks} isRwaVault={isRwaVault} />
           {[
-            'Historical yield',
+            isRwaVault ? 'Historical NAV price' : 'Historical yield',
             'Vault exposure',
             'Rebalancing activity',
             'Curation activity',
