@@ -150,6 +150,50 @@ export interface RewardRate {
   timestamp: Int8;
 }
 
+export interface OffchainApr {
+  asOf: Int8;
+  id: string;
+  network: Network;
+  productId: string;
+  protocol: string;
+  rate: Numeric;
+  source: string;
+  timestamp: Int8;
+}
+
+export interface HourlyOffchainApr {
+  averageRate: Numeric;
+  date: Int8;
+  id: string;
+  network: Network;
+  productId: string;
+  protocol: string;
+  sumRates: Numeric;
+  updateCount: Int8;
+}
+
+export interface DailyOffchainApr {
+  averageRate: Numeric;
+  date: Int8;
+  id: string;
+  network: Network;
+  productId: string;
+  protocol: string;
+  sumRates: Numeric;
+  updateCount: Int8;
+}
+
+export interface WeeklyOffchainApr {
+  averageRate: Numeric;
+  id: string;
+  network: Network;
+  productId: string;
+  protocol: string;
+  sumRates: Numeric;
+  updateCount: Int8;
+  weekTimestamp: Int8;
+}
+
 export interface TallyDelegates {
   bio: Generated<string>;
   customBio: Generated<string>;
@@ -292,12 +336,15 @@ export interface YieldRaceLeaderboard {
 export interface Database {
   campaigns: Campaigns;
   dailyFleetInterestRate: DailyFleetInterestRate;
+  dailyOffchainApr: DailyOffchainApr;
   dailyRewardRate: DailyRewardRate;
   fleetInterestRate: FleetInterestRate;
   hourlyFleetInterestRate: HourlyFleetInterestRate;
+  hourlyOffchainApr: HourlyOffchainApr;
   hourlyRewardRate: HourlyRewardRate;
   latestActivity: LatestActivity;
   networkStatus: NetworkStatus;
+  offchainApr: OffchainApr;
   rebalanceActivity: RebalanceActivity;
   rewardRate: RewardRate;
   tallyDelegates: TallyDelegates;
@@ -308,6 +355,7 @@ export interface Database {
   vaultBenchmark: VaultBenchmark;
   walletRisk: WalletRisk;
   weeklyFleetInterestRate: WeeklyFleetInterestRate;
+  weeklyOffchainApr: WeeklyOffchainApr;
   weeklyRewardRate: WeeklyRewardRate;
   yieldRaceGames: YieldRaceGames;
   yieldRaceLeaderboard: YieldRaceLeaderboard;

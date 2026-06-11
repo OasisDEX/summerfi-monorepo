@@ -54,6 +54,38 @@ export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext)
     job: updateEarnRewardsAprCronFunction,
   })
 
+  const updateOffchainAprCronFunctionProps: FunctionProps = {
+    handler: 'background-jobs/update-offchain-apr/src/index.handler',
+    runtime: 'nodejs20.x',
+    timeout: '500 seconds',
+    environment: {
+      POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
+      EARN_PROTOCOL_DB_CONNECTION_STRING,
+      SUBGRAPH_BASE,
+      NODE_ENV: app.stage,
+    },
+    ...(vpc && {
+      vpc: vpc.vpc,
+      vpcSubnets: {
+        subnets: [...vpc.vpc.privateSubnets],
+      },
+    }),
+  }
+
+  const updateOffchainAprCronFunction = new Function(
+    stack,
+    'update-offchain-apr-cron-function',
+    updateOffchainAprCronFunctionProps,
+  )
+
+  // Offchain APR (e.g. institutional RWAs without an on-chain rate signal) updates
+  // on a slower cadence than rewards since the source NAV typically refreshes daily.
+  new Cron(stack, 'update-offchain-apr-cron', {
+    schedule: 'rate(1 hour)',
+    enabled: true,
+    job: updateOffchainAprCronFunction,
+  })
+
   const updateBeachClubRewardsFunction = new Function(stack, 'update-beach-club-rewards-function', {
     handler: 'background-jobs/update-beach-club-rewards-function/src/index.handler',
     runtime: 'nodejs20.x',

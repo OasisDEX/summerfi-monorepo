@@ -668,6 +668,61 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  background-jobs/update-offchain-apr:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.32.0
+      '@aws-lambda-powertools/metrics':
+        specifier: ^2.0.2
+        version: 2.32.0
+      '@aws-lambda-powertools/tracer':
+        specifier: ^2.0.2
+        version: 2.32.0
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../packages/serverless-shared
+      '@summerfi/summer-earn-institutions-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-institutions-subgraph
+      '@summerfi/summer-earn-rates-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-rates-subgraph
+      '@summerfi/summer-protocol-db':
+        specifier: workspace:*
+        version: link:../../packages/summer-protocol-db
+      graphql-tag:
+        specifier: ^2.12.6
+        version: 2.12.6(graphql@16.11.0)
+      kysely:
+        specifier: ^0.27.3
+        version: 0.27.6
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@20.19.37)(typescript@5.9.3)
+      zod:
+        specifier: 3.25.61
+        version: 3.25.61
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.19.37
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.19.37)(ts-node@10.9.2)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
   background-jobs/update-summer-earn-paginated-tables:
     dependencies:
       '@aws-lambda-powertools/logger':
@@ -9789,7 +9844,7 @@ packages:
       '@ardatan/relay-compiler': 13.0.0(graphql@16.11.0)
       '@graphql-tools/utils': 11.0.0(graphql@16.11.0)
       graphql: 16.11.0
-      tslib: 2.6.3
+      tslib: 2.8.1
     dev: true
 
   /@graphql-tools/schema@10.0.31(graphql@16.11.0):
@@ -16800,7 +16855,7 @@ packages:
     resolution: {integrity: sha512-zmPitbQ8+6zNutpwgcQuLcsEpn/Cj54Kbn7L5pX0Os5kdWplB7xPgEh/g+SWOB/qmows2gpuCaPyduq8ZZRnxA==}
     deprecated: This is a stub types definition. minimatch provides its own type definitions, so you do not need this installed.
     dependencies:
-      minimatch: 9.0.9
+      minimatch: 10.2.4
 
   /@types/minimist@1.2.5:
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
@@ -20375,7 +20430,6 @@ packages:
   /balanced-match@4.0.4:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
-    dev: true
 
   /base-x@3.0.11:
     resolution: {integrity: sha512-xz7wQ8xDhdyP7tQxwdteLYeFfS68tSMNCZ/Y37WJ4bhGfKPpqEIlmIyueQHqOyoPhE6xNUqjzRr8ra0eF9VRvA==}
@@ -20536,7 +20590,6 @@ packages:
     engines: {node: 18 || 20 || >=22}
     dependencies:
       balanced-match: 4.0.4
-    dev: true
 
   /braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
@@ -28185,7 +28238,6 @@ packages:
     engines: {node: 18 || 20 || >=22}
     dependencies:
       brace-expansion: 5.0.4
-    dev: true
 
   /minimatch@3.1.5:
     resolution: {integrity: sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w==}
