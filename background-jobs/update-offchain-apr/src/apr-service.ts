@@ -2,6 +2,7 @@ import { Product } from '@summerfi/summer-earn-rates-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { IAprFetcher, OffchainAprRate } from './apr-fetchers/IAprFetcher'
+import { SuperstateAprFetcher } from './apr-fetchers/SuperstateAprFetcher'
 
 /**
  * Registry / dispatcher for offchain APR fetchers, mirroring `RewardsService`
@@ -14,10 +15,6 @@ import { IAprFetcher, OffchainAprRate } from './apr-fetchers/IAprFetcher'
  *   this.fetchersByProtocol = {
  *     [SomeProtocol]: new SomeAprFetcher(logger),
  *   }
- *
- * The map is intentionally EMPTY by default — until a real adapter is wired in,
- * `protocols` is empty and the handler queries no products, so the job is a
- * safe no-op.
  */
 export class AprService {
   private readonly logger: Logger
@@ -26,9 +23,11 @@ export class AprService {
   constructor(logger: Logger) {
     this.logger = logger
 
-    // TODO: register real adapters here once we pick the first protocol, e.g.
-    //   'Centrifuge': new CentrifugeAprFetcher(logger),
-    this.fetchersByProtocol = {}
+    this.fetchersByProtocol = {
+      // TODO: confirm the exact `product.protocol` string once Superstate arks
+      // are indexed by the rates subgraph.
+      Superstate: new SuperstateAprFetcher(logger),
+    }
   }
 
   /** Protocols that have an offchain APR adapter registered. */
