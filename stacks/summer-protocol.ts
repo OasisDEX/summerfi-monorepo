@@ -63,6 +63,9 @@ export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext)
       EARN_PROTOCOL_DB_CONNECTION_STRING,
       SUBGRAPH_BASE,
       NODE_ENV: app.stage,
+      ...(process.env.WT_DATASPAN_API_KEY && {
+        WT_DATASPAN_API_KEY: process.env.WT_DATASPAN_API_KEY,
+      }),
     },
     ...(vpc && {
       vpc: vpc.vpc,

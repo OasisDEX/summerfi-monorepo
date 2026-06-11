@@ -5,7 +5,8 @@
     "test": "jest --passWithNoTests",
     "build": "tsc -b --preserveWatchOutput -v",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "show-apr": "tsx src/scripts/show-apr.ts"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.0.2",
@@ -15,6 +16,7 @@
     "@summerfi/summer-earn-institutions-subgraph": "workspace:*",
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@summerfi/summer-protocol-db": "workspace:*",
+    "dotenv": "^16.4.5",
     "graphql-tag": "^2.12.6",
     "kysely": "^0.27.3",
     "ts-node": "^10.9.2",

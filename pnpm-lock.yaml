@@ -691,6 +691,9 @@ importers:
       '@summerfi/summer-protocol-db':
         specifier: workspace:*
         version: link:../../packages/summer-protocol-db
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.6.1
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.11.0)

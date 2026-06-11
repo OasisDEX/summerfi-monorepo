@@ -26,6 +26,10 @@ export class ExampleAprFetcher implements IAprFetcher {
     this.logger = logger
   }
 
+  supportedSymbols(): string[] {
+    return []
+  }
+
   async getAprRates(
     products: Product[],
     chainId: ChainId,

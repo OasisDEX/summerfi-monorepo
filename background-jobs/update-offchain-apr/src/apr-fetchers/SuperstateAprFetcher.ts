@@ -40,6 +40,10 @@ export class SuperstateAprFetcher implements IAprFetcher {
     this.logger = logger
   }
 
+  supportedSymbols(): string[] {
+    return Object.keys(this.FUND_ID_BY_SYMBOL)
+  }
+
   async getAprRates(
     products: Product[],
     chainId: ChainId,

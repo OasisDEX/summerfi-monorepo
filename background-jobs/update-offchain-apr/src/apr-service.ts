@@ -3,6 +3,7 @@ import { ChainId } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { IAprFetcher, OffchainAprRate } from './apr-fetchers/IAprFetcher'
 import { SuperstateAprFetcher } from './apr-fetchers/SuperstateAprFetcher'
+import { WisdomTreeAprFetcher } from './apr-fetchers/WisdomTreeAprFetcher'
 
 /**
  * Registry / dispatcher for offchain APR fetchers, mirroring `RewardsService`
@@ -24,15 +25,21 @@ export class AprService {
     this.logger = logger
 
     this.fetchersByProtocol = {
-      // TODO: confirm the exact `product.protocol` string once Superstate arks
-      // are indexed by the rates subgraph.
+      // TODO: confirm the exact `product.protocol` strings once these arks are
+      // indexed by the rates subgraph.
       Superstate: new SuperstateAprFetcher(logger),
+      WisdomTree: new WisdomTreeAprFetcher(logger),
     }
   }
 
   /** Protocols that have an offchain APR adapter registered. */
   get protocols(): string[] {
     return Object.keys(this.fetchersByProtocol)
+  }
+
+  /** Adapter registered for a protocol, if any. */
+  getFetcher(protocol: string): IAprFetcher | undefined {
+    return this.fetchersByProtocol[protocol]
   }
 
   /**

@@ -23,6 +23,12 @@ export interface OffchainAprRate {
 
 export interface IAprFetcher {
   /**
+   * Token symbols this fetcher knows how to resolve. Used by tooling (e.g. the
+   * show-apr CLI) to exercise the fetcher without real subgraph products.
+   */
+  supportedSymbols(): string[]
+
+  /**
    * Fetches the base APR for a batch of products on a given chain.
    *
    * Implementations should:
