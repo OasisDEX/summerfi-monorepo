@@ -9,7 +9,7 @@
   "plugin": [
     "typedoc-plugin-markdown"
   ],
-  "out": "docs/generated/sdk",
+  "out": "gitbook/reference",
   "name": "Summer.fi SDK",
   "router": "member",
   "entryFileName": "README",

@@ -39,8 +39,8 @@
     "armada:genindex": "cd armada-protocol/abis && pnpm run genindex",
     "armada:upconfig": "cd armada-protocol/contracts/packages/deployment/config && cp -r index.json ../../../../../sdk/armada-protocol-common/src/deployments/config.json",
     "cicheck:earn-frontend": "turbo run cicheck --cache-dir=.turbo --filter=@summerfi/earn-protocol... --filter=@summerfi/earn-protocol-landing-page... --filter=@summerfi/earn-protocol-institutions...",
-    "docs:gen": "pnpm build:sdk && typedoc",
-    "docs:check": "pnpm docs:gen && git diff --exit-code -- docs/generated"
+    "docs:gen": "pnpm build:sdk && typedoc && node scripts/docs/assemble.mjs",
+    "docs:check": "pnpm docs:gen && git diff --exit-code -- gitbook"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.732.0",

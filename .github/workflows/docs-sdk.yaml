@@ -7,17 +7,12 @@ on:
       - 'sdk/sdk-client-react/**'
       - 'sdk/sdk-common/**'
       - 'typedoc.json'
-      - 'docs/generated/**'
-      - '.github/workflows/docs-sdk.yaml'
+      - 'sdk/*/typedoc.json'
+      - 'gitbook/**'
+      - 'scripts/docs/**'
+      - '.gitbook.yaml'
   push:
     branches: [dev]
-    paths:
-      - 'sdk/sdk-client/**'
-      - 'sdk/sdk-client-react/**'
-      - 'sdk/sdk-common/**'
-      - 'typedoc.json'
-      - 'docs/generated/**'
-  workflow_dispatch:
 
 jobs:
   drift-check:
@@ -26,66 +21,47 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2.0.1
-
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-
       - name: Install dependencies
         run: pnpm install
-
-      - name: Regenerate SDK reference and check for drift
+      - name: Regenerate SDK gitbook and check for drift
         run: |
           pnpm docs:gen
-          if ! git diff --exit-code -- docs/generated; then
-            echo '::error::docs/generated is stale. Run `pnpm docs:gen` locally and commit the result.'
+          if ! git diff --exit-code -- gitbook; then
+            echo '::error::gitbook/ is stale. Run `pnpm docs:gen` locally and commit the result.'
             exit 1
           fi
 
-  deliver:
-    name: Deliver SDK reference to GitBook repo
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    timeout-minutes: 15
+  regen-safety-net:
+    name: Regenerate SDK gitbook on dev
+    if: github.event_name == 'push'
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - name: Check out summerfi-monorepo
-        uses: actions/checkout@v4
-
-      - name: Check out summer-earn-protocol
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          repository: OasisDEX/summer-earn-protocol
-          token: ${{ secrets.DOCS_SYNC_TOKEN }}
-          path: earn-repo
-
-      - name: Copy generated SDK reference
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: pnpm/action-setup@v2.0.1
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Regenerate and push if stale
         run: |
-          rsync -a --delete docs/generated/sdk/ earn-repo/gitbook/sdk/reference/
-          cd earn-repo && node scripts/docs/assemble.mjs --summary-only
-
-      - name: Open PR if changed
-        env:
-          GH_TOKEN: ${{ secrets.DOCS_SYNC_TOKEN }}
-        run: |
-          cd earn-repo
-          if git diff --quiet -- gitbook/; then
-            echo "SDK reference unchanged"
-            exit 0
+          pnpm docs:gen
+          if ! git diff --quiet -- gitbook; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add gitbook
+            git commit -m "docs(sdk): regenerate gitbook reference [skip ci]"
+            git push
           fi
-          BRANCH="docs/sdk-reference-${GITHUB_SHA::8}"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
-          git add gitbook/
-          git commit -m "docs(sdk): update generated SDK reference from summerfi-monorepo@${GITHUB_SHA::8}"
-          git push origin "$BRANCH"
-          gh pr create --base main --head "$BRANCH" \
-            --title "docs(sdk): update SDK reference" \
-            --body "Automated delivery of regenerated TypeDoc SDK reference from summerfi-monorepo@${GITHUB_SHA}."
-          gh pr merge "$BRANCH" --auto --squash || echo "auto-merge not enabled; PR left open"
