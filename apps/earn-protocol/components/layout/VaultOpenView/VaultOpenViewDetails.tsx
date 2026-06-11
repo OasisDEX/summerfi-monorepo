@@ -44,6 +44,7 @@ interface VaultOpenViewDetailsProps {
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   isDaoManaged?: boolean
+  isRwaVault?: boolean
 }
 
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
@@ -56,6 +57,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   arksInterestRates,
   vaultApyData,
   isDaoManaged,
+  isRwaVault,
 }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
@@ -77,7 +79,12 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
 
   return (
     <div className={styles.vaultOpenViewDetailsWrapper}>
-      <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} isDaoManaged={isDaoManaged} />
+      <VaultOpenHeaderBlock
+        detailsLinks={detailsLinks}
+        vault={vault}
+        isDaoManaged={isDaoManaged}
+        isRwaVault={isRwaVault}
+      />
       <Expander
         onExpand={handleExpanderToggle('historical-yield')}
         title={
