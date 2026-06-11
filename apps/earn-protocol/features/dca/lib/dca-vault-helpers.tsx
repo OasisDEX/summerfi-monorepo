@@ -53,8 +53,9 @@ export const mapVaultToOption = (vault: SDKVaultishType): DropdownRawOption => (
 })
 
 export const makeDropdownOptions = (vaults: SDKVaultishType[]): DropdownRawOption[] => {
-  const regularVaults = vaults.filter((vault) => !vault.isDaoManaged)
+  const regularVaults = vaults.filter((vault) => !vault.isDaoManaged && !vault.isRwaVault)
   const daoManagedVaults = vaults.filter((vault) => vault.isDaoManaged)
+  const rwaVaults = vaults.filter((vault) => vault.isRwaVault)
 
   return [
     ...(daoManagedVaults.length > 0
@@ -81,6 +82,18 @@ export const makeDropdownOptions = (vaults: SDKVaultishType[]): DropdownRawOptio
             isSeparator: true,
           },
           ...regularVaults.map(mapVaultToOption),
+        ]
+      : []),
+    ...(rwaVaults.length > 0
+      ? [
+          {
+            value: 'permissioned-rwa-vaults',
+            content: (
+              <div className={classNames.vaultDropdownSeparator}>Permissioned RWA Vaults</div>
+            ),
+            isSeparator: true,
+          },
+          ...rwaVaults.map(mapVaultToOption),
         ]
       : []),
   ]
