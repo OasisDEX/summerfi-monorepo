@@ -14,6 +14,7 @@ import { getCachedUserPositions } from '@/app/server-handlers/cached/get-user-po
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
+import { decorateVaultsWithFees } from '@/app/server-handlers/fleet-fees/decorate-vaults-with-fees'
 import { mergePositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
@@ -56,21 +57,26 @@ export const resolvePortfolioContext = async ({ walletAddress }: { walletAddress
 
   // Standard vaults decorated for the view (positions carousel + DCA lookups). RWA vaults are
   // permissioned, so they intentionally stay out of the "you might like" surfaces.
-  const vaultsWithConfig = decorateVaultsWithConfig({
-    vaults: vaultsList.vaults,
-    systemConfig,
-    userPositions: userPositionsJsonSafe,
-    daoManagedVaultsList,
-  })
-
-  // Combined list (standard + RWA), used only to resolve each position to its vault and to drive
-  // the per-vault history/APY calls. RWA positions carry their own (RWA) vault into the view.
-  const allVaultsWithConfig = decorateVaultsWithConfig({
-    vaults: [...vaultsList.vaults, ...rwaVaultsList.vaults],
-    systemConfig,
-    userPositions: [...userPositionsJsonSafe, ...rwaUserPositionsJsonSafe],
-    daoManagedVaultsList,
-  })
+  const [vaultsWithConfig, allVaultsWithConfig] = await Promise.all([
+    decorateVaultsWithFees(
+      decorateVaultsWithConfig({
+        vaults: vaultsList.vaults,
+        systemConfig,
+        userPositions: userPositionsJsonSafe,
+        daoManagedVaultsList,
+      }),
+    ),
+    // Combined list (standard + RWA), used only to resolve each position to its vault and to drive
+    // the per-vault history/APY calls. RWA positions carry their own (RWA) vault into the view.
+    decorateVaultsWithFees(
+      decorateVaultsWithConfig({
+        vaults: [...vaultsList.vaults, ...rwaVaultsList.vaults],
+        systemConfig,
+        userPositions: [...userPositionsJsonSafe, ...rwaUserPositionsJsonSafe],
+        daoManagedVaultsList,
+      }),
+    ),
+  ])
 
   // Source of truth for which fleets are RWA: the RWA vaults list (their ids are the fleet
   // addresses). decorateWithFleetConfig keys the fleet config by vault id and can miss the RWA flag

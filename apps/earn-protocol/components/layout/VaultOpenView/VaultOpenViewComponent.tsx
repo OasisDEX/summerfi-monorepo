@@ -684,9 +684,11 @@ export const VaultOpenViewComponent = ({
               rebalanceActivity={details.rebalanceActivity}
               curationEvents={details.curationEvents}
               arksHistoricalChartData={details.arksHistoricalChartData}
+              rwaNavHistoricalChartData={details.rwaNavHistoricalChartData}
               arksInterestRates={details.arksInterestRates}
               vaultApyData={vaultApyData}
               isDaoManaged={vault.isDaoManaged}
+              isRwaVault={vault.isRwaVault}
             />
           ) : (
             <VaultOpenDetailsLoading vault={vault} isDaoManaged={vault.isDaoManaged} />

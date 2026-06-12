@@ -141,17 +141,22 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
   // check for Client-Id header in request and fetch integrator config if present
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
 
-  // Institutional deployment-config version (set by makeInstiSdk). Defaults to 'v1' so existing
-  // makeAdminSDK clients (which do not send the header) keep the legacy institutions config path.
-  const assertInstiVersion = (unknownInstiVersion: string): InstiVersion => {
+  // Institutional deployment-config version (set by makeInstiSdk). Controls whether to source institution wiring from the RWA / institutions-v2 subgraph (v2) or the legacy institutions subgraph (v1).
+  const assertInstiVersion = (
+    unknownInstiVersion: string | undefined,
+  ): InstiVersion | undefined => {
     if (unknownInstiVersion && !['v1', 'v2'].includes(unknownInstiVersion)) {
       throw new Error(`Invalid InstiVersion header: ${unknownInstiVersion}`)
     }
+
+    if (clientId !== undefined && unknownInstiVersion === undefined) {
+      return 'v1' // default to v1 for backward compatibility when Client-Id is present without Insti-Version
+    }
+
     return unknownInstiVersion as InstiVersion
   }
-
   const instiVersion = assertInstiVersion(
-    opts.event.headers['Insti-Version'] || opts.event.headers['insti-version'] || 'v1',
+    opts.event.headers['Insti-Version'] || opts.event.headers['insti-version'],
   )
 
   const requestCookies = parseCookies(opts.event)

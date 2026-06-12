@@ -49,6 +49,7 @@ const subgraphNetworkToSafeSDKAPINetworkName = (network: SupportedSDKNetworks) =
     [SupportedSDKNetworks.ArbitrumOne.toLowerCase()]: 'arb1',
     [SupportedSDKNetworks.Base.toLowerCase()]: 'base',
     [SupportedSDKNetworks.SonicMainnet.toLowerCase()]: 'sonic',
+    [SupportedSDKNetworks.Hyperliquid.toLowerCase()]: 'hyper',
   }[network.toLowerCase()]
 }
 

@@ -6,6 +6,7 @@ import {
   type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
+  type SingleSourceChartData,
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
@@ -21,6 +22,7 @@ import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-d
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
+import { RwaNavPriceChart } from '@/components/organisms/Charts/RwaNavPriceChart'
 import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { CurationActivity } from '@/features/curation-activity/components/CurationActivity/CurationActivity'
 import { type VaultCurationEvent } from '@/features/curation-activity/types'
@@ -40,10 +42,12 @@ interface VaultOpenViewDetailsProps {
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
   curationEvents?: VaultCurationEvent[]
-  arksHistoricalChartData: ArksHistoricalChartData
+  arksHistoricalChartData?: ArksHistoricalChartData
+  rwaNavHistoricalChartData?: SingleSourceChartData
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   isDaoManaged?: boolean
+  isRwaVault?: boolean
 }
 
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
@@ -53,9 +57,11 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   rebalanceActivity,
   curationEvents = [],
   arksHistoricalChartData,
+  rwaNavHistoricalChartData,
   arksInterestRates,
   vaultApyData,
   isDaoManaged,
+  isRwaVault,
 }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
@@ -65,7 +71,14 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
     : 'USD'
   const vaultBenchmarkName = `${vaultBenchmarkAsset} Vault Benchmark`
 
-  const managementFee = getManagementFee(vault.inputToken.symbol)
+  // Prefer the on-chain management fee (tipRate) decorated server-side; fall back to the
+  // token-symbol heuristic for any path that didn't fetch fees.
+  const managementFee = vault.managementFee ?? getManagementFee(vault.inputToken.symbol)
+  // RWA fleets also charge a performance fee (performanceFeeRate); non-RWA fleets don't implement it.
+  const performanceFee =
+    typeof vault.performanceFee === 'number' && vault.performanceFee > 0
+      ? vault.performanceFee
+      : null
 
   const humanReadableNetwork = capitalize(
     sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
@@ -77,22 +90,56 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
 
   return (
     <div className={styles.vaultOpenViewDetailsWrapper}>
-      <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} isDaoManaged={isDaoManaged} />
+      <VaultOpenHeaderBlock
+        detailsLinks={detailsLinks}
+        vault={vault}
+        isDaoManaged={isDaoManaged}
+        isRwaVault={isRwaVault}
+      />
+      {isRwaVault ? (
+        <Expander
+          onExpand={handleExpanderToggle('vault-asset-manager')}
+          title={
+            <Text as="p" variant="p1semi">
+              Avantgarde Asset Management (Vault Curator)
+            </Text>
+          }
+          defaultExpanded
+        >
+          <Text
+            as="p"
+            variant="p3"
+            style={{
+              color: 'var(--color-text-secondary)',
+              margin: '0 10px',
+            }}
+          >
+            This Vault is curated and managed by Avantgarde Asset Managment. Avantgarde have over 8
+            years of experience....blah blah blah
+          </Text>
+        </Expander>
+      ) : null}
       <Expander
         onExpand={handleExpanderToggle('historical-yield')}
         title={
           <Text as="p" variant="p1semi">
-            Historical yield
+            {isRwaVault ? 'Historical NAV price' : 'Historical yield'}
           </Text>
         }
         defaultExpanded
       >
-        <ArkHistoricalYieldChart
-          chartId="open-view"
-          chartData={arksHistoricalChartData}
-          summerVaultName={summerVaultName}
-          vaultBenchmarkName={vaultBenchmarkName}
-        />
+        {isRwaVault ? (
+          <RwaNavPriceChart chartId="open-view" chartData={rwaNavHistoricalChartData} />
+        ) : (
+          arksHistoricalChartData && (
+            <ArkHistoricalYieldChart
+              chartId="open-view"
+              chartData={arksHistoricalChartData}
+              summerVaultName={summerVaultName}
+              vaultBenchmarkName={vaultBenchmarkName}
+            />
+          )
+        )}
       </Expander>
       <Expander
         onExpand={handleExpanderToggle('vault-exposure')}
@@ -181,6 +228,9 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
             }}
           >
             {formatDecimalAsPercent(managementFee)} management fee
+            {performanceFee !== null
+              ? ` + ${formatDecimalAsPercent(performanceFee)} performance fee`
+              : ''}
           </Text>
           <Text
             as="p"
@@ -189,10 +239,14 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
               color: 'var(--color-text-secondary)',
             }}
           >
-            A {formatDecimalAsPercent(managementFee)} annualised management fee is charged for using
-            this strategy. The fees are continually accounted for and reflected in the market value
-            of your position. This strategy has no other fees, and there are no restrictions or
-            delays when withdrawing.
+            {performanceFee !== null
+              ? `A ${formatDecimalAsPercent(managementFee)} annualised management fee and a ${formatDecimalAsPercent(performanceFee)} performance fee are charged for using this strategy. `
+              : `A ${formatDecimalAsPercent(managementFee)} annualised management fee is charged for using this strategy. `}
+            The fees are continually accounted for and reflected in the market value of your
+            position.
+            {performanceFee !== null
+              ? ' There are no restrictions or delays when withdrawing.'
+              : ' This strategy has no other fees, and there are no restrictions or delays when withdrawing.'}
             {vaultApyData.sma30d
               ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d - managementFee)}.`
               : ''}

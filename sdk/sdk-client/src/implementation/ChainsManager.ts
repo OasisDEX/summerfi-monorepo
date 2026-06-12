@@ -22,17 +22,6 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
   }
 
   /**
-   * Returns information for every chain supported by the SDK.
-   *
-   * @returns A promise resolving to the list of supported chains' {@link ChainInfo}.
-   */
-  public async getSupportedChains(): Promise<ChainInfo[]> {
-    return Object.values(ChainIds).map((chainId) => {
-      return getChainInfoByChainId(chainId)
-    })
-  }
-
-  /**
    * Builds a {@link Chain} instance (with its tokens and protocols managers) from chain info.
    *
    * @param params - Parameters object.

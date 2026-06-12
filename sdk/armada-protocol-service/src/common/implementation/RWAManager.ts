@@ -1,6 +1,8 @@
 import type { IRWAManager } from '@summerfi/armada-protocol-common'
 import {
   Address,
+  FiatCurrency,
+  FiatCurrencyAmount,
   getChainInfoByChainId,
   Price,
   RoundState,
@@ -11,6 +13,7 @@ import {
   User,
   type AddressValue,
   type ChainId,
+  type IFiatCurrencyAmount,
   type IResolvedRoundsVault,
   type IToken,
   type ITokenAmount,
@@ -24,6 +27,7 @@ import type {
   IProtocolAccessManagerV2Contract,
 } from '@summerfi/contracts-provider-common'
 import type { IRwaSubgraphManager, GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
+import { RoundStateRwa } from '@summerfi/subgraph-manager-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { mapSubgraphVaultToVaultInfoParams } from './extensions/mapSubgraphVaultToVaultInfoParams'
@@ -391,6 +395,171 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     }))
   }
 
+  /** @see IRWAManager.getUserVaultExposure */
+  async getUserVaultExposure(
+    params: Parameters<IRWAManager['getUserVaultExposure']>[0],
+  ): ReturnType<IRWAManager['getUserVaultExposure']> {
+    const { chainId, fleetAddress, userAddress } = params
+
+    const inputVault = await this._resolveRoundsVault(chainId, fleetAddress, RoundsVaultType.Input)
+    const outputVault = await this._resolveRoundsVault(
+      chainId,
+      fleetAddress,
+      RoundsVaultType.Output,
+    )
+
+    // Input vault underlying IS the Fleet input asset (e.g. USDC); Output vault underlying is Fleet
+    // shares. Pull vault-level price metadata directly (works even when the user has no Fleet
+    // position yet but does hold settled-but-unclaimed deposit receipts).
+    const { vault } = await this._rwaSubgraphManager.getVault({
+      chainId,
+      vaultId: fleetAddress.toLowerCase(),
+    })
+    const inputToken = inputVault.underlyingToken
+    const shareToken = outputVault.underlyingToken
+
+    const position = await this._getUserPosition(chainId, userAddress, fleetAddress)
+    const settledPosition = TokenAmount.createFromBaseUnit({
+      token: inputToken,
+      amount: (position?.inputTokenBalance ?? 0n).toString(),
+    })
+
+    // Input-vault receipts, bucketed by round state. Settled-but-unclaimed receipts (claimable
+    // deposits) are NOT in settledPosition — their Fleet shares are held by the RoundsVault, not the
+    // user — so they are a genuine additive term.
+    const { receipts: inputReceipts } = await this._rwaSubgraphManager.getReceipts({
+      chainId,
+      account: userAddress.toLowerCase(),
+      vault: inputVault.address.toLowerCase(),
+    })
+    let pendingDepositsBase = 0n
+    let claimableDepositsBase = 0n
+    for (const receipt of inputReceipts) {
+      if (receipt.round.state === RoundStateRwa.Settled) {
+        claimableDepositsBase += BigInt(receipt.balance)
+      } else {
+        pendingDepositsBase += BigInt(receipt.balance)
+      }
+    }
+    const pendingDeposits = TokenAmount.createFromBaseUnit({
+      token: inputToken,
+      amount: pendingDepositsBase.toString(),
+    })
+    const claimableDeposits = TokenAmount.createFromBaseUnit({
+      token: inputToken,
+      amount: claimableDepositsBase.toString(),
+    })
+
+    // Pending withdrawals: Output-vault receipts in non-settled rounds (share-denominated),
+    // converted to the input asset via pricePerShare. Claimable (settled) withdrawals are excluded.
+    const { receipts: outputReceipts } = await this._rwaSubgraphManager.getReceipts({
+      chainId,
+      account: userAddress.toLowerCase(),
+      vault: outputVault.address.toLowerCase(),
+    })
+    let pendingWithdrawalSharesBase = 0n
+    for (const receipt of outputReceipts) {
+      if (receipt.round.state !== RoundStateRwa.Settled) {
+        pendingWithdrawalSharesBase += BigInt(receipt.balance)
+      }
+    }
+    const pendingWithdrawals = this._sharesToInputAsset(
+      pendingWithdrawalSharesBase,
+      shareToken,
+      inputToken,
+      vault?.pricePerShare,
+    )
+
+    const total = settledPosition
+      .add(pendingDeposits)
+      .add(claimableDeposits)
+      .add(pendingWithdrawals)
+    const totalUsd = this._toUsd(total, vault?.inputTokenPriceUSD)
+
+    return {
+      total,
+      totalUsd,
+      settledPosition,
+      pendingDeposits,
+      claimableDeposits,
+      pendingWithdrawals,
+    }
+  }
+
+  /** @see IRWAManager.getVaultMarketValue */
+  async getVaultMarketValue(
+    params: Parameters<IRWAManager['getVaultMarketValue']>[0],
+  ): ReturnType<IRWAManager['getVaultMarketValue']> {
+    const { chainId, fleetAddress } = params
+
+    const inputVault = await this._resolveRoundsVault(chainId, fleetAddress, RoundsVaultType.Input)
+    const outputVault = await this._resolveRoundsVault(
+      chainId,
+      fleetAddress,
+      RoundsVaultType.Output,
+    )
+
+    const { vault } = await this._rwaSubgraphManager.getVault({
+      chainId,
+      vaultId: fleetAddress.toLowerCase(),
+    })
+    if (!vault) {
+      throw new Error(`No RWA vault ${fleetAddress} on chain ${chainId}`)
+    }
+    const inputToken = this._buildToken(chainId, vault.inputToken)
+
+    // Fleet on-chain totalAssets() — already counts settled-but-unclaimed deposits (deposited into
+    // the Fleet at settlement) and already excludes settled-but-unclaimed withdrawals.
+    const fleetAssets = TokenAmount.createFromBaseUnit({
+      token: inputToken,
+      amount: vault.inputTokenBalance.toString(),
+    })
+
+    // Vault-wide pending deposits: USDC still sitting in the Input RoundsVault for not-yet-settled
+    // rounds. receiptSupply is the live cross-user ERC-1155 supply per round.
+    const { rounds: inputRounds } = await this._rwaSubgraphManager.getVaultRounds({
+      chainId,
+      vault: inputVault.address.toLowerCase(),
+    })
+    let pendingDepositsBase = 0n
+    for (const round of inputRounds) {
+      if (round.state !== RoundStateRwa.Settled) {
+        pendingDepositsBase += BigInt(round.receiptSupply)
+      }
+    }
+    const pendingDeposits = TokenAmount.createFromBaseUnit({
+      token: inputToken,
+      amount: pendingDepositsBase.toString(),
+    })
+
+    // Vault-wide claimable withdrawals: USDC in the Output RoundsVault for settled, unredeemed
+    // rounds. Convert remaining receipt supply (shares) via each round's settled exchange-rate
+    // snapshot. Subgraph Round convention: payout = receiptAmount * exchangeRateBase / quote.
+    const { rounds: outputRounds } = await this._rwaSubgraphManager.getVaultRounds({
+      chainId,
+      vault: outputVault.address.toLowerCase(),
+    })
+    let claimableWithdrawalsBase = 0n
+    for (const round of outputRounds) {
+      if (round.state !== RoundStateRwa.Settled) continue
+      const supply = BigInt(round.receiptSupply)
+      if (supply <= 0n) continue
+      const base = round.exchangeRateBase == null ? null : BigInt(round.exchangeRateBase)
+      const quote = round.exchangeRateQuote == null ? null : BigInt(round.exchangeRateQuote)
+      if (base == null || quote == null || quote === 0n) continue
+      claimableWithdrawalsBase += (supply * base) / quote
+    }
+    const claimableWithdrawals = TokenAmount.createFromBaseUnit({
+      token: inputToken,
+      amount: claimableWithdrawalsBase.toString(),
+    })
+
+    const total = fleetAssets.add(pendingDeposits).add(claimableWithdrawals)
+    const totalUsd = this._toUsd(total, vault.inputTokenPriceUSD)
+
+    return { total, totalUsd, fleetAssets, pendingDeposits, claimableWithdrawals }
+  }
+
   /** @see IRWAManager.getSetMinimumPositionSizeTx */
   async getSetMinimumPositionSizeTx(
     params: Parameters<IRWAManager['getSetMinimumPositionSizeTx']>[0],
@@ -682,6 +851,46 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
    */
   private _formatAmount(value: ITokenAmount): string {
     return `${value.toBigNumber().toFixed(6)} ${value.token.symbol}`
+  }
+
+  /**
+   * @name _toUsd
+   * @description Values a (Fleet input asset) token amount in USD using the subgraph's
+   *              `inputTokenPriceUSD` (a decimal string; treated as 0 when missing).
+   */
+  private _toUsd(amount: ITokenAmount, priceUsd: string | null | undefined): IFiatCurrencyAmount {
+    return FiatCurrencyAmount.createFrom({
+      amount: amount
+        .toBigNumber()
+        .multipliedBy(BigNumber(priceUsd ?? '0'))
+        .toFixed(),
+      fiat: FiatCurrency.USD,
+    })
+  }
+
+  /**
+   * @name _sharesToInputAsset
+   * @description Converts a share-denominated base-unit amount into the Fleet input asset via the
+   *              vault `pricePerShare` (input asset per full share). Returns zero when there is
+   *              nothing to convert or `pricePerShare` is unavailable.
+   */
+  private _sharesToInputAsset(
+    sharesBaseUnit: bigint,
+    shareToken: IToken,
+    inputToken: IToken,
+    pricePerShare: string | null | undefined,
+  ): ITokenAmount {
+    if (sharesBaseUnit <= 0n || pricePerShare == null) {
+      return TokenAmount.createFromBaseUnit({ token: inputToken, amount: '0' })
+    }
+    const humanShares = TokenAmount.createFromBaseUnit({
+      token: shareToken,
+      amount: sharesBaseUnit.toString(),
+    }).toBigNumber()
+    return TokenAmount.createFrom({
+      token: inputToken,
+      amount: humanShares.times(BigNumber(pricePerShare)).toFixed(),
+    })
   }
 
   /**

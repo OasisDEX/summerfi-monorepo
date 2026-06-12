@@ -83,6 +83,18 @@ export class RwaManagerClient extends IRPCClient implements IRwaManagerClient {
     return this.rpcClient.rwa.getReceiptBalances.query(params)
   }
 
+  async getUserVaultExposure(
+    params: Parameters<IRwaManagerClient['getUserVaultExposure']>[0],
+  ): ReturnType<IRwaManagerClient['getUserVaultExposure']> {
+    return this.rpcClient.rwa.getUserVaultExposure.query(params)
+  }
+
+  async getVaultMarketValue(
+    params: Parameters<IRwaManagerClient['getVaultMarketValue']>[0],
+  ): ReturnType<IRwaManagerClient['getVaultMarketValue']> {
+    return this.rpcClient.rwa.getVaultMarketValue.query(params)
+  }
+
   async getSetMinimumPositionSizeTx(
     params: Parameters<IRwaManagerClient['getSetMinimumPositionSizeTx']>[0],
   ): ReturnType<IRwaManagerClient['getSetMinimumPositionSizeTx']> {

@@ -4,7 +4,9 @@ import type {
   IArmadaVaultId,
   IChainInfo,
   IPrice,
+  IRwaUserVaultExposure,
   IRwaVaultInfo,
+  IRwaVaultMarketValue,
   RoundState,
   RoundsVaultType,
   TransactionInfo,
@@ -112,6 +114,17 @@ export interface IRwaManagerClient {
     accountAddress: AddressValue
     vaultType: RoundsVaultType
   }): Promise<{ roundId: bigint; balance: bigint }[]>
+
+  getUserVaultExposure(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
+  }): Promise<IRwaUserVaultExposure>
+
+  getVaultMarketValue(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+  }): Promise<IRwaVaultMarketValue>
 
   getSetMinimumPositionSizeTx(params: {
     chainId: ChainId

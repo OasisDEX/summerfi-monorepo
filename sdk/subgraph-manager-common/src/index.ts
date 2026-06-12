@@ -48,12 +48,15 @@ export type {
   GetVaultsQuery as GetVaultsQueryRwa,
   GetVaultQuery as GetVaultQueryRwa,
   GetRwaReceiptsQuery,
+  GetRwaVaultRoundsQuery,
   GetRwaInstitutionByIdQuery,
 } from './generated/rwa/client'
 export {
   GetVaultsDocument as GetVaultsDocumentRwa,
   GetVaultDocument as GetVaultDocumentRwa,
   GetRwaReceiptsDocument,
+  GetRwaVaultRoundsDocument,
   GetRwaInstitutionByIdDocument,
+  RoundState as RoundStateRwa,
 } from './generated/rwa/client'
 export { SubgraphTypes, type SubgraphType } from './types/SubgraphTypes'

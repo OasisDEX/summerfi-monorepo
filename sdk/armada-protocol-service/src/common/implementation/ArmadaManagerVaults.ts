@@ -2257,8 +2257,8 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
 
   async getProtocolRevenue(): ReturnType<IArmadaManagerVaults['getProtocolRevenue']> {
     // Get vaults info list on all chains by creating a promise array
-    const vaultsPromises = Object.values(ChainIds).map((chainId) =>
-      this.getVaultInfoListPerChain({ chainId }),
+    const vaultsPromises = Object.values(this._supportedChains.map((ci) => ci.chainId)).map(
+      (chainId) => this.getVaultInfoListPerChain({ chainId }),
     )
     const vaults = await (await Promise.all(vaultsPromises)).flatMap((res) => res.list)
 
@@ -2295,8 +2295,8 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
   /** @see IArmadaManagerVaults.getProtocolTvl */
   async getProtocolTvl(): ReturnType<IArmadaManagerVaults['getProtocolTvl']> {
     // Get vaults info list on all chains by creating a promise array
-    const vaultsPromises = Object.values(ChainIds).map((chainId) =>
-      this.getVaultInfoListPerChain({ chainId }),
+    const vaultsPromises = Object.values(this._supportedChains.map((ci) => ci.chainId)).map(
+      (chainId) => this.getVaultInfoListPerChain({ chainId }),
     )
     const vaults = await (await Promise.all(vaultsPromises)).flatMap((res) => res.list)
 

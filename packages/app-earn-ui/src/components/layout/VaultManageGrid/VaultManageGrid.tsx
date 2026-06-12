@@ -210,8 +210,9 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   )
 
   const vaultsDropdownOptions: DropdownRawOption[] = useMemo(() => {
-    const regularVaults = vaults.filter((v) => !v.isDaoManaged)
+    const regularVaults = vaults.filter((v) => !v.isDaoManaged && !v.isRwaVault)
     const daoManagedVaults = vaults.filter((v) => v.isDaoManaged)
+    const rwaVaults = vaults.filter((v) => v.isRwaVault)
 
     return [
       ...(daoManagedVaults.length > 0
@@ -250,6 +251,25 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               isSeparator: true,
             },
             ...regularVaults.map(mapVaultToDropdownItem),
+          ]
+        : []),
+      ...(rwaVaults.length > 0
+        ? [
+            {
+              value: 'permissioned-rwa-vaults',
+              content: (
+                <div
+                  style={{
+                    fontSize: '12px',
+                    color: 'var(--earn-protocol-secondary-100)',
+                  }}
+                >
+                  Permissioned&nbsp;RWA&nbsp;Vaults
+                </div>
+              ),
+              isSeparator: true,
+            },
+            ...rwaVaults.map(mapVaultToDropdownItem),
           ]
         : []),
     ]

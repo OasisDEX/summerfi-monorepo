@@ -136,6 +136,10 @@ query GetVault($id: ID!) {
     rewardTokenEmissionsUSD
     rebalanceCount
     pricePerShare
+    dailySnapshots(first: 31, orderBy: timestamp, orderDirection: desc) {
+      pricePerShare
+      timestamp
+    }
     arks {
       id
       productId
@@ -234,5 +238,14 @@ query GetRwaReceipts($account: String!, $vault: String!) {
     vault {
       id
     }
+  }
+}
+query GetRwaVaultRounds($vault: String!) {
+  rounds(first: 1000, where: { vault: $vault }) {
+    roundId
+    state
+    receiptSupply
+    exchangeRateBase
+    exchangeRateQuote
   }
 }

@@ -26,7 +26,7 @@ export function createInstiSdkTestSetup(
     simulateOnly?: boolean
   } = {},
 ) {
-  const { clientId, instiVersion, simulateOnly = true } = params
+  const { clientId, instiVersion = 'v2', simulateOnly = true } = params
 
   let sdk: ReturnType<typeof makeInstiSdk> | ReturnType<typeof makeAdminSDK>
   let chainId: ChainId
@@ -35,7 +35,7 @@ export function createInstiSdkTestSetup(
 
   if (instiVersion) {
     sdk = makeInstiSdk({
-      clientId: clientId ?? RwaTestConfig.clientId,
+      clientId: clientId ?? TestClientIds.ACME_v2,
       instiVersion,
       apiDomainUrl: SDKApiUrl,
       logging: process.env.SDK_LOGGING_ENABLED === 'true',

@@ -15,6 +15,7 @@ import {
   emptyWalletAssets,
   getCachedWalletAssets,
 } from '@/app/server-handlers/cached/get-wallet-assets'
+import { decorateVaultsWithFees } from '@/app/server-handlers/fleet-fees/decorate-vaults-with-fees'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 // Shared by the /api/defi-vaults-list route and the server-side prefetch in the page, so the
@@ -42,11 +43,13 @@ export const getDefiVaultsListData = async (walletAddress?: string) => {
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
-  const vaultsWithConfig = decorateVaultsWithConfig({
-    systemConfig,
-    vaults,
-    daoManagedVaultsList,
-  })
+  const vaultsWithConfig = await decorateVaultsWithFees(
+    decorateVaultsWithConfig({
+      systemConfig,
+      vaults,
+      daoManagedVaultsList,
+    }),
+  )
 
   const filteredWalletAssetsVaults = walletAddress
     ? vaultsWithConfig.filter((vault) => {

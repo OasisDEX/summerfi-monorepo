@@ -12841,7 +12841,7 @@ export type GetVaultQueryVariables = Exact<{
 }>;
 
 
-export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, outputTokenSupply: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, minimumBufferBalance: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, isWhitelistOpen: boolean, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, roundsVaultPair?: { __typename?: 'RoundsVaultPair', id: string, active: boolean, inputVault?: { __typename?: 'RoundsVault', id: string, currentRound: bigint, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, exchangeAssetToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } } | null, outputVault?: { __typename?: 'RoundsVault', id: string, currentRound: bigint, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, exchangeAssetToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } } | null } | null } | null };
+export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, outputTokenSupply: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, minimumBufferBalance: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, isWhitelistOpen: boolean, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, dailySnapshots: Array<{ __typename?: 'VaultDailySnapshot', pricePerShare?: string | null, timestamp: bigint }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null, roundsVaultPair?: { __typename?: 'RoundsVaultPair', id: string, active: boolean, inputVault?: { __typename?: 'RoundsVault', id: string, currentRound: bigint, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, exchangeAssetToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } } | null, outputVault?: { __typename?: 'RoundsVault', id: string, currentRound: bigint, minPositionSize: bigint, underlyingToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, exchangeAssetToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } } | null } | null } | null };
 
 export type GetRwaReceiptsQueryVariables = Exact<{
   account: Scalars['String']['input'];
@@ -12850,6 +12850,13 @@ export type GetRwaReceiptsQueryVariables = Exact<{
 
 
 export type GetRwaReceiptsQuery = { __typename?: 'Query', receipts: Array<{ __typename?: 'Receipt', id: string, balance: bigint, round: { __typename?: 'Round', roundId: bigint, state: RoundState }, vault: { __typename?: 'RoundsVault', id: string } }> };
+
+export type GetRwaVaultRoundsQueryVariables = Exact<{
+  vault: Scalars['String']['input'];
+}>;
+
+
+export type GetRwaVaultRoundsQuery = { __typename?: 'Query', rounds: Array<{ __typename?: 'Round', roundId: bigint, state: RoundState, receiptSupply: bigint, exchangeRateBase?: bigint | null, exchangeRateQuote?: bigint | null }> };
 
 
 export const GetGlobalRebalancesDocument = gql`
@@ -13510,6 +13517,10 @@ export const GetVaultDocument = gql`
     rewardTokenEmissionsUSD
     rebalanceCount
     pricePerShare
+    dailySnapshots(first: 31, orderBy: timestamp, orderDirection: desc) {
+      pricePerShare
+      timestamp
+    }
     arks {
       id
       productId
@@ -13613,6 +13624,17 @@ export const GetRwaReceiptsDocument = gql`
   }
 }
     `;
+export const GetRwaVaultRoundsDocument = gql`
+    query GetRwaVaultRounds($vault: String!) {
+  rounds(first: 1000, where: {vault: $vault}) {
+    roundId
+    state
+    receiptSupply
+    exchangeRateBase
+    exchangeRateQuote
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -13668,6 +13690,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetRwaReceipts(variables: GetRwaReceiptsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRwaReceiptsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetRwaReceiptsQuery>({ document: GetRwaReceiptsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRwaReceipts', 'query', variables);
+    },
+    GetRwaVaultRounds(variables: GetRwaVaultRoundsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRwaVaultRoundsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRwaVaultRoundsQuery>({ document: GetRwaVaultRoundsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRwaVaultRounds', 'query', variables);
     }
   };
 }

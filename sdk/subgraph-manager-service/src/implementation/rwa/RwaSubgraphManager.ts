@@ -14,7 +14,7 @@ import type { ChainId } from 'node_modules/@summerfi/sdk-common/src/common/types
 export class RwaSubgraphManager extends ArmadaSubgraphManager implements IRwaSubgraphManager {
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
-    super(params)
+    super({ ...params, extendedCaller: 'RWA' })
   }
 
   getRwaClient(chainId: ChainId): ReturnType<typeof createRwaGraphQLClient> {
@@ -38,6 +38,10 @@ export class RwaSubgraphManager extends ArmadaSubgraphManager implements IRwaSub
 
   getReceipts({ chainId, account, vault }: Parameters<IRwaSubgraphManager['getReceipts']>[0]) {
     return this.getRwaClient(chainId).GetRwaReceipts({ account, vault })
+  }
+
+  getVaultRounds({ chainId, vault }: Parameters<IRwaSubgraphManager['getVaultRounds']>[0]) {
+    return this.getRwaClient(chainId).GetRwaVaultRounds({ vault })
   }
 
   async getInstitutionById({

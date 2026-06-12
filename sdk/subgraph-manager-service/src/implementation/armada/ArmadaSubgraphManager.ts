@@ -49,6 +49,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     configProvider: IConfigurationProvider
     clientId?: string
     instiVersion?: InstiVersion
+    extendedCaller?: string
   }) {
     if (params.clientId && !params.instiVersion) {
       throw new Error('instiVersion must be provided when clientId is specified')
@@ -76,7 +77,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
       throw new Error('No subgraph config in env')
     }
     LoggingService.log(
-      `Loaded Armada subgraph config from env ${envName} for ${this.config.subgraphType} with clientId ${this.clientId} and instiVersion ${this.instiVersion}`,
+      `Creating ${params.extendedCaller ?? 'Armada'} subgraph for ${this.config.subgraphType}, clientId ${this.clientId}, instiVersion ${this.instiVersion}`,
     )
 
     this.urlMap = urlMap

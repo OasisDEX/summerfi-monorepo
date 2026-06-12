@@ -3,7 +3,9 @@ import type {
   ChainId,
   IArmadaVaultId,
   IChainInfo,
+  IRwaUserVaultExposure,
   IRwaVaultInfo,
+  IRwaVaultMarketValue,
   IPrice,
   RoundState,
   RoundsVaultType,
@@ -236,6 +238,43 @@ export interface IRWAManager {
     accountAddress: AddressValue
     vaultType: RoundsVaultType
   }): Promise<{ roundId: bigint; balance: bigint }[]>
+
+  /**
+   * @method getUserVaultExposure
+   * @description Returns a user's total economic exposure to an RWA vault, denominated in the Fleet
+   *              input asset (e.g. USDC) plus a USD valuation and a per-component breakdown. Stitches
+   *              the three pools of the RoundsVault model:
+   *              `settledPosition + pendingDeposits + claimableDeposits + pendingWithdrawals`.
+   *              `claimableDeposits` (settled, unclaimed Input receipts) is added because those shares
+   *              are held by the RoundsVault, not the user, so they are absent from the per-user
+   *              `position.inputTokenBalance`. Pending withdrawals are share-denominated Output
+   *              receipts converted via the vault `pricePerShare`; claimable withdrawals are excluded.
+   *
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param userAddress  The user to query
+   */
+  getUserVaultExposure(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    userAddress: AddressValue
+  }): Promise<IRwaUserVaultExposure>
+
+  /**
+   * @method getVaultMarketValue
+   * @description Returns the total market value (true TVL) of an RWA vault across all users,
+   *              denominated in the Fleet input asset plus a USD valuation and a per-component
+   *              breakdown. Treats the Fleet and both RoundsVaults as one system:
+   *              `fleetAssets + pendingDeposits + claimableWithdrawals`, where `fleetAssets`
+   *              (on-chain `totalAssets()`) already accounts for settled deposits/withdrawals.
+   *
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   */
+  getVaultMarketValue(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+  }): Promise<IRwaVaultMarketValue>
 
   /**
    * @method getSetMinimumPositionSizeTx

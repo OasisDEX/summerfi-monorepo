@@ -1,5 +1,6 @@
-import { ChainIds } from '@summerfi/sdk-common'
-import { createSdkTestSetup } from './utils/createSdkTestSetup'
+import type { InstiVersion } from '@summerfi/sdk-common'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
+import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -7,18 +8,24 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - getProtocolTvl', () => {
-  it('should get total protocol TVL across all chains', async () => {
-    const { sdk } = createSdkTestSetup({ chainId: ChainIds.Base })
+  const scenarios: { clientId?: string; instiVersion?: InstiVersion }[] = [
+    {},
+    { clientId: TestClientIds.ACME },
+    { clientId: TestClientIds.ACME_v2, instiVersion: 'v2' },
+  ]
 
-    console.log('Fetching total protocol TVL...')
+  describe.each(scenarios)('with scenario %#', (scenario) => {
+    it('should get total protocol TVL across all chains', async () => {
+      const sdk = createTestSdkInstance(scenario.clientId, scenario.instiVersion)
 
-    const totalTvl = await sdk.armada.users.getProtocolTvl()
+      const totalTvl = await sdk.armada.users.getProtocolTvl()
 
-    console.log(`Total Protocol TVL: $${totalTvl.toLocaleString()}`)
+      console.log(`Total Protocol TVL: $${totalTvl.toLocaleString()}`)
 
-    // Verify the result is a number and greater than or equal to 0
-    expect(typeof totalTvl).toBe('number')
-    expect(totalTvl).toBeGreaterThanOrEqual(0)
-    expect(isNaN(totalTvl)).toBe(false)
+      // Verify the result is a number and greater than or equal to 0
+      expect(typeof totalTvl).toBe('number')
+      expect(totalTvl).toBeGreaterThanOrEqual(0)
+      expect(isNaN(totalTvl)).toBe(false)
+    })
   })
 })
