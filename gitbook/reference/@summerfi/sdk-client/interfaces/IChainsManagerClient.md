@@ -17,7 +17,7 @@ Interface for the ChainsManager client implementation. Allows to retrieve inform
 getChain(params): Promise<Chain>;
 ```
 
-Defined in: [src/interfaces/IChainsManager.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L26)
+Defined in: [src/interfaces/IChainsManager.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L18)
 
 #### Parameters
 
@@ -49,7 +49,7 @@ Retrieves a chain by its chain info
 getChainById(params): Promise<Maybe<Chain>>;
 ```
 
-Defined in: [src/interfaces/IChainsManager.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L36)
+Defined in: [src/interfaces/IChainsManager.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L28)
 
 #### Parameters
 
@@ -72,27 +72,3 @@ getChainById
 #### Description
 
 Retrieves a network by its chain ID
-
-***
-
-### getSupportedChains()
-
-```ts
-getSupportedChains(): Promise<ChainInfo[]>;
-```
-
-Defined in: [src/interfaces/IChainsManager.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L16)
-
-#### Returns
-
-`Promise`\<[`ChainInfo`](../classes/ChainInfo.md)[]\>
-
-The list of supported chains
-
-#### Method
-
-getSupportedChains
-
-#### Description
-
-Retrieves the list of supported chains
