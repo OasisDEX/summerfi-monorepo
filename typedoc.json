@@ -1,14 +1,8 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPointStrategy": "packages",
-  "entryPoints": [
-    "sdk/sdk-common",
-    "sdk/sdk-client",
-    "sdk/sdk-client-react"
-  ],
-  "plugin": [
-    "typedoc-plugin-markdown"
-  ],
+  "entryPoints": ["sdk/sdk-common", "sdk/sdk-client", "sdk/sdk-client-react"],
+  "plugin": ["typedoc-plugin-markdown"],
   "out": "gitbook/reference",
   "name": "Summer.fi SDK",
   "router": "member",
