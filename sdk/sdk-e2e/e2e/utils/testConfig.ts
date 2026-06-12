@@ -56,6 +56,7 @@ export const FleetAddresses = {
     USDCLowRisk: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
     ETHHighRisk: '0x2e6abcbcced9af05bc3b8a4908e0c98c29a88e10',
     ETHDao: '0x0c1fbccc019320032d9acd193447560c8c632114',
+    OrthodoxUSDC: '0x35aE5392cc355686606658d18dff9b9109390E13',
   },
   [ChainIds.Sonic]: {
     USDC: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
@@ -132,6 +133,7 @@ export const TestConfigKeys: TestConfigKey[] = Object.keys(TestConfigs) as TestC
 export enum TestClientIds {
   'ACME' = 'ExtDemoCorp',
   'ACME_v2' = 'ExtDemoCorp_v2',
+  'Orthodox' = 'Orthodox',
   'Targen' = 'Targen',
 }
 
@@ -157,6 +159,14 @@ export const InstiTestConfigs = {
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses[ChainIds.Base].AcmeUSDC_v2,
     aqAddressValue: '0x477285d524628faa3ed62d8086be56810a34795e',
+    userAddressValue: TestConfigAccounts.testUserAddressValue,
+    symbol: 'ETH',
+  },
+  [TestClientIds.Orthodox]: {
+    rpcUrl: RpcUrls[ChainIds.Mainnet],
+    chainId: ChainIds.Mainnet,
+    fleetAddressValue: FleetAddresses[ChainIds.Mainnet].OrthodoxUSDC,
+    aqAddressValue: '0xc5c96cA7607eCe902092F4080B844AA0Bb5C1Ff4',
     userAddressValue: TestConfigAccounts.testUserAddressValue,
     symbol: 'ETH',
   },
