@@ -9,5 +9,6 @@ export const subgraphsMap = {
 }
 
 export const rwaSubgraphsMap = {
+  [SupportedSDKNetworks.Mainnet]: `${process.env.SUBGRAPH_BASE}/summer-institutions-v2`,
   [SupportedSDKNetworks.Base]: `${process.env.SUBGRAPH_BASE}/summer-institutions-v2-base`,
 }

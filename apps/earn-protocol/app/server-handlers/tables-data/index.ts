@@ -41,6 +41,7 @@ export const updateTablesData = async ({
     }
 
     const rwaSubgraphsMap = {
+      [SupportedSDKNetworks.Mainnet]: `${baseUrl}/summer-institutions-v2`,
       [SupportedSDKNetworks.Base]: `${baseUrl}/summer-institutions-v2-base`,
     }
 
