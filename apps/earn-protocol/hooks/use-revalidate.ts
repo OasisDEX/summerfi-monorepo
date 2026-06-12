@@ -1,9 +1,10 @@
 'use client'
+import { humanNetworktoSDKNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 
 import { CACHE_TAGS } from '@/constants/revalidation'
-import { getUserDataCacheHandler } from '@/helpers/get-cache-handler-name'
+import { getFleetFeesTag, getUserDataCacheHandler } from '@/helpers/get-cache-handler-name'
 
 const fetchRevalidate = async ({
   tags,
@@ -76,7 +77,10 @@ export const useRevalidateVaultsListData = () => {
     })
 
     fetchRevalidate({
-      tags: [CACHE_TAGS.VAULTS_LIST, CACHE_TAGS.INTEREST_RATES].filter(Boolean),
+      // FLEET_FEES busts every vault's cached on-chain management/performance fee in one go.
+      tags: [CACHE_TAGS.VAULTS_LIST, CACHE_TAGS.INTEREST_RATES, CACHE_TAGS.FLEET_FEES].filter(
+        Boolean,
+      ),
     }).then(() => {
       refreshView()
     })
@@ -108,6 +112,10 @@ export const useRevalidatePositionData = () => {
       CACHE_TAGS.INTEREST_RATES,
       chainName && vaultPerformanceAsset
         ? `${CACHE_TAGS.VAULT_PERFORMANCE}-${chainName.toLowerCase()}-${vaultPerformanceAsset.toLowerCase()}`
+        : undefined,
+      // Surgically bust just this vault's cached on-chain fees so the refreshed page re-reads them.
+      chainName && vaultId
+        ? getFleetFeesTag(vaultId, subgraphNetworkToId(humanNetworktoSDKNetwork(chainName)))
         : undefined,
       walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
     ].filter(Boolean)

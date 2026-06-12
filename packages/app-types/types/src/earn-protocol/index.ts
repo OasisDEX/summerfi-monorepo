@@ -83,6 +83,13 @@ type VaultCustomFields = {
   // when the APY spans a shorter window (vault younger than 30d), the number of days actually used
   // (so the UI can explain the partial value); null/undefined when a full 30d window is available
   navApy30dPartialDays?: number | null
+  // annualised management fee read on-chain from the fleet contract's `tipRate`, as a decimal
+  // fraction (e.g. 0.01 = 1%); decorated server-side. Undefined on paths that don't fetch fees
+  // (callers fall back to the token-symbol heuristic in that case).
+  managementFee?: number
+  // RWA-only performance fee read on-chain from the fleet contract's `performanceFeeRate`, as a
+  // decimal fraction; null for non-RWA fleets (which don't implement it), undefined when not fetched.
+  performanceFee?: number | null
 }
 
 export type SDKVaultsListType = (GetVaultsQuery['vaults'][number] & VaultCustomFields)[]

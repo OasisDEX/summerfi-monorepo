@@ -57,7 +57,7 @@ export const LandingPageHero = ({
       (vaultsList
         ? vaultsList.map((vault) => {
             const vaultInfo = findVaultInfo(vaultsInfo, vault)
-            const managementFee = getManagementFee(vault.inputToken.symbol)
+            const managementFee = vault.managementFee ?? getManagementFee(vault.inputToken.symbol)
 
             if (!vaultInfo) return 0
             if (!vaultsApyByNetworkMap) return 0

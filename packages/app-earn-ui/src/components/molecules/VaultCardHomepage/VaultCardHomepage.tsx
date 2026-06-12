@@ -263,7 +263,8 @@ export const VaultCardHomepage = ({
   const apyUpdatedAt = getVaultApyUpdatedAtLabel({
     apyTimestamp,
   })
-  const managementFee = getManagementFee(inputToken.symbol)
+  // Prefer the on-chain fee decorated server-side; fall back to the token-symbol heuristic.
+  const managementFee = vault.managementFee ?? getManagementFee(inputToken.symbol)
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const grossApy = (Number(apy) ?? 0) + (Number(rawTokenBonus) ?? 0)
