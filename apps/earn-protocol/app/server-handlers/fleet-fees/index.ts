@@ -4,8 +4,8 @@ import { type Abi } from 'viem'
 
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 
-// Both `tipRate` and `performanceFeeRate` are stored on-chain as a `Percentage` uint256 scaled by
-// 1e18 (the SDK writes/reads them with `shiftedBy(±18)`), so a raw value of 1e16 == 0.01 == 1%.
+// Both `tipRate` and `performanceFeeRate` are stored on-chain as uint256 scaled by
+// 1e18 (the SDK writes/reads them with `shiftedBy(±18)`), so a raw value of 1e16 == 1.0 == 1%.
 const FEE_RATE_DECIMALS = 18
 
 // `tipRate` lives in the checked-in FleetCommander ABI, but `performanceFeeRate` (RWA-only) does
@@ -22,9 +22,9 @@ const performanceFeeRateAbi = [
 ] as const satisfies Abi
 
 export type FleetCommanderFees = {
-  // annualised management fee (tipRate) as a decimal fraction (e.g. 0.01 = 1%); null if unreadable
+  // annualised management fee (tipRate) as a percentage number (e.g. 1.00 = 1%); null if unreadable
   managementFee: number | null
-  // RWA-only performance fee (performanceFeeRate) as a decimal fraction; null for non-RWA fleets
+  // RWA-only performance fee (performanceFeeRate) as a percentage number; null for non-RWA fleets
   performanceFee: number | null
 }
 
