@@ -38,7 +38,8 @@ export const useDaoManagedBannerData = ({
       (prev, current) => (getApyWithBonus(current) > getApyWithBonus(prev) ? current : prev),
     )
 
-    const managementFee = getManagementFee(highest7dApyVault.inputToken.symbol)
+    const managementFee =
+      highest7dApyVault.managementFee ?? getManagementFee(highest7dApyVault.inputToken.symbol)
 
     return {
       assets,

@@ -12,6 +12,7 @@ import { getCachedRwaVaultsList } from '@/app/server-handlers/cached/get-rwa-vau
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
+import { decorateVaultsWithFees } from '@/app/server-handlers/fleet-fees/decorate-vaults-with-fees'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import {
   decorateVaultsWithConfig,
@@ -102,18 +103,23 @@ export const resolveVaultManageContext = async ({
 
   const daoManagedVaultsList = await getDaoManagedVaultsIDsList(allVaults)
 
-  const [vaultWithConfig] = decorateVaultsWithConfig({
-    vaults: [vault],
-    systemConfig,
-    userPositions: position ? [position] : undefined,
-    daoManagedVaultsList,
-  })
-
-  const allVaultsWithConfig = decorateVaultsWithConfig({
-    vaults: allVaults,
-    systemConfig,
-    daoManagedVaultsList,
-  })
+  const [[vaultWithConfig], allVaultsWithConfig] = await Promise.all([
+    decorateVaultsWithFees(
+      decorateVaultsWithConfig({
+        vaults: [vault],
+        systemConfig,
+        userPositions: position ? [position] : undefined,
+        daoManagedVaultsList,
+      }),
+    ),
+    decorateVaultsWithFees(
+      decorateVaultsWithConfig({
+        vaults: allVaults,
+        systemConfig,
+        daoManagedVaultsList,
+      }),
+    ),
+  ])
 
   return {
     systemConfig,

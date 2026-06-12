@@ -68,7 +68,14 @@ export const VaultManageViewDetails: FC<{
   const vaultBenchmarkName = `${vaultBenchmarkAsset} Vault Benchmark`
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
-  const managementFee = getManagementFee(vault.inputToken.symbol)
+  // Prefer the on-chain management fee (tipRate) decorated server-side; fall back to the
+  // token-symbol heuristic for any path that didn't fetch fees.
+  const managementFee = vault.managementFee ?? getManagementFee(vault.inputToken.symbol)
+  // RWA fleets also charge a performance fee (performanceFeeRate); non-RWA fleets don't implement it.
+  const performanceFee =
+    typeof vault.performanceFee === 'number' && vault.performanceFee > 0
+      ? vault.performanceFee
+      : null
 
   const humanReadableNetwork = capitalize(
     sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
@@ -252,6 +259,9 @@ export const VaultManageViewDetails: FC<{
             }}
           >
             {formatDecimalAsPercent(managementFee)} management fee
+            {performanceFee !== null
+              ? ` + ${formatDecimalAsPercent(performanceFee)} performance fee`
+              : ''}
           </Text>
           <Text
             as="p"
@@ -260,10 +270,14 @@ export const VaultManageViewDetails: FC<{
               color: 'var(--color-text-secondary)',
             }}
           >
-            A {formatDecimalAsPercent(managementFee)} annualised management fee is charged for using
-            this strategy. The fees are continually accounted for and reflected in the market value
-            of your position. This strategy has no other fees, and there are no restrictions or
-            delays when withdrawing.{' '}
+            {performanceFee !== null
+              ? `A ${formatDecimalAsPercent(managementFee)} annualised management fee and a ${formatDecimalAsPercent(performanceFee)} performance fee are charged for using this strategy. `
+              : `A ${formatDecimalAsPercent(managementFee)} annualised management fee is charged for using this strategy. `}
+            The fees are continually accounted for and reflected in the market value of your
+            position.
+            {performanceFee !== null
+              ? ' There are no restrictions or delays when withdrawing.'
+              : ' This strategy has no other fees, and there are no restrictions or delays when withdrawing.'}{' '}
             {vaultApyData.sma30d
               ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d - managementFee)}.`
               : ''}

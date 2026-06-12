@@ -114,7 +114,10 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
 
   const vaultInceptionDate = dayjs(Number(createdTimestamp) * 1000)
   const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
-  const managementFee = getManagementFee(inputToken.symbol)
+  // Prefer the on-chain fee decorated server-side; fall back to the token-symbol heuristic for
+  // callers (e.g. the institutions app) that don't fetch fees.
+  // eslint-disable-next-line react/destructuring-assignment
+  const managementFee = props.managementFee ?? getManagementFee(inputToken.symbol)
 
   return (
     <GradientBox

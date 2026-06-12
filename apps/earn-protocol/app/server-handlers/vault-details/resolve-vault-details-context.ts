@@ -10,6 +10,7 @@ import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
+import { decorateVaultsWithFees } from '@/app/server-handlers/fleet-fees/decorate-vaults-with-fees'
 import {
   decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
@@ -70,17 +71,22 @@ export const resolveVaultDetailsContext = async ({
 
   const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
 
-  const [vaultWithConfig] = decorateVaultsWithConfig({
-    vaults: [vault],
-    systemConfig,
-    daoManagedVaultsList,
-  })
-
-  const allVaultsWithConfig = decorateVaultsWithConfig({
-    vaults,
-    systemConfig,
-    daoManagedVaultsList,
-  })
+  const [[vaultWithConfig], allVaultsWithConfig] = await Promise.all([
+    decorateVaultsWithFees(
+      decorateVaultsWithConfig({
+        vaults: [vault],
+        systemConfig,
+        daoManagedVaultsList,
+      }),
+    ),
+    decorateVaultsWithFees(
+      decorateVaultsWithConfig({
+        vaults,
+        systemConfig,
+        daoManagedVaultsList,
+      }),
+    ),
+  ])
 
   return {
     systemConfig,

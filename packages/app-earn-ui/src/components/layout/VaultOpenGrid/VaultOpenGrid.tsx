@@ -256,7 +256,8 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     ]
   }, [mapVaultToDropdownItem, vaults])
 
-  const managementFee = getManagementFee(vault.inputToken.symbol)
+  // Prefer the on-chain fee decorated server-side; fall back to the token-symbol heuristic.
+  const managementFee = vault.managementFee ?? getManagementFee(vault.inputToken.symbol)
 
   return (
     <>

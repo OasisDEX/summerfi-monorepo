@@ -22,6 +22,7 @@ import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vau
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
+import { decorateVaultsWithFees } from '@/app/server-handlers/fleet-fees/decorate-vaults-with-fees'
 import { getCachedRewardTokenPrice } from '@/app/server-handlers/reward-token-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
@@ -136,11 +137,13 @@ export async function GET() {
 
   const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
 
-  const vaultsWithConfig = decorateVaultsWithConfig({
-    systemConfig,
-    vaults,
-    daoManagedVaultsList,
-  })
+  const vaultsWithConfig = await decorateVaultsWithFees(
+    decorateVaultsWithConfig({
+      systemConfig,
+      vaults,
+      daoManagedVaultsList,
+    }),
+  )
 
   const vaultsApyByNetworkMap = await getCachedVaultsApy({
     fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({

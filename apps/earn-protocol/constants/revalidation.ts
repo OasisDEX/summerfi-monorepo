@@ -27,6 +27,7 @@ export const CACHE_TAGS = {
   VAULT_DAO_MANAGED: 'vault-dao-managed',
   VAULT_PERFORMANCE: 'vault-performance',
   RWA_VAULTS_INFO: 'rwa-vaults-info',
+  FLEET_FEES: 'fleet-fees',
 }
 
 export const CACHE_TIMES = {
@@ -59,4 +60,5 @@ export const CACHE_TIMES = {
   STAKING_V2_GLOBAL_DATA: 300,
   ONE_DAY: 3600 * 24,
   RWA_VAULTS_INFO: 300,
+  FLEET_FEES: 3600 * 3, // 3 hours - on-chain management/performance fee rates change very rarely
 }
