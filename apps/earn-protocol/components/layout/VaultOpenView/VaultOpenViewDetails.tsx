@@ -1,12 +1,20 @@
 'use client'
 import { type FC } from 'react'
-import { Card, Expander, getUniqueVaultId, Text, VaultExposure } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  Expander,
+  getDisplayToken,
+  getUniqueVaultId,
+  Text,
+  VaultExposure,
+} from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
   type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
   type SingleSourceChartData,
+  type SupportedSDKNetworks,
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
@@ -20,6 +28,7 @@ import { capitalize } from 'lodash-es'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { RwaDepositsWithdrawals } from '@/components/layout/VaultManageView/RwaDepositsWithdrawals'
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { RwaNavPriceChart } from '@/components/organisms/Charts/RwaNavPriceChart'
@@ -30,6 +39,7 @@ import { LatestActivity } from '@/features/latest-activity/components/LatestActi
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
+import { type RwaReceipt } from '@/hooks/use-rwa-claim'
 
 import { detailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
@@ -48,6 +58,16 @@ interface VaultOpenViewDetailsProps {
   vaultApyData: VaultApyData
   isDaoManaged?: boolean
   isRwaVault?: boolean
+  // RWA-only: powers the "Deposits and Withdrawals" history table for pre-claim users (receipts,
+  // no Fleet position) who land on the open view. Claim/cancel wiring is owned by the parent.
+  // Optional because this view is also reused by the (non-RWA) migration page.
+  network?: SupportedSDKNetworks
+  vaultId?: string
+  walletAddress?: string
+  isWhitelisted?: boolean
+  onRwaAction?: (receipt: RwaReceipt) => void
+  rwaActionInProgressKey?: string
+  rwaActionError?: string
 }
 
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
@@ -62,6 +82,13 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   vaultApyData,
   isDaoManaged,
   isRwaVault,
+  network,
+  vaultId,
+  walletAddress,
+  isWhitelisted,
+  onRwaAction,
+  rwaActionInProgressKey,
+  rwaActionError,
 }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
@@ -117,6 +144,28 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
             This Vault is curated and managed by Avantgarde Asset Managment. Avantgarde have over 8
             years of experience....blah blah blah
           </Text>
+        </Expander>
+      ) : null}
+      {isRwaVault && isWhitelisted && walletAddress && network && vaultId ? (
+        <Expander
+          onExpand={handleExpanderToggle('rwa-deposits-withdrawals')}
+          title={
+            <Text as="p" variant="p1semi">
+              Deposits and Withdrawals
+            </Text>
+          }
+          defaultExpanded
+        >
+          <RwaDepositsWithdrawals
+            network={network}
+            vaultId={vaultId}
+            walletAddress={walletAddress}
+            enabled
+            tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
+            actionInProgressKey={rwaActionInProgressKey}
+            actionError={rwaActionError}
+            onAction={onRwaAction}
+          />
         </Expander>
       ) : null}
       <Expander

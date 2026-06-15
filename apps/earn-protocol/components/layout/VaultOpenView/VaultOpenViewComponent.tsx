@@ -35,12 +35,7 @@ import {
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
-import {
-  sdkNetworkToHumanNetwork,
-  slugify,
-  subgraphNetworkToSDKId,
-  supportedSDKNetwork,
-} from '@summerfi/app-utils'
+import { slugify, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import {
   // getChainInfoByChainId,
   type IArmadaVaultInfo,
@@ -48,13 +43,13 @@ import {
   RoundState,
   TransactionType,
 } from '@summerfi/sdk-common'
+import { useQueryClient } from '@tanstack/react-query'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
-import { RwaPendingPositions } from '@/components/layout/RwaVault/RwaPendingPositions'
-import { RwaRoundNotice } from '@/components/layout/RwaVault/RwaRoundNotice'
 import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
+import { getRwaReceiptsHistoryBaseQueryKey } from '@/components/layout/VaultManageView/vault-manage-query-keys'
 import { useVaultOpenDetailsQuery } from '@/components/layout/VaultOpenView/useVaultOpenQuery'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
@@ -80,9 +75,8 @@ import {
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
-import { useRevalidatePositionData } from '@/hooks/use-revalidate'
+import { useRevalidatePositionData, useRevalidateUser } from '@/hooks/use-revalidate'
 import { useRwaClaim } from '@/hooks/use-rwa-claim'
-import { useRwaReceipts } from '@/hooks/use-rwa-receipts'
 import { useRwaRoundInfo } from '@/hooks/use-rwa-round-info'
 import { useRwaSDK } from '@/hooks/use-rwa-sdk'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
@@ -171,6 +165,8 @@ export const VaultOpenViewComponent = ({
 
   const [isNewUser, setIsNewUser] = useState(false)
   const revalidatePositionData = useRevalidatePositionData()
+  const revalidateUser = useRevalidateUser()
+  const queryClient = useQueryClient()
 
   const beachClubEnabled = !!features?.BeachClub && !!userWalletAddress && isNewUser
 
@@ -349,11 +345,7 @@ export const VaultOpenViewComponent = ({
   // RWA vaults are rounds-based: surface the current deposit round so the user
   // knows which round their deposit enters, and block deposits when that round
   // is not currently open.
-  const {
-    roundId: rwaRoundId,
-    roundState: rwaRoundState,
-    isLoading: isRwaRoundLoading,
-  } = useRwaRoundInfo({
+  const { roundState: rwaRoundState, isLoading: isRwaRoundLoading } = useRwaRoundInfo({
     enabled: isRwaVault && isWhitelisted,
     sdk: rwaSdk,
     fleetAddress: vault.id,
@@ -365,19 +357,18 @@ export const VaultOpenViewComponent = ({
   const blockRwaDeposit =
     isRwaVault && isWhitelisted && !isRwaRoundLoading && rwaRoundState !== RoundState.Opened
 
-  // Pending RWA positions (ERC-1155 receipts) the user can claim once settled or
-  // cancel while the round is still open.
-  const {
-    receipts: rwaReceipts,
-    isLoading: isRwaReceiptsLoading,
-    refresh: refreshRwaReceipts,
-  } = useRwaReceipts({
-    enabled: isRwaVault && isWhitelisted,
-    sdk: rwaSdk,
-    fleetAddress: vault.id,
-    walletAddress: userWalletAddress,
-    chainId: vaultChainId,
-  })
+  // Pre-claim RWA users (receipts, no Fleet shares) land on this open view, so the deposits/
+  // withdrawals history table (with claim/cancel) lives here too. Refresh it + the portfolio
+  // user-data cache after a deposit/claim/cancel.
+  const handleRwaReceiptsRefresh = useCallback(() => {
+    if (!userWalletAddress) {
+      return
+    }
+    queryClient.invalidateQueries({
+      queryKey: getRwaReceiptsHistoryBaseQueryKey(network, vaultId, userWalletAddress),
+    })
+    revalidateUser(userWalletAddress)
+  }, [queryClient, network, vaultId, userWalletAddress, revalidateUser])
 
   const {
     executeAction: executeRwaAction,
@@ -389,16 +380,7 @@ export const VaultOpenViewComponent = ({
     chainId: vaultChainId,
     tokenDecimals: vault.inputToken.decimals,
     walletAddress: userWalletAddress,
-    onSuccess: () => {
-      refreshRwaReceipts()
-      if (userWalletAddress) {
-        revalidatePositionData({
-          chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
-          vaultId: vault.id,
-          walletAddress: userWalletAddress,
-        })
-      }
-    },
+    onSuccess: handleRwaReceiptsRefresh,
   })
 
   const {
@@ -427,8 +409,8 @@ export const VaultOpenViewComponent = ({
     sidebarTransactionType: TransactionAction.DEPOSIT,
     referralCode,
     referralCodeError,
-    // Reload the pending RWA receipts once a deposit settles so the new round entry appears.
-    onTransactionSuccess: refreshRwaReceipts,
+    // Refresh the RWA history table once a deposit mints its pending receipt.
+    onTransactionSuccess: handleRwaReceiptsRefresh,
   })
 
   const { position } = usePosition({
@@ -553,13 +535,7 @@ export const VaultOpenViewComponent = ({
       manualSetAmount={manualSetAmount}
       ownerView
       contentAfterInput={
-        isRwaVault && isWhitelisted ? (
-          <RwaRoundNotice
-            roundId={rwaRoundId}
-            roundState={rwaRoundState}
-            isLoading={isRwaRoundLoading}
-          />
-        ) : beachClubEnabled ? (
+        isRwaVault && isWhitelisted ? null : beachClubEnabled ? (
           <BeachClubReferralForm
             onError={handleReferralCodeError}
             onChange={handleReferralCodeChange}
@@ -689,6 +665,13 @@ export const VaultOpenViewComponent = ({
               vaultApyData={vaultApyData}
               isDaoManaged={vault.isDaoManaged}
               isRwaVault={vault.isRwaVault}
+              network={network}
+              vaultId={vaultId}
+              walletAddress={userWalletAddress}
+              isWhitelisted={isWhitelisted}
+              onRwaAction={executeRwaAction}
+              rwaActionInProgressKey={rwaActionInProgressKey}
+              rwaActionError={rwaActionError}
             />
           ) : (
             <VaultOpenDetailsLoading vault={vault} isDaoManaged={vault.isDaoManaged} />
@@ -726,24 +709,7 @@ export const VaultOpenViewComponent = ({
         //     />
         //   )
         // }
-        rightExtraContent={
-          isRwaVault ? (
-            <>
-              {isWhitelisted ? (
-                <RwaPendingPositions
-                  receipts={rwaReceipts}
-                  isLoading={isRwaReceiptsLoading}
-                  tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
-                  tokenDecimals={vault.inputToken.decimals}
-                  actionInProgressKey={rwaActionInProgressKey}
-                  error={rwaActionError}
-                  onAction={executeRwaAction}
-                />
-              ) : null}
-              <RwaSidebarInfo />
-            </>
-          ) : null
-        }
+        rightExtraContent={isRwaVault ? <RwaSidebarInfo /> : null}
       />
     </>
   )

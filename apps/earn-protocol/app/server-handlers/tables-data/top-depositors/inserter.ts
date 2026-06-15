@@ -30,7 +30,12 @@ import { type TopDepositorPosition } from './types'
 export async function insertTopDepositorsInBatches(
   db: SummerProtocolDB['db'],
   topDepositors: TopDepositorPosition[],
-  batchSize: number = DB_BATCH_SIZE,
+  {
+    batchSize = DB_BATCH_SIZE,
+    // When the incoming set is known to be incomplete (e.g. a transient RWA subgraph failure),
+    // skip the delete-reconcile so we never purge valid rows that simply didn't load this run.
+    skipReconcileDelete = false,
+  }: { batchSize?: number; skipReconcileDelete?: boolean } = {},
 ) {
   let updated = 0
   let deleted = 0
@@ -51,10 +56,14 @@ export async function insertTopDepositorsInBatches(
     ),
   )
 
-  // Find records to delete (those that exist in DB but not in incoming data)
-  const recordsToDelete = existingRecords.filter(
-    (record) => !incomingRecordIds.has(`${record.vaultId}-${record.userAddress}-${record.network}`),
-  )
+  // Find records to delete (those that exist in DB but not in incoming data). Skipped when the
+  // incoming set is incomplete, so a partial fetch upserts what loaded without pruning the rest.
+  const recordsToDelete = skipReconcileDelete
+    ? []
+    : existingRecords.filter(
+        (record) =>
+          !incomingRecordIds.has(`${record.vaultId}-${record.userAddress}-${record.network}`),
+      )
 
   // Process all operations in a single transaction
   await db.transaction().execute(async (trx) => {
