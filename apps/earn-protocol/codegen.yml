@@ -74,6 +74,42 @@ generates:
           gqlImport: 'graphql-request#gql'
       - add:
           content: 'import type { DocumentNode } from "graphql/language/ast";'
+  ./graphql/clients/rwa-receipts-history/client.ts:
+    schema: '${SUBGRAPH_BASE}/summer-institutions-v2-base'
+    documents: './graphql/queries/rwa-receipts-history.graphql'
+    plugins:
+      - add:
+          content:
+            - '// This file was automatically generated and should not be edited.'
+            - '// @ts-nocheck'
+            - '/* eslint-disable */'
+      - typescript
+      - typescript-operations:
+          strictScalars: true
+          immutableTypes: false
+          scalars:
+            BigDecimal: number
+            BigInt: number
+            Int8: number
+            BooleanType: boolean
+            CustomData: Record<string, unknown>
+            Date: string
+            DateTime: string
+            FloatType: number
+            IntType: number
+            ItemId: string
+            JsonField: unknown
+            Bytes: string
+            MetaTagAttributes: Record<string, string>
+            UploadId: string
+            Timestamp: number
+      - typescript-graphql-request:
+          pureMagicComment: true
+          useTypeImports: true
+          emitLegacyCommonJSImports: false
+          gqlImport: 'graphql-request#gql'
+      - add:
+          content: 'import type { DocumentNode } from "graphql/language/ast";'
   ./graphql/clients/rwa-vault-nav-history/client.ts:
     schema: '${SUBGRAPH_BASE}/summer-institutions-v2-base'
     documents: './graphql/queries/rwa-vault-nav-history.graphql'

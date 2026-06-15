@@ -8,6 +8,7 @@ import { CACHE_TAGS } from '@/constants/revalidation'
 // helpers (useRevalidatePositionData) refetch them, and a discriminator separates the units.
 const VAULT_MANAGE_CORE = 'vault-manage-core'
 const VAULT_MANAGE_SECTION = 'vault-manage-section'
+const RWA_RECEIPTS_HISTORY = 'rwa-receipts-history'
 
 export const getVaultManageCoreQueryKey = (
   network: SupportedSDKNetworks,
@@ -36,3 +37,25 @@ export const getVaultManageSectionQueryKey = (
     vaultId.toLowerCase(),
     walletAddress.toLowerCase(),
   ] as const
+
+// Prefix shared by both sides' infinite-query keys — invalidate this to refresh the whole RWA
+// deposits/withdrawals history (e.g. after a claim/cancel/deposit).
+export const getRwaReceiptsHistoryBaseQueryKey = (
+  network: SupportedSDKNetworks,
+  vaultId: string,
+  walletAddress: string,
+) =>
+  [
+    CACHE_TAGS.VAULTS_LIST,
+    RWA_RECEIPTS_HISTORY,
+    network,
+    vaultId.toLowerCase(),
+    walletAddress.toLowerCase(),
+  ] as const
+
+export const getRwaReceiptsHistoryQueryKey = (
+  network: SupportedSDKNetworks,
+  vaultId: string,
+  walletAddress: string,
+  side: 'deposit' | 'withdrawal',
+) => [...getRwaReceiptsHistoryBaseQueryKey(network, vaultId, walletAddress), side] as const

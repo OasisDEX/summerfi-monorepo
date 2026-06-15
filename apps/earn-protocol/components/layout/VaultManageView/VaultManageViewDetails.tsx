@@ -22,9 +22,11 @@ import {
   sdkNetworkToHumanNetwork,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
+import { type BigNumber } from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
+import { RwaDepositsWithdrawals } from '@/components/layout/VaultManageView/RwaDepositsWithdrawals'
 import {
   useVaultManageCurationQuery,
   useVaultManageExposureQuery,
@@ -43,6 +45,7 @@ import { LatestActivity } from '@/features/latest-activity/components/LatestActi
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
+import { type RwaReceipt } from '@/hooks/use-rwa-claim'
 
 import vaultManageViewStyles from './VaultManageView.module.css'
 
@@ -61,7 +64,25 @@ export const VaultManageViewDetails: FC<{
   viewWalletAddress: string
   vault: SDKVaultishType
   vaultApyData: VaultApyData
-}> = ({ network, vaultId, viewWalletAddress, vault, vaultApyData }) => {
+  // RWA-only: powers the "Deposits and Withdrawals" history expander. The receipt actions are
+  // owned by the parent (shared useRwaClaim wiring) and passed down here.
+  isRwaVault?: boolean
+  vaultSharePrice?: BigNumber
+  onRwaAction?: (receipt: RwaReceipt) => void
+  rwaActionInProgressKey?: string
+  rwaActionError?: string
+}> = ({
+  network,
+  vaultId,
+  viewWalletAddress,
+  vault,
+  vaultApyData,
+  isRwaVault = false,
+  vaultSharePrice,
+  onRwaAction,
+  rwaActionInProgressKey,
+  rwaActionError,
+}) => {
   const vaultBenchmarkAsset = ['ETH', 'WETH'].includes(vault.inputToken.symbol.toUpperCase())
     ? 'ETH'
     : 'USD'
@@ -85,6 +106,7 @@ export const VaultManageViewDetails: FC<{
   // only fetched) once the user reveals it. The performance chart is open by default, so it starts
   // enabled. Re-collapsing keeps the cached data; re-expanding doesn't refetch within staleTime.
   const [performanceOpen, setPerformanceOpen] = useState(true)
+  const [rwaReceiptsOpen, setRwaReceiptsOpen] = useState(false)
   const [yieldOpen, setYieldOpen] = useState(false)
   const [exposureOpen, setExposureOpen] = useState(false)
   const [rebalancingOpen, setRebalancingOpen] = useState(false)
@@ -199,6 +221,28 @@ export const VaultManageViewDetails: FC<{
           ))}
         </div>
       </div>
+      {isRwaVault ? (
+        <Expander
+          title={
+            <Text as="p" variant="p1semi">
+              Deposits and Withdrawals
+            </Text>
+          }
+          onExpand={handleExpand('rwa-deposits-withdrawals', setRwaReceiptsOpen)}
+        >
+          <RwaDepositsWithdrawals
+            network={network}
+            vaultId={vaultId}
+            walletAddress={viewWalletAddress}
+            enabled={rwaReceiptsOpen}
+            tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
+            vaultSharePrice={vaultSharePrice}
+            actionInProgressKey={rwaActionInProgressKey}
+            actionError={rwaActionError}
+            onAction={onRwaAction}
+          />
+        </Expander>
+      ) : null}
       <Expander
         title={
           <Text as="p" variant="p1semi">

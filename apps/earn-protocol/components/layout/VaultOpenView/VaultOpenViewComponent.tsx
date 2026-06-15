@@ -35,12 +35,7 @@ import {
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
-import {
-  sdkNetworkToHumanNetwork,
-  slugify,
-  subgraphNetworkToSDKId,
-  supportedSDKNetwork,
-} from '@summerfi/app-utils'
+import { slugify, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import {
   // getChainInfoByChainId,
   type IArmadaVaultInfo,
@@ -52,7 +47,6 @@ import {
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
-import { RwaPendingPositions } from '@/components/layout/RwaVault/RwaPendingPositions'
 import { RwaRoundNotice } from '@/components/layout/RwaVault/RwaRoundNotice'
 import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
 import { useVaultOpenDetailsQuery } from '@/components/layout/VaultOpenView/useVaultOpenQuery'
@@ -81,8 +75,6 @@ import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
-import { useRwaClaim } from '@/hooks/use-rwa-claim'
-import { useRwaReceipts } from '@/hooks/use-rwa-receipts'
 import { useRwaRoundInfo } from '@/hooks/use-rwa-round-info'
 import { useRwaSDK } from '@/hooks/use-rwa-sdk'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
@@ -365,42 +357,6 @@ export const VaultOpenViewComponent = ({
   const blockRwaDeposit =
     isRwaVault && isWhitelisted && !isRwaRoundLoading && rwaRoundState !== RoundState.Opened
 
-  // Pending RWA positions (ERC-1155 receipts) the user can claim once settled or
-  // cancel while the round is still open.
-  const {
-    receipts: rwaReceipts,
-    isLoading: isRwaReceiptsLoading,
-    refresh: refreshRwaReceipts,
-  } = useRwaReceipts({
-    enabled: isRwaVault && isWhitelisted,
-    sdk: rwaSdk,
-    fleetAddress: vault.id,
-    walletAddress: userWalletAddress,
-    chainId: vaultChainId,
-  })
-
-  const {
-    executeAction: executeRwaAction,
-    actionInProgressKey: rwaActionInProgressKey,
-    error: rwaActionError,
-  } = useRwaClaim({
-    sdk: rwaSdk,
-    fleetAddress: vault.id,
-    chainId: vaultChainId,
-    tokenDecimals: vault.inputToken.decimals,
-    walletAddress: userWalletAddress,
-    onSuccess: () => {
-      refreshRwaReceipts()
-      if (userWalletAddress) {
-        revalidatePositionData({
-          chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
-          vaultId: vault.id,
-          walletAddress: userWalletAddress,
-        })
-      }
-    },
-  })
-
   const {
     approvalType,
     approvalTokenSymbol,
@@ -427,8 +383,6 @@ export const VaultOpenViewComponent = ({
     sidebarTransactionType: TransactionAction.DEPOSIT,
     referralCode,
     referralCodeError,
-    // Reload the pending RWA receipts once a deposit settles so the new round entry appears.
-    onTransactionSuccess: refreshRwaReceipts,
   })
 
   const { position } = usePosition({
@@ -726,24 +680,7 @@ export const VaultOpenViewComponent = ({
         //     />
         //   )
         // }
-        rightExtraContent={
-          isRwaVault ? (
-            <>
-              {isWhitelisted ? (
-                <RwaPendingPositions
-                  receipts={rwaReceipts}
-                  isLoading={isRwaReceiptsLoading}
-                  tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
-                  tokenDecimals={vault.inputToken.decimals}
-                  actionInProgressKey={rwaActionInProgressKey}
-                  error={rwaActionError}
-                  onAction={executeRwaAction}
-                />
-              ) : null}
-              <RwaSidebarInfo />
-            </>
-          ) : null
-        }
+        rightExtraContent={isRwaVault ? <RwaSidebarInfo /> : null}
       />
     </>
   )

@@ -1,12 +1,29 @@
 import { useCallback, useState } from 'react'
 import { useEarnProtocolSendUserOperation } from '@summerfi/app-earn-ui'
 import { type SdkClient } from '@summerfi/sdk-client-react'
-import { type ChainId, RoundsVaultType } from '@summerfi/sdk-common'
+import { type ChainId, type IPrice, type RoundState, RoundsVaultType } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
-import { type RwaReceipt } from '@/hooks/use-rwa-receipts'
+
+export type RwaReceiptStatus = 'claimable' | 'cancellable' | 'pending'
+
+/**
+ * A single ERC-1155 receipt the user holds for a given rounds-vault round, enriched
+ * with the round's state and (when settled) its exchange rate, plus a derived status:
+ *  - `claimable`   round is Settled  → claim shares (Input) / assets (Output)
+ *  - `cancellable` round is Opened   → cancel the pending deposit/withdraw
+ *  - `pending`     round is settling (or not yet open) → no action available
+ */
+export type RwaReceipt = {
+  vaultType: RoundsVaultType
+  roundId: bigint
+  balance: bigint
+  roundState: RoundState
+  exchangeRate?: IPrice
+  status: RwaReceiptStatus
+}
 
 type UseRwaClaimProps = {
   sdk: SdkClient

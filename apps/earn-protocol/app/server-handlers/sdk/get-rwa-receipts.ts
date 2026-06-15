@@ -6,7 +6,7 @@ export type RwaReceiptStatus = 'claimable' | 'cancellable' | 'pending'
 
 /**
  * Server-side, JSON-safe representation of a pending RWA position (ERC-1155 receipt). Mirrors the
- * client `RwaReceipt` (see use-rwa-receipts), but `roundId`/`balance` are strings so the result can
+ * client `RwaReceipt` (see use-rwa-claim), but `roundId`/`balance` are strings so the result can
  * be cached via unstable_cache (JSON.stringify can't serialise BigInt) and crosses to the client.
  */
 export type RwaServerReceipt = {
