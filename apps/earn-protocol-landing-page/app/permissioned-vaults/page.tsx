@@ -1,5 +1,4 @@
 'use client'
-import { useEffect } from 'react'
 import { Audits, Button, Emphasis, Icon, Text, UseCasesSlider } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
