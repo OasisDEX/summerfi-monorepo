@@ -55,8 +55,11 @@ export const updateTopDepositors = async ({
   })
 
   // RWA positions from the institutions deployments (one client per RWA network), merged into the
-  // same combined set so the delete-reconcile below preserves them. Per-client fault tolerance: one
-  // RWA network failing must not break the standard update or the other RWA networks.
+  // same combined set. Per-client fault tolerance: one RWA network failing must not break the
+  // standard update or the other RWA networks. BUT a failed fetch yields an incomplete set, and the
+  // insert below delete-reconciles (purges rows missing from the incoming IDs) — so we track any
+  // failure and skip the delete when the set is incomplete, rather than purging valid rows.
+  let rwaFetchFailed = false
   const rwaTopDepositors = (
     await Promise.all(
       (rwaGraphQlClients ?? []).map((client) =>
@@ -65,6 +68,7 @@ export const updateTopDepositors = async ({
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error('Failed to fetch RWA top depositors', error)
+            rwaFetchFailed = true
 
             return []
           }),
@@ -176,7 +180,11 @@ export const updateTopDepositors = async ({
     }
   })
 
-  const { updated, deleted } = await insertTopDepositorsInBatches(db, extendPositions)
+  const { updated, deleted } = await insertTopDepositorsInBatches(db, extendPositions, {
+    // Don't prune the leaderboard from a partial set — a transient RWA failure would otherwise
+    // delete every RWA depositor that didn't load this run.
+    skipReconcileDelete: rwaFetchFailed,
+  })
 
   const endTime = Date.now()
   const duration = `${((endTime - startTime) / 1000).toFixed(2)}s`
