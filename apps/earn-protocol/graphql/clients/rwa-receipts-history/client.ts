@@ -12744,7 +12744,7 @@ export type GetRwaReceiptsHistoryPageQueryVariables = Exact<{
 }>;
 
 
-export type GetRwaReceiptsHistoryPageQuery = { __typename?: 'Query', receipts: Array<{ __typename?: 'Receipt', id: string, balance: number, vault: { __typename?: 'RoundsVault', id: string, flavor: RoundsVaultFlavor }, round: { __typename?: 'Round', roundId: number, state: RoundState, openedAt: number, settledAt?: number | null }, activities: Array<{ __typename?: 'ReceiptActivity', type: ReceiptActivityType, timestamp: number, txHash: string, assetAmount?: number | null, receiptAmount: number, assetToken?: { __typename?: 'Token', symbol: string, decimals: number } | null }> }> };
+export type GetRwaReceiptsHistoryPageQuery = { __typename?: 'Query', receipts: Array<{ __typename?: 'Receipt', id: string, balance: string, vault: { __typename?: 'RoundsVault', id: string, flavor: RoundsVaultFlavor }, round: { __typename?: 'Round', roundId: string, state: RoundState, openedAt: string, settledAt?: string | null }, activities: Array<{ __typename?: 'ReceiptActivity', type: ReceiptActivityType, timestamp: string, txHash: string, assetAmount?: string | null, receiptAmount: string, assetToken?: { __typename?: 'Token', symbol: string, decimals: number } | null }> }> };
 
 
 export const GetRwaRoundsVaultPairDocument = /*#__PURE__*/ gql`

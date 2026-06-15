@@ -88,8 +88,10 @@ generates:
           strictScalars: true
           immutableTypes: false
           scalars:
-            BigDecimal: number
-            BigInt: number
+            # The Graph serialises BigInt/BigDecimal as strings at runtime — type them as such so
+            # consumers are forced to coerce (BigInt/BigNumber/Number) rather than do raw arithmetic.
+            BigDecimal: string
+            BigInt: string
             Int8: number
             BooleanType: boolean
             CustomData: Record<string, unknown>

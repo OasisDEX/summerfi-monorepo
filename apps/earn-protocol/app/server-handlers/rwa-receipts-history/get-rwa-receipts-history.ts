@@ -93,7 +93,7 @@ const sumAssetAmount = (
 const firstActivity = (activities: HistoryReceipt['activities'], type: ReceiptActivityType) =>
   activities.find((activity) => activity.type === type)
 
-const toUnixSeconds = (raw: number | null | undefined): number | null => {
+const toUnixSeconds = (raw: string | number | null | undefined): number | null => {
   if (raw == null) {
     return null
   }
@@ -186,7 +186,7 @@ type RoundsVaultIds = { inputVaultId: string; outputVaultId: string }
 // can resolve on a later request.
 const pairCache = new Map<string, RoundsVaultIds>()
 
-const resolveRoundsVaultIds = async (
+export const resolveRoundsVaultIds = async (
   subgraphUrl: string,
   fleetAddress: string,
 ): Promise<RoundsVaultIds | null> => {
@@ -246,6 +246,14 @@ export const fetchRwaReceiptsHistoryPage = async ({
 }): Promise<RwaReceiptsHistoryPage> => {
   const emptyPage: RwaReceiptsHistoryPage = { rows: [], page, hasMore: false }
 
+  // graph-node caps `skip` at 5000; beyond that the query errors. No wallet realistically holds that
+  // many receipts on one side, so stop paging cleanly rather than issuing a doomed request.
+  const skip = page * limit
+
+  if (skip > 5000) {
+    return emptyPage
+  }
+
   try {
     const ids = await resolveRoundsVaultIds(subgraphUrl, fleetAddress)
 
@@ -262,7 +270,7 @@ export const fetchRwaReceiptsHistoryPage = async ({
         vault: vault.toLowerCase(),
         // One extra row beyond the page so we can tell whether a further page exists.
         first: limit + 1,
-        skip: page * limit,
+        skip,
       },
       { origin: 'earn-protocol-app' },
     )

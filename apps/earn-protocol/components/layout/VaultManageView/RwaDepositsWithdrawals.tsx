@@ -1,9 +1,12 @@
 'use client'
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 import {
   Button,
+  ERROR_TOAST_CONFIG,
   getScannerUrl,
   Icon,
+  SUCCESS_TOAST_CONFIG,
   Table,
   TableCellNodes,
   type TableColumn,
@@ -113,6 +116,24 @@ const formatDateTime = (unixSeconds: number | null): string =>
 const formatDate = (unixSeconds: number | null): string =>
   unixSeconds != null ? dayjs.unix(unixSeconds).format('MMMM DD, YYYY') : '-'
 
+// Turn the raw SDK/wallet error into a short, human-readable toast message.
+const parseActionError = (raw: string): string => {
+  const lower = raw.toLowerCase()
+
+  if (
+    lower.includes('user rejected') ||
+    lower.includes('user denied') ||
+    lower.includes('rejected the request')
+  ) {
+    return 'Transaction rejected'
+  }
+
+  // Blockchain/wallet errors can be very long — keep just the first line, capped for readability.
+  const firstLine = raw.split('\n')[0].trim()
+
+  return firstLine.length > 140 ? `${firstLine.slice(0, 139)}…` : firstLine
+}
+
 const buildReceipt = (row: RwaReceiptHistoryRow): RwaReceipt => ({
   vaultType: row.side === 'deposit' ? RoundsVaultType.Input : RoundsVaultType.Output,
   roundId: BigInt(row.roundId),
@@ -136,6 +157,29 @@ export const RwaDepositsWithdrawals = ({
   const [activeSide, setActiveSide] = useState<RwaReceiptHistorySide>('deposit')
   const [hideCompleted, setHideCompleted] = useState(false)
   const chainId = subgraphNetworkToId(network)
+
+  // Toast the outcome of a table-triggered claim/cancel. `actionInProgressKey`/`actionError` come
+  // only from this table's onAction (useRwaClaim), so an action finishing = key clears: success if
+  // no error, otherwise the parsed error. A ref tracks the verb so the message reads naturally.
+  const lastActionVerbRef = useRef<'claimed' | 'cancelled'>('claimed')
+  const prevActionKeyRef = useRef<string | undefined>(undefined)
+
+  useEffect(() => {
+    const wasInProgress = prevActionKeyRef.current !== undefined
+
+    prevActionKeyRef.current = actionInProgressKey
+
+    // Only react to the transition from "in progress" → "done".
+    if (!wasInProgress || actionInProgressKey !== undefined) {
+      return
+    }
+
+    if (actionError) {
+      toast.error(parseActionError(actionError), ERROR_TOAST_CONFIG)
+    } else {
+      toast.success(`Successfully ${lastActionVerbRef.current}`, SUCCESS_TOAST_CONFIG)
+    }
+  }, [actionInProgressKey, actionError])
 
   // Fetch only the active tab's page(s); the other side stays cached once visited.
   const depositsQuery = useRwaReceiptsHistory(
@@ -162,7 +206,7 @@ export const RwaDepositsWithdrawals = ({
   const renderActionCell = (row: RwaReceiptHistoryRow): ReactNode => {
     if (row.status === 'completed') {
       return (
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', minWidth: '120px' }}>
           <Text as="span" variant="p3" style={{ color: secondaryColor }}>
             Claimed
           </Text>
@@ -192,7 +236,13 @@ export const RwaDepositsWithdrawals = ({
         <Button
           variant={canClaim ? 'primarySmall' : 'secondarySmall'}
           disabled={!isActionable || isAnyProcessing || !onAction}
-          onClick={() => isActionable && onAction?.(buildReceipt(row))}
+          onClick={() => {
+            if (!isActionable) {
+              return
+            }
+            lastActionVerbRef.current = canCancel ? 'cancelled' : 'claimed'
+            onAction?.(buildReceipt(row))
+          }}
         >
           {isProcessing ? 'Processing…' : canCancel ? 'Cancel' : 'Claim'}
         </Button>
@@ -431,19 +481,6 @@ export const RwaDepositsWithdrawals = ({
             <Icon iconName="chevron_down" variant="xxs" color="var(--color-text-link)" />
           )}
         </button>
-      ) : null}
-
-      {actionError ? (
-        <Text
-          as="p"
-          variant="p4"
-          style={{
-            color: 'var(--earn-protocol-critical-100)',
-            marginTop: 'var(--general-space-8)',
-          }}
-        >
-          {actionError}
-        </Text>
       ) : null}
     </div>
   )

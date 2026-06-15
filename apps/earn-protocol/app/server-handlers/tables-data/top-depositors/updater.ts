@@ -35,7 +35,7 @@ export const updateTopDepositors = async ({
   arbitrumGraphQlClient,
   sonicGraphQlClient,
   hyperliquidGraphQlClient,
-  baseRwaGraphQlClient,
+  rwaGraphQlClients,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
@@ -43,7 +43,7 @@ export const updateTopDepositors = async ({
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
   hyperliquidGraphQlClient: GraphQLClient
-  baseRwaGraphQlClient?: GraphQLClient
+  rwaGraphQlClients?: GraphQLClient[]
 }) => {
   const startTime = Date.now()
   const standardTopDepositors = await getTopDepositors({
@@ -54,20 +54,23 @@ export const updateTopDepositors = async ({
     hyperliquidGraphQlClient,
   })
 
-  // RWA (Base) positions from its clone deployment, merged into the same combined set so the
-  // delete-reconcile below preserves them. Fault-tolerant: a RWA failure must not break the standard
-  // top-depositors update (the getter above uses Promise.all, so RWA is fetched separately here).
-  const rwaTopDepositors =
-    baseRwaGraphQlClient !== undefined
-      ? await fetchTopDepositors(baseRwaGraphQlClient)
+  // RWA positions from the institutions deployments (one client per RWA network), merged into the
+  // same combined set so the delete-reconcile below preserves them. Per-client fault tolerance: one
+  // RWA network failing must not break the standard update or the other RWA networks.
+  const rwaTopDepositors = (
+    await Promise.all(
+      (rwaGraphQlClients ?? []).map((client) =>
+        fetchTopDepositors(client)
           .then((positions) => positions.filter((position) => position.deposits.length > 0))
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error('Failed to fetch RWA top depositors', error)
 
             return []
-          })
-      : []
+          }),
+      ),
+    )
+  ).flat()
 
   const topDepositors = [...standardTopDepositors, ...rwaTopDepositors]
 

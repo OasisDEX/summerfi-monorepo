@@ -60,7 +60,6 @@ import dynamic from 'next/dynamic'
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
-import { RwaRoundNotice } from '@/components/layout/RwaVault/RwaRoundNotice'
 import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
 import { RewardTokenClaimBox } from '@/components/layout/VaultManageView/RewardTokenClaimBox'
 import { getRwaReceiptsHistoryBaseQueryKey } from '@/components/layout/VaultManageView/vault-manage-query-keys'
@@ -220,11 +219,7 @@ export const VaultManageViewComponent = ({
   // Surface the current round so the user knows which round a deposit/withdrawal enters and
   // so the action can be blocked when that round is not open. Input vault for deposits,
   // Output vault for withdrawals — they are independent rounds.
-  const {
-    roundId: rwaRoundId,
-    roundState: rwaRoundState,
-    isLoading: isRwaRoundLoading,
-  } = useRwaRoundInfo({
+  const { roundState: rwaRoundState, isLoading: isRwaRoundLoading } = useRwaRoundInfo({
     enabled: isRwaVault && isWhitelisted,
     sdk: rwaSdk,
     fleetAddress: vault.id,
@@ -698,18 +693,7 @@ export const VaultManageViewComponent = ({
             }
             tokenBalanceLoading={selectedTokenBalanceLoading}
             manualSetAmount={manualSetAmount}
-            contentAfterInput={
-              isRwaVault ? (
-                <RwaRoundNotice
-                  roundId={rwaRoundId}
-                  roundState={rwaRoundState}
-                  isLoading={isRwaRoundLoading}
-                  isDeposit={isDeposit}
-                />
-              ) : (
-                considerSwitchingContent
-              )
-            }
+            contentAfterInput={isRwaVault ? null : considerSwitchingContent}
           />
         )
       } else {
@@ -822,10 +806,6 @@ export const VaultManageViewComponent = ({
     manualSetAmount,
     considerSwitchingContent,
     isRwaVault,
-    isDeposit,
-    rwaRoundId,
-    rwaRoundState,
-    isRwaRoundLoading,
     switchAmountDisplay,
     switchManualSetAmount,
     sidebar.primaryButton.loading,
@@ -992,7 +972,8 @@ export const VaultManageViewComponent = ({
             vaultApyData={vaultApyData}
             isRwaVault={isRwaVault}
             vaultSharePrice={vaultSharePrice}
-            onRwaAction={executeRwaAction}
+            // Only the position owner can claim/cancel; non-owners view the history read-only.
+            onRwaAction={ownerView ? executeRwaAction : undefined}
             rwaActionInProgressKey={rwaActionInProgressKey}
             rwaActionError={rwaActionError}
           />

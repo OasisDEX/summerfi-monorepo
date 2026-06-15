@@ -11,6 +11,9 @@ import { resolveVaultManageContext } from '@/app/server-handlers/vault-manage/re
 
 const DEFAULT_LIMIT = 10
 const MAX_LIMIT = 50
+// Upper-bound the page too: with MAX_LIMIT this keeps `skip` well under graph-node's 5000 cap, and
+// guards against an arbitrarily large `?page=` (the handler also short-circuits skip > 5000).
+const MAX_PAGE = 1000
 
 const isRwaSubgraphNetwork = (net: string): net is keyof typeof rwaSubgraphsMap =>
   net in rwaSubgraphsMap
@@ -35,7 +38,7 @@ export async function GET(
 
   const side: RwaReceiptHistorySide =
     searchParams.get('side') === 'withdrawal' ? 'withdrawal' : 'deposit'
-  const page = Math.max(0, toInt(searchParams.get('page'), 0))
+  const page = Math.min(MAX_PAGE, Math.max(0, toInt(searchParams.get('page'), 0)))
   const limit = Math.min(MAX_LIMIT, Math.max(1, toInt(searchParams.get('limit'), DEFAULT_LIMIT)))
 
   const emptyPage: RwaReceiptsHistoryPage = { rows: [], page, hasMore: false }
