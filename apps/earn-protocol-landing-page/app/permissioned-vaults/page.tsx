@@ -56,10 +56,6 @@ export default function RwaVaults() {
     })
   }
 
-  useEffect(() => {
-    window.location.replace('/') // hide
-  }, [])
-
   return (
     <div style={{ display: 'none' }}>
       {/* hide */}
