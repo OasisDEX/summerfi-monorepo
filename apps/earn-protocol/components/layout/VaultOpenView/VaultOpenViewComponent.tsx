@@ -508,7 +508,7 @@ export const VaultOpenViewComponent = ({
   // Vault-wide true TVL (Fleet assets + pending deposits + claimable withdrawals). The subgraph TVL
   // only reflects settled Fleet assets, so the open-view "Market Value" uses this to include the
   // settling deposits. Public (no wallet), so it loads for any visitor of an RWA vault.
-  const { data: rwaMarketValue } = useRwaVaultMarketValue({
+  const { data: rwaMarketValue, isLoading: rwaMarketValueLoading } = useRwaVaultMarketValue({
     enabled: isRwaVault,
     sdk: rwaSdk,
     fleetAddress: vault.id,
@@ -675,6 +675,7 @@ export const VaultOpenViewComponent = ({
         vault={vault}
         vaultInfo={vaultInfo}
         rwaMarketValue={rwaMarketValue}
+        rwaMarketValueLoading={rwaMarketValueLoading}
         rewardTokenPrices={rewardTokenPrices}
         vaults={vaults}
         medianDefiYield={medianDefiYield}

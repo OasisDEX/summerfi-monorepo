@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js'
 
 import { Box } from '@/components/atoms/Box/Box'
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
@@ -27,6 +28,7 @@ interface RwaVaultStatsGridProps {
   // When provided, the "Market Value" stat uses this broader TVL (including settling deposits)
   // instead of the subgraph TVL, which only reflects settled Fleet assets.
   rwaMarketValue?: RwaVaultMarketValue
+  rwaMarketValueLoading?: boolean
   isMobileOrTablet?: boolean
   tooltipEventHandler: (tooltipName: string) => void
 }
@@ -34,6 +36,7 @@ interface RwaVaultStatsGridProps {
 export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
   vault,
   rwaMarketValue,
+  rwaMarketValueLoading,
   isMobileOrTablet,
   tooltipEventHandler,
 }) => {
@@ -64,10 +67,21 @@ export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
             title="Market Value"
             value={
               <>
-                {totalValueLockedTokenParsed}&nbsp;{getDisplayToken(vault.inputToken.symbol)}
+                {rwaMarketValueLoading ? (
+                  <SkeletonLine height={24} width={70} style={{ display: 'inline-block' }} />
+                ) : (
+                  totalValueLockedTokenParsed
+                )}
+                &nbsp;{getDisplayToken(vault.inputToken.symbol)}
               </>
             }
-            subValue={`$${totalValueLockedUSDParsed}`}
+            subValue={
+              rwaMarketValueLoading ? (
+                <SkeletonLine height={20} width={50} />
+              ) : (
+                `$${totalValueLockedUSDParsed}`
+              )
+            }
             subValueSize="small"
           />
         </Box>

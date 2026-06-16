@@ -48,6 +48,7 @@ interface VaultOpenGridProps {
   vaultInfo?: IArmadaVaultInfo
   // RWA-only: vault-wide true TVL (incl. settling deposits) for the "Market Value" stat.
   rwaMarketValue?: RwaVaultMarketValue
+  rwaMarketValueLoading?: boolean
   displaySimulationGraph?: boolean
   simulationGraph: ReactNode
   detailsContent: ReactNode
@@ -78,6 +79,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   vault,
   vaultInfo,
   rwaMarketValue,
+  rwaMarketValueLoading,
   vaults,
   displaySimulationGraph,
   simulationGraph,
@@ -337,6 +339,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
             <RwaVaultStatsGrid
               vault={vault}
               rwaMarketValue={rwaMarketValue}
+              rwaMarketValueLoading={rwaMarketValueLoading}
               isMobileOrTablet={isMobileOrTablet}
               tooltipEventHandler={tooltipEventHandler}
             />
