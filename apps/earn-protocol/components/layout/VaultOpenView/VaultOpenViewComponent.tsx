@@ -44,6 +44,7 @@ import {
   TransactionType,
 } from '@summerfi/sdk-common'
 import { useQueryClient } from '@tanstack/react-query'
+import BigNumber from 'bignumber.js'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
@@ -79,6 +80,14 @@ import { useRevalidatePositionData, useRevalidateUser } from '@/hooks/use-revali
 import { useRwaClaim } from '@/hooks/use-rwa-claim'
 import { useRwaRoundInfo } from '@/hooks/use-rwa-round-info'
 import { useRwaSDK } from '@/hooks/use-rwa-sdk'
+import {
+  getRwaUserVaultExposureQueryKey,
+  useRwaUserVaultExposure,
+} from '@/hooks/use-rwa-user-vault-exposure'
+import {
+  getRwaVaultMarketValueQueryKey,
+  useRwaVaultMarketValue,
+} from '@/hooks/use-rwa-vault-market-value'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -367,8 +376,18 @@ export const VaultOpenViewComponent = ({
     queryClient.invalidateQueries({
       queryKey: getRwaReceiptsHistoryBaseQueryKey(network, vaultId, userWalletAddress),
     })
+    // Also refresh the exposure query so `hasRwaExposure` flips once the deposit is indexed, which
+    // forwards a receipts-only holder to their manage view (mirrors the regular-vault post-deposit
+    // redirect that fires when the settled position appears).
+    queryClient.invalidateQueries({
+      queryKey: getRwaUserVaultExposureQueryKey(vaultChainId, vault.id, userWalletAddress),
+    })
+    // And the vault-wide market value, whose pending-deposits component grows with this deposit.
+    queryClient.invalidateQueries({
+      queryKey: getRwaVaultMarketValueQueryKey(vaultChainId, vault.id),
+    })
     revalidateUser(userWalletAddress)
-  }, [queryClient, network, vaultId, userWalletAddress, revalidateUser])
+  }, [queryClient, network, vaultId, userWalletAddress, revalidateUser, vaultChainId, vault.id])
 
   const {
     executeAction: executeRwaAction,
@@ -475,7 +494,28 @@ export const VaultOpenViewComponent = ({
       }
     }
   })
-  useRedirectToPositionView({ vault, position })
+  // A whitelisted, receipts-only RWA holder (no settled Fleet position) is forwarded to their manage
+  // view, which renders a "settling" position from this exposure.
+  const { data: rwaExposure } = useRwaUserVaultExposure({
+    enabled: isRwaVault && isWhitelisted,
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    walletAddress: userWalletAddress,
+    chainId: vaultChainId,
+  })
+  const hasRwaExposure = !!rwaExposure && new BigNumber(rwaExposure.total.amount).gt(0)
+
+  // Vault-wide true TVL (Fleet assets + pending deposits + claimable withdrawals). The subgraph TVL
+  // only reflects settled Fleet assets, so the open-view "Market Value" uses this to include the
+  // settling deposits. Public (no wallet), so it loads for any visitor of an RWA vault.
+  const { data: rwaMarketValue, isLoading: rwaMarketValueLoading } = useRwaVaultMarketValue({
+    enabled: isRwaVault,
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
+  })
+
+  useRedirectToPositionView({ vault, position, hasRwaExposure })
 
   const displaySimulationGraph = amountParsed.gt(0)
 
@@ -634,6 +674,8 @@ export const VaultOpenViewComponent = ({
         isMobileOrTablet={isMobileOrTablet}
         vault={vault}
         vaultInfo={vaultInfo}
+        rwaMarketValue={rwaMarketValue}
+        rwaMarketValueLoading={rwaMarketValueLoading}
         rewardTokenPrices={rewardTokenPrices}
         vaults={vaults}
         medianDefiYield={medianDefiYield}

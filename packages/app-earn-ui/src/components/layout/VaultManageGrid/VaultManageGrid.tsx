@@ -55,6 +55,9 @@ interface VaultManageGridProps {
   vaults: SDKVaultsListType
   vaultInfo?: IArmadaVaultInfo
   position: IArmadaPosition
+  // RWA pre-claim: `position` is synthesized from exposure (no settled shares yet). Market Value
+  // shows the total exposure with a "Settling" caption, and the (zero) Earned subline is suppressed.
+  isRwaPendingPosition?: boolean
   detailsContent: ReactNode[] | ReactNode
   sidebarContent: ReactNode
   connectedWalletAddress?: string
@@ -85,6 +88,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   detailsContent,
   sidebarContent,
   position,
+  isRwaPendingPosition = false,
   connectedWalletAddress,
   viewWalletAddress,
   isMobile,
@@ -147,10 +151,14 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   const apyUpdatedAt = useApyUpdatedAt({
     vaultApyData,
   })
-  // RWA (rounds-based) vaults accrue value as NAV per share, not a yield APY. The 30d block's "Live
-  // APY" subValue is replaced with NAV Price (the 30d value stays). `vault.isRwaVault` is reliable
-  // here (manage view receives the RWA detail vault, which the fleet-config decoration flags).
+  // RWA (rounds-based) vaults accrue value as NAV per share, not a yield APY. The 30d block shows a
+  // NAV-based net APY (NAV price change over 30d) instead of the yield SMA, and its "Live APY"
+  // subValue is replaced with NAV Price. `vault.isRwaVault` is reliable here (manage view receives
+  // the RWA detail vault, which the fleet-config decoration flags).
   const isRwaVault = vault.isRwaVault ?? false
+  // Mirror the open view's "30D Net APY": NAV price change over 30d (n/a until available), with a
+  // partial-days note while the vault is younger than 30 days.
+  const rwaNetApy30d = vault.navApy30d != null ? formatDecimalAsPercent(vault.navApy30d) : 'n/a'
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -393,25 +401,33 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   </Tooltip>
                 }
                 subValue={
-                  <Tooltip
-                    tooltip={<>USD&nbsp;Earned:&nbsp;${formatFiatBalance(netEarningsUSD)}</>}
-                    tooltipWrapperStyles={{
-                      maxWidth: '455px',
-                    }}
-                    onTooltipOpen={tooltipEventHandler}
-                    tooltipName="vault-manage-usd-earned-label"
-                  >
-                    <>
-                      Earned:&nbsp;
-                      {formatWithSeparators(netEarnings, {
-                        precision: 2,
-                      })}
-                      &nbsp;
-                      {getDisplayToken(vault.inputToken.symbol)}
-                    </>
-                  </Tooltip>
+                  isRwaPendingPosition ? null : ( // Pre-claim RWA: nothing is "earned" yet
+                    <Tooltip
+                      tooltip={<>USD&nbsp;Earned:&nbsp;${formatFiatBalance(netEarningsUSD)}</>}
+                      tooltipWrapperStyles={{
+                        maxWidth: '455px',
+                      }}
+                      onTooltipOpen={tooltipEventHandler}
+                      tooltipName="vault-manage-usd-earned-label"
+                    >
+                      <>
+                        Earned:&nbsp;
+                        {formatWithSeparators(netEarnings, {
+                          precision: 2,
+                        })}
+                        &nbsp;
+                        {getDisplayToken(vault.inputToken.symbol)}
+                      </>
+                    </Tooltip>
+                  )
                 }
-                subValueType={netEarnings.isPositive() ? 'positive' : 'negative'}
+                subValueType={
+                  isRwaPendingPosition
+                    ? undefined
+                    : netEarnings.isPositive()
+                      ? 'positive'
+                      : 'negative'
+                }
                 subValueSize="small"
               />
             </Box>
@@ -435,11 +451,19 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="30d Native Yield APY"
+                title={isRwaVault ? '30D Net APY' : '30d Native Yield APY'}
+                tooltipName={isRwaVault ? 'vault-manage-30d-net-apy' : undefined}
+                onTooltipOpen={isRwaVault ? tooltipEventHandler : undefined}
+                tooltipIconName={isRwaVault ? 'info' : undefined}
+                titleTooltip={
+                  isRwaVault && vault.navApy30dPartialDays != null
+                    ? `Vault has been deployed recently and the value is calculated using the last ${vault.navApy30dPartialDays} days`
+                    : undefined
+                }
                 value={
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Text variant="h4" style={{ marginRight: 'var(--general-space-8)' }}>
-                      {apy30d}
+                      {isRwaVault ? rwaNetApy30d : apy30d}
                     </Text>
                     <Icon iconName="stars_colorful" size={20} />
                   </div>

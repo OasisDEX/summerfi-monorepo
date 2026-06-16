@@ -314,11 +314,18 @@ export const VaultManageViewComponent = ({
     vault,
   })
 
+  // Pre-claim RWA user: the position is synthesized from exposure (no settled Fleet shares yet), so
+  // the manage view shows a "settling" summary rather than a real position.
+  const isRwaPendingPosition = isRwaVault && new BigNumber(position.shares.amount).lte(0)
+
   // Current vault share price (USDC per share); used to value RWA share receipts in USDC terms in
-  // both the sidebar pending positions and the manage-view deposits/withdrawals history.
+  // the manage-view deposits/withdrawals history. With no settled shares (pending RWA), fall back to
+  // the vault NAV per share so withdrawal-receipt valuation still works.
   const vaultSharePrice = new BigNumber(position.shares.amount).gt(0)
     ? netValue.div(new BigNumber(position.shares.amount))
-    : undefined
+    : vault.pricePerShare
+      ? new BigNumber(vault.pricePerShare)
+      : undefined
 
   const {
     amountParsed,
@@ -945,6 +952,7 @@ export const VaultManageViewComponent = ({
         vaultApyData={vaultApyData}
         vaults={vaults}
         position={position}
+        isRwaPendingPosition={isRwaPendingPosition}
         onRefresh={revalidatePositionData}
         viewWalletAddress={viewWalletAddress}
         connectedWalletAddress={userWalletAddress}
@@ -971,6 +979,7 @@ export const VaultManageViewComponent = ({
             vault={vault}
             vaultApyData={vaultApyData}
             isRwaVault={isRwaVault}
+            isRwaPendingPosition={isRwaPendingPosition}
             vaultSharePrice={vaultSharePrice}
             // Only the position owner can claim/cancel; non-owners view the history read-only.
             onRwaAction={ownerView ? executeRwaAction : undefined}
