@@ -14,21 +14,40 @@ import { NavPrice } from '@/components/molecules/NavPrice/NavPrice'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { getDisplayToken } from '@/helpers/get-display-token'
 
+// Vault-wide true TVL (Fleet assets + pending deposits + claimable withdrawals), denominated in the
+// Fleet input asset. Minimal structural shape of the SDK's `IRwaVaultMarketValue` (`.amount` is the
+// human-readable decimal string) so this shared component stays decoupled from the SDK type.
+export interface RwaVaultMarketValue {
+  total: { amount: string }
+  totalUsd: { amount: string }
+}
+
 interface RwaVaultStatsGridProps {
   vault: SDKVaultishType
+  // When provided, the "Market Value" stat uses this broader TVL (including settling deposits)
+  // instead of the subgraph TVL, which only reflects settled Fleet assets.
+  rwaMarketValue?: RwaVaultMarketValue
   isMobileOrTablet?: boolean
   tooltipEventHandler: (tooltipName: string) => void
 }
 
 export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
   vault,
+  rwaMarketValue,
   isMobileOrTablet,
   tooltipEventHandler,
 }) => {
-  const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
-  const totalValueLockedTokenParsed = formatCryptoBalance(
-    new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
-  )
+  // Prefer the broader market value (includes not-yet-settled deposits); fall back to the subgraph
+  // settled-only TVL until it loads.
+  const marketValueToken = rwaMarketValue
+    ? new BigNumber(rwaMarketValue.total.amount)
+    : new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals))
+  const marketValueUSD = rwaMarketValue
+    ? new BigNumber(rwaMarketValue.totalUsd.amount)
+    : new BigNumber(vault.totalValueLockedUSD)
+
+  const totalValueLockedUSDParsed = formatCryptoBalance(marketValueUSD)
+  const totalValueLockedTokenParsed = formatCryptoBalance(marketValueToken)
 
   return (
     <>

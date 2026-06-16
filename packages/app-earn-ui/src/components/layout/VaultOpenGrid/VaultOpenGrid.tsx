@@ -37,7 +37,7 @@ import { getRewardsTokenBonus } from '@/helpers/get-reward-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 
-import { RwaVaultStatsGrid } from './RwaVaultStatsGrid'
+import { type RwaVaultMarketValue, RwaVaultStatsGrid } from './RwaVaultStatsGrid'
 import { StandardVaultStatsGrid } from './StandardVaultStatsGrid'
 
 import vaultOpenGridStyles from './VaultOpenGrid.module.css'
@@ -46,6 +46,8 @@ interface VaultOpenGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
   vaultInfo?: IArmadaVaultInfo
+  // RWA-only: vault-wide true TVL (incl. settling deposits) for the "Market Value" stat.
+  rwaMarketValue?: RwaVaultMarketValue
   displaySimulationGraph?: boolean
   simulationGraph: ReactNode
   detailsContent: ReactNode
@@ -75,6 +77,7 @@ interface VaultOpenGridProps {
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   vault,
   vaultInfo,
+  rwaMarketValue,
   vaults,
   displaySimulationGraph,
   simulationGraph,
@@ -333,6 +336,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
           {isRwaVault ? (
             <RwaVaultStatsGrid
               vault={vault}
+              rwaMarketValue={rwaMarketValue}
               isMobileOrTablet={isMobileOrTablet}
               tooltipEventHandler={tooltipEventHandler}
             />

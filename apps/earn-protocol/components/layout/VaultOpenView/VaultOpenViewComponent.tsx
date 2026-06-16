@@ -84,6 +84,10 @@ import {
   getRwaUserVaultExposureQueryKey,
   useRwaUserVaultExposure,
 } from '@/hooks/use-rwa-user-vault-exposure'
+import {
+  getRwaVaultMarketValueQueryKey,
+  useRwaVaultMarketValue,
+} from '@/hooks/use-rwa-vault-market-value'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -378,6 +382,10 @@ export const VaultOpenViewComponent = ({
     queryClient.invalidateQueries({
       queryKey: getRwaUserVaultExposureQueryKey(vaultChainId, vault.id, userWalletAddress),
     })
+    // And the vault-wide market value, whose pending-deposits component grows with this deposit.
+    queryClient.invalidateQueries({
+      queryKey: getRwaVaultMarketValueQueryKey(vaultChainId, vault.id),
+    })
     revalidateUser(userWalletAddress)
   }, [queryClient, network, vaultId, userWalletAddress, revalidateUser, vaultChainId, vault.id])
 
@@ -496,6 +504,16 @@ export const VaultOpenViewComponent = ({
     chainId: vaultChainId,
   })
   const hasRwaExposure = !!rwaExposure && new BigNumber(rwaExposure.total.amount).gt(0)
+
+  // Vault-wide true TVL (Fleet assets + pending deposits + claimable withdrawals). The subgraph TVL
+  // only reflects settled Fleet assets, so the open-view "Market Value" uses this to include the
+  // settling deposits. Public (no wallet), so it loads for any visitor of an RWA vault.
+  const { data: rwaMarketValue } = useRwaVaultMarketValue({
+    enabled: isRwaVault,
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
+  })
 
   useRedirectToPositionView({ vault, position, hasRwaExposure })
 
@@ -656,6 +674,7 @@ export const VaultOpenViewComponent = ({
         isMobileOrTablet={isMobileOrTablet}
         vault={vault}
         vaultInfo={vaultInfo}
+        rwaMarketValue={rwaMarketValue}
         rewardTokenPrices={rewardTokenPrices}
         vaults={vaults}
         medianDefiYield={medianDefiYield}
