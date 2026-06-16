@@ -56,8 +56,7 @@ export default function RwaVaults() {
   }
 
   return (
-    <div style={{ display: 'none' }}>
-      {/* hide */}
+    <>
       <HeroWrapper className={rwaVaultsStyles.heroWrapper}>
         <div className={rwaVaultsStyles.heroBackground}>
           <FractalGlassBackground />
@@ -315,6 +314,6 @@ export default function RwaVaults() {
       <div className={rwaVaultsStyles.faqWrapper}>
         <LandingRwaFaqSection />
       </div>
-    </div>
+    </>
   )
 }
