@@ -17,6 +17,7 @@ import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedRwaUserVaultExposure } from '@/app/server-handlers/cached/get-rwa-user-vault-exposure'
 import { getCachedRwaVaultDetails } from '@/app/server-handlers/cached/get-rwa-vault-details'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
@@ -70,20 +71,28 @@ const VaultManageWithData = async ({
     !!parsedVaultId && !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
 
   if (isRwaVault) {
-    const position = parsedVaultId
-      ? await getUserPosition({
-          vaultAddress: parsedVaultId,
-          network: parsedNetwork,
-          walletAddress,
-          isRwaVault,
-        })
-      : undefined
+    const [position, exposure] = parsedVaultId
+      ? await Promise.all([
+          getUserPosition({
+            vaultAddress: parsedVaultId,
+            network: parsedNetwork,
+            walletAddress,
+            isRwaVault,
+          }),
+          getCachedRwaUserVaultExposure({
+            chainId: parsedNetworkId,
+            fleetAddress: parsedVaultId,
+            walletAddress,
+          }),
+        ])
+      : [undefined, null]
     const hasShares = !!position && new BigNumber(position.amount.amount).gt(0)
+    // A pre-claim user with no settled shares but pending/claimable exposure still belongs on the
+    // manage view (it synthesizes a "settling" position from this exposure). Only fall back to the
+    // deposit view when there is genuinely nothing (no shares AND no exposure).
+    const hasExposure = !!exposure && new BigNumber(exposure.total).gt(0)
 
-    if (!hasShares) {
-      // No Fleet shares yet (receipts only) — render the open/deposit view (same sidebar + pending
-      // positions). `resolveVaultManageContext` is RWA-aware so the manage path below also works
-      // once the user does hold shares.
+    if (!hasShares && !hasExposure) {
       await queryClient.prefetchQuery({
         queryKey: getVaultOpenCoreQueryKey(network, vaultId),
         queryFn: () => getVaultOpenCoreData({ network, vaultId }),

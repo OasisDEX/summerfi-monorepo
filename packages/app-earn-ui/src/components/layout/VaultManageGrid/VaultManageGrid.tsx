@@ -55,6 +55,9 @@ interface VaultManageGridProps {
   vaults: SDKVaultsListType
   vaultInfo?: IArmadaVaultInfo
   position: IArmadaPosition
+  // RWA pre-claim: `position` is synthesized from exposure (no settled shares yet). Market Value
+  // shows the total exposure with a "Settling" caption, and the (zero) Earned subline is suppressed.
+  isRwaPendingPosition?: boolean
   detailsContent: ReactNode[] | ReactNode
   sidebarContent: ReactNode
   connectedWalletAddress?: string
@@ -85,6 +88,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   detailsContent,
   sidebarContent,
   position,
+  isRwaPendingPosition = false,
   connectedWalletAddress,
   viewWalletAddress,
   isMobile,
@@ -393,25 +397,36 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   </Tooltip>
                 }
                 subValue={
-                  <Tooltip
-                    tooltip={<>USD&nbsp;Earned:&nbsp;${formatFiatBalance(netEarningsUSD)}</>}
-                    tooltipWrapperStyles={{
-                      maxWidth: '455px',
-                    }}
-                    onTooltipOpen={tooltipEventHandler}
-                    tooltipName="vault-manage-usd-earned-label"
-                  >
-                    <>
-                      Earned:&nbsp;
-                      {formatWithSeparators(netEarnings, {
-                        precision: 2,
-                      })}
-                      &nbsp;
-                      {getDisplayToken(vault.inputToken.symbol)}
-                    </>
-                  </Tooltip>
+                  isRwaPendingPosition ? (
+                    // Pre-claim RWA: nothing is "earned" yet; show the settling state instead.
+                    'Settling'
+                  ) : (
+                    <Tooltip
+                      tooltip={<>USD&nbsp;Earned:&nbsp;${formatFiatBalance(netEarningsUSD)}</>}
+                      tooltipWrapperStyles={{
+                        maxWidth: '455px',
+                      }}
+                      onTooltipOpen={tooltipEventHandler}
+                      tooltipName="vault-manage-usd-earned-label"
+                    >
+                      <>
+                        Earned:&nbsp;
+                        {formatWithSeparators(netEarnings, {
+                          precision: 2,
+                        })}
+                        &nbsp;
+                        {getDisplayToken(vault.inputToken.symbol)}
+                      </>
+                    </Tooltip>
+                  )
                 }
-                subValueType={netEarnings.isPositive() ? 'positive' : 'negative'}
+                subValueType={
+                  isRwaPendingPosition
+                    ? undefined
+                    : netEarnings.isPositive()
+                      ? 'positive'
+                      : 'negative'
+                }
                 subValueSize="small"
               />
             </Box>

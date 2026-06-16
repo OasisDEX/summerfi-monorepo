@@ -67,6 +67,9 @@ export const VaultManageViewDetails: FC<{
   // RWA-only: powers the "Deposits and Withdrawals" history expander. The receipt actions are
   // owned by the parent (shared useRwaClaim wiring) and passed down here.
   isRwaVault?: boolean
+  // RWA pre-claim (synthetic position from exposure): hide the position performance/forecast
+  // expander, which has no real position history to chart and whose section handler returns null.
+  isRwaPendingPosition?: boolean
   vaultSharePrice?: BigNumber
   onRwaAction?: (receipt: RwaReceipt) => void
   rwaActionInProgressKey?: string
@@ -78,6 +81,7 @@ export const VaultManageViewDetails: FC<{
   vault,
   vaultApyData,
   isRwaVault = false,
+  isRwaPendingPosition = false,
   vaultSharePrice,
   onRwaAction,
   rwaActionInProgressKey,
@@ -105,7 +109,9 @@ export const VaultManageViewDetails: FC<{
   // Each lazy expander tracks its own open state so the matching query is only `enabled` (and thus
   // only fetched) once the user reveals it. The performance chart is open by default, so it starts
   // enabled. Re-collapsing keeps the cached data; re-expanding doesn't refetch within staleTime.
-  const [performanceOpen, setPerformanceOpen] = useState(true)
+  // Pending RWA positions have no settled history/forecast to show, so the performance expander is
+  // hidden — keep its query disabled (start closed) to avoid a fetch for a section that won't render.
+  const [performanceOpen, setPerformanceOpen] = useState(!isRwaPendingPosition)
   const [rwaReceiptsOpen, setRwaReceiptsOpen] = useState(false)
   const [yieldOpen, setYieldOpen] = useState(false)
   const [exposureOpen, setExposureOpen] = useState(false)
@@ -152,26 +158,28 @@ export const VaultManageViewDetails: FC<{
     }
 
   return [
-    <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
-      <Expander
-        title={
-          <Text as="p" variant="p1semi">
-            Forecasted Market Value
-          </Text>
-        }
-        onExpand={handleExpand('performance', setPerformanceOpen)}
-        defaultExpanded
-      >
-        {performanceQuery.data ? (
-          <PositionPerformanceChart
-            chartData={performanceQuery.data.performanceChartData}
-            inputToken={getDisplayToken(vault.inputToken.symbol)}
-          />
-        ) : (
-          <SectionLoader />
-        )}
-      </Expander>
-    </div>,
+    isRwaPendingPosition ? null : (
+      <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
+        <Expander
+          title={
+            <Text as="p" variant="p1semi">
+              Forecasted Market Value
+            </Text>
+          }
+          onExpand={handleExpand('performance', setPerformanceOpen)}
+          defaultExpanded
+        >
+          {performanceQuery.data ? (
+            <PositionPerformanceChart
+              chartData={performanceQuery.data.performanceChartData}
+              inputToken={getDisplayToken(vault.inputToken.symbol)}
+            />
+          ) : (
+            <SectionLoader />
+          )}
+        </Expander>
+      </div>
+    ),
     <div className={vaultManageViewStyles.leftContentWrapper} key="AboutTheStrategy">
       <div>
         <Text
