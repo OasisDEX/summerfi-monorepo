@@ -397,10 +397,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                   </Tooltip>
                 }
                 subValue={
-                  isRwaPendingPosition ? (
-                    // Pre-claim RWA: nothing is "earned" yet; show the settling state instead.
-                    'Settling'
-                  ) : (
+                  isRwaPendingPosition ? null : ( // Pre-claim RWA: nothing is "earned" yet
                     <Tooltip
                       tooltip={<>USD&nbsp;Earned:&nbsp;${formatFiatBalance(netEarningsUSD)}</>}
                       tooltipWrapperStyles={{
