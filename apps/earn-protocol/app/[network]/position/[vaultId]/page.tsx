@@ -43,9 +43,13 @@ type EarnVaultOpenPageProps = {
 const VaultOpenWithData = async ({
   network,
   vaultId,
+  isRwaVault,
+  vaultCurator,
 }: {
   network: SupportedSDKNetworks
   vaultId: string
+  isRwaVault: boolean
+  vaultCurator?: string
 }) => {
   const queryClient = getServerQueryClient()
 
@@ -60,7 +64,12 @@ const VaultOpenWithData = async ({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <VaultOpenView network={network} vaultId={vaultId} />
+      <VaultOpenView
+        network={network}
+        vaultId={vaultId}
+        isRwaVault={isRwaVault}
+        vaultCurator={vaultCurator}
+      />
     </HydrationBoundary>
   )
 }
@@ -68,11 +77,34 @@ const VaultOpenWithData = async ({
 const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const { network, vaultId } = await params
 
-  // The await above only parses the URL; the data prefetch lives inside the Suspense boundary so
-  // the skeleton streams immediately while the prefetch resolves and streams in after it.
+  // Cheap, cached resolution (mirrors generateMetadata) so the Suspense fallback renders the RWA
+  // skeleton (RWA stats grid, curator expander, NAV labels, RwaSidebarInfo) for RWA vaults. The
+  // heavier data prefetch lives inside the Suspense boundary so the skeleton streams immediately.
+  const systemConfig = await getCachedConfig()
+  const parsedNetworkId = subgraphNetworkToId(humanNetworktoSDKNetwork(network))
+  const parsedVaultId = isAddress(vaultId)
+    ? vaultId.toLowerCase()
+    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
+  const vaultCurator = parsedVaultId
+    ? getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
+    : false
+  const isRwaVault = !!vaultCurator
+
   return (
-    <Suspense fallback={<VaultOpenLoadingView />}>
-      <VaultOpenWithData network={network} vaultId={vaultId} />
+    <Suspense
+      fallback={
+        <VaultOpenLoadingView
+          isRwaVault={isRwaVault}
+          vaultCurator={typeof vaultCurator === 'string' ? vaultCurator : undefined}
+        />
+      }
+    >
+      <VaultOpenWithData
+        network={network}
+        vaultId={vaultId}
+        isRwaVault={isRwaVault}
+        vaultCurator={typeof vaultCurator === 'string' ? vaultCurator : undefined}
+      />
     </Suspense>
   )
 }

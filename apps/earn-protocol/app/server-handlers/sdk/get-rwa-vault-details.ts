@@ -2,10 +2,12 @@ import { type SDKVaultType, type SupportedSDKNetworks } from '@summerfi/app-type
 import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendInstiSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { getNavPriceChange24h } from '@/helpers/get-nav-price-change-24h'
 import { getNavPriceChange30d } from '@/helpers/get-nav-price-change-30d'
+import { getVaultNavPriceSkipFirstNDays } from '@/helpers/vault-custom-value-helpers'
 
 export async function getRwaVaultDetails({
   vaultAddress,
@@ -39,8 +41,17 @@ export async function getRwaVaultDetails({
 
     // NAV (pricePerShare) changes, computed here where the raw RWA query shape still carries the
     // typed `dailySnapshots`. These survive the later `decorateWithFleetConfig` spread.
+    // The 30d Net APY can exclude the vault's volatile first N days via the fleet config's
+    // `navPriceSkipFirstNDays`; resolve it from config here since fleet-config decoration (which
+    // merges it into customFields) only runs after this point.
+    const systemConfig = await getCachedConfig()
+    const navPriceSkipFirstNDays = getVaultNavPriceSkipFirstNDays(
+      vaultAddress,
+      chainId,
+      systemConfig,
+    )
     const navPriceChange24h = getNavPriceChange24h(vault)
-    const navPriceChange30dResult = getNavPriceChange30d(vault)
+    const navPriceChange30dResult = getNavPriceChange30d(vault, navPriceSkipFirstNDays)
 
     return {
       ...vault,

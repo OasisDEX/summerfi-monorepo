@@ -13,10 +13,13 @@ export const VaultManageView = ({
   network,
   vaultId,
   walletAddress,
+  isRwaVault = false,
 }: {
   network: SupportedSDKNetworks
   vaultId: string
   walletAddress: string
+  // Page-resolved hint so the loading fallback is RWA-correct while the core query is pending.
+  isRwaVault?: boolean
 }) => {
   // Reads straight from the server-hydrated cache on first render; only ever hits the API route
   // fallback if the prefetch failed to dehydrate (then VaultManageLoadingView covers the gap).
@@ -25,7 +28,7 @@ export const VaultManageView = ({
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       {isPending ? (
-        <VaultManageLoadingView />
+        <VaultManageLoadingView isRwaVault={isRwaVault} />
       ) : data ? (
         <VaultManageViewComponent
           network={network}

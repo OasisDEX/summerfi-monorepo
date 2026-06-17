@@ -21,12 +21,14 @@ interface VaultManageLoadingGridProps {
   detailsContent: ReactNode
   sidebarContent: ReactNode
   isMobile?: boolean
+  isRwaVault?: boolean
 }
 
 export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
   detailsContent,
   sidebarContent,
   isMobile,
+  isRwaVault = false,
 }) => {
   const riskTooltipLabel = getVaultRiskTooltipLabel({
     risk: 'lower',
@@ -128,7 +130,7 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="30d Native Yield APY"
+                title={isRwaVault ? '30D Net APY' : '30d Native Yield APY'}
                 value={
                   <SkeletonLine
                     radius="16px"

@@ -117,7 +117,12 @@ const VaultManageWithData = async ({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <VaultManageView network={network} vaultId={vaultId} walletAddress={walletAddress} />
+      <VaultManageView
+        network={network}
+        vaultId={vaultId}
+        walletAddress={walletAddress}
+        isRwaVault={isRwaVault}
+      />
     </HydrationBoundary>
   )
 }
@@ -141,8 +146,13 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     redirect('/not-found')
   }
 
+  // Cheap, cached RWA check (same lookup VaultManageWithData uses) so the Suspense fallback renders
+  // the RWA manage skeleton (30D Net APY stat, Deposits & Withdrawals expander, Deposit/Withdraw
+  // tabs) for RWA vaults.
+  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
+
   return (
-    <Suspense fallback={<VaultManageLoadingView />}>
+    <Suspense fallback={<VaultManageLoadingView isRwaVault={isRwaVault} />}>
       <VaultManageWithData network={network} vaultId={vaultId} walletAddress={walletAddress} />
     </Suspense>
   )

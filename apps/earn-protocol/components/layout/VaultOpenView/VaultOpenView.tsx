@@ -12,19 +12,25 @@ import { sdkApiUrl } from '@/constants/sdk'
 export const VaultOpenView = ({
   network,
   vaultId,
+  isRwaVault: isRwaVaultHint,
+  vaultCurator,
 }: {
   network: SupportedSDKNetworks
   vaultId: string
+  // Page-resolved hints so the loading fallback is RWA-correct while `data` is still pending
+  // (`data?.vault.isRwaVault` is undefined until the query resolves).
+  isRwaVault?: boolean
+  vaultCurator?: string
 }) => {
   // Reads straight from the server-hydrated cache on first render; only ever hits the API route
   // fallback if the prefetch failed to dehydrate (then VaultOpenLoadingView covers the gap).
   const { data, isPending } = useVaultOpenCoreQuery(network, vaultId)
-  const isRwaVault = data?.vault.isRwaVault ?? false
+  const isRwaVault = data?.vault.isRwaVault ?? isRwaVaultHint ?? false
 
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       {isPending ? (
-        <VaultOpenLoadingView isRwaVault={isRwaVault} />
+        <VaultOpenLoadingView isRwaVault={isRwaVault} vaultCurator={vaultCurator} />
       ) : data ? (
         <VaultOpenViewComponent
           network={network}

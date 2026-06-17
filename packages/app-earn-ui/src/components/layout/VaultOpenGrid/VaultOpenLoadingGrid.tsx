@@ -22,6 +22,7 @@ interface VaultOpenLoadingGridProps {
   sidebarContent: ReactNode
   isMobile?: boolean
   isRwaVault?: boolean
+  rightExtraContent?: ReactNode
 }
 
 export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
@@ -29,6 +30,7 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
   sidebarContent,
   isMobile,
   isRwaVault = false,
+  rightExtraContent,
 }) => {
   const riskTooltipLabel = getVaultRiskTooltipLabel({
     risk: 'lower',
@@ -248,10 +250,18 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
               </SimpleGrid>
             </>
           )}
+          {isMobile && rightExtraContent && (
+            <div className={vaultOpenGridStyles.rightExtraBlockMobileWrapper}>
+              {rightExtraContent}
+            </div>
+          )}
           <Box className={vaultOpenGridStyles.leftBlock}>{detailsContent}</Box>
         </div>
         <div className={vaultOpenGridStyles.rightBlockWrapper}>
-          <div className={vaultOpenGridStyles.rightBlock}>{sidebarContent}</div>
+          <div className={vaultOpenGridStyles.rightBlock}>
+            {sidebarContent}
+            {rightExtraContent && rightExtraContent}
+          </div>
         </div>
       </div>
     </>

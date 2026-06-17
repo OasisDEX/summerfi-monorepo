@@ -8,6 +8,7 @@ import {
   VaultOpenLoadingGrid,
 } from '@summerfi/app-earn-ui'
 
+import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
@@ -15,7 +16,15 @@ import { detailsLinks } from './vault-details-links'
 
 import vaultOpenViewStyles from './VaultOpenView.module.css'
 
-export const VaultOpenLoadingView = ({ isRwaVault = false }: { isRwaVault?: boolean }) => {
+export const VaultOpenLoadingView = ({
+  isRwaVault = false,
+  vaultCurator,
+}: {
+  isRwaVault?: boolean
+  // RWA curator name, resolved cheaply at the page level (getVaultCuratedBy). When present the
+  // curator expander shows the real title; otherwise it falls back to a skeleton title.
+  vaultCurator?: string
+}) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
@@ -23,9 +32,33 @@ export const VaultOpenLoadingView = ({ isRwaVault = false }: { isRwaVault?: bool
     <VaultOpenLoadingGrid
       isMobile={isMobile}
       isRwaVault={isRwaVault}
+      // RwaSidebarInfo is fully static (no data), so render it as-is alongside the deposit sidebar
+      // skeleton to keep the right column from shifting once the loaded view appears.
+      rightExtraContent={isRwaVault ? <RwaSidebarInfo /> : undefined}
       detailsContent={
         <div className={vaultOpenViewStyles.leftContentWrapper}>
           <VaultOpenHeaderBlock detailsLinks={detailsLinks} isRwaVault={isRwaVault} />
+          {isRwaVault ? (
+            <Expander
+              title={
+                vaultCurator ? (
+                  <Text as="p" variant="p1semi">
+                    {vaultCurator}
+                  </Text>
+                ) : (
+                  <SkeletonLine width={160} height={20} radius="var(--radius-roundish)" />
+                )
+              }
+              defaultExpanded
+            >
+              <SkeletonLine
+                width="80%"
+                height={16}
+                radius="var(--radius-roundish)"
+                style={{ margin: 'var(--spacing-space-medium) 10px 0' }}
+              />
+            </Expander>
+          ) : null}
           {[
             isRwaVault ? 'Historical NAV price' : 'Historical yield',
             'Vault exposure',

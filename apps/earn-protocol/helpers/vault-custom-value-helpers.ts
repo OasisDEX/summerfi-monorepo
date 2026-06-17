@@ -90,3 +90,30 @@ export const getVaultCuratedBy = (
 
   return typeof vaultConfig?.vaultCurator !== 'undefined' ? vaultConfig.vaultCurator : false
 }
+
+/**
+ * Number of leading days of NAV (pricePerShare) history to exclude from an RWA vault's 30d Net APY
+ * calculation, read from the fleet config's `navPriceSkipFirstNDays`. Returns 0 when unset (no skip)
+ * — RWA-exclusive; non-RWA vaults never carry this field.
+ */
+export const getVaultNavPriceSkipFirstNDays = (
+  vaultAddress: string,
+  chainId: number | string,
+  systemConfig: Partial<EarnAppConfigType>,
+): number => {
+  const { fleetMap } = systemConfig
+
+  if (!fleetMap) {
+    return 0
+  }
+
+  const vaultNetworkConfig = fleetMap[String(chainId) as keyof typeof fleetMap]
+
+  const vaultConfig = (Object.values(vaultNetworkConfig) as EarnAppFleetCustomConfigType[]).find(
+    (fleet) => fleet.address.toLowerCase() === vaultAddress.toLowerCase(),
+  )
+
+  return typeof vaultConfig?.navPriceSkipFirstNDays === 'number'
+    ? vaultConfig.navPriceSkipFirstNDays
+    : 0
+}

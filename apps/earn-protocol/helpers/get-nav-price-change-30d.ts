@@ -28,16 +28,38 @@ export type NavPriceChange30d = {
  * The APY annualizes by the actual window: `((latest - past) / past) / daysUsed * 365`, so a partial
  * window still annualizes correctly (just from noisier, shorter data).
  *
+ * `skipFirstNDays` (from the RWA vault's `navPriceSkipFirstNDays` config) excludes the vault's first
+ * N days of NAV history from the calculation: right after inception the NAV price can swing out of
+ * regular bounds and skew the annualized APY. Snapshots are dropped by the vault's `createdTimestamp`
+ * (not by array position), so a matured vault — whose 31-day window no longer contains those early
+ * days — is unaffected. The trim is only applied while it still leaves at least two snapshots.
+ *
  * Returns `null` (rendered as "n/a") when there aren't two snapshots, a price/timestamp is
  * missing or non-finite, or the past price is zero (avoids division by zero).
  */
 export const getNavPriceChange30d = (
   vault: GetVaultQueryRwa['vault'],
+  skipFirstNDays = 0,
 ): NavPriceChange30d | null => {
-  const snapshots = vault?.dailySnapshots
+  let snapshots = vault?.dailySnapshots
 
   if (!snapshots || snapshots.length < 2) {
     return null
+  }
+
+  if (skipFirstNDays > 0) {
+    const createdTs = Number(vault?.createdTimestamp)
+
+    if (Number.isFinite(createdTs)) {
+      const cutoffTs = createdTs + Number(skipFirstNDays * SECONDS_PER_DAY)
+      const trimmed = snapshots.filter((snapshot) => Number(snapshot.timestamp) >= cutoffTs)
+
+      // Only honour the skip while it leaves enough data to compute a change; otherwise fall back to
+      // the full history rather than returning "n/a" for a very young vault.
+      if (trimmed.length >= 2) {
+        snapshots = trimmed
+      }
+    }
   }
 
   const latestPrice = Number(snapshots[0]?.pricePerShare)
