@@ -123,12 +123,12 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         isDaoManaged={isDaoManaged}
         isRwaVault={isRwaVault}
       />
-      {isRwaVault ? (
+      {isRwaVault && vault.customFields?.vaultCurator ? (
         <Expander
           onExpand={handleExpanderToggle('vault-asset-manager')}
           title={
             <Text as="p" variant="p1semi">
-              Avantgarde Asset Management (Vault Curator)
+              {vault.customFields.vaultCurator}
             </Text>
           }
           defaultExpanded
@@ -141,8 +141,8 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
               margin: '0 10px',
             }}
           >
-            This Vault is curated and managed by Avantgarde Asset Managment. Avantgarde have over 8
-            years of experience....blah blah blah
+            {vault.customFields.vaultCuratorDescription ??
+              `This Vault is curated and managed by ${vault.customFields.vaultCurator}`}
           </Text>
         </Expander>
       ) : null}

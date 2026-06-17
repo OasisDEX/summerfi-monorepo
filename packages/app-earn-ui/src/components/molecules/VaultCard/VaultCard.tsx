@@ -225,7 +225,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
                 </Text>
                 <div style={{ width: 'fit-content' }}>
                   <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                    {customFields?.curatedBy ?? 'n/a'}
+                    {customFields?.vaultCurator ?? 'n/a'}
                   </Text>
                 </div>
               </div>

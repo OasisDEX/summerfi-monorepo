@@ -88,5 +88,5 @@ export const getVaultCuratedBy = (
     (fleet) => fleet.address.toLowerCase() === vaultAddress.toLowerCase(),
   )
 
-  return typeof vaultConfig?.curatedBy !== 'undefined' ? vaultConfig.curatedBy : false
+  return typeof vaultConfig?.vaultCurator !== 'undefined' ? vaultConfig.vaultCurator : false
 }
