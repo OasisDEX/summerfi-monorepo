@@ -95,6 +95,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
               display: 'flex',
               alignItems: 'center',
               gap: '14px',
+              whiteSpace: 'pre',
             }}
             data-testid="vault-token"
           >
