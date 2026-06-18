@@ -319,6 +319,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 isNewVault={isNewVault}
                 isDaoManagedVault={vault.isDaoManaged}
                 isRwaVault={vault.isRwaVault}
+                vaultName={vault.customFields?.name}
               />
             </Dropdown>
             <div className={vaultOpenGridStyles.vaultBonusWrapper}>

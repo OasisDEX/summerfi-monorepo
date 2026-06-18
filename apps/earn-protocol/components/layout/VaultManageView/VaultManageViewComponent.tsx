@@ -60,7 +60,6 @@ import dynamic from 'next/dynamic'
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
-import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
 import { RewardTokenClaimBox } from '@/components/layout/VaultManageView/RewardTokenClaimBox'
 import { getRwaReceiptsHistoryBaseQueryKey } from '@/components/layout/VaultManageView/vault-manage-query-keys'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
@@ -205,8 +204,9 @@ export const VaultManageViewComponent = ({
   const isRwaVault = vault.isRwaVault ?? false
 
   // RWA (rounds-based) calls go through the institutional SDK; standard vault calls use `sdk`.
-  // Defined ahead of useTransaction so its success callback can refresh the pending receipts.
-  const rwaSdk = useRwaSDK()
+  // Defined ahead of useTransaction so its success callback can refresh the pending receipts. The
+  // institution is the vault's `vaultInstitutionId` (merged into customFields on decoration).
+  const rwaSdk = useRwaSDK(vault.customFields?.vaultInstitutionId)
 
   const { isWhitelisted } = useIsWhitelisted({
     isRwaVault,
@@ -989,11 +989,7 @@ export const VaultManageViewComponent = ({
         }
         sidebarContent={<Sidebar {...resovledSidebarProps} />}
         rightExtraContent={
-          isRwaVault ? (
-            // Pending positions now live in the "Deposits and Withdrawals" history table (details
-            // view), which is a superset of the old sidebar list.
-            <RwaSidebarInfo />
-          ) : (
+          isRwaVault ? null : (
             <>
               <RewardTokenClaimBox
                 vaultChainId={vaultChainId}

@@ -91,8 +91,11 @@ export const useTransaction = ({
   const transactionEventHandler = useHandleTransactionEvent()
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
-  // RWA tx builders live only on the institutional SDK surface.
-  const { getRwaDepositTx: getRwaDepositTX, getRwaWithdrawTx: getRwaWithdrawTX } = useRwaSDK()
+  // RWA tx builders live only on the institutional SDK surface, scoped to the institution that owns
+  // this vault (its `vaultInstitutionId`).
+  const { getRwaDepositTx: getRwaDepositTX, getRwaWithdrawTx: getRwaWithdrawTX } = useRwaSDK(
+    vault.customFields?.vaultInstitutionId,
+  )
   const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain, chain } = useEarnProtocolChain()

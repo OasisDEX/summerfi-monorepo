@@ -161,8 +161,10 @@ export const VaultOpenViewComponent = ({
     state: { slippageConfig },
   } = useLocalConfig()
   const sdk = useAppSDK()
-  // RWA (rounds-based) calls go through the institutional SDK; standard vault calls use `sdk`.
-  const rwaSdk = useRwaSDK()
+  // RWA (rounds-based) calls go through the institutional SDK; standard vault calls use `sdk`. The
+  // institution is the vault's `vaultInstitutionId` (merged into customFields on decoration).
+  const rwaClientId = vault.customFields?.vaultInstitutionId
+  const rwaSdk = useRwaSDK(rwaClientId)
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   // const [migratablePositions, setMigratablePositions] = useState<MigratablePosition[]>([])
@@ -438,6 +440,7 @@ export const VaultOpenViewComponent = ({
     // RWA Fleet positions live in the institutional subgraph; read them via the RWA SDK so a
     // whitelisted holder who has claimed shares is redirected from the open page to their position.
     isRwaVault,
+    rwaClientId,
   })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({

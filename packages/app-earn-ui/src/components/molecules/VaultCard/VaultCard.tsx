@@ -144,6 +144,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             onTooltipOpen={onTooltipOpen}
             isNewVault={isNewVault}
             isRwaVault={isRwaVault}
+            vaultName={customFields?.name}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>

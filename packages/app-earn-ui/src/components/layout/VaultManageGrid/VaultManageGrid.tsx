@@ -356,6 +356,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 isNewVault={isNewVault}
                 isDaoManagedVault={vault.isDaoManaged}
                 isRwaVault={vault.isRwaVault}
+                vaultName={vault.customFields?.name}
               />
             </Dropdown>
             <div className={vaultManageGridStyles.vaultBonusWrapper}>

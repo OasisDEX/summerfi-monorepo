@@ -27,6 +27,8 @@ interface VaultTitleWithRiskProps {
   isNewVault?: boolean
   isDaoManagedVault?: boolean
   isRwaVault?: boolean
+  // RWA vaults are titled by their configured name (`customFields.name`) instead of the token symbol.
+  vaultName?: string
 }
 
 export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
@@ -42,6 +44,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
   isNewVault = false,
   isDaoManagedVault,
   isRwaVault,
+  vaultName,
 }) => {
   const resolvedRisk = isDaoManagedVault ? 'higher' : risk
   const color = riskColors[resolvedRisk]
@@ -60,6 +63,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       isNewVault={isNewVault}
       isDaoManagedVault={isDaoManagedVault}
       isRwaVault={isRwaVault}
+      vaultName={vaultName}
       /* networkName should work 99% of the time, because SDKVault returns very similar results for that */
       networkName={networkName}
       value={

@@ -1,21 +1,28 @@
 import { type IArmadaPosition } from '@summerfi/app-types'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
-import { backendInstiSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getBackendInstiSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { rwaSupportedChainIds } from '@/app/server-handlers/subgraphs-map'
+import { getRwaClientIdsForChain, isVaultDisabled } from '@/helpers/vault-custom-value-helpers'
 
 /**
  * Fetches the wallet's claimed RWA Fleet positions (shares). These live in the institutional
- * subgraph, so they must be read through {@link backendInstiSDK} (Client-Id + Insti-Version
- * headers) — the public SDK returns nothing for them. The shape is the standard IArmadaPosition,
- * so these positions flow through the same portfolio pipeline as regular vault positions.
+ * subgraph, so they must be read through the institutional SDK ({@link getBackendInstiSDK}: Client-Id
+ * + Insti-Version headers) — the public SDK returns nothing for them. The shape is the standard
+ * IArmadaPosition, so these positions flow through the same portfolio pipeline as regular vault
+ * positions.
  *
- * Supported networks are derived from rwaSubgraphsMap (the single RWA-network source of truth).
+ * Supported networks are derived from rwaSubgraphsMap; the institutions per network are derived from
+ * the fleet config's `vaultInstitutionId`. `getUserPositions` has no clientId param — it's scoped to
+ * the SDK instance's `Client-Id` header — so we fetch once per (network, institution) instance.
  */
 export async function getRwaUserPositions({ walletAddress }: { walletAddress: string }) {
   try {
-    const positionsByNetwork = await Promise.all(
-      rwaSupportedChainIds.map(async (chainId) => {
+    const systemConfig = await getCachedConfig()
+
+    const positionsByChainAndClient = await Promise.all(
+      rwaSupportedChainIds.flatMap((chainId) => {
         const chainInfo = getChainInfoByChainId(Number(chainId))
 
         const wallet = Wallet.createFrom({
@@ -28,20 +35,32 @@ export async function getRwaUserPositions({ walletAddress }: { walletAddress: st
           wallet,
         })
 
-        // Per-network resilience: one network (e.g. a newly-enabled Mainnet) failing must not drop
-        // the other networks' positions. The outer catch is the last-resort safety net.
-        return await backendInstiSDK.armada.users
-          .getUserPositions({ user })
-          .catch((error: unknown) => {
-            // eslint-disable-next-line no-console
-            console.error(`getRwaUserPositions failed for chainId ${chainId}`, error)
+        // Per (network, institution) resilience: one failing must not drop the others' positions.
+        // The outer catch is the last-resort safety net.
+        return getRwaClientIdsForChain(chainId, systemConfig).map((clientId) =>
+          getBackendInstiSDK(clientId)
+            .armada.users.getUserPositions({ user })
+            // Exclude positions in vaults flagged `disabled: true` in config (hidden/unused).
+            .then((positions) =>
+              positions.filter(
+                (position) =>
+                  !isVaultDisabled(position.pool.id.fleetAddress.value, chainId, systemConfig),
+              ),
+            )
+            .catch((error: unknown) => {
+              // eslint-disable-next-line no-console
+              console.error(
+                `getRwaUserPositions failed for chainId ${chainId} clientId ${clientId}`,
+                error,
+              )
 
-            return [] as IArmadaPosition[]
-          })
+              return [] as IArmadaPosition[]
+            }),
+        )
       }),
     )
 
-    const positionsList = positionsByNetwork
+    const positionsList = positionsByChainAndClient
       .filter(Boolean)
       .reduce<IArmadaPosition[]>((acc, positions) => [...acc, ...positions], [])
 
