@@ -168,6 +168,7 @@ export const PortfolioPosition = ({
               isNewVault={isNewVault}
               isRwaVault={portfolioPosition.vault.isRwaVault}
               isDaoManagedVault={portfolioPosition.vault.isDaoManaged}
+              vaultName={customFields?.name}
             />
             {isMobile && buttonsWrapper}
           </div>

@@ -32,6 +32,9 @@ interface VaultTitleProps {
   isNewVault?: boolean
   isDaoManagedVault?: boolean
   isRwaVault?: boolean
+  // RWA (institutional) vaults are titled by their configured name (`customFields.name`) rather than
+  // the input-token symbol; ignored for non-RWA vaults and falls back to the symbol when unset.
+  vaultName?: string
 }
 
 export const VaultTitle: FC<VaultTitleProps> = ({
@@ -47,9 +50,12 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   isNewVault = false,
   isDaoManagedVault,
   isRwaVault,
+  vaultName,
 }) => {
   const resolvedSymbol = getDisplayToken(symbol)
   const isIconDefined = getTokenGuarded(resolvedSymbol)?.iconName
+  // RWA vaults show their configured name; everything else (and RWA vaults without a name) shows the token.
+  const resolvedTitle = isRwaVault && vaultName ? vaultName : resolvedSymbol
 
   return (
     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -92,7 +98,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
             }}
             data-testid="vault-token"
           >
-            {isLoading ? <SkeletonLine height={40} width={70} /> : resolvedSymbol}
+            {isLoading ? <SkeletonLine height={40} width={70} /> : resolvedTitle}
             {isNewVault && !isLoading && <Emphasis variant="p2semiColorful">New!</Emphasis>}
             {!isLoading && (!!isRwaVault || typeof isDaoManagedVault !== 'undefined') ? (
               <VaultLabelPill isDaoManagedVault={isDaoManagedVault} isRwaVault={isRwaVault} />

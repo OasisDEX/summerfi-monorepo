@@ -157,6 +157,7 @@ export const VaultGridDetails = ({
               isNewVault={isNewVault}
               isDaoManagedVault={vault.isDaoManaged}
               isRwaVault={vault.isRwaVault}
+              vaultName={vault.customFields?.name}
             />
           </Dropdown>
           <Button
