@@ -70,6 +70,7 @@ export const getVaultManageCoreData = async ({
     vault,
     vaultWithConfig,
     isRwaVault,
+    rwaClientId,
   } = ctx
 
   // Resolve the effective position. A pre-claim RWA user has no settled Fleet position; if they hold
@@ -77,11 +78,12 @@ export const getVaultManageCoreData = async ({
   // the manage view renders a meaningful "settling" summary instead of bailing to the deposit view.
   let { position } = ctx
 
-  if (!position && isRwaVault && parsedVaultId) {
+  if (!position && isRwaVault && parsedVaultId && rwaClientId) {
     const exposure = await getCachedRwaUserVaultExposure({
       chainId: Number(parsedNetworkId),
       fleetAddress: parsedVaultId,
       walletAddress,
+      clientId: rwaClientId,
     })
 
     if (exposure && new BigNumber(exposure.total).gt(0)) {

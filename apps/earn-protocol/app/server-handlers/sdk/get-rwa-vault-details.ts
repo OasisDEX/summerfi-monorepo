@@ -4,10 +4,13 @@ import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-com
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
-import { backendInstiSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { getBackendInstiSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { getNavPriceChange24h } from '@/helpers/get-nav-price-change-24h'
 import { getNavPriceChange30d } from '@/helpers/get-nav-price-change-30d'
-import { getVaultNavPriceSkipFirstNDays } from '@/helpers/vault-custom-value-helpers'
+import {
+  getVaultNavPriceSkipFirstNDays,
+  getVaultRwaClientId,
+} from '@/helpers/vault-custom-value-helpers'
 
 export async function getRwaVaultDetails({
   vaultAddress,
@@ -24,6 +27,16 @@ export async function getRwaVaultDetails({
     const chainId = subgraphNetworkToId(network)
     const chainInfo = getChainInfoByChainId(chainId)
 
+    // Resolve config up front: it carries both the institution routing (`vaultInstitutionId`) and the
+    // `navPriceSkipFirstNDays` read below. A disabled/unconfigured RWA vault has no client id, so it
+    // cannot be routed to an institution → treat as not found.
+    const systemConfig = await getCachedConfig()
+    const clientId = getVaultRwaClientId(vaultAddress, chainId, systemConfig)
+
+    if (!clientId) {
+      return undefined
+    }
+
     const fleetAddress = Address.createFromEthereum({
       value: vaultAddress,
     })
@@ -31,7 +44,7 @@ export async function getRwaVaultDetails({
       chainInfo,
       fleetAddress,
     })
-    const { vault } = await backendInstiSDK.rwa.getVaultRaw({
+    const { vault } = await getBackendInstiSDK(clientId).rwa.getVaultRaw({
       vaultId: poolId,
     })
 
@@ -42,9 +55,7 @@ export async function getRwaVaultDetails({
     // NAV (pricePerShare) changes, computed here where the raw RWA query shape still carries the
     // typed `dailySnapshots`. These survive the later `decorateWithFleetConfig` spread.
     // The 30d Net APY can exclude the vault's volatile first N days via the fleet config's
-    // `navPriceSkipFirstNDays`; resolve it from config here since fleet-config decoration (which
-    // merges it into customFields) only runs after this point.
-    const systemConfig = await getCachedConfig()
+    // `navPriceSkipFirstNDays`.
     const navPriceSkipFirstNDays = getVaultNavPriceSkipFirstNDays(
       vaultAddress,
       chainId,

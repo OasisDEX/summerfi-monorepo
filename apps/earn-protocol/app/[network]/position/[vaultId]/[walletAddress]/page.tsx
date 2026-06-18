@@ -33,6 +33,7 @@ import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   getVaultCuratedBy,
   getVaultIdByVaultCustomName,
+  getVaultRwaClientId,
 } from '@/helpers/vault-custom-value-helpers'
 
 type EarnVaultManagePageProps = {
@@ -71,21 +72,26 @@ const VaultManageWithData = async ({
     !!parsedVaultId && !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
 
   if (isRwaVault) {
-    const [position, exposure] = parsedVaultId
-      ? await Promise.all([
-          getUserPosition({
-            vaultAddress: parsedVaultId,
-            network: parsedNetwork,
-            walletAddress,
-            isRwaVault,
-          }),
-          getCachedRwaUserVaultExposure({
-            chainId: parsedNetworkId,
-            fleetAddress: parsedVaultId,
-            walletAddress,
-          }),
-        ])
-      : [undefined, null]
+    const rwaClientId = parsedVaultId
+      ? getVaultRwaClientId(parsedVaultId, parsedNetworkId, systemConfig)
+      : undefined
+    const [position, exposure] =
+      parsedVaultId && rwaClientId
+        ? await Promise.all([
+            getUserPosition({
+              vaultAddress: parsedVaultId,
+              network: parsedNetwork,
+              walletAddress,
+              isRwaVault,
+            }),
+            getCachedRwaUserVaultExposure({
+              chainId: parsedNetworkId,
+              fleetAddress: parsedVaultId,
+              walletAddress,
+              clientId: rwaClientId,
+            }),
+          ])
+        : [undefined, null]
     const hasShares = !!position && new BigNumber(position.amount.amount).gt(0)
     // A pre-claim user with no settled shares but pending/claimable exposure still belongs on the
     // manage view (it synthesizes a "settling" position from this exposure). Only fall back to the

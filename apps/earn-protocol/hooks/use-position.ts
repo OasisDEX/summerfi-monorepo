@@ -58,6 +58,7 @@ export const usePosition = ({
   onlyActive,
   cached,
   isRwaVault = false,
+  rwaClientId,
 }: {
   vaultId: string
   chainId: SupportedNetworkIds
@@ -66,10 +67,13 @@ export const usePosition = ({
   // RWA (rounds-based) Fleet positions are indexed in the institutional subgraph and must be read
   // through the RWA SDK (Client-Id + Insti-Version headers); the public SDK returns nothing for them.
   isRwaVault?: boolean
+  // Institution that owns the vault (its `vaultInstitutionId`) — selects the RWA SDK deployment.
+  // Only needed when `isRwaVault` is true.
+  rwaClientId?: string
 }) => {
   const [position, setPosition] = useState<IArmadaPosition>()
   const { getUserPosition: getUserPositionPublic } = useAppSDK()
-  const { getUserPosition: getUserPositionRwa } = useRwaSDK()
+  const { getUserPosition: getUserPositionRwa } = useRwaSDK(rwaClientId)
   const getUserPosition = isRwaVault ? getUserPositionRwa : getUserPositionPublic
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const [isLoading, setIsLoading] = useState(false)

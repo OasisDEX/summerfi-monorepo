@@ -11,15 +11,19 @@ export const getCachedRwaUserVaultExposure = ({
   chainId,
   fleetAddress,
   walletAddress,
+  clientId,
 }: {
   chainId: number
   fleetAddress: string
   walletAddress: string
+  // Institution that owns the vault (its `vaultInstitutionId`) — selects the SDK deployment to read
+  // exposure from, and is part of the cache key via the forwarded args.
+  clientId: string
 }) => {
   const userKey = walletAddress.toLowerCase()
 
   return unstableCache(getRwaUserVaultExposure, ['rwaUserExposure'], {
     revalidate: CACHE_TIMES.PORTFOLIO_DATA,
     tags: [getUserDataCacheHandler(userKey)],
-  })({ chainId, fleetAddress, walletAddress })
+  })({ chainId, fleetAddress, walletAddress, clientId })
 }
