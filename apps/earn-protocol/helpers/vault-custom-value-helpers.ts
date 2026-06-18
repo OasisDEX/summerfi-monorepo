@@ -138,9 +138,22 @@ export const getVaultRwaClientId = (
 
   const vaultNetworkConfig = fleetMap[String(chainId) as keyof typeof fleetMap]
 
+  // fleetMap is not guaranteed to carry a section for every chain (the generated type assumes it
+  // does); guard so Object.values doesn't throw on undefined.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!vaultNetworkConfig) {
+    return undefined
+  }
+
   const vaultConfig = (Object.values(vaultNetworkConfig) as EarnAppFleetCustomConfigType[]).find(
     (fleet) => fleet.address.toLowerCase() === vaultAddress.toLowerCase(),
   )
+
+  // A disabled vault must never resolve to a client id, so downstream reads (e.g. getUserPosition,
+  // getRwaVaultDetails) treat it as unconfigured rather than routing to an institution.
+  if (vaultConfig?.disabled) {
+    return undefined
+  }
 
   return vaultConfig?.vaultInstitutionId
 }
@@ -162,6 +175,13 @@ export const isVaultDisabled = (
   }
 
   const vaultNetworkConfig = fleetMap[String(chainId) as keyof typeof fleetMap]
+
+  // fleetMap is not guaranteed to carry a section for every chain (the generated type assumes it
+  // does); guard so Object.values doesn't throw on undefined.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!vaultNetworkConfig) {
+    return false
+  }
 
   const vaultConfig = (Object.values(vaultNetworkConfig) as EarnAppFleetCustomConfigType[]).find(
     (fleet) => fleet.address.toLowerCase() === vaultAddress.toLowerCase(),
