@@ -1,6 +1,7 @@
 import {
   getArkNiceName,
   getScannerUrl,
+  Icon,
   TableCellNodes,
   TableCellText,
   Text,
@@ -51,12 +52,6 @@ export const curationActivityMapper = (
     const isValueIncrease = new BigNumber(curationEvent.valueAfter).isGreaterThan(
       curationEvent.valueBefore,
     )
-    const beforeColor = !isValueIncrease
-      ? 'var(--earn-protocol-success-100)'
-      : 'var(--earn-protocol-critical-100)'
-    const afterColor = isValueIncrease
-      ? 'var(--earn-protocol-success-100)'
-      : 'var(--earn-protocol-critical-100)'
     const amountBefore = isPercentageChange
       ? formatDecimalAsPercent(getAmount(curationEvent.valueBefore, 20))
       : formatCryptoBalance(getAmount(curationEvent.valueBefore, vault.inputToken.decimals))
@@ -75,13 +70,26 @@ export const curationActivityMapper = (
       content: {
         activity: (
           <TableCellNodes
-            gap="small"
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+            gap="medium"
+            style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
           >
-            <TableCellText>{arkChangedNiceName ? `${arkChangedNiceName} ` : ''}</TableCellText>
-            <TableCellText style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-              {eventLabel.toLowerCase()}
-            </TableCellText>
+            <Icon
+              iconName={isValueIncrease ? 'arrow_increase' : 'arrow_decrease'}
+              size={14}
+              style={{ color: 'var(--earn-protocol-secondary-40)', marginRight: '4px' }}
+            />
+            <TableCellNodes
+              gap="small"
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+            >
+              <TableCellText>{eventLabel}</TableCellText>
+              <TableCellText style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                {timeAgo({
+                  from: new Date(),
+                  to: new Date(Number(curationEvent.timestamp) * 1000),
+                })}
+              </TableCellText>
+            </TableCellNodes>
           </TableCellNodes>
         ),
         change: (
@@ -90,18 +98,20 @@ export const curationActivityMapper = (
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}
           >
             <TableCellNodes gap="small">
-              <TableCellText style={{ color: beforeColor }}>{amountBefore}</TableCellText>
+              {arkChangedNiceName ? `${arkChangedNiceName} ` : ''}
+            </TableCellNodes>
+            <TableCellNodes gap="small">
+              <TableCellText style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                {amountBefore}
+              </TableCellText>
               <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>
                 →
               </Text>
-              <TableCellText style={{ color: afterColor }}>{amountAfter}</TableCellText>
+              <TableCellText style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                {amountAfter}
+              </TableCellText>
             </TableCellNodes>
           </TableCellNodes>
-        ),
-        timestamp: (
-          <TableCellText suppressHydrationWarning>
-            {timeAgo({ from: new Date(), to: new Date(Number(curationEvent.timestamp) * 1000) })}
-          </TableCellText>
         ),
         transaction: (
           <Link href={getScannerUrl(vaultChainId, curationEvent.hash)} target="_blank">
@@ -111,7 +121,7 @@ export const curationActivityMapper = (
               style={{ color: 'var(--earn-protocol-primary-100)' }}
               withStatic
             >
-              &nbsp;
+              View
             </WithArrow>
           </Link>
         ),

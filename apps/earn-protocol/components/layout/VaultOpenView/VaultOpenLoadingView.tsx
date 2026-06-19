@@ -63,9 +63,9 @@ export const VaultOpenLoadingView = ({
             isRwaVault ? 'Historical NAV price' : 'Historical yield',
             'Vault exposure',
             'Rebalancing activity',
-            'Curation activity',
+            'Portfolio Composition History',
             'Users activity',
-            'Strategy management fee',
+            'Strategy fees',
           ].map((expanderLabel) => (
             <Expander
               key={expanderLabel}

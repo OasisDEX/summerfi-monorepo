@@ -26,17 +26,17 @@ export const VaultManageLoadingView = ({ isRwaVault = false }: { isRwaVault?: bo
         'Deposits and Withdrawals',
         'Historical yield',
         'Vault exposure',
-        'Strategy management fee',
+        'Strategy fees',
         'Rebalancing activity',
-        'Curation activity',
+        'Portfolio Composition History',
         'User activity',
       ]
     : [
         'Historical yield',
         'Vault exposure',
-        'Strategy management fee',
+        'Strategy fees',
         'Rebalancing activity',
-        'Curation activity',
+        'Portfolio Composition History',
         'User activity',
       ]
 

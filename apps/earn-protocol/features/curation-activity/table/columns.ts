@@ -10,12 +10,7 @@ export const curationActivityColumns = [
     sortable: false,
   },
   {
-    title: 'Timestamp',
-    key: 'timestamp',
-    sortable: false,
-  },
-  {
-    title: '',
+    title: 'Onchain Tx',
     key: 'transaction',
     sortable: false,
   },

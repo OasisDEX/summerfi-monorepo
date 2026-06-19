@@ -199,7 +199,11 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         }
         defaultExpanded
       >
-        <VaultExposureDescription humanReadableNetwork={humanReadableNetwork} vault={vault}>
+        <VaultExposureDescription
+          humanReadableNetwork={humanReadableNetwork}
+          vault={vault}
+          isRwaVault={isRwaVault}
+        >
           <VaultExposure
             vault={vault}
             arksInterestRates={arksInterestRates}
@@ -232,7 +236,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         onExpand={handleExpanderToggle('curation-activity')}
         title={
           <Text as="p" variant="p1semi">
-            Curation activity
+            Portfolio Composition History
           </Text>
         }
         defaultExpanded
@@ -262,7 +266,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         onExpand={handleExpanderToggle('strategy-management-fee')}
         title={
           <Text as="p" variant="p1semi">
-            Strategy management fee
+            Strategy fees
           </Text>
         }
         defaultExpanded

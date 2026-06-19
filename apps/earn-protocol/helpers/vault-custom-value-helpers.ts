@@ -4,13 +4,59 @@ import {
   type IArmadaPosition,
   type SDKVaultishType,
 } from '@summerfi/app-types'
-import { decorateWithFleetConfig } from '@summerfi/app-utils'
+import { decorateWithFleetConfig, ten } from '@summerfi/app-utils'
+import { type GetVaultsQueryRwa } from '@summerfi/subgraph-manager-common'
+import BigNumber from 'bignumber.js'
 
 type VaultConfigDecorator = {
   vaults: SDKVaultishType[]
   systemConfig: Partial<EarnAppConfigType>
   userPositions?: IArmadaPosition[]
   daoManagedVaultsList: `0x${string}`[]
+}
+
+// RWA vaults carry their minimum deposit as the rounds inputVault's `minPositionSize` (base units) in
+// the RWA subgraph, not in fleet config — so `decorateWithFleetConfig` (which only sets `customFields`
+// from config) leaves `minimumDeposit` empty and the "Min Deposit" stat reads n/a. Callers must overlay
+// this live value after decoration. Builds a `{ [vaultId]: displayMinDeposit }` map from the raw RWA
+// list vaults (the same `getVaultsRaw` shape used by both the vaults list and the vault-open/manage
+// resolution).
+export const buildRwaLiveMinDepositMap = (
+  rwaVaults: GetVaultsQueryRwa['vaults'],
+): { [vaultId: string]: number } => {
+  const liveMinDeposit: { [vaultId: string]: number } = {}
+
+  for (const vault of rwaVaults) {
+    const inputVault = vault.roundsVaultPair?.inputVault
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (inputVault?.minPositionSize != null && inputVault.underlyingToken.decimals != null) {
+      liveMinDeposit[vault.id] = new BigNumber(inputVault.minPositionSize.toString())
+        .div(ten.pow(inputVault.underlyingToken.decimals))
+        .toNumber()
+    }
+  }
+
+  return liveMinDeposit
+}
+
+// Overlay the live RWA min deposit onto a (config-decorated) vault's `customFields.minimumDeposit`.
+// No-op when there's no live value for the vault or it carries no `customFields` (e.g. non-RWA vaults).
+export const withRwaLiveMinDeposit = <T extends SDKVaultishType>(
+  vault: T,
+  liveMinDepositMap: { [vaultId: string]: number },
+): T => {
+  const minDeposit = liveMinDepositMap[vault.id]
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (minDeposit == null || vault.customFields == null) {
+    return vault
+  }
+
+  return {
+    ...vault,
+    customFields: { ...vault.customFields, minimumDeposit: minDeposit },
+  }
 }
 
 export const decorateVaultsWithConfig = ({

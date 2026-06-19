@@ -6,16 +6,38 @@ import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/constants/charts'
 
 type NavSnapshot = { timestamp: number; navPrice?: number | null }
 
+const SECONDS_PER_DAY = 86_400
+
 // Maps the RWA vault NAV (pricePerShare) snapshots into the timeframe-bucketed shape the chart
 // expects. Mirrors get-position-historical-data / mapSinglePointChartData (7d/30d hourly, 90d/6m/1y
 // daily, 3y weekly) but emits a single `navPrice` series. Buckets without a snapshot omit the
 // `navPrice` key so the line renders a gap (connectNulls bridges it) rather than dropping to 0,
 // which would otherwise wreck the NAV line and its auto-scaled YAxis.
+//
+// `skipFirstNDays` (the vault's configured `navPriceSkipFirstNDays`) drops snapshots from the vault's
+// first N days — the inception window where NAV can swing out of bounds — so the chart, and the APY
+// derived from it, ignore those volatile early days, consistent with the navApy30d stat
+// (getNavPriceChange30d). No-op when 0 or when the vault has no usable created timestamp.
 export const getRwaNavHistoricalData = ({
   navHistory,
+  skipFirstNDays = 0,
+  vaultCreatedTimestamp,
 }: {
   navHistory: GetRwaVaultNavHistoryReturnType
+  skipFirstNDays?: number
+  vaultCreatedTimestamp?: number | string | bigint
 }): SingleSourceChartData => {
+  const createdTs = Number(vaultCreatedTimestamp)
+  const skipBeforeTimestamp =
+    skipFirstNDays > 0 && Number.isFinite(createdTs)
+      ? createdTs + Number(skipFirstNDays * SECONDS_PER_DAY)
+      : undefined
+
+  // Snapshots within the inception skip window are excluded before bucketing, so their buckets stay
+  // empty (rendered as gaps) and never feed the NAV line or the APY series.
+  const isAfterSkipWindow = (point: NavSnapshot) =>
+    skipBeforeTimestamp == null || point.timestamp >= skipBeforeTimestamp
+
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
   const nowStartOfDay = now.startOf('day')
@@ -42,6 +64,9 @@ export const getRwaNavHistoricalData = ({
   const weeklyDataMap = new Map<number, NavSnapshot>()
 
   navHistory.vault?.hourlyVaultHistory.forEach((point) => {
+    if (!isAfterSkipWindow(point)) {
+      return
+    }
     hourlyDataMap.set(
       dayjs(point.timestamp * 1000)
         .startOf('hour')
@@ -51,6 +76,9 @@ export const getRwaNavHistoricalData = ({
   })
 
   navHistory.vault?.dailyVaultHistory.forEach((point) => {
+    if (!isAfterSkipWindow(point)) {
+      return
+    }
     dailyDataMap.set(
       dayjs(point.timestamp * 1000)
         .startOf('day')
@@ -60,6 +88,9 @@ export const getRwaNavHistoricalData = ({
   })
 
   navHistory.vault?.weeklyVaultHistory.forEach((point) => {
+    if (!isAfterSkipWindow(point)) {
+      return
+    }
     weeklyDataMap.set(
       dayjs(point.timestamp * 1000)
         .startOf('week')

@@ -1,9 +1,9 @@
 'use client'
 
-import { type ReactNode, useMemo } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 import { Card, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type SingleSourceChartData, type TimeframesType } from '@summerfi/app-types'
-import { formatCryptoBalance } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 import { ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
@@ -11,6 +11,7 @@ import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { CHART_TIMESTAMP_FORMAT_DETAILED, CHART_TIMESTAMP_FORMAT_SHORT } from '@/constants/charts'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
+import { getRwaNavApySeries } from '@/helpers/chart-helpers/get-rwa-nav-apy-series'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useTimeframes } from '@/hooks/use-timeframes'
 
@@ -21,11 +22,13 @@ type RwaNavPriceChartProps = {
 
 export const RwaNavPriceChart = ({ chartData, chartId }: RwaNavPriceChartProps) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
+  // Switch between the raw NAV price line and an annualised-APY line derived locally from it.
+  const [showApy, setShowApy] = useState(false)
   const { timeframe, setTimeframe, timeframes } = useTimeframes({
     chartData: chartData?.data,
   })
 
-  const parsedData = useMemo(() => {
+  const navData = useMemo(() => {
     if (!chartData) {
       return []
     }
@@ -33,11 +36,22 @@ export const RwaNavPriceChart = ({ chartData, chartId }: RwaNavPriceChartProps) 
     return chartData.data[timeframe]
   }, [chartData, timeframe])
 
-  const hasData = parsedData.some((point) => 'navPrice' in point)
+  // APY annualised over the selected timeframe (re-based on the window's first NAV point), computed
+  // locally from the NAV series — recomputed when the timeframe changes.
+  const apyData = useMemo(() => getRwaNavApySeries(navData), [navData])
+
+  const dataKey = showApy ? 'apy' : 'navPrice'
+  const parsedData = showApy ? apyData : navData
+  const hasData = parsedData.some((point) => dataKey in point)
 
   const handleSetNextTimeframe = (nextTimeframe: string) => {
     setTimeframe(nextTimeframe as TimeframesType)
     buttonClickEventHandler(`${chartId}-rwa-nav-price-chart-timeframe-set-${nextTimeframe}`)
+  }
+
+  const handleToggleApy = (nextShowApy: boolean) => {
+    setShowApy(nextShowApy)
+    buttonClickEventHandler(`${chartId}-rwa-nav-price-chart-${nextShowApy ? 'apy' : 'nav'}-view`)
   }
 
   return (
@@ -53,6 +67,9 @@ export const RwaNavPriceChart = ({ chartData, chartId }: RwaNavPriceChartProps) 
         timeframes={timeframes}
         timeframe={timeframe}
         setTimeframe={handleSetNextTimeframe}
+        checkboxLabel="APY"
+        checkboxValue={showApy}
+        setCheckboxValue={handleToggleApy}
       />
       <RechartResponsiveWrapper height="270px">
         <ResponsiveContainer
@@ -70,7 +87,7 @@ export const RwaNavPriceChart = ({ chartData, chartId }: RwaNavPriceChartProps) 
               left: 10,
               bottom: 10,
             }}
-            dataKey="navPrice"
+            dataKey={dataKey}
           >
             <XAxis
               dataKey="timestampParsed"
@@ -84,25 +101,35 @@ export const RwaNavPriceChart = ({ chartData, chartId }: RwaNavPriceChartProps) 
               strokeWidth={0}
               fontSize={12}
               interval="preserveStartEnd"
-              tickFormatter={(label: string) => formatChartCryptoValue(Number(label))}
+              tickFormatter={(label: string) =>
+                showApy
+                  ? formatDecimalAsPercent(Number(label))
+                  : formatChartCryptoValue(Number(label))
+              }
               scale="linear"
               tickCount={10}
               width={55}
-              domain={[
-                (dataMin: number) => {
-                  return Math.max(dataMin - Number(dataMin * 0.001), 0)
-                },
-                (dataMax: number) => {
-                  return dataMax + Number(dataMax * 0.001)
-                },
-              ]}
+              domain={
+                showApy
+                  ? ['auto', 'auto']
+                  : [
+                      (dataMin: number) => {
+                        return Math.max(dataMin - Number(dataMin * 0.001), 0)
+                      },
+                      (dataMax: number) => {
+                        return dataMax + Number(dataMax * 0.001)
+                      },
+                    ]
+              }
             />
             <Tooltip
               formatter={(val, valName) => {
-                return [
-                  formatCryptoBalance(Number(val)),
-                  String(valName).replace('navPrice', 'Net Asset Value'),
-                ]
+                return showApy
+                  ? [formatDecimalAsPercent(Number(val)), 'APY']
+                  : [
+                      formatCryptoBalance(Number(val)),
+                      String(valName).replace('navPrice', 'Net Asset Value'),
+                    ]
               }}
               wrapperStyle={{
                 zIndex: 1000,
@@ -139,7 +166,7 @@ export const RwaNavPriceChart = ({ chartData, chartId }: RwaNavPriceChartProps) 
             <Line
               dot={false}
               type="monotone"
-              dataKey="navPrice"
+              dataKey={dataKey}
               stroke="#FF80BF"
               activeDot={false}
               connectNulls

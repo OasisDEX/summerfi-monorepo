@@ -15,11 +15,13 @@ import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-lis
 import { decorateVaultsWithFees } from '@/app/server-handlers/fleet-fees/decorate-vaults-with-fees'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import {
+  buildRwaLiveMinDepositMap,
   decorateVaultsWithConfig,
   getVaultCuratedBy,
   getVaultIdByVaultCustomName,
   getVaultRwaClientId,
   isVaultDisabled,
+  withRwaLiveMinDeposit,
 } from '@/helpers/vault-custom-value-helpers'
 
 // Shared resolution step for the vault-manage query units. The core + per-section handlers each
@@ -117,6 +119,10 @@ export const resolveVaultManageContext = async ({
 
   const daoManagedVaultsList = await getDaoManagedVaultsIDsList(allVaults)
 
+  // RWA min deposit lives in the subgraph (inputVault.minPositionSize), not in fleet config, so the
+  // decorated vault's customFields.minimumDeposit is empty — overlay the live value (mirrors the list).
+  const liveMinDepositMap = isRwaVault ? buildRwaLiveMinDepositMap(rwaVaults) : {}
+
   const [[vaultWithConfig], allVaultsWithConfig] = await Promise.all([
     decorateVaultsWithFees(
       decorateVaultsWithConfig({
@@ -124,14 +130,14 @@ export const resolveVaultManageContext = async ({
         systemConfig,
         userPositions: position ? [position] : undefined,
         daoManagedVaultsList,
-      }),
+      }).map((decoratedVault) => withRwaLiveMinDeposit(decoratedVault, liveMinDepositMap)),
     ),
     decorateVaultsWithFees(
       decorateVaultsWithConfig({
         vaults: allVaults,
         systemConfig,
         daoManagedVaultsList,
-      }),
+      }).map((decoratedVault) => withRwaLiveMinDeposit(decoratedVault, liveMinDepositMap)),
     ),
   ])
 

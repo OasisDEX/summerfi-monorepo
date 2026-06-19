@@ -10,6 +10,7 @@ import {
   type InterestRates,
   type PerformanceChartData,
   type PositionForecastAPIResponse,
+  type SingleSourceChartData,
   type SupportedSDKNetworks,
 } from '@summerfi/app-types'
 import {
@@ -21,6 +22,7 @@ import dayjs from 'dayjs'
 
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
+import { getCachedRwaVaultNavHistory } from '@/app/server-handlers/cached/get-rwa-vault-nav-history'
 import { getCachedVaultCurationEvents } from '@/app/server-handlers/cached/get-vault-curation-events'
 import { getCachedVaultsBenchmark } from '@/app/server-handlers/cached/get-vaults-benchmark'
 import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
@@ -33,7 +35,10 @@ import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/
 import { resolveVaultManageContext } from '@/app/server-handlers/vault-manage/resolve-vault-manage-context'
 import { type VaultCurationEvent } from '@/features/curation-activity/types'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { getPositionHistoricalData } from '@/helpers/chart-helpers/get-position-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
+import { getRwaNavHistoricalData } from '@/helpers/chart-helpers/get-rwa-nav-historical-data'
+import { getVaultNavPriceSkipFirstNDays } from '@/helpers/vault-custom-value-helpers'
 
 // Each below-the-fold expander on the manage page fetches only its own slice, lazily on expand
 // (see useVaultManageSectionQuery). Charts are computed server-side so only JSON-safe results
@@ -46,8 +51,19 @@ export type VaultManageSection =
   | 'curation'
   | 'user-activity'
 
-export type VaultManagePerformanceData = { performanceChartData: PerformanceChartData }
-export type VaultManageYieldChartData = { arksHistoricalChartData: ArksHistoricalChartData }
+// Non-RWA vaults return the forecast chart (`performanceChartData`). RWA vaults have no forecast, so
+// they instead return the position's market value over time (`rwaHistoricalChartData`) — the same
+// SingleSourceChartData shape + helper the portfolio's per-position chart uses.
+export type VaultManagePerformanceData = {
+  performanceChartData?: PerformanceChartData
+  rwaHistoricalChartData?: SingleSourceChartData
+}
+// DeFi vaults return `arksHistoricalChartData` (the ARK historical yield chart); RWA vaults return
+// `rwaNavHistoricalChartData` (the Historical NAV price chart) instead.
+export type VaultManageYieldChartData = {
+  arksHistoricalChartData?: ArksHistoricalChartData
+  rwaNavHistoricalChartData?: SingleSourceChartData
+}
 export type VaultManageExposureData = { arksInterestRates: InterestRates }
 export type VaultManageRebalancingData = { rebalanceActivity: RebalanceActivityPagination }
 export type VaultManageCurationData = { curationEvents: VaultCurationEvent[] }
@@ -75,12 +91,35 @@ export const getVaultManagePerformanceData = async ({
     return null
   }
 
-  const { parsedNetworkId, vault, position, vaultWithConfig, isRwaVault } = ctx
+  const { parsedNetwork, parsedNetworkId, vault, position, vaultWithConfig, isRwaVault } = ctx
+  const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
+
+  // RWA positions have no forecast — show the position's market value over time instead, reusing the
+  // same position-history source + transform as the portfolio's per-position chart. The manage context
+  // has already resolved this position/vault, so (unlike the portfolio endpoint, which re-resolves RWA
+  // positions through a different path and can miss them) the data is always available here.
+  if (isRwaVault) {
+    const positionHistoryResult = await getCachedPositionHistory({
+      network: parsedNetwork,
+      address: walletAddress.toLowerCase(),
+      vault,
+      isRwaVault: true,
+    })
+
+    return {
+      rwaHistoricalChartData: getPositionHistoricalData({
+        position: positionJsonSafe,
+        vault: vaultWithConfig,
+        positionHistory: parseServerResponseToClient(positionHistoryResult.positionHistory),
+      }),
+    }
+  }
+
   const { netValue } = getPositionValues({ position, vault })
 
   const [positionHistory, positionForecastResponse] = await Promise.all([
     getCachedPositionHistory({
-      network: ctx.parsedNetwork,
+      network: parsedNetwork,
       address: walletAddress.toLowerCase(),
       vault,
       isRwaVault,
@@ -97,7 +136,6 @@ export const getVaultManagePerformanceData = async ({
   }
   const forecastData = (await positionForecastResponse.json()) as PositionForecastAPIResponse
   const positionForecast = parseForecastDatapoints(forecastData)
-  const positionJsonSafe = parseServerResponseToClient<IArmadaPosition>(position)
 
   return {
     performanceChartData: getPositionPerformanceData({
@@ -125,7 +163,37 @@ export const getVaultManageYieldChartData = async ({
     return null
   }
 
-  const { parsedNetwork, vault, vaultWithConfig } = ctx
+  const {
+    parsedNetwork,
+    parsedNetworkId,
+    parsedVaultId,
+    vault,
+    vaultWithConfig,
+    isRwaVault,
+    systemConfig,
+  } = ctx
+
+  // RWA vaults render the Historical NAV price chart (a single NAV/pricePerShare line, with an
+  // in-app APY toggle), sourced via the institutions subgraph. The ARK pipeline (benchmark + full
+  // historical ARK rates + historical APY) doesn't apply to them, so skip it — mirrors the open view.
+  if (isRwaVault) {
+    const navHistory = await getCachedRwaVaultNavHistory({
+      network: parsedNetwork,
+      vaultId: parsedVaultId as string,
+    })
+
+    return {
+      rwaNavHistoricalChartData: getRwaNavHistoricalData({
+        navHistory,
+        skipFirstNDays: getVaultNavPriceSkipFirstNDays(
+          parsedVaultId as string,
+          parsedNetworkId,
+          systemConfig,
+        ),
+        vaultCreatedTimestamp: vaultWithConfig.createdTimestamp,
+      }),
+    }
+  }
 
   const [{ chartData: vaultBenchmark }, fullArkInterestRatesMap, vaultInterestRates] =
     await Promise.all([
@@ -140,7 +208,7 @@ export const getVaultManageYieldChartData = async ({
         ),
       }),
       getCachedVaultsHistoricalApy({
-        fleets: [{ id: ctx.parsedVaultId as string, protocol: { network: parsedNetwork } }].map(
+        fleets: [{ id: parsedVaultId as string, protocol: { network: parsedNetwork } }].map(
           ({ id, protocol: { network: vaultNetwork } }) => ({
             fleetAddress: id,
             chainId: subgraphNetworkToId(supportedSDKNetwork(vaultNetwork)),

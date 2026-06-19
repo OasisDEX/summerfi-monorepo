@@ -12,9 +12,9 @@ const getDetailsExpanderLabels = (isRwaVault: boolean) => [
   isRwaVault ? 'Historical NAV price' : 'Historical yield',
   'Vault exposure',
   'Rebalancing activity',
-  'Curation activity',
+  'Portfolio Composition History',
   'Users activity',
-  'Strategy management fee',
+  'Strategy fees',
 ]
 
 // Shown in place of VaultOpenViewDetails while the details query unit streams in (only ever

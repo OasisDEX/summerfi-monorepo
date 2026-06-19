@@ -29,6 +29,9 @@ interface RwaVaultStatsGridProps {
   // instead of the subgraph TVL, which only reflects settled Fleet assets.
   rwaMarketValue?: RwaVaultMarketValue
   rwaMarketValueLoading?: boolean
+  // Manage view: when provided, the first block renders as "Position Market Value" — the connected
+  // user's current position value (token + USD) — instead of the vault-wide "Market Value".
+  positionMarketValue?: { netValue: BigNumber; netValueUSD: BigNumber }
   isMobileOrTablet?: boolean
   tooltipEventHandler: (tooltipName: string) => void
 }
@@ -37,6 +40,7 @@ export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
   vault,
   rwaMarketValue,
   rwaMarketValueLoading,
+  positionMarketValue,
   isMobileOrTablet,
   tooltipEventHandler,
 }) => {
@@ -61,29 +65,45 @@ export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
         style={{ marginBottom: 'var(--general-space-16)' }}
       >
         <Box>
-          <DataBlock
-            size="large"
-            titleSize="small"
-            title="Market Value"
-            value={
-              <>
-                {rwaMarketValueLoading ? (
-                  <SkeletonLine height={24} width={70} style={{ display: 'inline-block' }} />
+          {positionMarketValue ? (
+            <DataBlock
+              size="large"
+              titleSize="small"
+              title="Position Market Value"
+              value={
+                <>
+                  {formatCryptoBalance(positionMarketValue.netValue)}
+                  &nbsp;{getDisplayToken(vault.inputToken.symbol)}
+                </>
+              }
+              subValue={`$${formatCryptoBalance(positionMarketValue.netValueUSD)}`}
+              subValueSize="small"
+            />
+          ) : (
+            <DataBlock
+              size="large"
+              titleSize="small"
+              title="Market Value"
+              value={
+                <>
+                  {rwaMarketValueLoading ? (
+                    <SkeletonLine height={24} width={70} style={{ display: 'inline-block' }} />
+                  ) : (
+                    totalValueLockedTokenParsed
+                  )}
+                  &nbsp;{getDisplayToken(vault.inputToken.symbol)}
+                </>
+              }
+              subValue={
+                rwaMarketValueLoading ? (
+                  <SkeletonLine height={20} width={50} />
                 ) : (
-                  totalValueLockedTokenParsed
-                )}
-                &nbsp;{getDisplayToken(vault.inputToken.symbol)}
-              </>
-            }
-            subValue={
-              rwaMarketValueLoading ? (
-                <SkeletonLine height={20} width={50} />
-              ) : (
-                `$${totalValueLockedUSDParsed}`
-              )
-            }
-            subValueSize="small"
-          />
+                  `$${totalValueLockedUSDParsed}`
+                )
+              }
+              subValueSize="small"
+            />
+          )}
         </Box>
         <Box>
           <DataBlock
@@ -93,6 +113,9 @@ export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
               <Tooltip
                 tooltipName="vault-open-rwa-min-deposit"
                 onTooltipOpen={tooltipEventHandler}
+                tooltipWrapperStyles={{
+                  minWidth: '200px',
+                }}
                 tooltip={
                   <Text variant="p4" style={{ color: 'var(--color-text-primary)' }}>
                     Minimum amount required to enter this vault.
