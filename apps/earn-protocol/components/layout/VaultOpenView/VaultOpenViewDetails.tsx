@@ -141,6 +141,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
               margin: '0 10px',
             }}
           >
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             {vault.customFields.vaultCuratorDescription ??
               `This Vault is curated and managed by ${vault.customFields.vaultCurator}`}
           </Text>
@@ -297,9 +298,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
               : `A ${formatDecimalAsPercent(managementFee)} annualised management fee is charged for using this strategy. `}
             The fees are continually accounted for and reflected in the market value of your
             position.
-            {performanceFee !== null
-              ? ' There are no restrictions or delays when withdrawing.'
-              : ' This strategy has no other fees, and there are no restrictions or delays when withdrawing.'}
+            {performanceFee === null ? ' This strategy has no other fees.' : ''}{' '}
             {vaultApyData.sma30d
               ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d - managementFee)}.`
               : ''}
