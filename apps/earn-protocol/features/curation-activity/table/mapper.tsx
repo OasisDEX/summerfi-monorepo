@@ -9,6 +9,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 import {
+  formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
   subgraphNetworkToId,
@@ -29,6 +30,9 @@ const curationEventActionToLabelMap: { [key: string]: string } = {
   VAULT_CAP_CHANGED: 'Vault deposit cap',
   VAULT_MIN_BUFFER_CHANGED: 'Vault min buffer',
   VAULT_TIP_RATE_CHANGED: 'Vault tip rate',
+  VAULT_PERFORMANCE_RATE_CHANGED: 'Performance fee adjusted',
+  ARK_ADDED: 'New market added',
+  ARK_REMOVED: 'Existing market removed',
 }
 
 const getAmount = (amount: string | number, decimals: number): string => {
@@ -46,12 +50,16 @@ export const curationActivityMapper = (
   const vaultChainId = subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))
 
   return curationEvents.map((curationEvent) => {
+    // ARK_ADDED / ARK_REMOVED are market add/remove events, not numeric config
+    // changes: there is no before→after value, only the affected market.
+    const isMarketChange =
+      curationEvent.action.includes('ADDED') || curationEvent.action.includes('REMOVED')
     const isPercentageChange =
       curationEvent.action.includes('PCT') || curationEvent.action.includes('RATE')
     const isArkChange = curationEvent.action.includes('ARK')
-    const isValueIncrease = new BigNumber(curationEvent.valueAfter).isGreaterThan(
-      curationEvent.valueBefore,
-    )
+    const isValueIncrease = isMarketChange
+      ? curationEvent.action.includes('ADDED')
+      : new BigNumber(curationEvent.valueAfter).isGreaterThan(curationEvent.valueBefore)
     const amountBefore = isPercentageChange
       ? formatDecimalAsPercent(getAmount(curationEvent.valueBefore, 20))
       : formatCryptoBalance(getAmount(curationEvent.valueBefore, vault.inputToken.decimals))
@@ -63,7 +71,12 @@ export const curationActivityMapper = (
           (ark) => curationEvent.targetContract.toLowerCase() === ark.id.toLowerCase(),
         )
       : undefined
-    const arkChangedNiceName = arkChanged ? getArkNiceName(arkChanged) : undefined
+    // A removed ark is no longer in vault.arks, so fall back to its address.
+    const arkChangedNiceName = arkChanged
+      ? getArkNiceName(arkChanged)
+      : isMarketChange
+        ? formatAddress(curationEvent.targetContract)
+        : undefined
     const eventLabel = getEventLabel(curationEvent.action)
 
     return {
@@ -97,20 +110,28 @@ export const curationActivityMapper = (
             gap="small"
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}
           >
-            <TableCellNodes gap="small">
-              {arkChangedNiceName ? `${arkChangedNiceName} ` : ''}
-            </TableCellNodes>
-            <TableCellNodes gap="small">
+            {isMarketChange ? (
               <TableCellText style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-                {amountBefore}
+                {arkChangedNiceName}
               </TableCellText>
-              <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>
-                →
-              </Text>
-              <TableCellText style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-                {amountAfter}
-              </TableCellText>
-            </TableCellNodes>
+            ) : (
+              <>
+                <TableCellNodes gap="small">
+                  {arkChangedNiceName ? `${arkChangedNiceName} ` : ''}
+                </TableCellNodes>
+                <TableCellNodes gap="small">
+                  <TableCellText style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                    {amountBefore}
+                  </TableCellText>
+                  <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>
+                    →
+                  </Text>
+                  <TableCellText style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                    {amountAfter}
+                  </TableCellText>
+                </TableCellNodes>
+              </>
+            )}
           </TableCellNodes>
         ),
         transaction: (

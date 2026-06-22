@@ -417,6 +417,8 @@ export const VaultManageViewDetails: FC<{
             tableId="vault-manage-rebalancing-activity"
             buttonClickEventHandler={buttonClickEventHandler}
             tooltipEventHandler={tooltipEventHandler}
+            isRwaVault={isRwaVault}
+            marketTargetAllocationPercentage={vault.customFields?.marketTargetAllocationPercentage}
           />
         ) : (
           <SectionLoader />

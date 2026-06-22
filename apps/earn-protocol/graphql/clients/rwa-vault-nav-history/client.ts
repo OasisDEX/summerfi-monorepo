@@ -378,12 +378,15 @@ export enum ActiveAccount_OrderBy {
 }
 
 export enum AdminAction {
+  ARK_ADDED = 'ARK_ADDED',
   ARK_CAP_CHANGED = 'ARK_CAP_CHANGED',
   ARK_MAX_PCT_TVL_CHANGED = 'ARK_MAX_PCT_TVL_CHANGED',
   ARK_MAX_REBALANCE_INFLOW_CHANGED = 'ARK_MAX_REBALANCE_INFLOW_CHANGED',
   ARK_MAX_REBALANCE_OUTFLOW_CHANGED = 'ARK_MAX_REBALANCE_OUTFLOW_CHANGED',
+  ARK_REMOVED = 'ARK_REMOVED',
   VAULT_CAP_CHANGED = 'VAULT_CAP_CHANGED',
   VAULT_MIN_BUFFER_CHANGED = 'VAULT_MIN_BUFFER_CHANGED',
+  VAULT_PERFORMANCE_RATE_CHANGED = 'VAULT_PERFORMANCE_RATE_CHANGED',
   VAULT_TIP_RATE_CHANGED = 'VAULT_TIP_RATE_CHANGED'
 }
 
@@ -760,6 +763,7 @@ export enum ArkDailySnapshot_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -988,6 +992,7 @@ export enum ArkHourlySnapshot_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -1353,6 +1358,7 @@ export enum Ark_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -1689,6 +1695,7 @@ export enum Board_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -1987,6 +1994,7 @@ export enum DailyInterestRate_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -2364,6 +2372,7 @@ export enum Deposit_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -2690,6 +2699,7 @@ export enum Disembark_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -3320,6 +3330,7 @@ export enum HourlyInterestRate_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -4734,6 +4745,7 @@ export enum Position_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -4975,6 +4987,7 @@ export enum PostActionArkSnapshot_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -5211,6 +5224,7 @@ export enum PostActionVaultSnapshot_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -6909,6 +6923,7 @@ export enum Rebalance_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -7627,6 +7642,7 @@ export enum RewardsManager_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -8428,6 +8444,7 @@ export enum RoundsVaultPair_OrderBy {
   targetVault__name = 'targetVault__name',
   targetVault__outputTokenPriceUSD = 'targetVault__outputTokenPriceUSD',
   targetVault__outputTokenSupply = 'targetVault__outputTokenSupply',
+  targetVault__performanceFeeRate = 'targetVault__performanceFeeRate',
   targetVault__pricePerShare = 'targetVault__pricePerShare',
   targetVault__rebalanceCount = 'targetVault__rebalanceCount',
   targetVault__stakedOutputTokenAmount = 'targetVault__stakedOutputTokenAmount',
@@ -8927,6 +8944,7 @@ export enum Staked_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -9479,6 +9497,7 @@ export enum Unstaked_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -9856,6 +9875,7 @@ export type Vault = {
   outputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Total supply of output token  */
   outputTokenSupply: Scalars['BigInt']['output'];
+  performanceFeeRate: Scalars['BigInt']['output'];
   positions: Array<Position>;
   /**  Amount of input token per full share of output token. Usually corresponds to the value of `pricePerShare` or `pricePerFullShare` in the vault contract.  */
   pricePerShare?: Maybe<Scalars['BigDecimal']['output']>;
@@ -10358,6 +10378,7 @@ export enum VaultDailySnapshot_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -10555,6 +10576,7 @@ export enum VaultFee_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -10892,6 +10914,7 @@ export enum VaultHourlySnapshot_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -11227,6 +11250,7 @@ export enum VaultWeeklySnapshot_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -11569,6 +11593,14 @@ export type Vault_Filter = {
   outputToken_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   outputToken_starts_with?: InputMaybe<Scalars['String']['input']>;
   outputToken_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  performanceFeeRate?: InputMaybe<Scalars['BigInt']['input']>;
+  performanceFeeRate_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  performanceFeeRate_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  performanceFeeRate_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  performanceFeeRate_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  performanceFeeRate_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  performanceFeeRate_not?: InputMaybe<Scalars['BigInt']['input']>;
+  performanceFeeRate_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   positions?: InputMaybe<Array<Scalars['String']['input']>>;
   positions_?: InputMaybe<Position_Filter>;
   positions_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -11797,6 +11829,7 @@ export enum Vault_OrderBy {
   outputToken__lastPriceUSD = 'outputToken__lastPriceUSD',
   outputToken__name = 'outputToken__name',
   outputToken__symbol = 'outputToken__symbol',
+  performanceFeeRate = 'performanceFeeRate',
   positions = 'positions',
   pricePerShare = 'pricePerShare',
   protocol = 'protocol',
@@ -11957,6 +11990,7 @@ export enum WeeklyInterestRate_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
@@ -12334,6 +12368,7 @@ export enum Withdraw_OrderBy {
   vault__name = 'vault__name',
   vault__outputTokenPriceUSD = 'vault__outputTokenPriceUSD',
   vault__outputTokenSupply = 'vault__outputTokenSupply',
+  vault__performanceFeeRate = 'vault__performanceFeeRate',
   vault__pricePerShare = 'vault__pricePerShare',
   vault__rebalanceCount = 'vault__rebalanceCount',
   vault__stakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',

@@ -11,7 +11,7 @@ export const subgraphsMap = {
 
 export const rwaSubgraphsMap = {
   [SupportedSDKNetworks.Mainnet]: `${process.env.SUBGRAPH_BASE}/summer-institutions-v2-staging`,
-  [SupportedSDKNetworks.Base]: `${process.env.SUBGRAPH_BASE}/summer-institutions-v2-base`,
+  [SupportedSDKNetworks.Base]: `${process.env.SUBGRAPH_BASE}/summer-institutions-v2-base-staging`,
 }
 
 // Single source of truth for "which chains have an RWA (institutions) subgraph deployed". Everything

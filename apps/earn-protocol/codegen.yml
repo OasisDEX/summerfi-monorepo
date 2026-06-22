@@ -75,7 +75,7 @@ generates:
       - add:
           content: 'import type { DocumentNode } from "graphql/language/ast";'
   ./graphql/clients/rwa-receipts-history/client.ts:
-    schema: '${SUBGRAPH_BASE}/summer-institutions-v2-base'
+    schema: '${SUBGRAPH_BASE}/summer-institutions-v2-base-staging'
     documents: './graphql/queries/rwa-receipts-history.graphql'
     plugins:
       - add:
@@ -113,7 +113,7 @@ generates:
       - add:
           content: 'import type { DocumentNode } from "graphql/language/ast";'
   ./graphql/clients/rwa-vault-nav-history/client.ts:
-    schema: '${SUBGRAPH_BASE}/summer-institutions-v2-base'
+    schema: '${SUBGRAPH_BASE}/summer-institutions-v2-base-staging'
     documents: './graphql/queries/rwa-vault-nav-history.graphql'
     plugins:
       - add:

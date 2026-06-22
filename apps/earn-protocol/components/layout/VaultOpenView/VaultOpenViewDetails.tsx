@@ -231,6 +231,8 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
           tableId="vault-open-rebalancing-activity"
           buttonClickEventHandler={buttonClickEventHandler}
           tooltipEventHandler={tooltipEventHandler}
+          isRwaVault={isRwaVault}
+          marketTargetAllocationPercentage={vault.customFields?.marketTargetAllocationPercentage}
         />
       </Expander>
       <Expander

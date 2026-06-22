@@ -642,21 +642,35 @@ export const VaultOpenViewComponent = ({
 
   const permissionedSidebarProps: SidebarProps = {
     title: 'Permissioned Vault',
+    // Show the standard deposit inputs but disabled (no ownerView) — the wallet isn't
+    // whitelisted yet — and tuck the restriction notice underneath as a small footnote.
     content: (
-      <Text
-        as="p"
-        variant="p3semi"
-        style={{ color: 'var(--earn-protocol-secondary-60)', margin: '8px 0 24px 0' }}
-      >
-        This Vault is restricted to users and their wallets which have been approved for access
-        through KYC/AML checks either through Summer.fi or an approved custodian or wallet provider.
-      </Text>
+      <ControlsDepositWithdraw
+        amountDisplay={amountDisplay}
+        amountDisplayUSD={amountDisplayUSDWithSwap}
+        handleAmountChange={handleAmountChange}
+        handleDropdownChange={handleTokenSelectionChangeWrapper}
+        options={tokenOptions}
+        dropdownValue={selectedTokenOption}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        tokenSymbol={selectedTokenOption.value}
+        tokenBalance={selectedTokenBalance}
+        tokenBalanceLoading={selectedTokenBalanceLoading}
+        manualSetAmount={manualSetAmount}
+      />
     ),
     primaryButton: {
       label: 'Connect a whitelisted wallet',
       action: handleConnectWhitelistedWallet,
       loading: isWhitelistedLoading,
     },
+    footnote: (
+      <Text as="p" variant="p4" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+        This Vault is restricted to users and their wallets which have been approved for access
+        through KYC/AML checks either through Summer.fi or an approved custodian or wallet provider.
+      </Text>
+    ),
     isMobileOrTablet,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
   }
