@@ -50,6 +50,7 @@ import {
 } from '@/graphql/clients/vault-history/client'
 import { getInstiSubgraphId } from '@/helpers/get-insti-subgraph-id'
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
+import { decorateRwaVaults, isRwaVaultByConfig, rwaSupportedNetworkIds } from '@/helpers/rwa'
 import { type ArksDeployedOnChain } from '@/types/arks'
 import { type InstitutionVaultRole } from '@/types/institution-data'
 
@@ -173,11 +174,42 @@ const getInstitutionVaults = async ({ institutionName }: { institutionName: stri
 
     const vaultsWithConfig = decorateWithFleetConfig(vaultsListByNetwork, systemConfig)
 
+    // RWA vaults are served by a separate SDK surface (rounds-based, institutions-v2 subgraph) over a
+    // different network set. Fetch them per RWA network with the institution-name clientId (= RWA
+    // clientId) and decorate separately so they always surface. Each network is isolated so a failing
+    // RWA fetch never blanks the standard list.
+    const rwaVaultsByNetwork = (
+      await Promise.all(
+        rwaSupportedNetworkIds.map(async (networkId) => {
+          try {
+            const { vaults } = await institutionSdk.rwa.getVaultsRaw({
+              chainInfo: getChainInfoByChainId(networkId),
+              clientId: institutionName,
+            })
+
+            return decorateRwaVaults({
+              vaults: vaults as unknown as SDKVaultishType[],
+              systemConfig,
+              networkId,
+            })
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(
+              `Error fetching RWA vaults for ${institutionName} on chain ${networkId}:`,
+              error,
+            )
+
+            return [] as SDKVaultishType[]
+          }
+        }),
+      )
+    ).flat()
+
     const returnTyped: {
       vaults: SDKVaultishType[]
       vaultsAdditionalInfo: VaultAdditionalInfo
     } = {
-      vaults: vaultsWithConfig,
+      vaults: [...vaultsWithConfig, ...rwaVaultsByNetwork],
       vaultsAdditionalInfo: {
         vaultApyMap,
         vaultsApyAverages,
@@ -210,23 +242,34 @@ const getInstitutionVault = async ({
     const chainId = subgraphNetworkToId(network)
 
     const institutionSdk = getInstitutionsSDK(institutionName)
-    const [vault, systemConfig] = await Promise.all([
-      institutionSdk.armada.users.getVaultRaw({
-        vaultId: ArmadaVaultId.createFrom({
-          chainInfo: getChainInfoByChainId(chainId),
-          fleetAddress: Address.createFromEthereum({
-            value: vaultAddress,
-          }),
-        }),
-      }),
-      getCachedConfig(),
-    ])
+    const systemConfig = await getCachedConfig()
 
-    if (!vault.vault) {
+    const vaultId = ArmadaVaultId.createFrom({
+      chainInfo: getChainInfoByChainId(chainId),
+      fleetAddress: Address.createFromEthereum({
+        value: vaultAddress,
+      }),
+    })
+
+    // RWA vaults live on a different SDK surface + subgraph; `armada.users.getVaultRaw` would return
+    // nothing for them. Detect RWA from the fleet config (by address) and route accordingly.
+    const isRwa = isRwaVaultByConfig({ systemConfig, networkId: chainId, vaultAddress })
+
+    const { vault } = isRwa
+      ? await institutionSdk.rwa.getVaultRaw({ vaultId })
+      : await institutionSdk.armada.users.getVaultRaw({ vaultId })
+
+    if (!vault) {
       return null
     }
 
-    const vaultWithConfig = decorateWithFleetConfig([vault.vault], systemConfig)
+    const vaultWithConfig = isRwa
+      ? decorateRwaVaults({
+          vaults: [vault as unknown as SDKVaultishType],
+          systemConfig,
+          networkId: chainId,
+        })
+      : decorateWithFleetConfig([vault], systemConfig)
 
     return {
       vault: vaultWithConfig[0],
@@ -457,9 +500,15 @@ const getVaultDetails = async ({
       chainInfo,
       fleetAddress,
     })
-    const { vault } = await institutionSDK.armada.users.getVaultRaw({
-      vaultId: poolId,
-    })
+
+    // RWA vaults live on a different SDK surface + subgraph; route by config so the overview /
+    // risk pages resolve them instead of returning "not found".
+    const systemConfig = await getCachedConfig()
+    const isRwa = isRwaVaultByConfig({ systemConfig, networkId: chainId, vaultAddress })
+
+    const { vault } = isRwa
+      ? await institutionSDK.rwa.getVaultRaw({ vaultId: poolId })
+      : await institutionSDK.armada.users.getVaultRaw({ vaultId: poolId })
 
     return vault as SDKVaultType | undefined
   } catch (error) {

@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import { readSession } from '@/app/server-handlers/auth/session'
 import {
+  getCachedAllInstitutionsList,
   getCachedInstitutionData,
   getCachedUserInstitutionsList,
 } from '@/app/server-handlers/institution/institution-data'
@@ -41,7 +42,11 @@ export default async function InstitutionMainLayout({
 
   const [institution, userInstitutionsList] = await Promise.all([
     getCachedInstitutionData({ institutionName }),
-    getCachedUserInstitutionsList({ userSub: session.sub }),
+    // Global admins can access any institution, so feed the selector every institution. Regular
+    // users see only the institutions they belong to (their institution_users rows).
+    session.user?.isGlobalAdmin
+      ? getCachedAllInstitutionsList()
+      : getCachedUserInstitutionsList({ userSub: session.sub }),
   ])
 
   if (!institutionName || !institution) {

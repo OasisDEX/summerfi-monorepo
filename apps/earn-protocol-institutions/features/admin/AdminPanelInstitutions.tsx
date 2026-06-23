@@ -137,6 +137,9 @@ const InstitutionsListTable = ({
                             )}
                             {accessor === 'actions' && (
                               <div className={styles.actions}>
+                                <Link href={`/${row.name}/overview/institution`}>
+                                  <Button variant="textPrimarySmall">Open</Button>
+                                </Link>
                                 <Link href={`/admin/institutions/${row.id}/edit`}>
                                   <Button variant="textPrimarySmall">Edit</Button>
                                 </Link>

@@ -131,3 +131,51 @@ export const getWithdrawId = ({
 }) => {
   return `withdraw-${address}-${chainId}-${withdrawAmount}`
 }
+
+// region RWA
+
+export const getRwaSetWhitelistOpenId = ({
+  address,
+  chainId,
+  isOpen,
+}: {
+  address: string
+  chainId: number
+  isOpen: boolean
+}) => {
+  return `rwa-set-whitelist-open-${address}-${chainId}-${isOpen}`
+}
+
+export const getRwaGrantWhitelistId = ({
+  address,
+  chainId,
+}: {
+  address: string
+  chainId: number
+}) => {
+  return `rwa-grant-whitelist-${address}-${chainId}`
+}
+
+export const getRwaRevokeWhitelistId = ({
+  address,
+  chainId,
+}: {
+  address: string
+  chainId: number
+}) => {
+  return `rwa-revoke-whitelist-${address}-${chainId}`
+}
+
+export const getRwaSetMinimumPositionSizeId = ({
+  address,
+  chainId,
+  minimumPositionSize,
+}: {
+  address: string
+  chainId: number
+  minimumPositionSize: string
+}) => {
+  return `rwa-set-minimum-position-size-${address}-${chainId}-${minimumPositionSize}`
+}
+
+// endregion

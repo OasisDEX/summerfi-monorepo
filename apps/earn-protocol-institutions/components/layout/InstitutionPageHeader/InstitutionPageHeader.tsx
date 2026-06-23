@@ -46,16 +46,19 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
 
   const { user } = useAuth()
 
-  const institutionUserRole = user
-    ? user.institutionsList?.find((institution) => institution.id === selectedInstitution.id)?.role
-    : 'No role connected'
+  const institutionUserRole = !user
+    ? 'No role connected'
+    : user.isGlobalAdmin
+      ? 'Global Admin'
+      : (user.institutionsList?.find((institution) => institution.id === selectedInstitution.id)
+          ?.role ?? 'No role connected')
   const institutionsOptions: DropdownRawOption[] = institutionsList.map((institution) => ({
     value: institution.name,
     content: <DropdownContent>{institution.displayName}</DropdownContent>,
   }))
 
   const handleChangeInstitution = (option: DropdownRawOption) => {
-    push(`/${option.value}/overview`)
+    push(`/${option.value}/overview/institution`)
   }
 
   return (

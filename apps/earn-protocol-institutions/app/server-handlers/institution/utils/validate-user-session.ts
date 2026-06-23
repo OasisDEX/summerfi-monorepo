@@ -18,6 +18,13 @@ export const validateInstitutionUserSession = async ({
     throw new Error('institutionId or institutionName is required')
   }
 
+  // Global admins may access any institution. They have no rows in institution_users, so their
+  // session `institutionsList` is empty and the membership check below would otherwise log them
+  // out. A valid, unexpired session is still required.
+  if (hasValidSession && session.user?.isGlobalAdmin) {
+    return
+  }
+
   const institutionsList = session?.user?.institutionsList ?? []
 
   // Match on whichever identifier the caller supplied. Compare ids as strings so a non-numeric

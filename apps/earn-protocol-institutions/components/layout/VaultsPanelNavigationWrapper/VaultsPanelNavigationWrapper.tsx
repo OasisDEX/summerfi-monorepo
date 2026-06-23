@@ -17,9 +17,14 @@ enum DashboardVaultsPanel {
   USER_ADMIN = 'user-admin',
   FEE_REVENUE_ADMIN = 'fee-revenue-admin',
   ACTIVITY = 'activity',
+  WHITELIST = 'whitelist',
+  RWA_MONITORING = 'rwa-monitoring',
 }
 
-const panelItems = [
+type PanelItem = { id: DashboardVaultsPanel; label: string; disabled?: boolean }
+
+// Standard institutional (FleetCommander) vaults: the full fleet-management surface.
+const standardPanelItems: PanelItem[] = [
   {
     id: DashboardVaultsPanel.OVERVIEW,
     label: 'Overview',
@@ -59,6 +64,40 @@ const panelItems = [
   },
 ]
 
+// RWA (rounds-based) vaults: the fleet/ark-oriented tabs don't apply, so swap in the RWA whitelist
+// + monitoring panels and keep the read-only / curator-managed tabs. Asset management (fleet
+// deposit), User admin (access-control whitelist) and Asset reallocation are intentionally omitted.
+const rwaPanelItems: PanelItem[] = [
+  {
+    id: DashboardVaultsPanel.OVERVIEW,
+    label: 'Overview',
+  },
+  {
+    id: DashboardVaultsPanel.VAULT_EXPOSURE,
+    label: 'Vault exposure',
+  },
+  {
+    id: DashboardVaultsPanel.RISK_PARAMETERS,
+    label: 'Risk Parameters',
+  },
+  {
+    id: DashboardVaultsPanel.FEE_REVENUE_ADMIN,
+    label: 'Fee & revenue admin',
+  },
+  {
+    id: DashboardVaultsPanel.WHITELIST,
+    label: 'Whitelist',
+  },
+  {
+    id: DashboardVaultsPanel.RWA_MONITORING,
+    label: 'RWA monitoring',
+  },
+  {
+    id: DashboardVaultsPanel.ACTIVITY,
+    label: 'Activity',
+  },
+]
+
 export const VaultsPanelNavigationWrapper = ({
   selectedVault,
   institutionName,
@@ -69,6 +108,8 @@ export const VaultsPanelNavigationWrapper = ({
   const { push } = useRouter()
   const pathname = usePathname()
   const panelNavigationTabId = getPanelVaultNavigationTabId(pathname)
+
+  const panelItems = selectedVault.isRwaVault ? rwaPanelItems : standardPanelItems
 
   const navigation = [
     {
