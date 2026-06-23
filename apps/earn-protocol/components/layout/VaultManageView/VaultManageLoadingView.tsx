@@ -9,7 +9,7 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 
-import { detailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
+import { getDetailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 import vaultManageViewStyles from './VaultManageView.module.css'
@@ -84,7 +84,7 @@ export const VaultManageLoadingView = ({ isRwaVault = false }: { isRwaVault?: bo
                 marginTop: 'var(--general-space-20)',
               }}
             >
-              {detailsLinks.map(({ label }) => (
+              {getDetailsLinks().map(({ label }) => (
                 <Text
                   key={label}
                   as="p"

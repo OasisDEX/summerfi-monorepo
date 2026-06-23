@@ -2,16 +2,37 @@ import { type FC } from 'react'
 import { getVaultDetailsUrl, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { slugify } from '@summerfi/app-utils'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { DaoManagedInfoBlock } from '@/components/molecules/DaoManagedInfoBlock/DaoManagedInfoBlock'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
+import apolloMarketLogo from '@/public/img/private-markets/apollo.png'
+import franklinTempletonMarketLogo from '@/public/img/private-markets/franklin_templeton.png'
+import mapleMarketLogo from '@/public/img/private-markets/maple.png'
+import securitizeMarketLogo from '@/public/img/private-markets/securitize.png'
+import stacMarketLogo from '@/public/img/private-markets/stac.png'
+import superstateMarketLogo from '@/public/img/private-markets/superstate.png'
+import vaneckMarketLogo from '@/public/img/private-markets/vaneck.png'
+import wisdomTreeMarketLogo from '@/public/img/private-markets/wisdomtree.png'
+
 interface VaultOpenHeaderBlockProps {
   vault?: SDKVaultishType
-  detailsLinks: { label: string; id: string }[]
+  detailsLinks: { label: string; id?: string; url?: string }[]
   isDaoManaged?: boolean
   isRwaVault?: boolean
+}
+
+const marketLogoMap = {
+  apollo: apolloMarketLogo,
+  franklinTempleton: franklinTempletonMarketLogo,
+  maple: mapleMarketLogo,
+  securitize: securitizeMarketLogo,
+  stac: stacMarketLogo,
+  superstate: superstateMarketLogo,
+  wisdomTree: wisdomTreeMarketLogo,
+  vaneck: vaneckMarketLogo,
 }
 
 export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({
@@ -37,41 +58,42 @@ export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({
     if (isRwaVault) {
       return (
         <>
-          <Text
-            as="p"
-            variant="p3"
-            style={{
-              color: 'var(--color-text-secondary)',
-            }}
-          >
-            The Permissioned RWA Vault on the Lazy Summer Protocol offers real yield from a basket
-            of underlying tokenized RWAs and private credit markets. Unlike many RWA yield options
-            in DeFi, this yield comes directly from the assets and not from borrowing demand for
-            looping.
+          <Text as="p" variant="p3semi">
+            Seamlessly earn onchain yield from the highest quality RWA markets.
           </Text>
-          <Text
-            as="p"
-            variant="p3"
-            style={{
-              color: 'var(--color-text-secondary)',
-            }}
-          >
-            Because the Vault contains permissioned assets, access is restricted to those that meet
-            certain requirements and complete KYC and AML checks. The good news with this Vault is
-            that if you are a customer of one of our trusted partners, such as Utila and Balance,
-            you can access the Vault straight away from their app or web interface with no
-            additional checks or hoops to jump through. Similarly, if you would like to access the
-            Vault through Summer.fi, you can perform these checks just once and get access to the
-            yield from all of the underlying markets that are available. Just reach out to the
-            Summer.fi Institutional team{' '}
-            <Link
-              href="mailto:institutions@summer.fi"
-              style={{ color: 'var(--earn-protocol-primary-100)' }}
+          {vault?.customFields?.vaultHeaderDescription ? (
+            <Text as="p" variant="p3">
+              {vault.customFields.vaultHeaderDescription}
+            </Text>
+          ) : null}
+          {vault?.customFields?.vaultMarketLogos?.length ? (
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                rowGap: 'var(--spacing-space-medium)',
+                columnGap: 'var(--spacing-space-large)',
+                marginTop: 'var(--spacing-space-large)',
+                marginBottom: 'var(--spacing-space-large)',
+              }}
             >
-              here
-            </Link>{' '}
-            to find out more.
-          </Text>
+              {vault.customFields.vaultMarketLogos
+                .map((logoKey) => ({
+                  logoKey,
+                  logo: marketLogoMap[logoKey as keyof typeof marketLogoMap],
+                }))
+                .filter(({ logo }) => Boolean(logo))
+                .map(({ logoKey, logo }) => (
+                  <Image
+                    key={logoKey}
+                    src={logo}
+                    alt={`${logoKey} market logo`}
+                    style={{ width: 'auto', maxWidth: '20%', height: '28px', objectFit: 'contain' }}
+                  />
+                ))}
+            </div>
+          ) : null}
         </>
       )
     }
@@ -125,10 +147,10 @@ export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({
           gap: 'var(--general-space-24)',
         }}
       >
-        {detailsLinks.map(({ label, id }) => (
+        {detailsLinks.map(({ label, id, url }) => (
           <Link
             key={label}
-            href={`${getVaultDetailsUrl(vault)}#${id}`}
+            href={url ?? `${getVaultDetailsUrl(vault)}#${id}`}
             onClick={() => buttonClickEventHandler(`vault-open-details-${slugify(label)}`)}
           >
             <Text

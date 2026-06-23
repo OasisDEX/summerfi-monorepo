@@ -12,7 +12,7 @@ import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
-import { detailsLinks } from './vault-details-links'
+import { getDetailsLinks } from './vault-details-links'
 
 import vaultOpenViewStyles from './VaultOpenView.module.css'
 
@@ -37,7 +37,7 @@ export const VaultOpenLoadingView = ({
       rightExtraContent={isRwaVault ? <RwaSidebarInfo /> : undefined}
       detailsContent={
         <div className={vaultOpenViewStyles.leftContentWrapper}>
-          <VaultOpenHeaderBlock detailsLinks={detailsLinks} isRwaVault={isRwaVault} />
+          <VaultOpenHeaderBlock detailsLinks={getDetailsLinks()} isRwaVault={isRwaVault} />
           {isRwaVault ? (
             <Expander
               title={

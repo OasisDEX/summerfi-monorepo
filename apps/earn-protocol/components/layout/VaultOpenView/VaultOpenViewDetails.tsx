@@ -41,7 +41,7 @@ import { getManagementFee } from '@/helpers/get-management-fee'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 import { type RwaReceipt } from '@/hooks/use-rwa-claim'
 
-import { detailsLinks } from './vault-details-links'
+import { getDetailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 
 import styles from './VaultOpenViewDetails.module.css'
@@ -118,7 +118,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   return (
     <div className={styles.vaultOpenViewDetailsWrapper}>
       <VaultOpenHeaderBlock
-        detailsLinks={detailsLinks}
+        detailsLinks={getDetailsLinks(vault.customFields?.vaultFactSheetUrl)}
         vault={vault}
         isDaoManaged={isDaoManaged}
         isRwaVault={isRwaVault}

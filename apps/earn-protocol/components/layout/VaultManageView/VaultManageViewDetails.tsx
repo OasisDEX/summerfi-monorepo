@@ -37,7 +37,7 @@ import {
   useVaultManageUserActivityQuery,
   useVaultManageYieldChartQuery,
 } from '@/components/layout/VaultManageView/useVaultManageQuery'
-import { detailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
+import { getDetailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
@@ -167,6 +167,8 @@ export const VaultManageViewDetails: FC<{
       setOpen(isOpen)
       buttonClickEventHandler(`vault-manage-expander-${expanderId}-${isOpen ? 'open' : 'close'}`)
     }
+
+  const detailsLinks = getDetailsLinks(vault.customFields?.vaultFactSheetUrl)
 
   return [
     isRwaPendingPosition ? null : (
