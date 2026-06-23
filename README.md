@@ -6,11 +6,19 @@
 
 ### Apps
 
-- `summerfi-api`: Summerfi API
+- `earn-protocol`: Summer.fi Earn Protocol (main app)
+- `earn-protocol-institutions`: Institutional portal
+- `earn-protocol-landing-page`: Static landing page
+- `summerfi-api`: Summerfi API (Lambda functions via SST)
 
 ### Packages
 
 - `sdk`: Summerfi SDK
+- `app-earn-ui`: Shared UI components for earn apps
+- `app-types`: Shared TypeScript types
+- `app-utils`: Shared utilities
+- `app-risk`: Risk assessment module
+- `app-tos`: Terms of Service module
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and
   `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
@@ -58,3 +66,4 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
 - [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
 - [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+
