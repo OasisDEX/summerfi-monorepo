@@ -35,6 +35,7 @@ export const VaultsDropdownWrapper: FC<VaultsDropdownWrapperProps> = ({
           symbol: vault.inputToken.symbol,
           network: vault.protocol.network,
           institutionName: institution.name,
+          customName: vault.customFields?.name,
         })}
       />
     ),
@@ -46,6 +47,12 @@ export const VaultsDropdownWrapper: FC<VaultsDropdownWrapperProps> = ({
       <VaultTitleDropdownContentBlock
         vault={selectedVault}
         className={vaultsDropdownWrapperStyles.contentWrapper}
+        customVaultName={getInstiVaultNiceName({
+          symbol: selectedVault.inputToken.symbol,
+          network: selectedVault.protocol.network,
+          institutionName: institution.name,
+          customName: selectedVault.customFields?.name,
+        })}
       />
     ),
   }

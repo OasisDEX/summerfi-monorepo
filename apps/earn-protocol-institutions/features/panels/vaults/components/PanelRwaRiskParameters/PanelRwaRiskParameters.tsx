@@ -1,56 +1,71 @@
 'use client'
 
-import { type FC, useCallback, useMemo, useState } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import { toast } from 'react-toastify'
 import {
-  Button,
   Card,
   ERROR_TOAST_CONFIG,
-  Input,
+  getArkNiceName,
+  Table,
+  TableCellNodes,
+  TableCellText,
   Text,
   useEarnProtocolChain,
 } from '@summerfi/app-earn-ui'
-import { type NetworkNames } from '@summerfi/app-types'
-import { networkNameToSDKId } from '@summerfi/app-utils'
+import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
+import { formatPercent, formatWithSeparators } from '@summerfi/app-utils'
 import { RoundsVaultType } from '@summerfi/sdk-common'
+import BigNumber from 'bignumber.js'
 
+import { type RwaVaultRiskParameters } from '@/app/server-handlers/institution/institution-vaults'
+import { EditTokenValueModal } from '@/components/molecules/EditValueModal/EditValueModal'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { marketRiskParametersColumns } from '@/features/panels/vaults/components/PanelRiskParameters/market-risk-parameters-table/columns'
+import { vaultRiskParametersColumns } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/columns'
+import { vaultRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/mapper'
 import { getRwaSetMinimumPositionSizeId } from '@/helpers/get-transaction-id'
-import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
+import { urlNetworkToChainId } from '@/helpers/rwa'
+import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 import { useRevalidateTags } from '@/hooks/useRevalidateTags'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
+import styles from '@/features/panels/vaults/components/PanelRiskParameters/PanelRiskParameters.module.css'
+
 interface PanelRwaRiskParametersProps {
   institutionName: string
+  // RWA SDK clientId (the vault's `vaultInstitutionId`), not the institution name.
+  clientId: string
   vaultAddress: string
   network: NetworkNames
-  // Current minimum position size for reference (decimal string in the vault input asset), if known.
-  currentMinimumDeposit?: number | null
-  inputTokenSymbol?: string
+  riskParameters: RwaVaultRiskParameters | null
 }
+
+const displayAmount = (value: string | null | undefined, symbol?: string | null): string =>
+  value != null
+    ? `${formatWithSeparators(Number(value), { precision: 2 })} ${symbol ?? ''}`.trim()
+    : 'n/a'
 
 export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
   institutionName,
+  clientId,
   vaultAddress,
   network,
-  currentMinimumDeposit,
-  inputTokenSymbol,
+  riskParameters,
 }) => {
-  const chainId = networkNameToSDKId(network)
+  const chainId = urlNetworkToChainId(network)
   const fleetAddress = vaultAddress.toLowerCase() as `0x${string}`
   const { chain, isSettingChain } = useEarnProtocolChain()
-  const { getRwaSetMinimumPositionSizeTx } = useAdminAppSDK(institutionName)
+  const { getRwaSetMinimumPositionSizeTx } = useAdminAppRwaSDK(clientId)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const { revalidateTags } = useRevalidateTags()
 
-  const [minPositionSize, setMinPositionSize] = useState('')
-
   const isProperChain = useMemo(() => chain.id === chainId, [chain.id, chainId])
   const controlsDisabled = !isProperChain || isSettingChain
-  const isValidAmount = minPositionSize !== '' && Number(minPositionSize) >= 0
 
-  const onSetMinimumPositionSize = useCallback(() => {
-    if (!isValidAmount) return
+  const onSetMinimumPositionSize = (vaultType: RoundsVaultType, value: BigNumber) => {
+    // `minimumPositionSize` is human-readable here — the SDK normalizes it to the rounds vault's
+    // underlying-token decimals server-side.
+    const minimumPositionSize = value.toString()
 
     try {
       addTransaction(
@@ -58,13 +73,14 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
           id: getRwaSetMinimumPositionSizeId({
             address: fleetAddress,
             chainId,
-            minimumPositionSize: minPositionSize,
+            vaultType,
+            minimumPositionSize,
           }),
           txDescription: (
             <Text variant="p3">
-              set minimum position size to&nbsp;
+              set {vaultType === RoundsVaultType.Input ? 'deposit' : 'withdrawal'} minimum to&nbsp;
               <Text as="span" variant="p4semi">
-                {minPositionSize} {inputTokenSymbol ?? ''}
+                {minimumPositionSize}
               </Text>
             </Text>
           ),
@@ -73,78 +89,167 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
         getRwaSetMinimumPositionSizeTx({
           fleetAddress,
           chainId,
-          vaultType: RoundsVaultType.Input,
-          minimumPositionSize: minPositionSize,
+          vaultType,
+          minimumPositionSize,
         }),
       )
-      setMinPositionSize('')
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to add transaction to queue', error)
       toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
     }
-  }, [
-    addTransaction,
-    chainId,
-    fleetAddress,
-    getRwaSetMinimumPositionSizeTx,
-    inputTokenSymbol,
-    isValidAmount,
-    minPositionSize,
-  ])
+  }
+
+  const renderMinPositionEdit = ({
+    vaultType,
+    value,
+    symbol,
+    decimals,
+    modalTitle,
+    modalDescription,
+  }: {
+    vaultType: RoundsVaultType
+    value: string | null
+    symbol: string | null
+    decimals: number | null
+    modalTitle: string
+    modalDescription: string
+  }): ReactNode => {
+    if (value == null || decimals == null) {
+      return 'n/a'
+    }
+
+    return (
+      <EditTokenValueModal
+        buttonLabel={displayAmount(value, symbol)}
+        modalTitle={modalTitle}
+        modalDescription={modalDescription}
+        editValue={{
+          label: modalTitle,
+          valueNormalized: value,
+          decimals,
+          symbol: symbol ?? '',
+        }}
+        onAddTransaction={(next) => onSetMinimumPositionSize(vaultType, next)}
+        loading={controlsDisabled}
+      />
+    )
+  }
+
+  const vaultRows = vaultRiskParametersMapper({
+    rawData: [
+      {
+        id: 'vault-cap',
+        parameter: 'Vault Cap',
+        value: displayAmount(riskParameters?.vaultCap, riskParameters?.inputTokenSymbol),
+      },
+      {
+        id: 'deposit-limit',
+        parameter: 'Deposit Limit',
+        value: displayAmount(riskParameters?.depositLimit, riskParameters?.inputTokenSymbol),
+      },
+      {
+        id: 'buffer',
+        parameter: 'Buffer',
+        value: displayAmount(
+          riskParameters?.minimumBufferBalance,
+          riskParameters?.inputTokenSymbol,
+        ),
+      },
+      {
+        id: 'min-deposit',
+        parameter: 'Minimum Deposit Size',
+        value: renderMinPositionEdit({
+          vaultType: RoundsVaultType.Input,
+          value: riskParameters?.inputMinPositionSize ?? null,
+          symbol: riskParameters?.inputMinPositionSymbol ?? null,
+          decimals: riskParameters?.inputMinPositionDecimals ?? null,
+          modalTitle: 'Edit Minimum Deposit Size',
+          modalDescription: 'Edit the minimum amount a user can deposit into the vault per round.',
+        }),
+      },
+      {
+        id: 'min-withdrawal',
+        parameter: 'Minimum Withdrawal Size',
+        value: renderMinPositionEdit({
+          vaultType: RoundsVaultType.Output,
+          value: riskParameters?.outputMinPositionSize ?? null,
+          symbol: riskParameters?.outputMinPositionSymbol ?? null,
+          decimals: riskParameters?.outputMinPositionDecimals ?? null,
+          modalTitle: 'Edit Minimum Withdrawal Size',
+          modalDescription: 'Edit the minimum amount a user can withdraw from the vault per round.',
+        }),
+      },
+    ],
+  })
+
+  const marketRows = (riskParameters?.arks ?? [])
+    // Drop the technical BufferArk (and any nameless ark) — same exclusion the standard panel applies
+    // via `getArkNiceName(ark) !== null`. The BufferArk carries a MAX_INT cap and isn't a real market.
+    .filter((ark) => getArkNiceName({ name: ark.name } as SDKVaultishType['arks'][number]) !== null)
+    .map((ark) => {
+      const arkForName = { name: ark.name } as SDKVaultishType['arks'][number]
+      // getArkNiceName can return `false` (deduped Morpho arks), so `||` is intentional here.
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      const marketName = getArkNiceName(arkForName) || 'Unknown Market'
+
+      return {
+        content: {
+          market: <TableCellText>{marketName}</TableCellText>,
+          'market-cap': (
+            <TableCellNodes>{displayAmount(ark.depositCap, ark.tokenSymbol)}</TableCellNodes>
+          ),
+          'max-percentage': (
+            <TableCellNodes>
+              {ark.maxDepositPercentage != null
+                ? formatPercent(new BigNumber(ark.maxDepositPercentage), { precision: 2 })
+                : 'n/a'}
+            </TableCellNodes>
+          ),
+          // Implied cap isn't exposed by the RWA contracts/subgraph, so it's always n/a here.
+          'implied-cap': <TableCellNodes>n/a</TableCellNodes>,
+        },
+      }
+    })
 
   const onTxSuccess = () => {
-    revalidateTags({ tags: [`institution-vault-${institutionName.toLowerCase()}`] })
+    revalidateTags({
+      tags: [
+        `rwa-vault-risk-parameters-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+        `institution-vault-${institutionName.toLowerCase()}`,
+      ],
+    })
   }
 
   return (
-    <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <Text as="h5" variant="h5">
-          Minimum position size
-        </Text>
-        <Card>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
-              Current minimum deposit:&nbsp;
-              <Text as="span" variant="p3semi">
-                {currentMinimumDeposit != null
-                  ? `${currentMinimumDeposit} ${inputTokenSymbol ?? ''}`
-                  : 'n/a'}
-              </Text>
-            </Text>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-              <Input
-                variant="withBorder"
-                type="number"
-                placeholder={`New minimum (in ${inputTokenSymbol ?? 'input asset'})`}
-                value={minPositionSize}
-                onChange={(e) => setMinPositionSize(e.target.value)}
-                wrapperStyles={{ width: '320px' }}
-              />
-              <Button
-                variant="primaryLarge"
-                disabled={controlsDisabled || !isValidAmount}
-                onClick={onSetMinimumPositionSize}
-              >
-                <Text variant="p4">Update</Text>
-              </Button>
-            </div>
-          </div>
-        </Card>
-      </div>
+    <Card variant="cardSecondary" className={styles.panelRiskParametersWrapper}>
+      <Text as="h5" variant="h5">
+        Vault Risk Parameters
+      </Text>
+      <Card>
+        <Table
+          rows={vaultRows}
+          columns={vaultRiskParametersColumns}
+          wrapperClassName={styles.tableWrapper}
+          tableClassName={styles.table}
+        />
+      </Card>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <Text as="h5" variant="h5">
-          Allocation &amp; deposit caps
-        </Text>
-        <Card>
-          <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
-            Ark allocations and fleet/ark deposit caps for RWA vaults are managed by the curator and
-            are not configurable from this console.
-          </Text>
-        </Card>
-      </div>
+      <Text as="h5" variant="h5">
+        Market Risk Parameters
+      </Text>
+      <Card>
+        <Table
+          rows={marketRows}
+          columns={marketRiskParametersColumns}
+          wrapperClassName={styles.tableWrapper}
+          tableClassName={styles.table}
+        />
+      </Card>
+      <Text variant="p4" style={{ color: 'var(--color-text-secondary)' }}>
+        Market allocations and fleet/ark deposit caps for RWA vaults are managed by the curator and
+        are not configurable from this console.
+      </Text>
 
       <Text as="h5" variant="h5">
         Transaction Queue

@@ -26,7 +26,7 @@ export const InstitutionTabsHeader = async ({ institutionName }: { institutionNa
   const institutionVaults = await getCachedInstitutionVaults({ institutionName })
 
   if (!institutionVaults?.vaults.length) {
-    return <div>Institution not found.</div>
+    return null
   }
 
   const performanceValues = institutionVaults.vaults

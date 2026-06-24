@@ -1,20 +1,16 @@
 import { type NetworkNames } from '@summerfi/app-types'
-import {
-  decorateWithFleetConfig,
-  humanNetworktoSDKNetwork,
-  networkNameToSDKId,
-} from '@summerfi/app-utils'
+import { decorateWithFleetConfig, humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 
 import { getCachedConfig } from '@/app/server-handlers/config'
 import {
-  getCachedInstitutionVault,
   getCachedInstitutionVaultArksImpliedCapsMap,
+  getCachedRwaVaultRiskParameters,
   getCachedVaultDetails,
 } from '@/app/server-handlers/institution/institution-vaults'
 import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { PanelRiskParameters } from '@/features/panels/vaults/components/PanelRiskParameters/PanelRiskParameters'
 import { PanelRwaRiskParameters } from '@/features/panels/vaults/components/PanelRwaRiskParameters/PanelRwaRiskParameters'
-import { isRwaVaultByConfig } from '@/helpers/rwa'
+import { getRwaClientIdForVault, urlNetworkToChainId } from '@/helpers/rwa'
 
 export default async function InstitutionVaultRiskParametersPage({
   params,
@@ -25,13 +21,19 @@ export default async function InstitutionVaultRiskParametersPage({
 
   const parsedNetwork = humanNetworktoSDKNetwork(network)
   const config = await getCachedConfig()
-  const chainId = networkNameToSDKId(network)
+  const chainId = urlNetworkToChainId(network)
 
   // RWA vaults aren't FleetCommander/ark-managed here: the ark-cap admin surface doesn't apply and
   // their data lives in a different subgraph. Render the RWA-specific risk panel (minimum position
   // size + a curator-managed note) instead of the fleet ark-cap panel.
-  if (isRwaVaultByConfig({ systemConfig: config, networkId: chainId, vaultAddress })) {
-    const rwaVault = await getCachedInstitutionVault({
+  const rwaClientId = getRwaClientIdForVault({
+    systemConfig: config,
+    networkId: chainId,
+    vaultAddress,
+  })
+
+  if (rwaClientId) {
+    const riskParameters = await getCachedRwaVaultRiskParameters({
       institutionName,
       network: parsedNetwork,
       vaultAddress,
@@ -41,10 +43,10 @@ export default async function InstitutionVaultRiskParametersPage({
       <ClientSideSdkWrapper>
         <PanelRwaRiskParameters
           institutionName={institutionName}
+          clientId={rwaClientId}
           vaultAddress={vaultAddress}
           network={network}
-          currentMinimumDeposit={rwaVault?.vault.customFields?.minimumDeposit ?? null}
-          inputTokenSymbol={rwaVault?.vault.inputToken.symbol}
+          riskParameters={riskParameters}
         />
       </ClientSideSdkWrapper>
     )

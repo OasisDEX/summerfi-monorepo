@@ -22,8 +22,23 @@ export const mapMultiVaultChartData = ({
     performanceData: InstiVaultPerformanceResponse
     pointName: keyof InstiVaultPerformanceResponse['vault']['hourlyVaultHistory'][number]
     currentPointValue: string
+    // Vault's configured display name (fleetMap `name`), preferred over the derived label.
+    customName?: string | null
   }[]
 }): MultipleSourceChartData => {
+  // Single source of the per-vault series label so every place that keys a row / map by it stays
+  // consistent (and all honour the configured custom name).
+  const getVaultLabel = (
+    performanceData: InstiVaultPerformanceResponse,
+    customName?: string | null,
+  ) =>
+    getInstiVaultNiceName({
+      network: supportedSDKNetwork(performanceData.vault.protocol.network),
+      symbol: performanceData.vault.inputToken.symbol,
+      institutionName,
+      customName,
+    })
+
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
   const nowStartOfDay = now.startOf('day')
@@ -62,12 +77,8 @@ export const mapMultiVaultChartData = ({
     Map<number, NonNullable<InstiVaultPerformanceResponse['vault']>['weeklyVaultHistory'][number]>
   >()
 
-  performanceDataArray.forEach(({ performanceData }) => {
-    const vaultLabel = getInstiVaultNiceName({
-      network: supportedSDKNetwork(performanceData.vault.protocol.network),
-      symbol: performanceData.vault.inputToken.symbol,
-      institutionName,
-    })
+  performanceDataArray.forEach(({ performanceData, customName }) => {
+    const vaultLabel = getVaultLabel(performanceData, customName)
 
     colors.push(getUniqueColor(vaultLabel))
     dataNames.push(vaultLabel)
@@ -124,18 +135,16 @@ export const mapMultiVaultChartData = ({
       timestampParsed: dayjs.unix(timestampUnix).format(CHART_TIMESTAMP_FORMAT_DETAILED),
     }
 
-    performanceDataArray.forEach(({ performanceData, pointName, currentPointValue }) => {
-      const vaultLabel = getInstiVaultNiceName({
-        network: supportedSDKNetwork(performanceData.vault.protocol.network),
-        symbol: performanceData.vault.inputToken.symbol,
-        institutionName,
-      })
-      const existingPoint = perVaultHourly.get(vaultLabel)?.get(timestampUnix)
+    performanceDataArray.forEach(
+      ({ performanceData, pointName, currentPointValue, customName }) => {
+        const vaultLabel = getVaultLabel(performanceData, customName)
+        const existingPoint = perVaultHourly.get(vaultLabel)?.get(timestampUnix)
 
-      row[vaultLabel] = Number(
-        isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
-      )
-    })
+        row[vaultLabel] = Number(
+          isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+        )
+      },
+    )
 
     chartBaseData['7d'].push(row)
   }
@@ -146,18 +155,16 @@ export const mapMultiVaultChartData = ({
       timestampParsed: dayjs.unix(timestampUnix).format(CHART_TIMESTAMP_FORMAT_DETAILED),
     }
 
-    performanceDataArray.forEach(({ performanceData, pointName, currentPointValue }) => {
-      const vaultLabel = getInstiVaultNiceName({
-        network: supportedSDKNetwork(performanceData.vault.protocol.network),
-        symbol: performanceData.vault.inputToken.symbol,
-        institutionName,
-      })
-      const existingPoint = perVaultHourly.get(vaultLabel)?.get(timestampUnix)
+    performanceDataArray.forEach(
+      ({ performanceData, pointName, currentPointValue, customName }) => {
+        const vaultLabel = getVaultLabel(performanceData, customName)
+        const existingPoint = perVaultHourly.get(vaultLabel)?.get(timestampUnix)
 
-      row[vaultLabel] = Number(
-        isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
-      )
-    })
+        row[vaultLabel] = Number(
+          isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+        )
+      },
+    )
 
     chartBaseData['30d'].push(row)
   }
@@ -172,18 +179,16 @@ export const mapMultiVaultChartData = ({
       timestampParsed: dayjs.unix(timestampUnix).format(CHART_TIMESTAMP_FORMAT_DETAILED),
     }
 
-    performanceDataArray.forEach(({ performanceData, pointName, currentPointValue }) => {
-      const vaultLabel = getInstiVaultNiceName({
-        network: supportedSDKNetwork(performanceData.vault.protocol.network),
-        symbol: performanceData.vault.inputToken.symbol,
-        institutionName,
-      })
-      const existingPoint = perVaultDaily.get(vaultLabel)?.get(timestampUnix)
+    performanceDataArray.forEach(
+      ({ performanceData, pointName, currentPointValue, customName }) => {
+        const vaultLabel = getVaultLabel(performanceData, customName)
+        const existingPoint = perVaultDaily.get(vaultLabel)?.get(timestampUnix)
 
-      row[vaultLabel] = Number(
-        isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
-      )
-    })
+        row[vaultLabel] = Number(
+          isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+        )
+      },
+    )
 
     chartBaseData[timeframe].push(row)
   }
@@ -194,18 +199,16 @@ export const mapMultiVaultChartData = ({
       timestampParsed: dayjs.unix(timestampUnix).format(CHART_TIMESTAMP_FORMAT_DETAILED),
     }
 
-    performanceDataArray.forEach(({ performanceData, pointName, currentPointValue }) => {
-      const vaultLabel = getInstiVaultNiceName({
-        network: supportedSDKNetwork(performanceData.vault.protocol.network),
-        symbol: performanceData.vault.inputToken.symbol,
-        institutionName,
-      })
-      const existingPoint = perVaultWeekly.get(vaultLabel)?.get(timestampUnix)
+    performanceDataArray.forEach(
+      ({ performanceData, pointName, currentPointValue, customName }) => {
+        const vaultLabel = getVaultLabel(performanceData, customName)
+        const existingPoint = perVaultWeekly.get(vaultLabel)?.get(timestampUnix)
 
-      row[vaultLabel] = Number(
-        isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
-      )
-    })
+        row[vaultLabel] = Number(
+          isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+        )
+      },
+    )
 
     chartBaseData['3y'].push(row)
   }

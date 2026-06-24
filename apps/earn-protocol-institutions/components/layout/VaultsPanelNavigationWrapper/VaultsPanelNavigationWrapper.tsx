@@ -44,7 +44,6 @@ const standardPanelItems: PanelItem[] = [
   {
     id: DashboardVaultsPanel.ASSET_REALLOCATION,
     label: 'Asset reallocation',
-    disabled: true,
   },
   {
     id: DashboardVaultsPanel.ASSET_MANAGEMENT,

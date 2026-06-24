@@ -1,14 +1,16 @@
 import { Text } from '@summerfi/app-earn-ui'
-import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
+import { humanNetworktoSDKNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
+import { getCachedConfig } from '@/app/server-handlers/config'
 import {
   getCachedInstitutionBasicData,
   getCachedVaultDetails,
 } from '@/app/server-handlers/institution/institution-vaults'
 import { PanelOverview } from '@/features/panels/vaults/components/PanelOverview/PanelOverview'
 import { getInstiVaultNiceName } from '@/helpers/get-insti-vault-nice-name'
+import { getVaultConfigCustomFields } from '@/helpers/rwa'
 
 export default async function InstitutionVaultOverviewPage({
   params,
@@ -26,7 +28,7 @@ export default async function InstitutionVaultOverviewPage({
 
   // Core / above-the-fold only: the vault name + the contracts table. The NAV / AUM / ARK charts
   // (which need four heavy fetches) are deferred to a scroll-gated client query inside PanelOverview.
-  const [vault, institutionBasicData] = await Promise.all([
+  const [vault, institutionBasicData, config] = await Promise.all([
     getCachedVaultDetails({
       institutionName,
       vaultAddress: parsedVaultAddress,
@@ -36,6 +38,7 @@ export default async function InstitutionVaultOverviewPage({
       institutionName,
       network: parsedNetwork,
     }),
+    getCachedConfig(),
   ])
 
   if (!vault) {
@@ -46,10 +49,19 @@ export default async function InstitutionVaultOverviewPage({
     )
   }
 
+  // `getVaultDetails` returns the raw (undecorated) vault, so resolve the configured display name
+  // straight from the fleet config by address.
+  const customName = getVaultConfigCustomFields({
+    systemConfig: config,
+    networkId: subgraphNetworkToId(parsedNetwork),
+    vaultAddress: parsedVaultAddress,
+  })?.name
+
   const summerVaultName = getInstiVaultNiceName({
     network: parsedNetwork,
     symbol: vault.inputToken.symbol,
     institutionName,
+    customName,
   })
 
   return (

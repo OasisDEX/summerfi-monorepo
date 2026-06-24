@@ -1,11 +1,10 @@
 import { type NetworkNames } from '@summerfi/app-types'
-import { networkNameToSDKId } from '@summerfi/app-utils'
 import { redirect } from 'next/navigation'
 
 import { getCachedConfig } from '@/app/server-handlers/config'
 import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { PanelRwaWhitelist } from '@/features/panels/vaults/components/PanelRwaWhitelist/PanelRwaWhitelist'
-import { isRwaVaultByConfig } from '@/helpers/rwa'
+import { getRwaClientIdForVault, urlNetworkToChainId } from '@/helpers/rwa'
 
 export default async function InstitutionVaultWhitelistPage({
   params,
@@ -15,10 +14,15 @@ export default async function InstitutionVaultWhitelistPage({
   const { institutionName, vaultAddress, network } = await params
 
   const config = await getCachedConfig()
-  const chainId = networkNameToSDKId(network)
+  const chainId = urlNetworkToChainId(network)
+  const rwaClientId = getRwaClientIdForVault({
+    systemConfig: config,
+    networkId: chainId,
+    vaultAddress,
+  })
 
   // RWA-only tab: a standard vault has no rounds-based whitelist surface, so bounce to its overview.
-  if (!isRwaVaultByConfig({ systemConfig: config, networkId: chainId, vaultAddress })) {
+  if (!rwaClientId) {
     redirect(`/${institutionName}/vaults/${network}/${vaultAddress}/overview/institution`)
   }
 
@@ -26,6 +30,7 @@ export default async function InstitutionVaultWhitelistPage({
     <ClientSideSdkWrapper>
       <PanelRwaWhitelist
         institutionName={institutionName}
+        clientId={rwaClientId}
         vaultAddress={vaultAddress}
         network={network}
       />

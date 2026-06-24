@@ -11,7 +11,7 @@ import {
   useEarnProtocolChain,
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
-import { formatAddress, networkNameToSDKId } from '@summerfi/app-utils'
+import { formatAddress } from '@summerfi/app-utils'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import {
@@ -20,22 +20,26 @@ import {
   getRwaSetWhitelistOpenId,
 } from '@/helpers/get-transaction-id'
 import { isValidAddress } from '@/helpers/is-valid-address'
-import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
+import { urlNetworkToChainId } from '@/helpers/rwa'
+import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 import { useRevalidateTags } from '@/hooks/useRevalidateTags'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 interface PanelRwaWhitelistProps {
   institutionName: string
+  // RWA SDK clientId (the vault's `vaultInstitutionId`), not the institution name.
+  clientId: string
   vaultAddress: string
   network: NetworkNames
 }
 
 export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
   institutionName,
+  clientId,
   vaultAddress,
   network,
 }) => {
-  const chainId = networkNameToSDKId(network)
+  const chainId = urlNetworkToChainId(network)
   const fleetAddress = vaultAddress.toLowerCase() as `0x${string}`
   const { chain, isSettingChain } = useEarnProtocolChain()
   const {
@@ -43,7 +47,7 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
     getRwaSetWhitelistedTx,
     getRwaIsWhitelistOpen,
     getRwaIsWhitelisted,
-  } = useAdminAppSDK(institutionName)
+  } = useAdminAppRwaSDK(clientId)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const { revalidateTags } = useRevalidateTags()
 

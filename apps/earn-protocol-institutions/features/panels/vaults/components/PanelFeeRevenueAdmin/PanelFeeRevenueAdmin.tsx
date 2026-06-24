@@ -1,10 +1,10 @@
 'use client'
 import { type FC } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType } from '@summerfi/app-types'
 
 import { feeRevenueMapper } from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/tables/fee-revenue/mapper'
 import { thirdPartyCostsMapper } from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/tables/third-party-costs/mapper'
+import { type InstitutionVaultFeeRevenueItem } from '@/types/institution-data'
 
 import { feeRevenueColumns } from './tables/fee-revenue/columns'
 // import { feeRevenueHistoryColumns } from './tables/history/columns'
@@ -14,25 +14,18 @@ import { thirdPartyCostsColumns } from './tables/third-party-costs/columns'
 import classNames from './PanelFeeRevenueAdmin.module.css'
 
 interface PanelFeeRevenueAdminProps {
-  vaultData: SDKVaultishType
-  vaultFeeAmount: number | null
+  // Fee rows to display — a single "Vault AUM Fee" for standard vaults, or "Management Fee" +
+  // "Performance Fee" for RWA vaults (read on-chain). `aumFee` is a decimal fraction (0.01 = 1%).
+  feeRevenue: InstitutionVaultFeeRevenueItem[]
 }
 
-export const PanelFeeRevenueAdmin: FC<PanelFeeRevenueAdminProps> = ({
-  vaultData: _vaultData,
-  vaultFeeAmount,
-}) => {
+export const PanelFeeRevenueAdmin: FC<PanelFeeRevenueAdminProps> = ({ feeRevenue }) => {
   const thirdPartyCostsRows = thirdPartyCostsMapper({
     rawData: [],
   })
 
   const feeRevenueRows = feeRevenueMapper({
-    rawData: [
-      {
-        name: 'Vault AUM Fee',
-        aumFee: vaultFeeAmount,
-      },
-    ],
+    rawData: feeRevenue,
   })
 
   // const feeRevenueHistoryRows = feeRevenueHistoryMapper({

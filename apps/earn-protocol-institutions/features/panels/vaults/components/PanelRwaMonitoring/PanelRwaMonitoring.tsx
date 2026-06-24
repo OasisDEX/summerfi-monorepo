@@ -3,19 +3,30 @@
 import { type FC, useEffect, useMemo, useState } from 'react'
 import { Card, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
-import { networkNameToSDKId } from '@summerfi/app-utils'
+import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import { RoundState, RoundsVaultType } from '@summerfi/sdk-common'
 
-import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
+import { urlNetworkToChainId } from '@/helpers/rwa'
+import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 
 interface PanelRwaMonitoringProps {
-  institutionName: string
+  // RWA SDK clientId (the vault's `vaultInstitutionId`).
+  clientId: string
   vaultAddress: string
   network: NetworkNames
   curatorName?: string
   curatorDescription?: string
   factSheetUrl?: string
+  // Performance metrics, all decimal fractions (0.05 = 5%) or null when unavailable.
+  navApy30d?: number | null
+  navApy30dPartialDays?: number | null
+  navPriceChange24h?: number | null
+  managementFee?: number | null
+  performanceFee?: number | null
 }
+
+const formatPercentOrNa = (value: number | null | undefined): string =>
+  value != null ? formatDecimalAsPercent(value, { precision: 2 }) : 'n/a'
 
 const roundStateLabel: { [key in RoundState]: string } = {
   [RoundState.NotOpened]: 'Not opened',
@@ -45,17 +56,22 @@ const StatRow: FC<{ label: string; value: string }> = ({ label, value }) => (
 )
 
 export const PanelRwaMonitoring: FC<PanelRwaMonitoringProps> = ({
-  institutionName,
+  clientId,
   vaultAddress,
   network,
   curatorName,
   curatorDescription,
   factSheetUrl,
+  navApy30d,
+  navApy30dPartialDays,
+  navPriceChange24h,
+  managementFee,
+  performanceFee,
 }) => {
-  const chainId = networkNameToSDKId(network)
+  const chainId = urlNetworkToChainId(network)
   const fleetAddress = vaultAddress.toLowerCase() as `0x${string}`
   const { getRwaVaultMarketValue, getRwaCurrentRound, getRwaRoundState } =
-    useAdminAppSDK(institutionName)
+    useAdminAppRwaSDK(clientId)
 
   const [marketValue, setMarketValue] = useState<MarketValue | null>(null)
   const [inputRound, setInputRound] = useState<RoundInfo | null>(null)
@@ -131,6 +147,23 @@ export const PanelRwaMonitoring: FC<PanelRwaMonitoringProps> = ({
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {curatorBlock}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <Text as="h5" variant="h5">
+          Performance
+        </Text>
+        <Card>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <StatRow
+              label={`NAV APY (30d)${navApy30dPartialDays ? ` · partial, ${navApy30dPartialDays}d` : ''}`}
+              value={formatPercentOrNa(navApy30d)}
+            />
+            <StatRow label="NAV change (24h)" value={formatPercentOrNa(navPriceChange24h)} />
+            <StatRow label="Management fee" value={formatPercentOrNa(managementFee)} />
+            <StatRow label="Performance fee" value={formatPercentOrNa(performanceFee)} />
+          </div>
+        </Card>
+      </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Text as="h5" variant="h5">

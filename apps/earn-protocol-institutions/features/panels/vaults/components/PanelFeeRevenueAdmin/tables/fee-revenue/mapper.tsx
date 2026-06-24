@@ -10,7 +10,8 @@ export const feeRevenueMapper = ({ rawData }: { rawData: InstitutionVaultFeeReve
         name: <TableCellText>{item.name}</TableCellText>,
         'aum-fee': (
           <TableCellNodes>
-            {item.aumFee
+            {/* A 0 fee is a known value (0.00%), not missing data — only null/undefined is "n/a". */}
+            {item.aumFee != null
               ? formatDecimalAsPercent(item.aumFee, {
                   precision: 2,
                 })

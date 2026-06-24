@@ -4,6 +4,7 @@ import {
   type SDKVaultishType,
   SupportedNetworkIds,
 } from '@summerfi/app-types'
+import { humanNetworktoSDKNetwork, subgraphNetworkToSDKId } from '@summerfi/app-utils'
 
 /**
  * Networks on which the RWA (institutions-v2) subgraph is deployed. Mirrors the earn-protocol
@@ -11,6 +12,17 @@ import {
  * institution are fetched per network from this list.
  */
 export const rwaSupportedNetworkIds = [SupportedNetworkIds.Mainnet, SupportedNetworkIds.Base]
+
+/**
+ * Resolves a vault-detail route network *slug* (e.g. `mainnet`, `base`) to a chain id. The route
+ * segments use SDK network slugs, which diverge from the `NetworkNames` enum for Ethereum (slug
+ * `mainnet` vs enum value `ethereum`), so `networkNameToSDKId` returns `undefined` for mainnet —
+ * crashing any RWA panel that feeds the chain id to a `TransactionQueue`. Going through the SDK
+ * network (`humanNetworktoSDKNetwork` → `subgraphNetworkToSDKId`) maps every slug correctly, and is
+ * the same resolution the server-side RWA fetchers already use.
+ */
+export const urlNetworkToChainId = (network: string): SupportedNetworkIds =>
+  subgraphNetworkToSDKId(humanNetworktoSDKNetwork(network))
 
 /**
  * Returns the fleet-config custom fields for a vault if it is configured (by address) on the given
@@ -42,6 +54,77 @@ export const isRwaVaultByConfig = (params: {
   networkId: number
   vaultAddress: string
 }): boolean => !!getVaultConfigCustomFields(params)?.vaultCurator
+
+/**
+ * The RWA SDK clientId for a vault — its `vaultInstitutionId` fleet-config field (NOT the institution
+ * name). RWA SDK calls must run on the instance whose clientId owns the vault. Returns undefined for
+ * non-RWA / unconfigured vaults.
+ */
+export const getRwaClientIdForVault = (params: {
+  systemConfig: Partial<EarnAppConfigType>
+  networkId: number
+  vaultAddress: string
+}): string | undefined => getVaultConfigCustomFields(params)?.vaultInstitutionId
+
+/**
+ * Determines whether an RWA vault's `vaultInstitutionId` clientId belongs to the given institution.
+ * The DB institution `name` is usually the clientId (`Orthodox`), but an institution can also own
+ * vaults under suffixed clientIds (`ExtDemoCorp_v2`, `ExtDemoCorp_3`) — matched via a `name_` prefix.
+ */
+const rwaClientIdBelongsToInstitution = (clientId: string, institutionName: string): boolean =>
+  clientId === institutionName || clientId.startsWith(`${institutionName}_`)
+
+/**
+ * The institution's RWA `(clientId, networkId)` pairs, derived from the fleet config's per-chain
+ * buckets — exactly how the earn-protocol app does it (`getRwaClientIdsForChain` over `fleetMap[chainId]`).
+ *
+ * The chain pairing comes from which chain bucket a vault's config lives in, so each RWA clientId is
+ * fetched ONLY on the chain(s) it's configured for. This is the fix for duplicate vaults: the previous
+ * approach cross-producted every clientId against every RWA network, and since the SDK resolves the
+ * subgraph from the Client-Id, a clientId's vaults came back once per network iteration. Pairing each
+ * clientId with its own chain queries each set exactly once.
+ *
+ * Only RWA-supported chains are considered; disabled / non-RWA entries and other institutions are
+ * skipped. Pairs are deduped by `clientId-networkId`.
+ */
+export const getInstitutionRwaClientChainPairs = ({
+  systemConfig,
+  institutionName,
+}: {
+  systemConfig: Partial<EarnAppConfigType>
+  institutionName: string
+}): { clientId: string; networkId: number }[] => {
+  const fleetMap = systemConfig.fleetMap ?? {}
+  const seen = new Set<string>()
+  const pairs: { clientId: string; networkId: number }[] = []
+
+  for (const [chainKey, networkConfig] of Object.entries(
+    fleetMap as { [key: string]: { [key: string]: EarnAppFleetCustomConfigType } },
+  )) {
+    const networkId = Number(chainKey)
+
+    // Only chains where the RWA (institutions-v2) subgraph is deployed.
+    if (rwaSupportedNetworkIds.includes(networkId as SupportedNetworkIds)) {
+      for (const entry of Object.values(networkConfig)) {
+        const clientId = entry.vaultInstitutionId
+        const key = `${clientId}-${networkId}`
+
+        if (
+          entry.vaultCurator &&
+          !entry.disabled &&
+          clientId &&
+          rwaClientIdBelongsToInstitution(clientId, institutionName) &&
+          !seen.has(key)
+        ) {
+          seen.add(key)
+          pairs.push({ clientId, networkId })
+        }
+      }
+    }
+  }
+
+  return pairs
+}
 
 /**
  * Decorates raw RWA subgraph vaults with their fleet-config custom fields and the `isRwaVault` flag,

@@ -169,13 +169,15 @@ export const getRwaRevokeWhitelistId = ({
 export const getRwaSetMinimumPositionSizeId = ({
   address,
   chainId,
+  vaultType,
   minimumPositionSize,
 }: {
   address: string
   chainId: number
+  vaultType: string
   minimumPositionSize: string
 }) => {
-  return `rwa-set-minimum-position-size-${address}-${chainId}-${minimumPositionSize}`
+  return `rwa-set-minimum-position-size-${address}-${chainId}-${vaultType}-${minimumPositionSize}`
 }
 
 // endregion
