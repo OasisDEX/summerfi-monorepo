@@ -122,6 +122,8 @@ import { getRwaRetryRoundTxHandler } from '../handlers/getRwaRetryRoundTxHandler
 import { getRwaEmergencyRollbackRoundTxHandler } from '../handlers/getRwaEmergencyRollbackRoundTxHandler'
 import { getRwaSetFleetTransferabilityTxHandler } from '../handlers/getRwaSetFleetTransferabilityTxHandler'
 import { getRwaIsFleetTransfersEnabledHandler } from '../handlers/getRwaIsFleetTransfersEnabledHandler'
+import { getRwaGrantRoleTxHandler } from '../handlers/getRwaGrantRoleTxHandler'
+import { getRwaRevokeRoleTxHandler } from '../handlers/getRwaRevokeRoleTxHandler'
 import { getRwaSetWhitelistedTxHandler } from '../handlers/getRwaSetWhitelistedTxHandler'
 import { getRwaSetWhitelistedBatchTxHandler } from '../handlers/getRwaSetWhitelistedBatchTxHandler'
 import { getRwaSetWhitelistOpenTxHandler } from '../handlers/getRwaSetWhitelistOpenTxHandler'
@@ -565,6 +567,8 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
     () => getRwaIsFleetTransfersEnabledHandler(sdk),
     [sdk],
   )
+  const getRwaGrantRoleTx = useMemo(() => getRwaGrantRoleTxHandler(sdk), [sdk])
+  const getRwaRevokeRoleTx = useMemo(() => getRwaRevokeRoleTxHandler(sdk), [sdk])
   const getRwaSetWhitelistedTx = useMemo(() => getRwaSetWhitelistedTxHandler(sdk), [sdk])
   const getRwaSetWhitelistedBatchTx = useMemo(() => getRwaSetWhitelistedBatchTxHandler(sdk), [sdk])
   const getRwaSetWhitelistOpenTx = useMemo(() => getRwaSetWhitelistOpenTxHandler(sdk), [sdk])
@@ -608,6 +612,8 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       getRwaEmergencyRollbackRoundTx,
       getRwaSetFleetTransferabilityTx,
       getRwaIsFleetTransfersEnabled,
+      getRwaGrantRoleTx,
+      getRwaRevokeRoleTx,
       getRwaSetWhitelistedTx,
       getRwaSetWhitelistedBatchTx,
       getRwaSetWhitelistOpenTx,
@@ -648,6 +654,8 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       getRwaEmergencyRollbackRoundTx,
       getRwaSetFleetTransferabilityTx,
       getRwaIsFleetTransfersEnabled,
+      getRwaGrantRoleTx,
+      getRwaRevokeRoleTx,
       getRwaSetWhitelistedTx,
       getRwaSetWhitelistedBatchTx,
       getRwaSetWhitelistOpenTx,

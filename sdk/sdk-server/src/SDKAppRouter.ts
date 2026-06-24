@@ -169,6 +169,8 @@ import { getRetryRoundTx as getRwaRetryRoundTx } from './armada-protocol-handler
 import { getEmergencyRollbackRoundTx as getRwaEmergencyRollbackRoundTx } from './armada-protocol-handlers/rwa/getEmergencyRollbackRoundTx'
 import { getSetFleetTransferabilityTx as getRwaSetFleetTransferabilityTx } from './armada-protocol-handlers/rwa/getSetFleetTransferabilityTx'
 import { isFleetTransfersEnabled as isRwaFleetTransfersEnabled } from './armada-protocol-handlers/rwa/isFleetTransfersEnabled'
+import { getGrantRoleTx as getRwaGrantRoleTx } from './armada-protocol-handlers/rwa/getGrantRoleTx'
+import { getRevokeRoleTx as getRwaRevokeRoleTx } from './armada-protocol-handlers/rwa/getRevokeRoleTx'
 import { getSetWhitelistedTx as getRwaSetWhitelistedTx } from './armada-protocol-handlers/rwa/getSetWhitelistedTx'
 import { getSetWhitelistedBatchTx as getRwaSetWhitelistedBatchTx } from './armada-protocol-handlers/rwa/getSetWhitelistedBatchTx'
 import { getSetWhitelistOpenTx as getRwaSetWhitelistOpenTx } from './armada-protocol-handlers/rwa/getSetWhitelistOpenTx'
@@ -379,6 +381,8 @@ export const sdkAppRouter = router({
     getEmergencyRollbackRoundTx: getRwaEmergencyRollbackRoundTx,
     getSetFleetTransferabilityTx: getRwaSetFleetTransferabilityTx,
     isFleetTransfersEnabled: isRwaFleetTransfersEnabled,
+    getGrantRoleTx: getRwaGrantRoleTx,
+    getRevokeRoleTx: getRwaRevokeRoleTx,
     getSetWhitelistedTx: getRwaSetWhitelistedTx,
     getSetWhitelistedBatchTx: getRwaSetWhitelistedBatchTx,
     getSetWhitelistOpenTx: getRwaSetWhitelistOpenTx,

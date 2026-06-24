@@ -660,6 +660,28 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     return contract.transfersEnabled()
   }
 
+  /** @see IRWAManager.getGrantRoleTx */
+  async getGrantRoleTx(
+    params: Parameters<IRWAManager['getGrantRoleTx']>[0],
+  ): ReturnType<IRWAManager['getGrantRoleTx']> {
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
+    return contract.grantRole({
+      role: params.role,
+      account: Address.createFromEthereum({ value: params.account }),
+    })
+  }
+
+  /** @see IRWAManager.getRevokeRoleTx */
+  async getRevokeRoleTx(
+    params: Parameters<IRWAManager['getRevokeRoleTx']>[0],
+  ): ReturnType<IRWAManager['getRevokeRoleTx']> {
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
+    return contract.revokeRole({
+      role: params.role,
+      account: Address.createFromEthereum({ value: params.account }),
+    })
+  }
+
   /** @see IRWAManager.getSetWhitelistedTx */
   async getSetWhitelistedTx(
     params: Parameters<IRWAManager['getSetWhitelistedTx']>[0],

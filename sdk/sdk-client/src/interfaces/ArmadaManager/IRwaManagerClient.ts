@@ -9,6 +9,7 @@ import type {
   IRwaVaultMarketValue,
   RoundState,
   RoundsVaultType,
+  RwaRole,
   TransactionInfo,
 } from '@summerfi/sdk-common'
 import type { GetVaultQueryRwa, GetVaultsQueryRwa } from '@summerfi/subgraph-manager-common'
@@ -180,6 +181,20 @@ export interface IRwaManagerClient {
     chainId: ChainId
     fleetAddress: AddressValue
   }): Promise<boolean>
+
+  // --- Role management (Governor) ---
+
+  getGrantRoleTx(params: {
+    chainId: ChainId
+    role: RwaRole
+    account: AddressValue
+  }): Promise<TransactionInfo>
+
+  getRevokeRoleTx(params: {
+    chainId: ChainId
+    role: RwaRole
+    account: AddressValue
+  }): Promise<TransactionInfo>
 
   // --- Whitelisting ---
 

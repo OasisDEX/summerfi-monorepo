@@ -143,6 +143,18 @@ export class RwaManagerClient extends IRPCClient implements IRwaManagerClient {
     return this.rpcClient.rwa.isFleetTransfersEnabled.query(params)
   }
 
+  async getGrantRoleTx(
+    params: Parameters<IRwaManagerClient['getGrantRoleTx']>[0],
+  ): ReturnType<IRwaManagerClient['getGrantRoleTx']> {
+    return this.rpcClient.rwa.getGrantRoleTx.query(params)
+  }
+
+  async getRevokeRoleTx(
+    params: Parameters<IRwaManagerClient['getRevokeRoleTx']>[0],
+  ): ReturnType<IRwaManagerClient['getRevokeRoleTx']> {
+    return this.rpcClient.rwa.getRevokeRoleTx.query(params)
+  }
+
   async getSetWhitelistedTx(
     params: Parameters<IRwaManagerClient['getSetWhitelistedTx']>[0],
   ): ReturnType<IRwaManagerClient['getSetWhitelistedTx']> {

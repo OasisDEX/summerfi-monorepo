@@ -33,6 +33,7 @@ export { RebalanceDataSchema, isRebalanceData } from './common/types/IRebalanceD
 export type { IRebalanceData, IRebalanceDataData } from './common/types/IRebalanceData'
 export { GlobalRoles, GLOBAL_ROLE_HASHES } from './common/types/GlobalRoles'
 export { InstiContractRoles } from './common/types/InstiContractRoles'
+export { type RwaRole, RwaRoleSchema } from './common/types/RwaRole'
 export { AddressType } from './common/enums/AddressType'
 export { CommonTokenSymbols } from './common/enums/CommonTokenSymbols'
 export {

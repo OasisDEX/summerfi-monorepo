@@ -9,6 +9,7 @@ import type {
   IPrice,
   RoundState,
   RoundsVaultType,
+  RwaRole,
   TransactionInfo,
 } from '@summerfi/sdk-common'
 import type { GetVaultQueryRwa, GetVaultsQueryRwa } from '@summerfi/subgraph-manager-common'
@@ -410,6 +411,40 @@ export interface IRWAManager {
     chainId: ChainId
     fleetAddress: AddressValue
   }): Promise<boolean>
+
+  // ---------------------------------------------------------------------------
+  // Role management (Governor) — on the institution's ProtocolAccessManagerV2
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @method getGrantRoleTx
+   * @description Builds the transaction to grant a role to an account on the institution's
+   *              ProtocolAccessManager(V2), via the matching typed on-chain wrapper.
+   *
+   * @param chainId The chain the institution is deployed on
+   * @param role    The role descriptor (carries a `target` contract for contract-specific roles)
+   * @param account The account to grant the role to
+   */
+  getGrantRoleTx(params: {
+    chainId: ChainId
+    role: RwaRole
+    account: AddressValue
+  }): Promise<TransactionInfo>
+
+  /**
+   * @method getRevokeRoleTx
+   * @description Builds the transaction to revoke a role from an account on the institution's
+   *              ProtocolAccessManager(V2), via the matching typed on-chain wrapper.
+   *
+   * @param chainId The chain the institution is deployed on
+   * @param role    The role descriptor (carries a `target` contract for contract-specific roles)
+   * @param account The account to revoke the role from
+   */
+  getRevokeRoleTx(params: {
+    chainId: ChainId
+    role: RwaRole
+    account: AddressValue
+  }): Promise<TransactionInfo>
 
   // ---------------------------------------------------------------------------
   // Whitelisting (Manager set) — keyed on the Fleet address as context

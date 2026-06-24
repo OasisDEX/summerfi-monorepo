@@ -1,6 +1,6 @@
 import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import { IProtocolAccessManagerV2Contract } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo } from '@summerfi/sdk-common'
+import { IAddress, IChainInfo, type RwaRole, type TransactionInfo } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 
 import { ProtocolAccessManagerV2Abi } from '@summerfi/armada-protocol-abis'
@@ -96,6 +96,57 @@ export class ProtocolAccessManagerV2Contract<
       functionName: 'setWhitelistOpen',
       args: [params.context.value, params.isOpen],
       description: `Set whitelist open flag to ${params.isOpen} for context ${params.context.value}`,
+    })
+  }
+
+  /** @see IProtocolAccessManagerV2Contract.grantRole */
+  async grantRole(
+    params: Parameters<IProtocolAccessManagerV2Contract['grantRole']>[0],
+  ): ReturnType<IProtocolAccessManagerV2Contract['grantRole']> {
+    return this._createRoleTransaction('grant', params.role, params.account)
+  }
+
+  /** @see IProtocolAccessManagerV2Contract.revokeRole */
+  async revokeRole(
+    params: Parameters<IProtocolAccessManagerV2Contract['revokeRole']>[0],
+  ): ReturnType<IProtocolAccessManagerV2Contract['revokeRole']> {
+    return this._createRoleTransaction('revoke', params.role, params.account)
+  }
+
+  /**
+   * Dispatches a grant/revoke to the matching typed on-chain wrapper. `ProtocolAccessManager` disables
+   * OZ's generic grantRole/revokeRole, so each role maps to its own function: global roles take
+   * `(account)`, contract-specific roles take `(target, account)`. The function name is computed, so it
+   * and its args are cast at the `_createTransaction` boundary (viem can't correlate a computed name).
+   */
+  private _createRoleTransaction(
+    action: 'grant' | 'revoke',
+    role: RwaRole,
+    account: IAddress,
+  ): Promise<TransactionInfo> {
+    const roleSuffix: Record<RwaRole['kind'], string> = {
+      GOVERNOR: 'GovernorRole',
+      SUPER_KEEPER: 'SuperKeeperRole',
+      GUARDIAN: 'GuardianRole',
+      DECAY_CONTROLLER: 'DecayControllerRole',
+      ADMIRALS_QUARTERS: 'AdmiralsQuartersRole',
+      FOUNDATION: 'FoundationRole',
+      WHITELIST_MANAGER: 'WhitelistManagerRole',
+      KEEPER: 'KeeperRole',
+      CURATOR: 'CuratorRole',
+      COMMANDER: 'CommanderRole',
+      OPERATOR: 'OperatorRole',
+    }
+    const functionName = `${action}${roleSuffix[role.kind]}`
+    // Contract-specific roles take (target, account); global roles take (account).
+    const args = 'target' in role ? [role.target, account.value] : [account.value]
+    const targetSuffix = 'target' in role ? ` on ${role.target}` : ''
+    return this._createTransaction({
+      functionName: functionName as never,
+      args: args as never,
+      description: `${action === 'grant' ? 'Grant' : 'Revoke'} ${role.kind} role ${
+        action === 'grant' ? 'to' : 'from'
+      } ${account.value}${targetSuffix}`,
     })
   }
 }
