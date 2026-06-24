@@ -351,6 +351,20 @@ export class FleetCommanderContract<
     return await this.contract.read.tipRate()
   }
 
+  /** @see IFleetCommanderContract.setFleetTokenTransferability */
+  async setFleetTokenTransferability(): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'setFleetTokenTransferability',
+      args: [],
+      description: `Toggle fleet-token transferability for FleetCommander ${this.address.value}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.transfersEnabled */
+  async transfersEnabled(): Promise<boolean> {
+    return await this.contract.read.transfersEnabled()
+  }
+
   /** CASTING METHODS */
 
   /** @see IFleetCommanderContract.asErc20 */

@@ -295,6 +295,123 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   // ---------------------------------------------------------------------------
+  // Round lifecycle control (Keeper/SuperKeeper; rollback is Governor)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @method getNextRoundTx
+   * @description Builds the RoundsVault.nextRound transaction: closes the current open round (moving it
+   *              to InSettlement) and opens a new round.
+   *
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param vaultType    Whether to target the Input or Output RoundsVault
+   */
+  getNextRoundTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+  }): Promise<TransactionInfo>
+
+  /**
+   * @method getSetRoundSettledTx
+   * @description Builds the RoundsVault.setRoundSettled transaction: marks an in-settlement round as
+   *              Settled, making its receipts redeemable.
+   *
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param vaultType    Whether to target the Input or Output RoundsVault
+   * @param roundId      The round number to settle
+   */
+  getSetRoundSettledTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    roundId: bigint
+  }): Promise<TransactionInfo>
+
+  /**
+   * @method getSetRoundSettledBatchTx
+   * @description Builds the RoundsVault.setRoundSettledBatch transaction: settles multiple
+   *              in-settlement rounds in a single call.
+   *
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param vaultType    Whether to target the Input or Output RoundsVault
+   * @param roundIds     The round numbers to settle
+   */
+  getSetRoundSettledBatchTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    roundIds: bigint[]
+  }): Promise<TransactionInfo>
+
+  /**
+   * @method getRetryRoundTx
+   * @description Builds the RoundsVault.retryRound transaction: re-queues a rolled-back round for
+   *              settlement.
+   *
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param vaultType    Whether to target the Input or Output RoundsVault
+   * @param roundId      The round number to retry
+   */
+  getRetryRoundTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    roundId: bigint
+  }): Promise<TransactionInfo>
+
+  /**
+   * @method getEmergencyRollbackRoundTx
+   * @description Builds the RoundsVault.emergencyRollbackRound transaction: rolls a stuck
+   *              in-settlement round back to Opened (Governor-gated recovery path).
+   *
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   * @param vaultType    Whether to target the Input or Output RoundsVault
+   * @param roundId      The round number to roll back
+   */
+  getEmergencyRollbackRoundTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    roundId: bigint
+  }): Promise<TransactionInfo>
+
+  // ---------------------------------------------------------------------------
+  // Fleet share-token transferability (Governor)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @method getSetFleetTransferabilityTx
+   * @description Builds the FleetCommander.setFleetTokenTransferability transaction, which flips the
+   *              fleet share-token transferability flag (no argument — it is a toggle).
+   *
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   */
+  getSetFleetTransferabilityTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+  }): Promise<TransactionInfo>
+
+  /**
+   * @method isFleetTransfersEnabled
+   * @description Returns whether the Fleet's share token is currently transferable (read the current
+   *              state so callers can label the toggle).
+   *
+   * @param chainId      The chain the Fleet is on
+   * @param fleetAddress The Fleet address
+   */
+  isFleetTransfersEnabled(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+  }): Promise<boolean>
+
+  // ---------------------------------------------------------------------------
   // Whitelisting (Manager set) — keyed on the Fleet address as context
   // ---------------------------------------------------------------------------
 

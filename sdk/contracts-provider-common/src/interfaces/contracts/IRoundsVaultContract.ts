@@ -72,6 +72,57 @@ export interface IRoundsVaultContract extends IContractWrapper {
    */
   setMinPositionSize(params: { minSize: bigint }): Promise<TransactionInfo>
 
+  /**
+   * @name nextRound
+   * @description Closes the current open round (moving it to InSettlement) and opens a new round.
+   *              Keeper/SuperKeeper-gated round-lifecycle operation.
+   *
+   * @returns The transaction information
+   */
+  nextRound(): Promise<TransactionInfo>
+
+  /**
+   * @name setRoundSettled
+   * @description Marks an in-settlement round as Settled (after off-chain settlement completes),
+   *              making its receipts redeemable. Keeper/SuperKeeper-gated.
+   *
+   * @param roundId The round number to settle
+   *
+   * @returns The transaction information
+   */
+  setRoundSettled(params: { roundId: bigint }): Promise<TransactionInfo>
+
+  /**
+   * @name setRoundSettledBatch
+   * @description Marks multiple in-settlement rounds as Settled in a single call. Keeper/SuperKeeper-gated.
+   *
+   * @param roundIds The round numbers to settle
+   *
+   * @returns The transaction information
+   */
+  setRoundSettledBatch(params: { roundIds: bigint[] }): Promise<TransactionInfo>
+
+  /**
+   * @name retryRound
+   * @description Re-queues a rolled-back round for settlement (Opened → InSettlement again).
+   *              Keeper/SuperKeeper-gated.
+   *
+   * @param roundId The round number to retry
+   *
+   * @returns The transaction information
+   */
+  retryRound(params: { roundId: bigint }): Promise<TransactionInfo>
+
+  /**
+   * @name emergencyRollbackRound
+   * @description Rolls a stuck in-settlement round back to Opened (recovery path). Governor-gated.
+   *
+   * @param roundId The round number to roll back
+   *
+   * @returns The transaction information
+   */
+  emergencyRollbackRound(params: { roundId: bigint }): Promise<TransactionInfo>
+
   /** READ METHODS */
 
   /**

@@ -200,6 +200,15 @@ export interface IFleetCommanderContract extends IContractWrapper {
    */
   forceRebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
 
+  /**
+   * @name setFleetTokenTransferability
+   * @description Toggles (flips) the fleet share-token transferability flag. Governor-gated; takes no
+   *              argument — read `transfersEnabled` first to label the action.
+   *
+   * @returns The transaction information
+   */
+  setFleetTokenTransferability(): Promise<TransactionInfo>
+
   /** READ METHODS */
 
   /**
@@ -240,6 +249,12 @@ export interface IFleetCommanderContract extends IContractWrapper {
    * @description Returns the tip rate of the fleet
    */
   tipRate(): Promise<bigint>
+
+  /**
+   * @name transfersEnabled
+   * @description Returns whether the fleet's share token is currently transferable.
+   */
+  transfersEnabled(): Promise<boolean>
 
   /** CASTING METHODS */
 

@@ -115,6 +115,13 @@ import { getRwaReceiptBalancesHandler } from '../handlers/getRwaReceiptBalancesH
 import { getRwaUserVaultExposureHandler } from '../handlers/getRwaUserVaultExposureHandler'
 import { getRwaVaultMarketValueHandler } from '../handlers/getRwaVaultMarketValueHandler'
 import { getRwaSetMinimumPositionSizeTxHandler } from '../handlers/getRwaSetMinimumPositionSizeTxHandler'
+import { getRwaNextRoundTxHandler } from '../handlers/getRwaNextRoundTxHandler'
+import { getRwaSetRoundSettledTxHandler } from '../handlers/getRwaSetRoundSettledTxHandler'
+import { getRwaSetRoundSettledBatchTxHandler } from '../handlers/getRwaSetRoundSettledBatchTxHandler'
+import { getRwaRetryRoundTxHandler } from '../handlers/getRwaRetryRoundTxHandler'
+import { getRwaEmergencyRollbackRoundTxHandler } from '../handlers/getRwaEmergencyRollbackRoundTxHandler'
+import { getRwaSetFleetTransferabilityTxHandler } from '../handlers/getRwaSetFleetTransferabilityTxHandler'
+import { getRwaIsFleetTransfersEnabledHandler } from '../handlers/getRwaIsFleetTransfersEnabledHandler'
 import { getRwaSetWhitelistedTxHandler } from '../handlers/getRwaSetWhitelistedTxHandler'
 import { getRwaSetWhitelistedBatchTxHandler } from '../handlers/getRwaSetWhitelistedBatchTxHandler'
 import { getRwaSetWhitelistOpenTxHandler } from '../handlers/getRwaSetWhitelistOpenTxHandler'
@@ -539,6 +546,25 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
     () => getRwaSetMinimumPositionSizeTxHandler(sdk),
     [sdk],
   )
+  const getRwaNextRoundTx = useMemo(() => getRwaNextRoundTxHandler(sdk), [sdk])
+  const getRwaSetRoundSettledTx = useMemo(() => getRwaSetRoundSettledTxHandler(sdk), [sdk])
+  const getRwaSetRoundSettledBatchTx = useMemo(
+    () => getRwaSetRoundSettledBatchTxHandler(sdk),
+    [sdk],
+  )
+  const getRwaRetryRoundTx = useMemo(() => getRwaRetryRoundTxHandler(sdk), [sdk])
+  const getRwaEmergencyRollbackRoundTx = useMemo(
+    () => getRwaEmergencyRollbackRoundTxHandler(sdk),
+    [sdk],
+  )
+  const getRwaSetFleetTransferabilityTx = useMemo(
+    () => getRwaSetFleetTransferabilityTxHandler(sdk),
+    [sdk],
+  )
+  const getRwaIsFleetTransfersEnabled = useMemo(
+    () => getRwaIsFleetTransfersEnabledHandler(sdk),
+    [sdk],
+  )
   const getRwaSetWhitelistedTx = useMemo(() => getRwaSetWhitelistedTxHandler(sdk), [sdk])
   const getRwaSetWhitelistedBatchTx = useMemo(() => getRwaSetWhitelistedBatchTxHandler(sdk), [sdk])
   const getRwaSetWhitelistOpenTx = useMemo(() => getRwaSetWhitelistOpenTxHandler(sdk), [sdk])
@@ -575,6 +601,13 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       getRwaUserVaultExposure,
       getRwaVaultMarketValue,
       getRwaSetMinimumPositionSizeTx,
+      getRwaNextRoundTx,
+      getRwaSetRoundSettledTx,
+      getRwaSetRoundSettledBatchTx,
+      getRwaRetryRoundTx,
+      getRwaEmergencyRollbackRoundTx,
+      getRwaSetFleetTransferabilityTx,
+      getRwaIsFleetTransfersEnabled,
       getRwaSetWhitelistedTx,
       getRwaSetWhitelistedBatchTx,
       getRwaSetWhitelistOpenTx,
@@ -608,6 +641,13 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       getRwaUserVaultExposure,
       getRwaVaultMarketValue,
       getRwaSetMinimumPositionSizeTx,
+      getRwaNextRoundTx,
+      getRwaSetRoundSettledTx,
+      getRwaSetRoundSettledBatchTx,
+      getRwaRetryRoundTx,
+      getRwaEmergencyRollbackRoundTx,
+      getRwaSetFleetTransferabilityTx,
+      getRwaIsFleetTransfersEnabled,
       getRwaSetWhitelistedTx,
       getRwaSetWhitelistedBatchTx,
       getRwaSetWhitelistOpenTx,

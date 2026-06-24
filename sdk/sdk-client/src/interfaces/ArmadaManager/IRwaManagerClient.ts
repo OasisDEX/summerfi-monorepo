@@ -133,6 +133,54 @@ export interface IRwaManagerClient {
     minimumPositionSize: string
   }): Promise<TransactionInfo>
 
+  // --- Round lifecycle control ---
+
+  getNextRoundTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+  }): Promise<TransactionInfo>
+
+  getSetRoundSettledTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    roundId: bigint
+  }): Promise<TransactionInfo>
+
+  getSetRoundSettledBatchTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    roundIds: bigint[]
+  }): Promise<TransactionInfo>
+
+  getRetryRoundTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    roundId: bigint
+  }): Promise<TransactionInfo>
+
+  getEmergencyRollbackRoundTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+    vaultType: RoundsVaultType
+    roundId: bigint
+  }): Promise<TransactionInfo>
+
+  // --- Fleet share-token transferability ---
+
+  getSetFleetTransferabilityTx(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+  }): Promise<TransactionInfo>
+
+  isFleetTransfersEnabled(params: {
+    chainId: ChainId
+    fleetAddress: AddressValue
+  }): Promise<boolean>
+
   // --- Whitelisting ---
 
   getSetWhitelistedTx(params: {

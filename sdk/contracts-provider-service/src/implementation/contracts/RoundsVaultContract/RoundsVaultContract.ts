@@ -113,4 +113,57 @@ export class RoundsVaultContract<const TClient extends IBlockchainClient, TAddre
       description: `Set minimum position size to ${params.minSize} for RoundsVault ${this.address.value}`,
     })
   }
+
+  /** @see IRoundsVaultContract.nextRound */
+  async nextRound(): ReturnType<IRoundsVaultContract['nextRound']> {
+    return this._createTransaction({
+      functionName: 'nextRound',
+      args: [],
+      description: `Advance to the next round for RoundsVault ${this.address.value}`,
+    })
+  }
+
+  /** @see IRoundsVaultContract.setRoundSettled */
+  async setRoundSettled(
+    params: Parameters<IRoundsVaultContract['setRoundSettled']>[0],
+  ): ReturnType<IRoundsVaultContract['setRoundSettled']> {
+    return this._createTransaction({
+      functionName: 'setRoundSettled',
+      args: [params.roundId],
+      description: `Settle round ${params.roundId} for RoundsVault ${this.address.value}`,
+    })
+  }
+
+  /** @see IRoundsVaultContract.setRoundSettledBatch */
+  async setRoundSettledBatch(
+    params: Parameters<IRoundsVaultContract['setRoundSettledBatch']>[0],
+  ): ReturnType<IRoundsVaultContract['setRoundSettledBatch']> {
+    return this._createTransaction({
+      functionName: 'setRoundSettledBatch',
+      args: [params.roundIds],
+      description: `Settle rounds ${params.roundIds.join(', ')} for RoundsVault ${this.address.value}`,
+    })
+  }
+
+  /** @see IRoundsVaultContract.retryRound */
+  async retryRound(
+    params: Parameters<IRoundsVaultContract['retryRound']>[0],
+  ): ReturnType<IRoundsVaultContract['retryRound']> {
+    return this._createTransaction({
+      functionName: 'retryRound',
+      args: [params.roundId],
+      description: `Retry round ${params.roundId} for RoundsVault ${this.address.value}`,
+    })
+  }
+
+  /** @see IRoundsVaultContract.emergencyRollbackRound */
+  async emergencyRollbackRound(
+    params: Parameters<IRoundsVaultContract['emergencyRollbackRound']>[0],
+  ): ReturnType<IRoundsVaultContract['emergencyRollbackRound']> {
+    return this._createTransaction({
+      functionName: 'emergencyRollbackRound',
+      args: [params.roundId],
+      description: `Emergency rollback round ${params.roundId} for RoundsVault ${this.address.value}`,
+    })
+  }
 }
