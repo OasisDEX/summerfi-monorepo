@@ -25,6 +25,7 @@ import type {
   IContractsProvider,
   IRoundsVaultContract,
   IProtocolAccessManagerV2Contract,
+  IFleetCommanderContract,
 } from '@summerfi/contracts-provider-common'
 import type { IRwaSubgraphManager, GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import { RoundStateRwa } from '@summerfi/subgraph-manager-common'
@@ -578,6 +579,109 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     return contract.setMinPositionSize({ minSize: minSize.toSolidityValue() })
   }
 
+  /** @see IRWAManager.getNextRoundTx */
+  async getNextRoundTx(
+    params: Parameters<IRWAManager['getNextRoundTx']>[0],
+  ): ReturnType<IRWAManager['getNextRoundTx']> {
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    return contract.nextRound()
+  }
+
+  /** @see IRWAManager.getSetRoundSettledTx */
+  async getSetRoundSettledTx(
+    params: Parameters<IRWAManager['getSetRoundSettledTx']>[0],
+  ): ReturnType<IRWAManager['getSetRoundSettledTx']> {
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    return contract.setRoundSettled({ roundId: params.roundId })
+  }
+
+  /** @see IRWAManager.getSetRoundSettledBatchTx */
+  async getSetRoundSettledBatchTx(
+    params: Parameters<IRWAManager['getSetRoundSettledBatchTx']>[0],
+  ): ReturnType<IRWAManager['getSetRoundSettledBatchTx']> {
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    return contract.setRoundSettledBatch({ roundIds: params.roundIds })
+  }
+
+  /** @see IRWAManager.getRetryRoundTx */
+  async getRetryRoundTx(
+    params: Parameters<IRWAManager['getRetryRoundTx']>[0],
+  ): ReturnType<IRWAManager['getRetryRoundTx']> {
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    return contract.retryRound({ roundId: params.roundId })
+  }
+
+  /** @see IRWAManager.getEmergencyRollbackRoundTx */
+  async getEmergencyRollbackRoundTx(
+    params: Parameters<IRWAManager['getEmergencyRollbackRoundTx']>[0],
+  ): ReturnType<IRWAManager['getEmergencyRollbackRoundTx']> {
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    return contract.emergencyRollbackRound({ roundId: params.roundId })
+  }
+
+  /** @see IRWAManager.getSetFleetTransferabilityTx */
+  async getSetFleetTransferabilityTx(
+    params: Parameters<IRWAManager['getSetFleetTransferabilityTx']>[0],
+  ): ReturnType<IRWAManager['getSetFleetTransferabilityTx']> {
+    const contract = await this._getFleetCommanderContract(params.chainId, params.fleetAddress)
+    return contract.setFleetTokenTransferability()
+  }
+
+  /** @see IRWAManager.isFleetTransfersEnabled */
+  async isFleetTransfersEnabled(
+    params: Parameters<IRWAManager['isFleetTransfersEnabled']>[0],
+  ): ReturnType<IRWAManager['isFleetTransfersEnabled']> {
+    const contract = await this._getFleetCommanderContract(params.chainId, params.fleetAddress)
+    return contract.transfersEnabled()
+  }
+
+  /** @see IRWAManager.getGrantRoleTx */
+  async getGrantRoleTx(
+    params: Parameters<IRWAManager['getGrantRoleTx']>[0],
+  ): ReturnType<IRWAManager['getGrantRoleTx']> {
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
+    return contract.grantRole({
+      role: params.role,
+      account: Address.createFromEthereum({ value: params.account }),
+    })
+  }
+
+  /** @see IRWAManager.getRevokeRoleTx */
+  async getRevokeRoleTx(
+    params: Parameters<IRWAManager['getRevokeRoleTx']>[0],
+  ): ReturnType<IRWAManager['getRevokeRoleTx']> {
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
+    return contract.revokeRole({
+      role: params.role,
+      account: Address.createFromEthereum({ value: params.account }),
+    })
+  }
+
   /** @see IRWAManager.getSetWhitelistedTx */
   async getSetWhitelistedTx(
     params: Parameters<IRWAManager['getSetWhitelistedTx']>[0],
@@ -760,6 +864,20 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     return this._contractsProvider.getRoundsVaultContract({
       chainInfo: getChainInfoByChainId(vault.chainId),
       address: Address.createFromEthereum({ value: vault.address }),
+    })
+  }
+
+  /**
+   * @name _getFleetCommanderContract
+   * @description Returns the IFleetCommanderContract wrapper for a Fleet address on a chain.
+   */
+  private _getFleetCommanderContract(
+    chainId: ChainId,
+    fleetAddress: AddressValue,
+  ): Promise<IFleetCommanderContract> {
+    return this._contractsProvider.getFleetCommanderContract({
+      chainInfo: getChainInfoByChainId(chainId),
+      address: Address.createFromEthereum({ value: fleetAddress }),
     })
   }
 

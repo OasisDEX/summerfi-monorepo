@@ -162,6 +162,15 @@ import { getReceiptBalances as getRwaReceiptBalances } from './armada-protocol-h
 import { getUserVaultExposure as getRwaUserVaultExposure } from './armada-protocol-handlers/rwa/getUserVaultExposure'
 import { getVaultMarketValue as getRwaVaultMarketValue } from './armada-protocol-handlers/rwa/getVaultMarketValue'
 import { getSetMinimumPositionSizeTx as getRwaSetMinimumPositionSizeTx } from './armada-protocol-handlers/rwa/getSetMinimumPositionSizeTx'
+import { getNextRoundTx as getRwaNextRoundTx } from './armada-protocol-handlers/rwa/getNextRoundTx'
+import { getSetRoundSettledTx as getRwaSetRoundSettledTx } from './armada-protocol-handlers/rwa/getSetRoundSettledTx'
+import { getSetRoundSettledBatchTx as getRwaSetRoundSettledBatchTx } from './armada-protocol-handlers/rwa/getSetRoundSettledBatchTx'
+import { getRetryRoundTx as getRwaRetryRoundTx } from './armada-protocol-handlers/rwa/getRetryRoundTx'
+import { getEmergencyRollbackRoundTx as getRwaEmergencyRollbackRoundTx } from './armada-protocol-handlers/rwa/getEmergencyRollbackRoundTx'
+import { getSetFleetTransferabilityTx as getRwaSetFleetTransferabilityTx } from './armada-protocol-handlers/rwa/getSetFleetTransferabilityTx'
+import { isFleetTransfersEnabled as isRwaFleetTransfersEnabled } from './armada-protocol-handlers/rwa/isFleetTransfersEnabled'
+import { getGrantRoleTx as getRwaGrantRoleTx } from './armada-protocol-handlers/rwa/getGrantRoleTx'
+import { getRevokeRoleTx as getRwaRevokeRoleTx } from './armada-protocol-handlers/rwa/getRevokeRoleTx'
 import { getSetWhitelistedTx as getRwaSetWhitelistedTx } from './armada-protocol-handlers/rwa/getSetWhitelistedTx'
 import { getSetWhitelistedBatchTx as getRwaSetWhitelistedBatchTx } from './armada-protocol-handlers/rwa/getSetWhitelistedBatchTx'
 import { getSetWhitelistOpenTx as getRwaSetWhitelistOpenTx } from './armada-protocol-handlers/rwa/getSetWhitelistOpenTx'
@@ -365,6 +374,15 @@ export const sdkAppRouter = router({
     getUserVaultExposure: getRwaUserVaultExposure,
     getVaultMarketValue: getRwaVaultMarketValue,
     getSetMinimumPositionSizeTx: getRwaSetMinimumPositionSizeTx,
+    getNextRoundTx: getRwaNextRoundTx,
+    getSetRoundSettledTx: getRwaSetRoundSettledTx,
+    getSetRoundSettledBatchTx: getRwaSetRoundSettledBatchTx,
+    getRetryRoundTx: getRwaRetryRoundTx,
+    getEmergencyRollbackRoundTx: getRwaEmergencyRollbackRoundTx,
+    getSetFleetTransferabilityTx: getRwaSetFleetTransferabilityTx,
+    isFleetTransfersEnabled: isRwaFleetTransfersEnabled,
+    getGrantRoleTx: getRwaGrantRoleTx,
+    getRevokeRoleTx: getRwaRevokeRoleTx,
     getSetWhitelistedTx: getRwaSetWhitelistedTx,
     getSetWhitelistedBatchTx: getRwaSetWhitelistedBatchTx,
     getSetWhitelistOpenTx: getRwaSetWhitelistOpenTx,
