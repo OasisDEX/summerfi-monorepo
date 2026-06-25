@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode, useMemo } from 'react'
-import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
+import { RechartResponsiveWrapper, Text } from '@summerfi/app-earn-ui'
 import { type MultipleSourceChartData, type TimeframesType } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 import { ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
@@ -53,6 +53,26 @@ export const MultiNavPriceChart = ({ chartData, timeframe, syncId }: MultiNavPri
       />
     ))
   }, [chartData])
+
+  if (parsedData.length === 0) {
+    return (
+      <div className={multiNavPriceChartStyles.navPriceChart}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '270px',
+          }}
+        >
+          <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+            No data available
+          </Text>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={multiNavPriceChartStyles.navPriceChart}>

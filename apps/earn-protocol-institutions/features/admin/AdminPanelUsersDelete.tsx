@@ -1,10 +1,10 @@
-import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
+import { Card, Text } from '@summerfi/app-earn-ui'
 
 import {
   rootAdminActionDeleteWholeUser,
   rootAdminActionGetUserData,
 } from '@/app/server-handlers/admin/user'
+import { ConfirmDeleteForm } from '@/features/admin/ConfirmDeleteForm'
 
 import styles from './AdminPanelUsers.module.css'
 
@@ -20,9 +20,20 @@ const DeleteUserForm = ({
         <Text variant="p3">
           Deleting the user will remove: the DB entry in our DB and the cognito user pool entry.
         </Text>
-        <form action={rootAdminActionDeleteWholeUser} className={styles.editUserForm}>
+        <ConfirmDeleteForm
+          action={rootAdminActionDeleteWholeUser}
+          className={styles.editUserForm}
+          confirmation={{
+            mode: 'check',
+            label: 'I understand this permanently deletes the user from the database and Cognito.',
+          }}
+          submitLabel={<>Delete&nbsp;User</>}
+          pendingLabel={<>Deleting&nbsp;User...</>}
+          pendingToast="Deleting user..."
+          backHref="/admin/users"
+        >
+          <input type="hidden" name="userSub" value={user.userSub} />
           <div className={styles.formFields}>
-            <input type="hidden" name="userSub" value={user.userSub} />
             <div className={styles.formField}>
               <label htmlFor="name" className={styles.formLabel}>
                 User name
@@ -64,20 +75,7 @@ const DeleteUserForm = ({
               />
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Button
-              variant="primarySmall"
-              type="submit"
-              style={{ alignSelf: 'flex-start' }}
-              className={styles.submitButton}
-            >
-              Delete&nbsp;User
-            </Button>
-            <Link href="/admin/users">
-              <Button variant="secondarySmall">Go back</Button>
-            </Link>
-          </div>
-        </form>
+        </ConfirmDeleteForm>
       </div>
     </Card>
   )

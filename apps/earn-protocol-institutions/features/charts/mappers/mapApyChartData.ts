@@ -92,6 +92,7 @@ export const getArkHistoricalChartData = ({
     network: supportedSDKNetwork(vault.protocol.network),
     symbol: vault.inputToken.symbol,
     institutionName,
+    customName: vault.customFields?.name,
   })
   const today = dayjs()
   const threshold7d = today.startOf('hour').subtract(7, 'day').unix()

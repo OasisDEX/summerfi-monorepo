@@ -6,6 +6,7 @@ import {
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 import { getCachedConfig } from '@/app/server-handlers/config'
 import {
@@ -14,6 +15,7 @@ import {
 } from '@/app/server-handlers/institution/institution-vaults'
 import { INSTITUTIONS_CACHE_TAGS, INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
+import { getRwaClientIdForVault, urlNetworkToChainId } from '@/helpers/rwa'
 
 export default async function InstitutionVaultVaultExposurePage({
   params,
@@ -33,13 +35,25 @@ export default async function InstitutionVaultVaultExposurePage({
     ],
   }
 
-  const [vault, config, arksDeployedOnChain] = await Promise.all([
+  // Standard fleet-management tab — not applicable to RWA vaults (no multi-ark allocation). Bounce an
+  // RWA vault (resolved from config by address) to its overview.
+  const config = await getCachedConfig()
+  const rwaClientId = getRwaClientIdForVault({
+    systemConfig: config,
+    networkId: urlNetworkToChainId(network),
+    vaultAddress,
+  })
+
+  if (rwaClientId) {
+    redirect(`/${institutionName}/vaults/${network}/${vaultAddress}/overview`)
+  }
+
+  const [vault, arksDeployedOnChain] = await Promise.all([
     getCachedVaultDetails({
       institutionName,
       vaultAddress: parsedVaultAddress,
       network: parsedNetwork,
     }),
-    getCachedConfig(),
     getCachedArksDeployedOnChain({ network: parsedNetwork }),
   ])
 

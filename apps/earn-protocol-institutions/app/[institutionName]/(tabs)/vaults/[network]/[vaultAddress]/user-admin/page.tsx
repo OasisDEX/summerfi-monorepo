@@ -1,6 +1,8 @@
 import { type NetworkNames } from '@summerfi/app-types'
-import { humanNetworktoSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
+import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
+import { redirect } from 'next/navigation'
 
+import { getCachedConfig } from '@/app/server-handlers/config'
 import {
   getCachedAQWhitelist,
   getCachedInstitutionBasicData,
@@ -9,6 +11,7 @@ import {
 } from '@/app/server-handlers/institution/institution-vaults'
 import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { PanelUserAdmin } from '@/features/panels/vaults/components/PanelUserAdmin/PanelUserAdmin'
+import { getRwaClientIdForVault, urlNetworkToChainId } from '@/helpers/rwa'
 
 export default async function InstitutionVaultUserAdminPage({
   params,
@@ -17,13 +20,23 @@ export default async function InstitutionVaultUserAdminPage({
 }) {
   const { institutionName, vaultAddress, network } = await params
 
-  const chainId = networkNameToSDKId(network)
+  const chainId = urlNetworkToChainId(network)
   const parsedNetwork = humanNetworktoSDKNetwork(network)
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!chainId) {
-    throw new Error(`Unsupported network: ${network}`)
+  // Standard fleet-management tab — not applicable to RWA (rounds-based) vaults. Bounce an RWA vault
+  // (resolved from config by address) to its overview so it never reaches the v1 whitelist SDK path.
+  // (Also replaces the old `networkNameToSDKId` check that threw on the `mainnet` slug.)
+  const config = await getCachedConfig()
+  const rwaClientId = getRwaClientIdForVault({
+    systemConfig: config,
+    networkId: chainId,
+    vaultAddress,
+  })
+
+  if (rwaClientId) {
+    redirect(`/${institutionName}/vaults/${network}/${vaultAddress}/overview`)
   }
+
   const [institutionBasicData, whitelistedWallets] = await Promise.all([
     getCachedInstitutionBasicData({
       institutionName,

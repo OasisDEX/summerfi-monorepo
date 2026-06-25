@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { authComputeDelayMs, authFetchMe, authRefresh } from '@/contexts/AuthContext/helpers'
@@ -34,18 +34,18 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
   const refreshTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const { replace } = useRouter()
 
-  const clearRefreshTimer = () => {
+  const clearRefreshTimer = useCallback(() => {
     if (refreshTimeout.current) {
       clearTimeout(refreshTimeout.current)
       refreshTimeout.current = null
     }
-  }
-  const handleAuthReset = () => {
+  }, [])
+  const handleAuthReset = useCallback(() => {
     setUser(null)
     clearRefreshTimer()
     setChallengeData(null)
     setIsLoading(false)
-  }
+  }, [clearRefreshTimer])
 
   // Self-rescheduling refresher: refresh -> fetchMe -> schedule next run
   const refreshAndReschedule = async () => {
@@ -135,7 +135,7 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const authSignInHandler = async (email: string, password: string) => {
+  const authSignInHandler = useCallback(async (email: string, password: string) => {
     const response = await fetch('/api/auth/signin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -180,86 +180,103 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
     setChallengeData(null)
 
     return data
-  }
+  }, [])
 
-  const authSignOutHandler = async () => {
+  const authSignOutHandler = useCallback(async () => {
     await fetch('/api/auth/signout', { method: 'POST', credentials: 'include' })
 
     setUser(null)
     clearRefreshTimer()
     replace('/')
-  }
+  }, [clearRefreshTimer, replace])
 
-  const authSetPasswordHandler = async ({ newPassword }: { newPassword: string }) => {
-    if (!challengeData) {
-      throw new Error('No challenge data available')
-    }
-    const response = await fetch('/api/auth/set-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: challengeData.email,
-        newPassword,
-        session: challengeData.session,
-      }),
-    })
-    const data = await response.json()
+  const authSetPasswordHandler = useCallback(
+    async ({ newPassword }: { newPassword: string }) => {
+      if (!challengeData) {
+        throw new Error('No challenge data available')
+      }
+      const response = await fetch('/api/auth/set-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: challengeData.email,
+          newPassword,
+          session: challengeData.session,
+        }),
+      })
+      const data = await response.json()
 
-    if (!response.ok) {
-      // eslint-disable-next-line no-console
-      console.error('Password change failed', data)
+      if (!response.ok) {
+        // eslint-disable-next-line no-console
+        console.error('Password change failed', data)
 
-      return null
-    }
-    setUser(data.user)
-    setChallengeData(null)
+        return null
+      }
+      setUser(data.user)
+      setChallengeData(null)
 
-    return data
-  }
-
-  const authRespondToMfaHandler = async (code: string) => {
-    if (!challengeData) {
-      throw new Error('No challenge data available')
-    }
-
-    const response = await fetch('/api/auth/respond-challenge', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: challengeData.email,
-        session: challengeData.session,
-        code,
-      }),
-    })
-
-    const data = await response.json()
-
-    if (!response.ok) {
-      throw new Error(data.error || 'MFA verification failed')
-    }
-    setUser(data.user)
-    setChallengeData(null)
-
-    return data
-  }
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isLoading,
-        authSignInHandler,
-        authSignOutHandler,
-        authRespondToMfaHandler,
-        challengeData,
-        setChallengeData,
-        authSetPasswordHandler,
-        handleAuthReset,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+      return data
+    },
+    [challengeData],
   )
+
+  const authRespondToMfaHandler = useCallback(
+    async (code: string) => {
+      if (!challengeData) {
+        throw new Error('No challenge data available')
+      }
+
+      const response = await fetch('/api/auth/respond-challenge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: challengeData.email,
+          session: challengeData.session,
+          code,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'MFA verification failed')
+      }
+      setUser(data.user)
+      setChallengeData(null)
+
+      return data
+    },
+    [challengeData],
+  )
+
+  // Memoize the context value (and the handlers above) so a parent re-render doesn't hand every
+  // `useAuth` consumer a brand-new object/function set and re-render the whole app subtree. The
+  // value only changes when the auth state it carries does.
+  const value = useMemo(
+    () => ({
+      user,
+      isLoading,
+      authSignInHandler,
+      authSignOutHandler,
+      authRespondToMfaHandler,
+      challengeData,
+      setChallengeData,
+      authSetPasswordHandler,
+      handleAuthReset,
+    }),
+    [
+      user,
+      isLoading,
+      authSignInHandler,
+      authSignOutHandler,
+      authRespondToMfaHandler,
+      challengeData,
+      authSetPasswordHandler,
+      handleAuthReset,
+    ],
+  )
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => {

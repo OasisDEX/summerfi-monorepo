@@ -4,10 +4,13 @@ import { decorateWithFleetConfig, humanNetworktoSDKNetwork } from '@summerfi/app
 import { getCachedConfig } from '@/app/server-handlers/config'
 import {
   getCachedInstitutionVaultArksImpliedCapsMap,
+  getCachedRwaVaultRiskParameters,
   getCachedVaultDetails,
 } from '@/app/server-handlers/institution/institution-vaults'
 import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { PanelRiskParameters } from '@/features/panels/vaults/components/PanelRiskParameters/PanelRiskParameters'
+import { PanelRwaRiskParameters } from '@/features/panels/vaults/components/PanelRwaRiskParameters/PanelRwaRiskParameters'
+import { getRwaClientIdForVault, urlNetworkToChainId } from '@/helpers/rwa'
 
 export default async function InstitutionVaultRiskParametersPage({
   params,
@@ -17,15 +20,43 @@ export default async function InstitutionVaultRiskParametersPage({
   const { institutionName, vaultAddress, network } = await params
 
   const parsedNetwork = humanNetworktoSDKNetwork(network)
+  const config = await getCachedConfig()
+  const chainId = urlNetworkToChainId(network)
 
-  const [vault, config] = await Promise.all([
-    getCachedVaultDetails({
+  // RWA vaults aren't FleetCommander/ark-managed here: the ark-cap admin surface doesn't apply and
+  // their data lives in a different subgraph. Render the RWA-specific risk panel (minimum position
+  // size + a curator-managed note) instead of the fleet ark-cap panel.
+  const rwaClientId = getRwaClientIdForVault({
+    systemConfig: config,
+    networkId: chainId,
+    vaultAddress,
+  })
+
+  if (rwaClientId) {
+    const riskParameters = await getCachedRwaVaultRiskParameters({
       institutionName,
-      vaultAddress,
       network: parsedNetwork,
-    }),
-    getCachedConfig(),
-  ])
+      vaultAddress,
+    })
+
+    return (
+      <ClientSideSdkWrapper>
+        <PanelRwaRiskParameters
+          institutionName={institutionName}
+          clientId={rwaClientId}
+          vaultAddress={vaultAddress}
+          network={network}
+          riskParameters={riskParameters}
+        />
+      </ClientSideSdkWrapper>
+    )
+  }
+
+  const vault = await getCachedVaultDetails({
+    institutionName,
+    vaultAddress,
+    network: parsedNetwork,
+  })
 
   if (!vault) {
     return <div>Vault not found</div>

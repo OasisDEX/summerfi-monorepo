@@ -1,6 +1,8 @@
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { NextResponse } from 'next/server'
 
+import { isSameOrigin } from '@/helpers/validate-same-origin'
+
 const isValidPath = (value: unknown): value is string => {
   if (typeof value !== 'string' || !value.startsWith('/')) return false
 
@@ -14,6 +16,12 @@ const isValidPath = (value: unknown): value is string => {
 }
 
 export const POST = async (request: Request) => {
+  // Cache-busting endpoint: not session-gated (it's driven by the same client hook the proxies use),
+  // but require same-origin so another site can't drive a visitor's browser into churning our caches.
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ message: 'Forbidden' }, { status: 403 })
+  }
+
   const requestData = await request.json()
   const { tags, paths } = requestData
 

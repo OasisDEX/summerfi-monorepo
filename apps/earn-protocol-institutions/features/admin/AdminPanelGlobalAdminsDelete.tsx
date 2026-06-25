@@ -1,10 +1,10 @@
-import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
+import { Card, Text } from '@summerfi/app-earn-ui'
 
 import {
   rootAdminActionDeleteGlobalAdmin,
   rootAdminActionGetGlobalAdminData,
 } from '@/app/server-handlers/admin/user'
+import { ConfirmDeleteForm } from '@/features/admin/ConfirmDeleteForm'
 
 import styles from './AdminPanelUsers.module.css'
 
@@ -21,9 +21,18 @@ const DeleteUserForm = ({
           Deleting the GLOBAL ADMIN will remove: the DB entry in our DB and the cognito user pool
           entry.
         </Text>
-        <form action={rootAdminActionDeleteGlobalAdmin} className={styles.editUserForm}>
+        {/* Privileged account → require typing the username to confirm. */}
+        <ConfirmDeleteForm
+          action={rootAdminActionDeleteGlobalAdmin}
+          className={styles.editUserForm}
+          confirmation={{ mode: 'type', match: globalAdmin.cognitoUserName ?? '' }}
+          submitLabel={<>Delete&nbsp;User</>}
+          pendingLabel={<>Deleting&nbsp;Global&nbsp;admin...</>}
+          pendingToast="Deleting global admin..."
+          backHref="/admin/global-admins"
+        >
+          <input type="hidden" name="userSub" value={globalAdmin.userSub} />
           <div className={styles.formFields}>
-            <input type="hidden" name="userSub" value={globalAdmin.userSub} />
             <div className={styles.formField}>
               <label htmlFor="name" className={styles.formLabel}>
                 User name
@@ -52,20 +61,7 @@ const DeleteUserForm = ({
               />
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Button
-              variant="primarySmall"
-              type="submit"
-              style={{ alignSelf: 'flex-start' }}
-              className={styles.submitButton}
-            >
-              Delete&nbsp;User
-            </Button>
-            <Link href="/admin/global-admins">
-              <Button variant="secondarySmall">Go back</Button>
-            </Link>
-          </div>
-        </form>
+        </ConfirmDeleteForm>
       </div>
     </Card>
   )

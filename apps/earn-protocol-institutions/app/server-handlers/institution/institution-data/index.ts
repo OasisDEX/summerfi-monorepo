@@ -55,6 +55,26 @@ const getUserInstitutionsList = async ({ userSub }: { userSub: string }) => {
   }
 }
 
+// Every institution, in the same shape as `getUserInstitutionsList`. Used to populate the
+// institution selector for global admins, who have no rows in institution_users.
+const getAllInstitutionsList = async () => {
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+
+  try {
+    const institutionsList = await db
+      .selectFrom('institutions as i')
+      .select(['i.id as id', 'i.name as name', 'i.displayName as displayName'])
+      .orderBy('i.displayName', 'asc')
+      .execute()
+
+    return institutionsList
+  } finally {
+    db.destroy()
+  }
+}
+
 const getInstitutionRoles: ({ institutionName }: { institutionName: string }) => Promise<{
   [role in GlobalRoles]: { wallets: string[] }
 }> = async ({ institutionName }) => {
@@ -99,6 +119,13 @@ export const getCachedUserInstitutionsList = ({ userSub }: { userSub: string }) 
     revalidate: 300,
     tags: [`user-data-${userSub}`, `user-institutions-list-${userSub}`],
   })({ userSub })
+}
+
+export const getCachedAllInstitutionsList = () => {
+  return unstableCache(getAllInstitutionsList, ['all-institutions-list'], {
+    revalidate: 300,
+    tags: ['all-institutions-list'],
+  })()
 }
 
 export const getCachedInstitutionRoles = ({ institutionName }: { institutionName: string }) => {

@@ -54,6 +54,7 @@ const mapVaultTableRows: ({
             symbol: vault.inputToken.symbol,
             network: vault.protocol.network,
             institutionName,
+            customName: vault.customFields?.name,
           }),
           value: (
             <TableCellRightAlign>
