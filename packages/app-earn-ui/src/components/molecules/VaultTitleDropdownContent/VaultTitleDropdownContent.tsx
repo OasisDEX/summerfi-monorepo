@@ -53,16 +53,16 @@ export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 
             size={10}
           />
         </div>
-        <Text
-          as="p"
-          variant="p1semi"
-          className={customVaultName ? classNames.customVaultTitle : ''}
-        >
-          {customVaultName ?? getDisplayToken(vault.inputToken.symbol)}
-        </Text>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-        <Risk risk={resolvedRisk} variant="p4semi" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <Text
+            as="p"
+            variant="p1semi"
+            className={customVaultName ? classNames.customVaultTitle : ''}
+          >
+            {customVaultName ?? getDisplayToken(vault.inputToken.symbol)}
+          </Text>
+          <Risk risk={resolvedRisk} variant="p4" />
+        </div>
       </div>
     </div>
   )

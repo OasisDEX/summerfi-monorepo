@@ -33,8 +33,9 @@ export const getInstitutionsSDK: (institutionName: string) => SDKAdminManager = 
  * SDK instance for RWA (rounds-based) vault calls. RWA vaults are served by the institutions-v2
  * deployment, which requires the `Insti-Version: v2` header that `makeInstiSdk` sends — `makeAdminSDK`
  * (used by {@link getInstitutionsSDK}) hardcodes 'v1' and would resolve the wrong deployment/subgraph.
- * `clientId` is the vault's `vaultInstitutionId` fleet-config field, NOT necessarily the institution
- * name (e.g. an institution can own vaults under `Name_v2` / `Name_3`). One instance per clientId.
+ * `clientId` is the vault's `vaultInstitutionId` fleet-config field — the owning institution's DB
+ * name (suffixed names like `Name_v2` / `Name_3` are themselves distinct institutions, not
+ * sub-accounts of a shorter-named one). One instance per clientId.
  */
 export const getInstitutionsRwaSDK: (clientId: string) => SDKAdminManager = (clientId: string) => {
   if (!process.env.EARN_APP_URL) {

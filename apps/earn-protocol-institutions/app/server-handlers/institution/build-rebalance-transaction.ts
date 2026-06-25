@@ -5,6 +5,7 @@ import {
   Address,
   ArmadaVaultId,
   getChainInfoByChainId,
+  type HexData,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common'
@@ -14,10 +15,15 @@ import { validateInstitutionUserSession } from '@/app/server-handlers/institutio
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
 
 // A single fund move between two arks (amounts in human/decimal token units of the vault input asset).
+// `boardData`/`disembarkData` are optional per-ark encoded params for arks that need them to
+// board/disembark funds; omitted means the SDK encodes empty `0x` (the common case). The on-chain
+// `rebalance` always takes the 5-field leg, so empty values still produce valid calldata.
 export type RebalanceMove = {
   fromArk: string
   toArk: string
   amount: string
+  boardData?: HexData
+  disembarkData?: HexData
 }
 
 // Plain, serializable shape of the built transaction — `Transaction.value` is already a string and
@@ -79,6 +85,8 @@ export async function buildRebalanceTransaction({
     fromArk: Address.createFromEthereum({ value: move.fromArk }),
     toArk: Address.createFromEthereum({ value: move.toArk }),
     amount: TokenAmount.createFrom({ token, amount: move.amount }),
+    boardData: move.boardData,
+    disembarkData: move.disembarkData,
   }))
 
   const txInfo = await getInstitutionsSDK(institutionName).armada.admin.rebalance({

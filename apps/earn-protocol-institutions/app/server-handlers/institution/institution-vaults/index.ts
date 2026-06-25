@@ -826,6 +826,131 @@ const getRwaVaultActivity = async ({
   }
 }
 
+// Standing per-round receipt balances (current pending positions), vault-wide. Unlike the activity
+// feed above — an event history that still lists since-cancelled requests — this filters to
+// `balance_gt: 0`, so it reflects what is *currently* queued in each round: the deposits (Input) and
+// withdrawals (Output) an admin sees when deciding to close or settle a round. `vault.underlyingToken`
+// is the receipt-balance denomination (Input: the deposit asset e.g. USDC; Output: target shares).
+export type RwaRoundPosition = {
+  side: 'deposit' | 'withdrawal'
+  roundId: string
+  roundState: string
+  account: string
+  amount: string
+  tokenSymbol: string
+}
+
+export type RwaVaultRoundPositions = {
+  chainId: number
+  positions: RwaRoundPosition[]
+}
+
+const GetRwaVaultRoundPositionsDocument = gql`
+  query GetRwaVaultRoundPositions($vault: String!, $first: Int!) {
+    receipts(
+      first: $first
+      orderBy: lastUpdated
+      orderDirection: desc
+      where: { vault: $vault, balance_gt: "0" }
+    ) {
+      account {
+        id
+      }
+      balance
+      round {
+        roundId
+        state
+      }
+      vault {
+        underlyingToken {
+          symbol
+          decimals
+        }
+      }
+    }
+  }
+`
+
+type RwaRoundReceiptsResponse = {
+  receipts: {
+    account: { id: string } | null
+    balance: string
+    round: { roundId: string; state: string }
+    vault: { underlyingToken: { symbol: string; decimals: number } }
+  }[]
+}
+
+const getRwaVaultRoundPositions = async ({
+  network,
+  vaultAddress,
+}: {
+  network: SupportedSDKNetworks
+  vaultAddress: string
+}): Promise<RwaVaultRoundPositions> => {
+  const chainId = subgraphNetworkToId(network)
+  const client = graphqlRwaVaultHistoryClients[network]
+
+  if (!client) {
+    return { chainId, positions: [] }
+  }
+
+  try {
+    const { roundsVaultPairs } = await client.request<{
+      roundsVaultPairs: { inputVault: { id: string }; outputVault: { id: string } }[]
+    }>(
+      GetRwaRoundsVaultPairDocument,
+      { fleet: vaultAddress.toLowerCase() },
+      { origin: 'earn-protocol-institutions' },
+    )
+
+    if (roundsVaultPairs.length === 0) {
+      return { chainId, positions: [] }
+    }
+
+    const [pair] = roundsVaultPairs
+
+    const [inputReceipts, outputReceipts] = await Promise.all([
+      client.request<RwaRoundReceiptsResponse>(
+        GetRwaVaultRoundPositionsDocument,
+        { vault: pair.inputVault.id, first: RWA_ACTIVITY_RECEIPTS_LIMIT },
+        { origin: 'earn-protocol-institutions' },
+      ),
+      client.request<RwaRoundReceiptsResponse>(
+        GetRwaVaultRoundPositionsDocument,
+        { vault: pair.outputVault.id, first: RWA_ACTIVITY_RECEIPTS_LIMIT },
+        { origin: 'earn-protocol-institutions' },
+      ),
+    ])
+
+    const mapReceipts = (
+      receipts: RwaRoundReceiptsResponse['receipts'],
+      side: RwaRoundPosition['side'],
+    ): RwaRoundPosition[] =>
+      receipts.map((receipt) => ({
+        side,
+        roundId: receipt.round.roundId,
+        roundState: receipt.round.state,
+        account: receipt.account?.id ?? '',
+        amount: new BigNumber(receipt.balance)
+          .shiftedBy(-receipt.vault.underlyingToken.decimals)
+          .toString(),
+        tokenSymbol: receipt.vault.underlyingToken.symbol,
+      }))
+
+    const positions = [
+      ...mapReceipts(inputReceipts.receipts, 'deposit'),
+      ...mapReceipts(outputReceipts.receipts, 'withdrawal'),
+    ]
+
+    return { chainId, positions }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching RWA vault round positions:', error)
+
+    return { chainId, positions: [] }
+  }
+}
+
 const getInstitutionVaultFeeRevenueConfig = async ({
   network,
   institutionName,
@@ -1409,6 +1534,28 @@ export const getCachedRwaVaultActivity = ({
       `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
     ],
   })({ network, vaultAddress })
+}
+
+export const getCachedRwaVaultRoundPositions = ({
+  network,
+  institutionName,
+  vaultAddress,
+}: {
+  institutionName: string
+  network: SupportedSDKNetworks
+  vaultAddress: string
+}) => {
+  return unstableCache(
+    getRwaVaultRoundPositions,
+    ['rwa-vault-round-positions', vaultAddress, network],
+    {
+      revalidate: 300,
+      tags: [
+        `rwa-vault-round-positions-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    },
+  )({ network, vaultAddress })
 }
 
 export const getCachedInstitutionVaultFeeRevenueConfig = ({

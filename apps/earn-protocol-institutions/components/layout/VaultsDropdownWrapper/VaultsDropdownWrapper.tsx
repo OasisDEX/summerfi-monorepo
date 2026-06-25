@@ -41,18 +41,22 @@ export const VaultsDropdownWrapper: FC<VaultsDropdownWrapperProps> = ({
     ),
   }))
 
+  const selectedVaultName = getInstiVaultNiceName({
+    symbol: selectedVault.inputToken.symbol,
+    network: selectedVault.protocol.network,
+    institutionName: institution.name,
+    customName: selectedVault.customFields?.name,
+  })
+
   const selectedVaultOption = {
     value: `${selectedVault.id}-${selectedVault.protocol.network}`,
     content: (
       <VaultTitleDropdownContentBlock
         vault={selectedVault}
         className={vaultsDropdownWrapperStyles.contentWrapper}
-        customVaultName={getInstiVaultNiceName({
-          symbol: selectedVault.inputToken.symbol,
-          network: selectedVault.protocol.network,
-          institutionName: institution.name,
-          customName: selectedVault.customFields?.name,
-        })}
+        customVaultName={
+          selectedVaultName.length > 16 ? `${selectedVaultName.slice(0, 16)}...` : selectedVaultName
+        }
       />
     ),
   }

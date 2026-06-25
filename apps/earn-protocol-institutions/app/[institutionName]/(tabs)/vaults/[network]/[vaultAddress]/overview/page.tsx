@@ -1,4 +1,6 @@
+import { type ReactNode } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
+import { type NetworkNames } from '@summerfi/app-types'
 import { humanNetworktoSDKNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
@@ -6,11 +8,19 @@ import { isAddress } from 'viem'
 import { getCachedConfig } from '@/app/server-handlers/config'
 import {
   getCachedInstitutionBasicData,
+  getCachedInstitutionVault,
+  getCachedInstitutionVaultFleetFees,
   getCachedVaultDetails,
 } from '@/app/server-handlers/institution/institution-vaults'
+import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { PanelOverview } from '@/features/panels/vaults/components/PanelOverview/PanelOverview'
+import { PanelRwaMonitoring } from '@/features/panels/vaults/components/PanelRwaMonitoring/PanelRwaMonitoring'
 import { getInstiVaultNiceName } from '@/helpers/get-insti-vault-nice-name'
-import { getVaultConfigCustomFields } from '@/helpers/rwa'
+import {
+  getRwaClientIdForVault,
+  getVaultConfigCustomFields,
+  urlNetworkToChainId,
+} from '@/helpers/rwa'
 
 export default async function InstitutionVaultOverviewPage({
   params,
@@ -64,13 +74,54 @@ export default async function InstitutionVaultOverviewPage({
     customName,
   })
 
+  // RWA vaults gain the former "RWA monitoring" tab's content at the bottom of the overview.
+  // Standard vaults resolve no clientId, so this stays null and only the overview renders.
+  const chainId = urlNetworkToChainId(network)
+  const rwaClientId = getRwaClientIdForVault({
+    systemConfig: config,
+    networkId: chainId,
+    vaultAddress,
+  })
+
+  let rwaMonitoring: ReactNode = null
+
+  if (rwaClientId) {
+    const [rwaVault, fleetFees] = await Promise.all([
+      getCachedInstitutionVault({ institutionName, network: parsedNetwork, vaultAddress }),
+      getCachedInstitutionVaultFleetFees({ institutionName, network: parsedNetwork, vaultAddress }),
+    ])
+    const rwaVaultData = rwaVault?.vault
+    const customFields = rwaVaultData?.customFields
+
+    rwaMonitoring = (
+      <ClientSideSdkWrapper>
+        <PanelRwaMonitoring
+          clientId={rwaClientId}
+          vaultAddress={vaultAddress}
+          network={network as NetworkNames}
+          curatorName={customFields?.vaultCurator}
+          curatorDescription={customFields?.vaultCuratorDescription}
+          factSheetUrl={customFields?.vaultFactSheetUrl}
+          navApy30d={rwaVaultData?.navApy30d}
+          navApy30dPartialDays={rwaVaultData?.navApy30dPartialDays}
+          navPriceChange24h={rwaVaultData?.navPriceChange24h}
+          managementFee={fleetFees.managementFee}
+          performanceFee={fleetFees.performanceFee}
+        />
+      </ClientSideSdkWrapper>
+    )
+  }
+
   return (
-    <PanelOverview
-      vaultAddress={parsedVaultAddress}
-      summerVaultName={summerVaultName}
-      institutionBasicData={institutionBasicData}
-      institutionName={institutionName}
-      network={network}
-    />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <PanelOverview
+        vaultAddress={parsedVaultAddress}
+        summerVaultName={summerVaultName}
+        institutionBasicData={institutionBasicData}
+        institutionName={institutionName}
+        network={network}
+      />
+      {rwaMonitoring}
+    </div>
   )
 }

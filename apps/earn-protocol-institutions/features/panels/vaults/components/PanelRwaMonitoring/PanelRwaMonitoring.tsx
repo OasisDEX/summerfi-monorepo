@@ -146,85 +146,94 @@ export const PanelRwaMonitoring: FC<PanelRwaMonitoringProps> = ({
 
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {curatorBlock}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: 24,
+          alignItems: 'start',
+        }}
+      >
+        {curatorBlock}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <Text as="h5" variant="h5">
-          Performance
-        </Text>
-        <Card>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <StatRow
-              label={`NAV APY (30d)${navApy30dPartialDays ? ` · partial, ${navApy30dPartialDays}d` : ''}`}
-              value={formatPercentOrNa(navApy30d)}
-            />
-            <StatRow label="NAV change (24h)" value={formatPercentOrNa(navPriceChange24h)} />
-            <StatRow label="Management fee" value={formatPercentOrNa(managementFee)} />
-            <StatRow label="Performance fee" value={formatPercentOrNa(performanceFee)} />
-          </div>
-        </Card>
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <Text as="h5" variant="h5">
-          Market value (true TVL)
-        </Text>
-        <Card>
-          {error ? (
-            <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
-              Unable to load market value.
-            </Text>
-          ) : !marketValue ? (
-            <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
-              Loading…
-            </Text>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <StatRow label="Total" value={`${marketValue.total} ${marketValue.symbol}`} />
-              <StatRow label="Total (USD)" value={`$${marketValue.totalUsd}`} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <Text as="h5" variant="h5">
+            NAV & fees
+          </Text>
+          <Card>
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
               <StatRow
-                label="Fleet assets"
-                value={`${marketValue.fleetAssets} ${marketValue.symbol}`}
+                label={`NAV APY (30d)${navApy30dPartialDays ? ` · partial, ${navApy30dPartialDays}d` : ''}`}
+                value={formatPercentOrNa(navApy30d)}
               />
-              <StatRow
-                label="Pending deposits"
-                value={`${marketValue.pendingDeposits} ${marketValue.symbol}`}
-              />
-              <StatRow
-                label="Claimable withdrawals"
-                value={`${marketValue.claimableWithdrawals} ${marketValue.symbol}`}
-              />
+              <StatRow label="NAV change (24h)" value={formatPercentOrNa(navPriceChange24h)} />
+              <StatRow label="Management fee" value={formatPercentOrNa(managementFee)} />
+              <StatRow label="Performance fee" value={formatPercentOrNa(performanceFee)} />
             </div>
-          )}
-        </Card>
-      </div>
+          </Card>
+        </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <Text as="h5" variant="h5">
-          Rounds
-        </Text>
-        <Card>
-          {error ? (
-            <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
-              Unable to load round state.
-            </Text>
-          ) : !inputRound || !outputRound ? (
-            <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
-              Loading…
-            </Text>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <StatRow
-                label="Deposit (input) round"
-                value={`#${inputRound.round} · ${inputRound.state}`}
-              />
-              <StatRow
-                label="Withdraw (output) round"
-                value={`#${outputRound.round} · ${outputRound.state}`}
-              />
-            </div>
-          )}
-        </Card>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <Text as="h5" variant="h5">
+            Market value (true TVL)
+          </Text>
+          <Card>
+            {error ? (
+              <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
+                Unable to load market value.
+              </Text>
+            ) : !marketValue ? (
+              <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
+                Loading…
+              </Text>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                <StatRow label="Total" value={`${marketValue.total} ${marketValue.symbol}`} />
+                <StatRow label="Total (USD)" value={`$${marketValue.totalUsd}`} />
+                <StatRow
+                  label="Fleet assets"
+                  value={`${marketValue.fleetAssets} ${marketValue.symbol}`}
+                />
+                <StatRow
+                  label="Pending deposits"
+                  value={`${marketValue.pendingDeposits} ${marketValue.symbol}`}
+                />
+                <StatRow
+                  label="Claimable withdrawals"
+                  value={`${marketValue.claimableWithdrawals} ${marketValue.symbol}`}
+                />
+              </div>
+            )}
+          </Card>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <Text as="h5" variant="h5">
+            Rounds
+          </Text>
+          <Card>
+            {error ? (
+              <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
+                Unable to load round state.
+              </Text>
+            ) : !inputRound || !outputRound ? (
+              <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
+                Loading…
+              </Text>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                <StatRow
+                  label="Deposit (input) round"
+                  value={`#${inputRound.round} · ${inputRound.state}`}
+                />
+                <StatRow
+                  label="Withdraw (output) round"
+                  value={`#${outputRound.round} · ${outputRound.state}`}
+                />
+              </div>
+            )}
+          </Card>
+        </div>
       </div>
     </Card>
   )

@@ -246,10 +246,6 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
           tableClassName={styles.table}
         />
       </Card>
-      <Text variant="p4" style={{ color: 'var(--color-text-secondary)' }}>
-        Market allocations and fleet/ark deposit caps for RWA vaults are managed by the curator and
-        are not configurable from this console.
-      </Text>
 
       <Text as="h5" variant="h5">
         Transaction Queue

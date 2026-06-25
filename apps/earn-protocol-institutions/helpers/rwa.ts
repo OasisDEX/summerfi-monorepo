@@ -68,11 +68,13 @@ export const getRwaClientIdForVault = (params: {
 
 /**
  * Determines whether an RWA vault's `vaultInstitutionId` clientId belongs to the given institution.
- * The DB institution `name` is usually the clientId (`Orthodox`), but an institution can also own
- * vaults under suffixed clientIds (`ExtDemoCorp_v2`, `ExtDemoCorp_3`) — matched via a `name_` prefix.
+ * The clientId IS the institution's DB `name`, matched EXACTLY. Suffixed names like `ExtDemoCorp_v2`
+ * and `ExtDemoCorp_3` are their OWN distinct institutions (each a separate DB row with its own
+ * dashboard), not sub-accounts of a shorter-named one — so a prefix match leaks their vaults into
+ * `ExtDemoCorp`'s list. Every RWA clientId in the config is an exact institution name.
  */
 const rwaClientIdBelongsToInstitution = (clientId: string, institutionName: string): boolean =>
-  clientId === institutionName || clientId.startsWith(`${institutionName}_`)
+  clientId === institutionName
 
 /**
  * The institution's RWA `(clientId, networkId)` pairs, derived from the fleet config's per-chain

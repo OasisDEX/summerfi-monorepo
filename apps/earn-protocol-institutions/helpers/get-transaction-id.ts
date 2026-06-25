@@ -180,4 +180,96 @@ export const getRwaSetMinimumPositionSizeId = ({
   return `rwa-set-minimum-position-size-${address}-${chainId}-${vaultType}-${minimumPositionSize}`
 }
 
+export const getRwaNextRoundId = ({
+  address,
+  chainId,
+  vaultType,
+}: {
+  address: string
+  chainId: number
+  vaultType: string
+}) => {
+  return `rwa-next-round-${address}-${chainId}-${vaultType}`
+}
+
+export const getRwaSetRoundSettledId = ({
+  address,
+  chainId,
+  vaultType,
+  roundId,
+}: {
+  address: string
+  chainId: number
+  vaultType: string
+  roundId: string
+}) => {
+  return `rwa-set-round-settled-${address}-${chainId}-${vaultType}-${roundId}`
+}
+
+export const getRwaRetryRoundId = ({
+  address,
+  chainId,
+  vaultType,
+  roundId,
+}: {
+  address: string
+  chainId: number
+  vaultType: string
+  roundId: string
+}) => {
+  return `rwa-retry-round-${address}-${chainId}-${vaultType}-${roundId}`
+}
+
+export const getRwaEmergencyRollbackRoundId = ({
+  address,
+  chainId,
+  vaultType,
+  roundId,
+}: {
+  address: string
+  chainId: number
+  vaultType: string
+  roundId: string
+}) => {
+  return `rwa-emergency-rollback-round-${address}-${chainId}-${vaultType}-${roundId}`
+}
+
+export const getRwaGrantRoleId = ({
+  chainId,
+  role,
+  target,
+  account,
+}: {
+  chainId: number
+  role: string
+  target?: string
+  account: string
+}) => {
+  return `rwa-grant-role-${role}-${target ?? 'global'}-${account}-${chainId}`
+}
+
+export const getRwaRevokeRoleId = ({
+  chainId,
+  role,
+  target,
+  account,
+}: {
+  chainId: number
+  role: string
+  target?: string
+  account: string
+}) => {
+  return `rwa-revoke-role-${role}-${target ?? 'global'}-${account}-${chainId}`
+}
+
+export const getRwaSetTransferabilityId = ({
+  address,
+  chainId,
+}: {
+  address: string
+  chainId: number
+}) => {
+  return `rwa-set-transferability-${address}-${chainId}`
+}
+
 // endregion
