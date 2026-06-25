@@ -1085,9 +1085,11 @@ const getInstitutionVaultFleetFees = async ({
   }
 }
 
-// Risk-parameter data for an RWA vault, read from the institutions-v2 deployment. Caps / buffer are
-// display-only (no RWA admin setter); the two rounds-vault `minPositionSize`s are the editable bits.
-// All token amounts are normalized to display units (decimal strings). `null` = not available (n/a).
+// Risk-parameter data for an RWA vault, read from the institutions-v2 deployment. Caps / buffer / ark
+// params are editable via the generic FleetCommander admin setters (RWA vaults are FleetCommander
+// vaults), and the two rounds-vault `minPositionSize`s via the RWA-specific setter — see
+// PanelRwaRiskParameters. All token amounts are normalized to display units (decimal strings). `null`
+// = not available (n/a).
 export type RwaVaultRiskParameters = {
   inputTokenSymbol: string
   vaultCap: string | null

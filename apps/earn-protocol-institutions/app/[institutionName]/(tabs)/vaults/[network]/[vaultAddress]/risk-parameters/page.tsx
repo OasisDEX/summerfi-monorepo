@@ -23,9 +23,10 @@ export default async function InstitutionVaultRiskParametersPage({
   const config = await getCachedConfig()
   const chainId = urlNetworkToChainId(network)
 
-  // RWA vaults aren't FleetCommander/ark-managed here: the ark-cap admin surface doesn't apply and
-  // their data lives in a different subgraph. Render the RWA-specific risk panel (minimum position
-  // size + a curator-managed note) instead of the fleet ark-cap panel.
+  // RWA vaults render a dedicated risk panel: their data lives in the institutions-v2 subgraph (read
+  // via the v2 SDK) rather than the standard fleet sources. They ARE FleetCommander vaults, so the
+  // generic fleet admin setters (cap / buffer / ark cap / ark max %) still apply — the panel just
+  // resolves them through the v2 SDK, and adds the rounds-vault minimum position size controls.
   const rwaClientId = getRwaClientIdForVault({
     systemConfig: config,
     networkId: chainId,

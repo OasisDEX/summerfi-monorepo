@@ -272,4 +272,16 @@ export const getRwaSetTransferabilityId = ({
   return `rwa-set-transferability-${address}-${chainId}`
 }
 
+export const getRwaSetTipRateId = ({
+  address,
+  chainId,
+  rate,
+}: {
+  address: string
+  chainId: number
+  rate: string
+}) => {
+  return `rwa-set-tip-rate-${address}-${chainId}-${rate}`
+}
+
 // endregion
