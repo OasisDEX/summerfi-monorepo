@@ -34,7 +34,7 @@ export default async function InstitutionVaultRoundsPage({
   // Standing per-round deposit (Input) / withdrawal (Output) positions, grouped by round in the panel.
   // Share price (NAV) is the same value the vault header shows — used to value Output (withdrawal)
   // positions in USD, since pre-settlement rounds have no exchange rate yet.
-  const [{ positions }, institutionVaults] = await Promise.all([
+  const [{ positions, truncated }, institutionVaults] = await Promise.all([
     getCachedRwaVaultRoundPositions({
       institutionName,
       network: humanNetworktoSDKNetwork(network),
@@ -58,6 +58,7 @@ export default async function InstitutionVaultRoundsPage({
         network={network}
         positions={positions}
         navPrice={navPrice}
+        positionsTruncated={truncated}
       />
     </ClientSideSdkWrapper>
   )

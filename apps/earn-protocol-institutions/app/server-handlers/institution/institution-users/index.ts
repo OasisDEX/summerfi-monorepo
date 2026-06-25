@@ -22,7 +22,10 @@ import {
   getCachedCognitoGroupUsers,
 } from '@/app/server-handlers/institution/institution-users/cached-cognito-users'
 import { escapeCognitoFilterValue } from '@/app/server-handlers/institution/institution-users/helpers'
-import { validateInstitutionUserSession } from '@/app/server-handlers/institution/utils/validate-user-session'
+import {
+  validateInstitutionAdminSession,
+  validateInstitutionUserSession,
+} from '@/app/server-handlers/institution/utils/validate-user-session'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
 // this is just a simple helper function to extract user attributes
@@ -171,7 +174,7 @@ export const addInstitutionUser = async (_prevState: unknown, formData: FormData
   }
 
   try {
-    await validateInstitutionUserSession({ institutionName })
+    await validateInstitutionAdminSession({ institutionName })
 
     const role = roleRaw ? (String(roleRaw) as UserRole) : null
     // ...existing code...
@@ -305,7 +308,7 @@ export const updateInstitutionUser = async (_prevState: unknown, formData: FormD
   }
 
   try {
-    await validateInstitutionUserSession({ institutionId: String(institutionIdRaw) })
+    await validateInstitutionAdminSession({ institutionId: String(institutionIdRaw) })
 
     const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
     const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
@@ -333,6 +336,19 @@ export const updateInstitutionUser = async (_prevState: unknown, formData: FormD
 
       if (!Number.isFinite(institutionId)) {
         return { success: false, error: 'Invalid institutionId' }
+      }
+
+      // Only edit a user who is ALREADY a member of this institution — otherwise an admin could pull
+      // an arbitrary user (by sub) from another institution into theirs via the `userSub` form field.
+      const existingMembership = await db
+        .selectFrom('institutionUsers')
+        .select('id')
+        .where('userSub', '=', userSub)
+        .where('institutionId', '=', institutionId)
+        .executeTakeFirst()
+
+      if (!existingMembership) {
+        return { success: false, error: 'User is not a member of this institution' }
       }
 
       // get the user by sub
@@ -414,7 +430,7 @@ export const updateInstitutionUser = async (_prevState: unknown, formData: FormD
 
 export async function institutionDeleteCognitoUser(userSub: string, institutionIdRaw: string) {
   'use server'
-  await validateInstitutionUserSession({ institutionId: String(institutionIdRaw) })
+  await validateInstitutionAdminSession({ institutionId: String(institutionIdRaw) })
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -463,7 +479,7 @@ export const removeInstitutionUser = async (_prevState: unknown, formData: FormD
   'use server'
   const institutionName = formData.get('institutionName')
 
-  await validateInstitutionUserSession({ institutionName: String(institutionName) })
+  await validateInstitutionAdminSession({ institutionName: String(institutionName) })
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,

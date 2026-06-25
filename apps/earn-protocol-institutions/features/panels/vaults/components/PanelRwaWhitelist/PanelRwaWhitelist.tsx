@@ -9,11 +9,13 @@ import {
   Input,
   Text,
   useEarnProtocolChain,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { formatAddress } from '@summerfi/app-utils'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
 import {
   getRwaGrantWhitelistId,
   getRwaRevokeWhitelistId,
@@ -21,6 +23,7 @@ import {
 } from '@/helpers/get-transaction-id'
 import { isValidAddress } from '@/helpers/is-valid-address'
 import { urlNetworkToChainId } from '@/helpers/rwa'
+import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 import { useRevalidateTags } from '@/hooks/useRevalidateTags'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
@@ -42,6 +45,7 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
   const chainId = urlNetworkToChainId(network)
   const fleetAddress = vaultAddress.toLowerCase() as `0x${string}`
   const { chain, isSettingChain } = useEarnProtocolChain()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const {
     getRwaSetWhitelistOpenTx,
     getRwaSetWhitelistedTx,
@@ -58,11 +62,11 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
   const [checkResult, setCheckResult] = useState<string | null>(null)
 
   const isProperChain = useMemo(() => chain.id === chainId, [chain.id, chainId])
-  const controlsDisabled = !isProperChain || isSettingChain
+  const controlsDisabled = !isProperChain || isSettingChain || !userWalletAddress
 
   // Whitelist open/closed reads through the backend proxy and is independent of the connected chain.
   const refreshWhitelistOpen = useCallback(() => {
-    getRwaIsWhitelistOpen({ fleetAddress, chainId })
+    withRetry(() => getRwaIsWhitelistOpen({ fleetAddress, chainId }))
       .then(setWhitelistOpen)
       .catch(() => setWhitelistOpen(null))
   }, [getRwaIsWhitelistOpen, fleetAddress, chainId])
@@ -142,7 +146,9 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
   }, [checkAddress, chainId, fleetAddress, getRwaIsWhitelisted])
 
   const onTxSuccess = () => {
-    revalidateTags({ tags: [`institution-vault-${institutionName.toLowerCase()}`] })
+    revalidateTags({
+      tags: getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
+    })
     refreshWhitelistOpen()
   }
 

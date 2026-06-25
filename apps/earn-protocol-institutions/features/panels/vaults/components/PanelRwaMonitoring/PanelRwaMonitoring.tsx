@@ -3,10 +3,11 @@
 import { type FC, useEffect, useMemo, useState } from 'react'
 import { Card, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
-import { formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import { RoundState, RoundsVaultType } from '@summerfi/sdk-common'
 
 import { urlNetworkToChainId } from '@/helpers/rwa'
+import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 
 interface PanelRwaMonitoringProps {
@@ -88,11 +89,13 @@ export const PanelRwaMonitoring: FC<PanelRwaMonitoringProps> = ({
       return { round: round.toString(), state: roundStateLabel[state] }
     }
 
-    Promise.all([
-      getRwaVaultMarketValue({ fleetAddress, chainId }),
-      readRound(RoundsVaultType.Input),
-      readRound(RoundsVaultType.Output),
-    ])
+    withRetry(() =>
+      Promise.all([
+        getRwaVaultMarketValue({ fleetAddress, chainId }),
+        readRound(RoundsVaultType.Input),
+        readRound(RoundsVaultType.Output),
+      ]),
+    )
       .then(([mv, input, output]) => {
         if (cancelled) return
         setMarketValue({
@@ -188,19 +191,25 @@ export const PanelRwaMonitoring: FC<PanelRwaMonitoringProps> = ({
               </Text>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                <StatRow label="Total" value={`${marketValue.total} ${marketValue.symbol}`} />
-                <StatRow label="Total (USD)" value={`$${marketValue.totalUsd}`} />
+                <StatRow
+                  label="Total"
+                  value={`${formatCryptoBalance(marketValue.total)} ${marketValue.symbol}`}
+                />
+                <StatRow
+                  label="Total (USD)"
+                  value={`$${formatFiatBalance(marketValue.totalUsd)}`}
+                />
                 <StatRow
                   label="Fleet assets"
-                  value={`${marketValue.fleetAssets} ${marketValue.symbol}`}
+                  value={`${formatCryptoBalance(marketValue.fleetAssets)} ${marketValue.symbol}`}
                 />
                 <StatRow
                   label="Pending deposits"
-                  value={`${marketValue.pendingDeposits} ${marketValue.symbol}`}
+                  value={`${formatCryptoBalance(marketValue.pendingDeposits)} ${marketValue.symbol}`}
                 />
                 <StatRow
                   label="Claimable withdrawals"
-                  value={`${marketValue.claimableWithdrawals} ${marketValue.symbol}`}
+                  value={`${formatCryptoBalance(marketValue.claimableWithdrawals)} ${marketValue.symbol}`}
                 />
               </div>
             )}

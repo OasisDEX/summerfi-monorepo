@@ -10,7 +10,7 @@ import { getInstitutionVaultUrl } from '@/helpers/get-url'
 enum DashboardVaultsPanel {
   OVERVIEW = 'overview',
   VAULT_EXPOSURE = 'vault-exposure',
-  ASSET_REALLOCATION = 'asset-reallocation',
+  ASSET_REALLOCATION = 'asset-relocation',
   ASSET_MANAGEMENT = 'asset-management',
   RISK_PARAMETERS = 'risk-parameters',
   ROLE_ADMIN = 'role-admin',

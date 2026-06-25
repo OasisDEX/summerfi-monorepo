@@ -1,7 +1,11 @@
+import { type UserRole } from '@summerfi/summer-protocol-institutions-db'
 import { redirect } from 'next/navigation'
 
 import { logout } from '@/app/server-handlers/auth/logout'
 import { readSession } from '@/app/server-handlers/auth/session'
+
+// Institution roles that may perform user-management mutations. `Viewer` is read-only.
+const INSTITUTION_ADMIN_ROLES: UserRole[] = ['RoleAdmin', 'SuperAdmin']
 
 export const validateInstitutionUserSession = async ({
   institutionId,
@@ -47,5 +51,49 @@ export const validateInstitutionUserSession = async ({
       console.error('Error destroying session:', error)
     }
     redirect(`/?error=unauthorized`)
+  }
+}
+
+/**
+ * Stricter variant of {@link validateInstitutionUserSession} for user-management mutations: the
+ * caller must hold an admin role (RoleAdmin / SuperAdmin) in the target institution — a `Viewer` is
+ * rejected. Global admins bypass (they manage any institution). Redirects + logs out on failure.
+ */
+export const validateInstitutionAdminSession = async ({
+  institutionId,
+  institutionName,
+}: {
+  institutionId?: string
+  institutionName?: string
+}) => {
+  const session = await readSession()
+
+  const hasValidSession = session && session.exp * 1000 > Date.now()
+
+  if (!institutionId && !institutionName) {
+    throw new Error('institutionId or institutionName is required')
+  }
+
+  if (hasValidSession && session.user?.isGlobalAdmin) {
+    return
+  }
+
+  const matchedEntry = (session?.user?.institutionsList ?? []).find(
+    (entry) =>
+      (institutionName !== undefined && entry.name === institutionName) ||
+      (institutionId !== undefined && String(entry.id) === String(institutionId)),
+  )
+
+  const matchedRole = matchedEntry?.role
+  const isInstitutionAdmin = matchedRole != null && INSTITUTION_ADMIN_ROLES.includes(matchedRole)
+
+  if (!hasValidSession || !isInstitutionAdmin) {
+    try {
+      await logout()
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error destroying session:', error)
+    }
+    redirect(`/?error=forbidden`)
   }
 }

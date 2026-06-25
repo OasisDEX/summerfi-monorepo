@@ -17,6 +17,7 @@ import {
   Input,
   Text,
   useEarnProtocolChain,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { formatAddress, formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
@@ -24,6 +25,7 @@ import { RoundState, RoundsVaultType, type TransactionInfo } from '@summerfi/sdk
 
 import { type RwaRoundPosition } from '@/app/server-handlers/institution/institution-vaults'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
 import {
   getRwaEmergencyRollbackRoundId,
   getRwaNextRoundId,
@@ -31,6 +33,7 @@ import {
   getRwaSetRoundSettledId,
 } from '@/helpers/get-transaction-id'
 import { urlNetworkToChainId } from '@/helpers/rwa'
+import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 import { useRevalidateTags } from '@/hooks/useRevalidateTags'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
@@ -145,7 +148,7 @@ const RoundSide: FC<RoundSideProps> = ({
       )
     }
 
-    load().catch(() => {
+    withRetry(load).catch(() => {
       setCurrentRound(null)
       setCurrentState(null)
       setSettlementRounds(null)
@@ -274,12 +277,20 @@ const RoundSide: FC<RoundSideProps> = ({
 
   const pluralNoun = vaultType === RoundsVaultType.Input ? 'deposits' : 'withdrawals'
 
-  // Withdrawals are queued in vault shares; value them in USD via the NAV (share price). Pre-settlement
-  // rounds have no exchange rate yet, so this is an approximation. Deposits are already in the asset.
-  const formatPositionAmount = (position: RwaRoundPosition): string =>
-    vaultType === RoundsVaultType.Output && navPrice !== null
+  const formatPositionAmount = (position: RwaRoundPosition): string => {
+    // Deposits are denominated in the underlying asset — show as-is.
+    if (vaultType !== RoundsVaultType.Output) {
+      return `${formatCryptoBalance(position.amount)} ${position.tokenSymbol}`
+    }
+
+    // Withdrawals are queued in vault shares. Value them in USD via the current NAV (an approximation
+    // — pre-settlement rounds have no exchange rate yet). When NAV is unavailable, show the share
+    // amount explicitly labelled "shares" rather than the share-token symbol, which can be mistaken
+    // for the underlying asset.
+    return navPrice !== null
       ? `$${formatFiatBalance(Number(position.amount) * navPrice)}`
-      : `${formatCryptoBalance(position.amount)} ${position.tokenSymbol}`
+      : `${formatCryptoBalance(position.amount)} shares`
+  }
 
   // The standing deposits/withdrawals queued in a given round (account + current amount).
   const renderPositions = (roundId: bigint) => {
@@ -435,6 +446,8 @@ interface PanelRwaRoundsProps {
   positions: RwaRoundPosition[]
   // Share price (NAV) used to value Output (withdrawal) share positions in USD; null when unavailable.
   navPrice: number | null
+  // True when the standing-positions fetch hit its per-side cap, so some rows may be omitted.
+  positionsTruncated: boolean
 }
 
 export const PanelRwaRounds: FC<PanelRwaRoundsProps> = ({
@@ -444,17 +457,19 @@ export const PanelRwaRounds: FC<PanelRwaRoundsProps> = ({
   network,
   positions,
   navPrice,
+  positionsTruncated,
 }) => {
   const chainId = urlNetworkToChainId(network)
   const fleetAddress = vaultAddress.toLowerCase() as `0x${string}`
   const { chain, isSettingChain } = useEarnProtocolChain()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const sdk = useAdminAppRwaSDK(clientId)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const { revalidateTags } = useRevalidateTags()
   const [refreshNonce, setRefreshNonce] = useState(0)
 
   const isProperChain = useMemo(() => chain.id === chainId, [chain.id, chainId])
-  const controlsDisabled = !isProperChain || isSettingChain
+  const controlsDisabled = !isProperChain || isSettingChain || !userWalletAddress
 
   const depositPositions = useMemo(
     () => positions.filter((position) => position.side === 'deposit'),
@@ -466,12 +481,20 @@ export const PanelRwaRounds: FC<PanelRwaRoundsProps> = ({
   )
 
   const onTxSuccess = () => {
-    revalidateTags({ tags: [`institution-vault-${institutionName.toLowerCase()}`] })
+    revalidateTags({
+      tags: getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
+    })
     setRefreshNonce((n) => n + 1)
   }
 
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {positionsTruncated ? (
+        <Text variant="p4" style={{ color: 'var(--color-text-warning)' }}>
+          This vault has a large deposit/withdrawal queue — some positions may be omitted from the
+          lists below.
+        </Text>
+      ) : null}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
         <RoundSide
           title="Deposit round (input)"

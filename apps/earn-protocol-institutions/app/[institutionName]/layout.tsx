@@ -7,6 +7,7 @@ import {
   getCachedInstitutionData,
   getCachedUserInstitutionsList,
 } from '@/app/server-handlers/institution/institution-data'
+import { validateInstitutionUserSession } from '@/app/server-handlers/institution/utils/validate-user-session'
 import { InstitutionPageHeader } from '@/components/layout/InstitutionPageHeader/InstitutionPageHeader'
 
 import institutionMainLayoutStyles from './InstitutionMainLayout.module.css'
@@ -39,6 +40,11 @@ export default async function InstitutionMainLayout({
       </div>
     )
   }
+
+  // Authorize: the user must belong to this institution (global admins may access any). This guards
+  // the ENTIRE institution subtree — without it, any authenticated user could read another
+  // institution's data by changing the URL. Redirects (and logs out) on failure.
+  await validateInstitutionUserSession({ institutionName })
 
   const [institution, userInstitutionsList] = await Promise.all([
     getCachedInstitutionData({ institutionName }),

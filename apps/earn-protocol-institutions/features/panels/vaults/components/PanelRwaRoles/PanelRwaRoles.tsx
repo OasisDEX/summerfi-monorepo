@@ -10,16 +10,19 @@ import {
   Input,
   Text,
   useEarnProtocolChain,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { formatAddress } from '@summerfi/app-utils'
 import { type AddressValue, type Role, type RwaRole } from '@summerfi/sdk-common'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
 import { getRwaGrantRoleId, getRwaRevokeRoleId } from '@/helpers/get-transaction-id'
 import { isValidAddress } from '@/helpers/is-valid-address'
 import { urlNetworkToChainId } from '@/helpers/rwa'
 import { resolveRwaRoleLabel } from '@/helpers/rwa-roles'
+import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 import { useRevalidateTags } from '@/hooks/useRevalidateTags'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
@@ -112,6 +115,7 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
 }) => {
   const chainId = urlNetworkToChainId(network)
   const { chain, isSettingChain } = useEarnProtocolChain()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { getRwaGrantRoleTx, getRwaRevokeRoleTx, getAllRoles } = useAdminAppRwaSDK(clientId)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const { revalidateTags } = useRevalidateTags()
@@ -122,7 +126,7 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
   const [holders, setHolders] = useState<Role[] | null>(null)
 
   const isProperChain = useMemo(() => chain.id === chainId, [chain.id, chainId])
-  const controlsDisabled = !isProperChain || isSettingChain
+  const controlsDisabled = !isProperChain || isSettingChain || !userWalletAddress
 
   const roleDef = useMemo(
     () => ROLE_KINDS.find((r) => r.kind === selectedKind) ?? ROLE_KINDS[0],
@@ -160,7 +164,7 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
   }, [tableRows])
 
   const refreshHolders = useCallback(() => {
-    getAllRoles({ chainId })
+    withRetry(() => getAllRoles({ chainId }))
       .then((res) => setHolders(res.roles))
       .catch(() => setHolders(null))
   }, [getAllRoles, chainId])
@@ -222,7 +226,9 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
   )
 
   const onTxSuccess = () => {
-    revalidateTags({ tags: [`institution-vault-${institutionName.toLowerCase()}`] })
+    revalidateTags({
+      tags: getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
+    })
     refreshHolders()
   }
 

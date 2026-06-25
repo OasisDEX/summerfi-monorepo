@@ -2,12 +2,21 @@
 
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
-import { Button, Card, ERROR_TOAST_CONFIG, Text, useEarnProtocolChain } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  ERROR_TOAST_CONFIG,
+  Text,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
+} from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
 import { getRwaSetTransferabilityId } from '@/helpers/get-transaction-id'
 import { urlNetworkToChainId } from '@/helpers/rwa'
+import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 import { useRevalidateTags } from '@/hooks/useRevalidateTags'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
@@ -29,6 +38,7 @@ export const PanelRwaTransfers: FC<PanelRwaTransfersProps> = ({
   const chainId = urlNetworkToChainId(network)
   const fleetAddress = vaultAddress.toLowerCase() as `0x${string}`
   const { chain, isSettingChain } = useEarnProtocolChain()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { getRwaIsFleetTransfersEnabled, getRwaSetFleetTransferabilityTx } =
     useAdminAppRwaSDK(clientId)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
@@ -37,10 +47,10 @@ export const PanelRwaTransfers: FC<PanelRwaTransfersProps> = ({
   const [transfersEnabled, setTransfersEnabled] = useState<boolean | null>(null)
 
   const isProperChain = useMemo(() => chain.id === chainId, [chain.id, chainId])
-  const controlsDisabled = !isProperChain || isSettingChain
+  const controlsDisabled = !isProperChain || isSettingChain || !userWalletAddress
 
   const refreshTransfersEnabled = useCallback(() => {
-    getRwaIsFleetTransfersEnabled({ fleetAddress, chainId })
+    withRetry(() => getRwaIsFleetTransfersEnabled({ fleetAddress, chainId }))
       .then(setTransfersEnabled)
       .catch(() => setTransfersEnabled(null))
   }, [getRwaIsFleetTransfersEnabled, fleetAddress, chainId])
@@ -75,7 +85,9 @@ export const PanelRwaTransfers: FC<PanelRwaTransfersProps> = ({
   }, [addTransaction, chainId, fleetAddress, getRwaSetFleetTransferabilityTx, transfersEnabled])
 
   const onTxSuccess = () => {
-    revalidateTags({ tags: [`institution-vault-${institutionName.toLowerCase()}`] })
+    revalidateTags({
+      tags: getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
+    })
     refreshTransfersEnabled()
   }
 

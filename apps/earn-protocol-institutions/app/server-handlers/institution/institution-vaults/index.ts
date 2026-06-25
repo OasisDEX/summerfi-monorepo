@@ -42,6 +42,7 @@ import {
   graphqlVaultHistoryClients,
 } from '@/app/server-handlers/institution/utils/graph-ql-clients'
 import { getInstitutionsRwaSDK, getInstitutionsSDK } from '@/app/server-handlers/sdk'
+import { INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
 import { vaultSpecificRolesList } from '@/constants/vaults'
 import {
   GetInstitutionDataDocument,
@@ -697,7 +698,10 @@ export type RwaVaultActivity = {
 
 // Receipts pulled per rounds-vault side. Bounded — newest-touched first; a "load more" can page via
 // skip later if needed.
-const RWA_ACTIVITY_RECEIPTS_LIMIT = 200
+// 1000 matches the reference RWA app and comfortably covers realistic vaults. If a side ever hits the
+// cap, `getRwaVaultRoundPositions` returns `truncated: true` so the panel can surface a notice rather
+// than silently dropping standing positions (a `skip`-based "load more" can page beyond it later).
+const RWA_ACTIVITY_RECEIPTS_LIMIT = 1000
 
 const GetRwaRoundsVaultPairDocument = gql`
   query GetRwaRoundsVaultPair($fleet: String!) {
@@ -843,6 +847,8 @@ export type RwaRoundPosition = {
 export type RwaVaultRoundPositions = {
   chainId: number
   positions: RwaRoundPosition[]
+  // True when a side hit `RWA_ACTIVITY_RECEIPTS_LIMIT`, so some standing positions may be omitted.
+  truncated: boolean
 }
 
 const GetRwaVaultRoundPositionsDocument = gql`
@@ -891,7 +897,7 @@ const getRwaVaultRoundPositions = async ({
   const client = graphqlRwaVaultHistoryClients[network]
 
   if (!client) {
-    return { chainId, positions: [] }
+    return { chainId, positions: [], truncated: false }
   }
 
   try {
@@ -904,7 +910,7 @@ const getRwaVaultRoundPositions = async ({
     )
 
     if (roundsVaultPairs.length === 0) {
-      return { chainId, positions: [] }
+      return { chainId, positions: [], truncated: false }
     }
 
     const [pair] = roundsVaultPairs
@@ -942,12 +948,16 @@ const getRwaVaultRoundPositions = async ({
       ...mapReceipts(outputReceipts.receipts, 'withdrawal'),
     ]
 
-    return { chainId, positions }
+    const truncated =
+      inputReceipts.receipts.length >= RWA_ACTIVITY_RECEIPTS_LIMIT ||
+      outputReceipts.receipts.length >= RWA_ACTIVITY_RECEIPTS_LIMIT
+
+    return { chainId, positions, truncated }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching RWA vault round positions:', error)
 
-    return { chainId, positions: [] }
+    return { chainId, positions: [], truncated: false }
   }
 }
 
@@ -1187,9 +1197,22 @@ const getVaultDetails = async ({
     const systemConfig = await getCachedConfig()
     const rwaClientId = getRwaClientIdForVault({ systemConfig, networkId: chainId, vaultAddress })
 
-    const { vault } = rwaClientId
-      ? await getInstitutionsRwaSDK(rwaClientId).rwa.getVaultRaw({ vaultId: poolId })
-      : await institutionSDK.armada.users.getVaultRaw({ vaultId: poolId })
+    if (rwaClientId) {
+      // Isolate RWA (institutions-v2) subgraph outages: degrade to "not found" (like the vault list
+      // does) rather than throwing and erroring the whole detail page on a transient subgraph blip.
+      const rwaResult = await getInstitutionsRwaSDK(rwaClientId)
+        .rwa.getVaultRaw({ vaultId: poolId })
+        .catch((rwaError: unknown) => {
+          // eslint-disable-next-line no-console
+          console.error('getVaultDetails: RWA vault fetch failed', rwaError)
+
+          return null
+        })
+
+      return rwaResult?.vault as SDKVaultType | undefined
+    }
+
+    const { vault } = await institutionSDK.armada.users.getVaultRaw({ vaultId: poolId })
 
     return vault as SDKVaultType | undefined
   } catch (error) {
@@ -1444,26 +1467,45 @@ export const getCachedInstitutionVaultArksImpliedCapsMap = ({
     },
   )({ network, vaultAddress, arksAddresses })
 }
-export const getCachedInstitutionVaultPerformanceData = ({
+// Chart history is cached in-process with a HARD TTL rather than `unstable_cache`. The chart mappers
+// anchor the x-axis to live `now` and walk every hour/day/week bucket backwards; any bucket with no
+// matching history point is backfilled with 0. `unstable_cache`'s stale-while-revalidate served a
+// stale snapshot whose latest point lagged `now` by far more than the TTL, so the trailing buckets
+// resolved to 0 — the "holes"/cliff at the right edge that vanished only on a hard refresh. A hard
+// TTL never serves stale: once an entry lapses the next read blocks on a fresh fetch, capping
+// staleness at the TTL so the only ever-missing bucket is the current one (which the mapper fills
+// live). Mirrors earn-protocol's get-position-history / get-rwa-vault-nav-history fix. The key is
+// vault-address + network (institution-agnostic — the same vault's history is identical per tenant).
+const _vaultPerformanceDataCache = new Map<
+  string,
+  { data: InstiVaultPerformanceResponse; expiresAt: number }
+>()
+
+export const getCachedInstitutionVaultPerformanceData = async ({
   network,
   vaultAddress,
-  institutionName,
 }: {
   network: SupportedSDKNetworks
   vaultAddress: string
+  // Accepted for call-site compatibility; not part of the cache key (history is institution-agnostic).
   institutionName: string
-}) => {
-  return unstableCache(
-    getInstitutionVaultPerformanceData,
-    ['institution-vault-performance-data', vaultAddress, network],
-    {
-      revalidate: 300,
-      tags: [
-        `institution-vault-performance-data-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
-        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
-      ],
-    },
-  )({ network, vaultAddress })
+}): Promise<InstiVaultPerformanceResponse> => {
+  const cacheKey = `${network}:${vaultAddress.toLowerCase()}`
+  const now = Date.now()
+  const cached = _vaultPerformanceDataCache.get(cacheKey)
+
+  if (cached && cached.expiresAt > now) {
+    return cached.data
+  }
+
+  const data = await getInstitutionVaultPerformanceData({ network, vaultAddress })
+
+  _vaultPerformanceDataCache.set(cacheKey, {
+    data,
+    expiresAt: now + Number(INSTITUTIONS_CACHE_TIMES.VAULT_PERFORMANCE_DATA * 1000),
+  })
+
+  return data
 }
 
 export const getCachedInstitutionVaultActiveUsers = ({
