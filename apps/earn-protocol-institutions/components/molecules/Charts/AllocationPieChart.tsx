@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from '@summerfi/app-earn-ui'
+import { Card, Text } from '@summerfi/app-earn-ui'
 import { Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 import { formatChartPercentageValue } from '@/features/charts/helpers'
@@ -17,6 +17,26 @@ const parseAllocationItemToChartData = (item: AllocationItem) => ({
 
 export const AllocationPieChart = ({ chartData }: NavPriceChartProps) => {
   const parsedChartData = chartData?.map(parseAllocationItemToChartData) ?? []
+
+  if (parsedChartData.length === 0) {
+    return (
+      <Card>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: 400,
+          }}
+        >
+          <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+            No allocation data
+          </Text>
+        </div>
+      </Card>
+    )
+  }
 
   return (
     <Card>

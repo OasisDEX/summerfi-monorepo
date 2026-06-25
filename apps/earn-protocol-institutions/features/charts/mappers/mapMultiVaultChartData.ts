@@ -128,8 +128,51 @@ export const mapMultiVaultChartData = ({
     perVaultWeekly.set(vaultLabel, weeklyMap)
   })
 
+  // Resolve a single vault's value for a bucket, carrying the last known value forward instead of
+  // dropping to 0. The x-axis is anchored to `now`, so the buckets between a vault's latest snapshot
+  // and `now` — and the live point itself when a stale/soft-load fetch returns 0/empty — would
+  // otherwise backfill as 0 and render as a cliff at the right edge (the "hole"). A real snapshot is
+  // always trusted (even 0) and re-anchors the carry-forward, so a vault that genuinely empties still
+  // shows its drop; only missing points, and a zero live value when history exists, are carried
+  // forward. `lastKnownByVault` is per-timeframe (a fresh map is passed for each series build below).
+  const resolveValueWithCarryForward = ({
+    rawValue,
+    isCurrent,
+    currentPointValue,
+    vaultLabel,
+    lastKnownByVault,
+  }: {
+    rawValue: number | undefined
+    isCurrent: boolean
+    currentPointValue: string
+    vaultLabel: string
+    lastKnownByVault: Map<string, number>
+  }): number => {
+    if (rawValue !== undefined) {
+      lastKnownByVault.set(vaultLabel, rawValue)
+
+      return rawValue
+    }
+
+    if (isCurrent) {
+      const liveValue = Number(currentPointValue)
+
+      if (Number.isFinite(liveValue) && liveValue > 0) {
+        lastKnownByVault.set(vaultLabel, liveValue)
+
+        return liveValue
+      }
+    }
+
+    return lastKnownByVault.get(vaultLabel) ?? 0
+  }
+
   // Helper to aggregate a single row across all vaults
-  const addRowForHour = (timestampUnix: number, isCurrent: boolean) => {
+  const addRowForHour = (
+    timestampUnix: number,
+    isCurrent: boolean,
+    lastKnownByVault: Map<string, number>,
+  ) => {
     const row: ChartRow = {
       timestamp: timestampUnix,
       timestampParsed: dayjs.unix(timestampUnix).format(CHART_TIMESTAMP_FORMAT_DETAILED),
@@ -140,16 +183,24 @@ export const mapMultiVaultChartData = ({
         const vaultLabel = getVaultLabel(performanceData, customName)
         const existingPoint = perVaultHourly.get(vaultLabel)?.get(timestampUnix)
 
-        row[vaultLabel] = Number(
-          isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
-        )
+        row[vaultLabel] = resolveValueWithCarryForward({
+          rawValue: existingPoint ? Number(existingPoint[pointName]) : undefined,
+          isCurrent,
+          currentPointValue,
+          vaultLabel,
+          lastKnownByVault,
+        })
       },
     )
 
     chartBaseData['7d'].push(row)
   }
 
-  const addRowForHour30d = (timestampUnix: number, isCurrent: boolean) => {
+  const addRowForHour30d = (
+    timestampUnix: number,
+    isCurrent: boolean,
+    lastKnownByVault: Map<string, number>,
+  ) => {
     const row: ChartRow = {
       timestamp: timestampUnix,
       timestampParsed: dayjs.unix(timestampUnix).format(CHART_TIMESTAMP_FORMAT_DETAILED),
@@ -160,9 +211,13 @@ export const mapMultiVaultChartData = ({
         const vaultLabel = getVaultLabel(performanceData, customName)
         const existingPoint = perVaultHourly.get(vaultLabel)?.get(timestampUnix)
 
-        row[vaultLabel] = Number(
-          isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
-        )
+        row[vaultLabel] = resolveValueWithCarryForward({
+          rawValue: existingPoint ? Number(existingPoint[pointName]) : undefined,
+          isCurrent,
+          currentPointValue,
+          vaultLabel,
+          lastKnownByVault,
+        })
       },
     )
 
@@ -173,6 +228,7 @@ export const mapMultiVaultChartData = ({
     timeframe: '90d' | '6m' | '1y',
     timestampUnix: number,
     isCurrent: boolean,
+    lastKnownByVault: Map<string, number>,
   ) => {
     const row: ChartRow = {
       timestamp: timestampUnix,
@@ -184,16 +240,24 @@ export const mapMultiVaultChartData = ({
         const vaultLabel = getVaultLabel(performanceData, customName)
         const existingPoint = perVaultDaily.get(vaultLabel)?.get(timestampUnix)
 
-        row[vaultLabel] = Number(
-          isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
-        )
+        row[vaultLabel] = resolveValueWithCarryForward({
+          rawValue: existingPoint ? Number(existingPoint[pointName]) : undefined,
+          isCurrent,
+          currentPointValue,
+          vaultLabel,
+          lastKnownByVault,
+        })
       },
     )
 
     chartBaseData[timeframe].push(row)
   }
 
-  const addRowForWeek = (timestampUnix: number, isCurrent: boolean) => {
+  const addRowForWeek = (
+    timestampUnix: number,
+    isCurrent: boolean,
+    lastKnownByVault: Map<string, number>,
+  ) => {
     const row: ChartRow = {
       timestamp: timestampUnix,
       timestampParsed: dayjs.unix(timestampUnix).format(CHART_TIMESTAMP_FORMAT_DETAILED),
@@ -204,9 +268,13 @@ export const mapMultiVaultChartData = ({
         const vaultLabel = getVaultLabel(performanceData, customName)
         const existingPoint = perVaultWeekly.get(vaultLabel)?.get(timestampUnix)
 
-        row[vaultLabel] = Number(
-          isCurrent ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
-        )
+        row[vaultLabel] = resolveValueWithCarryForward({
+          rawValue: existingPoint ? Number(existingPoint[pointName]) : undefined,
+          isCurrent,
+          currentPointValue,
+          vaultLabel,
+          lastKnownByVault,
+        })
       },
     )
 
@@ -214,55 +282,67 @@ export const mapMultiVaultChartData = ({
   }
 
   // Generate complete 7d chart (hourly points)
+  const lastKnown7d = new Map<string, number>()
+
   for (let i = pointsNeededFor7dChart - 1; i >= 0; i--) {
     const pointTime = nowStartOfHour.subtract(i, 'hours')
     const timestampUnix = pointTime.unix()
     const isSameHour = pointTime.isSame(nowStartOfHour)
 
-    addRowForHour(timestampUnix, isSameHour)
+    addRowForHour(timestampUnix, isSameHour, lastKnown7d)
   }
 
   // Generate complete 30d chart (hourly points)
+  const lastKnown30d = new Map<string, number>()
+
   for (let i = pointsNeededFor30dChart - 1; i >= 0; i--) {
     const pointTime = nowStartOfHour.subtract(i, 'hours')
     const timestampUnix = pointTime.unix()
     const isSameHour = pointTime.isSame(nowStartOfHour)
 
-    addRowForHour30d(timestampUnix, isSameHour)
+    addRowForHour30d(timestampUnix, isSameHour, lastKnown30d)
   }
 
   // Generate complete daily charts (90d, 6m, 1y)
+  const lastKnown90d = new Map<string, number>()
+
   for (let i = pointsNeededFor90dChart - 1; i >= 0; i--) {
     const pointTime = nowStartOfDay.subtract(i, 'days')
     const timestampUnix = pointTime.unix()
     const isSameDay = pointTime.isSame(nowStartOfDay)
 
-    addRowForDay('90d', timestampUnix, isSameDay)
+    addRowForDay('90d', timestampUnix, isSameDay, lastKnown90d)
   }
+
+  const lastKnown6m = new Map<string, number>()
 
   for (let i = pointsNeededFor6mChart - 1; i >= 0; i--) {
     const pointTime = nowStartOfDay.subtract(i, 'days')
     const timestampUnix = pointTime.unix()
     const isSameDay = pointTime.isSame(nowStartOfDay)
 
-    addRowForDay('6m', timestampUnix, isSameDay)
+    addRowForDay('6m', timestampUnix, isSameDay, lastKnown6m)
   }
+
+  const lastKnown1y = new Map<string, number>()
 
   for (let i = pointsNeededFor1yChart - 1; i >= 0; i--) {
     const pointTime = nowStartOfDay.subtract(i, 'days')
     const timestampUnix = pointTime.unix()
     const isSameDay = pointTime.isSame(nowStartOfDay)
 
-    addRowForDay('1y', timestampUnix, isSameDay)
+    addRowForDay('1y', timestampUnix, isSameDay, lastKnown1y)
   }
 
   // Generate complete 3y chart (weekly points)
+  const lastKnownWeekly = new Map<string, number>()
+
   for (let i = pointsNeededFor3yChart - 1; i >= 0; i--) {
     const pointTime = nowStartOfWeek.subtract(i, 'weeks')
     const timestampUnix = pointTime.unix()
     const isSameWeek = pointTime.isSame(nowStartOfWeek)
 
-    addRowForWeek(timestampUnix, isSameWeek)
+    addRowForWeek(timestampUnix, isSameWeek, lastKnownWeekly)
   }
 
   return {

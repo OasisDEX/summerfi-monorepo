@@ -132,22 +132,35 @@ const getInstitutionVaults = async ({ institutionName }: { institutionName: stri
     const vaultsListByNetwork = (
       await Promise.all(
         vaultsInfoByNetwork.map(async ({ list, networkId }) => {
-          const vaults = await Promise.all(
-            list.map(async (vaultInfo) => {
-              const vaultId = ArmadaVaultId.createFrom({
-                chainInfo: getChainInfoByChainId(networkId),
-                fleetAddress: vaultInfo.id.fleetAddress,
-              })
+          // `getVaultInfoList` (above) already told us whether this institution has standard vaults
+          // on the chain; skip the batched fetch where it has none. The per-client SDK throws on
+          // chains with no deployment, so this also avoids a guaranteed-failing call.
+          if (list.length === 0) {
+            return []
+          }
 
-              const vaultDetails = await institutionSdk.armada.users
-                .getVaultRaw({ vaultId })
-                .catch(() => null)
+          // One client-scoped batched query per chain, replacing the previous `getVaultRaw`-per-vault
+          // N+1. `getVaultsRaw` filters by the SDK's Client-Id (see
+          // ArmadaManagerPositions.getVaultsRaw), so it returns exactly this institution's vaults on
+          // the chain — the same set `getVaultInfoList` produced ids for, in a single round-trip and
+          // in the full shape the list/detail panels consume. Mirrors earn-protocol's getVaultsListRaw.
+          const vaultsResult = await institutionSdk.armada.users
+            .getVaultsRaw({ chainInfo: getChainInfoByChainId(networkId) })
+            .catch((error: unknown) => {
+              if (!isExpectedMissingDeploymentError(error)) {
+                // eslint-disable-next-line no-console
+                console.error(
+                  `Error fetching standard vaults for ${institutionName} on chain ${networkId}:`,
+                  error,
+                )
+              }
 
-              return vaultDetails?.vault ?? null
-            }),
-          )
+              return { vaults: [] } as Awaited<
+                ReturnType<typeof institutionSdk.armada.users.getVaultsRaw>
+              >
+            })
 
-          return vaults.filter((vault): vault is NonNullable<typeof vault> => vault !== null).flat()
+          return vaultsResult.vaults
         }),
       )
     ).flat()

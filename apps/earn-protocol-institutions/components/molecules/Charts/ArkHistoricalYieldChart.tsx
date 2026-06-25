@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode, useMemo, useState } from 'react'
-import { Card, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
+import { Card, RechartResponsiveWrapper, Text } from '@summerfi/app-earn-ui'
 import { type ArksHistoricalChartData, type TimeframesType } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 import { Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
@@ -69,119 +69,135 @@ export const ArkHistoricalYieldChart = ({
       className={arkHistoricalChartStyles.arkHistoricalYieldChartCardWrapper}
     >
       <div className={arkHistoricalChartStyles.arkHistoricalYieldChart}>
-        <RechartResponsiveWrapper height="270px">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart
-              syncId={syncId}
-              data={parsedDataWithCutoff}
-              margin={{
-                top: 20,
-                right: 20,
-                left: 20,
-                bottom: 10,
-              }}
-            >
-              <defs>
-                <linearGradient id="summerYieldGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#FF49A4" stopOpacity={0.8} />
-                  <stop offset="100%" stopColor="#333333" stopOpacity={0.4} />
-                </linearGradient>
-              </defs>
-              <XAxis
-                dataKey="timestamp"
-                fontSize={12}
-                interval="preserveStartEnd"
-                tickMargin={10}
-                tickFormatter={(timestamp: string) => {
-                  return timestamp.split(' ')[0]
+        {parsedDataWithCutoff.length === 0 ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              height: '270px',
+            }}
+          >
+            <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+              No data available
+            </Text>
+          </div>
+        ) : (
+          <RechartResponsiveWrapper height="270px">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart
+                syncId={syncId}
+                data={parsedDataWithCutoff}
+                margin={{
+                  top: 20,
+                  right: 20,
+                  left: 20,
+                  bottom: 10,
                 }}
-                style={{
-                  userSelect: 'none',
-                }}
-              />
-              <YAxis
-                strokeWidth={0}
-                tickFormatter={(label: string) => `${formatChartPercentageValue(Number(label))}`}
-                style={{
-                  userSelect: 'none',
-                }}
-              />
-              <Tooltip
-                formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
-                wrapperStyle={{
-                  zIndex: 1000,
-                  backgroundColor: 'var(--color-surface-subtle)',
-                  borderRadius: '5px',
-                  padding: '10px',
-                }}
-                labelStyle={{
-                  fontSize: '16px',
-                  fontWeight: '700',
-                  marginTop: '10px',
-                  marginBottom: '10px',
-                }}
-                contentStyle={{
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  fontSize: '13px',
-                  lineHeight: '11px',
-                  letterSpacing: '-0.5px',
-                }}
-                labelFormatter={(label: ReactNode) => {
-                  if (typeof label !== 'string') {
-                    return label
-                  }
+              >
+                <defs>
+                  <linearGradient id="summerYieldGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#FF49A4" stopOpacity={0.8} />
+                    <stop offset="100%" stopColor="#333333" stopOpacity={0.4} />
+                  </linearGradient>
+                </defs>
+                <XAxis
+                  dataKey="timestamp"
+                  fontSize={12}
+                  interval="preserveStartEnd"
+                  tickMargin={10}
+                  tickFormatter={(timestamp: string) => {
+                    return timestamp.split(' ')[0]
+                  }}
+                  style={{
+                    userSelect: 'none',
+                  }}
+                />
+                <YAxis
+                  strokeWidth={0}
+                  tickFormatter={(label: string) => `${formatChartPercentageValue(Number(label))}`}
+                  style={{
+                    userSelect: 'none',
+                  }}
+                />
+                <Tooltip
+                  formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
+                  wrapperStyle={{
+                    zIndex: 1000,
+                    backgroundColor: 'var(--color-surface-subtle)',
+                    borderRadius: '5px',
+                    padding: '10px',
+                  }}
+                  labelStyle={{
+                    fontSize: '16px',
+                    fontWeight: '700',
+                    marginTop: '10px',
+                    marginBottom: '10px',
+                  }}
+                  contentStyle={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    fontSize: '13px',
+                    lineHeight: '11px',
+                    letterSpacing: '-0.5px',
+                  }}
+                  labelFormatter={(label: ReactNode) => {
+                    if (typeof label !== 'string') {
+                      return label
+                    }
 
-                  const parsedTimestamp = dayjs(label)
-                  const formattedDate = parsedTimestamp.format(
-                    ['7d', '30d'].includes(timeframe)
-                      ? CHART_TIMESTAMP_FORMAT_DETAILED
-                      : CHART_TIMESTAMP_FORMAT_SHORT,
+                    const parsedTimestamp = dayjs(label)
+                    const formattedDate = parsedTimestamp.format(
+                      ['7d', '30d'].includes(timeframe)
+                        ? CHART_TIMESTAMP_FORMAT_DETAILED
+                        : CHART_TIMESTAMP_FORMAT_SHORT,
+                    )
+
+                    return formattedDate
+                  }}
+                />
+                {dataNames.map((dataName, dataIndex) => {
+                  return dataName === summerVaultName ? (
+                    <Area
+                      key={dataName}
+                      type={parsedDataWithCutoff.length > 100 ? 'linear' : 'natural'}
+                      animationDuration={300}
+                      animationBegin={dataIndex * 50}
+                      animationEasing="ease-out"
+                      connectNulls
+                      dataKey={dataName}
+                      strokeWidth={highlightedProtocol === dataName ? 2 : 1}
+                      stroke={colors[dataName as keyof typeof colors]}
+                      opacity={highlightedProtocol && highlightedProtocol !== dataName ? 0.1 : 1}
+                      fillOpacity={1}
+                      style={{
+                        transition: 'opacity 0.3s',
+                      }}
+                      fill="url(#summerYieldGradient)"
+                    />
+                  ) : (
+                    <Line
+                      key={dataName}
+                      type="monotone"
+                      animationDuration={300}
+                      animationBegin={dataIndex * 50}
+                      animationEasing="ease-out"
+                      dataKey={dataName}
+                      stroke={colors[dataName as keyof typeof colors]}
+                      strokeWidth={highlightedProtocol === dataName ? 2 : 1}
+                      style={{
+                        transition: 'opacity 0.3s',
+                      }}
+                      opacity={highlightedProtocol && highlightedProtocol !== dataName ? 0.1 : 1}
+                      dot={false}
+                    />
                   )
-
-                  return formattedDate
-                }}
-              />
-              {dataNames.map((dataName, dataIndex) => {
-                return dataName === summerVaultName ? (
-                  <Area
-                    key={dataName}
-                    type={parsedDataWithCutoff.length > 100 ? 'linear' : 'natural'}
-                    animationDuration={300}
-                    animationBegin={dataIndex * 50}
-                    animationEasing="ease-out"
-                    connectNulls
-                    dataKey={dataName}
-                    strokeWidth={highlightedProtocol === dataName ? 2 : 1}
-                    stroke={colors[dataName as keyof typeof colors]}
-                    opacity={highlightedProtocol && highlightedProtocol !== dataName ? 0.1 : 1}
-                    fillOpacity={1}
-                    style={{
-                      transition: 'opacity 0.3s',
-                    }}
-                    fill="url(#summerYieldGradient)"
-                  />
-                ) : (
-                  <Line
-                    key={dataName}
-                    type="monotone"
-                    animationDuration={300}
-                    animationBegin={dataIndex * 50}
-                    animationEasing="ease-out"
-                    dataKey={dataName}
-                    stroke={colors[dataName as keyof typeof colors]}
-                    strokeWidth={highlightedProtocol === dataName ? 2 : 1}
-                    style={{
-                      transition: 'opacity 0.3s',
-                    }}
-                    opacity={highlightedProtocol && highlightedProtocol !== dataName ? 0.1 : 1}
-                    dot={false}
-                  />
-                )
-              })}
-            </ComposedChart>
-          </ResponsiveContainer>
-        </RechartResponsiveWrapper>
+                })}
+              </ComposedChart>
+            </ResponsiveContainer>
+          </RechartResponsiveWrapper>
+        )}
         <YieldsLegend
           dataNames={dataNames}
           colors={colors}

@@ -25,7 +25,11 @@ const sharedQueryOptions = {
   retry: 1,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
-  refetchOnMount: false,
+  // Refetch on mount when the cached entry is older than `staleTime` (60s). Without this a stale
+  // response cached on a soft navigation was re-served indefinitely — so a transient/lagging snapshot
+  // that rendered the right-edge "hole" only cleared on a hard refresh. The server caches (hard-TTL
+  // perf data + SWR vault list) absorb most of the cost, so this isn't a full cold fetch each time.
+  refetchOnMount: true,
 } as const
 
 // `enabled` is wired to whether the chart is in the viewport, so the O(n)-per-vault performance
