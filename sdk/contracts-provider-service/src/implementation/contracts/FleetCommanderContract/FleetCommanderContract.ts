@@ -146,6 +146,15 @@ export class FleetCommanderContract<
     })
   }
 
+  /** @see IFleetCommanderContract.setPerformanceFeeRate */
+  setPerformanceFeeRate(params: { rate: IPercentage }): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'setPerformanceFeeRate',
+      args: [params.rate.toSolidityValue({ decimals: 18 })],
+      description: `Set the performance fee rate to ${params.rate}`,
+    })
+  }
+
   /** @see IFleetCommanderContract.addArk */
   addArk(params: { ark: IAddress }): Promise<TransactionInfo> {
     return this._createTransaction({

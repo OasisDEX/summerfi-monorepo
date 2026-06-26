@@ -200,6 +200,18 @@ export class ArmadaManagerAdmin extends ArmadaManagerShared implements IArmadaMa
     return fleetContract.setTipRate({ rate: params.rate })
   }
 
+  /** @see IArmadaManagerAdmin.setPerformanceFeeRate */
+  async setPerformanceFeeRate(
+    params: Parameters<IArmadaManagerAdmin['setPerformanceFeeRate']>[0],
+  ): ReturnType<IArmadaManagerAdmin['setPerformanceFeeRate']> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setPerformanceFeeRate({ rate: params.rate })
+  }
+
   /** @see IArmadaManagerAdmin.updateRebalanceCooldown */
   async updateRebalanceCooldown(
     params: Parameters<IArmadaManagerAdmin['updateRebalanceCooldown']>[0],

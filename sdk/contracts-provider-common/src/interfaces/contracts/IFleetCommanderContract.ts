@@ -87,6 +87,16 @@ export interface IFleetCommanderContract extends IContractWrapper {
   setTipRate(params: { rate: IPercentage }): Promise<TransactionInfo>
 
   /**
+   * @name setPerformanceFeeRate
+   * @description Sets the performance fee rate of the fleet.
+   *
+   * @param rate The new performance fee rate
+   *
+   * @returns The transaction information
+   */
+  setPerformanceFeeRate(params: { rate: IPercentage }): Promise<TransactionInfo>
+
+  /**
    * @name addArk
    * @description Adds a new ark to the fleet.
    *

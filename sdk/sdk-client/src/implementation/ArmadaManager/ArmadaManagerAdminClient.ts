@@ -39,6 +39,13 @@ export class ArmadaManagerAdminClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.admin.setTipRate.query(params)
   }
 
+  /** @see IArmadaManagerAdminClient.setPerformanceFeeRate */
+  async setPerformanceFeeRate(
+    params: Parameters<IArmadaManagerAdminClient['setPerformanceFeeRate']>[0],
+  ): ReturnType<IArmadaManagerAdminClient['setPerformanceFeeRate']> {
+    return this.rpcClient.armada.admin.setPerformanceFeeRate.query(params)
+  }
+
   /** @see IArmadaManagerAdminClient.addArk */
   async addArk(
     params: Parameters<IArmadaManagerAdminClient['addArk']>[0],

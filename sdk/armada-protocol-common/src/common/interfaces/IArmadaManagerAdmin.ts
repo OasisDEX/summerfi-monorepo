@@ -193,6 +193,20 @@ export interface IArmadaManagerAdmin {
   setTipRate(params: { vaultId: IArmadaVaultId; rate: IPercentage }): Promise<TransactionInfo>
 
   /**
+   * @name setPerformanceFeeRate
+   * @description Sets the performance fee rate of the fleet. Used by the governance
+   *
+   * @param vaultId The ID of the vault
+   * @param rate The new performance fee rate
+   *
+   * @returns The transaction information
+   */
+  setPerformanceFeeRate(params: {
+    vaultId: IArmadaVaultId
+    rate: IPercentage
+  }): Promise<TransactionInfo>
+
+  /**
    * @name updateRebalanceCooldown
    * @description Updates the rebalance cooldown of the fleet. Used by the governance
    *

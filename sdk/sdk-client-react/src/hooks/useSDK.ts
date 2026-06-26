@@ -90,6 +90,7 @@ import { setMinimumBufferBalanceHandler } from '../handlers/setMinimumBufferBala
 import { setArkDepositCapHandler } from '../handlers/setArkDepositCapHandler'
 import { setArkMaxDepositPercentageOfTVLHandler } from '../handlers/setArkMaxDepositPercentageOfTVLHandler'
 import { setTipRateHandler } from '../handlers/setTipRateHandler'
+import { setPerformanceFeeRateHandler } from '../handlers/setPerformanceFeeRateHandler'
 import { isPermit2AuthorizationNeededHandler } from '../handlers/isPermit2AuthorizationNeededHandler'
 import { getPermit2AuthorizationTxHandler } from '../handlers/getPermit2AuthorizeTxHandler'
 import { getPermit2RevokeTxHandler } from '../handlers/getPermit2UnauthorizeTxHandler'
@@ -532,6 +533,7 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
     [sdk],
   )
   const setTipRate = useMemo(() => setTipRateHandler(sdk), [sdk])
+  const setPerformanceFeeRate = useMemo(() => setPerformanceFeeRateHandler(sdk), [sdk])
   const getTipRate = useMemo(() => getTipRateHandler(sdk), [sdk])
 
   // region RWA
@@ -595,6 +597,7 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       setArkDepositCap,
       setArkMaxDepositPercentageOfTVL,
       setTipRate,
+      setPerformanceFeeRate,
       // RWA
       getRwaDepositTx,
       getRwaWithdrawTx,
@@ -639,6 +642,7 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       setArkDepositCap,
       setArkMaxDepositPercentageOfTVL,
       setTipRate,
+      setPerformanceFeeRate,
       getRwaDepositTx,
       getRwaWithdrawTx,
       getRwaClaimSharesTx,
