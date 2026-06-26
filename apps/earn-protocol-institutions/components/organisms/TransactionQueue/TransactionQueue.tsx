@@ -17,6 +17,8 @@ import clsx from 'clsx'
 import { capitalize } from 'lodash-es'
 
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
+import { ExportToSafeButton } from '@/components/organisms/ExportToSafe/ExportToSafeButton'
+import { isExportable } from '@/components/organisms/ExportToSafe/toSafeBatch'
 import { SimpleTransactionButton } from '@/components/organisms/SimpleTransactionButton/SimpleTransactionButton'
 import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { type SDKTransactionItem } from '@/contexts/TransactionQueueContext/types'
@@ -245,6 +247,11 @@ export const TransactionQueue = ({
           No transactions in the queue.
         </Text>
       </AnimateHeight>
+      {transactionQueue.some(isExportable) ? (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+          <ExportToSafeButton transactions={transactionQueue} />
+        </div>
+      ) : null}
     </Card>
   )
 }
