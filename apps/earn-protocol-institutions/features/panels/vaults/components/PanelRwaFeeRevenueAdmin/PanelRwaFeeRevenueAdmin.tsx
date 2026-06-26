@@ -13,13 +13,13 @@ import {
 } from '@summerfi/app-earn-ui'
 import type { NetworkNames } from '@summerfi/app-types'
 import { chainIdToSDKNetwork, formatDecimalAsPercent } from '@summerfi/app-utils'
-import type BigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js'
 
 import { EditPercentageValueModal } from '@/components/molecules/EditValueModal/EditValueModal'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { feeRevenueColumns } from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/tables/fee-revenue/columns'
 import { thirdPartyCostsColumns } from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/tables/third-party-costs/columns'
-import { getRwaSetTipRateId } from '@/helpers/get-transaction-id'
+import { getRwaSetPerformanceFeeRateId, getRwaSetTipRateId } from '@/helpers/get-transaction-id'
 import { urlNetworkToChainId } from '@/helpers/rwa'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 import { useRevalidateTags } from '@/hooks/useRevalidateTags'
@@ -39,7 +39,8 @@ interface PanelRwaFeeRevenueAdminProps {
 }
 
 // The FleetCommander reverts (`TipRateCannotExceedFivePercent`) above 5%; guard before queuing a tx.
-const MAX_TIP_RATE_FRACTION = 0.05
+// `next` is in percent units (1 = 1%), so the cap is 5, not 0.05.
+const MAX_TIP_RATE_PERCENT = 5
 
 export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
   institutionName,
@@ -55,8 +56,9 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
   const sdkNetworkName = chainIdToSDKNetwork(chainId)
   const fleetAddress = vaultAddress.toLowerCase() as `0x${string}`
   const { chain, isSettingChain } = useEarnProtocolChain()
-  // RWA vaults are FleetCommander contracts, so the generic `setTipRate` admin setter applies.
-  const { setTipRate, getTargetChainInfo } = useAdminAppRwaSDK(clientId)
+  // RWA vaults are FleetCommander contracts, so the generic `setTipRate` /
+  // `setPerformanceFeeRate` admin setters apply.
+  const { setTipRate, setPerformanceFeeRate, getTargetChainInfo } = useAdminAppRwaSDK(clientId)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const { revalidateTags } = useRevalidateTags()
 
@@ -64,14 +66,14 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
   const controlsDisabled = !isProperChain || isSettingChain
 
   const onSetManagementFee = (next: BigNumber) => {
-    // The modal value is a decimal fraction (0.01 = 1%); the contract caps the tip rate at 5%.
-    if (next.isGreaterThan(MAX_TIP_RATE_FRACTION)) {
+    // The modal value is in percent units (1 = 1%); the contract caps the tip rate at 5%.
+    if (next.isGreaterThan(MAX_TIP_RATE_PERCENT)) {
       toast.error('Management fee cannot exceed 5%', ERROR_TOAST_CONFIG)
 
       return
     }
 
-    // `Percentage` expects percent units, so scale the fraction up by 100.
+    // The SDK `Percentage` value must be 100 times the target percent, so scale up by 100.
     const ratePercent = next.times(100)
 
     try {
@@ -87,18 +89,72 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
               management&nbsp;fee&nbsp;from&nbsp;
               <Text as="span" variant="p4semi">
                 {managementFee != null
-                  ? formatDecimalAsPercent(managementFee, { precision: 2 })
+                  ? formatDecimalAsPercent(managementFee, { precision: 4 })
                   : 'n/a'}
               </Text>
               &nbsp;to&nbsp;
               <Text as="span" variant="p4semi">
-                {formatDecimalAsPercent(next.toNumber(), { precision: 2 })}
+                {/* `next` is in percent units (0.5 = 0.5%); `formatDecimalAsPercent` expects a
+                    decimal fraction, so divide by 100 to match the on-chain/table read. */}
+                {formatDecimalAsPercent(next.div(100).toNumber(), { precision: 4 })}
               </Text>
             </Text>
           ),
           txLabel: { label: 'Set', charge: 'neutral' },
         },
         setTipRate({
+          fleetAddress,
+          chainInfo: getTargetChainInfo(chainId),
+          rate: ratePercent.toNumber(),
+        }),
+      )
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to add transaction to queue', error)
+      toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
+    }
+  }
+
+  const onSetPerformanceFee = (next: BigNumber) => {
+    // The modal value is in percent units (0.15 = 0.15%). The contract rejects a zero rate
+    // (`PerformanceFeeRateCannotBeZero`); the upper bound (`PerformanceFeeRateTooHigh`) is left for
+    // the contract to enforce rather than guessing a client-side cap.
+    if (next.isLessThanOrEqualTo(0)) {
+      toast.error('Performance fee must be greater than 0', ERROR_TOAST_CONFIG)
+
+      return
+    }
+
+    // The SDK `Percentage` value must be 100 times the target percent, so scale up by 100.
+    const ratePercent = next.times(100)
+
+    try {
+      addTransaction(
+        {
+          id: getRwaSetPerformanceFeeRateId({
+            address: fleetAddress,
+            chainId,
+            rate: ratePercent.toString(),
+          }),
+          txDescription: (
+            <Text variant="p3">
+              performance&nbsp;fee&nbsp;from&nbsp;
+              <Text as="span" variant="p4semi">
+                {performanceFee != null
+                  ? formatDecimalAsPercent(performanceFee, { precision: 4 })
+                  : 'n/a'}
+              </Text>
+              &nbsp;to&nbsp;
+              <Text as="span" variant="p4semi">
+                {/* `next` is in percent units (0.15 = 0.15%); `formatDecimalAsPercent` expects a
+                    decimal fraction, so divide by 100 to match the on-chain/table read. */}
+                {formatDecimalAsPercent(next.div(100).toNumber(), { precision: 4 })}
+              </Text>
+            </Text>
+          ),
+          txLabel: { label: 'Set', charge: 'neutral' },
+        },
+        setPerformanceFeeRate({
           fleetAddress,
           chainInfo: getTargetChainInfo(chainId),
           rate: ratePercent.toNumber(),
@@ -124,7 +180,11 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
                 buttonLabel={formatDecimalAsPercent(managementFee, { precision: 2 })}
                 modalTitle="Edit Management Fee"
                 modalDescription="Edit the vault management fee (tip rate). Capped at 5%."
-                editValue={{ label: 'Management Fee', valueNormalized: managementFee }}
+                editValue={{
+                  label: 'Management Fee',
+                  // `managementFee` is a decimal fraction; the modal/input works in percent units.
+                  valueNormalized: new BigNumber(managementFee).times(100).toString(),
+                }}
                 onAddTransaction={onSetManagementFee}
                 loading={controlsDisabled}
               />
@@ -141,12 +201,24 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
         name: <TableCellText>Performance Fee</TableCellText>,
         'aum-fee': (
           <TableCellNodes>
-            {performanceFee != null
-              ? formatDecimalAsPercent(performanceFee, { precision: 2 })
-              : 'n/a'}
+            {performanceFee != null ? (
+              <EditPercentageValueModal
+                buttonLabel={formatDecimalAsPercent(performanceFee, { precision: 2 })}
+                modalTitle="Edit Performance Fee"
+                modalDescription="Edit the vault performance fee. Must be greater than 0."
+                editValue={{
+                  label: 'Performance Fee',
+                  // `performanceFee` is a decimal fraction; the modal/input works in percent units.
+                  valueNormalized: new BigNumber(performanceFee).times(100).toString(),
+                }}
+                onAddTransaction={onSetPerformanceFee}
+                loading={controlsDisabled}
+              />
+            ) : (
+              'n/a'
+            )}
           </TableCellNodes>
         ),
-        // Performance fee has no on-chain setter exposed by the contracts/SDK — read-only for now.
         action: null,
       },
     },
