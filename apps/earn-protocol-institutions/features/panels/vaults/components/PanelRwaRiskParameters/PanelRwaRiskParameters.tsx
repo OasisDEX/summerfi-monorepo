@@ -23,6 +23,7 @@ import {
   EditTokenValueModal,
 } from '@/components/molecules/EditValueModal/EditValueModal'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { marketRiskParametersColumns } from '@/features/panels/vaults/components/PanelRiskParameters/market-risk-parameters-table/columns'
 import { vaultRiskParametersColumns } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/columns'
 import { vaultRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/mapper'
@@ -35,8 +36,6 @@ import {
 } from '@/helpers/get-transaction-id'
 import { urlNetworkToChainId } from '@/helpers/rwa'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 import styles from '@/features/panels/vaults/components/PanelRiskParameters/PanelRiskParameters.module.css'
 
@@ -75,6 +74,17 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
   arksImpliedCapsMap,
 }) => {
   const chainId = urlNetworkToChainId(network)
+  // Cache tags are keyed by the SDK network name (e.g. `arbitrum_one`), not the URL slug
+  // (`arbitrum`), so it must be derived from the chain id to bust the right cache entry.
+  const sdkNetworkName = chainIdToSDKNetwork(chainId).toLowerCase()
+  const revalidateTags = useMemo(
+    () => [
+      `rwa-vault-risk-parameters-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName}`,
+      `institution-vault-arks-implied-caps-${vaultAddress.toLowerCase()}-${sdkNetworkName}`,
+      `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName}`,
+    ],
+    [institutionName, vaultAddress, sdkNetworkName],
+  )
   const fleetAddress = vaultAddress.toLowerCase() as `0x${string}`
   const { chain, isSettingChain } = useEarnProtocolChain()
   // RWA vaults are FleetCommander contracts, so the generic fleet admin setters apply here exactly as
@@ -89,8 +99,7 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
     getTargetChainInfo,
     getTokenBySymbol,
   } = useAdminAppRwaSDK(clientId)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
-  const { revalidateTags } = useRevalidateTags()
+  const { addTransaction } = useTransactionQueue()
 
   // The cap / buffer / ark-cap setters need a resolved `IToken`; resolve the vault input token once
   // and reuse it for all three (arks share the vault input token, as the standard panel assumes).
@@ -134,15 +143,11 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
             vaultType,
             minimumPositionSize,
           }),
-          txDescription: (
-            <Text variant="p3">
-              set {vaultType === RoundsVaultType.Input ? 'deposit' : 'withdrawal'} minimum to&nbsp;
-              <Text as="span" variant="p4semi">
-                {minimumPositionSize}
-              </Text>
-            </Text>
-          ),
+          txDescription: `${vaultType === RoundsVaultType.Input ? 'deposit' : 'withdrawal'} minimum to ${minimumPositionSize}`,
           txLabel: { label: 'Set', charge: 'neutral' },
+          chainId,
+          vaultAddress,
+          revalidateTags,
         },
         getRwaSetMinimumPositionSizeTx({
           fleetAddress,
@@ -169,19 +174,11 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
       addTransaction(
         {
           id: getChangeVaultCapId({ address: fleetAddress, chainId, vaultCap: cap }),
-          txDescription: (
-            <Text variant="p3">
-              vault&nbsp;cap&nbsp;from&nbsp;
-              <Text as="span" variant="p4semi">
-                {displayAmount(riskParameters?.vaultCap, vaultInputToken.symbol)}
-              </Text>
-              &nbsp;to&nbsp;
-              <Text as="span" variant="p4semi">
-                {displayAmount(cap, vaultInputToken.symbol)}
-              </Text>
-            </Text>
-          ),
+          txDescription: `vault cap from ${displayAmount(riskParameters?.vaultCap, vaultInputToken.symbol)} to ${displayAmount(cap, vaultInputToken.symbol)}`,
           txLabel: createTransactionLabel(cap, riskParameters?.vaultCap ?? '0'),
+          chainId,
+          vaultAddress,
+          revalidateTags,
         },
         setFleetDepositCap({
           fleetAddress,
@@ -212,22 +209,14 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
             chainId,
             minimumBufferBalance,
           }),
-          txDescription: (
-            <Text variant="p3">
-              minimum&nbsp;buffer&nbsp;balance&nbsp;from&nbsp;
-              <Text as="span" variant="p4semi">
-                {displayAmount(riskParameters?.minimumBufferBalance, vaultInputToken.symbol)}
-              </Text>
-              &nbsp;to&nbsp;
-              <Text as="span" variant="p4semi">
-                {displayAmount(minimumBufferBalance, vaultInputToken.symbol)}
-              </Text>
-            </Text>
-          ),
+          txDescription: `minimum buffer balance from ${displayAmount(riskParameters?.minimumBufferBalance, vaultInputToken.symbol)} to ${displayAmount(minimumBufferBalance, vaultInputToken.symbol)}`,
           txLabel: createTransactionLabel(
             minimumBufferBalance,
             riskParameters?.minimumBufferBalance ?? '0',
           ),
+          chainId,
+          vaultAddress,
+          revalidateTags,
         },
         setMinimumBufferBalance({
           fleetAddress,
@@ -259,19 +248,11 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
             arkDepositCap: cap,
             arkId: ark.id,
           }),
-          txDescription: (
-            <Text variant="p3">
-              {marketName}&nbsp;ark&nbsp;deposit&nbsp;cap&nbsp;from&nbsp;
-              <Text as="span" variant="p4semi">
-                {displayAmount(ark.depositCap, ark.tokenSymbol)}
-              </Text>
-              &nbsp;to&nbsp;
-              <Text as="span" variant="p4semi">
-                {displayAmount(cap, vaultInputToken.symbol)}
-              </Text>
-            </Text>
-          ),
+          txDescription: `${marketName} ark deposit cap from ${displayAmount(ark.depositCap, ark.tokenSymbol)} to ${displayAmount(cap, vaultInputToken.symbol)}`,
           txLabel: createTransactionLabel(cap, ark.depositCap ?? '0'),
+          chainId,
+          vaultAddress,
+          revalidateTags,
         },
         setArkDepositCap({
           arkAddress: ark.id,
@@ -303,24 +284,14 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
             arkMaxDepositPercentage: maxDepositPercentage.toString(),
             arkId: ark.id,
           }),
-          txDescription: (
-            <Text variant="p3">
-              {marketName}&nbsp;ark&nbsp;max&nbsp;deposit&nbsp;%&nbsp;of&nbsp;TVL&nbsp;from&nbsp;
-              <Text as="span" variant="p4semi">
-                {ark.maxDepositPercentage != null
-                  ? formatPercent(new BigNumber(ark.maxDepositPercentage), { precision: 4 })
-                  : 'n/a'}
-              </Text>
-              &nbsp;to&nbsp;
-              <Text as="span" variant="p4semi">
-                {formatPercent(next, { precision: 4 })}
-              </Text>
-            </Text>
-          ),
+          txDescription: `${marketName} ark max deposit % of TVL from ${ark.maxDepositPercentage != null ? formatPercent(new BigNumber(ark.maxDepositPercentage), { precision: 4 }) : 'n/a'} to ${formatPercent(next, { precision: 4 })}`,
           txLabel: createTransactionLabel(
             maxDepositPercentage.toString(),
             currentMaxDepositPercentage.toString(),
           ),
+          chainId,
+          vaultAddress,
+          revalidateTags,
         },
         setArkMaxDepositPercentageOfTVL({
           arkAddress: ark.id,
@@ -538,21 +509,6 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
       }
     })
 
-  const onTxSuccess = () => {
-    // Cache tags are keyed by the SDK network name (e.g. `arbitrum_one`), not the URL slug
-    // (`arbitrum`) — derive it from the chain id so the right entry is busted on every network.
-    const sdkNetworkName = chainIdToSDKNetwork(chainId).toLowerCase()
-
-    revalidateTags({
-      tags: [
-        `rwa-vault-risk-parameters-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName}`,
-        // Ark cap / max-% edits change the effective (implied) cap, so bust its cache too.
-        `institution-vault-arks-implied-caps-${vaultAddress.toLowerCase()}-${sdkNetworkName}`,
-        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName}`,
-      ],
-    })
-  }
-
   return (
     <Card variant="cardSecondary" className={styles.panelRiskParametersWrapper}>
       <Text as="h5" variant="h5">
@@ -582,12 +538,7 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={chainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
-      />
+      <TransactionQueue />
     </Card>
   )
 }

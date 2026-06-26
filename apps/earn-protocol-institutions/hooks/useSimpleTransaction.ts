@@ -15,9 +15,9 @@ import {
 import { type EarnTransactionViewStates, SupportedNetworkIds } from '@summerfi/app-types'
 import { supportedSDKNetwork, supportedSDKNetworkId } from '@summerfi/app-utils'
 
+import { type SDKTransactionItem } from '@/contexts/TransactionQueueContext/types'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { usePublicClient } from '@/hooks/usePublicClient'
-import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
 
 const parseErrorMessage = (error: string) => {
   const cutoff = error.length > 100 ? `${error.slice(0, 100)}...` : error

@@ -17,13 +17,12 @@ import BigNumber from 'bignumber.js'
 
 import { EditPercentageValueModal } from '@/components/molecules/EditValueModal/EditValueModal'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { feeRevenueColumns } from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/tables/fee-revenue/columns'
 import { thirdPartyCostsColumns } from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/tables/third-party-costs/columns'
 import { getRwaSetPerformanceFeeRateId, getRwaSetTipRateId } from '@/helpers/get-transaction-id'
 import { urlNetworkToChainId } from '@/helpers/rwa'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 import classNames from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/PanelFeeRevenueAdmin.module.css'
 
@@ -59,8 +58,15 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
   // RWA vaults are FleetCommander contracts, so the generic `setTipRate` /
   // `setPerformanceFeeRate` admin setters apply.
   const { setTipRate, setPerformanceFeeRate, getTargetChainInfo } = useAdminAppRwaSDK(clientId)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
-  const { revalidateTags } = useRevalidateTags()
+  const { addTransaction } = useTransactionQueue()
+
+  const revalidateTags = useMemo(
+    () => [
+      `institution-vault-fleet-fees-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+      `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+    ],
+    [institutionName, vaultAddress, sdkNetworkName],
+  )
 
   const isProperChain = useMemo(() => chain.id === chainId, [chain.id, chainId])
   const controlsDisabled = !isProperChain || isSettingChain
@@ -84,23 +90,11 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
             chainId,
             rate: ratePercent.toString(),
           }),
-          txDescription: (
-            <Text variant="p3">
-              management&nbsp;fee&nbsp;from&nbsp;
-              <Text as="span" variant="p4semi">
-                {managementFee != null
-                  ? formatDecimalAsPercent(managementFee, { precision: 4 })
-                  : 'n/a'}
-              </Text>
-              &nbsp;to&nbsp;
-              <Text as="span" variant="p4semi">
-                {/* `next` is in percent units (0.5 = 0.5%); `formatDecimalAsPercent` expects a
-                    decimal fraction, so divide by 100 to match the on-chain/table read. */}
-                {formatDecimalAsPercent(next.div(100).toNumber(), { precision: 4 })}
-              </Text>
-            </Text>
-          ),
+          txDescription: `management fee from ${managementFee != null ? formatDecimalAsPercent(managementFee, { precision: 4 }) : 'n/a'} to ${formatDecimalAsPercent(next.div(100).toNumber(), { precision: 4 })}`,
           txLabel: { label: 'Set', charge: 'neutral' },
+          chainId,
+          vaultAddress,
+          revalidateTags,
         },
         setTipRate({
           fleetAddress,
@@ -136,23 +130,11 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
             chainId,
             rate: ratePercent.toString(),
           }),
-          txDescription: (
-            <Text variant="p3">
-              performance&nbsp;fee&nbsp;from&nbsp;
-              <Text as="span" variant="p4semi">
-                {performanceFee != null
-                  ? formatDecimalAsPercent(performanceFee, { precision: 4 })
-                  : 'n/a'}
-              </Text>
-              &nbsp;to&nbsp;
-              <Text as="span" variant="p4semi">
-                {/* `next` is in percent units (0.15 = 0.15%); `formatDecimalAsPercent` expects a
-                    decimal fraction, so divide by 100 to match the on-chain/table read. */}
-                {formatDecimalAsPercent(next.div(100).toNumber(), { precision: 4 })}
-              </Text>
-            </Text>
-          ),
+          txDescription: `performance fee from ${performanceFee != null ? formatDecimalAsPercent(performanceFee, { precision: 4 }) : 'n/a'} to ${formatDecimalAsPercent(next.div(100).toNumber(), { precision: 4 })}`,
           txLabel: { label: 'Set', charge: 'neutral' },
+          chainId,
+          vaultAddress,
+          revalidateTags,
         },
         setPerformanceFeeRate({
           fleetAddress,
@@ -224,15 +206,6 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
     },
   ]
 
-  const onTxSuccess = () => {
-    revalidateTags({
-      tags: [
-        `institution-vault-fleet-fees-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
-        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
-      ],
-    })
-  }
-
   return (
     <Card variant="cardSecondary" className={classNames.panelFeeRevenueAdminWrapper}>
       <Text as="h5" variant="h5">
@@ -268,12 +241,7 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={chainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
-      />
+      <TransactionQueue />
     </Card>
   )
 }

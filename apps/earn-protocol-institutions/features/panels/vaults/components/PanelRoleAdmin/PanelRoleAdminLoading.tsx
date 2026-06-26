@@ -39,7 +39,7 @@ export const PanelRoleAdminLoading = () => {
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue transactionQueue={[]} chainId={1} isLoading />
+      <TransactionQueue isLoading />
     </Card>
   )
 }

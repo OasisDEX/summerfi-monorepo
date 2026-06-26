@@ -16,6 +16,7 @@ import { chainIdToSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
 import { InstiContractRoles } from '@summerfi/sdk-common'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { AddNewRoleForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddNewRoleForm'
 import {
   getGrantContractRoleTransactionId,
@@ -23,8 +24,6 @@ import {
 } from '@/helpers/get-transaction-id'
 import { contractSpecificRolesToHuman } from '@/helpers/wallet-roles'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 import { type InstitutionVaultRole } from '@/types/institution-data'
 
 import { roleAdminColumns } from './columns'
@@ -47,12 +46,18 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
 }) => {
   const [rolesUsersFilter, setRolesUsersFilter] = useState('')
   const { grantContractSpecificRole, revokeContractSpecificRole } = useAdminAppSDK(institutionName)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
+  const { addTransaction, transactionQueue } = useTransactionQueue()
   const chainId = networkNameToSDKId(network)
   const sdkNetworkName = chainIdToSDKNetwork(chainId)
   const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const { chain, isSettingChain } = useEarnProtocolChain()
-  const { revalidateTags } = useRevalidateTags()
+
+  const revalidateTags = useMemo(
+    () => [
+      `vault-roles-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+    ],
+    [institutionName, vaultAddress, sdkNetworkName],
+  )
 
   const isProperChain = useMemo(() => {
     return chain.id === chainId
@@ -66,21 +71,14 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         addTransaction(
           {
             id: transactionId,
-            txDescription: (
-              <Text variant="p3">
-                <Text as="span" variant="p3semi">
-                  {contractSpecificRolesToHuman(role)}
-                </Text>
-                &nbsp;role&nbsp;from&nbsp;
-                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                  {address}
-                </Text>
-              </Text>
-            ),
+            txDescription: `${contractSpecificRolesToHuman(role)} role from ${address}`,
             txLabel: {
               label: 'Revoke',
               charge: 'negative',
             },
+            chainId,
+            vaultAddress,
+            revalidateTags,
           },
           revokeContractSpecificRole({
             contractAddress: vaultAddress,
@@ -95,7 +93,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [addTransaction, chainId, revokeContractSpecificRole, vaultAddress],
+    [addTransaction, chainId, revalidateTags, revokeContractSpecificRole, vaultAddress],
   )
 
   const onGrantContractSpecificRole = useCallback(
@@ -106,21 +104,14 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         addTransaction(
           {
             id: transactionId,
-            txDescription: (
-              <Text variant="p3">
-                <Text as="span" variant="p3semi">
-                  {contractSpecificRolesToHuman(role)}
-                </Text>
-                &nbsp;role to&nbsp;
-                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                  {address}
-                </Text>
-              </Text>
-            ),
+            txDescription: `${contractSpecificRolesToHuman(role)} role to ${address}`,
             txLabel: {
               label: 'Grant',
               charge: 'positive',
             },
+            chainId,
+            vaultAddress,
+            revalidateTags,
           },
           grantContractSpecificRole({
             contractAddress: vaultAddress,
@@ -135,7 +126,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [addTransaction, chainId, grantContractSpecificRole, vaultAddress],
+    [addTransaction, chainId, grantContractSpecificRole, revalidateTags, vaultAddress],
   )
 
   const rows = useMemo(
@@ -161,14 +152,6 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
       userWalletAddress,
     ],
   )
-
-  const onTxSuccess = () => {
-    revalidateTags({
-      tags: [
-        `vault-roles-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
-      ],
-    })
-  }
 
   return (
     <Card variant="cardSecondary" className={panelRoleStyles.panelRoleAdminWrapper}>
@@ -204,12 +187,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={chainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
-      />
+      <TransactionQueue />
     </Card>
   )
 }

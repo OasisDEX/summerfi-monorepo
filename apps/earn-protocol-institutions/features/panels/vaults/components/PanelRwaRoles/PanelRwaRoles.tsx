@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import {
   Button,
@@ -17,6 +17,7 @@ import { formatAddress } from '@summerfi/app-utils'
 import { type AddressValue, type Role, type RwaRole } from '@summerfi/sdk-common'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
 import { getRwaGrantRoleId, getRwaRevokeRoleId } from '@/helpers/get-transaction-id'
 import { isValidAddress } from '@/helpers/is-valid-address'
@@ -24,8 +25,6 @@ import { urlNetworkToChainId } from '@/helpers/rwa'
 import { resolveRwaRoleLabel } from '@/helpers/rwa-roles'
 import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 // All 11 grantable roles. Global roles take only an account; contract-specific roles also target a
 // contract (a Fleet for Keeper/Curator/Operator, an Ark for Commander).
@@ -117,8 +116,12 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
   const { chain, isSettingChain } = useEarnProtocolChain()
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { getRwaGrantRoleTx, getRwaRevokeRoleTx, getAllRoles } = useAdminAppRwaSDK(clientId)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
-  const { revalidateTags } = useRevalidateTags()
+  const { addTransaction } = useTransactionQueue()
+
+  const revalidateTags = useMemo(
+    () => getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
+    [institutionName, vaultAddress, network],
+  )
 
   const [selectedKind, setSelectedKind] = useState<RwaRole['kind']>('KEEPER')
   const [account, setAccount] = useState('')
@@ -193,24 +196,19 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
         action === 'grant'
           ? getRwaGrantRoleId({ chainId, role: role.kind, target: roleTarget, account })
           : getRwaRevokeRoleId({ chainId, role: role.kind, target: roleTarget, account })
-      const description: ReactNode = (
-        <Text variant="p3">
-          {action} {roleDef.label}&nbsp;
-          <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-            {formatAddress(account)}
-          </Text>
-        </Text>
-      )
 
       try {
         addTransaction(
           {
             id,
-            txDescription: description,
+            txDescription: `${roleDef.label} ${formatAddress(account)}`,
             txLabel: {
               label: action === 'grant' ? 'Grant' : 'Revoke',
               charge: action === 'grant' ? 'positive' : 'negative',
             },
+            chainId,
+            vaultAddress,
+            revalidateTags,
           },
           action === 'grant'
             ? getRwaGrantRoleTx({ chainId, role, account: account as AddressValue })
@@ -222,15 +220,18 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [buildRole, account, chainId, roleDef, addTransaction, getRwaGrantRoleTx, getRwaRevokeRoleTx],
+    [
+      buildRole,
+      account,
+      chainId,
+      roleDef,
+      addTransaction,
+      getRwaGrantRoleTx,
+      getRwaRevokeRoleTx,
+      revalidateTags,
+      vaultAddress,
+    ],
   )
-
-  const onTxSuccess = () => {
-    revalidateTags({
-      tags: getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
-    })
-    refreshHolders()
-  }
 
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -420,12 +421,7 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={chainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
-      />
+      <TransactionQueue onLocalTxSuccess={() => refreshHolders()} />
     </Card>
   )
 }

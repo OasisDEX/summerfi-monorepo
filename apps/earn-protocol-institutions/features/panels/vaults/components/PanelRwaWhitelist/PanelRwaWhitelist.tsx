@@ -15,6 +15,7 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { formatAddress } from '@summerfi/app-utils'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
 import {
   getRwaGrantWhitelistId,
@@ -25,8 +26,6 @@ import { isValidAddress } from '@/helpers/is-valid-address'
 import { urlNetworkToChainId } from '@/helpers/rwa'
 import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 interface PanelRwaWhitelistProps {
   institutionName: string
@@ -52,8 +51,12 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
     getRwaIsWhitelistOpen,
     getRwaIsWhitelisted,
   } = useAdminAppRwaSDK(clientId)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
-  const { revalidateTags } = useRevalidateTags()
+  const { addTransaction } = useTransactionQueue()
+
+  const revalidateTags = useMemo(
+    () => getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
+    [institutionName, vaultAddress, network],
+  )
 
   const [whitelistOpen, setWhitelistOpen] = useState<boolean | null>(null)
   const [grantAddress, setGrantAddress] = useState('')
@@ -82,13 +85,14 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
       addTransaction(
         {
           id: getRwaSetWhitelistOpenId({ address: fleetAddress, chainId, isOpen: nextOpen }),
-          txDescription: (
-            <Text variant="p3">{nextOpen ? 'open whitelist' : 'close whitelist'}</Text>
-          ),
+          txDescription: 'whitelist',
           txLabel: {
             label: nextOpen ? 'Open' : 'Close',
             charge: nextOpen ? 'positive' : 'negative',
           },
+          chainId,
+          vaultAddress,
+          revalidateTags,
         },
         getRwaSetWhitelistOpenTx({ fleetAddress, chainId, isOpen: nextOpen }),
       )
@@ -97,7 +101,15 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
       console.error('Failed to add transaction to queue', error)
       toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
     }
-  }, [addTransaction, chainId, fleetAddress, getRwaSetWhitelistOpenTx, whitelistOpen])
+  }, [
+    addTransaction,
+    chainId,
+    fleetAddress,
+    getRwaSetWhitelistOpenTx,
+    revalidateTags,
+    vaultAddress,
+    whitelistOpen,
+  ])
 
   const onSetWhitelisted = useCallback(
     ({ address, allowed }: { address: `0x${string}`; allowed: boolean }) => {
@@ -109,18 +121,14 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
         addTransaction(
           {
             id,
-            txDescription: (
-              <Text variant="p3">
-                {allowed ? 'whitelist' : 'remove'}&nbsp;
-                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                  {address}
-                </Text>
-              </Text>
-            ),
+            txDescription: `${allowed ? 'whitelist' : 'remove'} ${address}`,
             txLabel: {
               label: allowed ? 'Grant' : 'Revoke',
               charge: allowed ? 'positive' : 'negative',
             },
+            chainId,
+            vaultAddress,
+            revalidateTags,
           },
           getRwaSetWhitelistedTx({ fleetAddress, chainId, accountAddress: address, allowed }),
         )
@@ -130,7 +138,7 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [addTransaction, chainId, fleetAddress, getRwaSetWhitelistedTx],
+    [addTransaction, chainId, fleetAddress, getRwaSetWhitelistedTx, revalidateTags, vaultAddress],
   )
 
   const onCheckWhitelisted = useCallback(() => {
@@ -144,13 +152,6 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
       )
       .catch(() => setCheckResult('Failed to read whitelist status'))
   }, [checkAddress, chainId, fleetAddress, getRwaIsWhitelisted])
-
-  const onTxSuccess = () => {
-    revalidateTags({
-      tags: getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
-    })
-    refreshWhitelistOpen()
-  }
 
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -276,12 +277,7 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={chainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
-      />
+      <TransactionQueue onLocalTxSuccess={() => refreshWhitelistOpen()} />
     </Card>
   )
 }

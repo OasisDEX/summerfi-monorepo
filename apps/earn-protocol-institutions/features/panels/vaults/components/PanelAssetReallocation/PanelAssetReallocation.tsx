@@ -13,9 +13,8 @@ import {
   type RebalanceMove,
 } from '@/app/server-handlers/institution/build-rebalance-transaction'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getArksAllocation } from '@/features/panels/vaults/components/PanelVaultExposure/get-arks-allocation'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 import { assetReallocationColumns } from './columns'
 import {
@@ -44,8 +43,12 @@ export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({
     getAssetReallocationInitialBalanceState(vault),
   )
   const chainId = networkNameToSDKId(network)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
-  const { revalidateTags } = useRevalidateTags()
+  const { addTransaction } = useTransactionQueue()
+
+  const revalidateTags = useMemo(
+    () => [`institution-vault-${institutionName.toLowerCase()}`],
+    [institutionName],
+  )
 
   const onChange = useCallback(
     ({
@@ -148,16 +151,11 @@ export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({
       addTransaction(
         {
           id: transactionId,
-          txDescription: (
-            <Text variant="p3">
-              rebalance&nbsp;
-              <Text as="span" variant="p4semi">
-                {moves.length}
-              </Text>
-              &nbsp;move{moves.length > 1 ? 's' : ''}
-            </Text>
-          ),
+          txDescription: `${moves.length} move${moves.length > 1 ? 's' : ''}`,
           txLabel: { label: 'Rebalance', charge: 'neutral' },
+          chainId,
+          vaultAddress: vault.id,
+          revalidateTags,
         },
         buildRebalanceTransaction({
           institutionName,
@@ -181,12 +179,7 @@ export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({
       console.error('Failed to add rebalance transaction to queue', error)
       toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
     }
-  }, [addTransaction, buildMoves, chainId, institutionName, network, vault.id])
-
-  const onTxSuccess = () => {
-    revalidateTags({ tags: [`institution-vault-${institutionName.toLowerCase()}`] })
-    onCancel()
-  }
+  }, [addTransaction, buildMoves, chainId, institutionName, network, revalidateTags, vault.id])
 
   const rows = assetReallocationMapper({
     vault,
@@ -269,12 +262,7 @@ export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={chainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
-      />
+      <TransactionQueue onLocalTxSuccess={() => onCancel()} />
     </Card>
   )
 }

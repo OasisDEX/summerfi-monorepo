@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  type CSSProperties,
-  type FC,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { type CSSProperties, type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import {
   Button,
@@ -25,6 +17,7 @@ import { RoundState, RoundsVaultType, type TransactionInfo } from '@summerfi/sdk
 
 import { type RwaRoundPosition } from '@/app/server-handlers/institution/institution-vaults'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
 import {
   getRwaEmergencyRollbackRoundId,
@@ -35,8 +28,6 @@ import {
 import { urlNetworkToChainId } from '@/helpers/rwa'
 import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 // How many rounds below the current one to scan for ones still awaiting settlement. In normal
 // operation at most one round trails the open round; the window covers a backlog of un-settled rounds.
@@ -82,8 +73,11 @@ const StatePill: FC<{ state: RoundState }> = ({ state }) => {
 type AddTx = (
   item: {
     id: string
-    txDescription: ReactNode
+    txDescription: string
     txLabel: { label: string; charge: 'positive' | 'negative' | 'neutral' }
+    chainId: ReturnType<typeof urlNetworkToChainId>
+    vaultAddress: string
+    revalidateTags: string[]
   },
   tx: Promise<TransactionInfo>,
 ) => void
@@ -100,6 +94,7 @@ interface RoundSideProps {
   positions: RwaRoundPosition[]
   // Share price (NAV) used to value Output (withdrawal) share positions in USD; null when unavailable.
   navPrice: number | null
+  revalidateTags: string[]
 }
 
 const RoundSide: FC<RoundSideProps> = ({
@@ -113,6 +108,7 @@ const RoundSide: FC<RoundSideProps> = ({
   refreshNonce,
   positions,
   navPrice,
+  revalidateTags,
 }) => {
   const { getRwaCurrentRound, getRwaRoundState } = sdk
   const [currentRound, setCurrentRound] = useState<bigint | null>(null)
@@ -187,7 +183,7 @@ const RoundSide: FC<RoundSideProps> = ({
       id: string
       label: string
       charge: 'positive' | 'negative' | 'neutral'
-      description: ReactNode
+      description: string
       tx: Promise<TransactionInfo>
     }) => {
       try {
@@ -196,6 +192,9 @@ const RoundSide: FC<RoundSideProps> = ({
             id: params.id,
             txDescription: params.description,
             txLabel: { label: params.label, charge: params.charge },
+            chainId,
+            vaultAddress: fleetAddress,
+            revalidateTags,
           },
           params.tx,
         )
@@ -205,15 +204,15 @@ const RoundSide: FC<RoundSideProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [addTransaction],
+    [addTransaction, chainId, fleetAddress, revalidateTags],
   )
 
   const onCloseRound = () =>
     queue({
       id: getRwaNextRoundId({ address: fleetAddress, chainId, vaultType }),
-      label: 'Close round',
+      label: 'Close',
       charge: 'neutral',
-      description: <Text variant="p3">close {title.toLowerCase()} (open next)</Text>,
+      description: `${title.toLowerCase()} (open next)`,
       tx: sdk.getRwaNextRoundTx({ fleetAddress, chainId, vaultType }),
     })
 
@@ -227,7 +226,7 @@ const RoundSide: FC<RoundSideProps> = ({
       }),
       label: 'Settle',
       charge: 'positive',
-      description: <Text variant="p3">settle round #{roundId.toString()}</Text>,
+      description: `round #${roundId.toString()}`,
       tx: sdk.getRwaSetRoundSettledTx({ fleetAddress, chainId, vaultType, roundId }),
     })
 
@@ -243,7 +242,7 @@ const RoundSide: FC<RoundSideProps> = ({
         }),
         label: 'Retry',
         charge: 'neutral',
-        description: <Text variant="p3">retry round #{recoveryRound.toString()}</Text>,
+        description: `round #${recoveryRound.toString()}`,
         tx: sdk.getRwaRetryRoundTx({ fleetAddress, chainId, vaultType, roundId: recoveryRound }),
       })
 
@@ -258,7 +257,7 @@ const RoundSide: FC<RoundSideProps> = ({
       }),
       label: 'Rollback',
       charge: 'negative',
-      description: <Text variant="p3">emergency rollback round #{recoveryRound.toString()}</Text>,
+      description: `round #${recoveryRound.toString()} (emergency)`,
       tx: sdk.getRwaEmergencyRollbackRoundTx({
         fleetAddress,
         chainId,
@@ -464,8 +463,11 @@ export const PanelRwaRounds: FC<PanelRwaRoundsProps> = ({
   const { chain, isSettingChain } = useEarnProtocolChain()
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const sdk = useAdminAppRwaSDK(clientId)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
-  const { revalidateTags } = useRevalidateTags()
+  const { addTransaction } = useTransactionQueue()
+  const revalidateTags = useMemo(
+    () => getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
+    [institutionName, vaultAddress, network],
+  )
   const [refreshNonce, setRefreshNonce] = useState(0)
 
   const isProperChain = useMemo(() => chain.id === chainId, [chain.id, chainId])
@@ -479,13 +481,6 @@ export const PanelRwaRounds: FC<PanelRwaRoundsProps> = ({
     () => positions.filter((position) => position.side === 'withdrawal'),
     [positions],
   )
-
-  const onTxSuccess = () => {
-    revalidateTags({
-      tags: getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
-    })
-    setRefreshNonce((n) => n + 1)
-  }
 
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -507,6 +502,7 @@ export const PanelRwaRounds: FC<PanelRwaRoundsProps> = ({
           refreshNonce={refreshNonce}
           positions={depositPositions}
           navPrice={navPrice}
+          revalidateTags={revalidateTags}
         />
         <RoundSide
           title="Withdraw round (output)"
@@ -519,18 +515,14 @@ export const PanelRwaRounds: FC<PanelRwaRoundsProps> = ({
           refreshNonce={refreshNonce}
           positions={withdrawalPositions}
           navPrice={navPrice}
+          revalidateTags={revalidateTags}
         />
       </div>
 
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={chainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
-      />
+      <TransactionQueue onLocalTxSuccess={() => setRefreshNonce((n) => n + 1)} />
     </Card>
   )
 }

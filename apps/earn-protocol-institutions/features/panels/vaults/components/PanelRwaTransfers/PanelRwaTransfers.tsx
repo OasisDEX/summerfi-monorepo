@@ -13,13 +13,12 @@ import {
 import { type NetworkNames } from '@summerfi/app-types'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
 import { getRwaSetTransferabilityId } from '@/helpers/get-transaction-id'
 import { urlNetworkToChainId } from '@/helpers/rwa'
 import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 interface PanelRwaTransfersProps {
   institutionName: string
@@ -41,8 +40,12 @@ export const PanelRwaTransfers: FC<PanelRwaTransfersProps> = ({
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { getRwaIsFleetTransfersEnabled, getRwaSetFleetTransferabilityTx } =
     useAdminAppRwaSDK(clientId)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
-  const { revalidateTags } = useRevalidateTags()
+  const { addTransaction } = useTransactionQueue()
+
+  const revalidateTags = useMemo(
+    () => getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
+    [institutionName, vaultAddress, network],
+  )
 
   const [transfersEnabled, setTransfersEnabled] = useState<boolean | null>(null)
 
@@ -67,13 +70,14 @@ export const PanelRwaTransfers: FC<PanelRwaTransfersProps> = ({
       addTransaction(
         {
           id: getRwaSetTransferabilityId({ address: fleetAddress, chainId }),
-          txDescription: (
-            <Text variant="p3">{willEnable ? 'enable' : 'disable'} share transfers</Text>
-          ),
+          txDescription: 'share transfers',
           txLabel: {
             label: willEnable ? 'Enable' : 'Disable',
             charge: willEnable ? 'positive' : 'negative',
           },
+          chainId,
+          vaultAddress,
+          revalidateTags,
         },
         getRwaSetFleetTransferabilityTx({ fleetAddress, chainId }),
       )
@@ -82,14 +86,15 @@ export const PanelRwaTransfers: FC<PanelRwaTransfersProps> = ({
       console.error('Failed to add transaction to queue', error)
       toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
     }
-  }, [addTransaction, chainId, fleetAddress, getRwaSetFleetTransferabilityTx, transfersEnabled])
-
-  const onTxSuccess = () => {
-    revalidateTags({
-      tags: getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
-    })
-    refreshTransfersEnabled()
-  }
+  }, [
+    addTransaction,
+    chainId,
+    fleetAddress,
+    getRwaSetFleetTransferabilityTx,
+    revalidateTags,
+    transfersEnabled,
+    vaultAddress,
+  ])
 
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -129,12 +134,7 @@ export const PanelRwaTransfers: FC<PanelRwaTransfersProps> = ({
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={chainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
-      />
+      <TransactionQueue onLocalTxSuccess={() => refreshTransfersEnabled()} />
     </Card>
   )
 }
