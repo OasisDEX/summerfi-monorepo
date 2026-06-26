@@ -77,28 +77,26 @@ const rwaClientIdBelongsToInstitution = (clientId: string, institutionName: stri
   clientId === institutionName
 
 /**
- * The institution's RWA `(clientId, networkId)` pairs, derived from the fleet config's per-chain
- * buckets — exactly how the earn-protocol app does it (`getRwaClientIdsForChain` over `fleetMap[chainId]`).
+ * The institution's configured RWA vaults as `{ clientId, networkId, vaultAddress }`, derived from the
+ * fleet config's per-chain buckets (the bucket keys are the vault addresses). A vault is included when
+ * it carries a `vaultCurator` (the RWA signal), is not `disabled`, lives on an RWA-supported chain,
+ * and its `vaultInstitutionId` clientId is EXACTLY this institution's name (see
+ * {@link rwaClientIdBelongsToInstitution}). Deduped by `clientId-networkId-vaultAddress`.
  *
  * The chain pairing comes from which chain bucket a vault's config lives in, so each RWA clientId is
- * fetched ONLY on the chain(s) it's configured for. This is the fix for duplicate vaults: the previous
- * approach cross-producted every clientId against every RWA network, and since the SDK resolves the
- * subgraph from the Client-Id, a clientId's vaults came back once per network iteration. Pairing each
- * clientId with its own chain queries each set exactly once.
- *
- * Only RWA-supported chains are considered; disabled / non-RWA entries and other institutions are
- * skipped. Pairs are deduped by `clientId-networkId`.
+ * associated ONLY with the chain(s) it is configured for — the same source of truth the SDK uses to
+ * resolve the subgraph from the Client-Id.
  */
-export const getInstitutionRwaClientChainPairs = ({
+export const getInstitutionRwaVaults = ({
   systemConfig,
   institutionName,
 }: {
   systemConfig: Partial<EarnAppConfigType>
   institutionName: string
-}): { clientId: string; networkId: number }[] => {
+}): { clientId: string; networkId: number; vaultAddress: string }[] => {
   const fleetMap = systemConfig.fleetMap ?? {}
   const seen = new Set<string>()
-  const pairs: { clientId: string; networkId: number }[] = []
+  const vaults: { clientId: string; networkId: number; vaultAddress: string }[] = []
 
   for (const [chainKey, networkConfig] of Object.entries(
     fleetMap as { [key: string]: { [key: string]: EarnAppFleetCustomConfigType } },
@@ -107,9 +105,9 @@ export const getInstitutionRwaClientChainPairs = ({
 
     // Only chains where the RWA (institutions-v2) subgraph is deployed.
     if (rwaSupportedNetworkIds.includes(networkId as SupportedNetworkIds)) {
-      for (const entry of Object.values(networkConfig)) {
+      for (const [vaultAddress, entry] of Object.entries(networkConfig)) {
         const clientId = entry.vaultInstitutionId
-        const key = `${clientId}-${networkId}`
+        const key = `${clientId}-${networkId}-${vaultAddress.toLowerCase()}`
 
         if (
           entry.vaultCurator &&
@@ -119,9 +117,43 @@ export const getInstitutionRwaClientChainPairs = ({
           !seen.has(key)
         ) {
           seen.add(key)
-          pairs.push({ clientId, networkId })
+          vaults.push({ clientId, networkId, vaultAddress })
         }
       }
+    }
+  }
+
+  return vaults
+}
+
+/**
+ * The institution's RWA `(clientId, networkId)` pairs, derived from {@link getInstitutionRwaVaults} —
+ * exactly how the earn-protocol app does it (`getRwaClientIdsForChain` over `fleetMap[chainId]`).
+ *
+ * This is the fix for duplicate vaults: the previous approach cross-producted every clientId against
+ * every RWA network, and since the SDK resolves the subgraph from the Client-Id, a clientId's vaults
+ * came back once per network iteration. Pairing each clientId with its own chain queries each set
+ * exactly once. Pairs are deduped by `clientId-networkId`.
+ */
+export const getInstitutionRwaClientChainPairs = ({
+  systemConfig,
+  institutionName,
+}: {
+  systemConfig: Partial<EarnAppConfigType>
+  institutionName: string
+}): { clientId: string; networkId: number }[] => {
+  const seen = new Set<string>()
+  const pairs: { clientId: string; networkId: number }[] = []
+
+  for (const { clientId, networkId } of getInstitutionRwaVaults({
+    systemConfig,
+    institutionName,
+  })) {
+    const key = `${clientId}-${networkId}`
+
+    if (!seen.has(key)) {
+      seen.add(key)
+      pairs.push({ clientId, networkId })
     }
   }
 

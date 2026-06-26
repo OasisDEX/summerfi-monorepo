@@ -22,6 +22,7 @@ import {
   EditPercentageValueModal,
   EditTokenValueModal,
 } from '@/components/molecules/EditValueModal/EditValueModal'
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { marketRiskParametersColumns } from '@/features/panels/vaults/components/PanelRiskParameters/market-risk-parameters-table/columns'
@@ -511,6 +512,7 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
 
   return (
     <Card variant="cardSecondary" className={styles.panelRiskParametersWrapper}>
+      <SwitchChainButton requiredChainId={chainId} />
       <Text as="h5" variant="h5">
         Vault Risk Parameters
       </Text>

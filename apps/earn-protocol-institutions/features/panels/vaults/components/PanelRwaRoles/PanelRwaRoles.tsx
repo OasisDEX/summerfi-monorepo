@@ -16,13 +16,14 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { formatAddress } from '@summerfi/app-utils'
 import { type AddressValue, type Role, type RwaRole } from '@summerfi/sdk-common'
 
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
 import { getRwaGrantRoleId, getRwaRevokeRoleId } from '@/helpers/get-transaction-id'
 import { isValidAddress } from '@/helpers/is-valid-address'
 import { urlNetworkToChainId } from '@/helpers/rwa'
-import { resolveRwaRoleLabel } from '@/helpers/rwa-roles'
+import { buildContractRoleHashMap, resolveRwaRoleLabel } from '@/helpers/rwa-roles'
 import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 
@@ -104,6 +105,9 @@ interface PanelRwaRolesProps {
   clientId: string
   vaultAddress: string
   network: NetworkNames
+  // Fleet ark addresses — candidate targets for reversing raw contract-role hashes (Commander roles
+  // target arks, which the subgraph leaves as a zero `targetContract`).
+  arks: string[]
 }
 
 export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
@@ -111,6 +115,7 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
   clientId,
   vaultAddress,
   network,
+  arks,
 }) => {
   const chainId = urlNetworkToChainId(network)
   const { chain, isSettingChain } = useEarnProtocolChain()
@@ -136,6 +141,17 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
     [selectedKind],
   )
 
+  // Reverse-lookup for contract-specific role hashes the subgraph couldn't decode (raw bytes32 name +
+  // zero targetContract). Candidate targets: the vault, its arks, and every address already in the
+  // role set (owners + non-zero targets — e.g. operator accounts that hold contract roles).
+  const contractRoleMap = useMemo(() => {
+    const candidates: (string | null)[] = [vaultAddress, ...arks]
+
+    holders?.forEach((role) => candidates.push(role.owner, role.targetContract))
+
+    return buildContractRoleHashMap(candidates)
+  }, [vaultAddress, arks, holders])
+
   // Flattened, role-sorted rows for the grants table. Grouping is implicit via the sort; the role
   // label, scope and count render only on the first row of each role block. Unknown roles sort last.
   const tableRows = useMemo(() => {
@@ -143,9 +159,15 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
 
     return holders
       .map((role) => {
-        const resolved = resolveRwaRoleLabel(role.name, role.targetContract)
+        const resolved = resolveRwaRoleLabel(role.name, role.targetContract, contractRoleMap)
 
-        return { role, label: resolved.label, scope: resolved.scope }
+        return {
+          role,
+          label: resolved.label,
+          scope: resolved.scope,
+          // Resolved target wins over the (often zero) subgraph `targetContract` for raw-hash roles.
+          appliesTo: resolved.target ?? role.targetContract,
+        }
       })
       .sort((a, b) => {
         const rank = (scope: 'global' | 'contract' | 'unknown') => (scope === 'unknown' ? 1 : 0)
@@ -156,7 +178,7 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
           a.role.owner.localeCompare(b.role.owner)
         )
       })
-  }, [holders])
+  }, [holders, contractRoleMap])
 
   const roleCounts = useMemo(() => {
     const counts = new Map<string, number>()
@@ -235,6 +257,7 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
 
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <SwitchChainButton requiredChainId={chainId} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Text as="h5" variant="h5">
           Grant / revoke role
@@ -352,9 +375,9 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
                   const previous = index > 0 ? tableRows[index - 1] : null
                   const isGroupStart = !previous || previous.label !== row.label
                   const hasTarget =
-                    !!row.role.targetContract &&
-                    isValidAddress(row.role.targetContract) &&
-                    !/^0x0+$/u.test(row.role.targetContract)
+                    !!row.appliesTo &&
+                    isValidAddress(row.appliesTo) &&
+                    !/^0x0+$/u.test(row.appliesTo)
 
                   return (
                     <tr
@@ -406,7 +429,7 @@ export const PanelRwaRoles: FC<PanelRwaRolesProps> = ({
                             color: hasTarget ? undefined : 'var(--color-text-secondary)',
                           }}
                         >
-                          {hasTarget ? formatAddress(row.role.targetContract as string) : '—'}
+                          {hasTarget ? formatAddress(row.appliesTo as string) : '—'}
                         </Text>
                       </td>
                     </tr>

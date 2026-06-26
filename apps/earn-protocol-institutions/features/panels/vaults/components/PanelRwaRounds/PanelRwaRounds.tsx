@@ -16,6 +16,7 @@ import { formatAddress, formatCryptoBalance, formatFiatBalance } from '@summerfi
 import { RoundState, RoundsVaultType, type TransactionInfo } from '@summerfi/sdk-common'
 
 import { type RwaRoundPosition } from '@/app/server-handlers/institution/institution-vaults'
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
@@ -484,6 +485,7 @@ export const PanelRwaRounds: FC<PanelRwaRoundsProps> = ({
 
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <SwitchChainButton requiredChainId={chainId} />
       {positionsTruncated ? (
         <Text variant="p4" style={{ color: 'var(--color-text-warning)' }}>
           This vault has a large deposit/withdrawal queue — some positions may be omitted from the

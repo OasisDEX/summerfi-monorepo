@@ -15,6 +15,7 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { chainIdToSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
 import { InstiContractRoles } from '@summerfi/sdk-common'
 
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { AddNewRoleForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddNewRoleForm'
@@ -155,6 +156,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
 
   return (
     <Card variant="cardSecondary" className={panelRoleStyles.panelRoleAdminWrapper}>
+      <SwitchChainButton requiredChainId={chainId} />
       <div className={panelRoleStyles.titleWithInput}>
         <Text as="h5" variant="h5">
           Roles

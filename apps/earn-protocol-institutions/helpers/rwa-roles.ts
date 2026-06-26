@@ -1,3 +1,4 @@
+import { InstiContractRoles } from '@summerfi/sdk-common'
 import { encodePacked, keccak256, toBytes } from 'viem'
 
 // Friendly labels keyed by the on-chain role-name string.
@@ -27,13 +28,18 @@ const GLOBAL_ROLE_NAMES = [
   'WHITELIST_MANAGER_ROLE',
 ] as const
 
-// Contract-specific roles: the on-chain id is keccak256(encodePacked(['string','address'], [name, target])).
-const CONTRACT_ROLE_NAMES = [
-  'KEEPER_ROLE',
-  'CURATOR_ROLE',
-  'COMMANDER_ROLE',
-  'OPERATOR_ROLE',
-] as const
+// Contract-specific roles. On chain these are `generateRole(roleName, target)` =
+// keccak256(abi.encodePacked(uint8 roleName, address target)), where `roleName` is the
+// `InstiContractRoles` enum index (NOT the string). The earlier string-packed scheme never matched
+// any on-chain hash — see [[rwa-roles-unknown-scope]].
+const CONTRACT_ROLE_ENUM: { name: string; index: InstiContractRoles }[] = [
+  { name: 'CURATOR_ROLE', index: InstiContractRoles.CURATOR_ROLE },
+  { name: 'KEEPER_ROLE', index: InstiContractRoles.KEEPER_ROLE },
+  { name: 'COMMANDER_ROLE', index: InstiContractRoles.COMMANDER_ROLE },
+  { name: 'OPERATOR_ROLE', index: InstiContractRoles.OPERATOR_ROLE },
+]
+
+const CONTRACT_ROLE_NAMES = CONTRACT_ROLE_ENUM.map((r) => r.name)
 
 const DEFAULT_ADMIN_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
@@ -46,30 +52,70 @@ globalHashToName.set(DEFAULT_ADMIN_HASH, 'DEFAULT_ADMIN_ROLE')
 
 const isBytes32 = (value: string): boolean => /^0x[0-9a-f]{64}$/iu.test(value)
 const isAddress = (value: string): value is `0x${string}` => /^0x[0-9a-f]{40}$/iu.test(value)
+const isZeroAddress = (value: string): boolean => /^0x0+$/u.test(value)
+
+export type ContractRoleHashMap = Map<string, { roleName: string; target: string }>
 
 export type ResolvedRwaRole = {
   /** Friendly label, e.g. "Keeper" — or a truncated hash for unrecognised roles. */
   label: string
   scope: 'global' | 'contract' | 'unknown'
+  /** For contract-specific roles, the target the role applies to (fleet/ark/account), when known. */
+  target?: string
+}
+
+/**
+ * Builds a reverse lookup (roleHash → role-name + target) for contract-specific roles by hashing each
+ * `(InstiContractRoles enum, candidate target)` pair the way the on-chain `generateRole(uint8,address)`
+ * does. The v2 subgraph only decodes contract roles whose target it recognises as a FleetCommander, so
+ * roles targeting arks (Commander) or arbitrary accounts arrive as raw bytes32 names with a zero
+ * `targetContract`. Feeding the vault, its arks and every address seen in the role set as candidate
+ * targets lets {@link resolveRwaRoleLabel} reverse those raw hashes instead of showing them as Unknown.
+ */
+export const buildContractRoleHashMap = (
+  targets: readonly (string | null | undefined)[],
+): ContractRoleHashMap => {
+  const map: ContractRoleHashMap = new Map()
+  const seen = new Set<string>()
+
+  targets.forEach((target) => {
+    if (!target || !isAddress(target) || isZeroAddress(target)) return
+    const lower = target.toLowerCase()
+
+    if (seen.has(lower)) return
+    seen.add(lower)
+
+    CONTRACT_ROLE_ENUM.forEach(({ name: roleName, index }) => {
+      const hash = keccak256(encodePacked(['uint8', 'address'], [index, target])).toLowerCase()
+
+      if (!map.has(hash)) map.set(hash, { roleName, target })
+    })
+  })
+
+  return map
 }
 
 /**
  * Resolves a subgraph role `name` (a readable role string for some roles, a raw bytes32 hash for
  * others) into a friendly label. Global roles are matched against precomputed keccak hashes;
- * contract-specific roles are reversed by recomputing the hash from each candidate role-name and the
- * role's `targetContract`. Unrecognised hashes degrade to a truncated form rather than a 66-char blob.
+ * contract-specific roles whose name arrives as a raw hash are reversed via `contractRoleMap` (built
+ * from the vault, its arks and the addresses in the role set — see {@link buildContractRoleHashMap}).
+ * Unrecognised hashes degrade to a truncated form rather than a 66-char blob.
  */
 export const resolveRwaRoleLabel = (
   rawName: string,
   targetContract?: string | null,
+  contractRoleMap?: ContractRoleHashMap,
 ): ResolvedRwaRole => {
   // Already a readable role-name string (e.g. the subgraph returned "GOVERNOR_ROLE").
   if (ROLE_LABELS[rawName]) {
-    const scope = (CONTRACT_ROLE_NAMES as readonly string[]).includes(rawName)
-      ? 'contract'
-      : 'global'
+    const isContractRole = CONTRACT_ROLE_NAMES.includes(rawName)
 
-    return { label: ROLE_LABELS[rawName], scope }
+    return {
+      label: ROLE_LABELS[rawName],
+      scope: isContractRole ? 'contract' : 'global',
+      target: isContractRole ? (targetContract ?? undefined) : undefined,
+    }
   }
   if (!isBytes32(rawName)) {
     return { label: rawName, scope: 'unknown' }
@@ -81,35 +127,16 @@ export const resolveRwaRoleLabel = (
   if (globalName) {
     return { label: ROLE_LABELS[globalName] ?? globalName, scope: 'global' }
   }
-  if (targetContract && isAddress(targetContract)) {
-    for (const candidateRoleName of CONTRACT_ROLE_NAMES) {
-      const candidate = keccak256(
-        encodePacked(['string', 'address'], [candidateRoleName, targetContract]),
-      ).toLowerCase()
 
-      if (candidate === lower) {
-        return { label: ROLE_LABELS[candidateRoleName], scope: 'contract' }
-      }
+  const contractMatch = contractRoleMap?.get(lower)
+
+  if (contractMatch) {
+    return {
+      label: ROLE_LABELS[contractMatch.roleName] ?? contractMatch.roleName,
+      scope: 'contract',
+      target: contractMatch.target,
     }
   }
 
   return { label: `${rawName.slice(0, 10)}…${rawName.slice(-4)}`, scope: 'unknown' }
-}
-
-/**
- * Computes the on-chain role hash for a grantable role kind (e.g. 'GOVERNOR', 'KEEPER'). Global roles
- * hash the name directly; contract-specific roles need a `target`. Returns null when a target is
- * required but missing/invalid (used to show the hash in the grant/revoke form for verification).
- */
-export const computeRwaRoleHash = (kind: string, target?: string): `0x${string}` | null => {
-  const roleName = `${kind}_ROLE`
-
-  if ((GLOBAL_ROLE_NAMES as readonly string[]).includes(roleName)) {
-    return keccak256(toBytes(roleName))
-  }
-  if (target && isAddress(target)) {
-    return keccak256(encodePacked(['string', 'address'], [roleName, target]))
-  }
-
-  return null
 }

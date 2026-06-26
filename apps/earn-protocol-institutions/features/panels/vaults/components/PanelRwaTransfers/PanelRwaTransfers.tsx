@@ -12,6 +12,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
@@ -98,6 +99,7 @@ export const PanelRwaTransfers: FC<PanelRwaTransfersProps> = ({
 
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <SwitchChainButton requiredChainId={chainId} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Text as="h5" variant="h5">
           Share-token transferability

@@ -23,6 +23,7 @@ import {
 import { type Role } from '@summerfi/sdk-common'
 
 import { type InstiVaultActiveUsersResponse } from '@/app/server-handlers/institution/institution-vaults/types'
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { AddWhitelistForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddWhitelistForm'
@@ -332,6 +333,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
 
   return (
     <Card variant="cardSecondary" className={panelUserStyles.panelUserAdminWrapper}>
+      <SwitchChainButton requiredChainId={chainId} />
       <div className={panelUserStyles.titleWithInput}>
         <Text as="h5" variant="h5">
           Active Users

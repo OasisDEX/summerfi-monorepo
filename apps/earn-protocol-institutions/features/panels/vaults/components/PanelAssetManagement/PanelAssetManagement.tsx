@@ -26,6 +26,7 @@ import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
@@ -487,6 +488,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       variant="cardSecondary"
       className={panelAssetManagementStyles.panelAssetManagementWrapper}
     >
+      <SwitchChainButton requiredChainId={vaultChainId as SupportedNetworkIds} />
       <div className={panelAssetManagementStyles.assetManagementBlocks}>
         <div className={panelAssetManagementStyles.statsSection}>
           <Card style={{ flexDirection: 'column' }}>

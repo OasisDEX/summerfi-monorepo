@@ -14,6 +14,7 @@ import {
 import { type NetworkNames } from '@summerfi/app-types'
 import { formatAddress } from '@summerfi/app-utils'
 
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
@@ -155,6 +156,7 @@ export const PanelRwaWhitelist: FC<PanelRwaWhitelistProps> = ({
 
   return (
     <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <SwitchChainButton requiredChainId={chainId} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Text as="h5" variant="h5">
           Whitelist status

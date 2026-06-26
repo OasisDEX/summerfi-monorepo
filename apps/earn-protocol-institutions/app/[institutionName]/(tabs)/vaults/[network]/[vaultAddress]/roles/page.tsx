@@ -1,7 +1,9 @@
 import { type NetworkNames } from '@summerfi/app-types'
+import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 import { redirect } from 'next/navigation'
 
 import { getCachedConfig } from '@/app/server-handlers/config'
+import { getCachedVaultDetails } from '@/app/server-handlers/institution/institution-vaults'
 import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { PanelRwaRoles } from '@/features/panels/vaults/components/PanelRwaRoles/PanelRwaRoles'
 import { getRwaClientIdForVault, urlNetworkToChainId } from '@/helpers/rwa'
@@ -26,6 +28,14 @@ export default async function InstitutionVaultRolesPage({
     redirect(`/${institutionName}/vaults/${network}/${vaultAddress}/overview`)
   }
 
+  // Ark addresses are candidate targets for reversing raw Commander-role hashes in the grants table.
+  const vault = await getCachedVaultDetails({
+    institutionName,
+    vaultAddress: vaultAddress.toLowerCase(),
+    network: humanNetworktoSDKNetwork(network),
+  })
+  const arks = vault?.arks.map((ark) => ark.id) ?? []
+
   return (
     <ClientSideSdkWrapper>
       <PanelRwaRoles
@@ -33,6 +43,7 @@ export default async function InstitutionVaultRolesPage({
         clientId={rwaClientId}
         vaultAddress={vaultAddress}
         network={network}
+        arks={arks}
       />
     </ClientSideSdkWrapper>
   )

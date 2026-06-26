@@ -16,6 +16,7 @@ import { chainIdToSDKNetwork, formatDecimalAsPercent } from '@summerfi/app-utils
 import BigNumber from 'bignumber.js'
 
 import { EditPercentageValueModal } from '@/components/molecules/EditValueModal/EditValueModal'
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { feeRevenueColumns } from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/tables/fee-revenue/columns'
@@ -208,6 +209,7 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
 
   return (
     <Card variant="cardSecondary" className={classNames.panelFeeRevenueAdminWrapper}>
+      <SwitchChainButton requiredChainId={chainId} />
       <Text as="h5" variant="h5">
         Fee & revenue admin
       </Text>

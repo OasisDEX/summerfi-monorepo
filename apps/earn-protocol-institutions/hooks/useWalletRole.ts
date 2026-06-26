@@ -7,6 +7,10 @@ import { globalRoleToHuman } from '@/helpers/wallet-roles'
 
 export const useWalletGlobalRole = ({ institutionName }: { institutionName: string }) => {
   const [connectedRoles, setConnectedRoles] = useState<GlobalRoles[] | null>(null)
+  // RWA (institutions-v2) role labels, already human-readable (e.g. "Curator", "Keeper"). Kept
+  // separate from the global `GlobalRoles[]` since RWA roles include contract-specific roles that
+  // aren't part of that enum.
+  const [connectedRwaRoleLabels, setConnectedRwaRoleLabels] = useState<string[] | null>(null)
   const [isLoadingConnectedRoles, setIsLoadingConnectedRoles] = useState<boolean>(true)
   const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const abortControllerRef = useRef<AbortController | null>(null)
@@ -15,11 +19,13 @@ export const useWalletGlobalRole = ({ institutionName }: { institutionName: stri
     setIsLoadingConnectedRoles(false)
     if (isLoadingAccount && userWalletAddress) {
       setConnectedRoles(null)
+      setConnectedRwaRoleLabels(null)
 
       return
     }
     if (!userWalletAddress) {
       setConnectedRoles(null)
+      setConnectedRwaRoleLabels(null)
 
       return
     }
@@ -43,12 +49,14 @@ export const useWalletGlobalRole = ({ institutionName }: { institutionName: stri
         } else {
           setConnectedRoles(null)
         }
+        setConnectedRwaRoleLabels(data?.rwaRoleLabels ?? null)
       })
       .catch((err) => {
         if (err.name !== 'AbortError') {
           // eslint-disable-next-line no-console
           console.error('Error fetching user data', err)
           setConnectedRoles(null)
+          setConnectedRwaRoleLabels(null)
         }
       })
       .finally(() => {
@@ -68,15 +76,33 @@ export const useWalletGlobalRole = ({ institutionName }: { institutionName: stri
     if (isLoadingAccount || isLoadingConnectedRoles) {
       return 'Loading...'
     }
-    if (!connectedRoles || connectedRoles.length === 0) {
+
+    // Union of global roles (standard institutions) and RWA role labels (institutions-v2). Deduped
+    // because RWA `getAllRoles` also surfaces global roles, so a mixed institution could list a role
+    // from both sources.
+    const labels = Array.from(
+      new Set([
+        ...(connectedRoles ?? []).map(globalRoleToHuman),
+        ...(connectedRwaRoleLabels ?? []),
+      ]),
+    )
+
+    if (labels.length === 0) {
       return 'No role'
     }
 
-    return connectedRoles.map(globalRoleToHuman).join(', ')
-  }, [connectedRoles, isLoadingAccount, userWalletAddress, isLoadingConnectedRoles])
+    return labels.join(', ')
+  }, [
+    connectedRoles,
+    connectedRwaRoleLabels,
+    isLoadingAccount,
+    userWalletAddress,
+    isLoadingConnectedRoles,
+  ])
 
   return {
     connectedRoles,
+    connectedRwaRoleLabels,
     connectedRolesLabel,
   }
 }
