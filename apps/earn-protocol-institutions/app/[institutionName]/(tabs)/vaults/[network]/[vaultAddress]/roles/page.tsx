@@ -23,7 +23,7 @@ export default async function InstitutionVaultRolesPage({
 
   // RWA-only tab: bounce a standard vault to its overview (standard vaults use the Role admin tab).
   if (!rwaClientId) {
-    redirect(`/${institutionName}/vaults/${network}/${vaultAddress}/overview/institution`)
+    redirect(`/${institutionName}/vaults/${network}/${vaultAddress}/overview`)
   }
 
   return (

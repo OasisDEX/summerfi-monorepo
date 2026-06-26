@@ -1106,6 +1106,9 @@ export type RwaVaultRiskParameters = {
     name: string | null
     depositCap: string | null
     tokenSymbol: string
+    // Ark input-token decimals — needed to normalize the raw `getEffectiveArkDepositCap` value the
+    // implied-caps map returns (mirrors the standard panel's `ark.inputToken.decimals`).
+    decimals: number
     maxDepositPercentage: number | null
   }[]
 }
@@ -1167,6 +1170,7 @@ const getRwaVaultRiskParameters = async ({
         name: ark.name ?? null,
         depositCap: normalizeAmount(ark.depositCap, ark.inputToken.decimals),
         tokenSymbol: ark.inputToken.symbol,
+        decimals: ark.inputToken.decimals,
         maxDepositPercentage: new BigNumber(ark.maxDepositPercentageOfTVL.toString())
           .shiftedBy(-18)
           .toNumber(),

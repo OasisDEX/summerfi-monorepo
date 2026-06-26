@@ -6,7 +6,6 @@ import {
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
-import { redirect } from 'next/navigation'
 
 import { getCachedConfig } from '@/app/server-handlers/config'
 import {
@@ -15,7 +14,6 @@ import {
 } from '@/app/server-handlers/institution/institution-vaults'
 import { INSTITUTIONS_CACHE_TAGS, INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
-import { getRwaClientIdForVault, urlNetworkToChainId } from '@/helpers/rwa'
 
 export default async function InstitutionVaultVaultExposurePage({
   params,
@@ -35,18 +33,11 @@ export default async function InstitutionVaultVaultExposurePage({
     ],
   }
 
-  // Standard fleet-management tab — not applicable to RWA vaults (no multi-ark allocation). Bounce an
-  // RWA vault (resolved from config by address) to its overview.
+  // RWA vaults are FleetCommander vaults with real multi-ark allocation (the same arks driven by the
+  // Risk Parameters tab), so the exposure view applies to them too — `getCachedVaultDetails` is
+  // RWA-aware and resolves them via the v2 SDK. APY / on-chain-ark data is sourced from earn-protocol
+  // and may be sparse for RWA arks, which the panel renders as N/A rather than failing.
   const config = await getCachedConfig()
-  const rwaClientId = getRwaClientIdForVault({
-    systemConfig: config,
-    networkId: urlNetworkToChainId(network),
-    vaultAddress,
-  })
-
-  if (rwaClientId) {
-    redirect(`/${institutionName}/vaults/${network}/${vaultAddress}/overview`)
-  }
 
   const [vault, arksDeployedOnChain] = await Promise.all([
     getCachedVaultDetails({

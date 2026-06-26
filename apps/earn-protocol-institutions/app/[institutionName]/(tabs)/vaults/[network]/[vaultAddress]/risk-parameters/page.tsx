@@ -40,6 +40,16 @@ export default async function InstitutionVaultRiskParametersPage({
       vaultAddress,
     })
 
+    // RWA vaults are FleetCommander contracts, so the implied (effective) ark deposit cap reads off
+    // the same `getEffectiveArkDepositCap` method standard vaults use — the generic implied-caps
+    // fetcher works unchanged once given this vault's ark addresses.
+    const rwaArksImpliedCapsMap = await getCachedInstitutionVaultArksImpliedCapsMap({
+      network: parsedNetwork,
+      arksAddresses: riskParameters?.arks.map((ark) => ark.id) ?? [],
+      vaultAddress,
+      institutionName,
+    })
+
     return (
       <ClientSideSdkWrapper>
         <PanelRwaRiskParameters
@@ -48,6 +58,7 @@ export default async function InstitutionVaultRiskParametersPage({
           vaultAddress={vaultAddress}
           network={network}
           riskParameters={riskParameters}
+          arksImpliedCapsMap={rwaArksImpliedCapsMap}
         />
       </ClientSideSdkWrapper>
     )

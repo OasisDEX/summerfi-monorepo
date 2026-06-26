@@ -115,26 +115,25 @@ export const PanelRwaFeeRevenueAdmin: FC<PanelRwaFeeRevenueAdminProps> = ({
     {
       content: {
         name: <TableCellText>Management Fee</TableCellText>,
+        // The value itself is the edit affordance (gray, underlined-on-hover) — matching the Risk
+        // Parameters tables — rather than a separate "Edit" button in the action column.
         'aum-fee': (
           <TableCellNodes>
-            {managementFee != null
-              ? formatDecimalAsPercent(managementFee, { precision: 2 })
-              : 'n/a'}
-          </TableCellNodes>
-        ),
-        action:
-          managementFee != null ? (
-            <TableCellNodes>
+            {managementFee != null ? (
               <EditPercentageValueModal
-                buttonLabel="Edit"
+                buttonLabel={formatDecimalAsPercent(managementFee, { precision: 2 })}
                 modalTitle="Edit Management Fee"
                 modalDescription="Edit the vault management fee (tip rate). Capped at 5%."
                 editValue={{ label: 'Management Fee', valueNormalized: managementFee }}
                 onAddTransaction={onSetManagementFee}
                 loading={controlsDisabled}
               />
-            </TableCellNodes>
-          ) : null,
+            ) : (
+              'n/a'
+            )}
+          </TableCellNodes>
+        ),
+        action: null,
       },
     },
     {

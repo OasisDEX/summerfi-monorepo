@@ -47,6 +47,9 @@ interface PanelRwaRiskParametersProps {
   vaultAddress: string
   network: NetworkNames
   riskParameters: RwaVaultRiskParameters | null
+  // Effective (implied) ark deposit caps, keyed by ark address — raw on-chain values read from the
+  // FleetCommander's `getEffectiveArkDepositCap`, scaled by the ark's input-token decimals.
+  arksImpliedCapsMap: { [x: string]: string | undefined }
 }
 
 type RwaArk = RwaVaultRiskParameters['arks'][number]
@@ -69,6 +72,7 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
   vaultAddress,
   network,
   riskParameters,
+  arksImpliedCapsMap,
 }) => {
   const chainId = urlNetworkToChainId(network)
   const fleetAddress = vaultAddress.toLowerCase() as `0x${string}`
@@ -474,6 +478,14 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       const marketName = getArkNiceName(arkForName) || 'Unknown Market'
 
+      // Effective ark deposit cap from `getEffectiveArkDepositCap`, raw on-chain → normalize by the
+      // ark's input-token decimals (same as the standard PanelRiskParameters).
+      const rawImpliedCap = arksImpliedCapsMap[ark.id]
+      const impliedCap =
+        typeof rawImpliedCap === 'string'
+          ? new BigNumber(rawImpliedCap).shiftedBy(-ark.decimals).toString()
+          : null
+
       return {
         content: {
           market: <TableCellText>{marketName}</TableCellText>,
@@ -519,8 +531,9 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
               )}
             </TableCellNodes>
           ),
-          // Implied cap isn't exposed by the RWA contracts/subgraph, so it's always n/a here.
-          'implied-cap': <TableCellNodes>n/a</TableCellNodes>,
+          'implied-cap': (
+            <TableCellNodes>{displayAmount(impliedCap, ark.tokenSymbol)}</TableCellNodes>
+          ),
         },
       }
     })
@@ -533,6 +546,8 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
     revalidateTags({
       tags: [
         `rwa-vault-risk-parameters-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName}`,
+        // Ark cap / max-% edits change the effective (implied) cap, so bust its cache too.
+        `institution-vault-arks-implied-caps-${vaultAddress.toLowerCase()}-${sdkNetworkName}`,
         `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName}`,
       ],
     })
