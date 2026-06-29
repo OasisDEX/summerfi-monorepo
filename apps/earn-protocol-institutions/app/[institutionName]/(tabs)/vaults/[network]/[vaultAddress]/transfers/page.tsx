@@ -1,11 +1,8 @@
 import { type NetworkNames } from '@summerfi/app-types'
 import { redirect } from 'next/navigation'
 
-import { getCachedConfig } from '@/app/server-handlers/config'
-import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
-import { PanelRwaTransfers } from '@/features/panels/vaults/components/PanelRwaTransfers/PanelRwaTransfers'
-import { getRwaClientIdForVault, urlNetworkToChainId } from '@/helpers/rwa'
-
+// Share-token transferability moved into the Risk Parameters panel (RWA-exclusive). This legacy
+// route just forwards there so any existing bookmarks keep working.
 export default async function InstitutionVaultTransfersPage({
   params,
 }: {
@@ -13,27 +10,5 @@ export default async function InstitutionVaultTransfersPage({
 }) {
   const { institutionName, vaultAddress, network } = await params
 
-  const config = await getCachedConfig()
-  const chainId = urlNetworkToChainId(network)
-  const rwaClientId = getRwaClientIdForVault({
-    systemConfig: config,
-    networkId: chainId,
-    vaultAddress,
-  })
-
-  // RWA-only tab: bounce a standard vault to its overview.
-  if (!rwaClientId) {
-    redirect(`/${institutionName}/vaults/${network}/${vaultAddress}/overview/institution`)
-  }
-
-  return (
-    <ClientSideSdkWrapper>
-      <PanelRwaTransfers
-        institutionName={institutionName}
-        clientId={rwaClientId}
-        vaultAddress={vaultAddress}
-        network={network}
-      />
-    </ClientSideSdkWrapper>
-  )
+  redirect(`/${institutionName}/vaults/${network}/${vaultAddress}/risk-parameters`)
 }

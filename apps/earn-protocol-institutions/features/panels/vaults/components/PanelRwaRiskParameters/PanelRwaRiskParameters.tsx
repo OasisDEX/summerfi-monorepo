@@ -1,8 +1,9 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect, useMemo, useState } from 'react'
+import { type FC, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import {
+  Button,
   Card,
   ERROR_TOAST_CONFIG,
   getArkNiceName,
@@ -11,6 +12,7 @@ import {
   TableCellText,
   Text,
   useEarnProtocolChain,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
 import { chainIdToSDKNetwork, formatPercent, formatWithSeparators } from '@summerfi/app-utils'
@@ -28,14 +30,17 @@ import { useTransactionQueue } from '@/contexts/TransactionQueueContext/Transact
 import { marketRiskParametersColumns } from '@/features/panels/vaults/components/PanelRiskParameters/market-risk-parameters-table/columns'
 import { vaultRiskParametersColumns } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/columns'
 import { vaultRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/mapper'
+import { getInstitutionVaultCacheTags } from '@/helpers/get-institution-vault-cache-tags'
 import {
   getChangeArkDepositCapId,
   getChangeArkMaxDepositPercentageId,
   getChangeMinimumBufferBalanceId,
   getChangeVaultCapId,
   getRwaSetMinimumPositionSizeId,
+  getRwaSetTransferabilityId,
 } from '@/helpers/get-transaction-id'
 import { urlNetworkToChainId } from '@/helpers/rwa'
+import { withRetry } from '@/helpers/with-retry'
 import { useAdminAppRwaSDK } from '@/hooks/useAdminAppSDK'
 
 import styles from '@/features/panels/vaults/components/PanelRiskParameters/PanelRiskParameters.module.css'
@@ -86,8 +91,15 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
     ],
     [institutionName, vaultAddress, sdkNetworkName],
   )
+  // Cache tags for the share-transferability toggle — keyed the same way the (now-merged) Transfers
+  // panel busted them, independent of the risk-parameter tags above.
+  const transfersRevalidateTags = useMemo(
+    () => getInstitutionVaultCacheTags({ institutionName, vaultAddress, network }),
+    [institutionName, vaultAddress, network],
+  )
   const fleetAddress = vaultAddress.toLowerCase() as `0x${string}`
   const { chain, isSettingChain } = useEarnProtocolChain()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   // RWA vaults are FleetCommander contracts, so the generic fleet admin setters apply here exactly as
   // on standard vaults. `useAdminAppRwaSDK` returns the full managed surface (admin setters + RWA tx
   // builders), so caps/buffer/ark params are editable through the same insti-v2 SDK.
@@ -99,15 +111,65 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
     setArkMaxDepositPercentageOfTVL,
     getTargetChainInfo,
     getTokenBySymbol,
+    getRwaIsFleetTransfersEnabled,
+    getRwaSetFleetTransferabilityTx,
   } = useAdminAppRwaSDK(clientId)
   const { addTransaction } = useTransactionQueue()
 
   // The cap / buffer / ark-cap setters need a resolved `IToken`; resolve the vault input token once
   // and reuse it for all three (arks share the vault input token, as the standard panel assumes).
   const [vaultInputToken, setVaultInputToken] = useState<IToken>()
+  const [transfersEnabled, setTransfersEnabled] = useState<boolean | null>(null)
 
   const isProperChain = useMemo(() => chain.id === chainId, [chain.id, chainId])
   const controlsDisabled = !isProperChain || isSettingChain
+  // The transferability toggle additionally requires a connected wallet (unlike the value-edit modals,
+  // which gate on the wallet inside the modal flow).
+  const transfersControlsDisabled = controlsDisabled || !userWalletAddress
+
+  const refreshTransfersEnabled = useCallback(() => {
+    withRetry(() => getRwaIsFleetTransfersEnabled({ fleetAddress, chainId }))
+      .then(setTransfersEnabled)
+      .catch(() => setTransfersEnabled(null))
+  }, [getRwaIsFleetTransfersEnabled, fleetAddress, chainId])
+
+  useEffect(() => {
+    refreshTransfersEnabled()
+  }, [refreshTransfersEnabled])
+
+  const onToggleTransfers = useCallback(() => {
+    // The contract method is a no-arg flip; the next state is the inverse of the current read.
+    const willEnable = transfersEnabled === false
+
+    try {
+      addTransaction(
+        {
+          id: getRwaSetTransferabilityId({ address: fleetAddress, chainId }),
+          txDescription: 'share transfers',
+          txLabel: {
+            label: willEnable ? 'Enable' : 'Disable',
+            charge: willEnable ? 'positive' : 'negative',
+          },
+          chainId,
+          vaultAddress,
+          revalidateTags: transfersRevalidateTags,
+        },
+        getRwaSetFleetTransferabilityTx({ fleetAddress, chainId }),
+      )
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to add transaction to queue', error)
+      toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
+    }
+  }, [
+    addTransaction,
+    chainId,
+    fleetAddress,
+    getRwaSetFleetTransferabilityTx,
+    transfersRevalidateTags,
+    transfersEnabled,
+    vaultAddress,
+  ])
 
   const inputTokenSymbol = riskParameters?.inputTokenSymbol
 
@@ -537,10 +599,43 @@ export const PanelRwaRiskParameters: FC<PanelRwaRiskParametersProps> = ({
         />
       </Card>
 
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <Text as="h5" variant="h5">
+          Share-token transferability
+        </Text>
+        <Card style={{ display: 'flex', flexDirection: 'column' }}>
+          <Text variant="p4" style={{ color: 'var(--color-text-secondary)' }}>
+            Controls whether holders can transfer the fleet share token.
+          </Text>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 16,
+            }}
+          >
+            <Text variant="p2">
+              Transfers are currently:&nbsp;
+              <Text as="span" variant="p2semi" style={{ color: 'var(--color-text-link)' }}>
+                {transfersEnabled === null ? 'unknown' : transfersEnabled ? 'ENABLED' : 'DISABLED'}
+              </Text>
+            </Text>
+            <Button
+              variant="secondarySmall"
+              disabled={transfersControlsDisabled || transfersEnabled === null}
+              onClick={onToggleTransfers}
+            >
+              {transfersEnabled ? 'Disable transfers' : 'Enable transfers'}
+            </Button>
+          </div>
+        </Card>
+      </div>
+
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue />
+      <TransactionQueue onLocalTxSuccess={() => refreshTransfersEnabled()} />
     </Card>
   )
 }

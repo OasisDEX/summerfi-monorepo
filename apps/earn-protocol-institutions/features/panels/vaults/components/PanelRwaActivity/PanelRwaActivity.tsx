@@ -64,23 +64,41 @@ export const PanelRwaActivity: FC<{ activity: RwaVaultActivity }> = ({ activity 
       content: {
         when: <Text variant="p3">{dayjs.unix(item.timestamp).format('MMM D, YYYY HH:mm')}</Text>,
         type: <Text variant="p3">{labelForActivity(item)}</Text>,
+        // Two stacked lines so the row fits without forcing a horizontal scrollbar: the account +
+        // amount on top, the round/state + tx link below.
         activity: (
-          <Text variant="p3">
-            <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-              {item.account ? formatAddress(item.account) : 'n/a'}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
+            <Text variant="p3">
+              <Text as="span" variant="p4">
+                Round #{item.roundId} ({item.roundState})
+              </Text>
+              &nbsp;·&nbsp;{formatCryptoBalance(item.amount)} {item.tokenSymbol}
             </Text>
-            &nbsp;·&nbsp;{formatCryptoBalance(item.amount)} {item.tokenSymbol}&nbsp;·&nbsp;Round #
-            {item.roundId} ({item.roundState})&nbsp;·&nbsp;
-            <Link
-              href={getScannerUrl(activity.chainId, item.txHash)}
-              target="_blank"
-              rel="noreferrer"
-              className={styles.txLink}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                color: 'var(--color-text-secondary)',
+              }}
             >
-              view&nbsp;tx&nbsp;
-              <Icon iconName="arrow_increase" size={14} style={{ display: 'inline-block' }} />
-            </Link>
-          </Text>
+              <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+                {item.account ? formatAddress(item.account) : 'n/a'}
+              </Text>
+              <Text as="span" variant="p4">
+                ·
+              </Text>
+              <Link
+                href={getScannerUrl(activity.chainId, item.txHash)}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.txLink}
+              >
+                view&nbsp;tx&nbsp;
+                <Icon iconName="arrow_increase" size={14} style={{ display: 'inline-block' }} />
+              </Link>
+            </div>
+          </div>
         ),
       },
     }))

@@ -17,10 +17,8 @@ enum DashboardVaultsPanel {
   USER_ADMIN = 'user-admin',
   FEE_REVENUE_ADMIN = 'fee-revenue-admin',
   ACTIVITY = 'activity',
-  WHITELIST = 'whitelist',
   ROUNDS = 'rounds',
   ROLES = 'roles',
-  TRANSFERS = 'transfers',
 }
 
 type PanelItem = { id: DashboardVaultsPanel; label: string; disabled?: boolean }
@@ -66,9 +64,10 @@ const standardPanelItems: PanelItem[] = [
 ]
 
 // RWA (rounds-based) vaults: the standard fleet/ark fleet-management tabs don't apply, so swap in
-// the RWA admin surface — Whitelist, Rounds (lifecycle), Roles (grant/revoke on the access manager)
-// and Transfers (share transferability). Read-only RWA monitoring lives at the bottom of Overview.
-// Standard "Asset management" (fleet deposit), "User admin" and "Asset reallocation" are omitted.
+// the RWA admin surface — Rounds (lifecycle) and Roles (grant/revoke on the access manager).
+// Share transferability now lives inside Risk Parameters, and the whitelist controls live at the
+// bottom of Roles. Read-only RWA monitoring lives at the bottom of Overview. Standard "Asset
+// management" (fleet deposit), "User admin" and "Asset reallocation" are omitted.
 const rwaPanelItems: PanelItem[] = [
   {
     id: DashboardVaultsPanel.OVERVIEW,
@@ -87,20 +86,12 @@ const rwaPanelItems: PanelItem[] = [
     label: 'Fee & revenue admin',
   },
   {
-    id: DashboardVaultsPanel.WHITELIST,
-    label: 'Whitelist',
-  },
-  {
     id: DashboardVaultsPanel.ROUNDS,
     label: 'Rounds',
   },
   {
     id: DashboardVaultsPanel.ROLES,
     label: 'Roles',
-  },
-  {
-    id: DashboardVaultsPanel.TRANSFERS,
-    label: 'Transfers',
   },
   {
     id: DashboardVaultsPanel.ACTIVITY,
