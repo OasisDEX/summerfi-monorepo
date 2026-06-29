@@ -54,6 +54,13 @@ export type RwaReceiptHistoryRow = {
   status: RwaReceiptHistoryStatus
   // Raw ERC-1155 balance (bigint string) — needed to reconstruct a claim/cancel action client-side.
   balance: string
+  // Rounds-vault minimum position size (bigint string, in `underlyingDecimals` base units). A partial
+  // cancel that would leave a non-zero remainder below this reverts on-chain (validateMinPosition).
+  minPositionSize: string
+  // Decimals of the rounds-vault underlying token the `balance`/`minPositionSize` are denominated in
+  // (deposits → the input asset, e.g. USDC; withdrawals → fleet shares). Used to parse/format the
+  // partial-cancel amount client-side.
+  underlyingDecimals: number
   // Unix seconds of the deposit/withdrawal request and of round settlement (null when unavailable).
   requestedAt: number | null
   settledAt: number | null
@@ -155,6 +162,8 @@ const mapReceipt = (receipt: HistoryReceipt): RwaReceiptHistoryRow => {
     roundState: toRoundStateString(receipt.round.state),
     status: deriveStatus(balance, receipt.round.state),
     balance: receipt.balance.toString(),
+    minPositionSize: receipt.vault.minPositionSize.toString(),
+    underlyingDecimals: receipt.vault.underlyingToken.decimals,
     requestedAt: toUnixSeconds(firstDeposit?.timestamp ?? receipt.round.openedAt),
     settledAt: toUnixSeconds(receipt.round.settledAt),
     principalAmount:

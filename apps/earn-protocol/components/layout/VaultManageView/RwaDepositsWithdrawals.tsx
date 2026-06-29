@@ -27,6 +27,7 @@ import {
   type RwaReceiptHistoryRow,
   type RwaReceiptHistorySide,
 } from '@/app/server-handlers/rwa-receipts-history/get-rwa-receipts-history'
+import { RwaCancelModalButton } from '@/components/layout/VaultManageView/RwaCancelModalButton'
 import { useRwaReceiptsHistory } from '@/components/layout/VaultManageView/useVaultManageQuery'
 import { getRwaReceiptKey, type RwaReceipt, type RwaReceiptStatus } from '@/hooks/use-rwa-claim'
 
@@ -134,13 +135,16 @@ const parseActionError = (raw: string): string => {
   return firstLine.length > 140 ? `${firstLine.slice(0, 139)}…` : firstLine
 }
 
-const buildReceipt = (row: RwaReceiptHistoryRow): RwaReceipt => ({
+// `cancelAmount` (base units) redeems only part of the receipt on a cancel; omit it (claims, or a
+// full cancel) to act on the whole balance.
+const buildReceipt = (row: RwaReceiptHistoryRow, cancelAmount?: bigint): RwaReceipt => ({
   vaultType: row.side === 'deposit' ? RoundsVaultType.Input : RoundsVaultType.Output,
   roundId: BigInt(row.roundId),
   balance: BigInt(row.balance),
   roundState: toRoundState(row.roundState),
   // Only ever read for actionable (claimable/cancellable) rows; completed rows render no action.
   status: row.status as RwaReceiptStatus,
+  amount: cancelAmount,
 })
 
 export const RwaDepositsWithdrawals = ({
@@ -214,6 +218,24 @@ export const RwaDepositsWithdrawals = ({
       )
     }
 
+    // While a round is open the pending deposit OR withdrawal can be cancelled (in full or part) via
+    // a modal, redeeming the queued asset back 1:1; once settled it becomes claimable instead.
+    if (row.status === 'cancellable') {
+      return (
+        <RwaCancelModalButton
+          row={row}
+          tokenSymbol={tokenSymbol}
+          disabled={!onAction}
+          actionInProgressKey={actionInProgressKey}
+          actionError={actionError}
+          onConfirm={(cancelAmount) => {
+            lastActionVerbRef.current = 'cancelled'
+            onAction?.(buildReceipt(row, cancelAmount))
+          }}
+        />
+      )
+    }
+
     const key = getRwaReceiptKey({
       vaultType: row.side === 'deposit' ? RoundsVaultType.Input : RoundsVaultType.Output,
       roundId: BigInt(row.roundId),
@@ -222,10 +244,6 @@ export const RwaDepositsWithdrawals = ({
     const isAnyProcessing = actionInProgressKey !== undefined
 
     const canClaim = row.status === 'claimable'
-    // Only pending deposits can be cancelled here (mirrors the mockup; withdrawals show a disabled
-    // Claim until settled).
-    const canCancel = row.side === 'deposit' && row.status === 'cancellable'
-    const isActionable = canClaim || canCancel
 
     return (
       // Stop row-expand toggling when interacting with the action.
@@ -235,16 +253,16 @@ export const RwaDepositsWithdrawals = ({
       >
         <Button
           variant={canClaim ? 'primarySmall' : 'secondarySmall'}
-          disabled={!isActionable || isAnyProcessing || !onAction}
+          disabled={!canClaim || isAnyProcessing || !onAction}
           onClick={() => {
-            if (!isActionable) {
+            if (!canClaim) {
               return
             }
-            lastActionVerbRef.current = canCancel ? 'cancelled' : 'claimed'
+            lastActionVerbRef.current = 'claimed'
             onAction?.(buildReceipt(row))
           }}
         >
-          {isProcessing ? 'Processing…' : canCancel ? 'Cancel' : 'Claim'}
+          {isProcessing ? 'Processing…' : 'Claim'}
         </Button>
       </div>
     )

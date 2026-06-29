@@ -23,6 +23,10 @@ export type RwaReceipt = {
   roundState: RoundState
   exchangeRate?: IPrice
   status: RwaReceiptStatus
+  // For a partial cancel: the amount (in the vault's underlying base units) to redeem. When omitted
+  // the full `balance` is acted on (always the case for claims). Ignored unless `status` is
+  // `cancellable`.
+  amount?: bigint
 }
 
 type UseRwaClaimProps = {
@@ -73,13 +77,15 @@ export const useRwaClaim = ({
       setActionInProgressKey(getRwaReceiptKey(receipt))
 
       try {
+        // Claims act on the full balance; a cancel may redeem only part of it (receipt.amount).
+        const actionBaseAmount = receipt.amount ?? receipt.balance
         const baseParams = {
           fleetAddress: fleetAddress as `0x${string}`,
           chainId: chainId as ChainId,
           userAddress: walletAddress as `0x${string}`,
           roundId: receipt.roundId,
-          // Convert the raw receipt balance to the human-readable amount the SDK expects.
-          amount: new BigNumber(receipt.balance.toString()).shiftedBy(-tokenDecimals).toString(),
+          // Convert the raw base-unit amount to the human-readable amount the SDK expects.
+          amount: new BigNumber(actionBaseAmount.toString()).shiftedBy(-tokenDecimals).toString(),
         }
 
         const txInfo =

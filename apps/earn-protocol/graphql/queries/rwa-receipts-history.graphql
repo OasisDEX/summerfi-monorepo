@@ -34,6 +34,10 @@ query GetRwaReceiptsHistoryPage(
     vault {
       id
       flavor
+      minPositionSize
+      underlyingToken {
+        decimals
+      }
     }
     round {
       roundId
