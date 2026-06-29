@@ -4,6 +4,7 @@ import {
   Card,
   Expander,
   getDisplayToken,
+  getPositionValues,
   getUniqueVaultId,
   getVaultDetailsUrl,
   SkeletonLine,
@@ -113,6 +114,12 @@ export const VaultManageViewDetails: FC<{
   const humanReadableNetwork = capitalize(
     sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
   )
+
+  // The user's current settled Fleet position value (input asset, e.g. USDC). For a pre-claim RWA
+  // user `position` is synthesized from total exposure (so its amount already includes the pending
+  // deposit) — `isRwaPendingPosition` lets the receipts table treat the settled base as zero and add
+  // the live receipt balances instead, so the min-position cancel check isn't double-counted.
+  const { netValue: positionNetValue } = getPositionValues({ position, vault })
 
   // Each lazy expander tracks its own open state so the matching query is only `enabled` (and thus
   // only fetched) once the user reveals it. The performance chart is open by default, so it starts
@@ -302,6 +309,8 @@ export const VaultManageViewDetails: FC<{
             enabled={rwaReceiptsOpen}
             tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
             vaultSharePrice={vaultSharePrice}
+            positionNetValue={positionNetValue}
+            isRwaPendingPosition={isRwaPendingPosition}
             actionInProgressKey={rwaActionInProgressKey}
             actionError={rwaActionError}
             onAction={onRwaAction}

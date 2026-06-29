@@ -43,6 +43,13 @@ type RwaDepositsWithdrawalsProps = {
   tokenSymbol: string
   // Current vault share price (netValue / shares) used to value withdrawal share receipts in USDC.
   vaultSharePrice?: BigNumber
+  // The user's current settled Fleet position value in the input asset (USDC). Used as the base for
+  // the min-position cancel check (resulting overall position must be zero or >= the minimum).
+  positionNetValue?: BigNumber
+  // Pre-claim RWA position: `positionNetValue` is synthesized from total exposure (already includes
+  // the pending deposit), so the settled base is treated as zero and the live receipt balances are
+  // added instead — avoids double-counting the very deposit being cancelled.
+  isRwaPendingPosition?: boolean
   actionInProgressKey?: string
   actionError?: string
   onAction?: (receipt: RwaReceipt) => void
@@ -154,6 +161,8 @@ export const RwaDepositsWithdrawals = ({
   enabled,
   tokenSymbol,
   vaultSharePrice,
+  positionNetValue,
+  isRwaPendingPosition = false,
   actionInProgressKey,
   actionError,
   onAction,
@@ -207,6 +216,47 @@ export const RwaDepositsWithdrawals = ({
     ? loadedRows.filter((row) => row.status !== 'completed')
     : loadedRows
 
+  // Sum of all loaded receipt balances on the active side (native base units). For deposits these are
+  // the user's pending deposits, which all settle into the eventual position. Bounded by what's been
+  // loaded — with many pages the floor can be under-counted (the on-chain check is the backstop).
+  const sumLoadedBalances = loadedRows.reduce((acc, row) => acc + BigInt(row.balance), 0n)
+
+  // The redeem-independent part of the user's resulting position (in input-asset / USDC base units)
+  // plus the factor to value this receipt's cancelled amount in USDC. The modal adds the
+  // amount-dependent part and enforces that the resulting overall position is zero or >= the minimum.
+  const buildCancelPosition = (row: RwaReceiptHistoryRow) => {
+    // Settled Fleet position in input-asset base units. Zeroed for a pre-claim RWA position (whose
+    // synthetic netValue already includes the pending deposit) so it isn't double-counted; fleet
+    // shares and the input asset share decimals, so a single shift covers both sides.
+    const settledBaseUnits =
+      isRwaPendingPosition || !positionNetValue || positionNetValue.lte(0)
+        ? 0n
+        : BigInt(
+            positionNetValue
+              .shiftedBy(row.underlyingDecimals)
+              .integerValue(BigNumber.ROUND_FLOOR)
+              .toString(),
+          )
+
+    if (row.side === 'deposit') {
+      // Other pending deposits (besides this receipt) also settle into the position; deposit receipts
+      // are already denominated in the input asset, so the USDC factor is 1.
+      const otherPending = sumLoadedBalances - BigInt(row.balance)
+
+      return {
+        positionFloorBaseUnits: settledBaseUnits + (otherPending > 0n ? otherPending : 0n),
+        usdcPerNative: '1',
+      }
+    }
+
+    // Withdrawal: cancelling returns shares to the settled position (other pending withdrawals leave
+    // and don't count). The receipt is in shares, valued in USDC via the current share price.
+    return {
+      positionFloorBaseUnits: settledBaseUnits,
+      usdcPerNative: vaultSharePrice?.gt(0) ? vaultSharePrice.toString() : '1',
+    }
+  }
+
   const renderActionCell = (row: RwaReceiptHistoryRow): ReactNode => {
     if (row.status === 'completed') {
       return (
@@ -221,10 +271,14 @@ export const RwaDepositsWithdrawals = ({
     // While a round is open the pending deposit OR withdrawal can be cancelled (in full or part) via
     // a modal, redeeming the queued asset back 1:1; once settled it becomes claimable instead.
     if (row.status === 'cancellable') {
+      const { positionFloorBaseUnits, usdcPerNative } = buildCancelPosition(row)
+
       return (
         <RwaCancelModalButton
           row={row}
           tokenSymbol={tokenSymbol}
+          positionFloorBaseUnits={positionFloorBaseUnits}
+          usdcPerNative={usdcPerNative}
           disabled={!onAction}
           actionInProgressKey={actionInProgressKey}
           actionError={actionError}

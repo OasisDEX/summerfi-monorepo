@@ -40,12 +40,18 @@ const parseAmount = (value: string, decimals: number): bigint | null => {
 const RwaCancelModal: FC<{
   row: RwaReceiptHistoryRow
   tokenSymbol: string
+  // Redeem-independent part of the user's resulting position, in input-asset (USDC) base units.
+  positionFloorBaseUnits: bigint
+  // Factor to value this receipt's contribution in USDC (1 for deposits; the share price for
+  // withdrawals, whose receipts are denominated in fleet shares).
+  usdcPerNative: string
   isProcessing: boolean
   onConfirm: (cancelAmount: bigint) => void
-}> = ({ row, tokenSymbol, isProcessing, onConfirm }) => {
+}> = ({ row, tokenSymbol, positionFloorBaseUnits, usdcPerNative, isProcessing, onConfirm }) => {
   const isDeposit = row.side === 'deposit'
   const decimals = row.underlyingDecimals
   const balance = BigInt(row.balance)
+  // minPositionSize is the Fleet minimum in the input asset (USDC) base units.
   const minPositionSize = BigInt(row.minPositionSize)
 
   // Withdrawal receipts are denominated in fleet shares; deposits in the input asset (e.g. USDC).
@@ -66,11 +72,27 @@ const RwaCancelModal: FC<{
     return parsed >= balance ? balance : parsed
   }, [amountStr, balance, decimals])
 
-  const remainder = balance - redeemAmount
-  // The on-chain validateMinPosition modifier reverts if a non-zero leftover falls below the vault
-  // minimum, so block the action and explain why.
-  const leftoverTooSmall = redeemAmount > 0n && remainder > 0n && remainder < minPositionSize
-  const amountValid = redeemAmount > 0n && redeemAmount <= balance && !leftoverTooSmall
+  // The user's resulting overall position (USDC base units) after this cancel. A deposit's
+  // *uncancelled* remainder stays queued and settles into the position; a withdrawal's *cancelled*
+  // part returns to the position. minPositionSize constrains this whole position, not one receipt.
+  const nativeContribution = isDeposit ? balance - redeemAmount : redeemAmount
+  const usdcContribution = BigInt(
+    new BigNumber(nativeContribution.toString())
+      .times(usdcPerNative)
+      .integerValue(BigNumber.ROUND_FLOOR)
+      .toString(),
+  )
+  const resultingPosition = positionFloorBaseUnits + usdcContribution
+
+  // The on-chain validateMinPosition modifier reverts when the resulting position lands in the
+  // forbidden (0, min) band — it must be exactly zero (full exit) or at least the minimum.
+  const resultingBelowMin = resultingPosition > 0n && resultingPosition < minPositionSize
+  const amountValid = redeemAmount > 0n && redeemAmount <= balance && !resultingBelowMin
+
+  const minLabel = formatCryptoBalance(new BigNumber(formatUnits(minPositionSize, decimals)))
+  const resultingLabel = formatCryptoBalance(
+    new BigNumber(formatUnits(resultingPosition, decimals)),
+  )
 
   const percentBaseUnits = (percent: number): bigint =>
     percent >= 1 ? balance : (balance * BigInt(Math.round(percent * 100))) / 100n
@@ -151,11 +173,19 @@ const RwaCancelModal: FC<{
           ))}
         </div>
 
-        {leftoverTooSmall ? (
+        {resultingBelowMin ? (
           <Alert
             variant="warning"
             noIcon
-            error="The remaining position would fall below the vault minimum. Cancel a smaller amount or the full balance."
+            error={
+              <>
+                This would leave your position at ~{resultingLabel} {tokenSymbol}, below the{' '}
+                {minLabel} {tokenSymbol} minimum.{' '}
+                {isDeposit
+                  ? 'Cancel a smaller amount, or the full balance.'
+                  : 'Cancel a larger amount (or nothing) so your position is zero or above the minimum.'}
+              </>
+            }
           />
         ) : null}
 
@@ -185,12 +215,25 @@ const RwaCancelModal: FC<{
 export const RwaCancelModalButton: FC<{
   row: RwaReceiptHistoryRow
   tokenSymbol: string
+  // Redeem-independent part of the resulting position (input-asset base units) + the USDC valuation
+  // factor for this receipt — see RwaCancelModal.
+  positionFloorBaseUnits: bigint
+  usdcPerNative: string
   // True when no action handler is wired (e.g. a non-owner view) — keeps the button inert.
   disabled: boolean
   actionInProgressKey?: string
   actionError?: string
   onConfirm: (cancelAmount: bigint) => void
-}> = ({ row, tokenSymbol, disabled, actionInProgressKey, actionError, onConfirm }) => {
+}> = ({
+  row,
+  tokenSymbol,
+  positionFloorBaseUnits,
+  usdcPerNative,
+  disabled,
+  actionInProgressKey,
+  actionError,
+  onConfirm,
+}) => {
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const [isOpen, setIsOpen] = useState(false)
@@ -230,6 +273,8 @@ export const RwaCancelModalButton: FC<{
     <RwaCancelModal
       row={row}
       tokenSymbol={tokenSymbol}
+      positionFloorBaseUnits={positionFloorBaseUnits}
+      usdcPerNative={usdcPerNative}
       isProcessing={isProcessing}
       onConfirm={onConfirm}
     />
