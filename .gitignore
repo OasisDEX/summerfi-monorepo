@@ -87,3 +87,6 @@ cdk.context.json
 /apps/earn-protocol/types/generated
 /apps/earn-protocol-landing-page/types/generated
 /docs
+
+# graphify
+graphify-out/
