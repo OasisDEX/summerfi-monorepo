@@ -1,5 +1,5 @@
 import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
-import type { AddressValue, ChainId } from '@summerfi/sdk-common'
+import type { AddressValue, ChainId, IChainlinkFeed } from '@summerfi/sdk-common'
 
 export const createStrategyTxHandler =
   (sdk: ISDKManager | ISDKInstiManager) =>
@@ -13,6 +13,7 @@ export const createStrategyTxHandler =
     inAssetFeed,
     outAssetFeed,
     amountShares,
+    assetAmount,
     slippagePercentage,
     intervalSeconds,
     maxTrades,
@@ -26,9 +27,10 @@ export const createStrategyTxHandler =
     toVault: AddressValue
     inAsset: AddressValue
     outAsset: AddressValue
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
+    inAssetFeed: IChainlinkFeed
+    outAssetFeed: IChainlinkFeed
     amountShares: string
+    assetAmount: string
     slippagePercentage: string
     intervalSeconds: number
     maxTrades: number
@@ -46,6 +48,7 @@ export const createStrategyTxHandler =
       inAssetFeed,
       outAssetFeed,
       amountShares,
+      assetAmount,
       slippagePercentage,
       intervalSeconds,
       maxTrades,

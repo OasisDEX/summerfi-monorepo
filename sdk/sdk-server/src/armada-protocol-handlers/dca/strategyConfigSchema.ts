@@ -15,6 +15,12 @@ const nonZeroAddressSchema = addressSchema.refine(
   'Address must not be the zero address',
 )
 
+const chainlinkFeedSchema = z.object({
+  feed: nonZeroAddressSchema,
+  // maxStaleness in seconds; 0 = contract default (24h). Non-negative integer string-or-bigint.
+  maxStaleness: z.bigint().nonnegative(),
+})
+
 const MIN_INTERVAL_SECONDS = 86400 // 1 day, matching _MIN_INTERVAL in DCAStrategyManager
 const MAX_SLIPPAGE_PERCENTAGE = 100 // 100% = 10000 bps, matching _BPS in DCAStrategyManager
 
@@ -27,9 +33,10 @@ export const createStrategyTxInputSchema = z.object({
   toVault: addressSchema,
   inAsset: addressSchema,
   outAsset: addressSchema,
-  inAssetFeed: nonZeroAddressSchema,
-  outAssetFeed: nonZeroAddressSchema,
+  inAssetFeed: chainlinkFeedSchema,
+  outAssetFeed: chainlinkFeedSchema,
   amountShares: uint256StringSchema.refine((v) => v !== '0', 'Trade amount must not be zero'),
+  assetAmount: uint256StringSchema.refine((v) => v !== '0', 'Deposit amount must not be zero'),
   slippagePercentage: z
     .string()
     .refine(
@@ -55,8 +62,8 @@ export const strategySchema: z.ZodType<IDcaStrategy> = z.object({
   targetVault: addressSchema,
   inAsset: addressSchema,
   outAsset: addressSchema,
-  inAssetFeed: addressSchema,
-  outAssetFeed: addressSchema,
+  inAssetFeed: chainlinkFeedSchema,
+  outAssetFeed: chainlinkFeedSchema,
   tradeAmount: z.bigint(),
   slippagePercentage: z.number(),
   intervalSeconds: z.bigint(),
@@ -102,18 +109,18 @@ export const editStrategyTxInputSchema = z.object({
         path: ['tradeAmount'],
       })
     }
-    if (s.inAssetFeed === '0x0000000000000000000000000000000000000000') {
+    if (s.inAssetFeed.feed === '0x0000000000000000000000000000000000000000') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Address must not be the zero address',
-        path: ['inAssetFeed'],
+        message: 'inAssetFeed.feed must not be the zero address',
+        path: ['inAssetFeed', 'feed'],
       })
     }
-    if (s.outAssetFeed === '0x0000000000000000000000000000000000000000') {
+    if (s.outAssetFeed.feed === '0x0000000000000000000000000000000000000000') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Address must not be the zero address',
-        path: ['outAssetFeed'],
+        message: 'outAssetFeed.feed must not be the zero address',
+        path: ['outAssetFeed', 'feed'],
       })
     }
   }),

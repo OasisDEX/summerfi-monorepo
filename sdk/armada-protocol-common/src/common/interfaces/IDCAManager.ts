@@ -1,5 +1,6 @@
 import type {
   AddressValue,
+  IChainlinkFeed,
   IDcaStrategy,
   IDcaExecution,
   ChainId,
@@ -23,9 +24,12 @@ export interface IDCAManager {
     toVault: AddressValue
     inAsset: AddressValue
     outAsset: AddressValue
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
+    inAssetFeed: IChainlinkFeed
+    outAssetFeed: IChainlinkFeed
+    /** Per-trade amount (source asset base units). */
     amountShares: string
+    /** Initial principal deposited at creation (source asset base units). See plan Open Question 2. */
+    assetAmount: string
     slippagePercentage: string
     intervalSeconds: number
     maxTrades: number

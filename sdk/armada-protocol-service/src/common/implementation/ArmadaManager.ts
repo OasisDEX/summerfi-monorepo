@@ -190,6 +190,7 @@ export class ArmadaManager implements IArmadaManager {
       clientId: this._clientId,
       deploymentProvider: this._deploymentProvider,
       dcaSubgraphManager: this._dcaSubgraphManager,
+      contractsProvider: this._contractsProvider,
     })
   }
 }

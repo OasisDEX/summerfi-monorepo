@@ -1,4 +1,5 @@
 import type { AddressValue } from '../types/AddressValue'
+import type { IChainlinkFeed } from './IChainlinkFeed'
 
 /**
  * @name IDcaStrategyConfig
@@ -11,8 +12,8 @@ export interface IDcaStrategyConfig {
   targetVault: AddressValue
   inAsset: AddressValue
   outAsset: AddressValue
-  inAssetFeed: AddressValue
-  outAssetFeed: AddressValue
+  inAssetFeed: IChainlinkFeed
+  outAssetFeed: IChainlinkFeed
   tradeAmount: bigint
   interval: bigint
   slippageBps: bigint
