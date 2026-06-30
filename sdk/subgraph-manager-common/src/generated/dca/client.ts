@@ -1226,7 +1226,7 @@ export type GetExecutionsQuery = { __typename?: 'Query', executions: Array<{ __t
 export type GetStrategiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetStrategiesQuery = { __typename?: 'Query', strategies: Array<{ __typename?: 'Strategy', id: string, strategyId: bigint, sourceVault: string, targetVault: string, inAsset: string, outAsset: string, inAssetFeed: string, outAssetFeed: string, tradeAmount: bigint, interval: bigint, slippageBps: bigint, maxPrice: bigint, minPrice: bigint, endDate: bigint, maxTrades: bigint, status: string, nextTriggerAt: bigint, lastScheduledAt: bigint, createdAt: bigint, updatedAt: bigint, tradesExecuted: bigint, totalInAssetSwapped: bigint, totalOutAssetReceived: bigint, owner: { __typename?: 'User', id: string } }> };
+export type GetStrategiesQuery = { __typename?: 'Query', strategies: Array<{ __typename?: 'Strategy', id: string, strategyId: bigint, sourceVault: string, targetVault: string, inAsset: string, outAsset: string, inAssetFeed: string, outAssetFeed: string, inAssetFeedStaleness: bigint, outAssetFeedStaleness: bigint, tradeAmount: bigint, interval: bigint, slippageBps: bigint, maxPrice: bigint, minPrice: bigint, endDate: bigint, maxTrades: bigint, status: string, nextTriggerAt: bigint, lastScheduledAt: bigint, createdAt: bigint, updatedAt: bigint, tradesExecuted: bigint, totalInAssetSwapped: bigint, totalOutAssetReceived: bigint, owner: { __typename?: 'User', id: string } }> };
 
 
 export const GetExecutionsDocument = gql`
@@ -1255,6 +1255,8 @@ export const GetStrategiesDocument = gql`
     outAsset
     inAssetFeed
     outAssetFeed
+    inAssetFeedStaleness
+    outAssetFeedStaleness
     tradeAmount
     interval
     slippageBps

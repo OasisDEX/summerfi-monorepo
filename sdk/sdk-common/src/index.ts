@@ -234,6 +234,7 @@ export type { IArmadaWithdrawal } from './common/interfaces/IArmadaWithdrawal'
 export type { IDcaStrategy } from './common/interfaces/IDcaStrategy'
 export type { IDcaExecution } from './common/interfaces/IDcaExecution'
 export type { IDcaStrategyConfig } from './common/interfaces/IDcaStrategyConfig'
+export type { IChainlinkFeed } from './common/interfaces/IChainlinkFeed'
 export type { EarnAppCookieVerifier } from './common/types/EarnAppCookieVerifier'
 export { getViemChain, hyperliquid } from './common/utils/getViemChain'
 export {

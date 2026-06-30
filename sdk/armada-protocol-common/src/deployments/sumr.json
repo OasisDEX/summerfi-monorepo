@@ -84,7 +84,7 @@
           "address": "0xb2f4Ce82e974Ad9A6391B4eB3D1266054a0aD9a4"
         },
         "dcaStrategyManager": {
-          "address": "0xc7de5CFE86ebEfb80b01014549D6eB0041Af9c72"
+          "address": "0x659d087B158008ce37FabF963Af329Ca59cE952a"
         }
       }
     },
@@ -611,6 +611,9 @@
         },
         "fleetCommanderRewardsManagerFactory": {
           "address": "0x83e1E5Ea1a7A5994486508bB7B7bA20f269dC90c"
+        },
+        "dcaStrategyManager": {
+          "address": "0xa0d3E060A43B980E12e688c0607c250F9F53985D"
         }
       }
     },

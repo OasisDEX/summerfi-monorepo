@@ -9,6 +9,8 @@ export interface DCAConfig {
   maxTrades: number
   finalMaxTradingAmount: number
   deadline?: string
+  /** Optional advanced setting: oracle feed staleness window in seconds. Undefined / 0 => contract default (24h). */
+  feedMaxStalenessSeconds?: number
 }
 
 export type DCAPhase = 'wizard' | 'approval'

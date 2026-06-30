@@ -1,4 +1,5 @@
 import type { IDCAManager } from '@summerfi/armada-protocol-common'
+import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { IDcaSubgraphManager, GetStrategiesQuery } from '@summerfi/subgraph-manager-common'
 import {
@@ -9,6 +10,9 @@ import {
   type IDcaExecution,
   type IDcaStrategyConfig,
   Address,
+  Token,
+  TokenAmount,
+  getChainInfoByChainId,
   DcaStrategyStatusEnum,
   TransactionType,
   type CreateDcaStrategyTransactionInfo,
@@ -28,15 +32,18 @@ import { DCAStrategyManagerAbi } from './abi/DCAStrategyManagerAbi'
 export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   private _deploymentProvider: IDeploymentProvider
   private _dcaSubgraphManager: IDcaSubgraphManager
+  private _contractsProvider: IContractsProvider
 
   constructor(params: {
     clientId?: string
     deploymentProvider: IDeploymentProvider
     dcaSubgraphManager: IDcaSubgraphManager
+    contractsProvider: IContractsProvider
   }) {
     super({ clientId: params.clientId })
     this._deploymentProvider = params.deploymentProvider
     this._dcaSubgraphManager = params.dcaSubgraphManager
+    this._contractsProvider = params.contractsProvider
   }
 
   async createStrategyTx(
@@ -46,27 +53,40 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
+
+    const slippageBps = BigInt(Math.round(Number(params.slippagePercentage) * 100))
+    const assetAmount = BigInt(params.assetAmount)
+
+    // expectedMinShares = source-vault shares floor via convertToShares (fee-exclusive), minus slippage.
+    const expectedMinShares = await this._expectedMinShares({
+      chainId: params.chainId,
+      sourceVault: params.fromVault,
+      inAsset: params.inAsset,
+      assetAmount,
+      slippageBps,
+    })
+
+    const config = {
+      owner: params.userAddress,
+      sourceVault: params.fromVault,
+      targetVault: params.toVault,
+      inAsset: params.inAsset,
+      outAsset: params.outAsset,
+      inAssetFeed: params.inAssetFeed,
+      outAssetFeed: params.outAssetFeed,
+      tradeAmount: BigInt(params.amountShares),
+      interval: BigInt(params.intervalSeconds),
+      slippageBps,
+      maxPrice: BigInt(params.neverBuyAbove ?? '0'),
+      minPrice: BigInt(params.neverSellBelow ?? '0'),
+      endDate: BigInt(params.deadlineUnixTimestamp),
+      maxTrades: BigInt(params.maxTrades),
+    }
+
     const calldata = encodeFunctionData({
       abi: DCAStrategyManagerAbi,
-      functionName: 'createStrategy',
-      args: [
-        {
-          owner: params.userAddress,
-          sourceVault: params.fromVault,
-          targetVault: params.toVault,
-          inAsset: params.inAsset,
-          outAsset: params.outAsset,
-          inAssetFeed: params.inAssetFeed,
-          outAssetFeed: params.outAssetFeed,
-          tradeAmount: BigInt(params.amountShares),
-          interval: BigInt(params.intervalSeconds),
-          slippageBps: BigInt(Math.round(Number(params.slippagePercentage) * 100)),
-          maxPrice: BigInt(params.neverBuyAbove ?? '0'),
-          minPrice: BigInt(params.neverSellBelow ?? '0'),
-          endDate: BigInt(params.deadlineUnixTimestamp),
-          maxTrades: BigInt(params.maxTrades),
-        },
-      ],
+      functionName: 'depositAndCreate',
+      args: [config, assetAmount, expectedMinShares],
     }) as HexData
 
     return [
@@ -79,6 +99,41 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
         }),
       },
     ]
+  }
+
+  /**
+   * Computes the slippage-protected minimum source-vault shares for `depositAndCreate`.
+   * Uses convertToShares (fee-exclusive) — NOT previewDeposit, which can bake in a deposit
+   * fee and is not a valid floor (per contract team).
+   * expectedMinShares = floor(sourceVault.convertToShares(assetAmount) * (10_000 - slippageBps) / 10_000)
+   */
+  private async _expectedMinShares(params: {
+    chainId: ChainId
+    sourceVault: AddressValue
+    inAsset: AddressValue
+    assetAmount: bigint
+    slippageBps: bigint
+  }): Promise<bigint> {
+    const chainInfo = getChainInfoByChainId(params.chainId)
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo,
+      address: Address.createFromEthereum({ value: params.sourceVault }),
+    })
+    const amount = TokenAmount.createFromBaseUnit({
+      token: Token.createFrom({
+        address: Address.createFromEthereum({ value: params.inAsset }),
+        chainInfo,
+        symbol: 'IN',
+        name: 'IN',
+        decimals: 18, // base-unit amount; decimals only affect display, not toSolidityValue
+      }),
+      amount: params.assetAmount.toString(),
+    })
+    // convertToShares takes { amount } and returns shares as ITokenAmount (see IErc4626Contract)
+    const expectedShares = await fleetContract.asErc4626().convertToShares({ amount })
+    const expected = expectedShares.toSolidityValue() // bigint, base units of shares
+    const bps = 10_000n
+    return (expected * (bps - params.slippageBps)) / bps
   }
 
   async editStrategyTx(
@@ -261,8 +316,14 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       targetVault: subgraphStrategy.targetVault as AddressValue,
       inAsset: subgraphStrategy.inAsset as AddressValue,
       outAsset: subgraphStrategy.outAsset as AddressValue,
-      inAssetFeed: subgraphStrategy.inAssetFeed as AddressValue,
-      outAssetFeed: subgraphStrategy.outAssetFeed as AddressValue,
+      inAssetFeed: {
+        feed: subgraphStrategy.inAssetFeed as AddressValue,
+        maxStaleness: BigInt(subgraphStrategy.inAssetFeedStaleness ?? 0),
+      },
+      outAssetFeed: {
+        feed: subgraphStrategy.outAssetFeed as AddressValue,
+        maxStaleness: BigInt(subgraphStrategy.outAssetFeedStaleness ?? 0),
+      },
       tradeAmount: BigInt(subgraphStrategy.tradeAmount.toString()),
       slippagePercentage: Number(subgraphStrategy.slippageBps) / 100,
       intervalSeconds: BigInt(subgraphStrategy.interval.toString()),
@@ -295,29 +356,6 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       minPrice: BigInt(params.strategy.neverSellBelow),
       endDate: params.strategy.deadlineUnixTimestamp,
       maxTrades: params.strategy.maxTrades,
-    }
-  }
-
-  private _buildCreateTransaction(params: {
-    strategyManagerAddress: AddressValue
-    strategyConfig: IDcaStrategyConfig
-    functionName: 'createStrategy'
-    description: string
-    type: TransactionType.CreateStrategy
-  }): CreateDcaStrategyTransactionInfo {
-    const calldata = encodeFunctionData({
-      abi: DCAStrategyManagerAbi,
-      functionName: params.functionName,
-      args: [this._toViemStrategyConfig(params.strategyConfig)],
-    }) as HexData
-
-    return {
-      type: params.type,
-      description: params.description,
-      transaction: this._buildTransaction({
-        target: params.strategyManagerAddress,
-        calldata,
-      }),
     }
   }
 

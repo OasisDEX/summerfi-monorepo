@@ -1,6 +1,7 @@
 import type { DcaStrategyStatusEnum } from '../enums/DcaStrategyStatus'
 import type { AddressValue } from '../types/AddressValue'
 import type { ChainId } from '../types/ChainId'
+import type { IChainlinkFeed } from './IChainlinkFeed'
 
 export interface IDcaStrategy {
   /** Unique identifier for the DCA strategy in graph */
@@ -19,10 +20,10 @@ export interface IDcaStrategy {
   inAsset: AddressValue
   /** The underlying asset of the target vault (output asset for DCA trades) */
   outAsset: AddressValue
-  /** Oracle price feed address for the input asset */
-  inAssetFeed: AddressValue
-  /** Oracle price feed address for the output asset */
-  outAssetFeed: AddressValue
+  /** Oracle price feed (address + max staleness) for the input asset */
+  inAssetFeed: IChainlinkFeed
+  /** Oracle price feed (address + max staleness) for the output asset */
+  outAssetFeed: IChainlinkFeed
   /** Amount to trade in each execution, denominated in the source vault's underlying asset decimals */
   tradeAmount: bigint
   /** Maximum allowed slippage for each trade, expressed as a percentage */

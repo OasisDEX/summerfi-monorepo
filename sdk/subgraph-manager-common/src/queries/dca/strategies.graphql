@@ -11,6 +11,8 @@ query GetStrategies {
     outAsset
     inAssetFeed
     outAssetFeed
+    inAssetFeedStaleness
+    outAssetFeedStaleness
     tradeAmount
     interval
     slippageBps
