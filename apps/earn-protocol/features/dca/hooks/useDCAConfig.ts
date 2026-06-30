@@ -15,6 +15,7 @@ const DEFAULT_CONFIG: DCAConfig = {
   maxTrades: DEFAULT_MAX_TRADES,
   finalMaxTradingAmount: 250 * DEFAULT_MAX_TRADES,
   deadline: undefined,
+  feedMaxStalenessSeconds: undefined,
 }
 
 const normalizeDcaConfig = (config: DCAConfig): DCAConfig => {

@@ -261,6 +261,36 @@ export const StepLimitsConfig: FC<StepLimitsConfigProps> = ({
             }}
           />
         </div>
+
+        <div className={classNames.conditionCardContent}>
+          <div className={classNames.conditionHeader}>
+            <div>
+              <Text as="h4" variant="p2semi">
+                Oracle staleness{' '}
+                <Text as="span" variant="p2" className={classNames.mutedText}>
+                  (advanced, seconds — leave blank for 24h default)
+                </Text>
+              </Text>
+            </div>
+          </div>
+          <Text as="p" variant="p4" className={classNames.mutedText}>
+            Maximum age of the Chainlink price feed used to validate DCA trades. Leave empty to use
+            the contract default (24 hours).
+          </Text>
+          <Input
+            variant="dark"
+            type="number"
+            min={0}
+            step={1}
+            value={config.feedMaxStalenessSeconds ?? ''}
+            onChange={(ev) => {
+              patchConfig({
+                feedMaxStalenessSeconds:
+                  ev.target.value === '' ? undefined : Math.max(0, Number(ev.target.value)),
+              })
+            }}
+          />
+        </div>
       </div>
     </DCAWizardStepCard>
   )
