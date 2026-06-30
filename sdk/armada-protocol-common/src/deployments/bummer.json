@@ -65,6 +65,9 @@
         "admiralsQuarters": {
           "address": "0x08E19585548c8439E83239BBED99aFc8e28528C6"
         },
+        "dcaStrategyManager": {
+          "address": "0x659d087B158008ce37FabF963Af329Ca59cE952a"
+        },
         "fleetCommanderRewardsManagerFactory": {
           "address": "0x90CaD67E09F79436F51E6a07B9267b002DfDFF03"
         },
@@ -562,6 +565,9 @@
         },
         "admiralsQuarters": {
           "address": "0x8b8235f12F03c34d9CB064460E234cC2C9a12922"
+        },
+        "dcaStrategyManager": {
+          "address": "0xa0d3E060A43B980E12e688c0607c250F9F53985D"
         },
         "fleetCommanderRewardsManagerFactory": {
           "address": "0xA2e47Bb397f908aba018276a3CC683608404123f"

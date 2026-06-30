@@ -27,7 +27,6 @@ import { type AddressValue } from '@summerfi/sdk-common'
 import { useRouter } from 'next/navigation'
 import { parseUnits } from 'viem'
 
-import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
 import { VaultSwitchBox } from '@/components/molecules/SidebarElements/VaultSwitchBox'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { DCASidebar } from '@/features/dca/components/DCASidebar/DCASidebar'
@@ -562,15 +561,6 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
               {errorMessage}
             </Text>
           ) : null}
-        </DCAWizardStepCard>
-        <DCAWizardStepCard title="Execute transactions">
-          <PendingTransactionsList
-            chainId={dcaChainId}
-            transactions={[]}
-            style={{
-              marginTop: '2px',
-            }}
-          />
         </DCAWizardStepCard>
         {address && tosState.status !== TOSStatus.DONE && tosState.status !== TOSStatus.INIT ? (
           <DCAWizardStepCard title={tosSidebarProps.title}>
