@@ -1,11 +1,13 @@
 import type { IDCAManager } from '@summerfi/armada-protocol-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
+import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import type { IDcaSubgraphManager, GetStrategiesQuery } from '@summerfi/subgraph-manager-common'
 import {
   type AddressValue,
   type ChainId,
   type HexData,
+  type IChainInfo,
   type IDcaStrategy,
   type IDcaExecution,
   type IDcaStrategyConfig,
@@ -13,9 +15,9 @@ import {
   Token,
   TokenAmount,
   getChainInfoByChainId,
+  isChainId,
   DcaStrategyStatusEnum,
   TransactionType,
-  type CreateDcaStrategyTransactionInfo,
   type EditDcaStrategyTransactionInfo,
   type PauseDcaStrategyTransactionInfo,
   type ResumeDcaStrategyTransactionInfo,
@@ -33,9 +35,11 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   private _deploymentProvider: IDeploymentProvider
   private _dcaSubgraphManager: IDcaSubgraphManager
   private _contractsProvider: IContractsProvider
+  private _supportedChains: IChainInfo[]
 
   constructor(params: {
     clientId?: string
+    configProvider: IConfigurationProvider
     deploymentProvider: IDeploymentProvider
     dcaSubgraphManager: IDcaSubgraphManager
     contractsProvider: IContractsProvider
@@ -44,11 +48,26 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     this._deploymentProvider = params.deploymentProvider
     this._dcaSubgraphManager = params.dcaSubgraphManager
     this._contractsProvider = params.contractsProvider
+    this._supportedChains = params.configProvider
+      .getConfigurationItem({ name: 'SUMMER_DEPLOYED_CHAINS_ID_DCA' })
+      .split(',')
+      .map(Number)
+      .filter(isChainId)
+      .map(getChainInfoByChainId)
+  }
+
+  /**
+   * @name _assertSupportedChain
+   * @description Throws unless the DCA module is deployed on `chainId`.
+   */
+  private _assertSupportedChain(chainId: ChainId): void {
+    this.assertSupportedChain({ chainId, supportedChains: this._supportedChains })
   }
 
   async createStrategyTx(
     params: Parameters<IDCAManager['createStrategyTx']>[0],
   ): ReturnType<IDCAManager['createStrategyTx']> {
+    this._assertSupportedChain(params.chainId)
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
@@ -139,6 +158,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async editStrategyTx(
     params: Parameters<IDCAManager['editStrategyTx']>[0],
   ): ReturnType<IDCAManager['editStrategyTx']> {
+    this._assertSupportedChain(params.chainId)
     const strategyStatus = params.strategy.status
     if (![DcaStrategyStatusEnum.Active, DcaStrategyStatusEnum.Paused].includes(strategyStatus)) {
       throw new Error('Can only edit strategies with status active or paused')
@@ -166,6 +186,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async pauseStrategyTx(
     params: Parameters<IDCAManager['pauseStrategyTx']>[0],
   ): ReturnType<IDCAManager['pauseStrategyTx']> {
+    this._assertSupportedChain(params.chainId)
     const strategyStatus = params.strategy.status
     if (strategyStatus !== DcaStrategyStatusEnum.Active) {
       throw new Error('Can only pause strategies with status active')
@@ -190,6 +211,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async resumeStrategyTx(
     params: Parameters<IDCAManager['resumeStrategyTx']>[0],
   ): ReturnType<IDCAManager['resumeStrategyTx']> {
+    this._assertSupportedChain(params.chainId)
     const strategyStatus = params.strategy.status
     if (strategyStatus !== DcaStrategyStatusEnum.Paused) {
       throw new Error('Can only resume strategies with status paused')
@@ -217,6 +239,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async cancelStrategyTx(
     params: Parameters<IDCAManager['cancelStrategyTx']>[0],
   ): ReturnType<IDCAManager['cancelStrategyTx']> {
+    this._assertSupportedChain(params.chainId)
     const strategyStatus = params.strategy.status
     if (![DcaStrategyStatusEnum.Active, DcaStrategyStatusEnum.Paused].includes(strategyStatus)) {
       throw new Error('Can only cancel strategies with status active or paused')
@@ -242,6 +265,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async getStrategies(
     params: Parameters<IDCAManager['getStrategies']>[0],
   ): ReturnType<IDCAManager['getStrategies']> {
+    this._assertSupportedChain(params.chainId)
     const result = await this._dcaSubgraphManager.getStrategies({ chainId: params.chainId })
     let subgraphStrategies = result.strategies
     if (params.userAddress) {
@@ -263,6 +287,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async getStrategy(
     params: Parameters<IDCAManager['getStrategy']>[0],
   ): ReturnType<IDCAManager['getStrategy']> {
+    this._assertSupportedChain(params.chainId)
     const strategies = await this.getStrategies({ chainId: params.chainId })
     const strategy = strategies.find((s) => s.strategyId.toString() === params.strategyId)
     return strategy
@@ -271,6 +296,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async getExecutions(
     params: Parameters<IDCAManager['getExecutions']>[0],
   ): ReturnType<IDCAManager['getExecutions']> {
+    this._assertSupportedChain(params.chainId)
     const { executions } = await this._dcaSubgraphManager.getExecutions({
       chainId: params.chainId,
       strategyId: params.strategyId,
@@ -281,6 +307,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   async getExecution(
     params: Parameters<IDCAManager['getExecution']>[0],
   ): ReturnType<IDCAManager['getExecution']> {
+    this._assertSupportedChain(params.chainId)
     const executions = await this.getExecutions({
       chainId: params.chainId,
       strategyId: params.strategyId,
