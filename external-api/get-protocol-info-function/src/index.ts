@@ -3,6 +3,7 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'a
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
+  ResponseNotFound,
   ResponseOk,
 } from '@summerfi/serverless-shared/responses'
 import { chainIdSchema } from '@summerfi/serverless-shared/validators'
@@ -22,6 +23,11 @@ import { mainnet, optimism, arbitrum, base, sonic, hyperliquid } from 'viem/chai
 import { supportedChains } from '@summerfi/summer-earn-protocol-subgraph'
 import { fleetRewardsManagerAbi } from './abis/fleetRewardsManager'
 import { handleCirculatingSupplyRoute } from './handlers/circulating-supply'
+import {
+  handleVaultRoute,
+  handleVaultsListRoute,
+  supportedVaultChainIds,
+} from './handlers/vaults'
 import { getRpcUrl } from './utils/rpc'
 
 // Token addresses per chain (same as rewardTokenPerChain in index.ts)
@@ -491,11 +497,64 @@ export const handler = async (
   const isAllUsersRoute = event.rawPath.endsWith('/all-users')
   const isCirculatingSupplyRoute = event.rawPath.endsWith('/circulating-supply')
 
+  // Path-based vaults routes: /vaults, /vaults/{chainId}, /vaults/{chainId}/{vaultAddress}
+  const pathSegments = event.rawPath.split('/').filter(Boolean)
+  const vaultsSegmentIndex = pathSegments.indexOf('vaults')
+  const isVaultsRoute = vaultsSegmentIndex !== -1
+
   try {
     switch (true) {
       case isCirculatingSupplyRoute: {
         const response = await handleCirculatingSupplyRoute()
         return ResponseOk({ body: response })
+      }
+      case isVaultsRoute: {
+        const chainIdSegment = pathSegments[vaultsSegmentIndex + 1]
+        const vaultAddressSegment = pathSegments[vaultsSegmentIndex + 2]
+
+        // /vaults — all vaults across all chains
+        if (!chainIdSegment) {
+          const response = await handleVaultsListRoute({}, SUBGRAPH_BASE)
+          return ResponseOk({ body: response })
+        }
+
+        const chainIdParse = chainIdSchema.safeParse(chainIdSegment)
+        if (!chainIdParse.success) {
+          logger.warn('Invalid chainId in vaults route', { chainIdSegment })
+          return ResponseBadRequest({
+            message: 'Invalid chainId',
+            errors: chainIdParse.error.errors,
+          })
+        }
+        const chainId = chainIdParse.data
+
+        // Reject chains that are valid ChainIds but not served by any vault source.
+        if (!supportedVaultChainIds.includes(chainId)) {
+          logger.warn('Unsupported chainId for vaults route', { chainId })
+          return ResponseBadRequest({
+            message: `Unsupported chainId ${chainId}. Supported chains: ${supportedVaultChainIds.join(', ')}`,
+          })
+        }
+
+        // /vaults/{chainId} — all vaults on a chain
+        if (!vaultAddressSegment) {
+          const response = await handleVaultsListRoute({ chainId }, SUBGRAPH_BASE)
+          return ResponseOk({ body: response })
+        }
+
+        // /vaults/{chainId}/{vaultAddress} — a single vault
+        if (!isValidAddress(vaultAddressSegment)) {
+          logger.warn('Invalid vault address in vaults route', { vaultAddressSegment })
+          return ResponseBadRequest({ message: 'Invalid vault address' })
+        }
+        const vault = await handleVaultRoute(
+          { chainId, vaultAddress: vaultAddressSegment as Address },
+          SUBGRAPH_BASE,
+        )
+        if (!vault) {
+          return ResponseNotFound()
+        }
+        return ResponseOk({ body: { vault } })
       }
       case isAllUsersRoute: {
         const response = await handleAllUsersRoute(SUBGRAPH_BASE)

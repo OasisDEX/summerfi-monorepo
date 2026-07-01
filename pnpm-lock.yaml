@@ -891,6 +891,12 @@ importers:
       '@aws-lambda-powertools/tracer':
         specifier: ^2.0.4
         version: 2.32.0
+      '@summerfi/abstractions':
+        specifier: workspace:*
+        version: link:../../packages/abstractions
+      '@summerfi/redis-cache':
+        specifier: workspace:*
+        version: link:../../packages/redis-cache
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
@@ -903,6 +909,9 @@ importers:
       bignumber.js:
         specifier: ^9.1.2
         version: 9.3.1
+      graphql-request:
+        specifier: ^6.1.0
+        version: 6.1.0(graphql@16.11.0)
       viem:
         specifier: 2.43.5
         version: 2.43.5(typescript@5.9.3)(zod@3.25.61)
