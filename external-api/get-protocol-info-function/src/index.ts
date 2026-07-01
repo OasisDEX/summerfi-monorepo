@@ -23,11 +23,7 @@ import { mainnet, optimism, arbitrum, base, sonic, hyperliquid } from 'viem/chai
 import { supportedChains } from '@summerfi/summer-earn-protocol-subgraph'
 import { fleetRewardsManagerAbi } from './abis/fleetRewardsManager'
 import { handleCirculatingSupplyRoute } from './handlers/circulating-supply'
-import {
-  handleVaultRoute,
-  handleVaultsListRoute,
-  supportedVaultChainIds,
-} from './handlers/vaults'
+import { handleVaultRoute, handleVaultsListRoute, supportedVaultChainIds } from './handlers/vaults'
 import { getRpcUrl } from './utils/rpc'
 
 // Token addresses per chain (same as rewardTokenPerChain in index.ts)
