@@ -13,10 +13,13 @@
     "@aws-lambda-powertools/logger": "^2.0.4",
     "@aws-lambda-powertools/metrics": "^2.0.4",
     "@aws-lambda-powertools/tracer": "^2.0.4",
+    "@summerfi/abstractions": "workspace:*",
+    "@summerfi/redis-cache": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/summer-earn-protocol-subgraph": "workspace:*",
     "@summerfi/summer-earn-institutions-subgraph": "workspace:*",
     "bignumber.js": "^9.1.2",
+    "graphql-request": "^6.1.0",
     "viem": "2.43.5",
     "zod": "3.25.61"
   },

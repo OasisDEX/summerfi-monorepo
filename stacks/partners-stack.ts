@@ -61,12 +61,26 @@ export function ExternalAPI(stackContext: StackContext) {
       SUBGRAPH_BASE: SUBGRAPH_BASE,
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
       RPC_GATEWAY: RPC_GATEWAY,
+      STAGE: stack.stage,
     },
     tracing: 'active',
     disableCloudWatchLogs: false,
     applicationLogLevel: 'INFO',
     systemLogLevel: 'INFO',
   })
+
+  // Optional Redis cache for the /vaults route. Passed through from the deploy env when present; the handler
+  // falls back to a noop cache when unset, so the function is fully functional without Redis configured.
+  const { REDIS_CACHE_URL, REDIS_CACHE_USER, REDIS_CACHE_PASSWORD } = process.env
+  if (REDIS_CACHE_URL) {
+    getProtocolInfo.addEnvironment('REDIS_CACHE_URL', REDIS_CACHE_URL)
+  }
+  if (REDIS_CACHE_USER) {
+    getProtocolInfo.addEnvironment('REDIS_CACHE_USER', REDIS_CACHE_USER)
+  }
+  if (REDIS_CACHE_PASSWORD) {
+    getProtocolInfo.addEnvironment('REDIS_CACHE_PASSWORD', REDIS_CACHE_PASSWORD)
+  }
 
   const getCampaignData = new Function(stack, 'get-campaign-data', {
     handler: 'external-api/get-campaign-data-function/src/index.handler',
@@ -98,6 +112,9 @@ export function ExternalAPI(stackContext: StackContext) {
     'GET /api/protocol-info/protocol': getProtocolInfo,
     'GET /api/protocol-info/all-users': getProtocolInfo,
     'GET /api/protocol-info/circulating-supply': getProtocolInfo,
+    'GET /api/protocol-info/vaults': getProtocolInfo,
+    'GET /api/protocol-info/vaults/{chainId}': getProtocolInfo,
+    'GET /api/protocol-info/vaults/{chainId}/{vaultAddress}': getProtocolInfo,
     'GET /api/campaigns/{campaign}/{questNumber}/{walletAddress}': getCampaignData,
   })
 
