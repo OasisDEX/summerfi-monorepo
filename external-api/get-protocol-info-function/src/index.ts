@@ -482,6 +482,11 @@ export const handler = async (
 ): Promise<APIGatewayProxyResultV2> => {
   const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
 
+  // Return the response as soon as the handler resolves, without waiting for the event loop to drain. This
+  // prevents a best-effort background Redis reconnect (which may still be retrying a slow/dead endpoint) from
+  // holding the invocation open and inflating billed duration.
+  context.callbackWaitsForEmptyEventLoop = false
+
   logger.addContext(context)
 
   if (!SUBGRAPH_BASE) {

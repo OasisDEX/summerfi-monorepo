@@ -18,12 +18,19 @@ import {
   navChangeAnnualised,
   navPriceChange24h,
 } from '../utils/nav-apy'
+import { withTimeout } from '../utils/with-timeout'
 
 const logger = new Logger({ serviceName: 'get-protocol-info-function' })
 
 // Cache TTL for the vaults payload. NAV/APY derive from daily snapshots (slow-moving), so a few minutes is
 // plenty fresh while keeping TVL reasonably current. Tunable without any other change.
 const VAULTS_CACHE_TTL_SECONDS = 300
+
+// Redis is a best-effort optimisation, never a hard dependency. These bound how long the endpoint will wait
+// on it before falling back to serving fresh (uncached) data.
+const CACHE_CONNECT_TIMEOUT_MS = 2000 // budget for establishing the Redis connection
+const CACHE_MAX_RECONNECT_ATTEMPTS = 2 // give up fast on an unreachable host instead of retrying forever
+const CACHE_OP_TIMEOUT_MS = 750 // budget for a single get/set once connected
 
 // New institutional (RWA) v2 subgraphs. These live on the same SUBGRAPH_BASE host as the public/v1 subgraphs.
 // NB: the earn-protocol app's `rwaSubgraphsMap` (app/server-handlers/subgraphs-map.ts) currently has the wrong
@@ -239,9 +246,17 @@ const NOOP_CACHE: DistributedCache = {
   set: async () => {},
 }
 
+// After a failed Redis init we serve the noop cache, but only until this cooldown elapses — then the next
+// request retries the connection. This avoids both extremes: retrying a dead host on every request (latency)
+// and permanently disabling caching for the whole container after a single transient hiccup.
+const CACHE_INIT_RETRY_COOLDOWN_MS = 60_000
+
 let cachedDistributedCache: DistributedCache | undefined = undefined
+let cacheRetryAfter = 0 // epoch ms; while on the noop cache, the earliest time to re-attempt a real connection
+
 async function getVaultsCacheInstance(): Promise<DistributedCache> {
-  if (cachedDistributedCache !== undefined) {
+  // A successfully-connected client is reused for the container's lifetime.
+  if (cachedDistributedCache !== undefined && cachedDistributedCache !== NOOP_CACHE) {
     return cachedDistributedCache
   }
 
@@ -251,31 +266,50 @@ async function getVaultsCacheInstance(): Promise<DistributedCache> {
   const STAGE = process.env.STAGE
 
   if (!REDIS_CACHE_URL || !STAGE) {
-    logger.warn('Redis not configured (REDIS_CACHE_URL/STAGE), using noop cache for vaults')
+    // Not configured — there's nothing to retry, so memoize the noop cache permanently.
+    if (cachedDistributedCache === undefined) {
+      logger.warn('Redis not configured (REDIS_CACHE_URL/STAGE), using noop cache for vaults')
+    }
     cachedDistributedCache = NOOP_CACHE
     return cachedDistributedCache
   }
 
-  try {
-    cachedDistributedCache = await getRedisInstance(
-      {
-        url: REDIS_CACHE_URL,
-        ttlInSeconds: VAULTS_CACHE_TTL_SECONDS,
-        username: REDIS_CACHE_USER,
-        password: REDIS_CACHE_PASSWORD,
-        stage: STAGE,
-      },
-      logger,
-    )
-  } catch (error) {
-    // The cache is optional — a Redis connection failure must not take down the endpoint. Fall back to the
-    // noop cache (and memoize it so we don't retry connecting on every request in this container).
-    logger.warn('Redis init failed, falling back to noop cache for vaults', {
-      error: error instanceof Error ? error.message : String(error),
-    })
-    cachedDistributedCache = NOOP_CACHE
+  // We fell back to the noop cache from a prior failure — keep serving it until the cooldown elapses.
+  if (cachedDistributedCache === NOOP_CACHE && Date.now() < cacheRetryAfter) {
+    return NOOP_CACHE
   }
-  return cachedDistributedCache
+
+  // The cache is optional — a Redis connection failure or a slow/dead endpoint must never take down or hang
+  // the endpoint. `getRedisInstance` is fail-fast (connect timeout + bounded reconnect), and `withTimeout` is
+  // a hard ceiling on top of that.
+  const instance = await withTimeout(
+    () =>
+      getRedisInstance(
+        {
+          url: REDIS_CACHE_URL,
+          ttlInSeconds: VAULTS_CACHE_TTL_SECONDS,
+          username: REDIS_CACHE_USER,
+          password: REDIS_CACHE_PASSWORD,
+          stage: STAGE,
+          connectTimeoutMs: CACHE_CONNECT_TIMEOUT_MS,
+          maxReconnectAttempts: CACHE_MAX_RECONNECT_ATTEMPTS,
+        },
+        logger,
+      ),
+    CACHE_CONNECT_TIMEOUT_MS + 500,
+    NOOP_CACHE,
+    (reason, error) =>
+      logger.warn('Redis init failed, using noop cache for vaults (will retry after cooldown)', {
+        reason,
+        error: error instanceof Error ? error.message : String(error),
+      }),
+  )
+
+  cachedDistributedCache = instance
+  if (instance === NOOP_CACHE) {
+    cacheRetryAfter = Date.now() + CACHE_INIT_RETRY_COOLDOWN_MS
+  }
+  return instance
 }
 
 /**
@@ -286,18 +320,31 @@ async function getAllVaults(subgraphBase: string, chainFilter?: ChainId): Promis
   const cache = await getVaultsCacheInstance()
   const cacheKey = `vaults-v1:${chainFilter ?? 'all'}`
 
-  // Cache reads are best-effort: a Redis failure must not fail the request, just fall through to a fresh fetch.
-  try {
-    const cached = await cache.get(cacheKey)
-    if (cached) {
+  // Cache reads are best-effort and time-bounded: a Redis failure or a slow/hung read must not fail or delay
+  // the request beyond CACHE_OP_TIMEOUT_MS — it just falls through to a fresh fetch.
+  const cached = await withTimeout(
+    () => cache.get(cacheKey),
+    CACHE_OP_TIMEOUT_MS,
+    null,
+    (reason, error) =>
+      logger.warn('Cache read failed, fetching fresh', {
+        cacheKey,
+        reason,
+        error: error instanceof Error ? error.message : String(error),
+      }),
+  )
+  if (cached) {
+    // Guard the parse too: a corrupt/stale-format cached value must fall through to a fresh fetch, not throw.
+    try {
+      const parsed = JSON.parse(cached) as VaultInfo[]
       logger.info('Returning cached vaults', { cacheKey })
-      return JSON.parse(cached) as VaultInfo[]
+      return parsed
+    } catch (error) {
+      logger.warn('Cached vaults payload was unparseable, fetching fresh', {
+        cacheKey,
+        error: error instanceof Error ? error.message : String(error),
+      })
     }
-  } catch (error) {
-    logger.warn('Cache read failed, fetching fresh', {
-      cacheKey,
-      error: error instanceof Error ? error.message : String(error),
-    })
   }
 
   const perSource = await Promise.all(
@@ -309,17 +356,21 @@ async function getAllVaults(subgraphBase: string, chainFilter?: ChainId): Promis
 
   // Only persist complete results. If any source degraded, skip the write so a transient outage isn't cached
   // as authoritative for the full TTL (which would also make single-vault lookups 404 for real vaults).
+  // The write is also time-bounded and never throws.
   if (degraded) {
     logger.warn('Skipping cache write due to degraded source(s)', { cacheKey })
   } else {
-    try {
-      await cache.set(cacheKey, JSON.stringify(vaults))
-    } catch (error) {
-      logger.warn('Cache write failed', {
-        cacheKey,
-        error: error instanceof Error ? error.message : String(error),
-      })
-    }
+    await withTimeout(
+      () => cache.set(cacheKey, JSON.stringify(vaults)),
+      CACHE_OP_TIMEOUT_MS,
+      undefined,
+      (reason, error) =>
+        logger.warn('Cache write failed', {
+          cacheKey,
+          reason,
+          error: error instanceof Error ? error.message : String(error),
+        }),
+    )
   }
 
   return vaults
