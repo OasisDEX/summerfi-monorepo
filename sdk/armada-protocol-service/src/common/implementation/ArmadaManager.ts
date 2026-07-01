@@ -192,6 +192,7 @@ export class ArmadaManager implements IArmadaManager {
       deploymentProvider: this._deploymentProvider,
       dcaSubgraphManager: this._dcaSubgraphManager,
       contractsProvider: this._contractsProvider,
+      allowanceManager: this._allowanceManager,
     })
   }
 }

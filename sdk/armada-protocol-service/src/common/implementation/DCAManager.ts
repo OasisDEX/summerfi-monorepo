@@ -1,4 +1,5 @@
 import type { IDCAManager } from '@summerfi/armada-protocol-common'
+import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
@@ -18,10 +19,12 @@ import {
   isChainId,
   DcaStrategyStatusEnum,
   TransactionType,
+  type CreateDcaStrategyTransactionInfo,
   type EditDcaStrategyTransactionInfo,
   type PauseDcaStrategyTransactionInfo,
   type ResumeDcaStrategyTransactionInfo,
   type CancelDcaStrategyTransactionInfo,
+  LoggingService,
 } from '@summerfi/sdk-common'
 import { encodeFunctionData } from 'viem'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
@@ -35,6 +38,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   private _deploymentProvider: IDeploymentProvider
   private _dcaSubgraphManager: IDcaSubgraphManager
   private _contractsProvider: IContractsProvider
+  private _allowanceManager: IAllowanceManager
   private _supportedChains: IChainInfo[]
 
   constructor(params: {
@@ -43,11 +47,13 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     deploymentProvider: IDeploymentProvider
     dcaSubgraphManager: IDcaSubgraphManager
     contractsProvider: IContractsProvider
+    allowanceManager: IAllowanceManager
   }) {
     super({ clientId: params.clientId })
     this._deploymentProvider = params.deploymentProvider
     this._dcaSubgraphManager = params.dcaSubgraphManager
     this._contractsProvider = params.contractsProvider
+    this._allowanceManager = params.allowanceManager
     this._supportedChains = params.configProvider
       .getConfigurationItem({ name: 'SUMMER_DEPLOYED_CHAINS_ID_DCA' })
       .split(',')
@@ -71,7 +77,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
-    }).value
+    })
 
     const slippageBps = BigInt(Math.round(Number(params.slippagePercentage) * 100))
     const assetAmount = BigInt(params.assetAmount)
@@ -108,16 +114,30 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       args: [config, assetAmount, expectedMinShares],
     }) as HexData
 
-    return [
-      {
-        type: TransactionType.CreateStrategy,
-        description: 'Create DCA strategy',
-        transaction: this._buildTransaction({
-          target: strategyManagerAddress,
-          calldata,
-        }),
-      },
-    ]
+    const createTx: CreateDcaStrategyTransactionInfo = {
+      type: TransactionType.CreateStrategy,
+      description: 'Create DCA strategy',
+      transaction: this._buildTransaction({
+        target: strategyManagerAddress.value,
+        calldata,
+      }),
+    }
+
+    // depositAndCreate pulls `assetAmount` of `inAsset` from the user via transferFrom, so the
+    // strategy manager must be approved to spend it — otherwise the tx reverts with
+    // "ERC20: transfer amount exceeds allowance". getApproval returns undefined when the existing
+    // allowance already covers the amount.
+    const approvalTx = await this._allowanceManager.getApprovalFromBaseUnit({
+      chainId: params.chainId,
+      spenderAddress: strategyManagerAddress.value,
+      tokenAddress: params.inAsset,
+      amount: assetAmount,
+      ownerAddress: params.userAddress,
+    })
+
+    LoggingService.debug(`DCA createStrategyTx: approvalTx=${approvalTx ? 'needed' : 'not needed'}`)
+
+    return approvalTx ? [approvalTx, createTx] : [createTx]
   }
 
   /**

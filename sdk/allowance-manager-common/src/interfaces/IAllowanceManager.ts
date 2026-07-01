@@ -35,6 +35,30 @@ export interface IAllowanceManager {
   }): Promise<ApproveTransactionInfo | undefined>
 
   /**
+   * @name getApprovalFromBaseUnit
+   * @description Base-unit convenience variant of {@link getApproval}. Accepts primitive
+   * arguments (chainId, address values, a base-unit bigint) instead of value objects, so callers
+   * holding a raw amount don't have to hand-build a Token/TokenAmount just to request an approval.
+   *
+   * @param chainId Chain in which the token is
+   * @param spenderAddress Address of the spender to approve
+   * @param tokenAddress Address of the ERC-20 token to approve
+   * @param amount Amount of tokens (in token base units) to allow the spender to spend
+   * @param ownerAddress (optional) Owner of the tokens. If not provided, the current allowance is
+   * not checked and the approval transaction is always returned
+   *
+   * @returns The transaction info needed to set the allowance, or undefined if no approval is
+   * needed (ownerAddress param is required for this)
+   */
+  getApprovalFromBaseUnit(params: {
+    chainId: ChainId
+    spenderAddress: AddressValue
+    tokenAddress: AddressValue
+    amount: bigint
+    ownerAddress?: AddressValue
+  }): Promise<ApproveTransactionInfo | undefined>
+
+  /**
    * @name isPermit2AuthorizationNeeded
    * @description Checks if the Permit2 contract needs authorization for a specific token and amount
    * @param chainId The chain ID to check the allowance on

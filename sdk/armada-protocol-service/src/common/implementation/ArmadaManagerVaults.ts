@@ -39,7 +39,6 @@ import {
   fetchWithTimeout,
   type IPrice,
   type VaultApys,
-  ChainIds,
   type ChainId,
   NATIVE_CURRENCY_ADDRESS_LOWERCASE,
   type TransactionPriceImpact,

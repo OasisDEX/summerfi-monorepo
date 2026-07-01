@@ -4,6 +4,7 @@ import type {
   IDcaStrategy,
   IDcaExecution,
   ChainId,
+  ApproveTransactionInfo,
   CreateDcaStrategyTransactionInfo,
   EditDcaStrategyTransactionInfo,
   PauseDcaStrategyTransactionInfo,
@@ -36,7 +37,9 @@ export interface IDCAManager {
     neverBuyAbove?: string
     neverSellBelow?: string
     deadlineUnixTimestamp: number
-  }): Promise<[CreateDcaStrategyTransactionInfo]>
+  }): Promise<
+    [CreateDcaStrategyTransactionInfo] | [ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]
+  >
 
   editStrategyTx(params: {
     chainId: ChainId
