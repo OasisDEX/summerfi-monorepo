@@ -494,4 +494,6 @@ common changes that span multiple packages. File paths are relative to the repo 
 ## SDK how-to docs
 
 For step-by-step generator walkthroughs, see `sdk/docs/ADD_SDK_SERVICE.md` and
-`sdk/docs/ADD_NEW_PLUGIN.md` rather than duplicating them here.
+`sdk/docs/ADD_NEW_PLUGIN.md` rather than duplicating them here. For how to modify the SDK's
+published GitBook docs — what's generated vs. hand-written, and the TSDoc rules TypeDoc enforces —
+see `sdk/docs/DOCS_PLAYBOOK.md`.
