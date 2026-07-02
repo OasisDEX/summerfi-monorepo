@@ -22,14 +22,14 @@ export type CowHook = {
 }
 
 /**
- * @name IIntentSwapClient
- * @description Interface for the IntentSwap client implementation.
+ * Interface for the IntentSwap client implementation.
+ *
  * @see IIntentSwapProvider
  */
 export interface IIntentSwapClient {
   /**
-   * @name getSellOrderQuote
-   * @description Returns a quote data for the swap between two tokens, by providing the exact amount of input tokens to swap
+   * Returns a quote data for the swap between two tokens, by providing the exact amount of input tokens to swap
+   *
    * @param fromAmount The amount of tokens to swap
    * @param toToken The token to swap to
    * @param sender The address that will send the tokens
@@ -53,8 +53,8 @@ export interface IIntentSwapClient {
   }): Promise<IntentQuoteData>
 
   /**
-   * @name sendOrder
-   * @description Sends the order to the swap provider
+   * Sends the order to the swap provider
+   *
    * @param order The order data for the swap
    * @param fromAmount The amount of tokens to swap
    * @param sender The address that will send the tokens
@@ -84,8 +84,8 @@ export interface IIntentSwapClient {
   >
 
   /**
-   * @name sendHookOrder
-   * @description Approves and sends the order to the swap provider
+   * Approves and sends the order to the swap provider
+   *
    * @param order The order data for the swap
    * @param fromAmount The amount of tokens to swap
    * @param sender The address that will send the tokens
@@ -116,8 +116,8 @@ export interface IIntentSwapClient {
   }): Promise<{ status: 'order_sent'; orderId: string }>
 
   /**
-   * @name cancelOrder
-   * @description Cancels an existing order by its ID
+   * Cancels an existing order by its ID
+   *
    * @param chainId The chain ID where the order exists
    * @param orderId The ID of the order to cancel
    * @param account The account to use for signing the cancellation
@@ -133,8 +133,8 @@ export interface IIntentSwapClient {
   }): Promise<{ result: string }>
 
   /**
-   * @name checkOrderById
-   * @description Checks the status of the order by its ID
+   * Checks the status of the order by its ID
+   *
    * @param chainId The chain ID where the order exists
    * @param orderId The ID of the order to check
    * @returns The order info if found, otherwise null

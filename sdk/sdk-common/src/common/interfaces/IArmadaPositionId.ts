@@ -9,8 +9,7 @@ import { isUser, type IUser } from '../../user/interfaces/IUser'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IArmadaPositionId
- * @description Interface for an ID of an Armada Protocol position
+ * Interface for an ID of an Armada Protocol position
  */
 export interface IArmadaPositionId extends IPositionId, IArmadaPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
@@ -23,7 +22,7 @@ export interface IArmadaPositionId extends IPositionId, IArmadaPositionIdData {
 }
 
 /**
- * @description Zod schema for IArmadaPositionId
+ * Zod schema for IArmadaPositionId
  */
 export const ArmadaPositionIdDataSchema = z.object({
   ...PositionIdDataSchema.shape,
@@ -37,7 +36,8 @@ export const ArmadaPositionIdDataSchema = z.object({
 export type IArmadaPositionIdData = Readonly<z.infer<typeof ArmadaPositionIdDataSchema>>
 
 /**
- * @description Type guard for IArmadaPositionId
+ * Type guard for IArmadaPositionId
+ *
  * @param maybeArmadaPositionId Object to be checked
  * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is a IArmadaPositionId

@@ -4,8 +4,7 @@ import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { ITokensManagerClient } from '../interfaces/ITokensManagerClient'
 
 /**
- * @name TokensManagerClient
- * @description Implementation of the ITokensManager interface for the SDK Client
+ * Implementation of the ITokensManager interface for the SDK Client
  */
 export class TokensManagerClient extends IRPCClient implements ITokensManagerClient {
   private readonly _chainInfo: ChainInfo

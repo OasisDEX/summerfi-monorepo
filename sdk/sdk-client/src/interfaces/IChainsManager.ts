@@ -2,14 +2,12 @@ import { ChainInfo, Maybe } from '@summerfi/sdk-common'
 import { Chain } from '../implementation/Chain'
 
 /**
- * @interface IChainsManagerClient
- * @description Interface for the ChainsManager client implementation. Allows to retrieve information for
- *             a Chain given its ChainInfo. It also supports to lookup a chain by its name or chain ID
+ * Interface for the ChainsManager client implementation. Allows to retrieve information for
+ * a Chain given its ChainInfo. It also supports to lookup a chain by its name or chain ID
  */
 export interface IChainsManagerClient {
   /**
-   * @method getChain
-   * @description Retrieves a chain by its chain info
+   * Retrieves a chain by its chain info
    *
    * @param chainInfo The info associated with the chain to retrieve
    *
@@ -18,8 +16,7 @@ export interface IChainsManagerClient {
   getChain(params: { chainInfo: ChainInfo }): Promise<Chain>
 
   /**
-   * @method getChainById
-   * @description Retrieves a network by its chain ID
+   * Retrieves a network by its chain ID
    *
    * @param chainId The chain ID of the network to retrieve
    *

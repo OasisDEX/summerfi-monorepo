@@ -10,13 +10,12 @@ import type {
 import type { Claim } from '../../distributions'
 
 /**
- * @name IArmadaManagerClaims
- * @description Interface for the Armada Manager Claims which handles generating transactions for claims
+ * Interface for the Armada Manager Claims which handles generating transactions for claims
  */
 export interface IArmadaManagerClaims {
   /**
-   * @name canClaimDistributions
-   * @description Checks if a user is eligible for a claim
+   * Checks if a user is eligible for a claim
+   *
    * @param params.user The user
    * @returns Promise<boolean>
    * @throws Error
@@ -26,8 +25,8 @@ export interface IArmadaManagerClaims {
   }) => Promise<Record<string, Record<string, boolean>>>
 
   /**
-   * @name hasClaimedDistributions
-   * @description Checks if a user has claimed
+   * Checks if a user has claimed
+   *
    * @param params.user The user
    * @returns Promise<boolean>
    * @throws Error
@@ -38,8 +37,8 @@ export interface IArmadaManagerClaims {
   }) => Promise<Record<string, Record<string, boolean>>>
 
   /**
-   * @name getAggregatedRewards
-   * @description Returns the total aggregated rewards a user is eligible to claim cross-chain
+   * Returns the total aggregated rewards a user is eligible to claim cross-chain
+   *
    * @param params.user The user
    * @returns Promise<{
    *  total: bigint
@@ -61,8 +60,8 @@ export interface IArmadaManagerClaims {
   }>
 
   /**
-   * @name getProtocolUsageRewards
-   * @description Gets protocol usage rewards for a user on a specific chain
+   * Gets protocol usage rewards for a user on a specific chain
+   *
    * @param userAddressValue The user address value
    * @param chainId The chain ID
    * @returns Promise with total and per-fleet rewards
@@ -74,8 +73,8 @@ export interface IArmadaManagerClaims {
   }>
 
   /**
-   * @name getAggregatedRewardsIncludingMerkl
-   * @description Returns the total aggregated rewards a user is eligible to claim cross-chain including Merkl
+   * Returns the total aggregated rewards a user is eligible to claim cross-chain including Merkl
+   *
    * @param params.user The user
    * @returns Promise<{
    *  total: bigint
@@ -97,8 +96,8 @@ export interface IArmadaManagerClaims {
   }>
 
   /**
-   * @name getClaimDistributionTx
-   * @description Claims distribution rewards for a user
+   * Claims distribution rewards for a user
+   *
    * @param params.user The user
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
@@ -106,8 +105,8 @@ export interface IArmadaManagerClaims {
   getClaimDistributionTx: (params: { user: IUser }) => Promise<ClaimTransactionInfo[] | undefined>
 
   /**
-   * @name getClaimVoteDelegationRewardsTx
-   * @description Claims governance rewards for a user
+   * Claims governance rewards for a user
+   *
    * @param params.rewardToken The reward token
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
@@ -118,8 +117,8 @@ export interface IArmadaManagerClaims {
   }) => Promise<[ClaimTransactionInfo]>
 
   /**
-   * @name getClaimStakingV2UserRewardsTx
-   * @description Claims staking v2 rewards for a user
+   * Claims staking v2 rewards for a user
+   *
    * @param params.user The user
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
@@ -127,10 +126,10 @@ export interface IArmadaManagerClaims {
   getClaimStakingV2UserRewardsTx: (params: { user: IUser }) => Promise<[ClaimTransactionInfo]>
 
   /**
-   * @name authorizeStakingRewardsCallerV2
-   * @description Generates a transaction to authorize a caller for staking rewards.
-   *              When authorizedCaller is omitted, defaults to the deployed AdmiralsQuarters
-   *              address on the hub chain (resolved via the deployment provider).
+   * Generates a transaction to authorize a caller for staking rewards.
+   * When authorizedCaller is omitted, defaults to the deployed AdmiralsQuarters
+   * address on the hub chain (resolved via the deployment provider).
+   *
    * @param params.user The user who is authorizing
    * @param params.authorizedCaller The address to authorize (optional; defaults to deployed AdmiralsQuarters)
    * @param params.isAuthorized Whether to authorize or revoke authorization
@@ -144,10 +143,10 @@ export interface IArmadaManagerClaims {
   }) => Promise<[ClaimTransactionInfo]>
 
   /**
-   * @name isAuthorizedStakingRewardsCallerV2
-   * @description Checks if a caller is authorized for staking rewards.
-   *              When authorizedCaller is omitted, defaults to the deployed AdmiralsQuarters
-   *              address on the hub chain (resolved via the deployment provider).
+   * Checks if a caller is authorized for staking rewards.
+   * When authorizedCaller is omitted, defaults to the deployed AdmiralsQuarters
+   * address on the hub chain (resolved via the deployment provider).
+   *
    * @param params.owner The owner address
    * @param params.authorizedCaller The address to check authorization for (optional; defaults to deployed AdmiralsQuarters)
    * @returns Promise<boolean>
@@ -159,8 +158,8 @@ export interface IArmadaManagerClaims {
   }) => Promise<boolean>
 
   /**
-   * @name getClaimProtocolUsageRewardsTx
-   * @description Claims protocol usage rewards for a user
+   * Claims protocol usage rewards for a user
+   *
    * @param params.user The user
    * @param params.chainInfo The chain info
    * @param params.fleetCommandersAddresses The fleet commanders addresses
@@ -176,8 +175,7 @@ export interface IArmadaManagerClaims {
   }) => Promise<[ClaimTransactionInfo]>
 
   /**
-   * @name getAggregatedClaimsForChainTx
-   * @description Returns the multicall transaction needed to claim rewards from the Fleet
+   * Returns the multicall transaction needed to claim rewards from the Fleet
    *
    * @param chainInfo Chain information
    * @param user Address of the user that is trying to claim

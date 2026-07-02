@@ -12,7 +12,6 @@ import { IMorphoLendingPoolId } from '../interfaces/IMorphoLendingPoolId'
 export type MorphoLendingPoolParameters = Omit<IMorphoLendingPoolData, 'type'>
 
 /**
- * @class MorphoLendingPool
  * @see IMorphoLendingPool
  */
 export class MorphoLendingPool extends LendingPool implements IMorphoLendingPool {

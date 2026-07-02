@@ -1,10 +1,9 @@
 import { z } from 'zod'
 
 /**
- * @enum RoundsVaultType
- * @description Distinguishes between the two RoundsVault flavors.
- *              Input vaults accept the Fleet's underlying asset (e.g. USDC) and issue Fleet shares
- *              on settlement. Output vaults accept Fleet shares and return the underlying asset.
+ * Distinguishes between the two RoundsVault flavors.
+ * Input vaults accept the Fleet's underlying asset (e.g. USDC) and issue Fleet shares
+ * on settlement. Output vaults accept Fleet shares and return the underlying asset.
  */
 export enum RoundsVaultType {
   Input = 'Input',

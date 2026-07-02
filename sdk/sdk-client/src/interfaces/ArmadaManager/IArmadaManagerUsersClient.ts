@@ -52,14 +52,12 @@ import {
 } from '@summerfi/sdk-common'
 
 /**
- * @interface IArmadaManagerUsersClient
- * @description Interface of the FleetCommander Users manager for the SDK Client. Allows to instantiate
- *              FleetCommanders to interact with them
+ * Interface of the FleetCommander Users manager for the SDK Client. Allows to instantiate
+ * FleetCommanders to interact with them
  */
 export interface IArmadaManagerUsersClient {
   /**
-   * @method getSummerToken
-   * @description Retrieves the Summer token for a given chain
+   * Retrieves the Summer token for a given chain
    *
    * @param chainInfo Chain information
    *
@@ -68,8 +66,7 @@ export interface IArmadaManagerUsersClient {
   getSummerToken(params: { chainInfo: IChainInfo }): Promise<IToken>
 
   /**
-   * @method getSummerPrice
-   * @description Retrieves the current price of the Summer token
+   * Retrieves the current price of the Summer token
    *
    * @param params - Optional parameters
    * @param params.override - Optional price override value
@@ -78,8 +75,7 @@ export interface IArmadaManagerUsersClient {
   getSummerPrice(params?: { override?: number }): Promise<{ price: number }>
 
   /**
-   * @method getVaultsRaw
-   * @description Retrieves all protocol vaults
+   * Retrieves all protocol vaults
    *
    * @param chainInfo Chain information
    *
@@ -88,8 +84,7 @@ export interface IArmadaManagerUsersClient {
   getVaultsRaw(params: { chainInfo: IChainInfo }): Promise<GetVaultsQuery>
 
   /**
-   * @method getVaultRaw
-   * @description Retrieves a specific protocol vault
+   * Retrieves a specific protocol vault
    *
    * @param vaultId ID of the vault
    *
@@ -98,8 +93,7 @@ export interface IArmadaManagerUsersClient {
   getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQuery>
 
   /**
-   * @name getGlobalRebalancesRaw
-   * @description Get all rebalances per given chain
+   * Get all rebalances per given chain
    *
    * @param chainInfo Chain information
    *
@@ -108,8 +102,7 @@ export interface IArmadaManagerUsersClient {
   getGlobalRebalancesRaw(params: { chainInfo: IChainInfo }): Promise<GetGlobalRebalancesQuery>
 
   /**
-   * @name getUsersActivityRaw
-   * @description Get all users activity per given chain
+   * Get all users activity per given chain
    *
    * @param chainInfo Chain information
    *
@@ -121,8 +114,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<GetUsersActivityQuery>
 
   /**
-   * @name getUserActivityRaw
-   * @description Get all users activity per given chain
+   * Get all users activity per given chain
    *
    * @param vaultId ID of the pool to retrieve
    *
@@ -134,8 +126,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<GetUserActivityQuery>
 
   /**
-   * @method getVaultInfo
-   * @description Retrieves the information of an Armada vault by its ID
+   * Retrieves the information of an Armada vault by its ID
    *
    * @param vaultId ID of the vault to retrieve
    *
@@ -144,8 +135,7 @@ export interface IArmadaManagerUsersClient {
   getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
 
   /**
-   * @method getVaultInfoList
-   * @description Retrieves the information of all Armada vaults for a given chain
+   * Retrieves the information of all Armada vaults for a given chain
    *
    * @param chainInfo Chain information
    *
@@ -156,24 +146,22 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getProtocolRevenue
-   * @description Calculates the total protocol revenue amount in USD across all vaults and chains
+   * Calculates the total protocol revenue amount in USD across all vaults and chains
    *
    * @returns The revenue amount in USD as a number
    */
   getProtocolRevenue(): Promise<number>
 
   /**
-   * @method getProtocolTvl
-   * @description Calculates the total protocol TVL in USD across all vaults and chains
+   * Calculates the total protocol TVL in USD across all vaults and chains
    *
    * @returns The TVL amount in USD as a number
    */
   getProtocolTvl(): Promise<number>
 
   /**
-   * @method getVaultsHistoricalRates
-   * @description Retrieves historical rates for a list of fleets across chains
+   * Retrieves historical rates for a list of fleets across chains
+   *
    * @param params.fleets Array of fleet descriptors with fleetAddress and chainId
    * @returns Array of HistoricalFleetRateResult per fleet
    */
@@ -182,8 +170,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<HistoricalFleetRateResult[]>
 
   /**
-   * @name getUserPositions
-   * @description Get all of user positions in the fleet
+   * Get all of user positions in the fleet
    *
    * @param user target user
    *
@@ -193,8 +180,7 @@ export interface IArmadaManagerUsersClient {
   getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]>
 
   /**
-   * @method getUserPosition
-   * @description Retrieves the position of a user in an Armada pool
+   * Retrieves the position of a user in an Armada pool
    *
    * @param user Target user
    * @param fleetAddress Address of the fleet
@@ -207,8 +193,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<IArmadaPosition | undefined>
 
   /**
-   * @method getPosition
-   * @description Retrieves the position of a user in an Armada pool
+   * Retrieves the position of a user in an Armada pool
    *
    * @param positionId ID of the position to retrieve
    *
@@ -217,8 +202,7 @@ export interface IArmadaManagerUsersClient {
   getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition | undefined>
 
   /**
-   * @method getPositionHistory
-   * @description Retrieves historical snapshots of a position
+   * Retrieves historical snapshots of a position
    *
    * @param positionId The ID of the position to retrieve history for
    * @returns GetPositionHistoryQuery with hourly, daily, and weekly snapshots
@@ -226,8 +210,7 @@ export interface IArmadaManagerUsersClient {
   getPositionHistory(params: { positionId: IArmadaPositionId }): Promise<GetPositionHistoryQuery>
 
   /**
-   * @method getDeposits
-   * @description Get deposits for a given Armada position ID with optional pagination
+   * Get deposits for a given Armada position ID with optional pagination
    *
    * @param positionId Position ID
    * @param first Optional number of items to return
@@ -242,8 +225,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<IArmadaDeposit[]>
 
   /**
-   * @method getWithdrawals
-   * @description Get withdrawals for a given Armada position ID with optional pagination
+   * Get withdrawals for a given Armada position ID with optional pagination
    *
    * @param positionId Position ID
    * @param first Optional number of items to return
@@ -258,8 +240,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<IArmadaWithdrawal[]>
 
   /**
-   * @method getNewDepositTx
-   * @description Returns the transactions needed to deposit tokens in the Fleet for a new position
+   * Returns the transactions needed to deposit tokens in the Fleet for a new position
    *
    * @param vaultId ID of the pool to deposit in
    * @param user Address of the user that is trying to deposit
@@ -280,8 +261,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
-   * @method getWithdrawTx
-   * @description Returns the transactions needed to withdraw tokens from the Fleet
+   * Returns the transactions needed to withdraw tokens from the Fleet
    *
    * @param vaultId ID of the pool to withdraw from
    * @param user user that is trying to withdraw
@@ -304,8 +284,7 @@ export interface IArmadaManagerUsersClient {
   >
 
   /**
-   * @method getCrossChainDepositTx
-   * @description Returns the transactions needed to deposit tokens cross-chain into a Fleet using Enso routing
+   * Returns the transactions needed to deposit tokens cross-chain into a Fleet using Enso routing
    *
    * @param fromChainId Source chain ID where user has tokens
    * @param vaultId ID of the pool to deposit in on destination chain
@@ -326,8 +305,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
-   * @method getCrossChainWithdrawTx
-   * @description Returns the transactions needed to withdraw tokens cross-chain from a Fleet using Enso routing
+   * Returns the transactions needed to withdraw tokens cross-chain from a Fleet using Enso routing
    *
    * @param vaultId ID of the pool to withdraw from
    * @param user user that is trying to withdraw
@@ -346,8 +324,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[WithdrawTransactionInfo] | [ApproveTransactionInfo, WithdrawTransactionInfo]>
 
   /**
-   * @method getStakedBalance
-   * @description Returns the staked balance of a user in a Fleet
+   * Returns the staked balance of a user in a Fleet
    *
    * @param vaultId ID of the vault to check the balance in
    * @param user Address of the user to check the balance for
@@ -360,8 +337,7 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getFleetBalance
-   * @description Returns the balance of a user in a Fleet
+   * Returns the balance of a user in a Fleet
    *
    * @param vaultId ID of the vault to check the balance in
    * @param user Address of the user to check the balance for
@@ -374,8 +350,7 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getTotalBalance
-   * @description Returns the total balance of a user in a Fleet
+   * Returns the total balance of a user in a Fleet
    *
    * @param vaultId ID of the vault to check the balance in
    * @param user Address of the user to check the balance for
@@ -388,8 +363,8 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @name getAggregatedRewards
-   * @description Returns the total aggregated rewards a user is eligible to claim cross-chain
+   * Returns the total aggregated rewards a user is eligible to claim cross-chain
+   *
    * @param params.user The user
    * @returns Promise<{
    *  total: bigint
@@ -412,8 +387,7 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getAggregatedRewardsIncludingMerkl
-   * @description Returns the aggregated rewards of a user including Merkl rewards
+   * Returns the aggregated rewards of a user including Merkl rewards
    *
    * @param user Address of the user to check the rewards for
    *
@@ -430,8 +404,7 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getBridgeTx
-   * @description Returns the bridge transaction needed to bridge tokens between chains
+   * Returns the bridge transaction needed to bridge tokens between chains
    *
    * @param user The user
    * @param recipient The recipient address
@@ -450,8 +423,8 @@ export interface IArmadaManagerUsersClient {
   }): Promise<BridgeTransactionInfo[]>
 
   /**
-   * @method getAggregatedClaimsForChainTx
-   * @description Returns the multicall transaction needed to claim rewards from the Fleet
+   * Returns the multicall transaction needed to claim rewards from the Fleet
+   *
    * @param chainInfo Chain information
    * @param user Address of the user to claim rewards for
    * @param includeMerkl Whether to include Merkl rewards in the claim
@@ -467,8 +440,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[ClaimTransactionInfo] | undefined>
 
   /**
-   * @method getUserDelegatee
-   * @description Returns delegatee that the account has chosen
+   * Returns delegatee that the account has chosen
    *
    * @param user The user
    *
@@ -477,8 +449,7 @@ export interface IArmadaManagerUsersClient {
   getUserDelegatee(params: { user: IUser }): Promise<IAddress>
 
   /**
-   * @method getUserDelegateeV2
-   * @description Returns delegatee configured on the staked SUMR contract (V2)
+   * Returns delegatee configured on the staked SUMR contract (V2)
    *
    * @param userAddress Address whose delegatee should be fetched
    *
@@ -487,8 +458,7 @@ export interface IArmadaManagerUsersClient {
   getUserDelegateeV2(params: { userAddress: AddressValue }): Promise<IAddress>
 
   /**
-   * @method getDelegateTx
-   * @description Delegates votes from the sender to delegatee
+   * Delegates votes from the sender to delegatee
    *
    * @param user The user
    *
@@ -497,8 +467,7 @@ export interface IArmadaManagerUsersClient {
   getDelegateTx(params: { user: IUser }): Promise<[DelegateTransactionInfo]>
 
   /**
-   * @method getDelegateTxV2
-   * @description Delegates votes for the staked SUMR contract (V2)
+   * Delegates votes for the staked SUMR contract (V2)
    *
    * @param delegateeAddress Address that should receive delegated votes
    *
@@ -507,8 +476,8 @@ export interface IArmadaManagerUsersClient {
   getDelegateTxV2(params: { delegateeAddress: AddressValue }): Promise<[DelegateTransactionInfo]>
 
   /**
-   * @method getErc20TokenTransferTx
-   * @description Generates a transaction for transferring ERC20 tokens
+   * Generates a transaction for transferring ERC20 tokens
+   *
    * @see IArmadaManagerUtils.getErc20TokenTransferTx
    *
    * @param chainId Chain identifier where the token exists
@@ -526,16 +495,14 @@ export interface IArmadaManagerUsersClient {
   }): Promise<Erc20TransferTransactionInfo[]>
 
   /**
-   * @method getUndelegateTx
-   * @description Undelegates votes from the sender
+   * Undelegates votes from the sender
    *
    * @returns The transaction information
    */
   getUndelegateTx(): Promise<[DelegateTransactionInfo]>
 
   /**
-   * @method getUserVotes
-   * @description Returns the number of votes the user has
+   * Returns the number of votes the user has
    *
    * @param user The user
    *
@@ -544,8 +511,7 @@ export interface IArmadaManagerUsersClient {
   getUserVotes(params: { user: IUser }): Promise<bigint>
 
   /**
-   * @method getUserBalance
-   * @description Returns the balance of the user
+   * Returns the balance of the user
    *
    * @param user The user
    *
@@ -554,8 +520,7 @@ export interface IArmadaManagerUsersClient {
   getUserBalance(params: { user: IUser }): Promise<bigint>
 
   /**
-   * @method getUserStakedBalance
-   * @description Returns the staked balance of the user
+   * Returns the staked balance of the user
    *
    * @param user The user
    *
@@ -564,8 +529,7 @@ export interface IArmadaManagerUsersClient {
   getUserStakedBalance(params: { user: IUser }): Promise<bigint>
 
   /**
-   * @method getUserEarnedRewards
-   * @description Returns the rewards the user has earned
+   * Returns the rewards the user has earned
    *
    * @param user The user
    *
@@ -574,8 +538,7 @@ export interface IArmadaManagerUsersClient {
   getUserEarnedRewards(params: { user: IUser }): Promise<bigint>
 
   /**
-   * @method getStakeTx
-   * @description Returns the transaction to stake tokens
+   * Returns the transaction to stake tokens
    *
    * @param user The user
    * @param amount The amount to stake
@@ -588,8 +551,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[ApproveTransactionInfo, StakeTransactionInfo] | [StakeTransactionInfo]>
 
   /**
-   * @method getUnstakeTx
-   * @description Returns the transaction to unstake tokens
+   * Returns the transaction to unstake tokens
    *
    * @param amount The amount to unstake
    *
@@ -598,8 +560,7 @@ export interface IArmadaManagerUsersClient {
   getUnstakeTx(params: { amount: bigint }): Promise<[UnstakeTransactionInfo]>
 
   /**
-   * @method getDelegationChainLength
-   * @description Returns the length of the delegation chain
+   * Returns the length of the delegation chain
    *
    * @param user The user
    *
@@ -608,8 +569,7 @@ export interface IArmadaManagerUsersClient {
   getDelegationChainLength: (params: { user: IUser }) => Promise<number>
 
   /**
-   * @method getStakeTxV2
-   * @description Returns the transaction to stake tokens with lockup (V2)
+   * Returns the transaction to stake tokens with lockup (V2)
    *
    * @param user The user
    * @param amount The amount to stake
@@ -624,8 +584,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[ApproveTransactionInfo, StakeTransactionInfo] | [StakeTransactionInfo]>
 
   /**
-   * @method getStakeOnBehalfTxV2
-   * @description Returns the transaction to stake tokens on behalf with lockup (V2)
+   * Returns the transaction to stake tokens on behalf with lockup (V2)
    *
    * @param user The user initiating the stake
    * @param receiver The address receiving the staked tokens
@@ -642,8 +601,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[ApproveTransactionInfo, StakeTransactionInfo] | [StakeTransactionInfo]>
 
   /**
-   * @method getUnstakeTxV2
-   * @description Returns the transaction to unstake tokens from a specific stake in the user's portfolio (V2)
+   * Returns the transaction to unstake tokens from a specific stake in the user's portfolio (V2)
    *
    * @param user The user
    * @param userStakeIndex The index of the stake in the user's stake array (portfolio) to unstake from
@@ -658,8 +616,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[ApproveTransactionInfo, UnstakeTransactionInfo] | [UnstakeTransactionInfo]>
 
   /**
-   * @method getUserStakesCount
-   * @description Returns the number of stakes a user has before and after considering a specific bucket
+   * Returns the number of stakes a user has before and after considering a specific bucket
    *
    * @param user The user
    *
@@ -670,8 +627,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<{ userStakesCountBefore: bigint; userStakesCountAfter: bigint }>
 
   /**
-   * @method getUserStakesV2
-   * @description Returns all staking positions for a user with detailed information
+   * Returns all staking positions for a user with detailed information
    *
    * @param user The user to get staking positions for
    *
@@ -680,8 +636,7 @@ export interface IArmadaManagerUsersClient {
   getUserStakesV2(params: { user: IUser }): Promise<UserStakeV2[]>
 
   /**
-   * @method getStakingStakesV2
-   * @description Retrieves all staking stakes across all users with pagination support (V2)
+   * Retrieves all staking stakes across all users with pagination support (V2)
    *
    * @param first number of items to return (optional, defaults to 1000)
    * @param skip number of items to skip for pagination (optional, defaults to 0)
@@ -691,8 +646,7 @@ export interface IArmadaManagerUsersClient {
   getStakingStakesV2(params?: { first?: number; skip?: number }): Promise<StakingStake[]>
 
   /**
-   * @method getCalculatePenaltyPercentage
-   * @description Calculates the penalty percentage for early unstaking of multiple stakes
+   * Calculates the penalty percentage for early unstaking of multiple stakes
    *
    * @param userStakes Array of user stake details
    *
@@ -703,8 +657,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<IPercentage[]>
 
   /**
-   * @method getCalculatePenaltyAmount
-   * @description Calculates the penalty amount for early unstaking of specific amounts from multiple stakes
+   * Calculates the penalty amount for early unstaking of specific amounts from multiple stakes
    *
    * @param userStakes Array of user stake details
    * @param amounts Array of amounts to unstake (must match userStakes length)
@@ -717,8 +670,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<bigint[]>
 
   /**
-   * @method getUserStakingBalanceV2
-   * @description Returns the user's staking balance for each bucket (V2)
+   * Returns the user's staking balance for each bucket (V2)
    *
    * @param user The user
    *
@@ -727,8 +679,7 @@ export interface IArmadaManagerUsersClient {
   getUserStakingBalanceV2(params: { user: IUser }): Promise<UserStakingBalanceByBucket[]>
 
   /**
-   * @method getUserStakingWeightedBalanceV2
-   * @description Returns the user's weighted staking balance for all buckets (V2)
+   * Returns the user's weighted staking balance for all buckets (V2)
    *
    * @param user The user
    *
@@ -737,8 +688,7 @@ export interface IArmadaManagerUsersClient {
   getUserStakingWeightedBalanceV2(params: { user: IUser }): Promise<bigint>
 
   /**
-   * @method getUserBlendedYieldBoost
-   * @description Returns the user's current blended yield boost based on their weighted balance and staked balance
+   * Returns the user's current blended yield boost based on their weighted balance and staked balance
    *
    * @param user The user to get the blended yield boost for
    *
@@ -747,8 +697,7 @@ export interface IArmadaManagerUsersClient {
   getUserBlendedYieldBoost(params: { user: IUser }): Promise<number>
 
   /**
-   * @method getUserStakingEarnedV2
-   * @description Returns the user's earned rewards (V2)
+   * Returns the user's earned rewards (V2)
    *
    * @param user The user
    * @param rewardTokenAddress The reward token address
@@ -757,8 +706,7 @@ export interface IArmadaManagerUsersClient {
    */
   getUserStakingEarnedV2(params: { user: IUser; rewardTokenAddress?: IAddress }): Promise<bigint>
   /**
-   * @method getUserStakingSumrStaked
-   * @description Returns the total amount of SUMR tokens staked by the user across all buckets
+   * Returns the total amount of SUMR tokens staked by the user across all buckets
    *
    * @param user The user to get staking balance for
    *
@@ -767,8 +715,7 @@ export interface IArmadaManagerUsersClient {
   getUserStakingSumrStaked(params: { user: IUser }): Promise<bigint>
 
   /**
-   * @method getStakingRewardRatesV2
-   * @description Returns the staking reward rates including user-specific boost (V2)
+   * Returns the staking reward rates including user-specific boost (V2)
    *
    * @param user The user to calculate boosted multiplier for
    * @param rewardTokenAddress Optional reward token address (defaults to SUMR token)
@@ -782,16 +729,14 @@ export interface IArmadaManagerUsersClient {
   }): Promise<StakingRewardRates>
 
   /**
-   * @method getStakingBucketsInfoV2
-   * @description Returns information about all staking buckets (V2)
+   * Returns information about all staking buckets (V2)
    *
    * @returns Array of bucket information
    */
   getStakingBucketsInfoV2(): Promise<StakingBucketInfo[]>
 
   /**
-   * @method getStakingCalculateWeightedStakeV2
-   * @description Calculates the weighted stake for a given amount and lockup period
+   * Calculates the weighted stake for a given amount and lockup period
    *
    * @param params.amount - The amount to stake
    * @param params.lockupPeriod - The lockup period in seconds
@@ -803,32 +748,28 @@ export interface IArmadaManagerUsersClient {
   }): Promise<bigint>
 
   /**
-   * @method getStakingTotalWeightedSupplyV2
-   * @description Returns the total weighted supply of staked tokens
+   * Returns the total weighted supply of staked tokens
    *
    * @returns The total weighted supply as bigint
    */
   getStakingTotalWeightedSupplyV2(): Promise<bigint>
 
   /**
-   * @method getStakingTotalSumrStakedV2
-   * @description Returns the total amount of SUMR tokens staked across all buckets
+   * Returns the total amount of SUMR tokens staked across all buckets
    *
    * @returns The total staked amount as bigint
    */
   getStakingTotalSumrStakedV2(): Promise<bigint>
 
   /**
-   * @method getStakingRevenueShareV2
-   * @description Returns the revenue share percentage for stakers and the calculated amount
+   * Returns the revenue share percentage for stakers and the calculated amount
    *
    * @returns Object containing the revenue share percentage and calculated amount in USD
    */
   getStakingRevenueShareV2(): Promise<{ percentage: IPercentage; amount: number }>
 
   /**
-   * @method getStakingSimulationDataV2
-   * @description Calculates staking simulation data including yield APYs and boosts
+   * Calculates staking simulation data including yield APYs and boosts
    *
    * @param amount The amount to stake
    * @param period The lockup period in seconds
@@ -845,8 +786,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<StakingSimulationDataV2>
 
   /**
-   * @method getStakingEarningsEstimationV2
-   * @description Calculates the earnings estimation for multiple stake positions
+   * Calculates the earnings estimation for multiple stake positions
    *
    * @param stakes Array of stake positions with amount, period, and weightedAmount
    * @param sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
@@ -859,24 +799,21 @@ export interface IArmadaManagerUsersClient {
   }): Promise<StakingEarningsEstimationForStakesV2>
 
   /**
-   * @method getStakingConfigV2
-   * @description Returns the staking configuration including the staking contract address
+   * Returns the staking configuration including the staking contract address
    *
    * @returns Object containing staking configuration
    */
   getStakingConfigV2(): Promise<{ stakingContractAddress: AddressValue }>
 
   /**
-   * @method getStakingStatsV2
-   * @description Returns staking statistics from the protocol subgraph
+   * Returns staking statistics from the protocol subgraph
    *
    * @returns Object containing staking statistics including total staked, average lockup period, and number of locked stakes
    */
   getStakingStatsV2(): Promise<StakingStatsV2>
 
   /**
-   * @method getMigratablePositions
-   * @description Returns the positions that can be migrated
+   * Returns the positions that can be migrated
    *
    * @param chainInfo Chain information
    * @param user The user
@@ -895,8 +832,7 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getMigratablePositionsApy
-   * @description Returns the APY for the positions that can be migrated
+   * Returns the APY for the positions that can be migrated
    *
    * @param chainInfo Chain information
    * @param positionIds The positions to get the APY for
@@ -912,8 +848,7 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getMigrationTx
-   * @description Returns the transaction for the migration
+   * Returns the transaction for the migration
    *
    * @param user The user
    * @param vaultId The vault id
@@ -933,8 +868,7 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[ApproveTransactionInfo[], MigrationTransactionInfo] | [MigrationTransactionInfo]>
 
   /**
-   * @name getVaultSwitchTx
-   * @description Returns the transactions needed to switch from one vault to another
+   * Returns the transactions needed to switch from one vault to another
    *
    * @param sourceVaultId ID of the source pool
    * @param destinationVaultId ID of the destination pool
@@ -958,9 +892,8 @@ export interface IArmadaManagerUsersClient {
   >
 
   /**
-   * @name getVaultSwitchEnsoTx
-   * @description Returns the transactions needed to switch from one vault to another using Enso routing.
-   *              Source and destination vaults must be on the same chain.
+   * Returns the transactions needed to switch from one vault to another using Enso routing.
+   * Source and destination vaults must be on the same chain.
    *
    * @param sourceVaultId ID of the source pool
    * @param destinationVaultId ID of the destination pool (must be same chain as source)
@@ -979,8 +912,8 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[VaultSwitchTransactionInfo] | [ApproveTransactionInfo, VaultSwitchTransactionInfo]>
 
   /**
-   * @name getUserMerklRewards
-   * @description Gets Merkl rewards for a user across specified chains
+   * Gets Merkl rewards for a user across specified chains
+   *
    * @param params.address The user's address
    * @param params.merklChainId Optional specific Merkl chain ID to get rewards from (if not provided reads from Base chain)
    * @param params.chainIds Optional chain IDs to filter by (default: supported chains)
@@ -995,8 +928,8 @@ export interface IArmadaManagerUsersClient {
   }): Promise<{ perChain: Partial<Record<ChainId, MerklReward[]>> }>
 
   /**
-   * @name getUserMerklClaimTx
-   * @description Generates a transaction to claim Merkl rewards for a user on a specific chain
+   * Generates a transaction to claim Merkl rewards for a user on a specific chain
+   *
    * @param params.address The user's address
    * @param params.chainId The chain ID to claim rewards on
    * @returns Promise<[MerklClaimTransactionInfo] | undefined> Array containing the claim transaction, or undefined if no rewards to claim
@@ -1007,8 +940,8 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[MerklClaimTransactionInfo] | undefined>
 
   /**
-   * @name getReferralFeesMerklClaimTx
-   * @description Generates a transaction to claim Merkl rewards for a referral on a specific chain
+   * Generates a transaction to claim Merkl rewards for a referral on a specific chain
+   *
    * @param params.address The user's address
    * @param params.chainId The chain ID to claim rewards on
    * @param params.rewardsTokensAddresses Optional array of token addresses to claim (default: all tokens)
@@ -1021,8 +954,8 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[MerklClaimTransactionInfo] | undefined>
 
   /**
-   * @name getVaultRewardsMerklClaimTx
-   * @description Generates a transaction to claim Merkl rewards for a vault on a specific chain
+   * Generates a transaction to claim Merkl rewards for a vault on a specific chain
+   *
    * @param params.address The vault's address
    * @param params.chainId The chain ID to claim rewards on
    * @param params.rewardsTokensAddresses Optional array of token addresses to claim (default: all tokens)
@@ -1035,8 +968,8 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[MerklClaimTransactionInfo] | undefined>
 
   /**
-   * @name getAuthorizeAsMerklRewardsOperatorTx
-   * @description Generates a transaction to toggle AdmiralsQuarters as a Merkl rewards operator for a user
+   * Generates a transaction to toggle AdmiralsQuarters as a Merkl rewards operator for a user
+   *
    * @param params.chainId The chain ID to perform the operation on
    * @param params.user The user's address
    * @returns Promise<[ToggleAQasMerklRewardsOperatorTransactionInfo]> Array containing the toggle transaction
@@ -1047,8 +980,8 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[ToggleAQasMerklRewardsOperatorTransactionInfo]>
 
   /**
-   * @name getIsAuthorizedAsMerklRewardsOperator
-   * @description Checks if AdmiralsQuarters is authorized as a Merkl rewards operator for a user
+   * Checks if AdmiralsQuarters is authorized as a Merkl rewards operator for a user
+   *
    * @param params.chainId The chain ID to check authorization on
    * @param params.user The user's address
    * @returns Promise<boolean> True if AdmiralsQuarters is authorized as operator, false otherwise
@@ -1059,8 +992,8 @@ export interface IArmadaManagerUsersClient {
   }): Promise<boolean>
 
   /**
-   * @name getUnstakeFleetTokensTx
-   * @description Generates a transaction to unstake fleet tokens from the rewards manager
+   * Generates a transaction to unstake fleet tokens from the rewards manager
+   *
    * @param params.addressValue The user's address
    * @param params.vaultId The vault ID to unstake from (chain info is derived from vaultId.chainInfo)
    * @param params.amountValue Optional amount to unstake (if not provided, unstakes full balance)
@@ -1073,18 +1006,18 @@ export interface IArmadaManagerUsersClient {
   }): Promise<TransactionInfo>
 
   /**
-   * @name getClaimStakingV2UserRewardsTx
-   * @description Generates a transaction to claim staking v2 rewards for a user
+   * Generates a transaction to claim staking v2 rewards for a user
+   *
    * @param params.user The user to claim rewards for
    * @returns Promise<[ClaimTransactionInfo]> Array containing the claim transaction
    */
   getClaimStakingV2UserRewardsTx(params: { user: IUser }): Promise<[ClaimTransactionInfo]>
 
   /**
-   * @name authorizeStakingRewardsCallerV2
-   * @description Generates a transaction to authorize a caller for staking rewards.
-   *              When authorizedCaller is omitted, the server defaults to the deployed
-   *              AdmiralsQuarters address on the hub chain.
+   * Generates a transaction to authorize a caller for staking rewards.
+   * When authorizedCaller is omitted, the server defaults to the deployed
+   * AdmiralsQuarters address on the hub chain.
+   *
    * @param params.user The user who is authorizing
    * @param params.authorizedCaller The address to authorize (optional; defaults to deployed AdmiralsQuarters)
    * @param params.isAuthorized Whether to authorize or revoke authorization
@@ -1097,10 +1030,10 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[ClaimTransactionInfo]>
 
   /**
-   * @name isAuthorizedStakingRewardsCallerV2
-   * @description Checks if a caller is authorized for staking rewards.
-   *              When authorizedCaller is omitted, the server defaults to the deployed
-   *              AdmiralsQuarters address on the hub chain.
+   * Checks if a caller is authorized for staking rewards.
+   * When authorizedCaller is omitted, the server defaults to the deployed
+   * AdmiralsQuarters address on the hub chain.
+   *
    * @param params.owner The owner address
    * @param params.authorizedCaller The address to check authorization for (optional; defaults to deployed AdmiralsQuarters)
    * @returns Promise<boolean> True if the caller is authorized, false otherwise
@@ -1111,8 +1044,8 @@ export interface IArmadaManagerUsersClient {
   }): Promise<boolean>
 
   /**
-   * @name getProtocolAddresses
-   * @description Returns the deployed contract addresses for the Armada protocol on a given chain
+   * Returns the deployed contract addresses for the Armada protocol on a given chain
+   *
    * @param params.chainId The chain ID to retrieve addresses for
    * @returns Promise with a record containing the admiralsQuarters contract address
    */

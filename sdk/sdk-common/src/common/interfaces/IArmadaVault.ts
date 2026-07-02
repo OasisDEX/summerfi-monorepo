@@ -9,8 +9,7 @@ import { PoolType } from '../enums/PoolType'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IArmadaVault
- * @description Interface for an ID of an Armada Protocol vault (fleet)
+ * Interface for an ID of an Armada Protocol vault (fleet)
  */
 export interface IArmadaVault extends IPool, IArmadaVaultData {
   /** Signature used to differentiate it from similar interfaces */
@@ -23,7 +22,7 @@ export interface IArmadaVault extends IPool, IArmadaVaultData {
 }
 
 /**
- * @description Zod schema for IArmadaVault
+ * Zod schema for IArmadaVault
  */
 export const ArmadaVaultDataSchema = z.object({
   ...PoolDataSchema.shape,
@@ -37,7 +36,8 @@ export const ArmadaVaultDataSchema = z.object({
 export type IArmadaVaultData = Readonly<z.infer<typeof ArmadaVaultDataSchema>>
 
 /**
- * @description Type guard for IArmadaVault
+ * Type guard for IArmadaVault
+ *
  * @param maybeArmadaVault Object to be checked
  * @returns true if the object is a IArmadaVault
  */

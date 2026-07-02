@@ -2,13 +2,12 @@ import { z } from 'zod'
 import { type AddressValue, isAddressValue } from './AddressValue'
 
 /**
- * @name RwaRole
- * @description A grantable / revocable role on an institution's ProtocolAccessManager(V2). Global roles
- *              carry no target; contract-specific roles (Keeper/Curator/Operator on a Fleet, Commander
- *              on an Ark) target a specific contract. Mirrors the on-chain typed role wrappers
- *              (`grantGovernorRole`, `grantKeeperRole`, …) — the contract derives the role hash, so no
- *              hash is passed. `ProtocolAccessManager` disables OZ's generic `grantRole`, which is why
- *              these map to the typed wrappers rather than a single (role-hash, account) call.
+ * A grantable / revocable role on an institution's ProtocolAccessManager(V2). Global roles
+ * carry no target; contract-specific roles (Keeper/Curator/Operator on a Fleet, Commander
+ * on an Ark) target a specific contract. Mirrors the on-chain typed role wrappers
+ * (`grantGovernorRole`, `grantKeeperRole`, …) — the contract derives the role hash, so no
+ * hash is passed. `ProtocolAccessManager` disables OZ's generic `grantRole`, which is why
+ * these map to the typed wrappers rather than a single (role-hash, account) call.
  */
 export type RwaRole =
   | { kind: 'GOVERNOR' }
@@ -30,8 +29,7 @@ const targetedRole = <K extends RwaRole['kind']>(kind: K) =>
   z.object({ kind: z.literal(kind), target: z.custom<AddressValue>(isAddressValue) })
 
 /**
- * @name RwaRoleSchema
- * @description Zod schema for {@link RwaRole}, used to validate the role descriptor at the tRPC boundary.
+ * Zod schema for {@link RwaRole}, used to validate the role descriptor at the tRPC boundary.
  */
 export const RwaRoleSchema = z.union([
   targetlessRole('GOVERNOR'),

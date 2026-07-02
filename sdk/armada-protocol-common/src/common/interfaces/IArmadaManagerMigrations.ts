@@ -12,13 +12,11 @@ import type {
 } from '@summerfi/sdk-common'
 
 /**
- * @name IArmadaManagerMigrations
- * @description Interface for the Armada Manager Migrations which handles generating transactions for migrations
+ * Interface for the Armada Manager Migrations which handles generating transactions for migrations
  */
 export interface IArmadaManagerMigrations {
   /**
-   * @method getMigratablePositions
-   * @description Returns the positions that can be migrated
+   * Returns the positions that can be migrated
    *
    * @param chainInfo Chain information
    * @param user The user
@@ -37,8 +35,7 @@ export interface IArmadaManagerMigrations {
   }>
 
   /**
-   * @method getMigratablePositionsApy
-   * @description Returns the APY for the positions that can be migrated
+   * Returns the APY for the positions that can be migrated
    *
    * @param chainInfo Chain information
    * @param positionIds The positions to get the APY for
@@ -54,8 +51,7 @@ export interface IArmadaManagerMigrations {
   }>
 
   /**
-   * @method getMigrationTx
-   * @description Returns the transaction for the migration
+   * Returns the transaction for the migration
    *
    * @param user The user
    * @param vaultId The vault id

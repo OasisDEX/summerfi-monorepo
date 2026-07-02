@@ -2,8 +2,8 @@ import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 /**
- * @name getAllRolesHandler
- * @description Gets all roles for a given chainId with pagination and filtering support
+ * Gets all roles for a given chainId with pagination and filtering support
+ *
  * @param params.chainId The chain ID to get roles for
  * @param params.first Number of items to return (default: 1000)
  * @param params.skip Number of items to skip for pagination (default: 0)

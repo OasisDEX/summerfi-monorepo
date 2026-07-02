@@ -1,18 +1,18 @@
 import { z } from 'zod'
 
 /**
- * @enum TokenSymbol
- * @description Represents the symbol of a token
+ * Represents the symbol of a token
  */
 export type TokenSymbol = string
 
 /**
- * @description Zod schema for TokenSymbol
+ * Zod schema for TokenSymbol
  */
 export const TokenSymbolSchema = z.string()
 
 /**
- * @description Type guard for TokenSymbol
+ * Type guard for TokenSymbol
+ *
  * @param maybeTokenSymbol
  * @returns true if the object is an TokenSymbol
  */

@@ -1,8 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 
 /**
- * @interface IValueConverter
- * @description Interface for data types that can be transformed into a Solidity value or a BigNumber
+ * Interface for data types that can be transformed into a Solidity value or a BigNumber
  *
  * The intention is to standardize the way that SDK common types are converted into Solidity values or BigNumbers
  */

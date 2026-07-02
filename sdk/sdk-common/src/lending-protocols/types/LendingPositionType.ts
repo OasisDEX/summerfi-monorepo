@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
 /**
- * @enum LendingPositionType
- * @description Indicates the type of lending position in the Summer system
+ * Indicates the type of lending position in the Summer system
  */
 export enum LendingPositionType {
   /** Simple borrow with added collateral */

@@ -13,7 +13,7 @@ export type SparkAbiMapType = GenericAbiMap<SparkContractNames> & {
 }
 
 /**
- * @description Spark ABI map
+ * Spark ABI map
  * ABIs for the different Spark contracts
  */
 export const SparkAbiMap: SparkAbiMapType = {

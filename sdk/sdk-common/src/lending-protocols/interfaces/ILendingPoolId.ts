@@ -9,8 +9,7 @@ import { PoolType } from '../../common/enums/PoolType'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name ILendingPoolId
- * @description Identifies a generic lending pool. This will be specialized for each protocol
+ * Identifies a generic lending pool. This will be specialized for each protocol
  *
  * This is meant to be used for single pair collateral/debt lending pools. For multi-collateral pools,
  * a different interface should be used
@@ -29,7 +28,7 @@ export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
 }
 
 /**
- * @description Zod schema for ILendingPoolId
+ * Zod schema for ILendingPoolId
  */
 export const LendingPoolIdDataSchema = z.object({
   ...PoolIdDataSchema.shape,
@@ -43,7 +42,8 @@ export const LendingPoolIdDataSchema = z.object({
 export type ILendingPoolIdData = Readonly<z.infer<typeof LendingPoolIdDataSchema>>
 
 /**
- * @description Type guard for ILendingPoolId
+ * Type guard for ILendingPoolId
+ *
  * @param maybePoolId Object to be checked
  * @returns true if the object is an ILendingPoolId
  *

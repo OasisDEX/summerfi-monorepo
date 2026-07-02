@@ -2,8 +2,8 @@ import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { IArmadaVaultId } from '@summerfi/sdk-common'
 
 /**
- * @name getTipRateHandler
- * @description Gets the tip rate of a fleet vault
+ * Gets the tip rate of a fleet vault
+ *
  * @param params.vaultId The ID of the vault
  * @returns Promise<bigint> The tip rate as a bigint
  */

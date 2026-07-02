@@ -31,7 +31,6 @@ import { TokenAmount } from './TokenAmount'
 export type PriceParameters = Omit<IPriceData, ''>
 
 /**
- * @class Price
  * @see IPrice
  */
 export class Price implements IPrice {
@@ -64,7 +63,7 @@ export class Price implements IPrice {
    * @param denominator the token amount in the denominator
    * @returns the price calculated from the amounts ratio of numerator divided by denominator
    *
-   * @dev The denominator becomes the base of the price and the numerator becomes the quote
+   * @remarks The denominator becomes the base of the price and the numerator becomes the quote
    */
   static createFromAmountsRatio(params: {
     numerator: ITokenAmount
@@ -274,7 +273,6 @@ export class Price implements IPrice {
   /** PRIVATE */
 
   /**
-   * @name _validateSameBaseToken
    * @param price Price to validate against the instance
    * @throws If the price base tokens do not match
    */
@@ -285,7 +283,6 @@ export class Price implements IPrice {
   }
 
   /**
-   * @name _validateSameQuoteToken
    * @param price Price to validate against the instance
    * @throws If the price quote tokens do not match
    */
@@ -296,7 +293,6 @@ export class Price implements IPrice {
   }
 
   /**
-   * @name _validateSameDenominations
    * @param price Price to validate against the instance
    * @throws If the price base or quote tokens do not match
    */

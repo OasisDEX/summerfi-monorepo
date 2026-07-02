@@ -2,9 +2,8 @@ import type { AddressValue } from '../types/AddressValue'
 import type { IChainlinkFeed } from './IChainlinkFeed'
 
 /**
- * @name IDcaStrategyConfig
- * @description Serializable representation of the IDCAStrategyManager.StrategyConfig calldata struct.
- *              Numeric fields are raw uint256 values encoded as base-10 strings.
+ * Serializable representation of the IDCAStrategyManager.StrategyConfig calldata struct.
+ * Numeric fields are raw uint256 values encoded as base-10 strings.
  */
 export interface IDcaStrategyConfig {
   owner: AddressValue

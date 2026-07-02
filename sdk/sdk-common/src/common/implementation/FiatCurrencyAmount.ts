@@ -21,7 +21,6 @@ import {
 export type FiatCurrencyAmountParameters = Omit<IFiatCurrencyAmountData, ''>
 
 /**
- * @class FiatCurrencyAmount
  * @see IFiatCurrencyAmount
  */
 export class FiatCurrencyAmount implements IFiatCurrencyAmount {
@@ -121,7 +120,6 @@ export class FiatCurrencyAmount implements IFiatCurrencyAmount {
   /** PRIVATE */
 
   /**
-   * @name _validateSameFiatCurrency
    * @param fiatCurrencyAmount FiatCurrencyAmount to validate against the instance
    * @throws Error if the fiat currency does not match
    *

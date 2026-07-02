@@ -25,8 +25,7 @@ export type FiatCurrencyAmountMulDivReturnType<T> = T extends IPrice
     : never
 
 /**
- * @name IFiatCurrencyAmount
- * @description Represents an amount of a fiat currency
+ * Represents an amount of a fiat currency
  *
  * The amount is represented as a string in floating point format without taking into consideration
  * the number of decimals of the token. This data type can be used for calculations with other types
@@ -41,21 +40,18 @@ export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IValueConv
   readonly amount: string
 
   /**
-   * @name add
    * @param fiatToAdd FiatCurrencyAmount to add
    * @returns The resulting FiatCurrencyAmount
    */
   add(fiatToAdd: IFiatCurrencyAmount): IFiatCurrencyAmount
 
   /**
-   * @name subtract
    * @param tokenToSubstract FiatCurrencyAmount to subtract
    * @returns The resulting FiatCurrencyAmount
    */
   subtract(fiatToSubtract: IFiatCurrencyAmount): IFiatCurrencyAmount
 
   /**
-   * @name multiply
    * @param multiplier A percentage, string amount or number to multiply
    * @returns The resulting FiatCurrencyAmount
    */
@@ -67,7 +63,6 @@ export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IValueConv
   ): ReturnType
 
   /**
-   * @name divide
    * @param divisor A percentage, price string amount or number to divide
    * @returns The resulting FiatCurrencyAmount
    */
@@ -80,7 +75,7 @@ export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IValueConv
 }
 
 /**
- * @description Zod schema for IFiatCurrencyAmount
+ * Zod schema for IFiatCurrencyAmount
  */
 export const FiatCurrencyAmountDataSchema = z.object({
   fiat: FiatCurrencySchema,
@@ -93,7 +88,8 @@ export const FiatCurrencyAmountDataSchema = z.object({
 export type IFiatCurrencyAmountData = Readonly<z.infer<typeof FiatCurrencyAmountDataSchema>>
 
 /**
- * @description Type guard for IFiatCurrencyAmount
+ * Type guard for IFiatCurrencyAmount
+ *
  * @param maybeTokenAmount
  * @returns true if the object is an ITokenAmount
  */

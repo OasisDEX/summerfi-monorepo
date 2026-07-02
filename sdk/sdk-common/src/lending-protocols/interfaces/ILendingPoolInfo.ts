@@ -11,8 +11,7 @@ import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name ILendingPoolInfo
- * @description Represents the extended information for a lending pool of a single pair collateral/debt
+ * Represents the extended information for a lending pool of a single pair collateral/debt
  *
  * This extended information includes extra info for the collateral and debt like the liquidation threshold, liquidation penalty, total amount
  * borroed, etc...
@@ -20,7 +19,6 @@ export const __signature__: unique symbol = Symbol()
  * The intention of this interface is to standardize the information that the protocol plugins should provide for the lending pools and it is
  * not intended to be specialized by the protocol plugins. The reason for this is that the plugins already have this information and the SDK
  * tries to abstract this information to provide a common interface for all the protocols on the client side.
- *
  */
 export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
   /** Signature to differentiate from similar interfaces */
@@ -37,7 +35,7 @@ export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
 }
 
 /**
- * @description Zod schema for ILendingPoolInfo
+ * Zod schema for ILendingPoolInfo
  */
 export const LendingPoolInfoDataSchema = z.object({
   ...PoolInfoDataSchema.shape,
@@ -53,7 +51,8 @@ export const LendingPoolInfoDataSchema = z.object({
 export type ILendingPoolInfoData = Readonly<z.infer<typeof LendingPoolInfoDataSchema>>
 
 /**
- * @description Type guard for ILendingPoolInfo
+ * Type guard for ILendingPoolInfo
+ *
  * @param maybePool Object to be checked
  * @returns true if the object is an ILendingPool
  *

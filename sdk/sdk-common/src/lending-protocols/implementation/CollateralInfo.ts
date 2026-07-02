@@ -17,7 +17,6 @@ import { ICollateralInfo, ICollateralInfoData, __signature__ } from '../interfac
 export type CollateralInfoParameters = Omit<ICollateralInfoData, ''>
 
 /**
- * @class CollateralInfo
  * @see ICollateralInfo
  */
 export class CollateralInfo implements ICollateralInfo {

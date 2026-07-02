@@ -10,7 +10,6 @@ import { ISwapError, ISwapErrorData, __signature__ } from '../interfaces/ISwapEr
 export type SwapErrorParams = Omit<ISwapErrorData, ''>
 
 /**
- * @class SwapError
  * @see ISwapError
  */
 export class SwapError extends SDKError implements ISwapError {

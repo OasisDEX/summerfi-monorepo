@@ -13,7 +13,6 @@ import { IAaveV3Protocol } from '../interfaces/IAaveV3Protocol'
 export type AaveV3LendingPoolIdParameters = Omit<IAaveV3LendingPoolIdData, 'type'>
 
 /**
- * @class AaveV3LendingPoolId
  * @see IAaveV3LendingPoolId
  */
 export class AaveV3LendingPoolId extends LendingPoolId implements IAaveV3LendingPoolId, IPrintable {

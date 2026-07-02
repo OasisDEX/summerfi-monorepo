@@ -6,8 +6,7 @@ import type { ITokenAmount } from '../interfaces/ITokenAmount'
 import type { HexData } from './HexData'
 
 /**
- * @name IRebalanceData
- * @description Data structure for rebalancing assets, used by Keepers of a fleet
+ * Data structure for rebalancing assets, used by Keepers of a fleet
  */
 export interface IRebalanceData {
   /** Signature to differentiate from similar interfaces */
@@ -24,7 +23,7 @@ export interface IRebalanceData {
 }
 
 /**
- * @description Zod schema for IRebalanceData
+ * Zod schema for IRebalanceData
  */
 export const RebalanceDataSchema = z.object({
   fromArk: AddressDataSchema,
@@ -38,7 +37,8 @@ export const RebalanceDataSchema = z.object({
 export type IRebalanceDataData = Readonly<z.infer<typeof RebalanceDataSchema>>
 
 /**
- * @description Type guard for IRebalanceData
+ * Type guard for IRebalanceData
+ *
  * @param maybeRebalanceData
  * @returns true if the object is an IRebalanceData
  */

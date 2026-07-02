@@ -13,7 +13,6 @@ import {
 export type PercentageParameters = Omit<IPercentageData, ''>
 
 /**
- * @class Percentage
  * @see IPercentage
  */
 export class Percentage implements IPercentage {

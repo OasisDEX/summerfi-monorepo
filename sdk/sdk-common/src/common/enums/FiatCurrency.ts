@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
 /**
- * @enum FiatCurrency
- * @description Used to indicate a currency
+ * Used to indicate a currency
  *
  * It is the counterpart of a Token in real world assets
  */
@@ -12,13 +11,11 @@ export enum FiatCurrency {
 }
 
 /**
- * @name FiatCurrencySchema
- * @description Zod schema for the FiatCurrency enum
+ * Zod schema for the FiatCurrency enum
  */
 export const FiatCurrencySchema = z.nativeEnum(FiatCurrency)
 
 /**
- * @name isFiatCurrency
  * @param value Value to check if it is a FiatCurrency
  * @returns true if the value is a FiatCurrency
  */

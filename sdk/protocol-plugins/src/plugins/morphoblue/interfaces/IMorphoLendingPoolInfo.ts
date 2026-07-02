@@ -9,8 +9,7 @@ import { IMorphoLendingPoolId } from './IMorphoLendingPoolId'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IMorphoLendingPoolInfo
- * @description Represents a lending pool info in the Morpho protocol
+ * Represents a lending pool info in the Morpho protocol
  *
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
@@ -23,7 +22,7 @@ export interface IMorphoLendingPoolInfo extends ILendingPoolInfo, IMorphoLending
 }
 
 /**
- * @description Zod schema for IMorphoLendingPoolInfo
+ * Zod schema for IMorphoLendingPoolInfo
  */
 export const MorphoLendingPoolInfoDataSchema = z.object({
   ...LendingPoolInfoDataSchema.shape,
@@ -36,7 +35,8 @@ export const MorphoLendingPoolInfoDataSchema = z.object({
 export type IMorphoLendingPoolInfoData = Readonly<z.infer<typeof MorphoLendingPoolInfoDataSchema>>
 
 /**
- * @description Type guard for IMorphoLendingPoolInfo
+ * Type guard for IMorphoLendingPoolInfo
+ *
  * @param maybeLendingPoolInfo
  * @returns true if the object is an IMorphoLendingPoolInfo
  */

@@ -12,7 +12,7 @@ import type {
 } from '@summerfi/sdk-common'
 
 /**
- * @description User staking balance by bucket
+ * User staking balance by bucket
  */
 export interface StakingBalanceByBucket {
   bucket: StakingBucket
@@ -20,7 +20,7 @@ export interface StakingBalanceByBucket {
 }
 
 /**
- * @description User stake position details (V2)
+ * User stake position details (V2)
  */
 export interface UserStakingStake {
   id: string
@@ -33,7 +33,7 @@ export interface UserStakingStake {
 }
 
 /**
- * @description Staking reward rates
+ * Staking reward rates
  */
 export interface StakingRewardRates {
   summerRewardYield: IPercentage
@@ -43,7 +43,7 @@ export interface StakingRewardRates {
 }
 
 /**
- * @description Staking bucket information
+ * Staking bucket information
  */
 export interface StakingBucketInfo {
   bucket: StakingBucket
@@ -54,7 +54,7 @@ export interface StakingBucketInfo {
 }
 
 /**
- * @description Staking simulation data result
+ * Staking simulation data result
  */
 export interface StakingSimulationData {
   sumrRewardApy: IPercentage
@@ -68,7 +68,7 @@ export interface StakingSimulationData {
 }
 
 /**
- * @description Staking stats result from protocol subgraph
+ * Staking stats result from protocol subgraph
  */
 export interface StakingStats {
   summerStakedNormalized: string
@@ -78,7 +78,7 @@ export interface StakingStats {
 }
 
 /**
- * @description Staking earnings estimation for multiple stakes (V2)
+ * Staking earnings estimation for multiple stakes (V2)
  */
 export interface StakingEarningsEstimationForStakes {
   stakes: {
@@ -89,14 +89,11 @@ export interface StakingEarningsEstimationForStakes {
 }
 
 /**
- * @name IArmadaManagerGovernance
- * @description Interface for the Armada Manager Token which handles delegating votes
- *
+ * Interface for the Armada Manager Token which handles delegating votes
  */
 export interface IArmadaManagerGovernance {
   /**
-   * @method getUserDelegatee
-   * @description Returns delegatee that the account has chosen
+   * Returns delegatee that the account has chosen
    *
    * @param user The user
    *
@@ -105,8 +102,7 @@ export interface IArmadaManagerGovernance {
   getUserDelegatee: (params: { user: IUser }) => Promise<IAddress>
 
   /**
-   * @method getUserDelegateeV2
-   * @description Returns delegatee selected in the staked SUMR contract (V2)
+   * Returns delegatee selected in the staked SUMR contract (V2)
    *
    * @param userAddress Address whose delegatee should be fetched
    *
@@ -115,8 +111,7 @@ export interface IArmadaManagerGovernance {
   getUserDelegateeV2: (params: { userAddress: AddressValue }) => Promise<IAddress>
 
   /**
-   * @method getDelegateTx
-   * @description Delegates votes from the sender to delegatee
+   * Delegates votes from the sender to delegatee
    *
    * @param user The user
    *
@@ -125,8 +120,7 @@ export interface IArmadaManagerGovernance {
   getDelegateTx: (params: { user: IUser }) => Promise<[DelegateTransactionInfo]>
 
   /**
-   * @method getDelegateTxV2
-   * @description Delegates votes for the staked SUMR token (V2)
+   * Delegates votes for the staked SUMR token (V2)
    *
    * @param delegateeAddress Address that should receive delegated votes
    *
@@ -137,16 +131,14 @@ export interface IArmadaManagerGovernance {
   }) => Promise<[DelegateTransactionInfo]>
 
   /**
-   * @method getUndelegateTx
-   * @description Undelegates votes from the sender
+   * Undelegates votes from the sender
    *
    * @returns The transaction information
    */
   getUndelegateTx: () => Promise<[DelegateTransactionInfo]>
 
   /**
-   * @method getUserVotes
-   * @description Returns the number of votes the user has
+   * Returns the number of votes the user has
    *
    * @param user The user
    *
@@ -155,8 +147,7 @@ export interface IArmadaManagerGovernance {
   getUserVotes: (params: { user: IUser }) => Promise<bigint>
 
   /**
-   * @method getUserBalance
-   * @description Returns the balance of the user
+   * Returns the balance of the user
    *
    * @param user The user
    *
@@ -165,8 +156,7 @@ export interface IArmadaManagerGovernance {
   getUserBalance: (params: { user: IUser }) => Promise<bigint>
 
   /**
-   * @method getUserStakedBalance
-   * @description Returns the staked balance of the user
+   * Returns the staked balance of the user
    *
    * @param user The user
    *
@@ -175,8 +165,7 @@ export interface IArmadaManagerGovernance {
   getUserStakedBalance: (params: { user: IUser }) => Promise<bigint>
 
   /**
-   * @method getUserEarnedRewards
-   * @description Returns the rewards the user has earned
+   * Returns the rewards the user has earned
    *
    * @param user The user
    *
@@ -185,8 +174,7 @@ export interface IArmadaManagerGovernance {
   getUserEarnedRewards: (params: { user: IUser }) => Promise<bigint>
 
   /**
-   * @method getStakeTx
-   * @description Returns the transaction to stake tokens
+   * Returns the transaction to stake tokens
    *
    * @param user The user
    * @param amount The amount to stake
@@ -199,8 +187,7 @@ export interface IArmadaManagerGovernance {
   }) => Promise<[ApproveTransactionInfo, StakeTransactionInfo] | [StakeTransactionInfo]>
 
   /**
-   * @method getUnstakeTx
-   * @description Returns the transaction to unstake tokens
+   * Returns the transaction to unstake tokens
    *
    * @param amount The amount to unstake
    *
@@ -209,8 +196,7 @@ export interface IArmadaManagerGovernance {
   getUnstakeTx: (params: { amount: bigint }) => Promise<[UnstakeTransactionInfo]>
 
   /**
-   * @method getDelegationChainLength
-   * @description Returns the length of the delegation chain
+   * Returns the length of the delegation chain
    *
    * @param user The user
    *
@@ -219,8 +205,7 @@ export interface IArmadaManagerGovernance {
   getDelegationChainLength: (params: { user: IUser }) => Promise<number>
 
   /**
-   * @method getStakeTxV2
-   * @description Returns the transaction to stake tokens with lockup (V2)
+   * Returns the transaction to stake tokens with lockup (V2)
    *
    * @param user The user
    * @param amount The amount to stake
@@ -235,8 +220,7 @@ export interface IArmadaManagerGovernance {
   }) => Promise<[ApproveTransactionInfo, StakeTransactionInfo] | [StakeTransactionInfo]>
 
   /**
-   * @method getStakeOnBehalfTxV2
-   * @description Returns the transaction to stake tokens on behalf of another address with lockup (V2)
+   * Returns the transaction to stake tokens on behalf of another address with lockup (V2)
    *
    * @param user The user initiating the stake
    * @param receiver The address receiving the staked tokens
@@ -253,8 +237,7 @@ export interface IArmadaManagerGovernance {
   }) => Promise<[ApproveTransactionInfo, StakeTransactionInfo] | [StakeTransactionInfo]>
 
   /**
-   * @method getUnstakeTxV2
-   * @description Returns the transaction to unstake tokens from a specific stake in the user's portfolio (V2)
+   * Returns the transaction to unstake tokens from a specific stake in the user's portfolio (V2)
    *
    * @param user The user
    * @param userStakeIndex The index of the stake in the user's stake array (portfolio) to unstake from
@@ -269,8 +252,7 @@ export interface IArmadaManagerGovernance {
   }) => Promise<[ApproveTransactionInfo, UnstakeTransactionInfo] | [UnstakeTransactionInfo]>
 
   /**
-   * @method getUserStakesCount
-   * @description Returns the number of stakes a user has before and after considering a specific bucket
+   * Returns the number of stakes a user has before and after considering a specific bucket
    *
    * @param user The user
    *
@@ -281,8 +263,7 @@ export interface IArmadaManagerGovernance {
   }) => Promise<{ userStakesCountBefore: bigint; userStakesCountAfter: bigint }>
 
   /**
-   * @method getUserStakingBalanceV2
-   * @description Returns the user's staking balance for each bucket (V2)
+   * Returns the user's staking balance for each bucket (V2)
    *
    * @param user The user
    *
@@ -291,8 +272,7 @@ export interface IArmadaManagerGovernance {
   getUserStakingBalanceV2: (params: { user: IUser }) => Promise<StakingBalanceByBucket[]>
 
   /**
-   * @method getUserStakingWeightedBalanceV2
-   * @description Returns the user's weighted staking balance for all buckets (V2)
+   * Returns the user's weighted staking balance for all buckets (V2)
    *
    * @param user The user
    *
@@ -301,8 +281,7 @@ export interface IArmadaManagerGovernance {
   getUserStakingWeightedBalanceV2: (params: { user: IUser }) => Promise<bigint>
 
   /**
-   * @method getUserStakingEarnedV2
-   * @description Returns the user's earned rewards (V2)
+   * Returns the user's earned rewards (V2)
    *
    * @param user The user
    * @param rewardTokenAddress The reward token address optional parameter (defaults to SUMR token)
@@ -315,8 +294,7 @@ export interface IArmadaManagerGovernance {
   }) => Promise<bigint>
 
   /**
-   * @method getStakingRewardRatesV2
-   * @description Returns the staking reward rates including user-specific boost (V2)
+   * Returns the staking reward rates including user-specific boost (V2)
    *
    * @param user The user to calculate boosted multiplier for
    * @param rewardTokenAddress Optional reward token address (defaults to SUMR token)
@@ -330,16 +308,14 @@ export interface IArmadaManagerGovernance {
   }) => Promise<StakingRewardRates>
 
   /**
-   * @method getStakingBucketsInfoV2
-   * @description Returns information about all staking buckets (V2)
+   * Returns information about all staking buckets (V2)
    *
    * @returns Array of bucket information
    */
   getStakingBucketsInfoV2: () => Promise<StakingBucketInfo[]>
 
   /**
-   * @method getStakingCalculateWeightedStakeV2
-   * @description Calculates the weighted stake for a given amount and lockup period (V2)
+   * Calculates the weighted stake for a given amount and lockup period (V2)
    *
    * @param amount The amount to stake
    * @param lockupPeriod The lockup period in seconds
@@ -352,32 +328,28 @@ export interface IArmadaManagerGovernance {
   }) => Promise<bigint>
 
   /**
-   * @method getStakingTotalWeightedSupplyV2
-   * @description Returns the total weighted supply of staked tokens (V2)
+   * Returns the total weighted supply of staked tokens (V2)
    *
    * @returns The total weighted supply
    */
   getStakingTotalWeightedSupplyV2: () => Promise<bigint>
 
   /**
-   * @method getStakingTotalSumrStakedV2
-   * @description Returns the total SUMR staked across all buckets (V2)
+   * Returns the total SUMR staked across all buckets (V2)
    *
    * @returns The total SUMR staked
    */
   getStakingTotalSumrStakedV2: () => Promise<bigint>
 
   /**
-   * @method getStakingRevenueShareV2
-   * @description Returns the revenue share percentage for stakers and the calculated amount (V2)
+   * Returns the revenue share percentage for stakers and the calculated amount (V2)
    *
    * @returns Object containing the revenue share percentage and calculated amount in USD
    */
   getStakingRevenueShareV2: () => Promise<{ percentage: IPercentage; amount: number }>
 
   /**
-   * @method getStakingSimulationDataV2
-   * @description Calculates staking simulation data including yield APYs and boosts
+   * Calculates staking simulation data including yield APYs and boosts
    *
    * @param amount The amount to stake
    * @param period The lockup period in seconds
@@ -394,8 +366,7 @@ export interface IArmadaManagerGovernance {
   }): Promise<StakingSimulationData>
 
   /**
-   * @method getStakingEarningsEstimationV2
-   * @description Calculates staking rewards estimation for multiple stakes
+   * Calculates staking rewards estimation for multiple stakes
    *
    * @param amounts The amounts to stake
    * @param periods The lockup periods in seconds
@@ -409,24 +380,21 @@ export interface IArmadaManagerGovernance {
   }): Promise<StakingEarningsEstimationForStakes>
 
   /**
-   * @method getStakingConfigV2
-   * @description Returns the staking configuration including the staking contract address
+   * Returns the staking configuration including the staking contract address
    *
    * @returns Object containing staking configuration
    */
   getStakingConfigV2(): Promise<{ stakingContractAddress: AddressValue }>
 
   /**
-   * @method getStakingStatsV2
-   * @description Returns staking statistics from the protocol subgraph
+   * Returns staking statistics from the protocol subgraph
    *
    * @returns Object containing staking statistics including total staked, average lockup period, and number of locked stakes
    */
   getStakingStatsV2(): Promise<StakingStats>
 
   /**
-   * @method getUserStakingSumrStaked
-   * @description Returns the total amount of SUMR tokens staked by the user across all buckets
+   * Returns the total amount of SUMR tokens staked by the user across all buckets
    *
    * @param user The user to get staking balance for
    *
@@ -435,8 +403,7 @@ export interface IArmadaManagerGovernance {
   getUserStakingSumrStaked: (params: { user: IUser }) => Promise<bigint>
 
   /**
-   * @method getUserStakesV2
-   * @description Returns all staking positions for a user with detailed information
+   * Returns all staking positions for a user with detailed information
    *
    * @param user The user to get staking positions for
    *
@@ -445,8 +412,7 @@ export interface IArmadaManagerGovernance {
   getUserStakesV2: (params: { user: IUser }) => Promise<UserStakingStake[]>
 
   /**
-   * @method getCalculatePenaltyPercentage
-   * @description Calculates the penalty percentage for early unstaking of multiple stakes
+   * Calculates the penalty percentage for early unstaking of multiple stakes
    *
    * @param userStakes Array of user stake details
    *
@@ -457,8 +423,7 @@ export interface IArmadaManagerGovernance {
   }) => Promise<IPercentage[]>
 
   /**
-   * @method getCalculatePenaltyAmount
-   * @description Calculates the penalty amount for early unstaking of specific amounts from multiple stakes
+   * Calculates the penalty amount for early unstaking of specific amounts from multiple stakes
    *
    * @param userStakes Array of user stake details
    * @param amounts Array of amounts to unstake (must match userStakes length)
@@ -471,8 +436,7 @@ export interface IArmadaManagerGovernance {
   }) => Promise<bigint[]>
 
   /**
-   * @method getUserBlendedYieldBoost
-   * @description Returns the user's current blended yield boost based on their weighted balance and staked balance
+   * Returns the user's current blended yield boost based on their weighted balance and staked balance
    *
    * @param user The user to get the blended yield boost for
    *
@@ -481,8 +445,7 @@ export interface IArmadaManagerGovernance {
   getUserBlendedYieldBoost: (params: { user: IUser }) => Promise<number>
 
   /**
-   * @method getStakingStakesV2
-   * @description Retrieves all staking stakes across all users with pagination support (V2)
+   * Retrieves all staking stakes across all users with pagination support (V2)
    *
    * @param first number of items to return (optional, defaults to 1000)
    * @param skip number of items to skip for pagination (optional, defaults to 0)

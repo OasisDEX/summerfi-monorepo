@@ -2,8 +2,7 @@ import { z } from 'zod'
 import { AddressDataSchema, IAddress } from '../../../common/interfaces/IAddress'
 
 /**
- * @name IPositionsManager
- * @description Interface for the positions manager (DPM)
+ * Interface for the positions manager (DPM)
  *
  * The Positions Manager is the proxy used to interact with the Summer.fi system. It is used as Smart Account for the user.
  */
@@ -13,7 +12,7 @@ export interface IPositionsManager extends IPositionsManagerData {
 }
 
 /**
- * @description Zod schema for IPositionsManager
+ * Zod schema for IPositionsManager
  */
 export const PositionsManagerDataSchema = z.object({
   address: AddressDataSchema,
@@ -25,7 +24,8 @@ export const PositionsManagerDataSchema = z.object({
 export type IPositionsManagerData = Readonly<z.infer<typeof PositionsManagerDataSchema>>
 
 /**
- * @description Type guard for IPositionsManager
+ * Type guard for IPositionsManager
+ *
  * @param maybePositionsManager
  * @returns true if the object is an IPositionsManager
  */

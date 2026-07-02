@@ -17,7 +17,6 @@ import { PoolInfo } from './PoolInfo'
 export type RwaVaultInfoParameters = Omit<IRwaVaultInfoData, 'type'>
 
 /**
- * @class RwaVaultInfo
  * @see IRwaVaultInfo
  */
 export class RwaVaultInfo extends PoolInfo implements IRwaVaultInfo {

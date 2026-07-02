@@ -8,8 +8,7 @@ import { IPrintable } from './IPrintable'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name IChainInfo
- * @description Information used to identify a blockchain network
+ * Information used to identify a blockchain network
  */
 export interface IChainInfo extends IChainInfoData, IPrintable {
   /** Signature to differentiate from similar interfaces */
@@ -20,8 +19,8 @@ export interface IChainInfo extends IChainInfoData, IPrintable {
   readonly name: string
 
   /**
-   * @name equals
-   * @description Checks if two chain infos are equal
+   * Checks if two chain infos are equal
+   *
    * @param chainInfo The chain info to compare
    * @returns true if the chain infos are equal
    *
@@ -31,7 +30,7 @@ export interface IChainInfo extends IChainInfoData, IPrintable {
 }
 
 /**
- * @description Zod schema for IChainInfo
+ * Zod schema for IChainInfo
  */
 export const ChainInfoDataSchema = z.object({
   chainId: ChainIdSchema.or(LegacyChainIdSchema),
@@ -44,7 +43,8 @@ export const ChainInfoDataSchema = z.object({
 export type IChainInfoData = Readonly<z.infer<typeof ChainInfoDataSchema>>
 
 /**
- * @description Type guard for IChainInfo
+ * Type guard for IChainInfo
+ *
  * @param maybeChainInfo The value to check
  * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is an IChainInfo

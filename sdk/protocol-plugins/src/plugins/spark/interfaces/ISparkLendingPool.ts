@@ -8,8 +8,7 @@ import { ISparkLendingPoolId, isSparkLendingPoolId } from './ISparkLendingPoolId
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface ISparkLendingPool
- * @description Represents a lending pool in the Spark protocol
+ * Represents a lending pool in the Spark protocol
  *
  * Currently empty as there are no specifics for this protocol
  *
@@ -24,7 +23,7 @@ export interface ISparkLendingPool extends ISparkLendingPoolData, ILendingPool {
 }
 
 /**
- * @description Zod schema for ISparkLendingPool
+ * Zod schema for ISparkLendingPool
  */
 export const SparkLendingPoolDataSchema = z.object({
   ...LendingPoolDataSchema.shape,
@@ -37,7 +36,8 @@ export const SparkLendingPoolDataSchema = z.object({
 export type ISparkLendingPoolData = Readonly<z.infer<typeof SparkLendingPoolDataSchema>>
 
 /**
- * @description Type guard for ISparkLendingPool
+ * Type guard for ISparkLendingPool
+ *
  * @param maybeLendingPool
  * @returns true if the object is an ISparkLendingPool
  */

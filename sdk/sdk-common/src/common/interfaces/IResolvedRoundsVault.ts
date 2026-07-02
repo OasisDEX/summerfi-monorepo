@@ -4,10 +4,9 @@ import type { IToken } from './IToken'
 import type { ITokenAmount } from './ITokenAmount'
 
 /**
- * @interface IResolvedRoundsVault
- * @description Metadata for one side (Input or Output) of a Fleet's RoundsVault pair, resolved from
- *              the RWA subgraph. Used by the RWA manager to build deposit/withdraw transactions and
- *              round reads against the correct RoundsVault contract.
+ * Metadata for one side (Input or Output) of a Fleet's RoundsVault pair, resolved from
+ * the RWA subgraph. Used by the RWA manager to build deposit/withdraw transactions and
+ * round reads against the correct RoundsVault contract.
  */
 export interface IResolvedRoundsVault {
   /** The chain the RoundsVault is deployed on */

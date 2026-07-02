@@ -8,8 +8,8 @@ import type {
 } from '@summerfi/sdk-common'
 
 /**
- * @name getCrossChainWithdrawTxHandler
- * @description Generates transactions needed to withdraw tokens cross-chain from a Fleet using Enso routing
+ * Generates transactions needed to withdraw tokens cross-chain from a Fleet using Enso routing
+ *
  * @param params.vaultId ID of the pool to withdraw from
  * @param params.user user that is trying to withdraw
  * @param params.amount Token amount to be withdrawn

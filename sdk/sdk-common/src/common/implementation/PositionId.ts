@@ -8,7 +8,6 @@ import { PositionType } from '../enums/PositionType'
 export type PositionIdParameters = Omit<IPositionIdData, 'type'>
 
 /**
- * @class PositionId
  * @see IPositionIdData
  */
 export abstract class PositionId implements IPositionId {

@@ -9,13 +9,11 @@ import type {
 } from '@summerfi/sdk-common'
 
 /**
- * @name IArmadaManagerClientAccessControl
- * @description Interface for the Armada Manager Access Control client - handles role-based access control operations
+ * Interface for the Armada Manager Access Control client - handles role-based access control operations
  */
 export interface IArmadaManagerClientAccessControl {
   /**
-   * @name hasGlobalRole
-   * @description Checks if an address has a specific global protocol role
+   * Checks if an address has a specific global protocol role
    *
    * @param chainId The chain ID to check the role on
    * @param role The global role to check
@@ -30,8 +28,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<boolean>
 
   /**
-   * @name hasContractSpecificRole
-   * @description Checks if an address has a specific contract-specific role
+   * Checks if an address has a specific contract-specific role
    *
    * @param chainId The chain ID to check the role on
    * @param role The contract-specific role to check
@@ -48,8 +45,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<boolean>
 
   /**
-   * @name grantGlobalRole
-   * @description Grants a global protocol role to an address
+   * Grants a global protocol role to an address
    *
    * @param chainId The chain ID to grant the role on
    * @param role The global role to grant
@@ -64,8 +60,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<TransactionInfo>
 
   /**
-   * @name revokeGlobalRole
-   * @description Revokes a global protocol role from an address
+   * Revokes a global protocol role from an address
    *
    * @param chainId The chain ID to revoke the role on
    * @param role The global role to revoke
@@ -80,8 +75,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<TransactionInfo>
 
   /**
-   * @name grantContractSpecificRole
-   * @description Grants a contract-specific role to an address
+   * Grants a contract-specific role to an address
    *
    * @param chainId The chain ID to grant the role on
    * @param role The contract-specific role to grant
@@ -98,8 +92,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<TransactionInfo>
 
   /**
-   * @name revokeContractSpecificRole
-   * @description Revokes a contract-specific role from an address
+   * Revokes a contract-specific role from an address
    *
    * @param chainId The chain ID to revoke the role on
    * @param role The contract-specific role to revoke
@@ -116,8 +109,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<TransactionInfo>
 
   /**
-   * @name getAllAddressesWithGlobalRole
-   * @description Gets all addresses that currently have a specific global protocol role
+   * Gets all addresses that currently have a specific global protocol role
    *
    * @param chainId The chain ID to check the role on
    * @param role The global role to check for
@@ -130,8 +122,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<AddressValue[]>
 
   /**
-   * @name getAllAddressesWithContractSpecificRole
-   * @description Gets all addresses that currently have a specific contract-specific role
+   * Gets all addresses that currently have a specific contract-specific role
    *
    * @param chainId The chain ID to check the role on
    * @param role The contract-specific role to check for
@@ -146,8 +137,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<AddressValue[]>
 
   /**
-   * @name isWhitelisted
-   * @description Checks if an address is whitelisted in the FleetCommander contract
+   * Checks if an address is whitelisted in the FleetCommander contract
    *
    * @param chainId The chain ID to check the whitelist status on
    * @param fleetCommanderAddress The FleetCommander contract address
@@ -162,8 +152,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<boolean>
 
   /**
-   * @name setWhitelisted
-   * @description Sets the whitelist status for an address in the FleetCommander contract
+   * Sets the whitelist status for an address in the FleetCommander contract
    *
    * @param chainId The chain ID to set the whitelist status on
    * @param fleetCommanderAddress The FleetCommander contract address
@@ -180,8 +169,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<TransactionInfo>
 
   /**
-   * @name setWhitelistedBatch
-   * @description Sets the whitelist status for multiple addresses in the FleetCommander contract
+   * Sets the whitelist status for multiple addresses in the FleetCommander contract
    *
    * @param chainId The chain ID to set the whitelist status on
    * @param fleetCommanderAddress The FleetCommander contract address
@@ -198,8 +186,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<TransactionInfo>
 
   /**
-   * @name isWhitelistedAQ
-   * @description Checks if an address is whitelisted in the AdmiralsQuarters contract
+   * Checks if an address is whitelisted in the AdmiralsQuarters contract
    *
    * @param chainId The chain ID to check the whitelist status on
    * @param targetAddress The address to check for whitelist status
@@ -209,8 +196,7 @@ export interface IArmadaManagerClientAccessControl {
   isWhitelistedAQ(params: { chainId: ChainId; targetAddress: AddressValue }): Promise<boolean>
 
   /**
-   * @name setWhitelistedAQ
-   * @description Sets the whitelist status for an address in the AdmiralsQuarters contract
+   * Sets the whitelist status for an address in the AdmiralsQuarters contract
    *
    * @param chainId The chain ID to set the whitelist status on
    * @param targetAddress The address to set the whitelist status for
@@ -225,8 +211,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<TransactionInfo>
 
   /**
-   * @name setWhitelistedBatchAQ
-   * @description Sets the whitelist status for multiple addresses in the AdmiralsQuarters contract
+   * Sets the whitelist status for multiple addresses in the AdmiralsQuarters contract
    *
    * @param chainId The chain ID to set the whitelist status on
    * @param targetAddresses The addresses to set the whitelist status for
@@ -241,8 +226,7 @@ export interface IArmadaManagerClientAccessControl {
   }): Promise<TransactionInfo>
 
   /**
-   * @name getAllRoles
-   * @description Gets all roles for a given chainId with pagination and filtering support
+   * Gets all roles for a given chainId with pagination and filtering support
    *
    * @param chainId The chain ID to get roles for
    * @param first Number of items to return (default: 1000)

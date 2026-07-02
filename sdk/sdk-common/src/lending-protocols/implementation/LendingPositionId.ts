@@ -9,7 +9,6 @@ import { ILendingPositionIdData, __signature__ } from '../interfaces/ILendingPos
 export type LendingPositionIdParameters = Omit<ILendingPositionIdData, 'type'>
 
 /**
- * @class LendingPositionId
  * @see ILendingPositionId
  */
 export abstract class LendingPositionId extends PositionId implements ILendingPositionIdData {

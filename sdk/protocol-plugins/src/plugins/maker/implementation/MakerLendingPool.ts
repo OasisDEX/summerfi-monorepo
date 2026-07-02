@@ -12,7 +12,6 @@ import { MakerLendingPoolId } from './MakerLendingPoolId'
 export type MakerLendingPoolParameters = Omit<IMakerLendingPoolData, 'type'>
 
 /**
- * @class MakerLendingPool
  * @see IMakerLendingPoolData
  */
 export class MakerLendingPool extends LendingPool implements IMakerLendingPool {

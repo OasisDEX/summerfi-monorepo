@@ -12,7 +12,6 @@ import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
 export type AaveV3LendingPoolParameters = Omit<IAaveV3LendingPoolData, 'type'>
 
 /**
- * @class AaveV3LendingPool
  * @see IAaveV3LendingPoolData
  */
 export class AaveV3LendingPool extends LendingPool implements IAaveV3LendingPool {

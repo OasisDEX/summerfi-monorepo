@@ -3,8 +3,7 @@ import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
 
 /**
- * @name ArmadaManagerClientAccessControl
- * @description Implementation of the Armada Manager Access Control client interface for role-based access control operations
+ * Implementation of the Armada Manager Access Control client interface for role-based access control operations
  */
 export class ArmadaManagerClientAccessControl
   extends IRPCClient

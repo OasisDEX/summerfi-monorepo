@@ -8,8 +8,7 @@ import { IArmadaPosition, ArmadaPositionDataSchema } from '@summerfi/sdk-common'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IArmadaSimulatedPosition
- * @description Interface for an Armada Protocol simulated position, used in the simulator only
+ * Interface for an Armada Protocol simulated position, used in the simulator only
  */
 export interface IArmadaSimulatedPosition extends IArmadaPosition, IArmadaSimulatedPositionData {
   /** Signature used to differentiate it from similar interfaces */
@@ -19,7 +18,7 @@ export interface IArmadaSimulatedPosition extends IArmadaPosition, IArmadaSimula
 }
 
 /**
- * @description Zod schema for IArmadaSimulatedPosition
+ * Zod schema for IArmadaSimulatedPosition
  */
 export const ArmadaSimulatedPositionDataSchema = z.object({
   ...ArmadaPositionDataSchema.shape,
@@ -34,7 +33,8 @@ export type IArmadaSimulatedPositionData = Readonly<
 >
 
 /**
- * @description Type guard for IArmadaSimulatedPosition
+ * Type guard for IArmadaSimulatedPosition
+ *
  * @param maybeArmadaSimulatedPosition Object to be checked
  * @returns true if the object is a IArmadaSimulatedPosition
  */

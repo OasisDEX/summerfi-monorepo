@@ -9,8 +9,7 @@ import { ISparkProtocol, isSparkProtocol } from './ISparkProtocol'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface ISparkLendingPoolId
- * @description Identifier of a lending pool in the Spark protocol
+ * Identifier of a lending pool in the Spark protocol
  *
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
@@ -29,7 +28,7 @@ export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPo
 }
 
 /**
- * @description Zod schema for ISparkLendingPoolId
+ * Zod schema for ISparkLendingPoolId
  */
 export const SparkLendingPoolIdDataSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
@@ -45,7 +44,8 @@ export const SparkLendingPoolIdDataSchema = z.object({
 export type ISparkLendingPoolIdData = Readonly<z.infer<typeof SparkLendingPoolIdDataSchema>>
 
 /**
- * @description Type guard for ISparkLendingPoolId
+ * Type guard for ISparkLendingPoolId
+ *
  * @param poolId Object to be checked
  * @returns true if the object is an ISparkLendingPoolId
  */

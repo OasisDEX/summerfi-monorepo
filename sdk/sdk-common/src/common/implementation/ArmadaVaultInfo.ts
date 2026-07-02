@@ -17,7 +17,6 @@ import { PoolInfo } from './PoolInfo'
 export type ArmadaVaultInfoParameters = Omit<IArmadaVaultInfoData, 'type'>
 
 /**
- * @class ArmadaVaultInfo
  * @see IArmadaVaultInfo
  */
 export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {

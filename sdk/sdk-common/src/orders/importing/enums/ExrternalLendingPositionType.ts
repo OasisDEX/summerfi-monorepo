@@ -13,12 +13,13 @@ export enum ExternalLendingPositionType {
 }
 
 /**
- * @description Zod schema for ExternalPositionType
+ * Zod schema for ExternalPositionType
  */
 export const ExternalLendingPositionTypeSchema = z.nativeEnum(ExternalLendingPositionType)
 
 /**
- * @description Type guard for ExternalPositionType
+ * Type guard for ExternalPositionType
+ *
  * @param maybeExternalLendingPositionType Object to be checked
  * @returns true if the object is a ExternalPositionType
  */

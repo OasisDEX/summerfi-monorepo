@@ -4,8 +4,7 @@ import type { SwapProviderType } from '../enums/SwapProviderType'
 import { IAddress } from '../../common/interfaces/IAddress'
 
 /**
- * @name SwapData
- * @description Represents the data needed to perform a swap between two tokens
+ * Represents the data needed to perform a swap between two tokens
  */
 export type SwapData = {
   provider: SwapProviderType

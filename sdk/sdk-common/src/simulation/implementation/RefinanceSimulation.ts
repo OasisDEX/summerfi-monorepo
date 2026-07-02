@@ -16,7 +16,6 @@ import { Simulation } from './Simulation'
 export type RefinanceSimulationParameters = Omit<IRefinanceSimulationData, 'type'>
 
 /**
- * @name RefinanceSimulation
  * @see IRefinanceSimulation
  */
 export class RefinanceSimulation extends Simulation implements IRefinanceSimulation {

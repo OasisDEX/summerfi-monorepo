@@ -17,7 +17,6 @@ import { LendingPositionType } from '../types/LendingPositionType'
 export type LendingPositionParameters = Omit<ILendingPositionData, 'type'>
 
 /**
- * @name LendingPosition
  * @see ILendingPosition
  */
 export abstract class LendingPosition extends Position implements ILendingPosition {

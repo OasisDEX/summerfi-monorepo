@@ -8,8 +8,7 @@ import { IMakerLendingPoolId, isMakerLendingPoolId } from './IMakerLendingPoolId
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IMakerLendingPoolInfo
- * @description Represents a lending pool info in the Maker protocol
+ * Represents a lending pool info in the Maker protocol
  *
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
@@ -22,7 +21,7 @@ export interface IMakerLendingPoolInfo extends ILendingPoolInfo, IMakerLendingPo
 }
 
 /**
- * @description Zod schema for IMakerLendingPool
+ * Zod schema for IMakerLendingPool
  */
 export const MakerLendingPoolInfoDataSchema = z.object({
   ...LendingPoolInfoDataSchema.shape,
@@ -35,7 +34,8 @@ export const MakerLendingPoolInfoDataSchema = z.object({
 export type IMakerLendingPoolInfoData = Readonly<z.infer<typeof MakerLendingPoolInfoDataSchema>>
 
 /**
- * @description Type guard for IMakerLendingPoolInfo
+ * Type guard for IMakerLendingPoolInfo
+ *
  * @param maybeLendingPoolInfo
  * @returns true if the object is an IMakerLendingPoolInfo
  */

@@ -6,8 +6,7 @@ import { ProtocolsManagerClient } from './ProtocolsManagerClient'
 import { TokensManagerClient } from './TokensManagerClient'
 
 /**
- * @name Chain
- * @description Implementation of the IChain interface for the SDK Client
+ * Implementation of the IChain interface for the SDK Client
  */
 export class Chain implements IChain {
   readonly chainInfo: IChainInfo

@@ -13,8 +13,7 @@ import { ProtocolsManagerClient } from './ProtocolsManagerClient'
 import { TokensManagerClient } from './TokensManagerClient'
 
 /**
- * @name ChainsManagerClient
- * @description Implementation of the IChainsManager interface for the SDK Client
+ * Implementation of the IChainsManager interface for the SDK Client
  */
 export class ChainsManagerClient extends IRPCClient implements IChainsManagerClient {
   constructor(params: { rpcClient: RPCMainClientType }) {

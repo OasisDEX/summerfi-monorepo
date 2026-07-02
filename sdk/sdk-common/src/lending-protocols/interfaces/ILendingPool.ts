@@ -10,8 +10,7 @@ import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name ILendingPool
- * @description Represents a lending pool for a single pair collateral/debt
+ * Represents a lending pool for a single pair collateral/debt
  *
  * A lending pool is a pool where users can deposit collateral and borrow debt against that collateral.
  * Typically the user will pay interest on the debt, and the collateral will be locked until the debt is repaid.
@@ -34,7 +33,7 @@ export interface ILendingPool extends IPool, ILendingPoolData {
 }
 
 /**
- * @description Zod schema for ILendingPool
+ * Zod schema for ILendingPool
  */
 export const LendingPoolDataSchema = z.object({
   ...PoolDataSchema.shape,
@@ -50,7 +49,8 @@ export const LendingPoolDataSchema = z.object({
 export type ILendingPoolData = Readonly<z.infer<typeof LendingPoolDataSchema>>
 
 /**
- * @description Type guard for ILendingPool
+ * Type guard for ILendingPool
+ *
  * @param maybePool Object to be checked
  * @returns true if the object is an ILendingPool
  *

@@ -4,8 +4,7 @@ import type { IntentSwapProviderType } from '../enums/IntentSwapProviderType'
 import type { IPrice } from '../../common/interfaces/IPrice'
 
 /**
- * @name IntentQuoteData
- * @description Represents the requested quote data for a swap between two tokens
+ * Represents the requested quote data for a swap between two tokens
  */
 export type IntentQuoteData = {
   providerType: IntentSwapProviderType

@@ -13,7 +13,6 @@ import { IAaveV3LendingPositionId } from '../interfaces/IAaveV3LendingPositionId
 export type AaveV3LendingPositionParameters = Omit<IAaveV3LendingPositionData, 'type'>
 
 /**
- * @class AaveV3Position
  * @see IAaveV3LendingPosition
  */
 export class AaveV3LendingPosition extends LendingPosition implements IAaveV3LendingPosition {

@@ -1,7 +1,7 @@
 import { IPercentage, ITokenAmount } from '@summerfi/sdk-common'
 
 /**
- * @description Morpho market info retrieved from the protocol
+ * Morpho market info retrieved from the protocol
  */
 export type MorphoMarketInfo = {
   /** The total supply assets in the market, i.e. total collateral locked */

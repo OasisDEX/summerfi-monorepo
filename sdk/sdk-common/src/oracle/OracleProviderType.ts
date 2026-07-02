@@ -9,12 +9,13 @@ export enum OracleProviderType {
 }
 
 /**
- * @description Zod schema for OracleProviderType
+ * Zod schema for OracleProviderType
  */
 export const OracleProviderTypeSchema = z.nativeEnum(OracleProviderType)
 
 /**
- * @description Type guard for OracleProviderType
+ * Type guard for OracleProviderType
+ *
  * @param maybeOracleProviderType
  * @returns true if the object is an OracleProviderType
  */

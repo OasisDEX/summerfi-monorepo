@@ -3,8 +3,7 @@ import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
 
 /**
- * @name RwaManagerClient
- * @description Implementation of the RWA manager client interface
+ * Implementation of the RWA manager client interface
  */
 export class RwaManagerClient extends IRPCClient implements IRwaManagerClient {
   constructor(params: { rpcClient: RPCMainClientType }) {

@@ -10,8 +10,7 @@ import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmoun
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IDebtInfo
- * @description Contains information about a debt token of a lending pool
+ * Contains information about a debt token of a lending pool
  *
  * Initially this is used for single pair lending pools, but it can be re-used in multi-token
  * lending pools
@@ -40,7 +39,7 @@ export interface IDebtInfo extends IDebtInfoData {
 }
 
 /**
- * @description Zod schema for IDebtInfo
+ * Zod schema for IDebtInfo
  */
 export const DebtInfoDataSchema = z.object({
   token: z.custom<IToken>((val) => isToken(val)),
@@ -60,7 +59,8 @@ export const DebtInfoDataSchema = z.object({
 export type IDebtInfoData = Readonly<z.infer<typeof DebtInfoDataSchema>>
 
 /**
- * @description Type guard for IDebtInfo
+ * Type guard for IDebtInfo
+ *
  * @param maybeDebtInfo
  * @returns true if the object is an IDebtInfo
  */

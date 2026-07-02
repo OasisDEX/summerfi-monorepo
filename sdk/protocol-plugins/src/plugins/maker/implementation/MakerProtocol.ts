@@ -7,7 +7,6 @@ import { IMakerProtocol, IMakerProtocolData, __signature__ } from '../interfaces
 export type MakerProtocolParameters = Omit<IMakerProtocolData, 'name'>
 
 /**
- * @class MakerProtocol
  * @see IMakerProtocolData
  */
 export class MakerProtocol extends Protocol implements IMakerProtocol {

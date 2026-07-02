@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
 /**
- * @name ProtocolName
- * @description Enumerates the names of the protocols that are supported by the SDK
+ * Enumerates the names of the protocols that are supported by the SDK
  */
 export enum ProtocolName {
   AaveV3 = 'AAVE_V3',
@@ -15,12 +14,13 @@ export enum ProtocolName {
 }
 
 /**
- * @description Zod schema for ProtocolName
+ * Zod schema for ProtocolName
  */
 export const ProtocolNameSchema = z.nativeEnum(ProtocolName)
 
 /**
- * @description Type guard for ProtocolName
+ * Type guard for ProtocolName
+ *
  * @param maybeProtocolName Object to be checked
  * @returns true if the object is a ProtocolName
  */

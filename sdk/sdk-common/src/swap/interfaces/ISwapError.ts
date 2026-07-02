@@ -9,8 +9,7 @@ import { SwapErrorType } from '../enums/SwapErrorType'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name ISwapError
- * @description Represents a custom error of the SDK for the Swap service
+ * Represents a custom error of the SDK for the Swap service
  */
 export interface ISwapError extends ISDKError, ISwapErrorData {
   /** Signature to differentiate from similar interfaces */
@@ -25,7 +24,7 @@ export interface ISwapError extends ISDKError, ISwapErrorData {
 }
 
 /**
- * @description Zod schema for ISwapError
+ * Zod schema for ISwapError
  */
 export const SwapErrorDataSchema = z.object({
   ...SDKErrorDataSchema.shape,
@@ -41,7 +40,8 @@ export const SwapErrorDataSchema = z.object({
 export type ISwapErrorData = Readonly<z.infer<typeof SwapErrorDataSchema>>
 
 /**
- * @description Type guard for ISwapError
+ * Type guard for ISwapError
+ *
  * @param maybeSwapErrorData
  * @returns true if the object is an ISwapError
  */

@@ -7,7 +7,6 @@ import { ISparkProtocol, ISparkProtocolData, __signature__ } from '../interfaces
 export type SparkProtocolParameters = Omit<ISparkProtocolData, 'name'>
 
 /**
- * @class SparkProtocol
  * @see ISparkProtocol
  */
 export class SparkProtocol extends Protocol implements ISparkProtocol {

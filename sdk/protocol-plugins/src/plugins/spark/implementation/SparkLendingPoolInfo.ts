@@ -12,7 +12,6 @@ import {
 export type SparkLendingPoolInfoParameters = Omit<ISparkLendingPoolInfoData, 'type'>
 
 /**
- * @class SparkLendingPoolInfo
  * @see ISparkLendingPoolInfo
  */
 export class SparkLendingPoolInfo extends LendingPoolInfo implements ISparkLendingPoolInfo {

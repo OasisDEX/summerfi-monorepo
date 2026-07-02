@@ -4,7 +4,6 @@ import { ITokenAmount, ITokenAmountData } from '../interfaces/ITokenAmount'
 import { BigNumber } from 'bignumber.js'
 
 /**
- * @name multiplyTokenAmountByPercentage
  * @param tokenAmount The token amount to multiply
  * @param percentage The percentage to multiply by
  * @returns The resulting token amount
@@ -20,7 +19,6 @@ export function multiplyTokenAmountByPercentage(
 }
 
 /**
- * @name divideTokenAmountByPercentage
  * @param tokenAmount The token amount to divide
  * @param percentage The percentage to divide by
  * @returns The resulting token amount
@@ -36,7 +34,6 @@ export function divideTokenAmountByPercentage(
 }
 
 /**
- * @name multiplyFiatCurrencyAmountByPercentage
  * @param fiatCurrencyAmount The fiat currency amount to multiply
  * @param percentage The percentage to multiply by
  * @returns The resulting fiat currency amount
@@ -52,7 +49,6 @@ export function multiplyFiatCurrencyAmountByPercentage(
 }
 
 /**
- * @name divideFiatCurrencyAmountByPercentage
  * @param fiatCurrencyAmount The fiat currency amount to divide
  * @param percentage The percentage to divide by
  * @returns The resulting fiat currency amount

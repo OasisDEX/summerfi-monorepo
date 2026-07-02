@@ -13,7 +13,6 @@ import { IMorphoLendingPositionId } from '../interfaces/IMorphoLendingPositionId
 export type MorphoLendingPositionParameters = Omit<IMorphoLendingPositionData, 'type'>
 
 /**
- * @class MorphoLendingPosition
  * @see IMorphoLendingPosition
  */
 export class MorphoLendingPosition extends LendingPosition implements IMorphoLendingPosition {

@@ -7,8 +7,7 @@ import { z } from 'zod'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IMorphoProtocol
- * @description Identifier of the Morpho protocol
+ * Identifier of the Morpho protocol
  *
  * This interface is used to add all the methods that the interface supports
  *
@@ -24,7 +23,7 @@ export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
 }
 
 /**
- * @description Zod schema for IMorphoProtocol
+ * Zod schema for IMorphoProtocol
  */
 export const MorphoProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
@@ -37,7 +36,8 @@ export const MorphoProtocolDataSchema = z.object({
 export type IMorphoProtocolData = Readonly<z.infer<typeof MorphoProtocolDataSchema>>
 
 /**
- * @description Type guard for IMorphoProtocol
+ * Type guard for IMorphoProtocol
+ *
  * @param maybeProtocol
  * @returns true if the object is an IMorphoProtocol
  */

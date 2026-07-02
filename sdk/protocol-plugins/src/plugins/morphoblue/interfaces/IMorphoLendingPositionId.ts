@@ -7,8 +7,7 @@ import { z } from 'zod'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IMorphoLendingPositionId
- * @description Represents the ID of a lending position in the Morpho protocol
+ * Represents the ID of a lending position in the Morpho protocol
  *
  * Currently empty as there are no specifics for this protocol
  */
@@ -18,7 +17,7 @@ export interface IMorphoLendingPositionId extends ILendingPositionId, IMorphoLen
 }
 
 /**
- * @description Zod schema for IMorphoLendingPositionId
+ * Zod schema for IMorphoLendingPositionId
  */
 export const MorphoLendingPositionIdDataSchema = z.object({
   ...LendingPositionIdDataSchema.shape,
@@ -32,7 +31,8 @@ export type IMorphoLendingPositionIdData = Readonly<
 >
 
 /**
- * @description Type guard for IMorphoLendingPositionId
+ * Type guard for IMorphoLendingPositionId
+ *
  * @param maybeMorphoLendingPositionId
  * @returns true if the object is an IMorphoLendingPositionId
  */

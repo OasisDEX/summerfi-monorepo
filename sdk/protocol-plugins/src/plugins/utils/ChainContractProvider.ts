@@ -1,9 +1,10 @@
 import { Maybe } from '@summerfi/sdk-common'
 
 /**
+ * Generic type for a map of contract ABIs, to be extended by each
+ * protocol plugin
+ *
  * @type GenericAbiMap
- * @description Generic type for a map of contract ABIs, to be extended by each
- *              protocol plugin
  */
 export type GenericAbiMap<ContractNames extends string> = {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
@@ -11,8 +12,7 @@ export type GenericAbiMap<ContractNames extends string> = {
 }
 
 /**
- * @class ChainContractsProvider
- * @description Provides type safe contract ABIs
+ * Provides type safe contract ABIs
  *
  * Used in the protocol plugins to obtain the ABI of the different contracts and
  * to call them

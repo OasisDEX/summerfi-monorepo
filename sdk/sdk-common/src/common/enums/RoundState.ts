@@ -1,9 +1,8 @@
 import { z } from 'zod'
 
 /**
- * @enum RoundState
- * @description Represents the lifecycle state of a RoundsVault round.
- *              Mirrors the on-chain `RoundState` enum in RoundsVaultBase.sol.
+ * Represents the lifecycle state of a RoundsVault round.
+ * Mirrors the on-chain `RoundState` enum in RoundsVaultBase.sol.
  */
 export enum RoundState {
   /** EVM default — the round has never been opened */

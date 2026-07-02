@@ -9,8 +9,7 @@ import { IAaveV3Protocol, isAaveV3Protocol } from './IAaveV3Protocol'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IAaveV3LendingPoolId
- * @description Identifier of a lending pool on the Aave v3 protocol
+ * Identifier of a lending pool on the Aave v3 protocol
  *
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
@@ -29,7 +28,7 @@ export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPool
 }
 
 /**
- * @description Zod schema for IAaveV3LendingPoolId
+ * Zod schema for IAaveV3LendingPoolId
  */
 export const AaveV3LendingPoolIdDataSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
@@ -45,7 +44,8 @@ export const AaveV3LendingPoolIdDataSchema = z.object({
 export type IAaveV3LendingPoolIdData = Readonly<z.infer<typeof AaveV3LendingPoolIdDataSchema>>
 
 /**
- * @description Type guard for IAaveV3LendingPoolId
+ * Type guard for IAaveV3LendingPoolId
+ *
  * @param maybePoolId
  * @returns true if the object is an IAaveV3LendingPoolId
  */

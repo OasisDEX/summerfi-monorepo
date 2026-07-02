@@ -12,7 +12,6 @@ import { ChainInfo } from './ChainInfo'
 export type TokenParameters = Omit<ITokenData, ''>
 
 /**
- * @name Token
  * @see IToken
  */
 export class Token implements IToken {

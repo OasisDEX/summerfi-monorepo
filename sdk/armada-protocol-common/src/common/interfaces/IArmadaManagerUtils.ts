@@ -15,13 +15,11 @@ import {
   type Erc20TransferTransactionInfo,
 } from '@summerfi/sdk-common'
 /**
- * @name IArmadaManagerUtils
- * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
+ * Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
  */
 export interface IArmadaManagerUtils {
   /**
-   * @method getSummerPrice
-   * @description Retrieves the current price of the Summer token
+   * Retrieves the current price of the Summer token
    *
    * @param params - Optional parameters
    * @param params.override - Optional price override value
@@ -30,8 +28,7 @@ export interface IArmadaManagerUtils {
   getSummerPrice(params?: { override?: number }): Promise<number>
 
   /**
-   * @method getSummerToken
-   * @description Retrieves the Summer token for a given chain
+   * Retrieves the Summer token for a given chain
    *
    * @param chainInfo Chain information
    *
@@ -42,14 +39,10 @@ export interface IArmadaManagerUtils {
   /** VAULT OPERATIONS */
   getFleetShares(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
 
-  /**
-   * @name getStakedShares
-   */
   getStakedShares(params: { vaultId: IArmadaVaultId; user: IUser }): Promise<ITokenAmount>
 
   /**
-   * @name getFleetBalance
-   * @description Get the balance of a user in a fleet
+   * Get the balance of a user in a fleet
    *
    * @param vaultId ID of the pool to retrieve the shares
    * @param user Address of the user to retrieve the shares
@@ -62,8 +55,7 @@ export interface IArmadaManagerUtils {
   }>
 
   /**
-   * @name getStakedBalance
-   * @description Get the staked balance of a user in a rewards pool
+   * Get the staked balance of a user in a rewards pool
    *
    * @param vaultId ID of the vault to retrieve the balance
    * @param user Address of the user to retrieve the balance
@@ -76,9 +68,7 @@ export interface IArmadaManagerUtils {
   }): Promise<{ shares: ITokenAmount; assets: ITokenAmount }>
 
   /**
-   *
-   * @name getTotalBalance
-   * @description Get the total balance of a user in a fleet
+   * Get the total balance of a user in a fleet
    *
    * @param vaultId ID of the pool to retrieve the shares
    * @param user Address of the user to retrieve the shares
@@ -93,8 +83,7 @@ export interface IArmadaManagerUtils {
   /** UTILITY FUNCTIONS */
 
   /**
-   * @name convertToShares
-   * @description Converts a token amount to shares in the Fleet
+   * Converts a token amount to shares in the Fleet
    *
    * @param vaultId ID of the vault to convert the tokens to shares
    * @param amount Token amount to be converted
@@ -104,8 +93,7 @@ export interface IArmadaManagerUtils {
   convertToShares(params: { vaultId: IArmadaVaultId; amount: ITokenAmount }): Promise<ITokenAmount>
 
   /**
-   * @name convertToAssets
-   * @description Converts shares to token amount in the Fleet
+   * Converts shares to token amount in the Fleet
    *
    * @param vaultId ID of the vault to convert the tokens to shares
    * @param amount Token amount to be converted
@@ -115,8 +103,7 @@ export interface IArmadaManagerUtils {
   convertToAssets(params: { vaultId: IArmadaVaultId; amount: ITokenAmount }): Promise<ITokenAmount>
 
   /**
-   * @name getSwapCall
-   * @description Get the swap call for a given vault
+   * Get the swap call for a given vault
    *
    * @param vaultId ID of the vault to swap
    * @param fromAmount Amount of tokens to swap
@@ -137,8 +124,7 @@ export interface IArmadaManagerUtils {
   }>
 
   /**
-   * @name getPriceImpact
-   * @description Get the price impact of a swap
+   * Get the price impact of a swap
    *
    * @param fromAmount The amount of tokens to swap
    * @param toAmount The amount of tokens to receive
@@ -151,8 +137,7 @@ export interface IArmadaManagerUtils {
   }): Promise<TransactionPriceImpact>
 
   /**
-   * @name getUnstakeFleetTokensTx
-   * @description Get the transaction to unstake fleet tokens from the rewards manager
+   * Get the transaction to unstake fleet tokens from the rewards manager
    *
    * @param addressValue The user address
    * @param vaultId The vault ID to unstake from (chain info is derived from vaultId.chainInfo)
@@ -167,8 +152,7 @@ export interface IArmadaManagerUtils {
   }): Promise<TransactionInfo>
 
   /**
-   * @name getErc20TokenTransferTx
-   * @description Generates a transaction for transferring ERC20 tokens
+   * Generates a transaction for transferring ERC20 tokens
    *
    * @param chainId Chain identifier where the token exists
    * @param tokenAddress ERC20 token contract address
@@ -185,8 +169,8 @@ export interface IArmadaManagerUtils {
   }): Promise<Erc20TransferTransactionInfo[]>
 
   /**
-   * @name getProtocolAddresses
-   * @description Returns the deployed contract addresses for the Armada protocol on a given chain
+   * Returns the deployed contract addresses for the Armada protocol on a given chain
+   *
    * @param params.chainId The chain ID to retrieve addresses for
    * @returns Promise with a record containing the admiralsQuarters contract address
    */

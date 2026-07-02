@@ -1,7 +1,7 @@
 import { IAddress, IRiskRatio, IToken } from '@summerfi/sdk-common'
 
 /**
- * @description Morpho market parameters for a given market
+ * Morpho market parameters for a given market
  */
 export type MorphoMarketParameters = {
   /** Debt token, which can be borrowed from the pool */

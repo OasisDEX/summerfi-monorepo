@@ -5,7 +5,6 @@ import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 
 /**
- * @class ProtocolsManagerClient
  * @see IProtocolsManagerClient
  */
 export class ProtocolsManagerClient extends IRPCClient implements IProtocolsManagerClient {

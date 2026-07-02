@@ -2,8 +2,8 @@ import type { IChainInfo, ISDKInstiManager } from '@summerfi/sdk-client'
 import { Address, ArmadaVaultId, Percentage } from '@summerfi/sdk-common'
 
 /**
- * @name setArkMaxDepositPercentageOfTVLHandler
- * @description Sets the maximum deposit percentage of TVL for an ark
+ * Sets the maximum deposit percentage of TVL for an ark
+ *
  * @param params.arkAddress The address of the ark
  * @param params.fleetAddress The address of the fleet
  * @param params.chainInfo The chain information

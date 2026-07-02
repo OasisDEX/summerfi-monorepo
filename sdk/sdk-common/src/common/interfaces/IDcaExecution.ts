@@ -1,6 +1,5 @@
 /**
- * @name IDcaExecution
- * @description Represents a single execution of a DCA strategy
+ * Represents a single execution of a DCA strategy
  */
 export interface IDcaExecution {
   /** Unique identifier of this execution */
