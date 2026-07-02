@@ -1006,7 +1006,7 @@ format: (args, action?) => object;
 
 ###### args
 
-`OpStackRpcBlock`\<`BlockTag`, `boolean`\>
+[`OpStackRpcBlock`](https://viem.sh/docs/)\<[`BlockTag`](https://viem.sh/docs/), `boolean`\>
 
 ###### action?
 
@@ -1151,7 +1151,9 @@ totalDifficulty: bigint | null;
 ###### transactions
 
 ```ts
-transactions: `0x${string}`[] | OpStackTransaction<boolean>[];
+transactions: 
+  | `0x${string}`[]
+  | OpStackTransaction<boolean>[];
 ```
 
 ###### transactionsRoot
@@ -1376,7 +1378,7 @@ format: (args, action?) =>
 
 ###### args
 
-`OpStackRpcTransaction`\<`boolean`\>
+[`OpStackRpcTransaction`](https://viem.sh/docs/)\<`boolean`\>
 
 ###### action?
 
@@ -1439,7 +1441,7 @@ format: (args, action?) =>
   `yParity?`: `undefined`;
 \}
   \| \{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `authorizationList?`: `undefined`;
   `blobVersionedHashes?`: `undefined`;
   `blockHash`: `` `0x${string}` `` \| `null`;
@@ -1468,7 +1470,7 @@ format: (args, action?) =>
   `yParity`: `number`;
 \}
   \| \{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `authorizationList?`: `undefined`;
   `blobVersionedHashes?`: `undefined`;
   `blockHash`: `` `0x${string}` `` \| `null`;
@@ -1497,7 +1499,7 @@ format: (args, action?) =>
   `yParity`: `number`;
 \}
   \| \{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `authorizationList?`: `undefined`;
   `blobVersionedHashes`: readonly `` `0x${string}` ``[];
   `blockHash`: `` `0x${string}` `` \| `null`;
@@ -1526,8 +1528,8 @@ format: (args, action?) =>
   `yParity`: `number`;
 \}
   \| \{
-  `accessList`: `AccessList`;
-  `authorizationList`: `SignedAuthorizationList`\<`number`\>;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
+  `authorizationList`: [`SignedAuthorizationList`](https://viem.sh/docs/)\<`number`\>;
   `blobVersionedHashes?`: `undefined`;
   `blockHash`: `` `0x${string}` `` \| `null`;
   `blockNumber`: `bigint` \| `null`;
@@ -1583,7 +1585,7 @@ format: (args, action?) => object;
 
 ###### args
 
-`OpStackRpcTransactionReceipt`
+[`OpStackRpcTransactionReceipt`](https://viem.sh/docs/)
 
 ###### action?
 
@@ -1815,11 +1817,11 @@ readonly transaction: (transaction, signature?) =>
 
 ###### transaction
 
-`OpStackTransactionSerializable`
+[`OpStackTransactionSerializable`](https://viem.sh/docs/)
 
 ###### signature?
 
-`Signature`
+[`Signature`](https://viem.sh/docs/)
 
 ##### Returns
 
@@ -1827,7 +1829,7 @@ readonly transaction: (transaction, signature?) =>
   \| `` `0x01${string}` ``
   \| `` `0x03${string}` ``
   \| `` `0x04${string}` ``
-  \| `TransactionSerializedLegacy`
+  \| [`TransactionSerializedLegacy`](https://viem.sh/docs/)
   \| `` `0x7e${string}` ``
 
 ### sourceId
@@ -1852,7 +1854,7 @@ optional verifyHash: (client, parameters) => Promise<boolean>;
 
 ##### client
 
-`Client`\<`Transport`, `Chain` \| `undefined`, `Account` \| `undefined`, `undefined`, 
+[`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, `undefined`, 
   \| \{
 \[`key`: `string`\]: `unknown`;
   `account?`: `undefined`;
@@ -1874,7 +1876,7 @@ optional verifyHash: (client, parameters) => Promise<boolean>;
 
 ##### parameters
 
-`VerifyHashParameters`
+[`VerifyHashParameters`](https://viem.sh/docs/)
 
 #### Returns
 
@@ -2131,7 +2133,7 @@ optional verifyHash: (client, parameters) => Promise<boolean>;
 
 ##### client
 
-`Client`\<`Transport`, `Chain` \| `undefined`, `Account` \| `undefined`, `undefined`, 
+[`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, `undefined`, 
   \| \{
 \[`key`: `string`\]: `unknown`;
   `account?`: `undefined`;
@@ -2153,7 +2155,7 @@ optional verifyHash: (client, parameters) => Promise<boolean>;
 
 ##### parameters
 
-`VerifyHashParameters`
+[`VerifyHashParameters`](https://viem.sh/docs/)
 
 #### Returns
 
@@ -2388,7 +2390,7 @@ optional verifyHash: (client, parameters) => Promise<boolean>;
 
 ##### client
 
-`Client`\<`Transport`, `Chain` \| `undefined`, `Account` \| `undefined`, `undefined`, 
+[`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, `undefined`, 
   \| \{
 \[`key`: `string`\]: `unknown`;
   `account?`: `undefined`;
@@ -2410,7 +2412,7 @@ optional verifyHash: (client, parameters) => Promise<boolean>;
 
 ##### parameters
 
-`VerifyHashParameters`
+[`VerifyHashParameters`](https://viem.sh/docs/)
 
 #### Returns
 
@@ -2638,7 +2640,7 @@ optional verifyHash: (client, parameters) => Promise<boolean>;
 
 ##### client
 
-`Client`\<`Transport`, `Chain` \| `undefined`, `Account` \| `undefined`, `undefined`, 
+[`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, `undefined`, 
   \| \{
 \[`key`: `string`\]: `unknown`;
   `account?`: `undefined`;
@@ -2660,7 +2662,7 @@ optional verifyHash: (client, parameters) => Promise<boolean>;
 
 ##### parameters
 
-`VerifyHashParameters`
+[`VerifyHashParameters`](https://viem.sh/docs/)
 
 #### Returns
 

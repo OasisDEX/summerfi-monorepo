@@ -14,10 +14,9 @@ export interface IValueConverter {
    * @returns The value as a TypeScript bigint that can be passed to a Solidity contract
    *
    * @remarks The value is expected to be scaled by 10^decimals, thus yielding a Solidity uint256
-   *          value with the correct fixed point decimals
-   *
-   * @remarks The data type implementing this interface should provide a default value for decimals
-   *          when possible to aid in the conversion
+   *          value with the correct fixed point decimals. The data type implementing this
+   *          interface should provide a default value for decimals when possible to aid in the
+   *          conversion.
    */
   toSolidityValue(params?: { decimals: number }): bigint
 
@@ -29,9 +28,8 @@ export interface IValueConverter {
    * @remarks It returns a BigNumber without explicit decimals. This function is intended for low
    *          level operations not accounted for in the specific data type. The BigNumber does NOT
    *          carry any information on how many decimals the value has, meaning that the conversion
-   *          of BigNumber to a Solidity value must be done manually
-   *
-   * @remarks Use `toSolidityValue` to convert the value to a Solidity value instead
+   *          of BigNumber to a Solidity value must be done manually. Use `toSolidityValue` to
+   *          convert the value to a Solidity value instead.
    */
   toBigNumber(): BigNumber
 }

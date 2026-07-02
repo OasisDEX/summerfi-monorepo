@@ -59,7 +59,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Retrieves the Summer token for a given chain
    *
-   * @param chainInfo Chain information
+   * @param params.chainInfo Chain information
    *
    * @returns The Summer token for the given chain
    */
@@ -77,7 +77,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Retrieves all protocol vaults
    *
-   * @param chainInfo Chain information
+   * @param params.chainInfo Chain information
    *
    * @returns All Armada vaults
    */
@@ -86,7 +86,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Retrieves a specific protocol vault
    *
-   * @param vaultId ID of the vault
+   * @param params.vaultId ID of the vault
    *
    * @returns The corresponding Armada vault
    */
@@ -95,7 +95,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Get all rebalances per given chain
    *
-   * @param chainInfo Chain information
+   * @param params.chainInfo Chain information
    *
    * @returns GerRebalancesQuery
    */
@@ -104,7 +104,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Get all users activity per given chain
    *
-   * @param chainInfo Chain information
+   * @param params.chainInfo Chain information
    *
    * @returns GerUsersActivityQuery
    */
@@ -116,7 +116,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Get all users activity per given chain
    *
-   * @param vaultId ID of the pool to retrieve
+   * @param params.vaultId ID of the pool to retrieve
    *
    * @returns GerUserActivityQuery
    */
@@ -128,7 +128,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Retrieves the information of an Armada vault by its ID
    *
-   * @param vaultId ID of the vault to retrieve
+   * @param params.vaultId ID of the vault to retrieve
    *
    * @returns The information of the corresponding Armada vault
    */
@@ -137,7 +137,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Retrieves the information of all Armada vaults for a given chain
    *
-   * @param chainInfo Chain information
+   * @param params.chainId The chain ID to list vaults for
    *
    * @returns The information of all Armada vaults for the given chain
    */
@@ -172,7 +172,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Get all of user positions in the fleet
    *
-   * @param user target user
+   * @param params.user target user
    *
    * @returns IArmadaPosition[] All user positions in the fleet
    *
@@ -182,8 +182,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Retrieves the position of a user in an Armada pool
    *
-   * @param user Target user
-   * @param fleetAddress Address of the fleet
+   * @param params.user Target user
+   * @param params.fleetAddress Address of the fleet
    *
    * @returns The position of the user in the corresponding Armada pool
    */
@@ -195,7 +195,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Retrieves the position of a user in an Armada pool
    *
-   * @param positionId ID of the position to retrieve
+   * @param params.positionId ID of the position to retrieve
    *
    * @returns The position of the user in the corresponding Armada pool
    */
@@ -204,7 +204,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Retrieves historical snapshots of a position
    *
-   * @param positionId The ID of the position to retrieve history for
+   * @param params.positionId The ID of the position to retrieve history for
    * @returns GetPositionHistoryQuery with hourly, daily, and weekly snapshots
    */
   getPositionHistory(params: { positionId: IArmadaPositionId }): Promise<GetPositionHistoryQuery>
@@ -212,9 +212,9 @@ export interface IArmadaManagerUsersClient {
   /**
    * Get deposits for a given Armada position ID with optional pagination
    *
-   * @param positionId Position ID
-   * @param first Optional number of items to return
-   * @param skip Optional number of items to skip for pagination
+   * @param params.positionId Position ID
+   * @param params.first Optional number of items to return
+   * @param params.skip Optional number of items to skip for pagination
    *
    * @returns Array of deposit transactions with amount, timestamp, and vault balance
    */
@@ -227,9 +227,9 @@ export interface IArmadaManagerUsersClient {
   /**
    * Get withdrawals for a given Armada position ID with optional pagination
    *
-   * @param positionId Position ID
-   * @param first Optional number of items to return
-   * @param skip Optional number of items to skip for pagination
+   * @param params.positionId Position ID
+   * @param params.first Optional number of items to return
+   * @param params.skip Optional number of items to skip for pagination
    *
    * @returns Array of withdrawal transactions with amount, timestamp, and vault balance
    */
@@ -242,12 +242,12 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transactions needed to deposit tokens in the Fleet for a new position
    *
-   * @param vaultId ID of the pool to deposit in
-   * @param user Address of the user that is trying to deposit
-   * @param amount Token amount to be deposited
-   * @param slippage Maximum slippage allowed
-   * @param shouldStake Whether the user wants to stake the deposited tokens
-   * @param referralCode Referral code to be used
+   * @param params.vaultId ID of the pool to deposit in
+   * @param params.user Address of the user that is trying to deposit
+   * @param params.amount Token amount to be deposited
+   * @param params.slippage Maximum slippage allowed
+   * @param params.shouldStake Whether the user wants to stake the deposited tokens
+   * @param params.referralCode Referral code to be used
    *
    * @returns The transactions needed to deposit the tokens
    */
@@ -263,11 +263,11 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transactions needed to withdraw tokens from the Fleet
    *
-   * @param vaultId ID of the pool to withdraw from
-   * @param user user that is trying to withdraw
-   * @param amount Token amount to be withdrawn
-   * @param toToken Token to withdraw to
-   * @param slippage Slippage tolerance
+   * @param params.vaultId ID of the pool to withdraw from
+   * @param params.user user that is trying to withdraw
+   * @param params.amount Token amount to be withdrawn
+   * @param params.toToken Token to withdraw to
+   * @param params.slippage Slippage tolerance
    *
    * @returns The transactions needed to withdraw the tokens
    */
@@ -286,12 +286,12 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transactions needed to deposit tokens cross-chain into a Fleet using Enso routing
    *
-   * @param fromChainId Source chain ID where user has tokens
-   * @param vaultId ID of the pool to deposit in on destination chain
-   * @param senderAddressValue Address of the user that is sending tokens
-   * @param receiverAddressValue Optional address to receive the vault shares (defaults to senderAddressValue)
-   * @param amount Token amount to be deposited from source chain
-   * @param slippage Maximum slippage allowed for the operation
+   * @param params.fromChainId Source chain ID where user has tokens
+   * @param params.vaultId ID of the pool to deposit in on destination chain
+   * @param params.senderAddressValue Address of the user that is sending tokens
+   * @param params.receiverAddressValue Optional address to receive the vault shares (defaults to senderAddressValue)
+   * @param params.amount Token amount to be deposited from source chain
+   * @param params.slippage Maximum slippage allowed for the operation
    *
    * @returns The transactions needed to deposit the tokens cross-chain
    */
@@ -307,11 +307,11 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transactions needed to withdraw tokens cross-chain from a Fleet using Enso routing
    *
-   * @param vaultId ID of the pool to withdraw from
-   * @param user user that is trying to withdraw
-   * @param amount Token amount to be withdrawn
-   * @param slippage Maximum slippage allowed for the operation (in basis points)
-   * @param toChainId Destination chain ID where user wants to receive tokens
+   * @param params.vaultId ID of the pool to withdraw from
+   * @param params.user user that is trying to withdraw
+   * @param params.amount Token amount to be withdrawn
+   * @param params.slippage Maximum slippage allowed for the operation (in basis points)
+   * @param params.toChainId Destination chain ID where user wants to receive tokens
    *
    * @returns The transactions needed to withdraw the tokens cross-chain
    */
@@ -326,8 +326,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the staked balance of a user in a Fleet
    *
-   * @param vaultId ID of the vault to check the balance in
-   * @param user Address of the user to check the balance for
+   * @param params.vaultId ID of the vault to check the balance in
+   * @param params.user Address of the user to check the balance for
    *
    * @returns The staked balance of the user in the Fleet
    */
@@ -339,8 +339,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the balance of a user in a Fleet
    *
-   * @param vaultId ID of the vault to check the balance in
-   * @param user Address of the user to check the balance for
+   * @param params.vaultId ID of the vault to check the balance in
+   * @param params.user Address of the user to check the balance for
    *
    * @returns The balance of the user in the Fleet
    */
@@ -352,8 +352,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the total balance of a user in a Fleet
    *
-   * @param vaultId ID of the vault to check the balance in
-   * @param user Address of the user to check the balance for
+   * @param params.vaultId ID of the vault to check the balance in
+   * @param params.user Address of the user to check the balance for
    *
    * @returns The total balance of the user in the Fleet
    */
@@ -389,7 +389,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the aggregated rewards of a user including Merkl rewards
    *
-   * @param user Address of the user to check the rewards for
+   * @param params.user Address of the user to check the rewards for
    *
    * @returns The aggregated rewards of the user including Merkl rewards
    */
@@ -406,11 +406,11 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the bridge transaction needed to bridge tokens between chains
    *
-   * @param user The user
-   * @param recipient The recipient address
-   * @param sourceChain The source chain
-   * @param targetChain The target chain
-   * @param amount The amount to bridge
+   * @param params.user The user
+   * @param params.recipient The recipient address
+   * @param params.sourceChain The source chain
+   * @param params.targetChain The target chain
+   * @param params.amount The amount to bridge
    *
    * @returns The bridge transaction needed to bridge the tokens
    */
@@ -425,10 +425,10 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the multicall transaction needed to claim rewards from the Fleet
    *
-   * @param chainInfo Chain information
-   * @param user Address of the user to claim rewards for
-   * @param includeMerkl Whether to include Merkl rewards in the claim
-   * @param includeStakingV2 Whether to include Staking V2 rewards in the claim
+   * @param params.chainInfo Chain information
+   * @param params.user Address of the user to claim rewards for
+   * @param params.includeMerkl Whether to include Merkl rewards in the claim
+   * @param params.includeStakingV2 Whether to include Staking V2 rewards in the claim
    *
    * @returns The transaction needed to claim the rewards
    */
@@ -442,7 +442,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns delegatee that the account has chosen
    *
-   * @param user The user
+   * @param params.user The user
    *
    * @returns The delegatee address
    */
@@ -451,7 +451,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns delegatee configured on the staked SUMR contract (V2)
    *
-   * @param userAddress Address whose delegatee should be fetched
+   * @param params.userAddress Address whose delegatee should be fetched
    *
    * @returns The delegatee address saved in the staking contract
    */
@@ -460,7 +460,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Delegates votes from the sender to delegatee
    *
-   * @param user The user
+   * @param params.user The user
    *
    * @returns The transaction information
    */
@@ -469,7 +469,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Delegates votes for the staked SUMR contract (V2)
    *
-   * @param delegateeAddress Address that should receive delegated votes
+   * @param params.delegateeAddress Address that should receive delegated votes
    *
    * @returns The transaction information
    */
@@ -480,10 +480,10 @@ export interface IArmadaManagerUsersClient {
    *
    * @see IArmadaManagerUtils.getErc20TokenTransferTx
    *
-   * @param chainId Chain identifier where the token exists
-   * @param tokenAddress ERC20 token contract address
-   * @param recipientAddress Address to receive the tokens
-   * @param amount Amount of tokens to transfer
+   * @param params.chainId Chain identifier where the token exists
+   * @param params.tokenAddress ERC20 token contract address
+   * @param params.recipientAddress Address to receive the tokens
+   * @param params.amount Amount of tokens to transfer
    *
    * @returns Erc20TransferTransactionInfo Transaction information for the transfer
    */
@@ -504,7 +504,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the number of votes the user has
    *
-   * @param user The user
+   * @param params.user The user
    *
    * @returns The number of votes
    */
@@ -513,7 +513,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the balance of the user
    *
-   * @param user The user
+   * @param params.user The user
    *
    * @returns The balance
    */
@@ -522,7 +522,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the staked balance of the user
    *
-   * @param user The user
+   * @param params.user The user
    *
    * @returns The staked balance
    */
@@ -531,7 +531,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the rewards the user has earned
    *
-   * @param user The user
+   * @param params.user The user
    *
    * @returns The rewards earned
    */
@@ -540,8 +540,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transaction to stake tokens
    *
-   * @param user The user
-   * @param amount The amount to stake
+   * @param params.user The user
+   * @param params.amount The amount to stake
    *
    * @returns The transaction information
    */
@@ -553,7 +553,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transaction to unstake tokens
    *
-   * @param amount The amount to unstake
+   * @param params.amount The amount to unstake
    *
    * @returns The transaction information
    */
@@ -562,7 +562,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the length of the delegation chain
    *
-   * @param user The user
+   * @param params.user The user
    *
    * @returns The length of the delegation
    */
@@ -571,9 +571,9 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transaction to stake tokens with lockup (V2)
    *
-   * @param user The user
-   * @param amount The amount to stake
-   * @param lockupPeriod The lockup period in seconds (14 days to 3 years)
+   * @param params.user The user
+   * @param params.amount The amount to stake
+   * @param params.lockupPeriod The lockup period in seconds (14 days to 3 years)
    *
    * @returns The transaction information
    */
@@ -586,10 +586,10 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transaction to stake tokens on behalf with lockup (V2)
    *
-   * @param user The user initiating the stake
-   * @param receiver The address receiving the staked tokens
-   * @param amount The amount to stake
-   * @param lockupPeriod The lockup period in seconds (14 days to 3 years)
+   * @param params.user The user initiating the stake
+   * @param params.receiver The address receiving the staked tokens
+   * @param params.amount The amount to stake
+   * @param params.lockupPeriod The lockup period in seconds (14 days to 3 years)
    *
    * @returns The transaction information
    */
@@ -603,9 +603,9 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transaction to unstake tokens from a specific stake in the user's portfolio (V2)
    *
-   * @param user The user
-   * @param userStakeIndex The index of the stake in the user's stake array (portfolio) to unstake from
-   * @param amount The amount to unstake
+   * @param params.user The user
+   * @param params.userStakeIndex The index of the stake in the user's stake array (portfolio) to unstake from
+   * @param params.amount The amount to unstake
    *
    * @returns The transaction information
    */
@@ -618,7 +618,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the number of stakes a user has before and after considering a specific bucket
    *
-   * @param user The user
+   * @param params.user The user
    *
    * @returns Object containing userStakesCountBefore and userStakesCountAfter
    */
@@ -629,7 +629,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns all staking positions for a user with detailed information
    *
-   * @param user The user to get staking positions for
+   * @param params.user The user to get staking positions for
    *
    * @returns Array of user stake positions
    */
@@ -638,8 +638,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Retrieves all staking stakes across all users with pagination support (V2)
    *
-   * @param first number of items to return (optional, defaults to 1000)
-   * @param skip number of items to skip for pagination (optional, defaults to 0)
+   * @param params.first number of items to return (optional, defaults to 1000)
+   * @param params.skip number of items to skip for pagination (optional, defaults to 0)
    *
    * @returns Array of StakingStake objects representing the staking stakes, sorted by lockupPeriod in descending order
    */
@@ -648,7 +648,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Calculates the penalty percentage for early unstaking of multiple stakes
    *
-   * @param userStakes Array of user stake details
+   * @param params.userStakes Array of user stake details
    *
    * @returns Array of penalty percentages (IPercentage objects)
    */
@@ -659,8 +659,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Calculates the penalty amount for early unstaking of specific amounts from multiple stakes
    *
-   * @param userStakes Array of user stake details
-   * @param amounts Array of amounts to unstake (must match userStakes length)
+   * @param params.userStakes Array of user stake details
+   * @param params.amounts Array of amounts to unstake (must match userStakes length)
    *
    * @returns Array of penalty amounts in tokens
    */
@@ -672,7 +672,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the user's staking balance for each bucket (V2)
    *
-   * @param user The user
+   * @param params.user The user
    *
    * @returns Array of balances by bucket
    */
@@ -681,7 +681,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the user's weighted staking balance for all buckets (V2)
    *
-   * @param user The user
+   * @param params.user The user
    *
    * @returns The weighted balance
    */
@@ -690,7 +690,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the user's current blended yield boost based on their weighted balance and staked balance
    *
-   * @param user The user to get the blended yield boost for
+   * @param params.user The user to get the blended yield boost for
    *
    * @returns The user's blended yield boost (userWeightedBalance / userSumrStakedBalance)
    */
@@ -699,8 +699,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the user's earned rewards (V2)
    *
-   * @param user The user
-   * @param rewardTokenAddress The reward token address
+   * @param params.user The user
+   * @param params.rewardTokenAddress The reward token address
    *
    * @returns The earned rewards
    */
@@ -708,7 +708,7 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the total amount of SUMR tokens staked by the user across all buckets
    *
-   * @param user The user to get staking balance for
+   * @param params.user The user to get staking balance for
    *
    * @returns The total SUMR amount staked
    */
@@ -717,9 +717,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the staking reward rates including user-specific boost (V2)
    *
-   * @param user The user to calculate boosted multiplier for
-   * @param rewardTokenAddress Optional reward token address (defaults to SUMR token)
-   * @param sumrPriceUsd Optional SUMR price in USD (defaults to current price from utils)
+   * @param params.rewardTokenAddress Optional reward token address (defaults to SUMR token)
+   * @param params.sumrPriceUsd Optional SUMR price in USD (defaults to current price from utils)
    *
    * @returns Reward rates including APR, APY, and user's boosted multiplier
    */
@@ -771,10 +770,10 @@ export interface IArmadaManagerUsersClient {
   /**
    * Calculates staking simulation data including yield APYs and boosts
    *
-   * @param amount The amount to stake
-   * @param period The lockup period in seconds
-   * @param sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
-   * @param userAddress The user's wallet address
+   * @param params.amount The amount to stake
+   * @param params.period The lockup period in seconds
+   * @param params.sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
+   * @param params.userAddress The user's wallet address
    *
    * @returns Simulation data including APYs and yield boosts
    */
@@ -788,8 +787,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Calculates the earnings estimation for multiple stake positions
    *
-   * @param stakes Array of stake positions with amount, period, and weightedAmount
-   * @param sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
+   * @param params.stakes Array of stake positions with amount, period, and weightedAmount
+   * @param params.sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
    *
    * @returns Earnings estimation including SUMR rewards and USD earnings for each stake
    */
@@ -815,9 +814,9 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the positions that can be migrated
    *
-   * @param chainInfo Chain information
-   * @param user The user
-   * @param migrationType The type of migration
+   * @param params.chainInfo Chain information
+   * @param params.user The user
+   * @param params.migrationType The type of migration
    *
    * @returns The positions that can be migrated
    * @throws Error if the migration type is not supported
@@ -834,8 +833,8 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the APY for the positions that can be migrated
    *
-   * @param chainInfo Chain information
-   * @param positionIds The positions to get the APY for
+   * @param params.chainInfo Chain information
+   * @param params.positionIds The positions to get the APY for
    *
    * @returns The APY for the positions that can be migrated
    */
@@ -850,11 +849,11 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transaction for the migration
    *
-   * @param user The user
-   * @param vaultId The vault id
-   * @param shouldStake Should stake
-   * @param slippage The slippage
-   * @param positions The positions to migrate
+   * @param params.user The user
+   * @param params.vaultId The vault id
+   * @param params.shouldStake Should stake
+   * @param params.slippage The slippage
+   * @param params.positionIds The position IDs to migrate
    *
    * @returns The transaction for the migration
    * @throws Error if the migration type is not supported
@@ -870,11 +869,11 @@ export interface IArmadaManagerUsersClient {
   /**
    * Returns the transactions needed to switch from one vault to another
    *
-   * @param sourceVaultId ID of the source pool
-   * @param destinationVaultId ID of the destination pool
-   * @param user Address of the user that is trying to switch
-   * @param amount Token amount to be switched
-   * @param slippage Maximum slippage allowed for the operation
+   * @param params.sourceVaultId ID of the source pool
+   * @param params.destinationVaultId ID of the destination pool
+   * @param params.user Address of the user that is trying to switch
+   * @param params.amount Token amount to be switched
+   * @param params.slippage Maximum slippage allowed for the operation
    *
    * @returns An array of transactions that must be executed
    */
@@ -895,11 +894,11 @@ export interface IArmadaManagerUsersClient {
    * Returns the transactions needed to switch from one vault to another using Enso routing.
    * Source and destination vaults must be on the same chain.
    *
-   * @param sourceVaultId ID of the source pool
-   * @param destinationVaultId ID of the destination pool (must be same chain as source)
-   * @param user Address of the user that is trying to switch
-   * @param amount Token amount (in source vault's underlying asset) to be switched
-   * @param slippage Maximum slippage allowed for the operation
+   * @param params.sourceVaultId ID of the source pool
+   * @param params.destinationVaultId ID of the destination pool (must be same chain as source)
+   * @param params.user Address of the user that is trying to switch
+   * @param params.amount Token amount (in source vault's underlying asset) to be switched
+   * @param params.slippage Maximum slippage allowed for the operation
    *
    * @returns An array of transactions that must be executed
    */

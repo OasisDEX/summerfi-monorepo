@@ -10,6 +10,7 @@
   * [Cross-Chain Deposits](guides/cross-chain-deposits.md)
   * [Withdrawals & Switching](guides/withdrawals.md)
   * [Positions & History](guides/positions.md)
+  * [RWA Vaults](guides/rwa-vaults.md)
   * [Rewards & Claims](guides/rewards.md)
   * [Intent Swaps (CoW)](guides/intent-swaps.md)
 * [Changelog](changelog.md)

@@ -16,9 +16,9 @@ admin/access-control surface. Accepts either an `apiDomainUrl` or a direct `apiU
 
 ### params
 
-`MakeAdminSDKParams`
+[`MakeAdminSDKParams`](../type-aliases/MakeAdminSDKParams.md)
 
-MakeSDKParams connection options plus the `clientId` to authenticate as.
+[MakeSDKParams](../type-aliases/MakeSDKParams.md) connection options plus the `clientId` to authenticate as.
 
 ## Returns
 

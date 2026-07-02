@@ -732,19 +732,19 @@ getIntentSwapsCancelOrder: (__namedParameters) => Promise<{
       \};
   \};
   `cacheTime`: `number`;
-  `call`: (`parameters`) => `Promise`\<`CallReturnType`\>;
+  `call`: (`parameters`) => `Promise`\<[`CallReturnType`](https://viem.sh/docs/)\>;
   `ccipRead?`:   \| `false`
      \| \{
      `request?`: (`parameters`) => `Promise`\<`` `0x${string}` ``\>;
    \};
-  `chain`: `Chain` \| `undefined`;
+  `chain`: [`Chain`](https://viem.sh/docs/) \| `undefined`;
   `createAccessList`: (`parameters`) => `Promise`\<\{
-     `accessList`: `AccessList`;
+     `accessList`: [`AccessList`](https://viem.sh/docs/);
      `gasUsed`: `bigint`;
   \}\>;
   `createBlockFilter`: () => `Promise`\<\{
      `id`: `` `0x${string}` ``;
-     `request`: `EIP1193RequestFn`\<readonly \[\{
+     `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<readonly \[\{
         `Method`: `"eth_getFilterChanges"`;
         `Parameters`: \[...\];
         `ReturnType`: ... \| ...;
@@ -759,11 +759,11 @@ getIntentSwapsCancelOrder: (__namedParameters) => Promise<{
      \}\]\>;
      `type`: `"block"`;
   \}\>;
-  `createContractEventFilter`: \<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`CreateContractEventFilterReturnType`\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>\>;
+  `createContractEventFilter`: \<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`CreateContractEventFilterReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>\>;
   `createEventFilter`: \<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`, `_EventName`, `_Args`\>(`args?`) => `Promise`\<\{ \[K in string \| number \| symbol\]: Filter\<"event", abiEvents, \_EventName, \_Args, strict, fromBlock, toBlock\>\[K\] \}\>;
   `createPendingTransactionFilter`: () => `Promise`\<\{
      `id`: `` `0x${string}` ``;
-     `request`: `EIP1193RequestFn`\<readonly \[\{
+     `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<readonly \[\{
         `Method`: `"eth_getFilterChanges"`;
         `Parameters`: \[...\];
         `ReturnType`: ... \| ...;
@@ -778,14 +778,14 @@ getIntentSwapsCancelOrder: (__namedParameters) => Promise<{
      \}\]\>;
      `type`: `"transaction"`;
   \}\>;
-  `dataSuffix?`: `DataSuffix`;
+  `dataSuffix?`: [`DataSuffix`](https://viem.sh/docs/);
   `estimateContractGas`: \<`chain`, `abi`, `functionName`, `args`\>(`args`) => `Promise`\<`bigint`\>;
-  `estimateFeesPerGas`: \<`chainOverride`, `type`\>(`args?`) => `Promise`\<`EstimateFeesPerGasReturnType`\<`type`\>\>;
+  `estimateFeesPerGas`: \<`chainOverride`, `type`\>(`args?`) => `Promise`\<[`EstimateFeesPerGasReturnType`](https://viem.sh/docs/)\<`type`\>\>;
   `estimateGas`: (`args`) => `Promise`\<`bigint`\>;
   `estimateMaxPriorityFeePerGas`: \<`chainOverride`\>(`args?`) => `Promise`\<`bigint`\>;
-  `experimental_blockTag?`: `BlockTag`;
-  `extend`: \<`client`\>(`fn`) => `Client`\<`Transport`, `Chain` \| `undefined`, `undefined`, `PublicRpcSchema`, \{ \[K in string \| number \| symbol\]: client\[K\] \} & `PublicActions`\<`Transport`, `Chain` \| `undefined`\>\>;
-  `fillTransaction`: \<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`FillTransactionReturnType`\<`Chain` \| `undefined`, `chainOverride`\>\>;
+  `experimental_blockTag?`: [`BlockTag`](https://viem.sh/docs/);
+  `extend`: \<`client`\>(`fn`) => [`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, `undefined`, [`PublicRpcSchema`](https://viem.sh/docs/), \{ \[K in string \| number \| symbol\]: client\[K\] \} & [`PublicActions`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`\>\>;
+  `fillTransaction`: \<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`FillTransactionReturnType`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, `chainOverride`\>\>;
   `getBalance`: (`args`) => `Promise`\<`bigint`\>;
   `getBlobBaseFee`: () => `Promise`\<`bigint`\>;
   `getBlock`: \<`includeTransactions`, `blockTag`\>(`args?`) => `Promise`\<\{
@@ -944,29 +944,29 @@ getIntentSwapsCancelOrder: (__namedParameters) => Promise<{
      \})[] : `` `0x${string}` ``[];
      `transactionsRoot`: `` `0x${string}` ``;
      `uncles`: `` `0x${string}` ``[];
-     `withdrawals?`: `Withdrawal`[];
+     `withdrawals?`: [`Withdrawal`](https://viem.sh/docs/)[];
      `withdrawalsRoot?`: `` `0x${string}` ``;
   \}\>;
   `getBlockNumber`: (`args?`) => `Promise`\<`bigint`\>;
   `getBlockTransactionCount`: (`args?`) => `Promise`\<`number`\>;
-  `getBytecode`: (`args`) => `Promise`\<`GetCodeReturnType`\>;
+  `getBytecode`: (`args`) => `Promise`\<[`GetCodeReturnType`](https://viem.sh/docs/)\>;
   `getChainId`: () => `Promise`\<`number`\>;
-  `getCode`: (`args`) => `Promise`\<`GetCodeReturnType`\>;
-  `getContractEvents`: \<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetContractEventsReturnType`\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
-  `getDelegation`: (`args`) => `Promise`\<`GetDelegationReturnType`\>;
-  `getEip712Domain`: (`args`) => `Promise`\<`GetEip712DomainReturnType`\>;
-  `getEnsAddress`: (`args`) => `Promise`\<`GetEnsAddressReturnType`\>;
-  `getEnsAvatar`: (`args`) => `Promise`\<`GetEnsAvatarReturnType`\>;
-  `getEnsName`: (`args`) => `Promise`\<`GetEnsNameReturnType`\>;
+  `getCode`: (`args`) => `Promise`\<[`GetCodeReturnType`](https://viem.sh/docs/)\>;
+  `getContractEvents`: \<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetContractEventsReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
+  `getDelegation`: (`args`) => `Promise`\<[`GetDelegationReturnType`](https://viem.sh/docs/)\>;
+  `getEip712Domain`: (`args`) => `Promise`\<[`GetEip712DomainReturnType`](https://viem.sh/docs/)\>;
+  `getEnsAddress`: (`args`) => `Promise`\<[`GetEnsAddressReturnType`](https://viem.sh/docs/)\>;
+  `getEnsAvatar`: (`args`) => `Promise`\<[`GetEnsAvatarReturnType`](https://viem.sh/docs/)\>;
+  `getEnsName`: (`args`) => `Promise`\<[`GetEnsNameReturnType`](https://viem.sh/docs/)\>;
   `getEnsResolver`: (`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `getEnsText`: (`args`) => `Promise`\<`GetEnsTextReturnType`\>;
-  `getFeeHistory`: (`args`) => `Promise`\<`GetFeeHistoryReturnType`\>;
-  `getFilterChanges`: \<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetFilterChangesReturnType`\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
-  `getFilterLogs`: \<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetFilterLogsReturnType`\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
+  `getEnsText`: (`args`) => `Promise`\<[`GetEnsTextReturnType`](https://viem.sh/docs/)\>;
+  `getFeeHistory`: (`args`) => `Promise`\<[`GetFeeHistoryReturnType`](https://viem.sh/docs/)\>;
+  `getFilterChanges`: \<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetFilterChangesReturnType`](https://viem.sh/docs/)\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
+  `getFilterLogs`: \<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetFilterLogsReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
   `getGasPrice`: () => `Promise`\<`bigint`\>;
-  `getLogs`: \<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>(`args?`) => `Promise`\<`GetLogsReturnType`\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>\>;
-  `getProof`: (`args`) => `Promise`\<`GetProofReturnType`\>;
-  `getStorageAt`: (`args`) => `Promise`\<`GetStorageAtReturnType`\>;
+  `getLogs`: \<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>(`args?`) => `Promise`\<[`GetLogsReturnType`](https://viem.sh/docs/)\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>\>;
+  `getProof`: (`args`) => `Promise`\<[`GetProofReturnType`](https://viem.sh/docs/)\>;
+  `getStorageAt`: (`args`) => `Promise`\<[`GetStorageAtReturnType`](https://viem.sh/docs/)\>;
   `getTransaction`: \<`blockTag`\>(`args`) => `Promise`\<
      \| \{
      `accessList?`: `undefined`;
@@ -995,7 +995,7 @@ getIntentSwapsCancelOrder: (__namedParameters) => Promise<{
      `yParity?`: `undefined`;
    \}
      \| \{
-     `accessList`: `AccessList`;
+     `accessList`: [`AccessList`](https://viem.sh/docs/);
      `authorizationList?`: `undefined`;
      `blobVersionedHashes?`: `undefined`;
      `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -1021,7 +1021,7 @@ getIntentSwapsCancelOrder: (__namedParameters) => Promise<{
      `yParity`: `number`;
    \}
      \| \{
-     `accessList`: `AccessList`;
+     `accessList`: [`AccessList`](https://viem.sh/docs/);
      `authorizationList?`: `undefined`;
      `blobVersionedHashes?`: `undefined`;
      `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -1047,7 +1047,7 @@ getIntentSwapsCancelOrder: (__namedParameters) => Promise<{
      `yParity`: `number`;
    \}
      \| \{
-     `accessList`: `AccessList`;
+     `accessList`: [`AccessList`](https://viem.sh/docs/);
      `authorizationList?`: `undefined`;
      `blobVersionedHashes`: readonly `` `0x${string}` ``[];
      `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -1073,8 +1073,8 @@ getIntentSwapsCancelOrder: (__namedParameters) => Promise<{
      `yParity`: `number`;
    \}
      \| \{
-     `accessList`: `AccessList`;
-     `authorizationList`: `SignedAuthorizationList`;
+     `accessList`: [`AccessList`](https://viem.sh/docs/);
+     `authorizationList`: [`SignedAuthorizationList`](https://viem.sh/docs/);
      `blobVersionedHashes?`: `undefined`;
      `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
      `blockNumber`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `bigint`;
@@ -1100,21 +1100,21 @@ getIntentSwapsCancelOrder: (__namedParameters) => Promise<{
   \}\>;
   `getTransactionConfirmations`: (`args`) => `Promise`\<`bigint`\>;
   `getTransactionCount`: (`args`) => `Promise`\<`number`\>;
-  `getTransactionReceipt`: (`args`) => `Promise`\<`TransactionReceipt`\>;
+  `getTransactionReceipt`: (`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
   `key`: `string`;
-  `multicall`: \<`contracts`, `allowFailure`\>(`args`) => `Promise`\<`MulticallReturnType`\<`contracts`, `allowFailure`\>\>;
+  `multicall`: \<`contracts`, `allowFailure`\>(`args`) => `Promise`\<[`MulticallReturnType`](https://viem.sh/docs/)\<`contracts`, `allowFailure`\>\>;
   `name`: `string`;
   `pollingInterval`: `number`;
   `prepareTransactionRequest`: \<`request`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<\{ \[K in string \| number \| symbol\]: (UnionRequiredBy\<(...) & (...), ParameterTypeToParameters\<(...)\>\> & (unknown extends (...)\[(...)\] ? \{\} : Pick\<(...), (...)\>))\[K\] \}\>;
-  `readContract`: \<`abi`, `functionName`, `args`\>(`args`) => `Promise`\<`ReadContractReturnType`\<`abi`, `functionName`, `args`\>\>;
-  `request`: `EIP1193RequestFn`\<`PublicRpcSchema`\>;
+  `readContract`: \<`abi`, `functionName`, `args`\>(`args`) => `Promise`\<[`ReadContractReturnType`](https://viem.sh/docs/)\<`abi`, `functionName`, `args`\>\>;
+  `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<[`PublicRpcSchema`](https://viem.sh/docs/)\>;
   `sendRawTransaction`: (`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `sendRawTransactionSync`: (`args`) => `Promise`\<`TransactionReceipt`\>;
-  `simulate`: \<`calls`\>(`args`) => `Promise`\<`SimulateBlocksReturnType`\<`calls`\>\>;
-  `simulateBlocks`: \<`calls`\>(`args`) => `Promise`\<`SimulateBlocksReturnType`\<`calls`\>\>;
-  `simulateCalls`: \<`calls`\>(`args`) => `Promise`\<`SimulateCallsReturnType`\<`calls`\>\>;
-  `simulateContract`: \<`abi`, `functionName`, `args`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`SimulateContractReturnType`\<`abi`, `functionName`, `args`, `Chain` \| `undefined`, `Account` \| `undefined`, `chainOverride`, `accountOverride`\>\>;
-  `transport`: `TransportConfig`\<`string`, `EIP1193RequestFn`\> & `Record`\<`string`, `any`\>;
+  `sendRawTransactionSync`: (`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
+  `simulate`: \<`calls`\>(`args`) => `Promise`\<[`SimulateBlocksReturnType`](https://viem.sh/docs/)\<`calls`\>\>;
+  `simulateBlocks`: \<`calls`\>(`args`) => `Promise`\<[`SimulateBlocksReturnType`](https://viem.sh/docs/)\<`calls`\>\>;
+  `simulateCalls`: \<`calls`\>(`args`) => `Promise`\<[`SimulateCallsReturnType`](https://viem.sh/docs/)\<`calls`\>\>;
+  `simulateContract`: \<`abi`, `functionName`, `args`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`SimulateContractReturnType`](https://viem.sh/docs/)\<`abi`, `functionName`, `args`, [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, `chainOverride`, `accountOverride`\>\>;
+  `transport`: [`TransportConfig`](https://viem.sh/docs/)\<`string`, [`EIP1193RequestFn`](https://viem.sh/docs/)\> & `Record`\<`string`, `any`\>;
   `type`: `string`;
   `uid`: `string`;
   `uninstallFilter`: (`args`) => `Promise`\<`boolean`\>;
@@ -1122,12 +1122,12 @@ getIntentSwapsCancelOrder: (__namedParameters) => Promise<{
   `verifyMessage`: (`args`) => `Promise`\<`boolean`\>;
   `verifySiweMessage`: (`args`) => `Promise`\<`boolean`\>;
   `verifyTypedData`: (`args`) => `Promise`\<`boolean`\>;
-  `waitForTransactionReceipt`: (`args`) => `Promise`\<`TransactionReceipt`\>;
-  `watchBlockNumber`: (`args`) => `WatchBlockNumberReturnType`;
-  `watchBlocks`: \<`includeTransactions`, `blockTag`\>(`args`) => `WatchBlocksReturnType`;
-  `watchContractEvent`: \<`abi`, `eventName`, `strict`\>(`args`) => `WatchContractEventReturnType`;
-  `watchEvent`: \<`abiEvent`, `abiEvents`, `strict`\>(`args`) => `WatchEventReturnType`;
-  `watchPendingTransactions`: (`args`) => `WatchPendingTransactionsReturnType`;
+  `waitForTransactionReceipt`: (`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
+  `watchBlockNumber`: (`args`) => [`WatchBlockNumberReturnType`](https://viem.sh/docs/);
+  `watchBlocks`: \<`includeTransactions`, `blockTag`\>(`args`) => [`WatchBlocksReturnType`](https://viem.sh/docs/);
+  `watchContractEvent`: \<`abi`, `eventName`, `strict`\>(`args`) => [`WatchContractEventReturnType`](https://viem.sh/docs/);
+  `watchEvent`: \<`abiEvent`, `abiEvents`, `strict`\>(`args`) => [`WatchEventReturnType`](https://viem.sh/docs/);
+  `watchPendingTransactions`: (`args`) => [`WatchPendingTransactionsReturnType`](https://viem.sh/docs/);
 \}
 
 ###### publicClient.account
@@ -1168,7 +1168,7 @@ Time (in ms) that cached data will remain in memory.
 
 ###### publicClient.call
 
-(`parameters`) => `Promise`\<`CallReturnType`\>
+(`parameters`) => `Promise`\<[`CallReturnType`](https://viem.sh/docs/)\>
 
 Executes a new message call immediately without submitting a transaction to the network.
 
@@ -1203,14 +1203,14 @@ const data = await client.call({
 
 ###### publicClient.chain
 
-`Chain` \| `undefined`
+[`Chain`](https://viem.sh/docs/) \| `undefined`
 
 Chain for the client.
 
 ###### publicClient.createAccessList
 
 (`parameters`) => `Promise`\<\{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `gasUsed`: `bigint`;
 \}\>
 
@@ -1240,7 +1240,7 @@ const data = await client.createAccessList({
 
 () => `Promise`\<\{
   `id`: `` `0x${string}` ``;
-  `request`: `EIP1193RequestFn`\<readonly \[\{
+  `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<readonly \[\{
      `Method`: `"eth_getFilterChanges"`;
      `Parameters`: \[...\];
      `ReturnType`: ... \| ...;
@@ -1277,7 +1277,7 @@ const filter = await createBlockFilter(client)
 
 ###### publicClient.createContractEventFilter
 
-\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`CreateContractEventFilterReturnType`\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>\>
+\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`CreateContractEventFilterReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>\>
 
 Creates a Filter to retrieve event logs that can be used with [`getFilterChanges`](https://viem.sh/docs/actions/public/getFilterChanges) or [`getFilterLogs`](https://viem.sh/docs/actions/public/getFilterLogs).
 
@@ -1326,7 +1326,7 @@ const filter = await client.createEventFilter({
 
 () => `Promise`\<\{
   `id`: `` `0x${string}` ``;
-  `request`: `EIP1193RequestFn`\<readonly \[\{
+  `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<readonly \[\{
      `Method`: `"eth_getFilterChanges"`;
      `Parameters`: \[...\];
      `ReturnType`: ... \| ...;
@@ -1363,7 +1363,7 @@ const filter = await client.createPendingTransactionFilter()
 
 ###### publicClient.dataSuffix?
 
-`DataSuffix`
+[`DataSuffix`](https://viem.sh/docs/)
 
 Data suffix to append to transaction data.
 
@@ -1399,7 +1399,7 @@ const gas = await client.estimateContractGas({
 
 ###### publicClient.estimateFeesPerGas
 
-\<`chainOverride`, `type`\>(`args?`) => `Promise`\<`EstimateFeesPerGasReturnType`\<`type`\>\>
+\<`chainOverride`, `type`\>(`args?`) => `Promise`\<[`EstimateFeesPerGasReturnType`](https://viem.sh/docs/)\<`type`\>\>
 
 Returns an estimate for the fees per gas for a transaction to be included
 in the next block.
@@ -1471,17 +1471,17 @@ const maxPriorityFeePerGas = await client.estimateMaxPriorityFeePerGas()
 
 ###### publicClient.experimental_blockTag?
 
-`BlockTag`
+[`BlockTag`](https://viem.sh/docs/)
 
 Default block tag to use for RPC requests.
 
 ###### publicClient.extend
 
-\<`client`\>(`fn`) => `Client`\<`Transport`, `Chain` \| `undefined`, `undefined`, `PublicRpcSchema`, \{ \[K in string \| number \| symbol\]: client\[K\] \} & `PublicActions`\<`Transport`, `Chain` \| `undefined`\>\>
+\<`client`\>(`fn`) => [`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, `undefined`, [`PublicRpcSchema`](https://viem.sh/docs/), \{ \[K in string \| number \| symbol\]: client\[K\] \} & [`PublicActions`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`\>\>
 
 ###### publicClient.fillTransaction
 
-\<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`FillTransactionReturnType`\<`Chain` \| `undefined`, `chainOverride`\>\>
+\<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`FillTransactionReturnType`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, `chainOverride`\>\>
 
 Fills a transaction request with the necessary fields to be signed over.
 
@@ -1723,7 +1723,7 @@ const blobBaseFee = await client.getBlobBaseFee()
   \})[] : `` `0x${string}` ``[];
   `transactionsRoot`: `` `0x${string}` ``;
   `uncles`: `` `0x${string}` ``[];
-  `withdrawals?`: `Withdrawal`[];
+  `withdrawals?`: [`Withdrawal`](https://viem.sh/docs/)[];
   `withdrawalsRoot?`: `` `0x${string}` ``;
 \}\>
 
@@ -1798,7 +1798,7 @@ const count = await client.getBlockTransactionCount()
 
 ###### publicClient.getBytecode
 
-(`args`) => `Promise`\<`GetCodeReturnType`\>
+(`args`) => `Promise`\<[`GetCodeReturnType`](https://viem.sh/docs/)\>
 
 **Deprecated**
 
@@ -1829,7 +1829,7 @@ const chainId = await client.getChainId()
 
 ###### publicClient.getCode
 
-(`args`) => `Promise`\<`GetCodeReturnType`\>
+(`args`) => `Promise`\<[`GetCodeReturnType`](https://viem.sh/docs/)\>
 
 Retrieves the bytecode at an address.
 
@@ -1853,7 +1853,7 @@ const code = await client.getCode({
 
 ###### publicClient.getContractEvents
 
-\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetContractEventsReturnType`\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
+\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetContractEventsReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
 
 Returns a list of event logs emitted by a contract.
 
@@ -1880,7 +1880,7 @@ const logs = await client.getContractEvents(client, {
 
 ###### publicClient.getDelegation
 
-(`args`) => `Promise`\<`GetDelegationReturnType`\>
+(`args`) => `Promise`\<[`GetDelegationReturnType`](https://viem.sh/docs/)\>
 
 Returns the address that an account has delegated to via EIP-7702.
 
@@ -1903,7 +1903,7 @@ const delegation = await client.getDelegation({
 
 ###### publicClient.getEip712Domain
 
-(`args`) => `Promise`\<`GetEip712DomainReturnType`\>
+(`args`) => `Promise`\<[`GetEip712DomainReturnType`](https://viem.sh/docs/)\>
 
 Reads the EIP-712 domain from a contract, based on the ERC-5267 specification.
 
@@ -1935,7 +1935,7 @@ const domain = await client.getEip712Domain({
 
 ###### publicClient.getEnsAddress
 
-(`args`) => `Promise`\<`GetEnsAddressReturnType`\>
+(`args`) => `Promise`\<[`GetEnsAddressReturnType`](https://viem.sh/docs/)\>
 
 Gets address for ENS name.
 
@@ -1967,7 +1967,7 @@ const ensAddress = await client.getEnsAddress({
 
 ###### publicClient.getEnsAvatar
 
-(`args`) => `Promise`\<`GetEnsAvatarReturnType`\>
+(`args`) => `Promise`\<[`GetEnsAvatarReturnType`](https://viem.sh/docs/)\>
 
 Gets the avatar of an ENS name.
 
@@ -1999,7 +1999,7 @@ const ensAvatar = await client.getEnsAvatar({
 
 ###### publicClient.getEnsName
 
-(`args`) => `Promise`\<`GetEnsNameReturnType`\>
+(`args`) => `Promise`\<[`GetEnsNameReturnType`](https://viem.sh/docs/)\>
 
 Gets primary name for specified address.
 
@@ -2060,7 +2060,7 @@ const resolverAddress = await client.getEnsResolver({
 
 ###### publicClient.getEnsText
 
-(`args`) => `Promise`\<`GetEnsTextReturnType`\>
+(`args`) => `Promise`\<[`GetEnsTextReturnType`](https://viem.sh/docs/)\>
 
 Gets a text record for specified ENS name.
 
@@ -2093,7 +2093,7 @@ const twitterRecord = await client.getEnsText({
 
 ###### publicClient.getFeeHistory
 
-(`args`) => `Promise`\<`GetFeeHistoryReturnType`\>
+(`args`) => `Promise`\<[`GetFeeHistoryReturnType`](https://viem.sh/docs/)\>
 
 Returns a collection of historical gas information.
 
@@ -2118,7 +2118,7 @@ const feeHistory = await client.getFeeHistory({
 
 ###### publicClient.getFilterChanges
 
-\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetFilterChangesReturnType`\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
+\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetFilterChangesReturnType`](https://viem.sh/docs/)\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
 
 Returns a list of logs or hashes based on a [Filter](/docs/glossary/terms#filter) since the last time it was called.
 
@@ -2203,7 +2203,7 @@ const hashes = await client.getFilterChanges({ filter })
 
 ###### publicClient.getFilterLogs
 
-\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetFilterLogsReturnType`\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
+\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetFilterLogsReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
 
 Returns a list of event logs since the filter was created.
 
@@ -2255,7 +2255,7 @@ const gasPrice = await client.getGasPrice()
 
 ###### publicClient.getLogs
 
-\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>(`args?`) => `Promise`\<`GetLogsReturnType`\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>\>
+\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>(`args?`) => `Promise`\<[`GetLogsReturnType`](https://viem.sh/docs/)\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>\>
 
 Returns a list of event logs matching the provided parameters.
 
@@ -2278,7 +2278,7 @@ const logs = await client.getLogs()
 
 ###### publicClient.getProof
 
-(`args`) => `Promise`\<`GetProofReturnType`\>
+(`args`) => `Promise`\<[`GetProofReturnType`](https://viem.sh/docs/)\>
 
 Returns the account and storage values of the specified account including the Merkle-proof.
 
@@ -2304,7 +2304,7 @@ const block = await client.getProof({
 
 ###### publicClient.getStorageAt
 
-(`args`) => `Promise`\<`GetStorageAtReturnType`\>
+(`args`) => `Promise`\<[`GetStorageAtReturnType`](https://viem.sh/docs/)\>
 
 Returns the value from a storage slot at a given address.
 
@@ -2358,7 +2358,7 @@ const code = await client.getStorageAt({
   `yParity?`: `undefined`;
 \}
   \| \{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `authorizationList?`: `undefined`;
   `blobVersionedHashes?`: `undefined`;
   `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -2384,7 +2384,7 @@ const code = await client.getStorageAt({
   `yParity`: `number`;
 \}
   \| \{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `authorizationList?`: `undefined`;
   `blobVersionedHashes?`: `undefined`;
   `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -2410,7 +2410,7 @@ const code = await client.getStorageAt({
   `yParity`: `number`;
 \}
   \| \{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `authorizationList?`: `undefined`;
   `blobVersionedHashes`: readonly `` `0x${string}` ``[];
   `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -2436,8 +2436,8 @@ const code = await client.getStorageAt({
   `yParity`: `number`;
 \}
   \| \{
-  `accessList`: `AccessList`;
-  `authorizationList`: `SignedAuthorizationList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
+  `authorizationList`: [`SignedAuthorizationList`](https://viem.sh/docs/);
   `blobVersionedHashes?`: `undefined`;
   `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
   `blockNumber`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `bigint`;
@@ -2534,7 +2534,7 @@ const transactionCount = await client.getTransactionCount({
 
 ###### publicClient.getTransactionReceipt
 
-(`args`) => `Promise`\<`TransactionReceipt`\>
+(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Returns the [Transaction Receipt](https://viem.sh/docs/glossary/terms#transaction-receipt) given a [Transaction](https://viem.sh/docs/glossary/terms#transaction) hash.
 
@@ -2565,7 +2565,7 @@ A key for the client.
 
 ###### publicClient.multicall
 
-\<`contracts`, `allowFailure`\>(`args`) => `Promise`\<`MulticallReturnType`\<`contracts`, `allowFailure`\>\>
+\<`contracts`, `allowFailure`\>(`args`) => `Promise`\<[`MulticallReturnType`](https://viem.sh/docs/)\<`contracts`, `allowFailure`\>\>
 
 Similar to [`readContract`](https://viem.sh/docs/contract/readContract), but batches up multiple functions on a contract in a single RPC call via the [`multicall3` contract](https://github.com/mds1/multicall).
 
@@ -2659,7 +2659,7 @@ const request = await client.prepareTransactionRequest({
 
 ###### publicClient.readContract
 
-\<`abi`, `functionName`, `args`\>(`args`) => `Promise`\<`ReadContractReturnType`\<`abi`, `functionName`, `args`\>\>
+\<`abi`, `functionName`, `args`\>(`args`) => `Promise`\<[`ReadContractReturnType`](https://viem.sh/docs/)\<`abi`, `functionName`, `args`\>\>
 
 Calls a read-only function on a contract, and returns the response.
 
@@ -2694,7 +2694,7 @@ const result = await client.readContract({
 
 ###### publicClient.request
 
-`EIP1193RequestFn`\<`PublicRpcSchema`\>
+[`EIP1193RequestFn`](https://viem.sh/docs/)\<[`PublicRpcSchema`](https://viem.sh/docs/)\>
 
 Request function wrapped with friendly error handling
 
@@ -2726,7 +2726,7 @@ const hash = await client.sendRawTransaction({
 
 ###### publicClient.sendRawTransactionSync
 
-(`args`) => `Promise`\<`TransactionReceipt`\>
+(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Sends a **signed** transaction to the network
 
@@ -2752,7 +2752,7 @@ const receipt = await client.sendRawTransactionSync({
 
 ###### publicClient.simulate
 
-\<`calls`\>(`args`) => `Promise`\<`SimulateBlocksReturnType`\<`calls`\>\>
+\<`calls`\>(`args`) => `Promise`\<[`SimulateBlocksReturnType`](https://viem.sh/docs/)\<`calls`\>\>
 
 **Deprecated**
 
@@ -2760,7 +2760,7 @@ Use `simulateBlocks` instead.
 
 ###### publicClient.simulateBlocks
 
-\<`calls`\>(`args`) => `Promise`\<`SimulateBlocksReturnType`\<`calls`\>\>
+\<`calls`\>(`args`) => `Promise`\<[`SimulateBlocksReturnType`](https://viem.sh/docs/)\<`calls`\>\>
 
 Simulates a set of calls on block(s) with optional block and state overrides.
 
@@ -2802,7 +2802,7 @@ const result = await client.simulateBlocks({
 
 ###### publicClient.simulateCalls
 
-\<`calls`\>(`args`) => `Promise`\<`SimulateCallsReturnType`\<`calls`\>\>
+\<`calls`\>(`args`) => `Promise`\<[`SimulateCallsReturnType`](https://viem.sh/docs/)\<`calls`\>\>
 
 Simulates a set of calls.
 
@@ -2834,7 +2834,7 @@ const result = await client.simulateCalls({
 
 ###### publicClient.simulateContract
 
-\<`abi`, `functionName`, `args`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`SimulateContractReturnType`\<`abi`, `functionName`, `args`, `Chain` \| `undefined`, `Account` \| `undefined`, `chainOverride`, `accountOverride`\>\>
+\<`abi`, `functionName`, `args`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`SimulateContractReturnType`](https://viem.sh/docs/)\<`abi`, `functionName`, `args`, [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, `chainOverride`, `accountOverride`\>\>
 
 Simulates/validates a contract interaction. This is useful for retrieving **return data** and **revert reasons** of contract write functions.
 
@@ -2868,7 +2868,7 @@ const result = await client.simulateContract({
 
 ###### publicClient.transport
 
-`TransportConfig`\<`string`, `EIP1193RequestFn`\> & `Record`\<`string`, `any`\>
+[`TransportConfig`](https://viem.sh/docs/)\<`string`, [`EIP1193RequestFn`](https://viem.sh/docs/)\> & `Record`\<`string`, `any`\>
 
 The RPC transport
 
@@ -2947,7 +2947,7 @@ Verify that typed data was signed by the provided address.
 
 ###### publicClient.waitForTransactionReceipt
 
-(`args`) => `Promise`\<`TransactionReceipt`\>
+(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Waits for the [Transaction](https://viem.sh/docs/glossary/terms#transaction) to be included on a [Block](https://viem.sh/docs/glossary/terms#block) (one confirmation), and then returns the [Transaction Receipt](https://viem.sh/docs/glossary/terms#transaction-receipt). If the Transaction reverts, then the action will throw an error.
 
@@ -2989,7 +2989,7 @@ const transactionReceipt = await client.waitForTransactionReceipt({
 
 ###### publicClient.watchBlockNumber
 
-(`args`) => `WatchBlockNumberReturnType`
+(`args`) => [`WatchBlockNumberReturnType`](https://viem.sh/docs/)
 
 Watches and returns incoming block numbers.
 
@@ -3016,7 +3016,7 @@ const unwatch = await client.watchBlockNumber({
 
 ###### publicClient.watchBlocks
 
-\<`includeTransactions`, `blockTag`\>(`args`) => `WatchBlocksReturnType`
+\<`includeTransactions`, `blockTag`\>(`args`) => [`WatchBlocksReturnType`](https://viem.sh/docs/)
 
 Watches and returns information for incoming blocks.
 
@@ -3043,7 +3043,7 @@ const unwatch = await client.watchBlocks({
 
 ###### publicClient.watchContractEvent
 
-\<`abi`, `eventName`, `strict`\>(`args`) => `WatchContractEventReturnType`
+\<`abi`, `eventName`, `strict`\>(`args`) => [`WatchContractEventReturnType`](https://viem.sh/docs/)
 
 Watches and returns emitted contract event logs.
 
@@ -3076,7 +3076,7 @@ const unwatch = client.watchContractEvent({
 
 ###### publicClient.watchEvent
 
-\<`abiEvent`, `abiEvents`, `strict`\>(`args`) => `WatchEventReturnType`
+\<`abiEvent`, `abiEvents`, `strict`\>(`args`) => [`WatchEventReturnType`](https://viem.sh/docs/)
 
 Watches and returns emitted [Event Logs](https://viem.sh/docs/glossary/terms#event-log).
 
@@ -3111,7 +3111,7 @@ const unwatch = client.watchEvent({
 
 ###### publicClient.watchPendingTransactions
 
-(`args`) => `WatchPendingTransactionsReturnType`
+(`args`) => [`WatchPendingTransactionsReturnType`](https://viem.sh/docs/)
 
 Watches and returns pending transaction hashes.
 
@@ -3144,7 +3144,7 @@ const unwatch = await client.watchPendingTransactions({
 ###### walletClient
 
 \{
-  `account`: `Account` \| `undefined`;
+  `account`: [`Account`](https://viem.sh/docs/) \| `undefined`;
   `addChain`: (`args`) => `Promise`\<`void`\>;
   `batch?`: \{
      `multicall?`:   \| `boolean`
@@ -3159,13 +3159,13 @@ const unwatch = await client.watchPendingTransactions({
      \| \{
      `request?`: (`parameters`) => `Promise`\<`` `0x${string}` ``\>;
    \};
-  `chain`: `Chain` \| `undefined`;
-  `dataSuffix?`: `DataSuffix`;
+  `chain`: [`Chain`](https://viem.sh/docs/) \| `undefined`;
+  `dataSuffix?`: [`DataSuffix`](https://viem.sh/docs/);
   `deployContract`: \<`abi`, `chainOverride`\>(`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `experimental_blockTag?`: `BlockTag`;
-  `extend`: \<`client`\>(`fn`) => `Client`\<`Transport`, `Chain` \| `undefined`, `Account` \| `undefined`, `WalletRpcSchema`, \{ \[K in string \| number \| symbol\]: client\[K\] \} & `WalletActions`\<`Chain` \| `undefined`, `Account` \| `undefined`\>\>;
-  `fillTransaction`: \<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`FillTransactionReturnType`\<`Chain` \| `undefined`, `chainOverride`\>\>;
-  `getAddresses`: () => `Promise`\<`GetAddressesReturnType`\>;
+  `experimental_blockTag?`: [`BlockTag`](https://viem.sh/docs/);
+  `extend`: \<`client`\>(`fn`) => [`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, [`WalletRpcSchema`](https://viem.sh/docs/), \{ \[K in string \| number \| symbol\]: client\[K\] \} & [`WalletActions`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`\>\>;
+  `fillTransaction`: \<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`FillTransactionReturnType`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, `chainOverride`\>\>;
+  `getAddresses`: () => `Promise`\<[`GetAddressesReturnType`](https://viem.sh/docs/)\>;
   `getCallsStatus`: (`parameters`) => `Promise`\<\{
      `atomic`: `boolean`;
      `capabilities?`:   \| \{
@@ -3176,22 +3176,22 @@ const unwatch = await client.watchPendingTransactions({
       \};
      `chainId`: `number`;
      `id`: `string`;
-     `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+     `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
      `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
      `statusCode`: `number`;
      `version`: `string`;
   \}\>;
   `getCapabilities`: \<`chainId`\>(`parameters?`) => `Promise`\<\{ \[K in string \| number \| symbol\]: (chainId extends number ? \{ atomic?: (...) \| (...); paymasterService?: (...) \| (...); unstable\_addSubAccount?: (...) \| (...); \[key: string\]: any \} : ChainIdToCapabilities\<Capabilities\<(...)\>, number\>)\[K\] \}\>;
   `getChainId`: () => `Promise`\<`number`\>;
-  `getPermissions`: () => `Promise`\<`GetPermissionsReturnType`\>;
+  `getPermissions`: () => `Promise`\<[`GetPermissionsReturnType`](https://viem.sh/docs/)\>;
   `key`: `string`;
   `name`: `string`;
   `pollingInterval`: `number`;
-  `prepareAuthorization`: (`parameters`) => `Promise`\<`PrepareAuthorizationReturnType`\>;
+  `prepareAuthorization`: (`parameters`) => `Promise`\<[`PrepareAuthorizationReturnType`](https://viem.sh/docs/)\>;
   `prepareTransactionRequest`: \<`request`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<\{ \[K in string \| number \| symbol\]: (UnionRequiredBy\<(...) & (...), ParameterTypeToParameters\<(...)\>\> & (unknown extends (...)\[(...)\] ? \{\} : Pick\<(...), (...)\>))\[K\] \}\>;
-  `request`: `EIP1193RequestFn`\<`WalletRpcSchema`\>;
-  `requestAddresses`: () => `Promise`\<`RequestAddressesReturnType`\>;
-  `requestPermissions`: (`args`) => `Promise`\<`RequestPermissionsReturnType`\>;
+  `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<[`WalletRpcSchema`](https://viem.sh/docs/)\>;
+  `requestAddresses`: () => `Promise`\<[`RequestAddressesReturnType`](https://viem.sh/docs/)\>;
+  `requestPermissions`: (`args`) => `Promise`\<[`RequestPermissionsReturnType`](https://viem.sh/docs/)\>;
   `sendCalls`: \<`calls`, `chainOverride`\>(`parameters`) => `Promise`\<\{
      `capabilities?`: \{
       \[`key`: `string`\]: `any`;
@@ -3208,33 +3208,33 @@ const unwatch = await client.watchPendingTransactions({
       \};
      `chainId`: `number`;
      `id`: `string`;
-     `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+     `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
      `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
      `statusCode`: `number`;
      `version`: `string`;
   \}\>;
   `sendRawTransaction`: (`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `sendRawTransactionSync`: (`args`) => `Promise`\<`TransactionReceipt`\>;
+  `sendRawTransactionSync`: (`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
   `sendTransaction`: \<`request`, `chainOverride`\>(`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `sendTransactionSync`: \<`request`, `chainOverride`\>(`args`) => `Promise`\<`TransactionReceipt`\>;
+  `sendTransactionSync`: \<`request`, `chainOverride`\>(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
   `showCallsStatus`: (`parameters`) => `Promise`\<`void`\>;
-  `signAuthorization`: (`parameters`) => `Promise`\<`SignAuthorizationReturnType`\>;
+  `signAuthorization`: (`parameters`) => `Promise`\<[`SignAuthorizationReturnType`](https://viem.sh/docs/)\>;
   `signMessage`: (`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `signTransaction`: \<`chainOverride`, `request`\>(`args`) => `Promise`\<`TransactionSerialized`\<`GetTransactionType`\<`request`, 
-     \| `request` *extends* `LegacyProperties` ? `"legacy"` : `never`
-     \| `request` *extends* `EIP1559Properties` ? `"eip1559"` : `never`
-     \| `request` *extends* `EIP2930Properties` ? `"eip2930"` : `never`
-     \| `request` *extends* `EIP4844Properties` ? `"eip4844"` : `never`
-     \| `request` *extends* `EIP7702Properties` ? `"eip7702"` : `never`
+  `signTransaction`: \<`chainOverride`, `request`\>(`args`) => `Promise`\<[`TransactionSerialized`](https://viem.sh/docs/)\<[`GetTransactionType`](https://viem.sh/docs/)\<`request`, 
+     \| `request` *extends* [`LegacyProperties`](https://viem.sh/docs/) ? `"legacy"` : `never`
+     \| `request` *extends* [`EIP1559Properties`](https://viem.sh/docs/) ? `"eip1559"` : `never`
+     \| `request` *extends* [`EIP2930Properties`](https://viem.sh/docs/) ? `"eip2930"` : `never`
+     \| `request` *extends* [`EIP4844Properties`](https://viem.sh/docs/) ? `"eip4844"` : `never`
+     \| `request` *extends* [`EIP7702Properties`](https://viem.sh/docs/) ? `"eip7702"` : `never`
      \| ...\[...\] *extends* ... \| ... ? `Extract`\<..., ...\> : `never`\>, 
-     \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip1559"` ? `` `0x02${string}` `` : `never`
-     \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip2930"` ? `` `0x01${string}` `` : `never`
-     \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip4844"` ? `` `0x03${string}` `` : `never`
-     \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip7702"` ? `` `0x04${string}` `` : `never`
-    \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"legacy"` ? `TransactionSerializedLegacy` : `never`\>\>;
+     \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip1559"` ? `` `0x02${string}` `` : `never`
+     \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip2930"` ? `` `0x01${string}` `` : `never`
+     \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip4844"` ? `` `0x03${string}` `` : `never`
+     \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip7702"` ? `` `0x04${string}` `` : `never`
+    \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"legacy"` ? [`TransactionSerializedLegacy`](https://viem.sh/docs/) : `never`\>\>;
   `signTypedData`: \<`typedData`, `primaryType`\>(`args`) => `Promise`\<`` `0x${string}` ``\>;
   `switchChain`: (`args`) => `Promise`\<`void`\>;
-  `transport`: `TransportConfig`\<`string`, `EIP1193RequestFn`\> & `Record`\<`string`, `any`\>;
+  `transport`: [`TransportConfig`](https://viem.sh/docs/)\<`string`, [`EIP1193RequestFn`](https://viem.sh/docs/)\> & `Record`\<`string`, `any`\>;
   `type`: `string`;
   `uid`: `string`;
   `waitForCallsStatus`: (`parameters`) => `Promise`\<\{
@@ -3247,19 +3247,19 @@ const unwatch = await client.watchPendingTransactions({
       \};
      `chainId`: `number`;
      `id`: `string`;
-     `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+     `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
      `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
      `statusCode`: `number`;
      `version`: `string`;
   \}\>;
   `watchAsset`: (`args`) => `Promise`\<`boolean`\>;
   `writeContract`: \<`abi`, `functionName`, `args`, `chainOverride`\>(`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `writeContractSync`: \<`abi`, `functionName`, `args`, `chainOverride`\>(`args`) => `Promise`\<`TransactionReceipt`\>;
+  `writeContractSync`: \<`abi`, `functionName`, `args`, `chainOverride`\>(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
 \}
 
 ###### walletClient.account
 
-`Account` \| `undefined`
+[`Account`](https://viem.sh/docs/) \| `undefined`
 
 The Account of the Client.
 
@@ -3325,13 +3325,13 @@ Time (in ms) that cached data will remain in memory.
 
 ###### walletClient.chain
 
-`Chain` \| `undefined`
+[`Chain`](https://viem.sh/docs/) \| `undefined`
 
 Chain for the client.
 
 ###### walletClient.dataSuffix?
 
-`DataSuffix`
+[`DataSuffix`](https://viem.sh/docs/)
 
 Data suffix to append to transaction data.
 
@@ -3365,17 +3365,17 @@ const hash = await client.deployContract({
 
 ###### walletClient.experimental_blockTag?
 
-`BlockTag`
+[`BlockTag`](https://viem.sh/docs/)
 
 Default block tag to use for RPC requests.
 
 ###### walletClient.extend
 
-\<`client`\>(`fn`) => `Client`\<`Transport`, `Chain` \| `undefined`, `Account` \| `undefined`, `WalletRpcSchema`, \{ \[K in string \| number \| symbol\]: client\[K\] \} & `WalletActions`\<`Chain` \| `undefined`, `Account` \| `undefined`\>\>
+\<`client`\>(`fn`) => [`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, [`WalletRpcSchema`](https://viem.sh/docs/), \{ \[K in string \| number \| symbol\]: client\[K\] \} & [`WalletActions`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`\>\>
 
 ###### walletClient.fillTransaction
 
-\<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`FillTransactionReturnType`\<`Chain` \| `undefined`, `chainOverride`\>\>
+\<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`FillTransactionReturnType`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, `chainOverride`\>\>
 
 Fills a transaction request with the necessary fields to be signed over.
 
@@ -3400,7 +3400,7 @@ const result = await client.fillTransaction({
 
 ###### walletClient.getAddresses
 
-() => `Promise`\<`GetAddressesReturnType`\>
+() => `Promise`\<[`GetAddressesReturnType`](https://viem.sh/docs/)\>
 
 Returns a list of account addresses owned by the wallet or client.
 
@@ -3432,7 +3432,7 @@ const accounts = await client.getAddresses()
    \};
   `chainId`: `number`;
   `id`: `string`;
-  `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+  `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
   `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
   `statusCode`: `number`;
   `version`: `string`;
@@ -3507,7 +3507,7 @@ const chainId = await client.getChainId()
 
 ###### walletClient.getPermissions
 
-() => `Promise`\<`GetPermissionsReturnType`\>
+() => `Promise`\<[`GetPermissionsReturnType`](https://viem.sh/docs/)\>
 
 Gets the wallets current permissions.
 
@@ -3547,7 +3547,7 @@ Frequency (in ms) for polling enabled actions & events. Defaults to 4_000 millis
 
 ###### walletClient.prepareAuthorization
 
-(`parameters`) => `Promise`\<`PrepareAuthorizationReturnType`\>
+(`parameters`) => `Promise`\<[`PrepareAuthorizationReturnType`](https://viem.sh/docs/)\>
 
 Prepares an [EIP-7702 Authorization](https://eips.ethereum.org/EIPS/eip-7702) object for signing.
 This Action will fill the required fields of the Authorization object if they are not provided (e.g. `nonce` and `chainId`).
@@ -3633,13 +3633,13 @@ const request = await client.prepareTransactionRequest({
 
 ###### walletClient.request
 
-`EIP1193RequestFn`\<`WalletRpcSchema`\>
+[`EIP1193RequestFn`](https://viem.sh/docs/)\<[`WalletRpcSchema`](https://viem.sh/docs/)\>
 
 Request function wrapped with friendly error handling
 
 ###### walletClient.requestAddresses
 
-() => `Promise`\<`RequestAddressesReturnType`\>
+() => `Promise`\<[`RequestAddressesReturnType`](https://viem.sh/docs/)\>
 
 Requests a list of accounts managed by a wallet.
 
@@ -3665,7 +3665,7 @@ const accounts = await client.requestAddresses()
 
 ###### walletClient.requestPermissions
 
-(`args`) => `Promise`\<`RequestPermissionsReturnType`\>
+(`args`) => `Promise`\<[`RequestPermissionsReturnType`](https://viem.sh/docs/)\>
 
 Requests permissions for a wallet.
 
@@ -3739,7 +3739,7 @@ const id = await client.sendCalls({
    \};
   `chainId`: `number`;
   `id`: `string`;
-  `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+  `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
   `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
   `statusCode`: `number`;
   `version`: `string`;
@@ -3804,7 +3804,7 @@ const hash = await client.sendRawTransaction({
 
 ###### walletClient.sendRawTransactionSync
 
-(`args`) => `Promise`\<`TransactionReceipt`\>
+(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Sends a **signed** transaction to the network synchronously,
 and waits for the transaction to be included in a block.
@@ -3877,7 +3877,7 @@ const hash = await client.sendTransaction({
 
 ###### walletClient.sendTransactionSync
 
-\<`request`, `chainOverride`\>(`args`) => `Promise`\<`TransactionReceipt`\>
+\<`request`, `chainOverride`\>(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Creates, signs, and sends a new transaction to the network synchronously.
 Returns the transaction receipt.
@@ -3948,7 +3948,7 @@ await client.showCallsStatus({ id: '0xdeadbeef' })
 
 ###### walletClient.signAuthorization
 
-(`parameters`) => `Promise`\<`SignAuthorizationReturnType`\>
+(`parameters`) => `Promise`\<[`SignAuthorizationReturnType`](https://viem.sh/docs/)\>
 
 Signs an [EIP-7702 Authorization](https://eips.ethereum.org/EIPS/eip-7702) object.
 
@@ -4040,18 +4040,18 @@ const signature = await client.signMessage({
 
 ###### walletClient.signTransaction
 
-\<`chainOverride`, `request`\>(`args`) => `Promise`\<`TransactionSerialized`\<`GetTransactionType`\<`request`, 
-  \| `request` *extends* `LegacyProperties` ? `"legacy"` : `never`
-  \| `request` *extends* `EIP1559Properties` ? `"eip1559"` : `never`
-  \| `request` *extends* `EIP2930Properties` ? `"eip2930"` : `never`
-  \| `request` *extends* `EIP4844Properties` ? `"eip4844"` : `never`
-  \| `request` *extends* `EIP7702Properties` ? `"eip7702"` : `never`
+\<`chainOverride`, `request`\>(`args`) => `Promise`\<[`TransactionSerialized`](https://viem.sh/docs/)\<[`GetTransactionType`](https://viem.sh/docs/)\<`request`, 
+  \| `request` *extends* [`LegacyProperties`](https://viem.sh/docs/) ? `"legacy"` : `never`
+  \| `request` *extends* [`EIP1559Properties`](https://viem.sh/docs/) ? `"eip1559"` : `never`
+  \| `request` *extends* [`EIP2930Properties`](https://viem.sh/docs/) ? `"eip2930"` : `never`
+  \| `request` *extends* [`EIP4844Properties`](https://viem.sh/docs/) ? `"eip4844"` : `never`
+  \| `request` *extends* [`EIP7702Properties`](https://viem.sh/docs/) ? `"eip7702"` : `never`
   \| ...\[...\] *extends* ... \| ... ? `Extract`\<..., ...\> : `never`\>, 
-  \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip1559"` ? `` `0x02${string}` `` : `never`
-  \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip2930"` ? `` `0x01${string}` `` : `never`
-  \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip4844"` ? `` `0x03${string}` `` : `never`
-  \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip7702"` ? `` `0x04${string}` `` : `never`
-  \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"legacy"` ? `TransactionSerializedLegacy` : `never`\>\>
+  \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip1559"` ? `` `0x02${string}` `` : `never`
+  \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip2930"` ? `` `0x01${string}` `` : `never`
+  \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip4844"` ? `` `0x03${string}` `` : `never`
+  \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip7702"` ? `` `0x04${string}` `` : `never`
+  \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"legacy"` ? [`TransactionSerializedLegacy`](https://viem.sh/docs/) : `never`\>\>
 
 Signs a transaction.
 
@@ -4219,7 +4219,7 @@ await client.switchChain({ id: optimism.id })
 
 ###### walletClient.transport
 
-`TransportConfig`\<`string`, `EIP1193RequestFn`\> & `Record`\<`string`, `any`\>
+[`TransportConfig`](https://viem.sh/docs/)\<`string`, [`EIP1193RequestFn`](https://viem.sh/docs/)\> & `Record`\<`string`, `any`\>
 
 The RPC transport
 
@@ -4247,7 +4247,7 @@ A unique ID for the client.
    \};
   `chainId`: `number`;
   `id`: `string`;
-  `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+  `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
   `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
   `statusCode`: `number`;
   `version`: `string`;
@@ -4354,7 +4354,7 @@ const hash = await client.writeContract(request)
 
 ###### walletClient.writeContractSync
 
-\<`abi`, `functionName`, `args`, `chainOverride`\>(`args`) => `Promise`\<`TransactionReceipt`\>
+\<`abi`, `functionName`, `args`, `chainOverride`\>(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Executes a write function on a contract synchronously.
 Returns the transaction receipt.
@@ -4587,19 +4587,19 @@ getIntentSwapsSendDepositOrder: (__namedParameters) => Promise<{
       \};
   \};
   `cacheTime`: `number`;
-  `call`: (`parameters`) => `Promise`\<`CallReturnType`\>;
+  `call`: (`parameters`) => `Promise`\<[`CallReturnType`](https://viem.sh/docs/)\>;
   `ccipRead?`:   \| `false`
      \| \{
      `request?`: (`parameters`) => `Promise`\<`` `0x${string}` ``\>;
    \};
-  `chain`: `Chain` \| `undefined`;
+  `chain`: [`Chain`](https://viem.sh/docs/) \| `undefined`;
   `createAccessList`: (`parameters`) => `Promise`\<\{
-     `accessList`: `AccessList`;
+     `accessList`: [`AccessList`](https://viem.sh/docs/);
      `gasUsed`: `bigint`;
   \}\>;
   `createBlockFilter`: () => `Promise`\<\{
      `id`: `` `0x${string}` ``;
-     `request`: `EIP1193RequestFn`\<readonly \[\{
+     `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<readonly \[\{
         `Method`: `"eth_getFilterChanges"`;
         `Parameters`: \[...\];
         `ReturnType`: ... \| ...;
@@ -4614,11 +4614,11 @@ getIntentSwapsSendDepositOrder: (__namedParameters) => Promise<{
      \}\]\>;
      `type`: `"block"`;
   \}\>;
-  `createContractEventFilter`: \<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`CreateContractEventFilterReturnType`\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>\>;
+  `createContractEventFilter`: \<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`CreateContractEventFilterReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>\>;
   `createEventFilter`: \<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`, `_EventName`, `_Args`\>(`args?`) => `Promise`\<\{ \[K in string \| number \| symbol\]: Filter\<"event", abiEvents, \_EventName, \_Args, strict, fromBlock, toBlock\>\[K\] \}\>;
   `createPendingTransactionFilter`: () => `Promise`\<\{
      `id`: `` `0x${string}` ``;
-     `request`: `EIP1193RequestFn`\<readonly \[\{
+     `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<readonly \[\{
         `Method`: `"eth_getFilterChanges"`;
         `Parameters`: \[...\];
         `ReturnType`: ... \| ...;
@@ -4633,14 +4633,14 @@ getIntentSwapsSendDepositOrder: (__namedParameters) => Promise<{
      \}\]\>;
      `type`: `"transaction"`;
   \}\>;
-  `dataSuffix?`: `DataSuffix`;
+  `dataSuffix?`: [`DataSuffix`](https://viem.sh/docs/);
   `estimateContractGas`: \<`chain`, `abi`, `functionName`, `args`\>(`args`) => `Promise`\<`bigint`\>;
-  `estimateFeesPerGas`: \<`chainOverride`, `type`\>(`args?`) => `Promise`\<`EstimateFeesPerGasReturnType`\<`type`\>\>;
+  `estimateFeesPerGas`: \<`chainOverride`, `type`\>(`args?`) => `Promise`\<[`EstimateFeesPerGasReturnType`](https://viem.sh/docs/)\<`type`\>\>;
   `estimateGas`: (`args`) => `Promise`\<`bigint`\>;
   `estimateMaxPriorityFeePerGas`: \<`chainOverride`\>(`args?`) => `Promise`\<`bigint`\>;
-  `experimental_blockTag?`: `BlockTag`;
-  `extend`: \<`client`\>(`fn`) => `Client`\<`Transport`, `Chain` \| `undefined`, `undefined`, `PublicRpcSchema`, \{ \[K in string \| number \| symbol\]: client\[K\] \} & `PublicActions`\<`Transport`, `Chain` \| `undefined`\>\>;
-  `fillTransaction`: \<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`FillTransactionReturnType`\<`Chain` \| `undefined`, `chainOverride`\>\>;
+  `experimental_blockTag?`: [`BlockTag`](https://viem.sh/docs/);
+  `extend`: \<`client`\>(`fn`) => [`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, `undefined`, [`PublicRpcSchema`](https://viem.sh/docs/), \{ \[K in string \| number \| symbol\]: client\[K\] \} & [`PublicActions`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`\>\>;
+  `fillTransaction`: \<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`FillTransactionReturnType`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, `chainOverride`\>\>;
   `getBalance`: (`args`) => `Promise`\<`bigint`\>;
   `getBlobBaseFee`: () => `Promise`\<`bigint`\>;
   `getBlock`: \<`includeTransactions`, `blockTag`\>(`args?`) => `Promise`\<\{
@@ -4799,29 +4799,29 @@ getIntentSwapsSendDepositOrder: (__namedParameters) => Promise<{
      \})[] : `` `0x${string}` ``[];
      `transactionsRoot`: `` `0x${string}` ``;
      `uncles`: `` `0x${string}` ``[];
-     `withdrawals?`: `Withdrawal`[];
+     `withdrawals?`: [`Withdrawal`](https://viem.sh/docs/)[];
      `withdrawalsRoot?`: `` `0x${string}` ``;
   \}\>;
   `getBlockNumber`: (`args?`) => `Promise`\<`bigint`\>;
   `getBlockTransactionCount`: (`args?`) => `Promise`\<`number`\>;
-  `getBytecode`: (`args`) => `Promise`\<`GetCodeReturnType`\>;
+  `getBytecode`: (`args`) => `Promise`\<[`GetCodeReturnType`](https://viem.sh/docs/)\>;
   `getChainId`: () => `Promise`\<`number`\>;
-  `getCode`: (`args`) => `Promise`\<`GetCodeReturnType`\>;
-  `getContractEvents`: \<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetContractEventsReturnType`\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
-  `getDelegation`: (`args`) => `Promise`\<`GetDelegationReturnType`\>;
-  `getEip712Domain`: (`args`) => `Promise`\<`GetEip712DomainReturnType`\>;
-  `getEnsAddress`: (`args`) => `Promise`\<`GetEnsAddressReturnType`\>;
-  `getEnsAvatar`: (`args`) => `Promise`\<`GetEnsAvatarReturnType`\>;
-  `getEnsName`: (`args`) => `Promise`\<`GetEnsNameReturnType`\>;
+  `getCode`: (`args`) => `Promise`\<[`GetCodeReturnType`](https://viem.sh/docs/)\>;
+  `getContractEvents`: \<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetContractEventsReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
+  `getDelegation`: (`args`) => `Promise`\<[`GetDelegationReturnType`](https://viem.sh/docs/)\>;
+  `getEip712Domain`: (`args`) => `Promise`\<[`GetEip712DomainReturnType`](https://viem.sh/docs/)\>;
+  `getEnsAddress`: (`args`) => `Promise`\<[`GetEnsAddressReturnType`](https://viem.sh/docs/)\>;
+  `getEnsAvatar`: (`args`) => `Promise`\<[`GetEnsAvatarReturnType`](https://viem.sh/docs/)\>;
+  `getEnsName`: (`args`) => `Promise`\<[`GetEnsNameReturnType`](https://viem.sh/docs/)\>;
   `getEnsResolver`: (`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `getEnsText`: (`args`) => `Promise`\<`GetEnsTextReturnType`\>;
-  `getFeeHistory`: (`args`) => `Promise`\<`GetFeeHistoryReturnType`\>;
-  `getFilterChanges`: \<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetFilterChangesReturnType`\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
-  `getFilterLogs`: \<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetFilterLogsReturnType`\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
+  `getEnsText`: (`args`) => `Promise`\<[`GetEnsTextReturnType`](https://viem.sh/docs/)\>;
+  `getFeeHistory`: (`args`) => `Promise`\<[`GetFeeHistoryReturnType`](https://viem.sh/docs/)\>;
+  `getFilterChanges`: \<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetFilterChangesReturnType`](https://viem.sh/docs/)\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
+  `getFilterLogs`: \<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetFilterLogsReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>;
   `getGasPrice`: () => `Promise`\<`bigint`\>;
-  `getLogs`: \<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>(`args?`) => `Promise`\<`GetLogsReturnType`\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>\>;
-  `getProof`: (`args`) => `Promise`\<`GetProofReturnType`\>;
-  `getStorageAt`: (`args`) => `Promise`\<`GetStorageAtReturnType`\>;
+  `getLogs`: \<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>(`args?`) => `Promise`\<[`GetLogsReturnType`](https://viem.sh/docs/)\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>\>;
+  `getProof`: (`args`) => `Promise`\<[`GetProofReturnType`](https://viem.sh/docs/)\>;
+  `getStorageAt`: (`args`) => `Promise`\<[`GetStorageAtReturnType`](https://viem.sh/docs/)\>;
   `getTransaction`: \<`blockTag`\>(`args`) => `Promise`\<
      \| \{
      `accessList?`: `undefined`;
@@ -4850,7 +4850,7 @@ getIntentSwapsSendDepositOrder: (__namedParameters) => Promise<{
      `yParity?`: `undefined`;
    \}
      \| \{
-     `accessList`: `AccessList`;
+     `accessList`: [`AccessList`](https://viem.sh/docs/);
      `authorizationList?`: `undefined`;
      `blobVersionedHashes?`: `undefined`;
      `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -4876,7 +4876,7 @@ getIntentSwapsSendDepositOrder: (__namedParameters) => Promise<{
      `yParity`: `number`;
    \}
      \| \{
-     `accessList`: `AccessList`;
+     `accessList`: [`AccessList`](https://viem.sh/docs/);
      `authorizationList?`: `undefined`;
      `blobVersionedHashes?`: `undefined`;
      `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -4902,7 +4902,7 @@ getIntentSwapsSendDepositOrder: (__namedParameters) => Promise<{
      `yParity`: `number`;
    \}
      \| \{
-     `accessList`: `AccessList`;
+     `accessList`: [`AccessList`](https://viem.sh/docs/);
      `authorizationList?`: `undefined`;
      `blobVersionedHashes`: readonly `` `0x${string}` ``[];
      `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -4928,8 +4928,8 @@ getIntentSwapsSendDepositOrder: (__namedParameters) => Promise<{
      `yParity`: `number`;
    \}
      \| \{
-     `accessList`: `AccessList`;
-     `authorizationList`: `SignedAuthorizationList`;
+     `accessList`: [`AccessList`](https://viem.sh/docs/);
+     `authorizationList`: [`SignedAuthorizationList`](https://viem.sh/docs/);
      `blobVersionedHashes?`: `undefined`;
      `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
      `blockNumber`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `bigint`;
@@ -4955,21 +4955,21 @@ getIntentSwapsSendDepositOrder: (__namedParameters) => Promise<{
   \}\>;
   `getTransactionConfirmations`: (`args`) => `Promise`\<`bigint`\>;
   `getTransactionCount`: (`args`) => `Promise`\<`number`\>;
-  `getTransactionReceipt`: (`args`) => `Promise`\<`TransactionReceipt`\>;
+  `getTransactionReceipt`: (`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
   `key`: `string`;
-  `multicall`: \<`contracts`, `allowFailure`\>(`args`) => `Promise`\<`MulticallReturnType`\<`contracts`, `allowFailure`\>\>;
+  `multicall`: \<`contracts`, `allowFailure`\>(`args`) => `Promise`\<[`MulticallReturnType`](https://viem.sh/docs/)\<`contracts`, `allowFailure`\>\>;
   `name`: `string`;
   `pollingInterval`: `number`;
   `prepareTransactionRequest`: \<`request`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<\{ \[K in string \| number \| symbol\]: (UnionRequiredBy\<(...) & (...), ParameterTypeToParameters\<(...)\>\> & (unknown extends (...)\[(...)\] ? \{\} : Pick\<(...), (...)\>))\[K\] \}\>;
-  `readContract`: \<`abi`, `functionName`, `args`\>(`args`) => `Promise`\<`ReadContractReturnType`\<`abi`, `functionName`, `args`\>\>;
-  `request`: `EIP1193RequestFn`\<`PublicRpcSchema`\>;
+  `readContract`: \<`abi`, `functionName`, `args`\>(`args`) => `Promise`\<[`ReadContractReturnType`](https://viem.sh/docs/)\<`abi`, `functionName`, `args`\>\>;
+  `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<[`PublicRpcSchema`](https://viem.sh/docs/)\>;
   `sendRawTransaction`: (`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `sendRawTransactionSync`: (`args`) => `Promise`\<`TransactionReceipt`\>;
-  `simulate`: \<`calls`\>(`args`) => `Promise`\<`SimulateBlocksReturnType`\<`calls`\>\>;
-  `simulateBlocks`: \<`calls`\>(`args`) => `Promise`\<`SimulateBlocksReturnType`\<`calls`\>\>;
-  `simulateCalls`: \<`calls`\>(`args`) => `Promise`\<`SimulateCallsReturnType`\<`calls`\>\>;
-  `simulateContract`: \<`abi`, `functionName`, `args`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`SimulateContractReturnType`\<`abi`, `functionName`, `args`, `Chain` \| `undefined`, `Account` \| `undefined`, `chainOverride`, `accountOverride`\>\>;
-  `transport`: `TransportConfig`\<`string`, `EIP1193RequestFn`\> & `Record`\<`string`, `any`\>;
+  `sendRawTransactionSync`: (`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
+  `simulate`: \<`calls`\>(`args`) => `Promise`\<[`SimulateBlocksReturnType`](https://viem.sh/docs/)\<`calls`\>\>;
+  `simulateBlocks`: \<`calls`\>(`args`) => `Promise`\<[`SimulateBlocksReturnType`](https://viem.sh/docs/)\<`calls`\>\>;
+  `simulateCalls`: \<`calls`\>(`args`) => `Promise`\<[`SimulateCallsReturnType`](https://viem.sh/docs/)\<`calls`\>\>;
+  `simulateContract`: \<`abi`, `functionName`, `args`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`SimulateContractReturnType`](https://viem.sh/docs/)\<`abi`, `functionName`, `args`, [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, `chainOverride`, `accountOverride`\>\>;
+  `transport`: [`TransportConfig`](https://viem.sh/docs/)\<`string`, [`EIP1193RequestFn`](https://viem.sh/docs/)\> & `Record`\<`string`, `any`\>;
   `type`: `string`;
   `uid`: `string`;
   `uninstallFilter`: (`args`) => `Promise`\<`boolean`\>;
@@ -4977,12 +4977,12 @@ getIntentSwapsSendDepositOrder: (__namedParameters) => Promise<{
   `verifyMessage`: (`args`) => `Promise`\<`boolean`\>;
   `verifySiweMessage`: (`args`) => `Promise`\<`boolean`\>;
   `verifyTypedData`: (`args`) => `Promise`\<`boolean`\>;
-  `waitForTransactionReceipt`: (`args`) => `Promise`\<`TransactionReceipt`\>;
-  `watchBlockNumber`: (`args`) => `WatchBlockNumberReturnType`;
-  `watchBlocks`: \<`includeTransactions`, `blockTag`\>(`args`) => `WatchBlocksReturnType`;
-  `watchContractEvent`: \<`abi`, `eventName`, `strict`\>(`args`) => `WatchContractEventReturnType`;
-  `watchEvent`: \<`abiEvent`, `abiEvents`, `strict`\>(`args`) => `WatchEventReturnType`;
-  `watchPendingTransactions`: (`args`) => `WatchPendingTransactionsReturnType`;
+  `waitForTransactionReceipt`: (`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
+  `watchBlockNumber`: (`args`) => [`WatchBlockNumberReturnType`](https://viem.sh/docs/);
+  `watchBlocks`: \<`includeTransactions`, `blockTag`\>(`args`) => [`WatchBlocksReturnType`](https://viem.sh/docs/);
+  `watchContractEvent`: \<`abi`, `eventName`, `strict`\>(`args`) => [`WatchContractEventReturnType`](https://viem.sh/docs/);
+  `watchEvent`: \<`abiEvent`, `abiEvents`, `strict`\>(`args`) => [`WatchEventReturnType`](https://viem.sh/docs/);
+  `watchPendingTransactions`: (`args`) => [`WatchPendingTransactionsReturnType`](https://viem.sh/docs/);
 \}
 
 ###### publicClient.account
@@ -5023,7 +5023,7 @@ Time (in ms) that cached data will remain in memory.
 
 ###### publicClient.call
 
-(`parameters`) => `Promise`\<`CallReturnType`\>
+(`parameters`) => `Promise`\<[`CallReturnType`](https://viem.sh/docs/)\>
 
 Executes a new message call immediately without submitting a transaction to the network.
 
@@ -5058,14 +5058,14 @@ const data = await client.call({
 
 ###### publicClient.chain
 
-`Chain` \| `undefined`
+[`Chain`](https://viem.sh/docs/) \| `undefined`
 
 Chain for the client.
 
 ###### publicClient.createAccessList
 
 (`parameters`) => `Promise`\<\{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `gasUsed`: `bigint`;
 \}\>
 
@@ -5095,7 +5095,7 @@ const data = await client.createAccessList({
 
 () => `Promise`\<\{
   `id`: `` `0x${string}` ``;
-  `request`: `EIP1193RequestFn`\<readonly \[\{
+  `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<readonly \[\{
      `Method`: `"eth_getFilterChanges"`;
      `Parameters`: \[...\];
      `ReturnType`: ... \| ...;
@@ -5132,7 +5132,7 @@ const filter = await createBlockFilter(client)
 
 ###### publicClient.createContractEventFilter
 
-\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`CreateContractEventFilterReturnType`\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>\>
+\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`CreateContractEventFilterReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `args`, `strict`, `fromBlock`, `toBlock`\>\>
 
 Creates a Filter to retrieve event logs that can be used with [`getFilterChanges`](https://viem.sh/docs/actions/public/getFilterChanges) or [`getFilterLogs`](https://viem.sh/docs/actions/public/getFilterLogs).
 
@@ -5181,7 +5181,7 @@ const filter = await client.createEventFilter({
 
 () => `Promise`\<\{
   `id`: `` `0x${string}` ``;
-  `request`: `EIP1193RequestFn`\<readonly \[\{
+  `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<readonly \[\{
      `Method`: `"eth_getFilterChanges"`;
      `Parameters`: \[...\];
      `ReturnType`: ... \| ...;
@@ -5218,7 +5218,7 @@ const filter = await client.createPendingTransactionFilter()
 
 ###### publicClient.dataSuffix?
 
-`DataSuffix`
+[`DataSuffix`](https://viem.sh/docs/)
 
 Data suffix to append to transaction data.
 
@@ -5254,7 +5254,7 @@ const gas = await client.estimateContractGas({
 
 ###### publicClient.estimateFeesPerGas
 
-\<`chainOverride`, `type`\>(`args?`) => `Promise`\<`EstimateFeesPerGasReturnType`\<`type`\>\>
+\<`chainOverride`, `type`\>(`args?`) => `Promise`\<[`EstimateFeesPerGasReturnType`](https://viem.sh/docs/)\<`type`\>\>
 
 Returns an estimate for the fees per gas for a transaction to be included
 in the next block.
@@ -5326,17 +5326,17 @@ const maxPriorityFeePerGas = await client.estimateMaxPriorityFeePerGas()
 
 ###### publicClient.experimental_blockTag?
 
-`BlockTag`
+[`BlockTag`](https://viem.sh/docs/)
 
 Default block tag to use for RPC requests.
 
 ###### publicClient.extend
 
-\<`client`\>(`fn`) => `Client`\<`Transport`, `Chain` \| `undefined`, `undefined`, `PublicRpcSchema`, \{ \[K in string \| number \| symbol\]: client\[K\] \} & `PublicActions`\<`Transport`, `Chain` \| `undefined`\>\>
+\<`client`\>(`fn`) => [`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, `undefined`, [`PublicRpcSchema`](https://viem.sh/docs/), \{ \[K in string \| number \| symbol\]: client\[K\] \} & [`PublicActions`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`\>\>
 
 ###### publicClient.fillTransaction
 
-\<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`FillTransactionReturnType`\<`Chain` \| `undefined`, `chainOverride`\>\>
+\<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`FillTransactionReturnType`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, `chainOverride`\>\>
 
 Fills a transaction request with the necessary fields to be signed over.
 
@@ -5578,7 +5578,7 @@ const blobBaseFee = await client.getBlobBaseFee()
   \})[] : `` `0x${string}` ``[];
   `transactionsRoot`: `` `0x${string}` ``;
   `uncles`: `` `0x${string}` ``[];
-  `withdrawals?`: `Withdrawal`[];
+  `withdrawals?`: [`Withdrawal`](https://viem.sh/docs/)[];
   `withdrawalsRoot?`: `` `0x${string}` ``;
 \}\>
 
@@ -5653,7 +5653,7 @@ const count = await client.getBlockTransactionCount()
 
 ###### publicClient.getBytecode
 
-(`args`) => `Promise`\<`GetCodeReturnType`\>
+(`args`) => `Promise`\<[`GetCodeReturnType`](https://viem.sh/docs/)\>
 
 **Deprecated**
 
@@ -5684,7 +5684,7 @@ const chainId = await client.getChainId()
 
 ###### publicClient.getCode
 
-(`args`) => `Promise`\<`GetCodeReturnType`\>
+(`args`) => `Promise`\<[`GetCodeReturnType`](https://viem.sh/docs/)\>
 
 Retrieves the bytecode at an address.
 
@@ -5708,7 +5708,7 @@ const code = await client.getCode({
 
 ###### publicClient.getContractEvents
 
-\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetContractEventsReturnType`\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
+\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetContractEventsReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
 
 Returns a list of event logs emitted by a contract.
 
@@ -5735,7 +5735,7 @@ const logs = await client.getContractEvents(client, {
 
 ###### publicClient.getDelegation
 
-(`args`) => `Promise`\<`GetDelegationReturnType`\>
+(`args`) => `Promise`\<[`GetDelegationReturnType`](https://viem.sh/docs/)\>
 
 Returns the address that an account has delegated to via EIP-7702.
 
@@ -5758,7 +5758,7 @@ const delegation = await client.getDelegation({
 
 ###### publicClient.getEip712Domain
 
-(`args`) => `Promise`\<`GetEip712DomainReturnType`\>
+(`args`) => `Promise`\<[`GetEip712DomainReturnType`](https://viem.sh/docs/)\>
 
 Reads the EIP-712 domain from a contract, based on the ERC-5267 specification.
 
@@ -5790,7 +5790,7 @@ const domain = await client.getEip712Domain({
 
 ###### publicClient.getEnsAddress
 
-(`args`) => `Promise`\<`GetEnsAddressReturnType`\>
+(`args`) => `Promise`\<[`GetEnsAddressReturnType`](https://viem.sh/docs/)\>
 
 Gets address for ENS name.
 
@@ -5822,7 +5822,7 @@ const ensAddress = await client.getEnsAddress({
 
 ###### publicClient.getEnsAvatar
 
-(`args`) => `Promise`\<`GetEnsAvatarReturnType`\>
+(`args`) => `Promise`\<[`GetEnsAvatarReturnType`](https://viem.sh/docs/)\>
 
 Gets the avatar of an ENS name.
 
@@ -5854,7 +5854,7 @@ const ensAvatar = await client.getEnsAvatar({
 
 ###### publicClient.getEnsName
 
-(`args`) => `Promise`\<`GetEnsNameReturnType`\>
+(`args`) => `Promise`\<[`GetEnsNameReturnType`](https://viem.sh/docs/)\>
 
 Gets primary name for specified address.
 
@@ -5915,7 +5915,7 @@ const resolverAddress = await client.getEnsResolver({
 
 ###### publicClient.getEnsText
 
-(`args`) => `Promise`\<`GetEnsTextReturnType`\>
+(`args`) => `Promise`\<[`GetEnsTextReturnType`](https://viem.sh/docs/)\>
 
 Gets a text record for specified ENS name.
 
@@ -5948,7 +5948,7 @@ const twitterRecord = await client.getEnsText({
 
 ###### publicClient.getFeeHistory
 
-(`args`) => `Promise`\<`GetFeeHistoryReturnType`\>
+(`args`) => `Promise`\<[`GetFeeHistoryReturnType`](https://viem.sh/docs/)\>
 
 Returns a collection of historical gas information.
 
@@ -5973,7 +5973,7 @@ const feeHistory = await client.getFeeHistory({
 
 ###### publicClient.getFilterChanges
 
-\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetFilterChangesReturnType`\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
+\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetFilterChangesReturnType`](https://viem.sh/docs/)\<`filterType`, `abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
 
 Returns a list of logs or hashes based on a [Filter](/docs/glossary/terms#filter) since the last time it was called.
 
@@ -6058,7 +6058,7 @@ const hashes = await client.getFilterChanges({ filter })
 
 ###### publicClient.getFilterLogs
 
-\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<`GetFilterLogsReturnType`\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
+\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>(`args`) => `Promise`\<[`GetFilterLogsReturnType`](https://viem.sh/docs/)\<`abi`, `eventName`, `strict`, `fromBlock`, `toBlock`\>\>
 
 Returns a list of event logs since the filter was created.
 
@@ -6110,7 +6110,7 @@ const gasPrice = await client.getGasPrice()
 
 ###### publicClient.getLogs
 
-\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>(`args?`) => `Promise`\<`GetLogsReturnType`\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>\>
+\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>(`args?`) => `Promise`\<[`GetLogsReturnType`](https://viem.sh/docs/)\<`abiEvent`, `abiEvents`, `strict`, `fromBlock`, `toBlock`\>\>
 
 Returns a list of event logs matching the provided parameters.
 
@@ -6133,7 +6133,7 @@ const logs = await client.getLogs()
 
 ###### publicClient.getProof
 
-(`args`) => `Promise`\<`GetProofReturnType`\>
+(`args`) => `Promise`\<[`GetProofReturnType`](https://viem.sh/docs/)\>
 
 Returns the account and storage values of the specified account including the Merkle-proof.
 
@@ -6159,7 +6159,7 @@ const block = await client.getProof({
 
 ###### publicClient.getStorageAt
 
-(`args`) => `Promise`\<`GetStorageAtReturnType`\>
+(`args`) => `Promise`\<[`GetStorageAtReturnType`](https://viem.sh/docs/)\>
 
 Returns the value from a storage slot at a given address.
 
@@ -6213,7 +6213,7 @@ const code = await client.getStorageAt({
   `yParity?`: `undefined`;
 \}
   \| \{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `authorizationList?`: `undefined`;
   `blobVersionedHashes?`: `undefined`;
   `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -6239,7 +6239,7 @@ const code = await client.getStorageAt({
   `yParity`: `number`;
 \}
   \| \{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `authorizationList?`: `undefined`;
   `blobVersionedHashes?`: `undefined`;
   `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -6265,7 +6265,7 @@ const code = await client.getStorageAt({
   `yParity`: `number`;
 \}
   \| \{
-  `accessList`: `AccessList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
   `authorizationList?`: `undefined`;
   `blobVersionedHashes`: readonly `` `0x${string}` ``[];
   `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
@@ -6291,8 +6291,8 @@ const code = await client.getStorageAt({
   `yParity`: `number`;
 \}
   \| \{
-  `accessList`: `AccessList`;
-  `authorizationList`: `SignedAuthorizationList`;
+  `accessList`: [`AccessList`](https://viem.sh/docs/);
+  `authorizationList`: [`SignedAuthorizationList`](https://viem.sh/docs/);
   `blobVersionedHashes?`: `undefined`;
   `blockHash`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `` `0x${string}` ``;
   `blockNumber`: `blockTag` *extends* `"pending"` ? `true` : `false` *extends* `true` ? `null` : `bigint`;
@@ -6389,7 +6389,7 @@ const transactionCount = await client.getTransactionCount({
 
 ###### publicClient.getTransactionReceipt
 
-(`args`) => `Promise`\<`TransactionReceipt`\>
+(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Returns the [Transaction Receipt](https://viem.sh/docs/glossary/terms#transaction-receipt) given a [Transaction](https://viem.sh/docs/glossary/terms#transaction) hash.
 
@@ -6420,7 +6420,7 @@ A key for the client.
 
 ###### publicClient.multicall
 
-\<`contracts`, `allowFailure`\>(`args`) => `Promise`\<`MulticallReturnType`\<`contracts`, `allowFailure`\>\>
+\<`contracts`, `allowFailure`\>(`args`) => `Promise`\<[`MulticallReturnType`](https://viem.sh/docs/)\<`contracts`, `allowFailure`\>\>
 
 Similar to [`readContract`](https://viem.sh/docs/contract/readContract), but batches up multiple functions on a contract in a single RPC call via the [`multicall3` contract](https://github.com/mds1/multicall).
 
@@ -6514,7 +6514,7 @@ const request = await client.prepareTransactionRequest({
 
 ###### publicClient.readContract
 
-\<`abi`, `functionName`, `args`\>(`args`) => `Promise`\<`ReadContractReturnType`\<`abi`, `functionName`, `args`\>\>
+\<`abi`, `functionName`, `args`\>(`args`) => `Promise`\<[`ReadContractReturnType`](https://viem.sh/docs/)\<`abi`, `functionName`, `args`\>\>
 
 Calls a read-only function on a contract, and returns the response.
 
@@ -6549,7 +6549,7 @@ const result = await client.readContract({
 
 ###### publicClient.request
 
-`EIP1193RequestFn`\<`PublicRpcSchema`\>
+[`EIP1193RequestFn`](https://viem.sh/docs/)\<[`PublicRpcSchema`](https://viem.sh/docs/)\>
 
 Request function wrapped with friendly error handling
 
@@ -6581,7 +6581,7 @@ const hash = await client.sendRawTransaction({
 
 ###### publicClient.sendRawTransactionSync
 
-(`args`) => `Promise`\<`TransactionReceipt`\>
+(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Sends a **signed** transaction to the network
 
@@ -6607,7 +6607,7 @@ const receipt = await client.sendRawTransactionSync({
 
 ###### publicClient.simulate
 
-\<`calls`\>(`args`) => `Promise`\<`SimulateBlocksReturnType`\<`calls`\>\>
+\<`calls`\>(`args`) => `Promise`\<[`SimulateBlocksReturnType`](https://viem.sh/docs/)\<`calls`\>\>
 
 **Deprecated**
 
@@ -6615,7 +6615,7 @@ Use `simulateBlocks` instead.
 
 ###### publicClient.simulateBlocks
 
-\<`calls`\>(`args`) => `Promise`\<`SimulateBlocksReturnType`\<`calls`\>\>
+\<`calls`\>(`args`) => `Promise`\<[`SimulateBlocksReturnType`](https://viem.sh/docs/)\<`calls`\>\>
 
 Simulates a set of calls on block(s) with optional block and state overrides.
 
@@ -6657,7 +6657,7 @@ const result = await client.simulateBlocks({
 
 ###### publicClient.simulateCalls
 
-\<`calls`\>(`args`) => `Promise`\<`SimulateCallsReturnType`\<`calls`\>\>
+\<`calls`\>(`args`) => `Promise`\<[`SimulateCallsReturnType`](https://viem.sh/docs/)\<`calls`\>\>
 
 Simulates a set of calls.
 
@@ -6689,7 +6689,7 @@ const result = await client.simulateCalls({
 
 ###### publicClient.simulateContract
 
-\<`abi`, `functionName`, `args`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`SimulateContractReturnType`\<`abi`, `functionName`, `args`, `Chain` \| `undefined`, `Account` \| `undefined`, `chainOverride`, `accountOverride`\>\>
+\<`abi`, `functionName`, `args`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`SimulateContractReturnType`](https://viem.sh/docs/)\<`abi`, `functionName`, `args`, [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, `chainOverride`, `accountOverride`\>\>
 
 Simulates/validates a contract interaction. This is useful for retrieving **return data** and **revert reasons** of contract write functions.
 
@@ -6723,7 +6723,7 @@ const result = await client.simulateContract({
 
 ###### publicClient.transport
 
-`TransportConfig`\<`string`, `EIP1193RequestFn`\> & `Record`\<`string`, `any`\>
+[`TransportConfig`](https://viem.sh/docs/)\<`string`, [`EIP1193RequestFn`](https://viem.sh/docs/)\> & `Record`\<`string`, `any`\>
 
 The RPC transport
 
@@ -6802,7 +6802,7 @@ Verify that typed data was signed by the provided address.
 
 ###### publicClient.waitForTransactionReceipt
 
-(`args`) => `Promise`\<`TransactionReceipt`\>
+(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Waits for the [Transaction](https://viem.sh/docs/glossary/terms#transaction) to be included on a [Block](https://viem.sh/docs/glossary/terms#block) (one confirmation), and then returns the [Transaction Receipt](https://viem.sh/docs/glossary/terms#transaction-receipt). If the Transaction reverts, then the action will throw an error.
 
@@ -6844,7 +6844,7 @@ const transactionReceipt = await client.waitForTransactionReceipt({
 
 ###### publicClient.watchBlockNumber
 
-(`args`) => `WatchBlockNumberReturnType`
+(`args`) => [`WatchBlockNumberReturnType`](https://viem.sh/docs/)
 
 Watches and returns incoming block numbers.
 
@@ -6871,7 +6871,7 @@ const unwatch = await client.watchBlockNumber({
 
 ###### publicClient.watchBlocks
 
-\<`includeTransactions`, `blockTag`\>(`args`) => `WatchBlocksReturnType`
+\<`includeTransactions`, `blockTag`\>(`args`) => [`WatchBlocksReturnType`](https://viem.sh/docs/)
 
 Watches and returns information for incoming blocks.
 
@@ -6898,7 +6898,7 @@ const unwatch = await client.watchBlocks({
 
 ###### publicClient.watchContractEvent
 
-\<`abi`, `eventName`, `strict`\>(`args`) => `WatchContractEventReturnType`
+\<`abi`, `eventName`, `strict`\>(`args`) => [`WatchContractEventReturnType`](https://viem.sh/docs/)
 
 Watches and returns emitted contract event logs.
 
@@ -6931,7 +6931,7 @@ const unwatch = client.watchContractEvent({
 
 ###### publicClient.watchEvent
 
-\<`abiEvent`, `abiEvents`, `strict`\>(`args`) => `WatchEventReturnType`
+\<`abiEvent`, `abiEvents`, `strict`\>(`args`) => [`WatchEventReturnType`](https://viem.sh/docs/)
 
 Watches and returns emitted [Event Logs](https://viem.sh/docs/glossary/terms#event-log).
 
@@ -6966,7 +6966,7 @@ const unwatch = client.watchEvent({
 
 ###### publicClient.watchPendingTransactions
 
-(`args`) => `WatchPendingTransactionsReturnType`
+(`args`) => [`WatchPendingTransactionsReturnType`](https://viem.sh/docs/)
 
 Watches and returns pending transaction hashes.
 
@@ -7019,7 +7019,7 @@ const unwatch = await client.watchPendingTransactions({
 ###### walletClient
 
 \{
-  `account`: `Account` \| `undefined`;
+  `account`: [`Account`](https://viem.sh/docs/) \| `undefined`;
   `addChain`: (`args`) => `Promise`\<`void`\>;
   `batch?`: \{
      `multicall?`:   \| `boolean`
@@ -7034,13 +7034,13 @@ const unwatch = await client.watchPendingTransactions({
      \| \{
      `request?`: (`parameters`) => `Promise`\<`` `0x${string}` ``\>;
    \};
-  `chain`: `Chain` \| `undefined`;
-  `dataSuffix?`: `DataSuffix`;
+  `chain`: [`Chain`](https://viem.sh/docs/) \| `undefined`;
+  `dataSuffix?`: [`DataSuffix`](https://viem.sh/docs/);
   `deployContract`: \<`abi`, `chainOverride`\>(`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `experimental_blockTag?`: `BlockTag`;
-  `extend`: \<`client`\>(`fn`) => `Client`\<`Transport`, `Chain` \| `undefined`, `Account` \| `undefined`, `WalletRpcSchema`, \{ \[K in string \| number \| symbol\]: client\[K\] \} & `WalletActions`\<`Chain` \| `undefined`, `Account` \| `undefined`\>\>;
-  `fillTransaction`: \<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`FillTransactionReturnType`\<`Chain` \| `undefined`, `chainOverride`\>\>;
-  `getAddresses`: () => `Promise`\<`GetAddressesReturnType`\>;
+  `experimental_blockTag?`: [`BlockTag`](https://viem.sh/docs/);
+  `extend`: \<`client`\>(`fn`) => [`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, [`WalletRpcSchema`](https://viem.sh/docs/), \{ \[K in string \| number \| symbol\]: client\[K\] \} & [`WalletActions`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`\>\>;
+  `fillTransaction`: \<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`FillTransactionReturnType`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, `chainOverride`\>\>;
+  `getAddresses`: () => `Promise`\<[`GetAddressesReturnType`](https://viem.sh/docs/)\>;
   `getCallsStatus`: (`parameters`) => `Promise`\<\{
      `atomic`: `boolean`;
      `capabilities?`:   \| \{
@@ -7051,22 +7051,22 @@ const unwatch = await client.watchPendingTransactions({
       \};
      `chainId`: `number`;
      `id`: `string`;
-     `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+     `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
      `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
      `statusCode`: `number`;
      `version`: `string`;
   \}\>;
   `getCapabilities`: \<`chainId`\>(`parameters?`) => `Promise`\<\{ \[K in string \| number \| symbol\]: (chainId extends number ? \{ atomic?: (...) \| (...); paymasterService?: (...) \| (...); unstable\_addSubAccount?: (...) \| (...); \[key: string\]: any \} : ChainIdToCapabilities\<Capabilities\<(...)\>, number\>)\[K\] \}\>;
   `getChainId`: () => `Promise`\<`number`\>;
-  `getPermissions`: () => `Promise`\<`GetPermissionsReturnType`\>;
+  `getPermissions`: () => `Promise`\<[`GetPermissionsReturnType`](https://viem.sh/docs/)\>;
   `key`: `string`;
   `name`: `string`;
   `pollingInterval`: `number`;
-  `prepareAuthorization`: (`parameters`) => `Promise`\<`PrepareAuthorizationReturnType`\>;
+  `prepareAuthorization`: (`parameters`) => `Promise`\<[`PrepareAuthorizationReturnType`](https://viem.sh/docs/)\>;
   `prepareTransactionRequest`: \<`request`, `chainOverride`, `accountOverride`\>(`args`) => `Promise`\<\{ \[K in string \| number \| symbol\]: (UnionRequiredBy\<(...) & (...), ParameterTypeToParameters\<(...)\>\> & (unknown extends (...)\[(...)\] ? \{\} : Pick\<(...), (...)\>))\[K\] \}\>;
-  `request`: `EIP1193RequestFn`\<`WalletRpcSchema`\>;
-  `requestAddresses`: () => `Promise`\<`RequestAddressesReturnType`\>;
-  `requestPermissions`: (`args`) => `Promise`\<`RequestPermissionsReturnType`\>;
+  `request`: [`EIP1193RequestFn`](https://viem.sh/docs/)\<[`WalletRpcSchema`](https://viem.sh/docs/)\>;
+  `requestAddresses`: () => `Promise`\<[`RequestAddressesReturnType`](https://viem.sh/docs/)\>;
+  `requestPermissions`: (`args`) => `Promise`\<[`RequestPermissionsReturnType`](https://viem.sh/docs/)\>;
   `sendCalls`: \<`calls`, `chainOverride`\>(`parameters`) => `Promise`\<\{
      `capabilities?`: \{
       \[`key`: `string`\]: `any`;
@@ -7083,33 +7083,33 @@ const unwatch = await client.watchPendingTransactions({
       \};
      `chainId`: `number`;
      `id`: `string`;
-     `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+     `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
      `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
      `statusCode`: `number`;
      `version`: `string`;
   \}\>;
   `sendRawTransaction`: (`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `sendRawTransactionSync`: (`args`) => `Promise`\<`TransactionReceipt`\>;
+  `sendRawTransactionSync`: (`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
   `sendTransaction`: \<`request`, `chainOverride`\>(`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `sendTransactionSync`: \<`request`, `chainOverride`\>(`args`) => `Promise`\<`TransactionReceipt`\>;
+  `sendTransactionSync`: \<`request`, `chainOverride`\>(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
   `showCallsStatus`: (`parameters`) => `Promise`\<`void`\>;
-  `signAuthorization`: (`parameters`) => `Promise`\<`SignAuthorizationReturnType`\>;
+  `signAuthorization`: (`parameters`) => `Promise`\<[`SignAuthorizationReturnType`](https://viem.sh/docs/)\>;
   `signMessage`: (`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `signTransaction`: \<`chainOverride`, `request`\>(`args`) => `Promise`\<`TransactionSerialized`\<`GetTransactionType`\<`request`, 
-     \| `request` *extends* `LegacyProperties` ? `"legacy"` : `never`
-     \| `request` *extends* `EIP1559Properties` ? `"eip1559"` : `never`
-     \| `request` *extends* `EIP2930Properties` ? `"eip2930"` : `never`
-     \| `request` *extends* `EIP4844Properties` ? `"eip4844"` : `never`
-     \| `request` *extends* `EIP7702Properties` ? `"eip7702"` : `never`
+  `signTransaction`: \<`chainOverride`, `request`\>(`args`) => `Promise`\<[`TransactionSerialized`](https://viem.sh/docs/)\<[`GetTransactionType`](https://viem.sh/docs/)\<`request`, 
+     \| `request` *extends* [`LegacyProperties`](https://viem.sh/docs/) ? `"legacy"` : `never`
+     \| `request` *extends* [`EIP1559Properties`](https://viem.sh/docs/) ? `"eip1559"` : `never`
+     \| `request` *extends* [`EIP2930Properties`](https://viem.sh/docs/) ? `"eip2930"` : `never`
+     \| `request` *extends* [`EIP4844Properties`](https://viem.sh/docs/) ? `"eip4844"` : `never`
+     \| `request` *extends* [`EIP7702Properties`](https://viem.sh/docs/) ? `"eip7702"` : `never`
      \| ...\[...\] *extends* ... \| ... ? `Extract`\<..., ...\> : `never`\>, 
-     \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip1559"` ? `` `0x02${string}` `` : `never`
-     \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip2930"` ? `` `0x01${string}` `` : `never`
-     \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip4844"` ? `` `0x03${string}` `` : `never`
-     \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip7702"` ? `` `0x04${string}` `` : `never`
-    \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"legacy"` ? `TransactionSerializedLegacy` : `never`\>\>;
+     \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip1559"` ? `` `0x02${string}` `` : `never`
+     \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip2930"` ? `` `0x01${string}` `` : `never`
+     \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip4844"` ? `` `0x03${string}` `` : `never`
+     \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip7702"` ? `` `0x04${string}` `` : `never`
+    \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"legacy"` ? [`TransactionSerializedLegacy`](https://viem.sh/docs/) : `never`\>\>;
   `signTypedData`: \<`typedData`, `primaryType`\>(`args`) => `Promise`\<`` `0x${string}` ``\>;
   `switchChain`: (`args`) => `Promise`\<`void`\>;
-  `transport`: `TransportConfig`\<`string`, `EIP1193RequestFn`\> & `Record`\<`string`, `any`\>;
+  `transport`: [`TransportConfig`](https://viem.sh/docs/)\<`string`, [`EIP1193RequestFn`](https://viem.sh/docs/)\> & `Record`\<`string`, `any`\>;
   `type`: `string`;
   `uid`: `string`;
   `waitForCallsStatus`: (`parameters`) => `Promise`\<\{
@@ -7122,19 +7122,19 @@ const unwatch = await client.watchPendingTransactions({
       \};
      `chainId`: `number`;
      `id`: `string`;
-     `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+     `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
      `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
      `statusCode`: `number`;
      `version`: `string`;
   \}\>;
   `watchAsset`: (`args`) => `Promise`\<`boolean`\>;
   `writeContract`: \<`abi`, `functionName`, `args`, `chainOverride`\>(`args`) => `Promise`\<`` `0x${string}` ``\>;
-  `writeContractSync`: \<`abi`, `functionName`, `args`, `chainOverride`\>(`args`) => `Promise`\<`TransactionReceipt`\>;
+  `writeContractSync`: \<`abi`, `functionName`, `args`, `chainOverride`\>(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>;
 \}
 
 ###### walletClient.account
 
-`Account` \| `undefined`
+[`Account`](https://viem.sh/docs/) \| `undefined`
 
 The Account of the Client.
 
@@ -7200,13 +7200,13 @@ Time (in ms) that cached data will remain in memory.
 
 ###### walletClient.chain
 
-`Chain` \| `undefined`
+[`Chain`](https://viem.sh/docs/) \| `undefined`
 
 Chain for the client.
 
 ###### walletClient.dataSuffix?
 
-`DataSuffix`
+[`DataSuffix`](https://viem.sh/docs/)
 
 Data suffix to append to transaction data.
 
@@ -7240,17 +7240,17 @@ const hash = await client.deployContract({
 
 ###### walletClient.experimental_blockTag?
 
-`BlockTag`
+[`BlockTag`](https://viem.sh/docs/)
 
 Default block tag to use for RPC requests.
 
 ###### walletClient.extend
 
-\<`client`\>(`fn`) => `Client`\<`Transport`, `Chain` \| `undefined`, `Account` \| `undefined`, `WalletRpcSchema`, \{ \[K in string \| number \| symbol\]: client\[K\] \} & `WalletActions`\<`Chain` \| `undefined`, `Account` \| `undefined`\>\>
+\<`client`\>(`fn`) => [`Client`](https://viem.sh/docs/)\<[`Transport`](https://viem.sh/docs/), [`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`, [`WalletRpcSchema`](https://viem.sh/docs/), \{ \[K in string \| number \| symbol\]: client\[K\] \} & [`WalletActions`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, [`Account`](https://viem.sh/docs/) \| `undefined`\>\>
 
 ###### walletClient.fillTransaction
 
-\<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<`FillTransactionReturnType`\<`Chain` \| `undefined`, `chainOverride`\>\>
+\<`chainOverride`, `accountOverride`\>(`args`) => `Promise`\<[`FillTransactionReturnType`](https://viem.sh/docs/)\<[`Chain`](https://viem.sh/docs/) \| `undefined`, `chainOverride`\>\>
 
 Fills a transaction request with the necessary fields to be signed over.
 
@@ -7275,7 +7275,7 @@ const result = await client.fillTransaction({
 
 ###### walletClient.getAddresses
 
-() => `Promise`\<`GetAddressesReturnType`\>
+() => `Promise`\<[`GetAddressesReturnType`](https://viem.sh/docs/)\>
 
 Returns a list of account addresses owned by the wallet or client.
 
@@ -7307,7 +7307,7 @@ const accounts = await client.getAddresses()
    \};
   `chainId`: `number`;
   `id`: `string`;
-  `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+  `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
   `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
   `statusCode`: `number`;
   `version`: `string`;
@@ -7382,7 +7382,7 @@ const chainId = await client.getChainId()
 
 ###### walletClient.getPermissions
 
-() => `Promise`\<`GetPermissionsReturnType`\>
+() => `Promise`\<[`GetPermissionsReturnType`](https://viem.sh/docs/)\>
 
 Gets the wallets current permissions.
 
@@ -7422,7 +7422,7 @@ Frequency (in ms) for polling enabled actions & events. Defaults to 4_000 millis
 
 ###### walletClient.prepareAuthorization
 
-(`parameters`) => `Promise`\<`PrepareAuthorizationReturnType`\>
+(`parameters`) => `Promise`\<[`PrepareAuthorizationReturnType`](https://viem.sh/docs/)\>
 
 Prepares an [EIP-7702 Authorization](https://eips.ethereum.org/EIPS/eip-7702) object for signing.
 This Action will fill the required fields of the Authorization object if they are not provided (e.g. `nonce` and `chainId`).
@@ -7508,13 +7508,13 @@ const request = await client.prepareTransactionRequest({
 
 ###### walletClient.request
 
-`EIP1193RequestFn`\<`WalletRpcSchema`\>
+[`EIP1193RequestFn`](https://viem.sh/docs/)\<[`WalletRpcSchema`](https://viem.sh/docs/)\>
 
 Request function wrapped with friendly error handling
 
 ###### walletClient.requestAddresses
 
-() => `Promise`\<`RequestAddressesReturnType`\>
+() => `Promise`\<[`RequestAddressesReturnType`](https://viem.sh/docs/)\>
 
 Requests a list of accounts managed by a wallet.
 
@@ -7540,7 +7540,7 @@ const accounts = await client.requestAddresses()
 
 ###### walletClient.requestPermissions
 
-(`args`) => `Promise`\<`RequestPermissionsReturnType`\>
+(`args`) => `Promise`\<[`RequestPermissionsReturnType`](https://viem.sh/docs/)\>
 
 Requests permissions for a wallet.
 
@@ -7614,7 +7614,7 @@ const id = await client.sendCalls({
    \};
   `chainId`: `number`;
   `id`: `string`;
-  `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+  `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
   `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
   `statusCode`: `number`;
   `version`: `string`;
@@ -7679,7 +7679,7 @@ const hash = await client.sendRawTransaction({
 
 ###### walletClient.sendRawTransactionSync
 
-(`args`) => `Promise`\<`TransactionReceipt`\>
+(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Sends a **signed** transaction to the network synchronously,
 and waits for the transaction to be included in a block.
@@ -7752,7 +7752,7 @@ const hash = await client.sendTransaction({
 
 ###### walletClient.sendTransactionSync
 
-\<`request`, `chainOverride`\>(`args`) => `Promise`\<`TransactionReceipt`\>
+\<`request`, `chainOverride`\>(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Creates, signs, and sends a new transaction to the network synchronously.
 Returns the transaction receipt.
@@ -7823,7 +7823,7 @@ await client.showCallsStatus({ id: '0xdeadbeef' })
 
 ###### walletClient.signAuthorization
 
-(`parameters`) => `Promise`\<`SignAuthorizationReturnType`\>
+(`parameters`) => `Promise`\<[`SignAuthorizationReturnType`](https://viem.sh/docs/)\>
 
 Signs an [EIP-7702 Authorization](https://eips.ethereum.org/EIPS/eip-7702) object.
 
@@ -7915,18 +7915,18 @@ const signature = await client.signMessage({
 
 ###### walletClient.signTransaction
 
-\<`chainOverride`, `request`\>(`args`) => `Promise`\<`TransactionSerialized`\<`GetTransactionType`\<`request`, 
-  \| `request` *extends* `LegacyProperties` ? `"legacy"` : `never`
-  \| `request` *extends* `EIP1559Properties` ? `"eip1559"` : `never`
-  \| `request` *extends* `EIP2930Properties` ? `"eip2930"` : `never`
-  \| `request` *extends* `EIP4844Properties` ? `"eip4844"` : `never`
-  \| `request` *extends* `EIP7702Properties` ? `"eip7702"` : `never`
+\<`chainOverride`, `request`\>(`args`) => `Promise`\<[`TransactionSerialized`](https://viem.sh/docs/)\<[`GetTransactionType`](https://viem.sh/docs/)\<`request`, 
+  \| `request` *extends* [`LegacyProperties`](https://viem.sh/docs/) ? `"legacy"` : `never`
+  \| `request` *extends* [`EIP1559Properties`](https://viem.sh/docs/) ? `"eip1559"` : `never`
+  \| `request` *extends* [`EIP2930Properties`](https://viem.sh/docs/) ? `"eip2930"` : `never`
+  \| `request` *extends* [`EIP4844Properties`](https://viem.sh/docs/) ? `"eip4844"` : `never`
+  \| `request` *extends* [`EIP7702Properties`](https://viem.sh/docs/) ? `"eip7702"` : `never`
   \| ...\[...\] *extends* ... \| ... ? `Extract`\<..., ...\> : `never`\>, 
-  \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip1559"` ? `` `0x02${string}` `` : `never`
-  \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip2930"` ? `` `0x01${string}` `` : `never`
-  \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip4844"` ? `` `0x03${string}` `` : `never`
-  \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip7702"` ? `` `0x04${string}` `` : `never`
-  \| `GetTransactionType`\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"legacy"` ? `TransactionSerializedLegacy` : `never`\>\>
+  \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip1559"` ? `` `0x02${string}` `` : `never`
+  \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip2930"` ? `` `0x01${string}` `` : `never`
+  \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip4844"` ? `` `0x03${string}` `` : `never`
+  \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"eip7702"` ? `` `0x04${string}` `` : `never`
+  \| [`GetTransactionType`](https://viem.sh/docs/)\<`request`, ... \| ... \| ... \| ... \| ... \| ...\> *extends* `"legacy"` ? [`TransactionSerializedLegacy`](https://viem.sh/docs/) : `never`\>\>
 
 Signs a transaction.
 
@@ -8094,7 +8094,7 @@ await client.switchChain({ id: optimism.id })
 
 ###### walletClient.transport
 
-`TransportConfig`\<`string`, `EIP1193RequestFn`\> & `Record`\<`string`, `any`\>
+[`TransportConfig`](https://viem.sh/docs/)\<`string`, [`EIP1193RequestFn`](https://viem.sh/docs/)\> & `Record`\<`string`, `any`\>
 
 The RPC transport
 
@@ -8122,7 +8122,7 @@ A unique ID for the client.
    \};
   `chainId`: `number`;
   `id`: `string`;
-  `receipts?`: `WalletCallReceipt`\<`bigint`, ... \| ...\>[];
+  `receipts?`: [`WalletCallReceipt`](https://viem.sh/docs/)\<`bigint`, ... \| ...\>[];
   `status`: `"success"` \| `"pending"` \| `"failure"` \| `undefined`;
   `statusCode`: `number`;
   `version`: `string`;
@@ -8229,7 +8229,7 @@ const hash = await client.writeContract(request)
 
 ###### walletClient.writeContractSync
 
-\<`abi`, `functionName`, `args`, `chainOverride`\>(`args`) => `Promise`\<`TransactionReceipt`\>
+\<`abi`, `functionName`, `args`, `chainOverride`\>(`args`) => `Promise`\<[`TransactionReceipt`](https://viem.sh/docs/)\>
 
 Executes a write function on a contract synchronously.
 Returns the transaction receipt.
