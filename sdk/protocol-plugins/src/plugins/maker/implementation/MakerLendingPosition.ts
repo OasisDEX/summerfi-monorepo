@@ -13,7 +13,6 @@ import { IMakerLendingPositionId } from '../interfaces/IMakerLendingPositionId'
 export type MakerLendingPositionParameters = Omit<IMakerLendingPositionData, 'type'>
 
 /**
- * @class MakerPosition
  * @see IMakerLendingPosition
  */
 export class MakerLendingPosition extends LendingPosition implements IMakerLendingPosition {

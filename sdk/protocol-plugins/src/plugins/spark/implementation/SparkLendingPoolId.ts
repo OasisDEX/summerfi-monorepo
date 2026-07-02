@@ -13,7 +13,6 @@ import { ISparkProtocol } from '../interfaces/ISparkProtocol'
 export type SparkLendingPoolIdParameters = Omit<ISparkLendingPoolIdData, 'type'>
 
 /**
- * @class SparkLendingPoolId
  * @see ISparkLendingPoolIdData
  */
 export class SparkLendingPoolId extends LendingPoolId implements ISparkLendingPoolId, IPrintable {

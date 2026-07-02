@@ -1,10 +1,6 @@
 # Interface: IRefinanceSimulation
 
-Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L20)
-
-IRefinanceSimulation
-
-## Description
+Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L19)
 
 Simulation result of a refinance operation
 
@@ -20,7 +16,7 @@ Simulation result of a refinance operation
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L22)
+Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L21)
 
 Signature used to differentiate it from similar interfaces
 
@@ -36,7 +32,7 @@ Signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/simulation/interfaces/ISimulation.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L15)
+Defined in: [src/simulation/interfaces/ISimulation.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L14)
 
 Signature used to differentiate it from similar interfaces
 
@@ -54,7 +50,7 @@ ISimulation.[___signature__]
 readonly sourcePosition: ILendingPosition;
 ```
 
-Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L24)
+Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L23)
 
 Original position that will be refinanced
 
@@ -66,7 +62,7 @@ Original position that will be refinanced
 readonly steps: Steps[];
 ```
 
-Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L30)
+Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L29)
 
 Steps needed to perform the refinance
 
@@ -78,7 +74,7 @@ Steps needed to perform the refinance
 readonly swaps: SimulatedSwapData[];
 ```
 
-Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L28)
+Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L27)
 
 The details of any swaps required as part of the simulation
 
@@ -90,7 +86,7 @@ The details of any swaps required as part of the simulation
 readonly targetPosition: ILendingPosition;
 ```
 
-Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L26)
+Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L25)
 
 Simulated target position
 
@@ -102,7 +98,7 @@ Simulated target position
 readonly type: Refinance;
 ```
 
-Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L33)
+Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L32)
 
 The type of the simulation
 

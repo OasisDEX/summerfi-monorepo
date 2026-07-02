@@ -4,6 +4,6 @@
 type IAddressData = Readonly<z.infer<typeof AddressDataSchema>>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IAddress.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L49)
+Defined in: [../sdk-common/src/common/interfaces/IAddress.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L48)
 
 Type for the data part of the IAddress interface

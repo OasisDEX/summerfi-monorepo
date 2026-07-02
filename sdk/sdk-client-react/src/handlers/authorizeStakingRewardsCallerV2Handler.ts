@@ -2,10 +2,10 @@ import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { type AddressValue, type ChainId, User, Address } from '@summerfi/sdk-common'
 
 /**
- * @name authorizeStakingRewardsCallerV2Handler
- * @description Generates a transaction to authorize a caller for staking rewards.
- *              When authorizedCallerAddress is omitted, the server defaults to the deployed
- *              AdmiralsQuarters address on the hub chain.
+ * Generates a transaction to authorize a caller for staking rewards.
+ * When authorizedCallerAddress is omitted, the server defaults to the deployed
+ * AdmiralsQuarters address on the hub chain.
+ *
  * @param params.userAddress The user's address who is authorizing
  * @param params.chainId The chain ID
  * @param params.authorizedCallerAddress The address to authorize (optional; defaults to deployed AdmiralsQuarters)

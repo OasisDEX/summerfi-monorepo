@@ -4,7 +4,9 @@
 function isPercentage(maybePercentage, returnedErrors?): maybePercentage is IPercentage;
 ```
 
-Defined in: [src/common/interfaces/IPercentage.ts:83](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L83)
+Defined in: [src/common/interfaces/IPercentage.ts:77](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L77)
+
+Type guard for IPercentage
 
 ## Parameters
 
@@ -25,7 +27,3 @@ Optional array that, on failure, is populated with validation error messages
 `maybePercentage is IPercentage`
 
 true if the object is an IPercentage
-
-## Description
-
-Type guard for IPercentage

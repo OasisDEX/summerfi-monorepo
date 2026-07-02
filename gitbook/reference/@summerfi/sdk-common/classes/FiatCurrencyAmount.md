@@ -1,8 +1,6 @@
 # Class: FiatCurrencyAmount
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L27)
-
-FiatCurrencyAmount
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L26)
 
 ## See
 
@@ -20,7 +18,7 @@ IFiatCurrencyAmount
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L29)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L28)
 
 SIGNATURE
 
@@ -36,7 +34,7 @@ SIGNATURE
 readonly amount: string;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L32)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L31)
 
 The amount in floating point format
 
@@ -52,7 +50,7 @@ The amount in floating point format
 readonly fiat: FiatCurrency;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L31)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L30)
 
 Fiat currency for the amount
 
@@ -68,7 +66,7 @@ Fiat currency for the amount
 add(fiatToAdd): IFiatCurrencyAmount;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L48)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L47)
 
 #### Parameters
 
@@ -96,7 +94,7 @@ IFiatCurrencyAmount.add
 divide<InputParams, ReturnType>(divisor): ReturnType;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:87](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L87)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L86)
 
 #### Type Parameters
 
@@ -134,7 +132,7 @@ IFiatCurrencyAmount.divide
 multiply<InputParams, ReturnType>(multiplier): ReturnType;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L68)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L67)
 
 #### Type Parameters
 
@@ -172,7 +170,7 @@ IFiatCurrencyAmount.multiply
 subtract(fiatToSubstract): IFiatCurrencyAmount;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:58](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L58)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:57](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L57)
 
 #### Parameters
 
@@ -200,7 +198,7 @@ IFiatCurrencyAmount.subtract
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:112](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L112)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:111](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L111)
 
 #### Returns
 
@@ -222,7 +220,7 @@ IValueConverter.toBigNumber
 toSolidityValue(params?): bigint;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:106](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L106)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:105](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L105)
 
 #### Parameters
 
@@ -252,7 +250,7 @@ IValueConverter.toBigNumber
 toString(): string;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:117](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L117)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:116](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L116)
 
 #### Returns
 
@@ -274,7 +272,7 @@ IPrintable.toString
 static createFrom(params): IFiatCurrencyAmount;
 ```
 
-Defined in: [src/common/implementation/FiatCurrencyAmount.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L35)
+Defined in: [src/common/implementation/FiatCurrencyAmount.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/FiatCurrencyAmount.ts#L34)
 
 FACTORY
 

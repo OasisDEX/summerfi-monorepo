@@ -9,8 +9,7 @@ import type { IArmadaManagerAdmin } from './IArmadaManagerAdmin'
 import type { IArmadaManagerAccessControl } from './IArmadaManagerAccessControl'
 import type { IDCAManager } from './IDCAManager'
 /**
- * @name IArmadaManager
- * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
+ * Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
  */
 import type { IArmadaManagerMerklRewards } from './IArmadaManagerMerklRewards'
 

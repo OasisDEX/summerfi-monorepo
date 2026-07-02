@@ -12,8 +12,7 @@ import { ILendingPositionId, isLendingPositionId } from './ILendingPositionId'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name ILendingPosition
- * @description Represents a position in a Lending protocol
+ * Represents a position in a Lending protocol
  */
 export interface ILendingPosition extends IPosition, ILendingPositionData {
   /** Signature to differentiate from similar interfaces */
@@ -34,7 +33,7 @@ export interface ILendingPosition extends IPosition, ILendingPositionData {
 }
 
 /**
- * @description Zod schema for ILendingPosition
+ * Zod schema for ILendingPosition
  */
 export const LendingPositionDataSchema = z.object({
   ...PositionDataSchema.shape,
@@ -52,7 +51,8 @@ export const LendingPositionDataSchema = z.object({
 export type ILendingPositionData = Readonly<z.infer<typeof LendingPositionDataSchema>>
 
 /**
- * @description Type guard for ILendingPosition
+ * Type guard for ILendingPosition
+ *
  * @param maybeLendingPosition Object to be checked
  * @returns true if the object is an ILendingPosition
  *

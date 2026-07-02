@@ -18,7 +18,6 @@ import { getChainInfoByChainId } from './ChainFamilies'
 export type ArmadaVaultIdParameters = Omit<IArmadaVaultIdData, 'type' | 'protocol'>
 
 /**
- * @class ArmadaVaultId
  * @see IArmadaVaultId
  */
 export class ArmadaVaultId extends PoolId implements IArmadaVaultId {

@@ -10,7 +10,6 @@ import { IProtocol, IProtocolData, __signature__ } from '../interfaces/IProtocol
 export type ProtocolParameters = Omit<IProtocolData, 'name'>
 
 /**
- * @class Protocol
  * @see IProtocol
  */
 export abstract class Protocol implements IProtocol, IPrintable {

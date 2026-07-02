@@ -1,8 +1,6 @@
 # Class: Address
 
-Defined in: [src/common/implementation/Address.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L16)
-
-Address
+Defined in: [src/common/implementation/Address.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L15)
 
 ## See
 
@@ -20,7 +18,7 @@ IAddress
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/common/implementation/Address.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L18)
+Defined in: [src/common/implementation/Address.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L17)
 
 SIGNATURE
 
@@ -36,7 +34,7 @@ SIGNATURE
 readonly type: AddressType;
 ```
 
-Defined in: [src/common/implementation/Address.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L22)
+Defined in: [src/common/implementation/Address.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L21)
 
 The type of the address
 
@@ -52,7 +50,7 @@ The type of the address
 readonly value: `0x${string}`;
 ```
 
-Defined in: [src/common/implementation/Address.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L21)
+Defined in: [src/common/implementation/Address.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L20)
 
 ATTRIBUTES
 
@@ -68,7 +66,7 @@ ATTRIBUTES
 static ZeroAddressEthereum: Address;
 ```
 
-Defined in: [src/common/implementation/Address.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L25)
+Defined in: [src/common/implementation/Address.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L24)
 
 CONSTANTS
 
@@ -80,7 +78,7 @@ CONSTANTS
 equals(address): boolean;
 ```
 
-Defined in: [src/common/implementation/Address.ts:63](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L63)
+Defined in: [src/common/implementation/Address.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L62)
 
 PUBLIC METHODS
 
@@ -106,7 +104,7 @@ PUBLIC METHODS
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [src/common/implementation/Address.ts:73](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L73)
+Defined in: [src/common/implementation/Address.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L72)
 
 #### Returns
 
@@ -124,7 +122,7 @@ IValueConverter.toBigNumber
 toSolidityValue(): `0x${string}`;
 ```
 
-Defined in: [src/common/implementation/Address.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L68)
+Defined in: [src/common/implementation/Address.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L67)
 
 #### Returns
 
@@ -146,7 +144,7 @@ IValueConverter.toBigNumber
 toString(): string;
 ```
 
-Defined in: [src/common/implementation/Address.ts:78](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L78)
+Defined in: [src/common/implementation/Address.ts:77](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L77)
 
 #### Returns
 
@@ -168,7 +166,7 @@ IPrintable.toString
 static createFrom(params): Address;
 ```
 
-Defined in: [src/common/implementation/Address.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L32)
+Defined in: [src/common/implementation/Address.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L31)
 
 FACTORY METHODS
 
@@ -190,7 +188,7 @@ FACTORY METHODS
 static createFromEthereum(params): Address;
 ```
 
-Defined in: [src/common/implementation/Address.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L36)
+Defined in: [src/common/implementation/Address.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L35)
 
 #### Parameters
 
@@ -212,7 +210,7 @@ Defined in: [src/common/implementation/Address.ts:36](https://github.com/OasisDE
 static getType(address): AddressType;
 ```
 
-Defined in: [src/common/implementation/Address.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L45)
+Defined in: [src/common/implementation/Address.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L44)
 
 #### Parameters
 
@@ -232,7 +230,7 @@ Defined in: [src/common/implementation/Address.ts:45](https://github.com/OasisDE
 static isValid(address): boolean;
 ```
 
-Defined in: [src/common/implementation/Address.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L40)
+Defined in: [src/common/implementation/Address.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Address.ts#L39)
 
 #### Parameters
 

@@ -9,8 +9,7 @@ import { IPrintable } from './IPrintable'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name IToken
- * @description Represents an token in a Chain, typically used to represent ERC-20 tokens
+ * Represents an token in a Chain, typically used to represent ERC-20 tokens
  */
 export interface IToken extends ITokenData, IPrintable {
   /** Signature to differentiate from similar interfaces */
@@ -27,8 +26,8 @@ export interface IToken extends ITokenData, IPrintable {
   readonly decimals: number
 
   /**
-   * @name equals
-   * @description Checks if two tokens are equal
+   * Checks if two tokens are equal
+   *
    * @param token The token to compare
    * @returns true if the tokens are equal
    *
@@ -38,7 +37,7 @@ export interface IToken extends ITokenData, IPrintable {
 }
 
 /**
- * @description Zod schema for IToken
+ * Zod schema for IToken
  */
 export const TokenDataSchema = z.object({
   chainInfo: ChainInfoDataSchema,
@@ -54,7 +53,8 @@ export const TokenDataSchema = z.object({
 export type ITokenData = Readonly<z.infer<typeof TokenDataSchema>>
 
 /**
- * @description Type guard for IToken
+ * Type guard for IToken
+ *
  * @param maybeTokenData
  * @returns true if the object is an IToken
  */
@@ -63,7 +63,8 @@ export function isToken(maybeTokenData: unknown): maybeTokenData is IToken {
 }
 
 /**
- * @description Type guard for ITokenData
+ * Type guard for ITokenData
+ *
  * @param maybeTokenData
  * @returns true if the object is an ITokenData
  */

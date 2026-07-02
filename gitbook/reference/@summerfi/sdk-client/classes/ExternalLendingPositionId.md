@@ -1,10 +1,6 @@
 # Class: ExternalLendingPositionId
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L21)
-
-## Name
-
-ExternalLendingPositionId
+Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L20)
 
 ## See
 
@@ -26,7 +22,7 @@ IExternalLendingPositionId
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L26)
+Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L25)
 
 SIGNATURE
 
@@ -46,7 +42,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPositionId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPositionId.ts#L17)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPositionId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPositionId.ts#L16)
 
 SIGNATURE
 
@@ -70,7 +66,7 @@ LendingPositionId.[___signature__]
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/PositionId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L16)
+Defined in: [../sdk-common/src/common/implementation/PositionId.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L15)
 
 SIGNATURE
 
@@ -94,7 +90,7 @@ LendingPositionId.[___signature__]
 readonly address: IAddress;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L30)
+Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L29)
 
 Address of the owner of the position
 
@@ -110,7 +106,7 @@ Address of the owner of the position
 readonly externalType: ExternalLendingPositionType;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L29)
+Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L28)
 
 ATTRIBUTES
 
@@ -126,7 +122,7 @@ ATTRIBUTES
 readonly id: string;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/PositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L19)
+Defined in: [../sdk-common/src/common/implementation/PositionId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L18)
 
 ATTRIBUTES
 
@@ -146,7 +142,7 @@ ATTRIBUTES
 readonly protocolId: ILendingPositionId;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L31)
+Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L30)
 
 ID of the lending protocol
 
@@ -162,7 +158,7 @@ ID of the lending protocol
 readonly type: Lending = PositionType.Lending;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPositionId.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPositionId.ts#L20)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPositionId.ts#L19)
 
 ATTRIBUTES
 
@@ -182,7 +178,7 @@ ATTRIBUTES
 toString(): string;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L50)
+Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L49)
 
 #### Returns
 
@@ -208,7 +204,7 @@ IPrintable.toString
 static createFrom(params): ExternalLendingPositionId;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L34)
+Defined in: [../sdk-common/src/orders/importing/implementation/ExternalLendingPositionId.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ExternalLendingPositionId.ts#L33)
 
 FACTORY
 

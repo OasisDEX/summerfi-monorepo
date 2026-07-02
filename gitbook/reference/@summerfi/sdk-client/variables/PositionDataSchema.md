@@ -16,8 +16,6 @@ const PositionDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPosition.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L29)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IPosition.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L28)
 
 Zod schema for IPosition

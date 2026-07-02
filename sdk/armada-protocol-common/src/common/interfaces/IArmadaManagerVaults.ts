@@ -19,8 +19,7 @@ export interface IArmadaManagerVaults {
   /** USER TRANSACTIONS */
 
   /**
-   * @name getNewDepositTx
-   * @description Returns the transactions needed to deposit tokens in the Fleet for a new position
+   * Returns the transactions needed to deposit tokens in the Fleet for a new position
    *
    * @param vaultId ID of the pool to deposit in
    * @param user Address of the user that is trying to deposit
@@ -40,8 +39,7 @@ export interface IArmadaManagerVaults {
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
-   * @name getUpdateDepositTx
-   * @description Returns the transactions needed to deposit tokens in the Fleet for an existing position
+   * Returns the transactions needed to deposit tokens in the Fleet for an existing position
    *
    * @param vaultId ID of the pool to deposit in
    * @param positionId ID of the position to be updated
@@ -60,8 +58,7 @@ export interface IArmadaManagerVaults {
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
-   * @name getWithdrawTx
-   * @description Returns the transactions needed to withdraw tokens from the Fleet
+   * Returns the transactions needed to withdraw tokens from the Fleet
    *
    * @param vaultId ID of the pool to withdraw from
    * @param user Address of the user that is trying to withdraw
@@ -83,8 +80,7 @@ export interface IArmadaManagerVaults {
   >
 
   /**
-   * @name getVaultSwitchTx
-   * @description Returns the transactions needed to switch from one vault to another
+   * Returns the transactions needed to switch from one vault to another
    *
    * @param sourceVaultId ID of the source pool
    * @param destinationVaultId ID of the destination pool
@@ -108,10 +104,9 @@ export interface IArmadaManagerVaults {
   >
 
   /**
-   * @name getVaultSwitchEnsoTx
-   * @description Returns the transactions needed to switch from one vault to another using Enso routing.
-   *              Source and destination vaults must be on the same chain. Enso handles the full flow:
-   *              redeem from source vault, swap assets if needed, deposit into destination vault.
+   * Returns the transactions needed to switch from one vault to another using Enso routing.
+   * Source and destination vaults must be on the same chain. Enso handles the full flow:
+   * redeem from source vault, swap assets if needed, deposit into destination vault.
    *
    * @param sourceVaultId ID of the source pool
    * @param destinationVaultId ID of the destination pool (must be same chain as source)
@@ -130,8 +125,7 @@ export interface IArmadaManagerVaults {
   }): Promise<[VaultSwitchTransactionInfo] | [ApproveTransactionInfo, VaultSwitchTransactionInfo]>
 
   /**
-   * @name getCrossChainDepositTx
-   * @description Returns the transactions needed to deposit tokens cross-chain into a Fleet using Enso routing
+   * Returns the transactions needed to deposit tokens cross-chain into a Fleet using Enso routing
    *
    * @param fromChainId Source chain ID where user has tokens
    * @param vaultId ID of the pool to deposit in on destination chain
@@ -152,8 +146,7 @@ export interface IArmadaManagerVaults {
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
 
   /**
-   * @name getCrossChainWithdrawTx
-   * @description Returns the transactions needed to withdraw tokens cross-chain from a Fleet using Enso routing
+   * Returns the transactions needed to withdraw tokens cross-chain from a Fleet using Enso routing
    *
    * @param vaultId ID of the pool to withdraw from
    * @param user Address of the user that is trying to withdraw
@@ -172,8 +165,7 @@ export interface IArmadaManagerVaults {
   }): Promise<[WithdrawTransactionInfo] | [ApproveTransactionInfo, WithdrawTransactionInfo]>
 
   /**
-   * @method getVaultInfo
-   * @description Retrieves the information of an Armada vault by its ID
+   * Retrieves the information of an Armada vault by its ID
    *
    * @param vaultId ID of the vault to retrieve
    * @param rawVault Optional raw vault data from subgraph containing totalValueLockedUSD
@@ -186,8 +178,7 @@ export interface IArmadaManagerVaults {
   }): Promise<IArmadaVaultInfo>
 
   /**
-   * @method getVaultInfoList
-   * @description Retrieves the information of all Armada vaults for a given chain
+   * Retrieves the information of all Armada vaults for a given chain
    *
    * @param chainInfo Chain information
    *
@@ -226,16 +217,14 @@ export interface IArmadaManagerVaults {
   }>
 
   /**
-   * @method getProtocolRevenue
-   * @description Calculates the total protocol revenue amount in USD across all vaults and chains
+   * Calculates the total protocol revenue amount in USD across all vaults and chains
    *
    * @returns The revenue amount in USD as a number
    */
   getProtocolRevenue(): Promise<number>
 
   /**
-   * @method getProtocolTvl
-   * @description Calculates the total protocol TVL in USD across all vaults and chains
+   * Calculates the total protocol TVL in USD across all vaults and chains
    *
    * @returns The TVL amount in USD as a number
    */

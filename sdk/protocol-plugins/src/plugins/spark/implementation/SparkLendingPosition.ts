@@ -13,7 +13,6 @@ import {
 export type SparkLendingPositionParameters = Omit<ISparkLendingPositionData, 'type'>
 
 /**
- * @class SparkPosition
  * @see ISparkLendingPosition
  */
 export class SparkLendingPosition extends LendingPosition implements ISparkLendingPosition {

@@ -4,7 +4,7 @@
 type TransactionMetadataDeposit = object;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L72)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:70](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L70)
 
 Metadata for a deposit transaction: amounts, optional price impact and slippage.
 
@@ -16,7 +16,7 @@ Metadata for a deposit transaction: amounts, optional price impact and slippage.
 fromAmount: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:73](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L73)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:71](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L71)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:73](https:
 optional priceImpact: TransactionPriceImpact;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:75](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L75)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:73](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L73)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:75](https:
 slippage: IPercentage;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:76](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L76)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:74](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L74)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:76](https:
 optional toAmount: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:74](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L74)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L72)

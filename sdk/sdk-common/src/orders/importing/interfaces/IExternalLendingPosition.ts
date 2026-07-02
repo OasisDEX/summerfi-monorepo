@@ -12,8 +12,7 @@ import { IExternalLendingPositionId } from './IExternalLendingPositionId'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IExternalLendingPosition
- * @description Lending position existing in another service
+ * Lending position existing in another service
  */
 export interface IExternalLendingPosition extends ILendingPosition, IPrintable {
   /** Signature used to differentiate it from similar interfaces */
@@ -23,7 +22,7 @@ export interface IExternalLendingPosition extends ILendingPosition, IPrintable {
 }
 
 /**
- * @description Zod schema for IExternalLendingPosition
+ * Zod schema for IExternalLendingPosition
  */
 export const ExternalLendingPositionDataSchema = z.object({
   ...LendingPositionDataSchema.shape,
@@ -38,7 +37,8 @@ export type IExternalLendingPositionData = Readonly<
 >
 
 /**
- * @description Type guard for IExternalLendingPosition
+ * Type guard for IExternalLendingPosition
+ *
  * @param maybeExternalLendingPosition
  * @returns true if the object is an IExternalLendingPosition
  */

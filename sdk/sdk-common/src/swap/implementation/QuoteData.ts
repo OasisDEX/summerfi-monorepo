@@ -4,9 +4,8 @@ import { IPercentage } from '../../common/interfaces/IPercentage'
 import { IAddress } from '../../common/interfaces/IAddress'
 
 /**
- * @name QuoteData
- * @description Gives information about a swap operation without providing
- *              the data needed to perform the swap
+ * Gives information about a swap operation without providing
+ * the data needed to perform the swap
  */
 export type QuoteData = {
   provider: SwapProviderType

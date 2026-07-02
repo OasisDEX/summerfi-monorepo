@@ -6,6 +6,8 @@ function isRefinanceSimulation(maybeRefinanceSimulationData): maybeRefinanceSimu
 
 Defined in: [../sdk-common/src/simulation/interfaces/IRefinanceSimulation.ts:58](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L58)
 
+Type guard for IRefinanceSimulation
+
 ## Parameters
 
 ### maybeRefinanceSimulationData
@@ -17,7 +19,3 @@ Defined in: [../sdk-common/src/simulation/interfaces/IRefinanceSimulation.ts:58]
 `maybeRefinanceSimulationData is IRefinanceSimulation`
 
 true if the object is an IRefinanceSimulation
-
-## Description
-
-Type guard for IRefinanceSimulation

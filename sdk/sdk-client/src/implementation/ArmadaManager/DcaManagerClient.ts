@@ -3,8 +3,7 @@ import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
 
 /**
- * @name DcaManagerClient
- * @description Implementation of the DCA manager client interface
+ * Implementation of the DCA manager client interface
  */
 export class DcaManagerClient extends IRPCClient implements IDcaManagerClient {
   constructor(params: { rpcClient: RPCMainClientType }) {

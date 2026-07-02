@@ -11,8 +11,7 @@ import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmoun
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface ICollateralInfo
- * @description Contains extended information about a collateral token of a lending pool
+ * Contains extended information about a collateral token of a lending pool
  */
 export interface ICollateralInfo extends ICollateralInfoData {
   /** Signature to differentiate from similar interfaces */
@@ -34,7 +33,7 @@ export interface ICollateralInfo extends ICollateralInfoData {
 }
 
 /**
- * @description Zod schema for ICollateralInfo
+ * Zod schema for ICollateralInfo
  */
 export const CollateralInfoDataSchema = z.object({
   token: z.custom<IToken>((val) => isToken(val)),
@@ -52,7 +51,8 @@ export const CollateralInfoDataSchema = z.object({
 export type ICollateralInfoData = Readonly<z.infer<typeof CollateralInfoDataSchema>>
 
 /**
- * @description Type guard for ICollateralInfo
+ * Type guard for ICollateralInfo
+ *
  * @param maybeCollateralInfo
  * @returns true if the object is an ICollateralInfo
  */

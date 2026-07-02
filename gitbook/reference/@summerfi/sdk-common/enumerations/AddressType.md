@@ -1,10 +1,6 @@
 # Enumeration: AddressType
 
-Defined in: [src/common/enums/AddressType.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/AddressType.ts#L5)
-
-AddressType
-
-## Description
+Defined in: [src/common/enums/AddressType.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/AddressType.ts#L4)
 
 Represents the type of a blockchain address
 
@@ -16,7 +12,7 @@ Represents the type of a blockchain address
 Ethereum: "Ethereum";
 ```
 
-Defined in: [src/common/enums/AddressType.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/AddressType.ts#L7)
+Defined in: [src/common/enums/AddressType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/AddressType.ts#L6)
 
 ***
 
@@ -26,4 +22,4 @@ Defined in: [src/common/enums/AddressType.ts:7](https://github.com/OasisDEX/summ
 Unknown: "Unknown";
 ```
 
-Defined in: [src/common/enums/AddressType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/AddressType.ts#L6)
+Defined in: [src/common/enums/AddressType.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/AddressType.ts#L5)

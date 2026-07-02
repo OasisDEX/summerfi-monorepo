@@ -72,7 +72,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/Pool.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Pool.ts#L18)
+Defined in: [../sdk-common/src/common/implementation/Pool.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Pool.ts#L17)
 
 SIGNATURE
 

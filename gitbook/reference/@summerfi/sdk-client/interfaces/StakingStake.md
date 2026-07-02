@@ -2,8 +2,6 @@
 
 Defined in: [../sdk-common/src/common/types/StakingStake.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/StakingStake.ts#L6)
 
-## Description
-
 Staking stake position details
 
 ## Properties

@@ -12,8 +12,7 @@ import { isFiatCurrencyAmount, type IFiatCurrencyAmount } from './IFiatCurrencyA
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IArmadaPosition
- * @description Interface for an Armada Protocol position
+ * Interface for an Armada Protocol position
  */
 export interface IArmadaPosition extends IPosition, IArmadaPositionData {
   /** Signature used to differentiate it from similar interfaces */
@@ -66,7 +65,7 @@ export interface IArmadaPosition extends IPosition, IArmadaPositionData {
 }
 
 /**
- * @description Zod schema for IArmadaPosition
+ * Zod schema for IArmadaPosition
  */
 export const ArmadaPositionDataSchema = z.object({
   ...PositionDataSchema.shape,
@@ -113,7 +112,8 @@ export const ArmadaPositionDataSchema = z.object({
 export type IArmadaPositionData = Readonly<z.infer<typeof ArmadaPositionDataSchema>>
 
 /**
- * @description Type guard for IArmadaPosition
+ * Type guard for IArmadaPosition
+ *
  * @param maybeArmadaPosition Object to be checked
  * @returns true if the object is a IArmadaPosition
  */

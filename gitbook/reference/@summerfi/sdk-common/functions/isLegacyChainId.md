@@ -4,7 +4,7 @@
 function isLegacyChainId(maybeChainId): maybeChainId is LegacyChainId;
 ```
 
-Defined in: [src/common/types/ChainId.ts:59](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/ChainId.ts#L59)
+Defined in: [src/common/types/ChainId.ts:58](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/ChainId.ts#L58)
 
 Type guard that checks whether a value is a [LegacyChainId](../type-aliases/LegacyChainId.md).
 

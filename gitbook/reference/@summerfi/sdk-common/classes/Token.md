@@ -1,10 +1,6 @@
 # Class: Token
 
-Defined in: [src/common/implementation/Token.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L18)
-
-## Name
-
-Token
+Defined in: [src/common/implementation/Token.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L17)
 
 ## See
 
@@ -22,7 +18,7 @@ IToken
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/common/implementation/Token.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L20)
+Defined in: [src/common/implementation/Token.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L19)
 
 SIGNATURE
 
@@ -38,7 +34,7 @@ SIGNATURE
 readonly address: IAddress;
 ```
 
-Defined in: [src/common/implementation/Token.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L26)
+Defined in: [src/common/implementation/Token.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L25)
 
 Token address
 
@@ -54,7 +50,7 @@ Token address
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [src/common/implementation/Token.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L25)
+Defined in: [src/common/implementation/Token.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L24)
 
 Chain where the token is deployed
 
@@ -70,7 +66,7 @@ Chain where the token is deployed
 readonly decimals: number;
 ```
 
-Defined in: [src/common/implementation/Token.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L27)
+Defined in: [src/common/implementation/Token.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L26)
 
 Number of decimals for the token
 
@@ -86,7 +82,7 @@ Number of decimals for the token
 readonly name: string;
 ```
 
-Defined in: [src/common/implementation/Token.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L24)
+Defined in: [src/common/implementation/Token.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L23)
 
 Full token name
 
@@ -102,7 +98,7 @@ Full token name
 readonly symbol: string;
 ```
 
-Defined in: [src/common/implementation/Token.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L23)
+Defined in: [src/common/implementation/Token.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L22)
 
 ATTRIBUTES
 
@@ -118,7 +114,7 @@ ATTRIBUTES
 equals(token): boolean;
 ```
 
-Defined in: [src/common/implementation/Token.ts:57](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L57)
+Defined in: [src/common/implementation/Token.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L56)
 
 #### Parameters
 
@@ -146,7 +142,7 @@ IToken.equals
 toString(): string;
 ```
 
-Defined in: [src/common/implementation/Token.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L62)
+Defined in: [src/common/implementation/Token.ts:61](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L61)
 
 #### Returns
 
@@ -168,7 +164,7 @@ IPrintable.toString
 static createFrom(params): Token;
 ```
 
-Defined in: [src/common/implementation/Token.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L30)
+Defined in: [src/common/implementation/Token.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L29)
 
 FACTORY
 
@@ -190,7 +186,7 @@ FACTORY
 static createFromEthereum(params): Token;
 ```
 
-Defined in: [src/common/implementation/Token.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L34)
+Defined in: [src/common/implementation/Token.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Token.ts#L33)
 
 #### Parameters
 

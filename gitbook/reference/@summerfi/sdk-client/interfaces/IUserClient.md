@@ -1,17 +1,13 @@
 # Interface: IUserClient
 
-Defined in: [src/interfaces/IUserClient.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L18)
-
-IUserClient
-
-## Description
+Defined in: [src/interfaces/IUserClient.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L17)
 
 Represents a user and allows to access their positions and to create new orders
 
-## Dev
+## Remarks
 
 This interface must be used to get positions for a user that will be used to create orders. To retrieve
-     positions for portfolio please
+positions for portfolio please
 
 ## See
 
@@ -25,7 +21,7 @@ PortfolioManager
 user: IUser;
 ```
 
-Defined in: [src/interfaces/IUserClient.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L19)
+Defined in: [src/interfaces/IUserClient.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L18)
 
 ## Methods
 
@@ -35,7 +31,9 @@ Defined in: [src/interfaces/IUserClient.ts:19](https://github.com/OasisDEX/summe
 getPosition(params): Promise<Maybe<Position>>;
 ```
 
-Defined in: [src/interfaces/IUserClient.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L37)
+Defined in: [src/interfaces/IUserClient.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L33)
+
+Retrieves a position of the user by its ID
 
 #### Parameters
 
@@ -49,14 +47,6 @@ Defined in: [src/interfaces/IUserClient.ts:37](https://github.com/OasisDEX/summe
 
 `Promise`\<[`Maybe`](../type-aliases/Maybe.md)\<[`Position`](../classes/Position.md)\>\>
 
-#### Method
-
-getPosition
-
-#### Description
-
-Retrieves a position of the user by its ID
-
 ***
 
 ### getPositionsByIds()
@@ -65,7 +55,9 @@ Retrieves a position of the user by its ID
 getPositionsByIds(params): Promise<Position[]>;
 ```
 
-Defined in: [src/interfaces/IUserClient.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L31)
+Defined in: [src/interfaces/IUserClient.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L28)
+
+Retrieves the list of positions of the user for the given IDs
 
 #### Parameters
 
@@ -79,14 +71,6 @@ Defined in: [src/interfaces/IUserClient.ts:31](https://github.com/OasisDEX/summe
 
 `Promise`\<[`Position`](../classes/Position.md)[]\>
 
-#### Method
-
-getPositionsByIds
-
-#### Description
-
-Retrieves the list of positions of the user for the given IDs
-
 ***
 
 ### getPositionsByProtocol()
@@ -95,7 +79,9 @@ Retrieves the list of positions of the user for the given IDs
 getPositionsByProtocol(params): Promise<Position[]>;
 ```
 
-Defined in: [src/interfaces/IUserClient.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L25)
+Defined in: [src/interfaces/IUserClient.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L23)
+
+Retrieves the list of positions of the user for a given protocol
 
 #### Parameters
 
@@ -109,14 +95,6 @@ Defined in: [src/interfaces/IUserClient.ts:25](https://github.com/OasisDEX/summe
 
 `Promise`\<[`Position`](../classes/Position.md)[]\>
 
-#### Method
-
-getPositionsByProtocol
-
-#### Description
-
-Retrieves the list of positions of the user for a given protocol
-
 ***
 
 ### newOrder()
@@ -125,7 +103,9 @@ Retrieves the list of positions of the user for a given protocol
 newOrder(params): Promise<Maybe<Order>>;
 ```
 
-Defined in: [src/interfaces/IUserClient.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L47)
+Defined in: [src/interfaces/IUserClient.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUserClient.ts#L42)
+
+Creates a new order for the user based on the given simulation
 
 #### Parameters
 
@@ -140,11 +120,3 @@ Defined in: [src/interfaces/IUserClient.ts:47](https://github.com/OasisDEX/summe
 `Promise`\<[`Maybe`](../type-aliases/Maybe.md)\<[`Order`](Order.md)\>\>
 
 The new order created for the user
-
-#### Method
-
-newOrder
-
-#### Description
-
-Creates a new order for the user based on the given simulation

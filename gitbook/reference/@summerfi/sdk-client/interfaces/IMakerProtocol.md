@@ -1,10 +1,6 @@
 # Interface: IMakerProtocol
 
-Defined in: [../protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/maker/interfaces/IMakerProtocol.ts#L16)
-
-IMakerProtocol
-
-## Description
+Defined in: [../protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/maker/interfaces/IMakerProtocol.ts#L15)
 
 Identifier of the Maker protocol
 
@@ -23,7 +19,7 @@ This may be fixed eventually, there is a discussion on the topic here: https://g
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/maker/interfaces/IMakerProtocol.ts#L18)
+Defined in: [../protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/maker/interfaces/IMakerProtocol.ts#L17)
 
 Interface signature used to differentiate it from similar interfaces
 
@@ -39,7 +35,7 @@ Interface signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L18)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L17)
 
 Signature used to differentiate it from similar interfaces
 
@@ -57,7 +53,7 @@ IProtocol.[___signature__]
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L22)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L21)
 
 The chain information
 
@@ -73,7 +69,7 @@ The chain information
 readonly name: Maker;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/maker/interfaces/IMakerProtocol.ts#L21)
+Defined in: [../protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/maker/interfaces/IMakerProtocol.ts#L20)
 
 The name of the protocol
 
@@ -89,7 +85,7 @@ The name of the protocol
 equals(protocol): boolean;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L31)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L30)
 
 Compare if the passed protocol is equal to the current protocol
 

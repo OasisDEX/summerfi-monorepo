@@ -1,10 +1,6 @@
 # Class: ImportSimulation
 
-Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L22)
-
-## Name
-
-ImportSimulation
+Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L21)
 
 ## See
 
@@ -26,7 +22,7 @@ IImportSimulation
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L24)
+Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L23)
 
 SIGNATURE
 
@@ -46,7 +42,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/simulation/implementation/Simulation.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L16)
+Defined in: [../sdk-common/src/simulation/implementation/Simulation.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L15)
 
 SIGNATURE
 
@@ -68,7 +64,7 @@ IImportSimulation.[___signature__]
 readonly sourcePosition: IExternalLendingPosition;
 ```
 
-Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L27)
+Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L26)
 
 ATTRIBUTES
 
@@ -84,7 +80,7 @@ ATTRIBUTES
 readonly steps: Steps[];
 ```
 
-Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L29)
+Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L28)
 
 Steps needed to perform the refinance
 
@@ -100,7 +96,7 @@ Steps needed to perform the refinance
 readonly targetPosition: ILendingPosition;
 ```
 
-Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L28)
+Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L27)
 
 Simulated target position
 
@@ -116,7 +112,7 @@ Simulated target position
 readonly type: ImportPosition = SimulationType.ImportPosition;
 ```
 
-Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L30)
+Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L29)
 
 ATTRIBUTES
 
@@ -136,7 +132,7 @@ ATTRIBUTES
 static createFrom(params): ImportSimulation;
 ```
 
-Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L33)
+Defined in: [../sdk-common/src/simulation/implementation/ImportSimulation.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/ImportSimulation.ts#L32)
 
 FACTORY
 

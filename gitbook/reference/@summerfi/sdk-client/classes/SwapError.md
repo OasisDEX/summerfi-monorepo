@@ -1,8 +1,6 @@
 # Class: SwapError
 
-Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L16)
-
-SwapError
+Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L15)
 
 ## See
 
@@ -24,7 +22,7 @@ ISwapError
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L18)
+Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L17)
 
 SIGNATURE
 
@@ -44,7 +42,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/SDKError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/SDKError.ts#L16)
+Defined in: [../sdk-common/src/common/implementation/SDKError.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/SDKError.ts#L15)
 
 SIGNATURE
 
@@ -68,7 +66,7 @@ SDKError.[___signature__]
 readonly apiQuery: string;
 ```
 
-Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L23)
+Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L22)
 
 Full URL of the API query that generated the error
 
@@ -98,7 +96,7 @@ Defined in: [../../node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript
 readonly message: string;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/SDKError.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/SDKError.ts#L21)
+Defined in: [../sdk-common/src/common/implementation/SDKError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/SDKError.ts#L20)
 
 Free form debug message, used to debug the issue through the console
 
@@ -132,7 +130,7 @@ Defined in: [../../node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript
 readonly reason: string;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/SDKError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/SDKError.ts#L20)
+Defined in: [../sdk-common/src/common/implementation/SDKError.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/SDKError.ts#L19)
 
 Free form reason message, used to provide a short description of the problem
 
@@ -166,7 +164,7 @@ Defined in: [../../node\_modules/.pnpm/typescript@5.9.3/node\_modules/typescript
 readonly statusCode: number;
 ```
 
-Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L24)
+Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L23)
 
 GET or POST status code
 
@@ -182,7 +180,7 @@ GET or POST status code
 readonly subtype: SwapErrorType;
 ```
 
-Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L22)
+Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L21)
 
 Specific error for the swap service
 
@@ -198,7 +196,7 @@ Specific error for the swap service
 readonly type: SwapError;
 ```
 
-Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L21)
+Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L20)
 
 ATTRIBUTES
 
@@ -314,7 +312,7 @@ a();
 static createFrom(params): SwapError;
 ```
 
-Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L27)
+Defined in: [../sdk-common/src/swap/implementation/SwapError.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/SwapError.ts#L26)
 
 FACTORY
 

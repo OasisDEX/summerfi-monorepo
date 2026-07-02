@@ -7,7 +7,6 @@ import { IAaveV3Protocol, IAaveV3ProtocolData, __signature__ } from '../interfac
 export type AaveV3ProtocolParameters = Omit<IAaveV3ProtocolData, 'name'>
 
 /**
- * @class AaveV3Protocol
  * @see IAaveV3ProtocolData
  */
 export class AaveV3Protocol extends Protocol implements IAaveV3Protocol {

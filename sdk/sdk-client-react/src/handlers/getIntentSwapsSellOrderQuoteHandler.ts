@@ -2,8 +2,8 @@ import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { Address, type AddressValue, type IToken, type ITokenAmount } from '@summerfi/sdk-common'
 
 /**
- * @name getIntentSwapsSellOrderQuoteHandler
- * @description Returns a quote for a sell order between two tokens
+ * Returns a quote for a sell order between two tokens
+ *
  * @param params.fromAmount The token amount to sell
  * @param params.toToken The token to receive
  * @param params.sender The sender's address

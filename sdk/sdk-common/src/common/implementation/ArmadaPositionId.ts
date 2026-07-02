@@ -11,7 +11,6 @@ import { PositionId } from './PositionId'
 export type ArmadaPositionIdParameters = Omit<IArmadaPositionIdData, 'type'>
 
 /**
- * @class ArmadaPositionId
  * @see IArmadaPositionId
  */
 export class ArmadaPositionId extends PositionId implements IArmadaPositionId {

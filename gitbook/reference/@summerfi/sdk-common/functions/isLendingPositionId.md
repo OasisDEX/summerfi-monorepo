@@ -6,6 +6,8 @@ function isLendingPositionId(maybeLendingPositionId): maybeLendingPositionId is 
 
 Defined in: [src/lending-protocols/interfaces/ILendingPositionId.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPositionId.ts#L42)
 
+Type guard for ILendingPositionId
+
 ## Parameters
 
 ### maybeLendingPositionId
@@ -21,7 +23,3 @@ Object to be checked
 true if the object is an ILendingPositionId
 
 It also asserts the type so that TypeScript knows that the object is an ILendingPool
-
-## Description
-
-Type guard for ILendingPositionId

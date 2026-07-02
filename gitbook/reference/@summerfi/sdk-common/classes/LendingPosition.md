@@ -1,10 +1,6 @@
 # Abstract Class: LendingPosition
 
-Defined in: [src/lending-protocols/implementation/LendingPosition.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L23)
-
-## Name
-
-LendingPosition
+Defined in: [src/lending-protocols/implementation/LendingPosition.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L22)
 
 ## See
 
@@ -30,7 +26,7 @@ ILendingPosition
 protected new LendingPosition(params): LendingPosition;
 ```
 
-Defined in: [src/lending-protocols/implementation/LendingPosition.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L36)
+Defined in: [src/lending-protocols/implementation/LendingPosition.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L35)
 
 SEALED CONSTRUCTOR
 
@@ -56,7 +52,7 @@ SEALED CONSTRUCTOR
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/lending-protocols/implementation/LendingPosition.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L25)
+Defined in: [src/lending-protocols/implementation/LendingPosition.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L24)
 
 SIGNATURE
 
@@ -76,7 +72,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/common/implementation/Position.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L18)
+Defined in: [src/common/implementation/Position.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L17)
 
 SIGNATURE
 
@@ -100,7 +96,7 @@ Position.[___signature__]
 readonly collateralAmount: ITokenAmount;
 ```
 
-Defined in: [src/lending-protocols/implementation/LendingPosition.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L31)
+Defined in: [src/lending-protocols/implementation/LendingPosition.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L30)
 
 Amount of collateral deposited in the pool
 
@@ -116,7 +112,7 @@ Amount of collateral deposited in the pool
 readonly debtAmount: ITokenAmount;
 ```
 
-Defined in: [src/lending-protocols/implementation/LendingPosition.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L30)
+Defined in: [src/lending-protocols/implementation/LendingPosition.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L29)
 
 Amount of debt borrowed from the pool
 
@@ -132,7 +128,7 @@ Amount of debt borrowed from the pool
 readonly id: ILendingPositionId;
 ```
 
-Defined in: [src/lending-protocols/implementation/LendingPosition.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L29)
+Defined in: [src/lending-protocols/implementation/LendingPosition.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L28)
 
 Unique identifier for the position inside the Summer.fi system
 
@@ -152,7 +148,7 @@ Unique identifier for the position inside the Summer.fi system
 abstract readonly pool: ILendingPool;
 ```
 
-Defined in: [src/lending-protocols/implementation/LendingPosition.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L32)
+Defined in: [src/lending-protocols/implementation/LendingPosition.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L31)
 
 Pool where the position is
 
@@ -172,7 +168,7 @@ Pool where the position is
 readonly subtype: LendingPositionType;
 ```
 
-Defined in: [src/lending-protocols/implementation/LendingPosition.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L28)
+Defined in: [src/lending-protocols/implementation/LendingPosition.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L27)
 
 ATTRIBUTES
 
@@ -188,7 +184,7 @@ ATTRIBUTES
 readonly type: Lending = PositionType.Lending;
 ```
 
-Defined in: [src/lending-protocols/implementation/LendingPosition.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L33)
+Defined in: [src/lending-protocols/implementation/LendingPosition.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L32)
 
 ATTRIBUTES
 

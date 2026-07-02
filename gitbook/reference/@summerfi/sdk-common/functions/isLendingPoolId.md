@@ -6,6 +6,8 @@ function isLendingPoolId(maybePoolId): maybePoolId is ILendingPoolId;
 
 Defined in: [src/lending-protocols/interfaces/ILendingPoolId.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L52)
 
+Type guard for ILendingPoolId
+
 ## Parameters
 
 ### maybePoolId
@@ -21,7 +23,3 @@ Object to be checked
 true if the object is an ILendingPoolId
 
 It also asserts the type so that TypeScript knows that the object is an ILendingPoolId
-
-## Description
-
-Type guard for ILendingPoolId

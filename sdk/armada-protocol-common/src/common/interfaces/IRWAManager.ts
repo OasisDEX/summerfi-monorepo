@@ -15,15 +15,13 @@ import type {
 import type { GetVaultQueryRwa, GetVaultsQueryRwa } from '@summerfi/subgraph-manager-common'
 
 /**
- * @name IRWAManager
- * @description Interface for managing Real-World Asset (RWA) vaults.
- *              Mirrors the relevant subset of IArmadaManagerVaults but is sourced
- *              from the RWA subgraph and returns RWA-specific domain types.
+ * Interface for managing Real-World Asset (RWA) vaults.
+ * Mirrors the relevant subset of IArmadaManagerVaults but is sourced
+ * from the RWA subgraph and returns RWA-specific domain types.
  */
 export interface IRWAManager {
   /**
-   * @method getVaultInfoListPerChain
-   * @description Retrieves the information of all RWA vaults for a given chain and institution
+   * Retrieves the information of all RWA vaults for a given chain and institution
    *
    * @param chainId  Chain to query
    * @param clientId Institution client ID string (e.g. 'ExtDemoCorp_v2')
@@ -35,10 +33,9 @@ export interface IRWAManager {
   }>
 
   /**
-   * @method getVaultsRaw
-   * @description Retrieves the raw RWA subgraph response for all vaults of a given chain
-   *              and institution. This is the RWA equivalent of
-   *              IArmadaManagerPositions.getVaultsRaw.
+   * Retrieves the raw RWA subgraph response for all vaults of a given chain
+   * and institution. This is the RWA equivalent of
+   * IArmadaManagerPositions.getVaultsRaw.
    *
    * @param chainInfo Chain to query
    * @param clientId  Institution client ID string (e.g. 'ExtDemoCorp_v2')
@@ -48,9 +45,8 @@ export interface IRWAManager {
   getVaultsRaw(params: { chainInfo: IChainInfo; clientId: string }): Promise<GetVaultsQueryRwa>
 
   /**
-   * @method getVaultRaw
-   * @description Retrieves the raw RWA subgraph response for a single vault. This is the RWA
-   *              equivalent of IArmadaManagerPositions.getVaultRaw.
+   * Retrieves the raw RWA subgraph response for a single vault. This is the RWA
+   * equivalent of IArmadaManagerPositions.getVaultRaw.
    *
    * @param vaultId Identifier of the vault to query (chain + fleet address)
    *
@@ -63,9 +59,8 @@ export interface IRWAManager {
   // ---------------------------------------------------------------------------
 
   /**
-   * @method getDepositTx
-   * @description Builds the approve + RoundsVaultInput.deposit transaction pair for a whitelisted
-   *              user. Mints an ERC-1155 receipt for the current open round.
+   * Builds the approve + RoundsVaultInput.deposit transaction pair for a whitelisted
+   * user. Mints an ERC-1155 receipt for the current open round.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -81,9 +76,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo[]>
 
   /**
-   * @method getClaimSharesTx
-   * @description Builds the RoundsVaultInput.redeemExchangeAsset transaction to exchange a
-   *              settled-round receipt for Fleet shares.
+   * Builds the RoundsVaultInput.redeemExchangeAsset transaction to exchange a
+   * settled-round receipt for Fleet shares.
    *
    * @param chainId         The chain the Fleet is on
    * @param fleetAddress    The Fleet address
@@ -107,9 +101,8 @@ export interface IRWAManager {
   // ---------------------------------------------------------------------------
 
   /**
-   * @method getWithdrawTx
-   * @description Builds the approve + RoundsVaultOutput.deposit transaction pair for a whitelisted
-   *              user who wants to exit the Fleet. Mints an ERC-1155 receipt for the current round.
+   * Builds the approve + RoundsVaultOutput.deposit transaction pair for a whitelisted
+   * user who wants to exit the Fleet. Mints an ERC-1155 receipt for the current round.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -125,9 +118,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo[]>
 
   /**
-   * @method getClaimAssetsTx
-   * @description Builds the RoundsVaultOutput.redeemExchangeAsset transaction to exchange a
-   *              settled-round receipt for the underlying asset (e.g. USDC).
+   * Builds the RoundsVaultOutput.redeemExchangeAsset transaction to exchange a
+   * settled-round receipt for the underlying asset (e.g. USDC).
    *
    * @param chainId         The chain the Fleet is on
    * @param fleetAddress    The Fleet address
@@ -147,9 +139,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @method getCancelRoundDepositTx
-   * @description Builds the RoundsVaultBase.redeem transaction to return an open current-round
-   *              receipt before it enters settlement (cancels a pending deposit or withdraw).
+   * Builds the RoundsVaultBase.redeem transaction to return an open current-round
+   * receipt before it enters settlement (cancels a pending deposit or withdraw).
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -177,8 +168,7 @@ export interface IRWAManager {
   // ---------------------------------------------------------------------------
 
   /**
-   * @method getCurrentRound
-   * @description Returns the current (open) round number for the given RoundsVault.
+   * Returns the current (open) round number for the given RoundsVault.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -191,8 +181,7 @@ export interface IRWAManager {
   }): Promise<bigint>
 
   /**
-   * @method getRoundState
-   * @description Returns the on-chain state of a specific round.
+   * Returns the on-chain state of a specific round.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -207,9 +196,8 @@ export interface IRWAManager {
   }): Promise<RoundState>
 
   /**
-   * @method getExchangeRate
-   * @description Returns the snapshotted exchange rate for a settled round
-   *              (output-asset amount per unit of receipt token).
+   * Returns the snapshotted exchange rate for a settled round
+   * (output-asset amount per unit of receipt token).
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -224,9 +212,8 @@ export interface IRWAManager {
   }): Promise<IPrice>
 
   /**
-   * @method getReceiptBalances
-   * @description Returns all ERC-1155 receipt token balances held by an account across every round id
-   *              (sourced from the RWA subgraph).
+   * Returns all ERC-1155 receipt token balances held by an account across every round id
+   * (sourced from the RWA subgraph).
    *
    * @param chainId        The chain the Fleet is on
    * @param fleetAddress   The Fleet address
@@ -241,15 +228,14 @@ export interface IRWAManager {
   }): Promise<{ roundId: bigint; balance: bigint }[]>
 
   /**
-   * @method getUserVaultExposure
-   * @description Returns a user's total economic exposure to an RWA vault, denominated in the Fleet
-   *              input asset (e.g. USDC) plus a USD valuation and a per-component breakdown. Stitches
-   *              the three pools of the RoundsVault model:
-   *              `settledPosition + pendingDeposits + claimableDeposits + pendingWithdrawals`.
-   *              `claimableDeposits` (settled, unclaimed Input receipts) is added because those shares
-   *              are held by the RoundsVault, not the user, so they are absent from the per-user
-   *              `position.inputTokenBalance`. Pending withdrawals are share-denominated Output
-   *              receipts converted via the vault `pricePerShare`; claimable withdrawals are excluded.
+   * Returns a user's total economic exposure to an RWA vault, denominated in the Fleet
+   * input asset (e.g. USDC) plus a USD valuation and a per-component breakdown. Stitches
+   * the three pools of the RoundsVault model:
+   * `settledPosition + pendingDeposits + claimableDeposits + pendingWithdrawals`.
+   * `claimableDeposits` (settled, unclaimed Input receipts) is added because those shares
+   * are held by the RoundsVault, not the user, so they are absent from the per-user
+   * `position.inputTokenBalance`. Pending withdrawals are share-denominated Output
+   * receipts converted via the vault `pricePerShare`; claimable withdrawals are excluded.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -262,12 +248,11 @@ export interface IRWAManager {
   }): Promise<IRwaUserVaultExposure>
 
   /**
-   * @method getVaultMarketValue
-   * @description Returns the total market value (true TVL) of an RWA vault across all users,
-   *              denominated in the Fleet input asset plus a USD valuation and a per-component
-   *              breakdown. Treats the Fleet and both RoundsVaults as one system:
-   *              `fleetAssets + pendingDeposits + claimableWithdrawals`, where `fleetAssets`
-   *              (on-chain `totalAssets()`) already accounts for settled deposits/withdrawals.
+   * Returns the total market value (true TVL) of an RWA vault across all users,
+   * denominated in the Fleet input asset plus a USD valuation and a per-component
+   * breakdown. Treats the Fleet and both RoundsVaults as one system:
+   * `fleetAssets + pendingDeposits + claimableWithdrawals`, where `fleetAssets`
+   * (on-chain `totalAssets()`) already accounts for settled deposits/withdrawals.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -278,9 +263,8 @@ export interface IRWAManager {
   }): Promise<IRwaVaultMarketValue>
 
   /**
-   * @method getSetMinimumPositionSizeTx
-   * @description Builds the RoundsVaultBase.setMinPositionSize transaction for the Input or Output
-   *              RoundsVault of a Fleet (manager-set config).
+   * Builds the RoundsVaultBase.setMinPositionSize transaction for the Input or Output
+   * RoundsVault of a Fleet (manager-set config).
    *
    * @param chainId             The chain the Fleet is on
    * @param fleetAddress        The Fleet address
@@ -300,9 +284,8 @@ export interface IRWAManager {
   // ---------------------------------------------------------------------------
 
   /**
-   * @method getNextRoundTx
-   * @description Builds the RoundsVault.nextRound transaction: closes the current open round (moving it
-   *              to InSettlement) and opens a new round.
+   * Builds the RoundsVault.nextRound transaction: closes the current open round (moving it
+   * to InSettlement) and opens a new round.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -315,9 +298,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @method getSetRoundSettledTx
-   * @description Builds the RoundsVault.setRoundSettled transaction: marks an in-settlement round as
-   *              Settled, making its receipts redeemable.
+   * Builds the RoundsVault.setRoundSettled transaction: marks an in-settlement round as
+   * Settled, making its receipts redeemable.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -332,9 +314,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @method getSetRoundSettledBatchTx
-   * @description Builds the RoundsVault.setRoundSettledBatch transaction: settles multiple
-   *              in-settlement rounds in a single call.
+   * Builds the RoundsVault.setRoundSettledBatch transaction: settles multiple
+   * in-settlement rounds in a single call.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -349,9 +330,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @method getRetryRoundTx
-   * @description Builds the RoundsVault.retryRound transaction: re-queues a rolled-back round for
-   *              settlement.
+   * Builds the RoundsVault.retryRound transaction: re-queues a rolled-back round for
+   * settlement.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -366,9 +346,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @method getEmergencyRollbackRoundTx
-   * @description Builds the RoundsVault.emergencyRollbackRound transaction: rolls a stuck
-   *              in-settlement round back to Opened (Governor-gated recovery path).
+   * Builds the RoundsVault.emergencyRollbackRound transaction: rolls a stuck
+   * in-settlement round back to Opened (Governor-gated recovery path).
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -387,9 +366,8 @@ export interface IRWAManager {
   // ---------------------------------------------------------------------------
 
   /**
-   * @method getSetFleetTransferabilityTx
-   * @description Builds the FleetCommander.setFleetTokenTransferability transaction, which flips the
-   *              fleet share-token transferability flag (no argument — it is a toggle).
+   * Builds the FleetCommander.setFleetTokenTransferability transaction, which flips the
+   * fleet share-token transferability flag (no argument — it is a toggle).
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -400,9 +378,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @method isFleetTransfersEnabled
-   * @description Returns whether the Fleet's share token is currently transferable (read the current
-   *              state so callers can label the toggle).
+   * Returns whether the Fleet's share token is currently transferable (read the current
+   * state so callers can label the toggle).
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address
@@ -417,9 +394,8 @@ export interface IRWAManager {
   // ---------------------------------------------------------------------------
 
   /**
-   * @method getGrantRoleTx
-   * @description Builds the transaction to grant a role to an account on the institution's
-   *              ProtocolAccessManager(V2), via the matching typed on-chain wrapper.
+   * Builds the transaction to grant a role to an account on the institution's
+   * ProtocolAccessManager(V2), via the matching typed on-chain wrapper.
    *
    * @param chainId The chain the institution is deployed on
    * @param role    The role descriptor (carries a `target` contract for contract-specific roles)
@@ -432,9 +408,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @method getRevokeRoleTx
-   * @description Builds the transaction to revoke a role from an account on the institution's
-   *              ProtocolAccessManager(V2), via the matching typed on-chain wrapper.
+   * Builds the transaction to revoke a role from an account on the institution's
+   * ProtocolAccessManager(V2), via the matching typed on-chain wrapper.
    *
    * @param chainId The chain the institution is deployed on
    * @param role    The role descriptor (carries a `target` contract for contract-specific roles)
@@ -451,9 +426,8 @@ export interface IRWAManager {
   // ---------------------------------------------------------------------------
 
   /**
-   * @method getSetWhitelistedTx
-   * @description Builds the transaction to set or revoke whitelist status for a single account
-   *              on the Fleet's ProtocolAccessManagerV2 context.
+   * Builds the transaction to set or revoke whitelist status for a single account
+   * on the Fleet's ProtocolAccessManagerV2 context.
    *
    * @param chainId        The chain the Fleet is on
    * @param fleetAddress   The Fleet address (the whitelist context)
@@ -468,9 +442,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @method getSetWhitelistedBatchTx
-   * @description Builds the transaction to set or revoke whitelist status for multiple accounts
-   *              in a single on-chain call.
+   * Builds the transaction to set or revoke whitelist status for multiple accounts
+   * in a single on-chain call.
    *
    * @param chainId          The chain the Fleet is on
    * @param fleetAddress     The Fleet address (the whitelist context)
@@ -485,9 +458,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @method getSetWhitelistOpenTx
-   * @description Builds the transaction to toggle the open-whitelist flag for the Fleet context.
-   *              When open, any address is considered whitelisted regardless of individual entries.
+   * Builds the transaction to toggle the open-whitelist flag for the Fleet context.
+   * When open, any address is considered whitelisted regardless of individual entries.
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address (the whitelist context)
@@ -500,9 +472,8 @@ export interface IRWAManager {
   }): Promise<TransactionInfo>
 
   /**
-   * @method isWhitelisted
-   * @description Returns whether an account is whitelisted on the Fleet context
-   *              (either individually or because the whitelist is open).
+   * Returns whether an account is whitelisted on the Fleet context
+   * (either individually or because the whitelist is open).
    *
    * @param chainId        The chain the Fleet is on
    * @param fleetAddress   The Fleet address (the whitelist context)
@@ -515,9 +486,8 @@ export interface IRWAManager {
   }): Promise<boolean>
 
   /**
-   * @method isWhitelistOpen
-   * @description Returns whether the Fleet's whitelist is globally open
-   *              (i.e. _isWhitelistOpen[fleetAddress] == true).
+   * Returns whether the Fleet's whitelist is globally open
+   * (i.e. _isWhitelistOpen[fleetAddress] == true).
    *
    * @param chainId      The chain the Fleet is on
    * @param fleetAddress The Fleet address (the whitelist context)

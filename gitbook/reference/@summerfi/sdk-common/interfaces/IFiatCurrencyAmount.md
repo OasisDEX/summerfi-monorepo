@@ -1,12 +1,6 @@
 # Interface: IFiatCurrencyAmount
 
-Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L35)
-
-## Name
-
-IFiatCurrencyAmount
-
-## Description
+Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L34)
 
 Represents an amount of a fiat currency
 
@@ -26,7 +20,7 @@ like Price or Percentage
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L37)
+Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L36)
 
 Signature to differentiate from similar interfaces
 
@@ -38,7 +32,7 @@ Signature to differentiate from similar interfaces
 readonly amount: string;
 ```
 
-Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L41)
+Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L40)
 
 The amount in floating point format
 
@@ -56,7 +50,7 @@ IFiatCurrencyAmountData.amount
 readonly fiat: FiatCurrency;
 ```
 
-Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L39)
+Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L38)
 
 Fiat currency for the amount
 
@@ -74,7 +68,7 @@ IFiatCurrencyAmountData.fiat
 add(fiatToAdd): IFiatCurrencyAmount;
 ```
 
-Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L48)
+Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L46)
 
 #### Parameters
 
@@ -90,10 +84,6 @@ FiatCurrencyAmount to add
 
 The resulting FiatCurrencyAmount
 
-#### Name
-
-add
-
 ***
 
 ### divide()
@@ -102,7 +92,7 @@ add
 divide<InputParams, ReturnType>(divisor): ReturnType;
 ```
 
-Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:74](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L74)
+Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:69](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L69)
 
 #### Type Parameters
 
@@ -128,10 +118,6 @@ A percentage, price string amount or number to divide
 
 The resulting FiatCurrencyAmount
 
-#### Name
-
-divide
-
 ***
 
 ### multiply()
@@ -140,7 +126,7 @@ divide
 multiply<InputParams, ReturnType>(multiplier): ReturnType;
 ```
 
-Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L62)
+Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:58](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L58)
 
 #### Type Parameters
 
@@ -166,10 +152,6 @@ A percentage, string amount or number to multiply
 
 The resulting FiatCurrencyAmount
 
-#### Name
-
-multiply
-
 ***
 
 ### subtract()
@@ -178,7 +160,7 @@ multiply
 subtract(fiatToSubtract): IFiatCurrencyAmount;
 ```
 
-Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:55](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L55)
+Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L52)
 
 #### Parameters
 
@@ -192,10 +174,6 @@ Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:55](https://github.com
 
 The resulting FiatCurrencyAmount
 
-#### Name
-
-subtract
-
 ***
 
 ### toBigNumber()
@@ -204,7 +182,7 @@ subtract
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [src/common/interfaces/IValueConverter.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L37)
+Defined in: [src/common/interfaces/IValueConverter.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L36)
 
 Converts the instance into a BigNumber
 
@@ -235,7 +213,7 @@ IValueConverter.toBigNumber
 toSolidityValue(params?): bigint;
 ```
 
-Defined in: [src/common/interfaces/IValueConverter.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L23)
+Defined in: [src/common/interfaces/IValueConverter.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L22)
 
 Converts the instance into a Solidity value
 
@@ -272,7 +250,9 @@ IValueConverter.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [src/common/interfaces/IPrintable.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L14)
+
+Returns a string representation of the object
 
 #### Returns
 
@@ -281,14 +261,6 @@ Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX
 string
 
 The string representation should have enough info to debug the object
-
-#### Name
-
-toString
-
-#### Description
-
-Returns a string representation of the object
 
 #### Inherited from
 

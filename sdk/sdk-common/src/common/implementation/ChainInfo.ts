@@ -8,7 +8,6 @@ import { IChainInfo, IChainInfoData, __signature__ } from '../interfaces/IChainI
 export type ChainInfoParameters = Omit<IChainInfoData, ''>
 
 /**
- * @name ChainInfo
  * @see IChainInfo
  */
 export class ChainInfo implements IChainInfo {

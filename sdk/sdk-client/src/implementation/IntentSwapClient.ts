@@ -20,10 +20,6 @@ import { LoggingService, NATIVE_CURRENCY_ADDRESS_LOWERCASE, Price } from '@summe
 
 const ORDER_VALIDITY_MINUTES = 10
 
-/**
- * @name IntentSwapClient
- * @implements IIntentSwapClient
- */
 export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   private _validateChainId(chainId: number) {
     if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId as SupportedChainId)) {

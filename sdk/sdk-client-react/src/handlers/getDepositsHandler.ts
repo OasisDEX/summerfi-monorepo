@@ -2,8 +2,8 @@ import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { IArmadaPositionId } from '@summerfi/sdk-common'
 
 /**
- * @name getDepositsHandler
- * @description Retrieves deposits for a given Armada position ID with optional pagination
+ * Retrieves deposits for a given Armada position ID with optional pagination
+ *
  * @param params.positionId The position ID
  * @param params.first Optional number of items to return
  * @param params.skip Optional number of items to skip for pagination

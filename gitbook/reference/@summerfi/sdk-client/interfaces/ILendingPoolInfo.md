@@ -1,12 +1,6 @@
 # Interface: ILendingPoolInfo
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L25)
-
-## Name
-
-ILendingPoolInfo
-
-## Description
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L23)
 
 Represents the extended information for a lending pool of a single pair collateral/debt
 
@@ -29,7 +23,7 @@ tries to abstract this information to provide a common interface for all the pro
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L27)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L25)
 
 Signature to differentiate from similar interfaces
 
@@ -45,7 +39,7 @@ Signature to differentiate from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L18)
+Defined in: [../sdk-common/src/common/interfaces/IPoolInfo.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L17)
 
 Signature to differentiate from similar interfaces
 
@@ -63,7 +57,7 @@ IPoolInfo.[___signature__]
 readonly collateral: ICollateralInfo;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L31)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L29)
 
 The collateral information of the pool
 
@@ -81,7 +75,7 @@ ILendingPoolInfoData.collateral
 readonly debt: IDebtInfo;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L33)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L31)
 
 The debt information of the pool
 
@@ -99,7 +93,7 @@ ILendingPoolInfoData.debt
 readonly id: ILendingPoolId;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L29)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L27)
 
 Pool ID of the lending pool
 
@@ -115,7 +109,7 @@ Pool ID of the lending pool
 readonly type: Lending;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L36)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L34)
 
 Type of the pool
 

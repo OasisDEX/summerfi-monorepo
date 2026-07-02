@@ -4,6 +4,6 @@
 type IProtocolData = Readonly<z.infer<typeof ProtocolDataSchema>>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L45)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L44)
 
 Type for the data part of the IProtocol interface

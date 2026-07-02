@@ -1,12 +1,6 @@
 # Interface: ITokenAmount
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L33)
-
-## Name
-
-ITokenAmount
-
-## Description
+Defined in: [src/common/interfaces/ITokenAmount.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L32)
 
 Interface for the implementors of the token amount
 
@@ -24,7 +18,7 @@ This interface is used to add all the methods that the interface supports
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L35)
+Defined in: [src/common/interfaces/ITokenAmount.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L34)
 
 Signature to differentiate from similar interfaces
 
@@ -36,7 +30,7 @@ Signature to differentiate from similar interfaces
 readonly amount: string;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L39)
+Defined in: [src/common/interfaces/ITokenAmount.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L38)
 
 Amount in floating point format without taking into account the token decimals
 
@@ -54,7 +48,7 @@ ITokenAmountData.amount
 readonly token: ITokenStanalone;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L37)
+Defined in: [src/common/interfaces/ITokenAmount.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L36)
 
 Token this amount refers to
 
@@ -72,7 +66,7 @@ ITokenAmountData.token
 add(tokenToAdd): ITokenAmount;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L46)
+Defined in: [src/common/interfaces/ITokenAmount.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L44)
 
 #### Parameters
 
@@ -88,10 +82,6 @@ TokenAmount to add
 
 The resulting TokenAmount
 
-#### Name
-
-add
-
 ***
 
 ### divide()
@@ -100,7 +90,7 @@ add
 divide<InputParams, ReturnType>(divisor): ReturnType;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L72)
+Defined in: [src/common/interfaces/ITokenAmount.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L67)
 
 #### Type Parameters
 
@@ -126,10 +116,6 @@ A percentage, price, string amount or number to divide
 
 The resulting TokenAmount
 
-#### Name
-
-divide
-
 ***
 
 ### isEqualTo()
@@ -138,7 +124,9 @@ divide
 isEqualTo(tokenAmount): boolean;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:124](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L124)
+Defined in: [src/common/interfaces/ITokenAmount.ts:119](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L119)
+
+Checks if the amount is equal to the provided TokenAmount
 
 #### Parameters
 
@@ -154,14 +142,6 @@ TokenAmount to compare
 
 true if the amount is equal to the provided TokenAmount
 
-#### Name
-
-isEqualTo
-
-#### Description
-
-Checks if the amount is equal to the provided TokenAmount
-
 ***
 
 ### isGreaterOrEqualThan()
@@ -170,7 +150,9 @@ Checks if the amount is equal to the provided TokenAmount
 isGreaterOrEqualThan(tokenAmount): boolean;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:108](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L108)
+Defined in: [src/common/interfaces/ITokenAmount.ts:103](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L103)
+
+Checks if the amount is greater or equal than the provided TokenAmount
 
 #### Parameters
 
@@ -186,14 +168,6 @@ TokenAmount to compare
 
 true if the amount is greater or equal than the provided TokenAmount
 
-#### Name
-
-isGreaterOrEqualThan
-
-#### Description
-
-Checks if the amount is greater or equal than the provided TokenAmount
-
 ***
 
 ### isGreaterThan()
@@ -202,7 +176,9 @@ Checks if the amount is greater or equal than the provided TokenAmount
 isGreaterThan(tokenAmount): boolean;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:92](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L92)
+Defined in: [src/common/interfaces/ITokenAmount.ts:87](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L87)
+
+Checks if the amount is greater than the provided TokenAmount
 
 #### Parameters
 
@@ -218,14 +194,6 @@ TokenAmount to compare
 
 true if the amount is greater than the provided TokenAmount
 
-#### Name
-
-isGreaterThan
-
-#### Description
-
-Checks if the amount is greater than the provided TokenAmount
-
 ***
 
 ### isLessOrEqualThan()
@@ -234,7 +202,9 @@ Checks if the amount is greater than the provided TokenAmount
 isLessOrEqualThan(tokenAmount): boolean;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:116](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L116)
+Defined in: [src/common/interfaces/ITokenAmount.ts:111](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L111)
+
+Checks if the amount is less or equal than the provided TokenAmount
 
 #### Parameters
 
@@ -250,14 +220,6 @@ TokenAmount to compare
 
 true if the amount is less or equal than the provided TokenAmount
 
-#### Name
-
-isLessOrEqualThan
-
-#### Description
-
-Checks if the amount is less or equal than the provided TokenAmount
-
 ***
 
 ### isLessThan()
@@ -266,7 +228,9 @@ Checks if the amount is less or equal than the provided TokenAmount
 isLessThan(tokenAmount): boolean;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:100](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L100)
+Defined in: [src/common/interfaces/ITokenAmount.ts:95](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L95)
+
+Checks if the amount is less than the provided TokenAmount
 
 #### Parameters
 
@@ -282,14 +246,6 @@ TokenAmount to compare
 
 true if the amount is less than the provided TokenAmount
 
-#### Name
-
-isLessThan
-
-#### Description
-
-Checks if the amount is less than the provided TokenAmount
-
 ***
 
 ### isZero()
@@ -298,21 +254,15 @@ Checks if the amount is less than the provided TokenAmount
 isZero(): boolean;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:84](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L84)
+Defined in: [src/common/interfaces/ITokenAmount.ts:79](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L79)
+
+Checks if the amount is zero
 
 #### Returns
 
 `boolean`
 
 true if the amount is zero or false otherwise
-
-#### Name
-
-isZero
-
-#### Description
-
-Checks if the amount is zero
 
 ***
 
@@ -322,7 +272,7 @@ Checks if the amount is zero
 multiply<InputParams, ReturnType>(multiplier): ReturnType;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L60)
+Defined in: [src/common/interfaces/ITokenAmount.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L56)
 
 #### Type Parameters
 
@@ -348,10 +298,6 @@ A percentage, price, string amount or number to multiply
 
 The resulting TokenAmount
 
-#### Name
-
-multiply
-
 ***
 
 ### subtract()
@@ -360,7 +306,7 @@ multiply
 subtract(tokenToSubstract): ITokenAmount;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:53](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L53)
+Defined in: [src/common/interfaces/ITokenAmount.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L50)
 
 #### Parameters
 
@@ -376,10 +322,6 @@ TokenAmount to subtract
 
 The resulting TokenAmount
 
-#### Name
-
-subtract
-
 ***
 
 ### toBigNumber()
@@ -388,7 +330,7 @@ subtract
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [src/common/interfaces/IValueConverter.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L37)
+Defined in: [src/common/interfaces/IValueConverter.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L36)
 
 Converts the instance into a BigNumber
 
@@ -419,7 +361,7 @@ IValueConverter.toBigNumber
 toSolidityValue(params?): bigint;
 ```
 
-Defined in: [src/common/interfaces/IValueConverter.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L23)
+Defined in: [src/common/interfaces/IValueConverter.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L22)
 
 Converts the instance into a Solidity value
 
@@ -456,7 +398,9 @@ IValueConverter.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [src/common/interfaces/IPrintable.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L14)
+
+Returns a string representation of the object
 
 #### Returns
 
@@ -465,14 +409,6 @@ Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX
 string
 
 The string representation should have enough info to debug the object
-
-#### Name
-
-toString
-
-#### Description
-
-Returns a string representation of the object
 
 #### Inherited from
 

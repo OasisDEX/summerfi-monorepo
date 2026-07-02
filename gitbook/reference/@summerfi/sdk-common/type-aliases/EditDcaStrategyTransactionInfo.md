@@ -4,7 +4,7 @@
 type EditDcaStrategyTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:188](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L188)
+Defined in: [src/orders/common/types/TransactionInfo.ts:186](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L186)
 
 Transaction info for editing a DCA strategy, carrying the updated strategy.
 

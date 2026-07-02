@@ -1,10 +1,6 @@
 # Interface: IImportSimulation
 
-Defined in: [src/simulation/interfaces/IImportSimulation.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L23)
-
-IImportSimulation
-
-## Description
+Defined in: [src/simulation/interfaces/IImportSimulation.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L22)
 
 Simulation result of an import operation
 
@@ -20,7 +16,7 @@ Simulation result of an import operation
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/simulation/interfaces/IImportSimulation.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L25)
+Defined in: [src/simulation/interfaces/IImportSimulation.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L24)
 
 Signature used to differentiate it from similar interfaces
 
@@ -36,7 +32,7 @@ Signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/simulation/interfaces/ISimulation.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L15)
+Defined in: [src/simulation/interfaces/ISimulation.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L14)
 
 Signature used to differentiate it from similar interfaces
 
@@ -54,7 +50,7 @@ ISimulation.[___signature__]
 readonly sourcePosition: IExternalLendingPosition;
 ```
 
-Defined in: [src/simulation/interfaces/IImportSimulation.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L27)
+Defined in: [src/simulation/interfaces/IImportSimulation.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L26)
 
 Original position that will be refinanced
 
@@ -66,7 +62,7 @@ Original position that will be refinanced
 readonly steps: Steps[];
 ```
 
-Defined in: [src/simulation/interfaces/IImportSimulation.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L31)
+Defined in: [src/simulation/interfaces/IImportSimulation.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L30)
 
 Steps needed to perform the refinance
 
@@ -78,7 +74,7 @@ Steps needed to perform the refinance
 readonly targetPosition: ILendingPosition;
 ```
 
-Defined in: [src/simulation/interfaces/IImportSimulation.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L29)
+Defined in: [src/simulation/interfaces/IImportSimulation.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L28)
 
 Simulated target position
 
@@ -90,7 +86,7 @@ Simulated target position
 readonly type: ImportPosition;
 ```
 
-Defined in: [src/simulation/interfaces/IImportSimulation.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L34)
+Defined in: [src/simulation/interfaces/IImportSimulation.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L33)
 
 The type of the simulation
 

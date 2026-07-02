@@ -22,7 +22,6 @@ import { Token } from './Token'
 export type TokenAmountParameters = Omit<ITokenAmountData, ''>
 
 /**
- * @class TokenAmount
  * @see ITokenAmount
  */
 export class TokenAmount implements ITokenAmount {
@@ -54,17 +53,15 @@ export class TokenAmount implements ITokenAmount {
   }
 
   /**
-   * @name _normalizeAmount
-   * @description Clamps a human-readable amount to the token's decimals, rounding down — a token
-   *              amount cannot carry more precision than the token supports. Also renders the value in
-   *              plain (non-exponential) notation.
+   * Clamps a human-readable amount to the token's decimals, rounding down — a token
+   * amount cannot carry more precision than the token supports. Also renders the value in
+   * plain (non-exponential) notation.
    */
   private static _normalizeAmount(token: IToken, amount: string): string {
     return new BigNumber(amount).decimalPlaces(token.decimals, BigNumber.ROUND_DOWN).toFixed()
   }
 
   /**
-   * @name createFromBaseUnit
    * @param params Token amount data to create the instance
    * @returns The resulting TokenAmount
    *
@@ -208,8 +205,7 @@ export class TokenAmount implements ITokenAmount {
   /** PRIVATE */
 
   /**
-   * @name _validateSameToken
-   * @description Validates that the token of the provided TokenAmount is the same as the current token
+   * Validates that the token of the provided TokenAmount is the same as the current token
    *
    * @param tokenAmount TokenAmount to validate against the instance
    *

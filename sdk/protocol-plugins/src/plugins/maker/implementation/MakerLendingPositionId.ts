@@ -12,7 +12,6 @@ import { MakerVaultId } from '../types/MakerVaultId'
 export type MakerLendingPositionIdParameters = Omit<IMakerLendingPositionIdData, 'type'>
 
 /**
- * @class MakerPositionId
  * @see IMakerLendingPositionIdData
  */
 export class MakerLendingPositionId extends LendingPositionId implements IMakerLendingPositionId {

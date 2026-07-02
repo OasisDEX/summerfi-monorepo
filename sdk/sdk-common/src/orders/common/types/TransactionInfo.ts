@@ -7,8 +7,7 @@ import type { IArmadaVaultId } from '../../../common/interfaces/IArmadaVaultId'
 import type { IDcaStrategy } from '../../../common/interfaces/IDcaStrategy'
 
 /**
- * @enum TransactionType
- * @description Enum of all the transaction types that can be performed.
+ * Enum of all the transaction types that can be performed.
  */
 export enum TransactionType {
   Approve = 'Approve',
@@ -41,14 +40,13 @@ export type TransactionPriceImpact = {
 }
 
 /**
- * @interface TransactionInfo
- * @description Contains the low level transaction plus a description of what the transaction is for.
- *              This could be used to display the transaction to the user.
+ * Contains the low level transaction plus a description of what the transaction is for.
+ * This could be used to display the transaction to the user.
  */
 export interface TransactionInfo {
-  /** @description Low level transaction that can be sent to the blockchain */
+  /** Low level transaction that can be sent to the blockchain */
   transaction: Transaction
-  /** @description High-level description of the transaction */
+  /** High-level description of the transaction */
   description: string
 }
 

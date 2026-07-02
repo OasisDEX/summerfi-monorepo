@@ -8,8 +8,7 @@ import { IAaveV3LendingPoolId, isAaveV3LendingPoolId } from './IAaveV3LendingPoo
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IAaveV3LendingPool
- * @description Represents a lending pool in the Aave V3 protocol
+ * Represents a lending pool in the Aave V3 protocol
  */
 export interface IAaveV3LendingPool extends ILendingPool, IAaveV3LendingPoolData {
   /** Signature used to differentiate it from similar interfaces */
@@ -19,7 +18,7 @@ export interface IAaveV3LendingPool extends ILendingPool, IAaveV3LendingPoolData
 }
 
 /**
- * @description Zod schema for IAaveV3LendingPool
+ * Zod schema for IAaveV3LendingPool
  */
 export const AaveV3LendingPoolDataSchema = z.object({
   ...LendingPoolDataSchema.shape,
@@ -32,7 +31,8 @@ export const AaveV3LendingPoolDataSchema = z.object({
 export type IAaveV3LendingPoolData = Readonly<z.infer<typeof AaveV3LendingPoolDataSchema>>
 
 /**
- * @description Type guard for IAaveV3LendingPool
+ * Type guard for IAaveV3LendingPool
+ *
  * @param maybeLendingPool
  * @returns true if the object is an IAaveV3LendingPool
  */

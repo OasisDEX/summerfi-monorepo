@@ -28,8 +28,6 @@ const CollateralInfoDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ICollateralInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L39)
-
-## Description
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ICollateralInfo.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L38)
 
 Zod schema for ICollateralInfo

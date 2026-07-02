@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
 /**
- * @enum EmodeType
- * @description Enumerates the efficiency modes of a lending pool
+ * Enumerates the efficiency modes of a lending pool
  */
 export enum EmodeType {
   None = 'None',
@@ -11,12 +10,13 @@ export enum EmodeType {
 }
 
 /**
- * @description Zod schema for EmodeType
+ * Zod schema for EmodeType
  */
 export const EmodeTypeSchema = z.nativeEnum(EmodeType)
 
 /**
- * @description Type guard for EmodeType
+ * Type guard for EmodeType
+ *
  * @param maybeEmodeType Object to be checked
  * @returns true if the object is an EmodeType
  */

@@ -1,15 +1,9 @@
 # Interface: IPool
 
-Defined in: [src/common/interfaces/IPool.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L18)
-
-## Name
-
-IPool
-
-## Description
+Defined in: [src/common/interfaces/IPool.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L17)
 
 Represents a generic protocol pool. Contains information about the pool's ID,
-             which is specific to each protocol, and the pool's type
+which is specific to each protocol, and the pool's type
 
 It is meant to be specialized for each type of pool
 
@@ -30,7 +24,7 @@ It is meant to be specialized for each type of pool
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IPool.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L20)
+Defined in: [src/common/interfaces/IPool.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L19)
 
 Signature to differentiate from similar interfaces
 
@@ -42,7 +36,7 @@ Signature to differentiate from similar interfaces
 readonly id: IPoolId;
 ```
 
-Defined in: [src/common/interfaces/IPool.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L24)
+Defined in: [src/common/interfaces/IPool.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L23)
 
 Unique identifier for the pool, to be specialized for each protocol
 
@@ -60,7 +54,7 @@ IPoolData.id
 readonly type: PoolType;
 ```
 
-Defined in: [src/common/interfaces/IPool.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L22)
+Defined in: [src/common/interfaces/IPool.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L21)
 
 Type of the pool
 
@@ -78,7 +72,9 @@ IPoolData.type
 toString(): string;
 ```
 
-Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [src/common/interfaces/IPrintable.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L14)
+
+Returns a string representation of the object
 
 #### Returns
 
@@ -87,14 +83,6 @@ Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX
 string
 
 The string representation should have enough info to debug the object
-
-#### Name
-
-toString
-
-#### Description
-
-Returns a string representation of the object
 
 #### Inherited from
 

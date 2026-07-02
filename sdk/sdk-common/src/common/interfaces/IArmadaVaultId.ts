@@ -11,8 +11,7 @@ import { PoolType } from '../enums/PoolType'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IArmadaVaultId
- * @description Interface for an ID of an Armada Protocol pool (fleet)
+ * Interface for an ID of an Armada Protocol pool (fleet)
  */
 export interface IArmadaVaultId extends IPoolId, IArmadaVaultIdData {
   /** Signature used to differentiate it from similar interfaces */
@@ -28,7 +27,7 @@ export interface IArmadaVaultId extends IPoolId, IArmadaVaultIdData {
 }
 
 /**
- * @description Zod schema for IArmadaVaultId
+ * Zod schema for IArmadaVaultId
  */
 export const ArmadaVaultIdDataSchema = z.object({
   ...PoolIdDataSchema.shape,
@@ -44,7 +43,8 @@ export const ArmadaVaultIdDataSchema = z.object({
 export type IArmadaVaultIdData = Readonly<z.infer<typeof ArmadaVaultIdDataSchema>>
 
 /**
- * @description Type guard for IArmadaVaultId
+ * Type guard for IArmadaVaultId
+ *
  * @param maybeArmadaVaultId Object to be checked
  * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is a IMakerLendingPosition

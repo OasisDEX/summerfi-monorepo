@@ -1,12 +1,6 @@
 # Interface: IPositionId
 
-Defined in: [../sdk-common/src/common/interfaces/IPositionId.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L13)
-
-## Name
-
-IPositionId
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IPositionId.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L12)
 
 Represents a unique identifier for a position in the Summer system
 
@@ -27,7 +21,7 @@ Represents a unique identifier for a position in the Summer system
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPositionId.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L15)
+Defined in: [../sdk-common/src/common/interfaces/IPositionId.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L14)
 
 Signature to differentiate from similar interfaces
 
@@ -39,7 +33,7 @@ Signature to differentiate from similar interfaces
 readonly id: string;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPositionId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L17)
+Defined in: [../sdk-common/src/common/interfaces/IPositionId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L16)
 
 #### Overrides
 
@@ -55,7 +49,7 @@ IPositionIdData.id
 readonly type: PositionType;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L19)
+Defined in: [../sdk-common/src/common/interfaces/IPositionId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L18)
 
 Type of the position
 

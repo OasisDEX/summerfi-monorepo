@@ -8,8 +8,7 @@ import { z } from 'zod'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IAaveV3Protocol
- * @description Identifier of the Aave V3 protocol
+ * Identifier of the Aave V3 protocol
  *
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
@@ -23,7 +22,7 @@ export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
 }
 
 /**
- * @description Zod schema for IAaveV3Protocol
+ * Zod schema for IAaveV3Protocol
  */
 export const AaveV3ProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
@@ -36,7 +35,8 @@ export const AaveV3ProtocolDataSchema = z.object({
 export type IAaveV3ProtocolData = Readonly<z.infer<typeof AaveV3ProtocolDataSchema>>
 
 /**
- * @description Type guard for IAaveV3Protocol
+ * Type guard for IAaveV3Protocol
+ *
  * @param maybeProtocol
  * @returns true if the object is an IAaveV3Protocol
  */

@@ -44,8 +44,8 @@ import { MorphoLendingPool } from './MorphoLendingPool'
 import { MorphoLendingPoolInfo } from './MorphoLendingPoolInfo'
 
 /**
- * @class MorphoProtocolPlugin
- * @description Protocol plugin for the Morpho protocol
+ * Protocol plugin for the Morpho protocol
+ *
  * @see BaseProtocolPlugin
  */
 export class MorphoProtocolPlugin extends BaseProtocolPlugin {
@@ -162,8 +162,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   /** PRIVATE */
 
   /**
-   * @name _getCollateralInfo
-   * @description Get the collateral info for the given morpho lending pool ID
+   * Get the collateral info for the given morpho lending pool ID
+   *
    * @param params The parameters
    * @returns The collateral info
    */
@@ -196,8 +196,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   }
 
   /**
-   * @name _getDebtInfo
-   * @description Get the debt info for the given morpho lending pool ID
+   * Get the debt info for the given morpho lending pool ID
+   *
    * @param morphoLendingPoolId The lending pool ID
    * @param marketInfo The market info
    * @param marketCollateralPriceInDebt The market collateral price in debt
@@ -238,8 +238,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   }
 
   /**
-   * @name _getMarketOraclePrice
-   * @description Get the market oracle price for the given morpho lending pool ID
+   * Get the market oracle price for the given morpho lending pool ID
+   *
    * @param morphoLendingPoolId The lending pool ID
    * @returns The market oracle price
    */
@@ -268,8 +268,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   }
 
   /**
-   * @name _getMarketInfo
-   * @description Get the market info for the given morpho lending pool ID
+   * Get the market info for the given morpho lending pool ID
+   *
    * @param morphoLendingPoolId The lending pool ID
    * @returns The market info
    */
@@ -311,8 +311,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   }
 
   /**
-   * @name _getMarketParams
-   * @description Get the market parameters from the market ID
+   * Get the market parameters from the market ID
+   *
    * @param morphoLendingPoolId The lending pool ID
    * @returns The market parameters
    */
@@ -376,8 +376,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     }
   }
   /**
-   * @name _getLiquidationPenalty
-   * @description Get the liquidation incentive factor for the given morpho lending pool ID
+   * Get the liquidation incentive factor for the given morpho lending pool ID
+   *
    * @param morphoLendingPoolId
    * @returns The liquidation incentive factor
    */

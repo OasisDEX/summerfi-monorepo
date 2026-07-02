@@ -8,8 +8,7 @@ import { ProtocolName } from '../enums/ProtocolName'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IProtocol
- * @description Information relative to a protocol
+ * Information relative to a protocol
  *
  * This interface is used to add all the methods that the interface supports
  */
@@ -32,7 +31,7 @@ export interface IProtocol extends IProtocolData {
 }
 
 /**
- * @description Zod schema for IProtocol
+ * Zod schema for IProtocol
  */
 export const ProtocolDataSchema = z.object({
   name: z.nativeEnum(ProtocolName),
@@ -45,7 +44,8 @@ export const ProtocolDataSchema = z.object({
 export type IProtocolData = Readonly<z.infer<typeof ProtocolDataSchema>>
 
 /**
- * @description Type guard for IProtocol
+ * Type guard for IProtocol
+ *
  * @param maybeProtocol
  * @returns true if the object is an IProtocol
  */

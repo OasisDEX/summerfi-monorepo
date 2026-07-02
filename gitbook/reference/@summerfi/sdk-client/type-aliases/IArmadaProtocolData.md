@@ -4,6 +4,6 @@
 type IArmadaProtocolData = Readonly<z.infer<typeof ArmadaProtocolDataSchema>>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L33)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L32)
 
 Type for the data part of IArmadaProtocol

@@ -4,7 +4,6 @@ import { IPrintable } from '../../../common/interfaces/IPrintable'
 import { IPositionsManager, IPositionsManagerData } from '../interfaces/IPositionsManager'
 
 /**
- * @class PositionsManager
  * @see IPositionsManager
  */
 export class PositionsManager implements IPositionsManager, IPrintable {

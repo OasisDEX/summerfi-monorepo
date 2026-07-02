@@ -4,7 +4,9 @@
 function isPrice(maybePrice): maybePrice is IPrice;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPrice.ts:202](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L202)
+Defined in: [../sdk-common/src/common/interfaces/IPrice.ts:195](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L195)
+
+Type guard for isPrice
 
 ## Parameters
 
@@ -17,7 +19,3 @@ Defined in: [../sdk-common/src/common/interfaces/IPrice.ts:202](https://github.c
 `maybePrice is IPrice`
 
 true if the object is an isPrice
-
-## Description
-
-Type guard for isPrice

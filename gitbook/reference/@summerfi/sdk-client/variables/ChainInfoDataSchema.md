@@ -13,8 +13,6 @@ const ChainInfoDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IChainInfo.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IChainInfo.ts#L36)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IChainInfo.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IChainInfo.ts#L35)
 
 Zod schema for IChainInfo

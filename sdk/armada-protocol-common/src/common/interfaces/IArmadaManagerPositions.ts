@@ -22,13 +22,11 @@ import type {
 } from '@summerfi/subgraph-manager-common'
 
 /**
- * @name IArmadaManagerPositions
- * @description Interface for managing Armada positions and vault data
+ * Interface for managing Armada positions and vault data
  */
 export interface IArmadaManagerPositions {
   /**
-   * @name getUserPositions
-   * @description Get all user positions in all fleets
+   * Get all user positions in all fleets
    *
    * @param user target user
    *
@@ -37,8 +35,7 @@ export interface IArmadaManagerPositions {
   getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]>
 
   /**
-   * @name getUserPosition
-   * @description Get user position in the fleet
+   * Get user position in the fleet
    *
    * @param user target user
    * @param fleetAddress Address of the fleet
@@ -51,8 +48,7 @@ export interface IArmadaManagerPositions {
   }): Promise<IArmadaPosition | undefined>
 
   /**
-   * @name getPosition
-   * @description Get the position of a user in the specified fleet
+   * Get the position of a user in the specified fleet
    *
    * @param positionId ID of the position to retrieve
    *
@@ -62,8 +58,7 @@ export interface IArmadaManagerPositions {
   getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition | undefined>
 
   /**
-   * @name getPositionHistory
-   * @description Get historical snapshots of a position including hourly, daily, and weekly data
+   * Get historical snapshots of a position including hourly, daily, and weekly data
    *
    * @param positionId ID of the position to retrieve history for
    *
@@ -72,8 +67,7 @@ export interface IArmadaManagerPositions {
   getPositionHistory(params: { positionId: IArmadaPositionId }): Promise<GetPositionHistoryQuery>
 
   /**
-   * @name getVaultsRaw
-   * @description Get all vaults in the protocol
+   * Get all vaults in the protocol
    *
    * @param chainInfo Chain information
    *
@@ -82,8 +76,7 @@ export interface IArmadaManagerPositions {
   getVaultsRaw(params: { chainInfo: IChainInfo }): Promise<GetVaultsQuery>
 
   /**
-   * @name getVaultRaw
-   * @description Get the specific vault in the protocol
+   * Get the specific vault in the protocol
    *
    * @param vaultId ID of the pool to retrieve
    *
@@ -92,8 +85,7 @@ export interface IArmadaManagerPositions {
   getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQuery>
 
   /**
-   * @name getGlobalRebalancesRaw
-   * @description Get all rebalances per given chain
+   * Get all rebalances per given chain
    *
    * @param chainInfo Chain information
    *
@@ -102,8 +94,7 @@ export interface IArmadaManagerPositions {
   getGlobalRebalancesRaw(params: { chainInfo: IChainInfo }): Promise<GetGlobalRebalancesQuery>
 
   /**
-   * @name getUsersActivityRaw
-   * @description Get all users activity per given chain
+   * Get all users activity per given chain
    *
    * @param chainInfo Chain information
    *
@@ -115,8 +106,7 @@ export interface IArmadaManagerPositions {
   }): Promise<GetUsersActivityQuery>
 
   /**
-   * @name getUserActivityRaw
-   * @description Get all user activity per given chain
+   * Get all user activity per given chain
    *
    * @param chainInfo Chain information
    *
@@ -128,8 +118,7 @@ export interface IArmadaManagerPositions {
   }): Promise<GetUserActivityQuery>
 
   /**
-   * @name getVaultsHistoricalRates
-   * @description Get historical rates for multiple vaults
+   * Get historical rates for multiple vaults
    *
    * @param fleets Array of fleet addresses and chain IDs
    *
@@ -140,8 +129,7 @@ export interface IArmadaManagerPositions {
   }): Promise<HistoricalFleetRateResult[]>
 
   /**
-   * @name getDeposits
-   * @description Get deposits for a given Armada position ID with optional pagination
+   * Get deposits for a given Armada position ID with optional pagination
    *
    * @param positionId Position ID
    * @param first Optional number of items to return
@@ -156,8 +144,7 @@ export interface IArmadaManagerPositions {
   }): Promise<IArmadaDeposit[]>
 
   /**
-   * @name getWithdrawals
-   * @description Get withdrawals for a given Armada position ID with optional pagination
+   * Get withdrawals for a given Armada position ID with optional pagination
    *
    * @param positionId Position ID
    * @param first Optional number of items to return

@@ -4,7 +4,7 @@
 type TransactionMetadataBridge = object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:124](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L124)
+Defined in: [src/orders/common/types/TransactionInfo.ts:122](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L122)
 
 Metadata for a bridge transaction: source/destination amounts and the LayerZero fee.
 
@@ -16,7 +16,7 @@ Metadata for a bridge transaction: source/destination amounts and the LayerZero 
 fromAmount: ITokenAmount;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:125](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L125)
+Defined in: [src/orders/common/types/TransactionInfo.ts:123](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L123)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:125](https://github.com/
 lzFee: ITokenAmount;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:127](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L127)
+Defined in: [src/orders/common/types/TransactionInfo.ts:125](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L125)
 
 ***
 
@@ -36,4 +36,4 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:127](https://github.com/
 toAmount: ITokenAmount;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:126](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L126)
+Defined in: [src/orders/common/types/TransactionInfo.ts:124](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L124)

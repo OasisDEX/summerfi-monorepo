@@ -13,8 +13,6 @@ const AddressDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IAddress.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L41)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IAddress.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L40)
 
 Zod schema for IAddress

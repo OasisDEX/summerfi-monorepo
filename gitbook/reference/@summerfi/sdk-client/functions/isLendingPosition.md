@@ -6,6 +6,8 @@ function isLendingPosition(maybeLendingPosition): maybeLendingPosition is ILendi
 
 Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPosition.ts:61](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L61)
 
+Type guard for ILendingPosition
+
 ## Parameters
 
 ### maybeLendingPosition
@@ -21,7 +23,3 @@ Object to be checked
 true if the object is an ILendingPosition
 
 It also asserts the type so that TypeScript knows that the object is an ILendingPool
-
-## Description
-
-Type guard for ILendingPosition

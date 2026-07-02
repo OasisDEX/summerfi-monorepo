@@ -15,8 +15,7 @@ import type { VaultApys } from '../types/VaultApys'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IArmadaVaultInfo
- * @description Interface for an the extended info of an Armada Protocol vault (fleet)
+ * Interface for an the extended info of an Armada Protocol vault (fleet)
  */
 export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
   /** Signature used to differentiate it from similar interfaces */
@@ -61,7 +60,7 @@ export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
 }
 
 /**
- * @description Zod schema for IArmadaVaultInfo
+ * Zod schema for IArmadaVaultInfo
  */
 export const ArmadaVaultInfoDataSchema = z.object({
   ...PoolInfoDataSchema.shape,
@@ -105,7 +104,8 @@ export const ArmadaVaultInfoDataSchema = z.object({
 export type IArmadaVaultInfoData = Readonly<z.infer<typeof ArmadaVaultInfoDataSchema>>
 
 /**
- * @description Type guard for IArmadaVaultInfo
+ * Type guard for IArmadaVaultInfo
+ *
  * @param maybeArmadaVaultInfo Object to be checked
  * @returns true if the object is a IArmadaVaultInfo
  */

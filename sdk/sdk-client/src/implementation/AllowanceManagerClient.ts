@@ -3,9 +3,7 @@ import type { RPCMainClientType } from '../rpc/SDKMainClient'
 import type { IAllowanceManagerClient } from '../interfaces/IAllowanceManagerClient'
 
 /**
- * @name AllowanceManagerClient
- * @implements IAllowanceManagerClient
- * @description Thin client over the server allowance manager Permit2 procedures
+ * Thin client over the server allowance manager Permit2 procedures
  */
 export class AllowanceManagerClient extends IRPCClient implements IAllowanceManagerClient {
   public constructor(params: { rpcClient: RPCMainClientType }) {

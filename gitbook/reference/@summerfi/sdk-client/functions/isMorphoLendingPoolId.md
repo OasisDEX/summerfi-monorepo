@@ -6,6 +6,8 @@ function isMorphoLendingPoolId(maybeLendingPoolId): maybeLendingPoolId is IMorph
 
 Defined in: [../protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoLendingPoolId.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/interfaces/IMorphoLendingPoolId.ts#L46)
 
+Type guard for IMorphoLendingPoolId
+
 ## Parameters
 
 ### maybeLendingPoolId
@@ -17,7 +19,3 @@ Defined in: [../protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoLendin
 `maybeLendingPoolId is IMorphoLendingPoolId`
 
 true if the object is an IMorphoLendingPoolId
-
-## Description
-
-Type guard for IMorphoLendingPoolId

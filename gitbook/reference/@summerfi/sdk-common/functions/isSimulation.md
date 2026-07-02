@@ -6,6 +6,8 @@ function isSimulation(maybeSimulationData): maybeSimulationData is ISimulation;
 
 Defined in: [src/simulation/interfaces/ISimulation.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L37)
 
+Type guard for ISimulation
+
 ## Parameters
 
 ### maybeSimulationData
@@ -17,7 +19,3 @@ Defined in: [src/simulation/interfaces/ISimulation.ts:37](https://github.com/Oas
 `maybeSimulationData is ISimulation`
 
 true if the object is an IToken
-
-## Description
-
-Type guard for ISimulation

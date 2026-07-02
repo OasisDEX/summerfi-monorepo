@@ -4,7 +4,6 @@ import { ImportingSimulationManager } from './ImportingSimulationManager'
 import { RefinanceSimulationManager } from './RefinanceSimulationManager'
 
 /**
- * @name SimulationManager
  * @see ISimulationManager
  */
 export class SimulationManager implements ISimulationManager {

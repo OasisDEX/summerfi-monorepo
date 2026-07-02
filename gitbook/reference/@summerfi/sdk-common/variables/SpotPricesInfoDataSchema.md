@@ -241,8 +241,6 @@ const SpotPricesInfoDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/oracle/ISpotPriceInfo.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L42)
-
-## Description
+Defined in: [src/oracle/ISpotPriceInfo.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L40)
 
 Zod schema for ISpotPriceInfo

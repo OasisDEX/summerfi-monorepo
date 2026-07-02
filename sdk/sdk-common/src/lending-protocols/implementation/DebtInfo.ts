@@ -15,7 +15,6 @@ import { IDebtInfo, IDebtInfoData, __signature__ } from '../interfaces/IDebtInfo
 export type DebtInfoParameters = Omit<IDebtInfoData, ''>
 
 /**
- * @class DebtInfo
  * @see IDebtInfo
  *
  * For now this class can be re-used among all the protocols and there is no need for specialization

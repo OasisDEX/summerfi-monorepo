@@ -61,9 +61,10 @@ const HyperliquidFamily: Record<'Hyperliquid', ChainInfo> = {
 }
 
 /**
+ * A map of chain family names to chain families. It can be used to
+ * retrieve the ChainId of a chain family + chain combination
+ *
  * @type ChainFamilyMap
- * @description A map of chain family names to chain families. It can be used to
- *              retrieve the ChainId of a chain family + chain combination
  */
 export const ChainFamilyMap = {
   [ChainFamilyName.Ethereum]: EthereumFamily,
@@ -84,8 +85,9 @@ export type ChainFamilyInfo = {
 export type ChainFamilyInfoById = Record<number, ChainFamilyInfo>
 
 /**
+ * Utility function to merge all chain families into a single map
+ *
  * @type Record<ChainId, ChainInfo>
- * @description Utility function to merge all chain families into a single map
  */
 function createChainIdToChainFamilyInfoMap(): ChainFamilyInfoById {
   return Object.entries(ChainFamilyMap).reduce((acc, [familyName, family]) => {
@@ -103,8 +105,7 @@ function createChainIdToChainFamilyInfoMap(): ChainFamilyInfoById {
 const chainIdToChainFamilyInfoMap = createChainIdToChainFamilyInfoMap()
 
 /**
- * @method getChainFamilyInfoByChainId
- * @description Retrieves the ChainFamilyInfo for a given chainId
+ * Retrieves the ChainFamilyInfo for a given chainId
  *
  * @param chainId The chainId to retrieve the ChainFamilyInfo for
  *
@@ -121,8 +122,7 @@ export function getChainFamilyInfoByChainId(chainId: number): ChainFamilyInfo {
 }
 
 /**
- * @method getChainInfoByChainId
- * @description Retrieves the ChainInfo for a given chainId
+ * Retrieves the ChainInfo for a given chainId
  *
  * @param chainId The chainId to retrieve the ChainInfo for
  *

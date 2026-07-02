@@ -8,8 +8,8 @@ import {
 } from 'viem'
 
 /**
- * @name getIntentSwapsSendDepositOrderHandler
- * @description Approves and sends a CoW swap order with pre/post interaction hooks
+ * Approves and sends a CoW swap order with pre/post interaction hooks
+ *
  * @param params.fromAmount The token amount to sell
  * @param params.toToken The token to receive
  * @param params.sender The sender's address

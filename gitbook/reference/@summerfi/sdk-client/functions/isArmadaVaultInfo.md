@@ -6,6 +6,8 @@ function isArmadaVaultInfo(maybeArmadaVaultInfo): maybeArmadaVaultInfo is IArmad
 
 Defined in: [../sdk-common/src/common/interfaces/IArmadaVaultInfo.ts:112](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaVaultInfo.ts#L112)
 
+Type guard for IArmadaVaultInfo
+
 ## Parameters
 
 ### maybeArmadaVaultInfo
@@ -19,7 +21,3 @@ Object to be checked
 `maybeArmadaVaultInfo is IArmadaVaultInfo`
 
 true if the object is a IArmadaVaultInfo
-
-## Description
-
-Type guard for IArmadaVaultInfo

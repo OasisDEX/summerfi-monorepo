@@ -8,8 +8,7 @@ import { ArmadaManagerUsersClient } from './ArmadaManagerUsersClient'
 import { ArmadaManagerClientAccessControl } from './ArmadaManagerClientAccessControl'
 
 /**
- * @name ArmadaManagerClient
- * @description Implementation of the Armada Manager client interface of the Armada
+ * Implementation of the Armada Manager client interface of the Armada
  */
 export class ArmadaManagerClient implements IArmadaManagerClient {
   /** APIs for the Armada protocol */

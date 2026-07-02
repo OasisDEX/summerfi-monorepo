@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
 /**
- * @enum ILKType
- * @description Enum for the different ILK types in the Maker protocol
+ * Enum for the different ILK types in the Maker protocol
  */
 export enum ILKType {
   ETH_A = 'ETH-A',
@@ -17,12 +16,13 @@ export enum ILKType {
 }
 
 /**
- * @description Zod schema for ILKType
+ * Zod schema for ILKType
  */
 export const ILKTypeSchema = z.nativeEnum(ILKType)
 
 /**
- * @description Type guard for ILKType
+ * Type guard for ILKType
+ *
  * @param maybeILKType Object to be checked
  * @returns true if the object is an ILKType
  */

@@ -9,7 +9,6 @@ import { Percentage } from './Percentage'
 export type RiskRatioParameters = Omit<IRiskRatioData, ''>
 
 /**
- * @class RiskRatio
  * @see IRiskRatio
  */
 export class RiskRatio implements IRiskRatio {

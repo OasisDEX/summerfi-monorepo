@@ -6,6 +6,8 @@ function isPoolInfo(maybePoolInfo): maybePoolInfo is IPoolInfo;
 
 Defined in: [../sdk-common/src/common/interfaces/IPoolInfo.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L43)
 
+Type guard for IPoolInfo
+
 ## Parameters
 
 ### maybePoolInfo
@@ -17,7 +19,3 @@ Defined in: [../sdk-common/src/common/interfaces/IPoolInfo.ts:43](https://github
 `maybePoolInfo is IPoolInfo`
 
 true if the object is an IPoolInfo
-
-## Description
-
-Type guard for IPoolInfo

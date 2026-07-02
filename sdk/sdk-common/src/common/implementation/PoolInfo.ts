@@ -10,7 +10,6 @@ import { PoolType } from '../enums/PoolType'
 export type PoolInfoParameters = Omit<IPoolInfoData, 'type' | 'id'>
 
 /**
- * @class PoolInfo
  * @see IPoolInfo
  */
 export abstract class PoolInfo implements IPoolInfo, IPrintable {

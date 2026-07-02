@@ -6,6 +6,8 @@ function isArmadaVaultId(maybeArmadaVaultId, returnedErrors?): maybeArmadaVaultI
 
 Defined in: [src/common/interfaces/IArmadaVaultId.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaVaultId.ts#L52)
 
+Type guard for IArmadaVaultId
+
 ## Parameters
 
 ### maybeArmadaVaultId
@@ -25,7 +27,3 @@ Optional array that, on failure, is populated with validation error messages
 `maybeArmadaVaultId is IArmadaVaultId`
 
 true if the object is a IMakerLendingPosition
-
-## Description
-
-Type guard for IArmadaVaultId

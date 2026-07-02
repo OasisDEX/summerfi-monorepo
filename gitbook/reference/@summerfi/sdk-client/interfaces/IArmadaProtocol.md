@@ -1,10 +1,6 @@
 # Interface: IArmadaProtocol
 
-Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L14)
-
-IArmadaProtocol
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L13)
 
 Interface for the Armada Protocol
 
@@ -20,7 +16,7 @@ Interface for the Armada Protocol
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L16)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L15)
 
 Signature used to differentiate it from similar interfaces
 
@@ -36,7 +32,7 @@ Signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L18)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L17)
 
 Signature used to differentiate it from similar interfaces
 
@@ -54,7 +50,7 @@ IProtocol.[___signature__]
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L22)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L21)
 
 The chain information
 
@@ -70,7 +66,7 @@ The chain information
 readonly name: Armada;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L19)
+Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L18)
 
 The name of the protocol
 
@@ -86,7 +82,7 @@ The name of the protocol
 equals(protocol): boolean;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L31)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L30)
 
 Compare if the passed protocol is equal to the current protocol
 

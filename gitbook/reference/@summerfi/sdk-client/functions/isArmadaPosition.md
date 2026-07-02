@@ -6,6 +6,8 @@ function isArmadaPosition(maybeArmadaPosition): maybeArmadaPosition is IArmadaPo
 
 Defined in: [../sdk-common/src/common/interfaces/IArmadaPosition.ts:120](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaPosition.ts#L120)
 
+Type guard for IArmadaPosition
+
 ## Parameters
 
 ### maybeArmadaPosition
@@ -19,7 +21,3 @@ Object to be checked
 `maybeArmadaPosition is IArmadaPosition`
 
 true if the object is a IArmadaPosition
-
-## Description
-
-Type guard for IArmadaPosition

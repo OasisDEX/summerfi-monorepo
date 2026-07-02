@@ -2,8 +2,6 @@
 
 Defined in: [../armada-protocol-common/src/common/interfaces/IArmadaManagerGovernance.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ocol-common/src/common/interfaces/IArmadaManagerGovernance.ts#L25)
 
-## Description
-
 User stake position details (V2)
 
 ## Properties

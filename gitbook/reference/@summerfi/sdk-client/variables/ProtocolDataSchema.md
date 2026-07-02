@@ -13,8 +13,6 @@ const ProtocolDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L37)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L36)
 
 Zod schema for IProtocol

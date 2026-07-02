@@ -11,8 +11,7 @@ import type { ISolidityValue } from './ISolidityValue'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name IAddress
- * @description Represents an address with a certain format, specified by the type
+ * Represents an address with a certain format, specified by the type
  *
  * Currently only Ethereum type is supported
  */
@@ -25,8 +24,8 @@ export interface IAddress extends IAddressData, IPrintable, ISolidityValue<Addre
   readonly type: AddressType
 
   /**
-   * @name equals
-   * @description Checks if two addresses are equal
+   * Checks if two addresses are equal
+   *
    * @param address The address to compare
    * @returns true if the addresses are equal
    *
@@ -36,7 +35,7 @@ export interface IAddress extends IAddressData, IPrintable, ISolidityValue<Addre
 }
 
 /**
- * @description Zod schema for IAddress
+ * Zod schema for IAddress
  */
 export const AddressDataSchema = z.object({
   value: z.custom<AddressValue>((val) => isHex(val)),
@@ -49,7 +48,8 @@ export const AddressDataSchema = z.object({
 export type IAddressData = Readonly<z.infer<typeof AddressDataSchema>>
 
 /**
- * @description Type guard for IAddress
+ * Type guard for IAddress
+ *
  * @param maybeAddress The value to check
  * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is an IAddress

@@ -11,7 +11,6 @@ import {
 export type AaveV3LendingPositionIdParameters = Omit<IAaveV3LendingPositionIdData, 'type'>
 
 /**
- * @class AaveV3PositionId
  * @see IAaveV3LendingPositionIdData
  */
 export class AaveV3LendingPositionId extends LendingPositionId implements IAaveV3LendingPositionId {

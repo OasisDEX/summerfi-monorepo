@@ -6,6 +6,8 @@ function isStakingBucket(maybeStakingBucket): maybeStakingBucket is StakingBucke
 
 Defined in: [src/common/enums/StakingBucket.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/StakingBucket.ts#L32)
 
+Type guard for StakingBucket
+
 ## Parameters
 
 ### maybeStakingBucket
@@ -19,7 +21,3 @@ Object to be checked
 `maybeStakingBucket is StakingBucket`
 
 true if the object is a StakingBucket
-
-## Description
-
-Type guard for StakingBucket

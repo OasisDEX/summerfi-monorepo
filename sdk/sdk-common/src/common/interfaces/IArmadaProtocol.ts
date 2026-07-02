@@ -8,8 +8,7 @@ import { ProtocolDataSchema, type IProtocol } from './IProtocol'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IArmadaProtocol
- * @description Interface for the Armada Protocol
+ * Interface for the Armada Protocol
  */
 export interface IArmadaProtocol extends IProtocol, IArmadaProtocolData {
   /** Signature used to differentiate it from similar interfaces */
@@ -20,7 +19,7 @@ export interface IArmadaProtocol extends IProtocol, IArmadaProtocolData {
 }
 
 /**
- * @description Zod schema for IArmadaProtocol
+ * Zod schema for IArmadaProtocol
  */
 export const ArmadaProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
@@ -33,7 +32,8 @@ export const ArmadaProtocolDataSchema = z.object({
 export type IArmadaProtocolData = Readonly<z.infer<typeof ArmadaProtocolDataSchema>>
 
 /**
- * @description Type guard for IArmadaProtocol
+ * Type guard for IArmadaProtocol
+ *
  * @param maybeArmadaProtocol Object to be checked
  * @returns true if the object is a IArmadaProtocol
  */

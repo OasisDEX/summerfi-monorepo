@@ -2,9 +2,9 @@ import type { IChainInfo, ISDKInstiManager } from '@summerfi/sdk-client'
 import { Address, ArmadaVaultId, Percentage } from '@summerfi/sdk-common'
 
 /**
- * @name setPerformanceFeeRateHandler
- * @description Sets the performance fee rate of a fleet vault. The on-chain contract enforces a
- *   non-zero rate and rejects rates above its maximum.
+ * Sets the performance fee rate of a fleet vault. The on-chain contract enforces a
+ * non-zero rate and rejects rates above its maximum.
+ *
  * @param params.fleetAddress The address of the fleet
  * @param params.chainInfo The chain information
  * @param params.rate The new performance fee rate in percent units (e.g. 1.5 for 1.5%)

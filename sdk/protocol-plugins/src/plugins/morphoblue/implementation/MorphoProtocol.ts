@@ -7,7 +7,6 @@ import { IMorphoProtocol, IMorphoProtocolData, __signature__ } from '../interfac
 export type MorphoProtocolParameters = Omit<IMorphoProtocolData, 'name'>
 
 /**
- * @class MorphoProtocol
  * @see IMorphoProtocol
  */
 export class MorphoProtocol extends Protocol implements IMorphoProtocol {

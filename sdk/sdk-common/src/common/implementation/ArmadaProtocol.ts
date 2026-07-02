@@ -10,7 +10,6 @@ import { Protocol } from './Protocol'
 export type ArmadaProtocolParameters = Omit<IArmadaProtocolData, 'name'>
 
 /**
- * @class ArmadaProtocol
  * @see IArmadaProtocol
  */
 export class ArmadaProtocol extends Protocol implements IArmadaProtocol {

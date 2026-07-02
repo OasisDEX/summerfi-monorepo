@@ -8,7 +8,6 @@ import { SDKErrorType } from '../enums/SDKErrorType'
 export type SDKErrorParameters = Omit<ISDKErrorData, ''>
 
 /**
- * @class SDKError
  * @see ISDKError
  */
 export class SDKError extends Error implements ISDKError {

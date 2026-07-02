@@ -2,8 +2,7 @@ import type { IAddress } from '../interfaces/IAddress'
 import type { ITokenAmount } from '../interfaces/ITokenAmount'
 
 /**
- * @name IFleetConfig
- * @description Data structure for rebalancing assets, used by Keepers of a fleet
+ * Data structure for rebalancing assets, used by Keepers of a fleet
  */
 export interface IFleetConfig {
   /** The address of the buffer Ark associated with this Fleet */

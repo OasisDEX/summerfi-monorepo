@@ -4,7 +4,9 @@
 function isRiskRatio(maybeRiskRatio): maybeRiskRatio is IRiskRatio;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IRiskRatio.ts:63](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L63)
+Defined in: [../sdk-common/src/common/interfaces/IRiskRatio.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L62)
+
+Type guard for IRiskRatio
 
 ## Parameters
 
@@ -17,7 +19,3 @@ Defined in: [../sdk-common/src/common/interfaces/IRiskRatio.ts:63](https://githu
 `maybeRiskRatio is IRiskRatio`
 
 true if the object is an IRiskRatio
-
-## Description
-
-Type guard for IRiskRatio

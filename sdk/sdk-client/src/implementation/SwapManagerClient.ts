@@ -4,8 +4,7 @@ import type { ISwapManagerClient } from '../interfaces/ISwapManagerClient'
 import type { RPCMainClientType } from '../rpc/SDKMainClient'
 
 /**
- * @name SwapManagerClient
- * @description Implementation of the ISwapManagerClient interface for the SDK Client
+ * Implementation of the ISwapManagerClient interface for the SDK Client
  */
 export class SwapManagerClient extends IRPCClient implements ISwapManagerClient {
   public constructor(params: { rpcClient: RPCMainClientType }) {

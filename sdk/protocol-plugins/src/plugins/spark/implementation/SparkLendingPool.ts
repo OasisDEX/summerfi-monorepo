@@ -12,7 +12,6 @@ import { SparkLendingPoolId } from './SparkLendingPoolId'
 export type SparkLendingPoolParameters = Omit<ISparkLendingPoolData, 'type'>
 
 /**
- * @class SparkLendingPool
  * @see ISparkLendingPool
  */
 export class SparkLendingPool extends LendingPool implements ISparkLendingPool {

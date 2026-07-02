@@ -1,5 +1,5 @@
 /**
- * @description Swap error types
+ * Swap error types
  *
  * Error types for the swap service
  */

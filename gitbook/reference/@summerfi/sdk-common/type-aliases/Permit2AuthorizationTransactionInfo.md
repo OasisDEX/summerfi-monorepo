@@ -4,7 +4,7 @@
 type Permit2AuthorizationTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:173](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L173)
+Defined in: [src/orders/common/types/TransactionInfo.ts:171](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L171)
 
 Transaction info for granting a Permit2 authorization.
 

@@ -16,7 +16,6 @@ import { Simulation } from './Simulation'
 export type ImportSimulationParameters = Omit<IImportSimulationData, 'type'>
 
 /**
- * @name ImportSimulation
  * @see IImportSimulation
  */
 export class ImportSimulation extends Simulation implements IImportSimulation {

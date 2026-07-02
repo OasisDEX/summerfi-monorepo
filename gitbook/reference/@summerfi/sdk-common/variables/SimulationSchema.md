@@ -10,8 +10,6 @@ const SimulationSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/simulation/interfaces/ISimulation.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L23)
-
-## Description
+Defined in: [src/simulation/interfaces/ISimulation.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L22)
 
 Zod schema for ISimulation

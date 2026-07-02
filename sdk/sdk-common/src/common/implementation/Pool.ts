@@ -10,7 +10,6 @@ import { IPoolId } from '../interfaces/IPoolId'
 export type PoolParameters = Omit<IPoolData, 'type' | 'id'>
 
 /**
- * @class Pool
  * @see IPool
  */
 export abstract class Pool implements IPool, IPrintable {

@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
 /**
- * @enum PositionType
- * @description Indicates the type of position
+ * Indicates the type of position
  */
 export enum PositionType {
   /** Staking position: adding 1 token to the pool generates some interest earnings */

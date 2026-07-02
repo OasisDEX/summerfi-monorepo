@@ -19,8 +19,6 @@ const ArmadaVaultIdDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IArmadaVaultId.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaVaultId.ts#L33)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IArmadaVaultId.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaVaultId.ts#L32)
 
 Zod schema for IArmadaVaultId

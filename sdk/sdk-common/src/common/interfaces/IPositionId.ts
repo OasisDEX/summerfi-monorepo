@@ -7,8 +7,7 @@ import { PositionType, PositionTypeSchema } from '../enums/PositionType'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name IPositionId
- * @description Represents a unique identifier for a position in the Summer system
+ * Represents a unique identifier for a position in the Summer system
  */
 export interface IPositionId extends IPositionIdData {
   /** Signature to differentiate from similar interfaces */
@@ -20,7 +19,7 @@ export interface IPositionId extends IPositionIdData {
 }
 
 /**
- * @description Zod schema for IPositionId
+ * Zod schema for IPositionId
  */
 export const PositionIdDataSchema = z.object({
   id: z.string(),
@@ -33,7 +32,8 @@ export const PositionIdDataSchema = z.object({
 export type IPositionIdData = Readonly<z.infer<typeof PositionIdDataSchema>>
 
 /**
- * @description Type guard for IPositionId
+ * Type guard for IPositionId
+ *
  * @param maybePositionId
  * @returns true if the object is an IPositionId
  */

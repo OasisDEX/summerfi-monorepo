@@ -15,7 +15,7 @@ export type AaveV3AbiMapType = GenericAbiMap<AaveV3ContractNames> & {
 }
 
 /**
- * @description AaveV3 ABI map
+ * AaveV3 ABI map
  * ABIs for the different AaveV3 contracts
  */
 export const AaveV3AbiMap: AaveV3AbiMapType = {

@@ -1,12 +1,6 @@
 # Interface: IDcaManagerClient
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L20)
-
-## Name
-
-IDcaManagerClient
-
-## Description
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L19)
 
 Client interface for DCA order management
 
@@ -18,7 +12,7 @@ Client interface for DCA order management
 cancelStrategyTx(params): Promise<[CancelDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:98](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L98)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:97](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L97)
 
 Builds the transaction that permanently cancels a DCA strategy.
 
@@ -56,7 +50,7 @@ createStrategyTx(params): Promise<
 | [ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L28)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L27)
 
 Builds the transaction that creates a new DCA (dollar-cost-averaging) strategy.
 
@@ -151,7 +145,7 @@ A promise resolving to the create-strategy transaction info.
 editStrategyTx(params): Promise<[EditDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:59](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L59)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:58](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L58)
 
 Builds the transaction that updates the parameters of an existing DCA strategy.
 
@@ -187,7 +181,7 @@ A promise resolving to the edit-strategy transaction info.
 getExecution(params): Promise<IDcaExecution | undefined>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:147](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L147)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:146](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L146)
 
 Fetches a single execution of a DCA strategy by its id.
 
@@ -229,7 +223,7 @@ A promise resolving to the execution, or `undefined` if not found.
 getExecutions(params): Promise<IDcaExecution[]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:136](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L136)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:135](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L135)
 
 Lists the executions (individual trades) performed by a DCA strategy.
 
@@ -265,7 +259,7 @@ A promise resolving to the strategy's executions.
 getStrategies(params): Promise<IDcaStrategy[]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:112](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L112)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:111](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L111)
 
 Lists DCA strategies on a chain, optionally filtered by user and status.
 
@@ -307,7 +301,7 @@ A promise resolving to the matching strategies.
 getStrategy(params): Promise<IDcaStrategy | undefined>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:126](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L126)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:125](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L125)
 
 Fetches a single DCA strategy by its id.
 
@@ -343,7 +337,7 @@ A promise resolving to the strategy, or `undefined` if not found.
 pauseStrategyTx(params): Promise<[PauseDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L72)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:71](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L71)
 
 Builds the transaction that pauses an active DCA strategy.
 
@@ -379,7 +373,7 @@ A promise resolving to the pause-strategy transaction info.
 resumeStrategyTx(params): Promise<[ResumeDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:85](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L85)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:84](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L84)
 
 Builds the transaction that resumes a previously paused DCA strategy.
 

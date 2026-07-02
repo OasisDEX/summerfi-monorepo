@@ -1,8 +1,7 @@
 import type { HexData } from './HexData'
 
 /**
- * @name GlobalRoles
- * @description Enum for all global protocol roles
+ * Enum for all global protocol roles
  */
 export enum GlobalRoles {
   GOVERNOR_ROLE = 'GOVERNOR_ROLE',
@@ -12,8 +11,7 @@ export enum GlobalRoles {
 }
 
 /**
- * @name GLOBAL_ROLE_HASHES
- * @description Mapping of global role names to their contract hashes
+ * Mapping of global role names to their contract hashes
  * Note: These will be populated at runtime from contract calls
  */
 export const GLOBAL_ROLE_HASHES: Record<GlobalRoles, HexData | null> = {

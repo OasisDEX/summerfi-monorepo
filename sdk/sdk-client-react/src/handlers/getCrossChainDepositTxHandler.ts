@@ -8,8 +8,8 @@ import type {
 } from '@summerfi/sdk-common'
 
 /**
- * @name getCrossChainDepositTxHandler
- * @description Generates transactions needed to deposit tokens cross-chain into a Fleet using Enso routing
+ * Generates transactions needed to deposit tokens cross-chain into a Fleet using Enso routing
+ *
  * @param params.fromChainId Source chain ID where user has tokens
  * @param params.vaultId ID of the pool to deposit in on destination chain
  * @param params.senderAddressValue Address of the user that is sending tokens

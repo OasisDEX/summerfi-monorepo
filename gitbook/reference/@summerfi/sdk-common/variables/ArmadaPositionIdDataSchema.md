@@ -16,8 +16,6 @@ const ArmadaPositionIdDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/common/interfaces/IArmadaPositionId.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaPositionId.ts#L28)
-
-## Description
+Defined in: [src/common/interfaces/IArmadaPositionId.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaPositionId.ts#L27)
 
 Zod schema for IArmadaPositionId

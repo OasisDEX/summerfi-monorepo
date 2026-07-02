@@ -13,8 +13,6 @@ const ArmadaProtocolDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L25)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L24)
 
 Zod schema for IArmadaProtocol

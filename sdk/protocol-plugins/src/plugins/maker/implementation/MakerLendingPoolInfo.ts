@@ -8,7 +8,6 @@ import { IMakerLendingPoolInfoData, __signature__ } from '../interfaces/IMakerLe
 export type MakerLendingPoolInfoParameters = Omit<IMakerLendingPoolInfoData, 'type'>
 
 /**
- * @class MakerLendingPoolInfo
  * @see IMakerLendingPoolInfoData
  */
 export class MakerLendingPoolInfo extends LendingPoolInfo implements IMakerLendingPoolInfoData {

@@ -1,10 +1,6 @@
 # Interface: IArmadaWithdrawal
 
-Defined in: [src/common/interfaces/IArmadaWithdrawal.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaWithdrawal.ts#L25)
-
-IArmadaWithdrawal
-
-## Description
+Defined in: [src/common/interfaces/IArmadaWithdrawal.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaWithdrawal.ts#L26)
 
 Interface for an Armada Protocol withdrawal transaction
 

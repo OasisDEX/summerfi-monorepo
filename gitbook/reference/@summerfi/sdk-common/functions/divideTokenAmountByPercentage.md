@@ -4,7 +4,7 @@
 function divideTokenAmountByPercentage(tokenAmount, percentage): ITokenAmountData;
 ```
 
-Defined in: [src/common/utils/PercentageUtils.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/utils/PercentageUtils.ts#L28)
+Defined in: [src/common/utils/PercentageUtils.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/utils/PercentageUtils.ts#L26)
 
 ## Parameters
 
@@ -25,7 +25,3 @@ The percentage to divide by
 [`ITokenAmountData`](../type-aliases/ITokenAmountData.md)
 
 The resulting token amount
-
-## Name
-
-divideTokenAmountByPercentage

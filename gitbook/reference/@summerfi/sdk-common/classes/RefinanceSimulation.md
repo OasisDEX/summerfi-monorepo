@@ -1,10 +1,6 @@
 # Class: RefinanceSimulation
 
-Defined in: [src/simulation/implementation/RefinanceSimulation.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L22)
-
-## Name
-
-RefinanceSimulation
+Defined in: [src/simulation/implementation/RefinanceSimulation.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L21)
 
 ## See
 
@@ -26,7 +22,7 @@ IRefinanceSimulation
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/simulation/implementation/RefinanceSimulation.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L24)
+Defined in: [src/simulation/implementation/RefinanceSimulation.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L23)
 
 SIGNATURE
 
@@ -46,7 +42,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/simulation/implementation/Simulation.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L16)
+Defined in: [src/simulation/implementation/Simulation.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L15)
 
 SIGNATURE
 
@@ -70,7 +66,7 @@ Simulation.[___signature__]
 readonly sourcePosition: ILendingPosition;
 ```
 
-Defined in: [src/simulation/implementation/RefinanceSimulation.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L27)
+Defined in: [src/simulation/implementation/RefinanceSimulation.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L26)
 
 ATTRIBUTES
 
@@ -86,7 +82,7 @@ ATTRIBUTES
 readonly steps: Steps[];
 ```
 
-Defined in: [src/simulation/implementation/RefinanceSimulation.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L30)
+Defined in: [src/simulation/implementation/RefinanceSimulation.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L29)
 
 Steps needed to perform the refinance
 
@@ -102,7 +98,7 @@ Steps needed to perform the refinance
 readonly swaps: SimulatedSwapData[];
 ```
 
-Defined in: [src/simulation/implementation/RefinanceSimulation.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L29)
+Defined in: [src/simulation/implementation/RefinanceSimulation.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L28)
 
 The details of any swaps required as part of the simulation
 
@@ -118,7 +114,7 @@ The details of any swaps required as part of the simulation
 readonly targetPosition: ILendingPosition;
 ```
 
-Defined in: [src/simulation/implementation/RefinanceSimulation.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L28)
+Defined in: [src/simulation/implementation/RefinanceSimulation.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L27)
 
 Simulated target position
 
@@ -134,7 +130,7 @@ Simulated target position
 readonly type: Refinance = SimulationType.Refinance;
 ```
 
-Defined in: [src/simulation/implementation/RefinanceSimulation.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L31)
+Defined in: [src/simulation/implementation/RefinanceSimulation.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L30)
 
 ATTRIBUTES
 
@@ -154,7 +150,7 @@ ATTRIBUTES
 static createFrom(params): RefinanceSimulation;
 ```
 
-Defined in: [src/simulation/implementation/RefinanceSimulation.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L34)
+Defined in: [src/simulation/implementation/RefinanceSimulation.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/RefinanceSimulation.ts#L33)
 
 FACTORY
 

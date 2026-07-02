@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
 /**
- * @name ArmadaMigrationType
- * @description Enumerates the names of the protocols that are migratable by the Armada
+ * Enumerates the names of the protocols that are migratable by the Armada
  */
 export enum ArmadaMigrationType {
   AaveV3 = 'AaveV3',
@@ -11,12 +10,13 @@ export enum ArmadaMigrationType {
 }
 
 /**
- * @description Zod schema for ProtocolName
+ * Zod schema for ProtocolName
  */
 export const ArmadaMigrationTypeSchema = z.nativeEnum(ArmadaMigrationType)
 
 /**
- * @description Type guard for ProtocolName
+ * Type guard for ProtocolName
+ *
  * @param maybeArmadaMigrationType Object to be checked
  * @returns true if the object is a ProtocolName
  */

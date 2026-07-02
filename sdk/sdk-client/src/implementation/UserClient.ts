@@ -16,7 +16,6 @@ import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 
 /**
- * @class UserClient
  * @see IUserClient
  */
 export class UserClient extends IRPCClient implements IUserClient {

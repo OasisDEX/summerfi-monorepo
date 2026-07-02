@@ -4,8 +4,7 @@ import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
 
 /**
- * @name ArmadaManagerUsersClient
- * @description Implementation of the Armada Manager client interface for Users of the Armada
+ * Implementation of the Armada Manager client interface for Users of the Armada
  */
 export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManagerUsersClient {
   constructor(params: { rpcClient: RPCMainClientType }) {

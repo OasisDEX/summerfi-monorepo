@@ -3,9 +3,8 @@ import { IArmadaManagerUsersClient } from './IArmadaManagerUsersClient'
 import { IArmadaManagerClientAccessControl } from './IArmadaManagerClientAccessControl'
 
 /**
- * @interface IArmadaManagerClient
- * @description Interface of the FleetCommander manager for the SDK Client. Allows to instantiate
- *              FleetCommanders to interact with them
+ * Interface of the FleetCommander manager for the SDK Client. Allows to instantiate
+ * FleetCommanders to interact with them
  */
 export interface IArmadaManagerClient {
   /** Users API for the Armada protocol */

@@ -168,8 +168,6 @@ const PriceDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:186](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L186)
-
-## Description
+Defined in: [src/common/interfaces/IPrice.ts:178](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L178)
 
 Zod schema for IPrice

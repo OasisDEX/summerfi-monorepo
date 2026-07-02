@@ -4,7 +4,7 @@
 function isChainId(maybeChainId): maybeChainId is ChainId;
 ```
 
-Defined in: [../sdk-common/src/common/types/ChainId.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/ChainId.ts#L31)
+Defined in: [../sdk-common/src/common/types/ChainId.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/ChainId.ts#L30)
 
 Type guard that checks whether a value is a supported [ChainId](../type-aliases/ChainId.md).
 

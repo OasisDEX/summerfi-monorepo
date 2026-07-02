@@ -1,12 +1,6 @@
 # Interface: ISDKError
 
-Defined in: [../sdk-common/src/common/interfaces/ISDKError.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L14)
-
-## Name
-
-ISDKError
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/ISDKError.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L13)
 
 Represents a custom error of the SDK
 
@@ -26,7 +20,7 @@ Represents a custom error of the SDK
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/ISDKError.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L16)
+Defined in: [../sdk-common/src/common/interfaces/ISDKError.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L15)
 
 Signature to differentiate from similar interfaces
 
@@ -38,7 +32,7 @@ Signature to differentiate from similar interfaces
 readonly message: string;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/ISDKError.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L22)
+Defined in: [../sdk-common/src/common/interfaces/ISDKError.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L21)
 
 Free form debug message, used to debug the issue through the console
 
@@ -56,7 +50,7 @@ ISDKErrorData.message
 readonly reason: string;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/ISDKError.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L20)
+Defined in: [../sdk-common/src/common/interfaces/ISDKError.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L19)
 
 Free form reason message, used to provide a short description of the problem
 
@@ -74,7 +68,7 @@ ISDKErrorData.reason
 readonly type: SDKErrorType;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/ISDKError.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L18)
+Defined in: [../sdk-common/src/common/interfaces/ISDKError.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L17)
 
 Error type main category
 
@@ -92,7 +86,9 @@ ISDKErrorData.type
 toString(): string;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [../sdk-common/src/common/interfaces/IPrintable.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L14)
+
+Returns a string representation of the object
 
 #### Returns
 
@@ -101,14 +97,6 @@ Defined in: [../sdk-common/src/common/interfaces/IPrintable.ts:15](https://githu
 string
 
 The string representation should have enough info to debug the object
-
-#### Name
-
-toString
-
-#### Description
-
-Returns a string representation of the object
 
 #### Inherited from
 

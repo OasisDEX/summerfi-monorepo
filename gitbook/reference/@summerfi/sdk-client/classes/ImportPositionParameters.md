@@ -1,10 +1,6 @@
 # Class: ImportPositionParameters
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ImportPositionParameters.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ImportPositionParameters.ts#L19)
-
-## Name
-
-ImportPositionParameters
+Defined in: [../sdk-common/src/orders/importing/implementation/ImportPositionParameters.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ImportPositionParameters.ts#L18)
 
 ## See
 
@@ -22,7 +18,7 @@ IImportPositionParameters
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ImportPositionParameters.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ImportPositionParameters.ts#L21)
+Defined in: [../sdk-common/src/orders/importing/implementation/ImportPositionParameters.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ImportPositionParameters.ts#L20)
 
 SIGNATURE
 
@@ -38,7 +34,7 @@ SIGNATURE
 readonly externalPosition: IExternalLendingPosition;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ImportPositionParameters.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ImportPositionParameters.ts#L24)
+Defined in: [../sdk-common/src/orders/importing/implementation/ImportPositionParameters.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ImportPositionParameters.ts#L23)
 
 ATTRIBUTES
 
@@ -54,7 +50,7 @@ ATTRIBUTES
 toString(): string;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ImportPositionParameters.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ImportPositionParameters.ts#L39)
+Defined in: [../sdk-common/src/orders/importing/implementation/ImportPositionParameters.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ImportPositionParameters.ts#L38)
 
 #### Returns
 
@@ -72,7 +68,7 @@ IPrintable.toString
 static createFrom(params): ImportPositionParameters;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/implementation/ImportPositionParameters.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ImportPositionParameters.ts#L27)
+Defined in: [../sdk-common/src/orders/importing/implementation/ImportPositionParameters.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/implementation/ImportPositionParameters.ts#L26)
 
 FACTORY
 

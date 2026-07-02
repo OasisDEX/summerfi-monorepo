@@ -35,8 +35,8 @@ import { AaveV3LendingPoolInfo } from './AaveV3LendingPoolInfo'
 import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
 
 /**
- * @class AaveV3ProtocolPlugin
- * @description Aave V3 protocol plugin
+ * Aave V3 protocol plugin
+ *
  * @see BaseProtocolPlugin
  */
 export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<

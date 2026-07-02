@@ -1,10 +1,6 @@
 # Interface: IDebtInfo
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L19)
-
-IDebtInfo
-
-## Description
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L18)
 
 Contains information about a debt token of a lending pool
 
@@ -23,7 +19,7 @@ lending pools
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L21)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L20)
 
 Signature to differentiate from similar interfaces
 
@@ -35,7 +31,7 @@ Signature to differentiate from similar interfaces
 readonly debtAvailable: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L35)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L34)
 
 The amount of the token that can still be borrowed
 
@@ -53,7 +49,7 @@ IDebtInfoData.debtAvailable
 readonly debtCeiling: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L33)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L32)
 
 The maximum amount of the token that can be borrowed
 
@@ -71,7 +67,7 @@ IDebtInfoData.debtCeiling
 readonly dustLimit: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L37)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L36)
 
 The minimum amount of the token that can be borrowed
 
@@ -89,7 +85,7 @@ IDebtInfoData.dustLimit
 readonly interestRate: IPercentage;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L29)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L28)
 
 The interest rate of the debt. TODO: which units??
 
@@ -107,7 +103,7 @@ IDebtInfoData.interestRate
 readonly originationFee: IPercentage;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L39)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L38)
 
 The fee that is charged for creating a new debt
 
@@ -125,7 +121,7 @@ IDebtInfoData.originationFee
 readonly price: IPrice;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L25)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L24)
 
 The price of the token in the protocol's default denomination
 
@@ -143,7 +139,7 @@ IDebtInfoData.price
 readonly priceUSD: IPrice;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L27)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L26)
 
 The price of the token in USD
 
@@ -161,7 +157,7 @@ IDebtInfoData.priceUSD
 readonly token: ITokenStanalone;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L23)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L22)
 
 The token that represents the debt
 
@@ -179,7 +175,7 @@ IDebtInfoData.token
 readonly totalBorrowed: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L31)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/IDebtInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L30)
 
 The total amount of the token borrowed
 

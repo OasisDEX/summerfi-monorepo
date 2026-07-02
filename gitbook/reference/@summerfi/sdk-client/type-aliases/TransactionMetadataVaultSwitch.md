@@ -4,7 +4,7 @@
 type TransactionMetadataVaultSwitch = object;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:98](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L98)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:96](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L96)
 
 Metadata for a vault-switch transaction: source/target vaults, amounts, price impact and slippage.
 
@@ -16,7 +16,7 @@ Metadata for a vault-switch transaction: source/target vaults, amounts, price im
 fromAmount: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:101](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L101)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:99](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L99)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:101](https
 fromVault: IArmadaVaultId;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:99](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L99)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:97](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L97)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:99](https:
 optional priceImpact: TransactionPriceImpact;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:103](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L103)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:101](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L101)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:103](https
 slippage: IPercentage;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:104](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L104)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:102](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L102)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:104](https
 optional toAmount: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:102](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L102)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:100](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L100)
 
 ***
 
@@ -66,4 +66,4 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:102](https
 toVault: IArmadaVaultId;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:100](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L100)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:98](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L98)

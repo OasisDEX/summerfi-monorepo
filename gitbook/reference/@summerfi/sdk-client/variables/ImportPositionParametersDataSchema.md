@@ -10,8 +10,6 @@ const ImportPositionParametersDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/orders/importing/interfaces/IImportPositionParameters.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/interfaces/IImportPositionParameters.ts#L23)
-
-## Description
+Defined in: [../sdk-common/src/orders/importing/interfaces/IImportPositionParameters.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/interfaces/IImportPositionParameters.ts#L22)
 
 Zod schema for IImportPositionParameters

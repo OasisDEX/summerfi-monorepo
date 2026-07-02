@@ -5,7 +5,7 @@ import { isAddressValue, type AddressValue } from '../types/AddressValue'
 import { isHexData, type HexData } from '../types/HexData'
 
 /**
- * @description Zod schema for IArmadaWithdrawal
+ * Zod schema for IArmadaWithdrawal
  */
 export const ArmadaWithdrawalDataSchema = z.object({
   from: z.custom<AddressValue>((val) => isAddressValue(val)),
@@ -19,13 +19,15 @@ export const ArmadaWithdrawalDataSchema = z.object({
 })
 
 /**
- * @interface IArmadaWithdrawal
- * @description Interface for an Armada Protocol withdrawal transaction
+ * Interface for an Armada Protocol withdrawal transaction
+ *
+ * @interface
  */
 export type IArmadaWithdrawal = Readonly<z.infer<typeof ArmadaWithdrawalDataSchema>>
 
 /**
- * @description Type guard for IArmadaWithdrawal
+ * Type guard for IArmadaWithdrawal
+ *
  * @param maybeArmadaWithdrawal Object to be checked
  * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is an IArmadaWithdrawal

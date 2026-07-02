@@ -8,8 +8,7 @@ import { z } from 'zod'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IArmadaSimulation
- * @description Simulation result of an Armada Protocol operation
+ * Simulation result of an Armada Protocol operation
  */
 export interface IArmadaSimulation extends ISimulation {
   /** Signature used to differentiate it from similar interfaces */
@@ -26,7 +25,7 @@ export interface IArmadaSimulation extends ISimulation {
 }
 
 /**
- * @description Zod schema for IArmadaSimulation
+ * Zod schema for IArmadaSimulation
  */
 export const ArmadaSimulationSchema = z.object({
   ...SimulationSchema.shape,
@@ -42,7 +41,8 @@ export const ArmadaSimulationSchema = z.object({
 export type IArmadaSimulationData = Readonly<z.infer<typeof ArmadaSimulationSchema>>
 
 /**
- * @description Type guard for IRefinanceSimulation
+ * Type guard for IRefinanceSimulation
+ *
  * @param maybeArmadaSimulationData
  * @returns true if the object is an IArmadaSimulation
  */

@@ -6,6 +6,8 @@ function isImportPositionParameters(maybeImportPositionParameters): maybeImportP
 
 Defined in: [src/orders/importing/interfaces/IImportPositionParameters.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/interfaces/IImportPositionParameters.ts#L39)
 
+Type guard for IImportPositionParameters
+
 ## Parameters
 
 ### maybeImportPositionParameters
@@ -17,7 +19,3 @@ Defined in: [src/orders/importing/interfaces/IImportPositionParameters.ts:39](ht
 `maybeImportPositionParameters is Readonly<{ externalPosition: IExternalLendingPosition }>`
 
 true if the object is an IImportPositionParameters
-
-## Description
-
-Type guard for IImportPositionParameters

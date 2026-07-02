@@ -11,7 +11,6 @@ import {
 export type MorphoLendingPositionIdParameters = Omit<IMorphoLendingPositionIdData, 'type'>
 
 /**
- * @class MorphoLendingPositionId
  * @see IMorphoLendingPositionId
  */
 export class MorphoLendingPositionId extends LendingPositionId implements IMorphoLendingPositionId {

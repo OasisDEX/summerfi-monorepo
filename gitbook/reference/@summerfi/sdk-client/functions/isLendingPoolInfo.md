@@ -4,7 +4,9 @@
 function isLendingPoolInfo(maybePool): maybePool is ILendingPoolInfo;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L62)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolInfo.ts:61](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolInfo.ts#L61)
+
+Type guard for ILendingPoolInfo
 
 ## Parameters
 
@@ -21,7 +23,3 @@ Object to be checked
 true if the object is an ILendingPool
 
 It also asserts the type so that TypeScript knows that the object is an ILendingPool
-
-## Description
-
-Type guard for ILendingPoolInfo

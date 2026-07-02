@@ -4,7 +4,7 @@
 type DepositTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L67)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:65](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L65)
 
 Transaction info for a vault deposit.
 

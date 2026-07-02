@@ -4,7 +4,7 @@
 type TransactionPriceImpact = object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L38)
+Defined in: [src/orders/common/types/TransactionInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L37)
 
 Price and percentage impact of a transaction on the traded asset's price.
 
@@ -16,7 +16,7 @@ Price and percentage impact of a transaction on the traded asset's price.
 impact: IPercentage | null;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L40)
+Defined in: [src/orders/common/types/TransactionInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L39)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:40](https://github.com/O
 price: IPrice | null;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L39)
+Defined in: [src/orders/common/types/TransactionInfo.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L38)

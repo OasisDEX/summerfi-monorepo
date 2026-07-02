@@ -34,8 +34,6 @@ const DebtInfoDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/lending-protocols/interfaces/IDebtInfo.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L45)
-
-## Description
+Defined in: [src/lending-protocols/interfaces/IDebtInfo.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/IDebtInfo.ts#L44)
 
 Zod schema for IDebtInfo

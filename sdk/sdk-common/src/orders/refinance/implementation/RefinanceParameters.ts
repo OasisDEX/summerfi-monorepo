@@ -14,7 +14,6 @@ import {
 export type RefinanceParametersParameters = Omit<IRefinanceParametersData, ''>
 
 /**
- * @name RefinanceParameters
  * @see IRefinanceParameters
  */
 export class RefinanceParameters implements IRefinanceParameters {

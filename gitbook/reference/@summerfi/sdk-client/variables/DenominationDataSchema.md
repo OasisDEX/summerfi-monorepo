@@ -52,8 +52,6 @@ const DenominationDataSchema: ZodUnion<[ZodObject<{
 }>, ZodNativeEnum<typeof FiatCurrency>]>;
 ```
 
-Defined in: [../sdk-common/src/common/types/Denomination.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Denomination.ts#L22)
-
-## Description
+Defined in: [../sdk-common/src/common/types/Denomination.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Denomination.ts#L20)
 
 Zod schema for Denomination

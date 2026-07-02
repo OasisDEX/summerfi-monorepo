@@ -15,10 +15,9 @@ import type { VaultApys } from '../types/VaultApys'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IRwaVaultInfo
- * @description Extended info of a Real-World Asset (RWA) vault.
- *              Cloned from IArmadaVaultInfo and intended to diverge as RWA-specific
- *              fields are added.
+ * Extended info of a Real-World Asset (RWA) vault.
+ * Cloned from IArmadaVaultInfo and intended to diverge as RWA-specific
+ * fields are added.
  */
 export interface IRwaVaultInfo extends IPoolInfo, IRwaVaultInfoData {
   /** Signature used to differentiate it from similar interfaces */
@@ -63,7 +62,7 @@ export interface IRwaVaultInfo extends IPoolInfo, IRwaVaultInfoData {
 }
 
 /**
- * @description Zod schema for IRwaVaultInfo
+ * Zod schema for IRwaVaultInfo
  */
 export const RwaVaultInfoDataSchema = z.object({
   ...PoolInfoDataSchema.shape,
@@ -107,7 +106,8 @@ export const RwaVaultInfoDataSchema = z.object({
 export type IRwaVaultInfoData = Readonly<z.infer<typeof RwaVaultInfoDataSchema>>
 
 /**
- * @description Type guard for IRwaVaultInfo
+ * Type guard for IRwaVaultInfo
+ *
  * @param maybeRwaVaultInfo Object to be checked
  * @returns true if the object is an IRwaVaultInfo
  */

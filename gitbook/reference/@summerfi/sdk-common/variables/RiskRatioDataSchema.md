@@ -25,8 +25,6 @@ const RiskRatioDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/common/interfaces/IRiskRatio.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L48)
-
-## Description
+Defined in: [src/common/interfaces/IRiskRatio.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L46)
 
 Zod schema for IRiskRatioData

@@ -14,8 +14,7 @@ import type {
 } from '@summerfi/sdk-common'
 
 /**
- * @name IDcaManagerClient
- * @description Client interface for DCA order management
+ * Client interface for DCA order management
  */
 export interface IDcaManagerClient {
   /**

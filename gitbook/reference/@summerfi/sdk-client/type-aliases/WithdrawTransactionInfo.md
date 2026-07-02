@@ -4,7 +4,7 @@
 type WithdrawTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:80](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L80)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:78](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L78)
 
 Transaction info for a vault withdrawal.
 

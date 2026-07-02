@@ -22,8 +22,6 @@ const RefinanceSimulationSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L39)
-
-## Description
+Defined in: [src/simulation/interfaces/IRefinanceSimulation.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IRefinanceSimulation.ts#L38)
 
 Zod schema for IRefinanceSimulation

@@ -13,8 +13,6 @@ const TokenAmountDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/ITokenAmount.ts:130](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L130)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/ITokenAmount.ts:125](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L125)
 
 Zod schema for ITokenAmount

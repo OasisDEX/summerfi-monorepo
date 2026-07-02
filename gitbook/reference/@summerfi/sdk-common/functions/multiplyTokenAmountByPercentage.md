@@ -4,7 +4,7 @@
 function multiplyTokenAmountByPercentage(tokenAmount, percentage): ITokenAmountData;
 ```
 
-Defined in: [src/common/utils/PercentageUtils.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/utils/PercentageUtils.ts#L12)
+Defined in: [src/common/utils/PercentageUtils.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/utils/PercentageUtils.ts#L11)
 
 ## Parameters
 
@@ -25,7 +25,3 @@ The percentage to multiply by
 [`ITokenAmountData`](../type-aliases/ITokenAmountData.md)
 
 The resulting token amount
-
-## Name
-
-multiplyTokenAmountByPercentage

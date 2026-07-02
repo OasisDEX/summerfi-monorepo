@@ -25,8 +25,6 @@ const SwapErrorDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/swap/interfaces/ISwapError.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/interfaces/ISwapError.ts#L30)
-
-## Description
+Defined in: [../sdk-common/src/swap/interfaces/ISwapError.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/interfaces/ISwapError.ts#L29)
 
 Zod schema for ISwapError

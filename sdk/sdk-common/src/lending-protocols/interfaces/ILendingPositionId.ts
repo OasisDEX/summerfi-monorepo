@@ -8,8 +8,7 @@ import { PositionType } from '../../common/enums/PositionType'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name ILendingPositionId
- * @description Represents a position ID for a lending position
+ * Represents a position ID for a lending position
  */
 export interface ILendingPositionId extends IPositionId {
   /** Signature to differentiate from similar interfaces */
@@ -20,7 +19,7 @@ export interface ILendingPositionId extends IPositionId {
 }
 
 /**
- * @description Zod schema for ILendingPositionId
+ * Zod schema for ILendingPositionId
  */
 export const LendingPositionIdDataSchema = z.object({
   ...PositionIdDataSchema.shape,
@@ -33,7 +32,8 @@ export const LendingPositionIdDataSchema = z.object({
 export type ILendingPositionIdData = Readonly<z.infer<typeof LendingPositionIdDataSchema>>
 
 /**
- * @description Type guard for ILendingPositionId
+ * Type guard for ILendingPositionId
+ *
  * @param maybeLendingPositionId Object to be checked
  * @returns true if the object is an ILendingPositionId
  *

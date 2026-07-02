@@ -1,18 +1,18 @@
 import { z } from 'zod'
 
 /**
- * @name MakerVaultId
- * @description Represents a Maker vault ID
+ * Represents a Maker vault ID
  */
 export type MakerVaultId = string
 
 /**
- * @description Zod schema for MakerVaultId
+ * Zod schema for MakerVaultId
  */
 export const MakerVaultIdSchema = z.string()
 
 /**
- * @description Type guard for MakerVaultId
+ * Type guard for MakerVaultId
+ *
  * @param maybeMakerVaultId Object to be checked
  * @returns true if the object is a MakerVaultId
  */

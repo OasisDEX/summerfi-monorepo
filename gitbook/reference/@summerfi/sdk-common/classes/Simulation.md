@@ -1,10 +1,6 @@
 # Abstract Class: Simulation
 
-Defined in: [src/simulation/implementation/Simulation.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L14)
-
-## Name
-
-Simulation
+Defined in: [src/simulation/implementation/Simulation.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L13)
 
 ## See
 
@@ -27,7 +23,7 @@ ISimulation
 protected new Simulation(_): Simulation;
 ```
 
-Defined in: [src/simulation/implementation/Simulation.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L22)
+Defined in: [src/simulation/implementation/Simulation.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L21)
 
 SEALED CONSTRUCTOR
 
@@ -49,7 +45,7 @@ SEALED CONSTRUCTOR
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/simulation/implementation/Simulation.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L16)
+Defined in: [src/simulation/implementation/Simulation.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L15)
 
 SIGNATURE
 
@@ -65,7 +61,7 @@ SIGNATURE
 abstract readonly type: SimulationType;
 ```
 
-Defined in: [src/simulation/implementation/Simulation.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L19)
+Defined in: [src/simulation/implementation/Simulation.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/implementation/Simulation.ts#L18)
 
 ATTRIBUTES
 

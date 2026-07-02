@@ -6,6 +6,8 @@ function isSparkLendingPoolId(maybeLendingPoolId): maybeLendingPoolId is ISparkL
 
 Defined in: [../protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/interfaces/ISparkLendingPoolId.ts#L52)
 
+Type guard for ISparkLendingPoolId
+
 ## Parameters
 
 ### maybeLendingPoolId
@@ -17,7 +19,3 @@ Defined in: [../protocol-plugins/src/plugins/spark/interfaces/ISparkLendingPoolI
 `maybeLendingPoolId is ISparkLendingPoolId`
 
 true if the object is an ISparkLendingPoolId
-
-## Description
-
-Type guard for ISparkLendingPoolId

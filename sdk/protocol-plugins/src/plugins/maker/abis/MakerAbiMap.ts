@@ -1,7 +1,7 @@
 import { DOG_ABI, ILK_REGISTRY_ABI, JUG_ABI, SPOT_ABI, VAT_ABI } from './MakerABIS'
 
 /**
- * @description Maker ABI map
+ * Maker ABI map
  * ABIs for the different Maker contracts
  */
 export const MakerAbiMap = {

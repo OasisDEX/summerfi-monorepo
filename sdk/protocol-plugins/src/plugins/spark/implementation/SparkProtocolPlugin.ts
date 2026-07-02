@@ -37,8 +37,8 @@ import { SparkLendingPoolId } from './SparkLendingPoolId'
 import { SparkLendingPoolInfo } from './SparkLendingPoolInfo'
 
 /**
- * @class SparkProtocolPlugin
- * @description Protocol plugin for the Spark protocol
+ * Protocol plugin for the Spark protocol
+ *
  * @see BaseProtocolPlugin
  */
 export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<

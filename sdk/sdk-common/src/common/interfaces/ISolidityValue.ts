@@ -1,6 +1,5 @@
 /**
- * @interface ISolidityValue
- * @description Interface for data types that can be transformed into a custom Solidity value
+ * Interface for data types that can be transformed into a custom Solidity value
  */
 export interface ISolidityValue<T> {
   /**

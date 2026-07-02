@@ -2,8 +2,8 @@ import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { ChainId, AddressValue } from '@summerfi/sdk-common'
 
 /**
- * @name setWhitelistedBatchTxHandler
- * @description Sets the whitelist status for multiple addresses in the FleetCommander contract
+ * Sets the whitelist status for multiple addresses in the FleetCommander contract
+ *
  * @param params.chainId The chain ID to set the whitelist status on
  * @param params.fleetCommanderAddress The FleetCommander contract address
  * @param params.targetAddresses The addresses to set the whitelist status for

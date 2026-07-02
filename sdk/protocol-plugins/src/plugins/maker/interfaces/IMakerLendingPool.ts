@@ -8,8 +8,7 @@ import { IMakerLendingPoolId, isMakerLendingPoolId } from './IMakerLendingPoolId
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IMakerLendingPool
- * @description Represents a lending pool in the Maker protocol
+ * Represents a lending pool in the Maker protocol
  */
 export interface IMakerLendingPool extends ILendingPool, IMakerLendingPoolData {
   /** Signature used to differentiate it from similar interfaces */
@@ -19,7 +18,7 @@ export interface IMakerLendingPool extends ILendingPool, IMakerLendingPoolData {
 }
 
 /**
- * @description Zod schema for IMakerLendingPool
+ * Zod schema for IMakerLendingPool
  */
 export const MakerLendingPoolDataSchema = z.object({
   ...LendingPoolDataSchema.shape,
@@ -32,7 +31,8 @@ export const MakerLendingPoolDataSchema = z.object({
 export type IMakerLendingPoolData = Readonly<z.infer<typeof MakerLendingPoolDataSchema>>
 
 /**
- * @description Type guard for IMakerLendingPool
+ * Type guard for IMakerLendingPool
+ *
  * @param maybeLendingPool
  * @returns true if the object is an IMakerLendingPool
  */

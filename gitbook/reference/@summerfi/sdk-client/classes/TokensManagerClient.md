@@ -1,12 +1,6 @@
 # Class: TokensManagerClient
 
-Defined in: [src/implementation/TokensManagerClient.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/TokensManagerClient.ts#L10)
-
-## Name
-
-TokensManagerClient
-
-## Description
+Defined in: [src/implementation/TokensManagerClient.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/TokensManagerClient.ts#L9)
 
 Implementation of the ITokensManager interface for the SDK Client
 
@@ -26,7 +20,7 @@ Implementation of the ITokensManager interface for the SDK Client
 new TokensManagerClient(params): TokensManagerClient;
 ```
 
-Defined in: [src/implementation/TokensManagerClient.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/TokensManagerClient.ts#L13)
+Defined in: [src/implementation/TokensManagerClient.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/TokensManagerClient.ts#L12)
 
 #### Parameters
 
@@ -80,7 +74,7 @@ IRPCClient.rpcClient
 getTokenByAddress(params): Promise<ITokenStanalone>;
 ```
 
-Defined in: [src/implementation/TokensManagerClient.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/TokensManagerClient.ts#L28)
+Defined in: [src/implementation/TokensManagerClient.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/TokensManagerClient.ts#L27)
 
 #### Parameters
 
@@ -110,7 +104,7 @@ ITokensManagerClient.getTokenByAddress
 getTokenByName(_params): Promise<ITokenStanalone>;
 ```
 
-Defined in: [src/implementation/TokensManagerClient.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/TokensManagerClient.ts#L36)
+Defined in: [src/implementation/TokensManagerClient.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/TokensManagerClient.ts#L35)
 
 #### Parameters
 
@@ -140,7 +134,7 @@ ITokensManagerClient.getTokenByName
 getTokenBySymbol(params): Promise<ITokenStanalone>;
 ```
 
-Defined in: [src/implementation/TokensManagerClient.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/TokensManagerClient.ts#L20)
+Defined in: [src/implementation/TokensManagerClient.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/TokensManagerClient.ts#L19)
 
 #### Parameters
 

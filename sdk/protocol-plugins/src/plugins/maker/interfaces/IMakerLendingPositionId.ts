@@ -8,8 +8,7 @@ import { MakerVaultId, MakerVaultIdSchema } from '../types/MakerVaultId'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IMakerLendingPositionId
- * @description Identifier of a Maker lending position
+ * Identifier of a Maker lending position
  */
 export interface IMakerLendingPositionId extends ILendingPositionId, IMakerLendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
@@ -19,7 +18,7 @@ export interface IMakerLendingPositionId extends ILendingPositionId, IMakerLendi
 }
 
 /**
- * @description Zod schema for IMakerLendingPositionId
+ * Zod schema for IMakerLendingPositionId
  */
 export const MakerLendingPositionIdDataSchema = z.object({
   ...LendingPositionIdDataSchema.shape,
@@ -32,7 +31,8 @@ export const MakerLendingPositionIdDataSchema = z.object({
 export type IMakerLendingPositionIdData = Readonly<z.infer<typeof MakerLendingPositionIdDataSchema>>
 
 /**
- * @description Type guard for IMakerLendingPositionId
+ * Type guard for IMakerLendingPositionId
+ *
  * @param maybeMakerLendingPositionId Object to be checked
  * @returns true if the object is a IMakerLendingPositionId
  */

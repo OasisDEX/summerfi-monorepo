@@ -8,7 +8,6 @@ import { IWallet, IWalletData, __signature__ } from '../interfaces/IWallet'
 export type WalletParameters = Omit<IWalletData, ''>
 
 /**
- * @interface Wallet
  * @see IWalletData
  */
 export class Wallet implements IWallet {

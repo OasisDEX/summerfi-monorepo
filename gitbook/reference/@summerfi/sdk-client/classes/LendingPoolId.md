@@ -76,7 +76,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/PoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolId.ts#L18)
+Defined in: [../sdk-common/src/common/implementation/PoolId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolId.ts#L17)
 
 SIGNATURE
 
@@ -98,7 +98,7 @@ ILendingPoolId.[___signature__]
 abstract readonly protocol: IProtocol;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/PoolId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolId.ts#L22)
+Defined in: [../sdk-common/src/common/implementation/PoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolId.ts#L21)
 
 Protocol where the pool is
 

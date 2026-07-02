@@ -4,8 +4,6 @@
 const ArmadaMigrationTypeSchema: ZodNativeEnum<typeof ArmadaMigrationType>;
 ```
 
-Defined in: [../sdk-common/src/common/enums/ArmadaMigrationType.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ArmadaMigrationType.ts#L16)
-
-## Description
+Defined in: [../sdk-common/src/common/enums/ArmadaMigrationType.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ArmadaMigrationType.ts#L15)
 
 Zod schema for ProtocolName

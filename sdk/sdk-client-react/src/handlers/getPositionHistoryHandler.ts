@@ -2,8 +2,8 @@ import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { IArmadaPositionId } from '@summerfi/sdk-common'
 
 /**
- * @name getPositionHistoryHandler
- * @description Retrieves historical snapshots of a position including hourly, daily, and weekly data
+ * Retrieves historical snapshots of a position including hourly, daily, and weekly data
+ *
  * @param params.positionId The ID of the position to retrieve history for
  * @returns GetPositionHistoryQuery with position history snapshots
  */

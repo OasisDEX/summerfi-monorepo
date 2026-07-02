@@ -2,8 +2,8 @@ import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import { type AddressValue, type ChainId, User } from '@summerfi/sdk-common'
 
 /**
- * @name getClaimStakingV2UserRewardsTxHandler
- * @description Generates a transaction to claim staking v2 rewards for a user
+ * Generates a transaction to claim staking v2 rewards for a user
+ *
  * @param params.address The user's address
  * @param params.chainId The chain ID
  */

@@ -1,12 +1,6 @@
 # Interface: ILendingPool
 
-Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L22)
-
-## Name
-
-ILendingPool
-
-## Description
+Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L21)
 
 Represents a lending pool for a single pair collateral/debt
 
@@ -28,7 +22,7 @@ level through the PoolId
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L24)
+Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L23)
 
 Signature to differentiate from similar interfaces
 
@@ -44,7 +38,7 @@ Signature to differentiate from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IPool.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L20)
+Defined in: [src/common/interfaces/IPool.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L19)
 
 Signature to differentiate from similar interfaces
 
@@ -62,7 +56,7 @@ IPool.[___signature__]
 readonly collateralToken: ITokenStanalone;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L28)
+Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L27)
 
 Collateral token used to collateralized the pool
 
@@ -80,7 +74,7 @@ ILendingPoolData.collateralToken
 readonly debtToken: ITokenStanalone;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L30)
+Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L29)
 
 Debt token, which can be borrowed from the pool
 
@@ -98,7 +92,7 @@ ILendingPoolData.debtToken
 readonly id: ILendingPoolId;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L26)
+Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L25)
 
 Pool ID of the lending pool
 
@@ -114,7 +108,7 @@ Pool ID of the lending pool
 readonly type: Lending;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L33)
+Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L32)
 
 Type of the pool
 
@@ -130,7 +124,9 @@ Type of the pool
 toString(): string;
 ```
 
-Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [src/common/interfaces/IPrintable.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L14)
+
+Returns a string representation of the object
 
 #### Returns
 
@@ -139,14 +135,6 @@ Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX
 string
 
 The string representation should have enough info to debug the object
-
-#### Name
-
-toString
-
-#### Description
-
-Returns a string representation of the object
 
 #### Inherited from
 

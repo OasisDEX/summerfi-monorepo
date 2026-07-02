@@ -13,7 +13,6 @@ import { MakerProtocol } from './MakerProtocol'
 export type MakerLendingPoolIdParameters = Omit<IMakerLendingPoolIdData, 'type'>
 
 /**
- * @class MakerLendingPoolId
  * @see IMakerLendingPoolIdData
  */
 export class MakerLendingPoolId extends LendingPoolId implements IMakerLendingPoolId, IPrintable {

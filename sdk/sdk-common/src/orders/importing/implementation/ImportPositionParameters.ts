@@ -13,7 +13,6 @@ import { ExternalLendingPosition } from './ExternalLendingPosition'
 export type ImportPositionParametersParameters = Omit<IImportPositionParametersData, ''>
 
 /**
- * @name ImportPositionParameters
  * @see IImportPositionParameters
  */
 export class ImportPositionParameters implements IImportPositionParameters {

@@ -8,8 +8,7 @@ import { IPrintable } from './IPrintable'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name RiskRatioType
- * @description Enum for the different types of risk ratios supported
+ * Enum for the different types of risk ratios supported
  */
 export enum RiskRatioType {
   /** Loan-to-Value ratio in percentage */
@@ -21,8 +20,7 @@ export enum RiskRatioType {
 }
 
 /**
- * @name IRiskRatio
- * @description Interface for the implementors of the risk ratio
+ * Interface for the implementors of the risk ratio
  */
 export interface IRiskRatio extends IRiskRatioData, IPrintable {
   /** Signature to differentiate from similar interfaces */
@@ -43,7 +41,7 @@ export interface IRiskRatio extends IRiskRatioData, IPrintable {
 }
 
 /**
- * @description Zod schema for IRiskRatioData
+ * Zod schema for IRiskRatioData
  */
 export const RiskRatioDataSchema = z.object({
   type: z.nativeEnum(RiskRatioType),
@@ -56,7 +54,8 @@ export const RiskRatioDataSchema = z.object({
 export type IRiskRatioData = Readonly<z.infer<typeof RiskRatioDataSchema>>
 
 /**
- * @description Type guard for IRiskRatio
+ * Type guard for IRiskRatio
+ *
  * @param maybeRiskRatio
  * @returns true if the object is an IRiskRatio
  */

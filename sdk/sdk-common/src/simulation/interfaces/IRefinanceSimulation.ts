@@ -14,8 +14,7 @@ import { Steps } from './Steps'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IRefinanceSimulation
- * @description Simulation result of a refinance operation
+ * Simulation result of a refinance operation
  */
 export interface IRefinanceSimulation extends ISimulation {
   /** Signature used to differentiate it from similar interfaces */
@@ -34,7 +33,7 @@ export interface IRefinanceSimulation extends ISimulation {
 }
 
 /**
- * @description Zod schema for IRefinanceSimulation
+ * Zod schema for IRefinanceSimulation
  */
 export const RefinanceSimulationSchema = z.object({
   ...SimulationSchema.shape,
@@ -51,7 +50,8 @@ export const RefinanceSimulationSchema = z.object({
 export type IRefinanceSimulationData = Readonly<z.infer<typeof RefinanceSimulationSchema>>
 
 /**
- * @description Type guard for IRefinanceSimulation
+ * Type guard for IRefinanceSimulation
+ *
  * @param maybeRefinanceSimulationData
  * @returns true if the object is an IRefinanceSimulation
  */

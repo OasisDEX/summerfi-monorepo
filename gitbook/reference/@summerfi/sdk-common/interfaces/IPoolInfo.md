@@ -1,12 +1,6 @@
 # Interface: IPoolInfo
 
-Defined in: [src/common/interfaces/IPoolInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L16)
-
-## Name
-
-IPool
-
-## Description
+Defined in: [src/common/interfaces/IPoolInfo.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L15)
 
 Represents the extended information of a pool. It should contain extra info that is common for any type of pool
 
@@ -30,7 +24,7 @@ It is meant to be specialized for each type of pool, like a lending pool, a stak
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IPoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L18)
+Defined in: [src/common/interfaces/IPoolInfo.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L17)
 
 Signature to differentiate from similar interfaces
 
@@ -42,7 +36,7 @@ Signature to differentiate from similar interfaces
 readonly id: IPoolId;
 ```
 
-Defined in: [src/common/interfaces/IPoolInfo.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L22)
+Defined in: [src/common/interfaces/IPoolInfo.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L21)
 
 Unique identifier for the pool, to be specialized for each protocol
 
@@ -60,7 +54,7 @@ IPoolInfoData.id
 readonly type: PoolType;
 ```
 
-Defined in: [src/common/interfaces/IPoolInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L20)
+Defined in: [src/common/interfaces/IPoolInfo.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L19)
 
 Type of the pool
 

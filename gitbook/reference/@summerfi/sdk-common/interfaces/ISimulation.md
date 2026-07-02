@@ -1,10 +1,6 @@
 # Interface: ISimulation
 
-Defined in: [src/simulation/interfaces/ISimulation.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L13)
-
-ISimulation
-
-## Description
+Defined in: [src/simulation/interfaces/ISimulation.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L12)
 
 Generic simulation interface, defines the simulation type for all simulations
 
@@ -21,7 +17,7 @@ Generic simulation interface, defines the simulation type for all simulations
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/simulation/interfaces/ISimulation.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L15)
+Defined in: [src/simulation/interfaces/ISimulation.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L14)
 
 Signature used to differentiate it from similar interfaces
 
@@ -33,6 +29,6 @@ Signature used to differentiate it from similar interfaces
 readonly type: SimulationType;
 ```
 
-Defined in: [src/simulation/interfaces/ISimulation.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L17)
+Defined in: [src/simulation/interfaces/ISimulation.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/ISimulation.ts#L16)
 
 The type of the simulation

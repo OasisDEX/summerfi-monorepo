@@ -10,7 +10,6 @@ import { AddressType } from '../enums/AddressType'
 export type AddressParameters = Omit<IAddressData, ''>
 
 /**
- * @class Address
  * @see IAddress
  */
 export class Address implements IAddress {

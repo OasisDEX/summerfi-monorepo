@@ -35,8 +35,7 @@ type Asset<ContractNames extends string, ContractsAbiMap extends GenericAbiMap<C
   AssetsList<ContractNames, ContractsAbiMap> extends (infer U)[] ? U : never
 
 /**
- * @class AAVEv3BaseProtocolPlugin
- * @description Base class for AAVEv3 protocol plugins, it contains common functionality to
+ * Base class for AAVEv3 protocol plugins, it contains common functionality to
  * fetch data from forks of AAVEv3 protocol.
  */
 export abstract class AAVEv3LikeBaseProtocolPlugin<

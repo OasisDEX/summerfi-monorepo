@@ -1,15 +1,13 @@
 import type { ChainInfo, Wallet, Position } from '@summerfi/sdk-common'
 
 /**
- * @interface IPortfolioManager
- * @description Allows to retrieve a wallet's positions by their wallet and network. This is meant to be used in isolation
- *              without having to retrieve a User or a Network
+ * Allows to retrieve a wallet's positions by their wallet and network. This is meant to be used in isolation
+ * without having to retrieve a User or a Network
  */
 export interface IPortfolioManager {
   /**
-   * @method getPositions
-   * @description Retrieves all positions of the given wallet for the given networks. The positions can be filtered by
-   *              their IDs
+   * Retrieves all positions of the given wallet for the given networks. The positions can be filtered by
+   * their IDs
    *
    * @param networks The list of networks to retrieve the positions for
    * @param wallet The wallet to retrieve the positions for

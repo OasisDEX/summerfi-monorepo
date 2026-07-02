@@ -1,10 +1,6 @@
 # Interface: IUsersManager
 
-Defined in: [src/interfaces/IUsersManager.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUsersManager.ts#L8)
-
-IUsersManager
-
-## Description
+Defined in: [src/interfaces/IUsersManager.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUsersManager.ts#L7)
 
 Allows to retrieve a user by their wallet and network
 
@@ -16,7 +12,9 @@ Allows to retrieve a user by their wallet and network
 getUserClient(params): Promise<IUserClient>;
 ```
 
-Defined in: [src/interfaces/IUsersManager.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUsersManager.ts#L18)
+Defined in: [src/interfaces/IUsersManager.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IUsersManager.ts#L16)
+
+Retrieves a user by their wallet and network
 
 #### Parameters
 
@@ -35,11 +33,3 @@ Defined in: [src/interfaces/IUsersManager.ts:18](https://github.com/OasisDEX/sum
 `Promise`\<[`IUserClient`](IUserClient.md)\>
 
 The user for the given wallet and network
-
-#### Method
-
-getUserClient
-
-#### Description
-
-Retrieves a user by their wallet and network

@@ -4,6 +4,6 @@
 const PositionTypeSchema: ZodNativeEnum<typeof PositionType>;
 ```
 
-Defined in: [src/common/enums/PositionType.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L19)
+Defined in: [src/common/enums/PositionType.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L18)
 
 Zod schema for PositionType

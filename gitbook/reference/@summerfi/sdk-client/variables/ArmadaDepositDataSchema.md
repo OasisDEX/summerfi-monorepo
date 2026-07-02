@@ -33,6 +33,4 @@ const ArmadaDepositDataSchema: ZodObject<{
 
 Defined in: [../sdk-common/src/common/interfaces/IArmadaDeposit.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaDeposit.ts#L10)
 
-## Description
-
 Zod schema for IArmadaDeposit

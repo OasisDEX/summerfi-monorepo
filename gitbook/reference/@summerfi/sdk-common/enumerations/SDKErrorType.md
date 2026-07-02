@@ -2,8 +2,6 @@
 
 Defined in: [src/common/enums/SDKErrorType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/SDKErrorType.ts#L6)
 
-## Description
-
 Error types for the SDK
 
 Used to categorize errors and provide a more detailed error message for the client

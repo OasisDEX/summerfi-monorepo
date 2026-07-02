@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
 /**
- * @enum PoolType
- * @description Indicates the type of pool (supply or lending)
+ * Indicates the type of pool (supply or lending)
  */
 export enum PoolType {
   /** Staking pool: adding 1 token to the pool generates some interest earnings */

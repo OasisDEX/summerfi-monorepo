@@ -6,6 +6,8 @@ function isArmadaPositionId(maybeArmadaPositionId, returnedErrors?): maybeArmada
 
 Defined in: [../sdk-common/src/common/interfaces/IArmadaPositionId.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaPositionId.ts#L45)
 
+Type guard for IArmadaPositionId
+
 ## Parameters
 
 ### maybeArmadaPositionId
@@ -25,7 +27,3 @@ Optional array that, on failure, is populated with validation error messages
 `maybeArmadaPositionId is IArmadaPositionId`
 
 true if the object is a IArmadaPositionId
-
-## Description
-
-Type guard for IArmadaPositionId

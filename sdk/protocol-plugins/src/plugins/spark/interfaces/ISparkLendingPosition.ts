@@ -13,8 +13,7 @@ import { ISparkLendingPositionId, isSparkLendingPositionId } from './ISparkLendi
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface ISparkPosition
- * @description Represents a position in the Spark protocol
+ * Represents a position in the Spark protocol
  *
  * Currently empty as there are no specifics for this protocol
  *
@@ -34,7 +33,7 @@ export interface ISparkLendingPosition extends ILendingPosition, ISparkLendingPo
 }
 
 /**
- * @description Zod schema for ISparkPositionId
+ * Zod schema for ISparkPositionId
  */
 export const SparkLendingPositionDataSchema = z.object({
   ...LendingPositionDataSchema.shape,
@@ -48,7 +47,8 @@ export const SparkLendingPositionDataSchema = z.object({
 export type ISparkLendingPositionData = Readonly<z.infer<typeof SparkLendingPositionDataSchema>>
 
 /**
- * @description Type guard for ISparkPosition
+ * Type guard for ISparkPosition
+ *
  * @param maybePosition
  * @returns true if the object is an ISparkPosition
  */

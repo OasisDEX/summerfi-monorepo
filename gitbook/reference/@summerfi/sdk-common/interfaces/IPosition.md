@@ -1,12 +1,6 @@
 # Interface: IPosition
 
-Defined in: [src/common/interfaces/IPosition.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L15)
-
-## Name
-
-IPosition
-
-## Description
+Defined in: [src/common/interfaces/IPosition.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L14)
 
 Represents a Summer position in a pool/protocol
 
@@ -27,7 +21,7 @@ Represents a Summer position in a pool/protocol
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IPosition.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L17)
+Defined in: [src/common/interfaces/IPosition.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L16)
 
 Signature to differentiate from similar interfaces
 
@@ -39,7 +33,7 @@ Signature to differentiate from similar interfaces
 readonly id: IPositionId;
 ```
 
-Defined in: [src/common/interfaces/IPosition.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L21)
+Defined in: [src/common/interfaces/IPosition.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L20)
 
 Unique identifier for the position inside the Summer.fi system
 
@@ -57,7 +51,7 @@ IPositionData.id
 readonly pool: IPool;
 ```
 
-Defined in: [src/common/interfaces/IPosition.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L23)
+Defined in: [src/common/interfaces/IPosition.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L22)
 
 Pool where the position is opened
 
@@ -75,7 +69,7 @@ IPositionData.pool
 readonly type: PositionType;
 ```
 
-Defined in: [src/common/interfaces/IPosition.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L19)
+Defined in: [src/common/interfaces/IPosition.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L18)
 
 Type of the position in the Summer.fi system
 

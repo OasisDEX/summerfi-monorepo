@@ -6,6 +6,4 @@ const ExternalLendingPositionTypeSchema: ZodNativeEnum<typeof ExternalLendingPos
 
 Defined in: [../sdk-common/src/orders/importing/enums/ExrternalLendingPositionType.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/enums/ExrternalLendingPositionType.ts#L18)
 
-## Description
-
 Zod schema for ExternalPositionType
