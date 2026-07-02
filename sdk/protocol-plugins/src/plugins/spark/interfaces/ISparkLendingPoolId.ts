@@ -46,7 +46,7 @@ export type ISparkLendingPoolIdData = Readonly<z.infer<typeof SparkLendingPoolId
 /**
  * Type guard for ISparkLendingPoolId
  *
- * @param poolId Object to be checked
+ * @param maybeLendingPoolId Object to be checked
  * @returns true if the object is an ISparkLendingPoolId
  */
 export function isSparkLendingPoolId(

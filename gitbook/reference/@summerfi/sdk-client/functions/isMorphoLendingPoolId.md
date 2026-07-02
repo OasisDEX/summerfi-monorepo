@@ -14,6 +14,8 @@ Type guard for IMorphoLendingPoolId
 
 `unknown`
 
+Object to be checked
+
 ## Returns
 
 `maybeLendingPoolId is IMorphoLendingPoolId`

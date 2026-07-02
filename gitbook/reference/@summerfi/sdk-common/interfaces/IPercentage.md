@@ -222,6 +222,8 @@ Converts the instance into a Solidity value
 
 `number`
 
+The number of decimals used to represent the value in Solidity
+
 #### Returns
 
 `bigint`

@@ -9,8 +9,8 @@ export interface IPortfolioManager {
    * Retrieves all positions of the given wallet for the given networks. The positions can be filtered by
    * their IDs
    *
-   * @param networks The list of networks to retrieve the positions for
-   * @param wallet The wallet to retrieve the positions for
+   * @param params.networks The list of networks to retrieve the positions for
+   * @param params.wallet The wallet to retrieve the positions for
    *
    * @returns The list of positions for the given wallet and networks
    */

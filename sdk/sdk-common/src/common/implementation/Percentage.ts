@@ -42,7 +42,7 @@ export class Percentage implements IPercentage {
 
   /**
    * Creates a Percentage instance from a Solidity value with PERCENTAGE_DECIMALS decimals
-   * @param value The Solidity value
+   * @param params.value The Solidity value
    * @returns The Percentage instance
    */
   static createFromSolidityValue(params: { value: bigint }): Percentage {

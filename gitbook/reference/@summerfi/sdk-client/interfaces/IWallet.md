@@ -59,6 +59,8 @@ Checks if two wallets are equal
 
 `IWallet`
 
+The wallet to compare
+
 #### Returns
 
 `boolean`

@@ -96,7 +96,7 @@ IRPCClient.rpcClient
 getPosition(params): Promise<Maybe<Position>>;
 ```
 
-Defined in: [src/implementation/UserClient.ts:72](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UserClient.ts#L72)
+Defined in: [src/implementation/UserClient.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UserClient.ts#L68)
 
 Returns a single position owned by the user, by its id.
 
@@ -134,7 +134,7 @@ Not yet implemented — currently returns a placeholder value.
 getPositionsByIds(_params): Promise<Position[]>;
 ```
 
-Defined in: [src/implementation/UserClient.ts:58](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UserClient.ts#L58)
+Defined in: [src/implementation/UserClient.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UserClient.ts#L54)
 
 Returns the user's positions matching the given position ids.
 
@@ -168,7 +168,7 @@ Not yet implemented — currently returns an empty array.
 getPositionsByProtocol(_params): Promise<Position[]>;
 ```
 
-Defined in: [src/implementation/UserClient.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UserClient.ts#L44)
+Defined in: [src/implementation/UserClient.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UserClient.ts#L42)
 
 Returns the user's positions for a given protocol.
 
@@ -202,7 +202,7 @@ Not yet implemented — currently returns an empty array.
 newOrder(params): Promise<Maybe<Order>>;
 ```
 
-Defined in: [src/implementation/UserClient.ts:87](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UserClient.ts#L87)
+Defined in: [src/implementation/UserClient.ts:83](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/UserClient.ts#L83)
 
 Builds an executable order for this user from a simulation.
 

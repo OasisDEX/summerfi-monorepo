@@ -24,13 +24,19 @@ Gets all addresses that currently have a specific contract-specific role
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to check the role on
+
 ###### contractAddress
 
 [`IAddress`](IAddress.md)
 
+The target contract address
+
 ###### role
 
 [`InstiContractRoles`](../enumerations/InstiContractRoles.md)
+
+The contract-specific role to check for
 
 #### Returns
 
@@ -58,9 +64,13 @@ Gets all addresses that currently have a specific global protocol role
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to check the role on
+
 ###### role
 
 [`GlobalRoles`](../enumerations/GlobalRoles.md)
+
+The global role to check for
 
 #### Returns
 
@@ -88,25 +98,37 @@ Gets all roles for a given chainId with pagination and filtering support
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to get roles for
+
 ###### first?
 
 `number`
+
+Number of items to return (default: 1000)
 
 ###### name?
 
 `string`
 
+Optional role name filter
+
 ###### owner?
 
 `` `0x${string}` ``
+
+Optional owner address filter
 
 ###### skip?
 
 `number`
 
+Number of items to skip for pagination (default: 0)
+
 ###### targetContract?
 
 `` `0x${string}` ``
+
+Optional target contract address filter
 
 #### Returns
 
@@ -134,17 +156,25 @@ Grants a contract-specific role to an address
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to grant the role on
+
 ###### contractAddress
 
 [`IAddress`](IAddress.md)
+
+The target contract address
 
 ###### role
 
 [`InstiContractRoles`](../enumerations/InstiContractRoles.md)
 
+The contract-specific role to grant
+
 ###### targetAddress
 
 [`IAddress`](IAddress.md)
+
+The address to grant the role to
 
 #### Returns
 
@@ -172,13 +202,19 @@ Grants a global protocol role to an address
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to grant the role on
+
 ###### role
 
 [`GlobalRoles`](../enumerations/GlobalRoles.md)
 
+The global role to grant
+
 ###### targetAddress
 
 [`IAddress`](IAddress.md)
+
+The address to grant the role to
 
 #### Returns
 
@@ -206,17 +242,25 @@ Checks if an address has a specific contract-specific role
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to check the role on
+
 ###### contractAddress
 
 [`IAddress`](IAddress.md)
+
+The target contract address
 
 ###### role
 
 [`InstiContractRoles`](../enumerations/InstiContractRoles.md)
 
+The contract-specific role to check
+
 ###### targetAddress
 
 [`IAddress`](IAddress.md)
+
+The address to check for the role
 
 #### Returns
 
@@ -244,13 +288,19 @@ Checks if an address has a specific global protocol role
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to check the role on
+
 ###### role
 
 [`GlobalRoles`](../enumerations/GlobalRoles.md)
 
+The global role to check
+
 ###### targetAddress
 
 [`IAddress`](IAddress.md)
+
+The address to check for the role
 
 #### Returns
 
@@ -278,13 +328,19 @@ Checks if an address is whitelisted in the FleetCommander contract
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to check the whitelist status on
+
 ###### fleetCommanderAddress
 
 `` `0x${string}` ``
 
+The FleetCommander contract address
+
 ###### targetAddress
 
 `` `0x${string}` ``
+
+The address to check for whitelist status
 
 #### Returns
 
@@ -312,9 +368,13 @@ Checks if an address is whitelisted in the AdmiralsQuarters contract
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to check the whitelist status on
+
 ###### targetAddress
 
 `` `0x${string}` ``
+
+The address to check for whitelist status
 
 #### Returns
 
@@ -342,17 +402,25 @@ Revokes a contract-specific role from an address
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to revoke the role on
+
 ###### contractAddress
 
 [`IAddress`](IAddress.md)
+
+The target contract address
 
 ###### role
 
 [`InstiContractRoles`](../enumerations/InstiContractRoles.md)
 
+The contract-specific role to revoke
+
 ###### targetAddress
 
 [`IAddress`](IAddress.md)
+
+The address to revoke the role from
 
 #### Returns
 
@@ -380,13 +448,19 @@ Revokes a global protocol role from an address
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to revoke the role on
+
 ###### role
 
 [`GlobalRoles`](../enumerations/GlobalRoles.md)
 
+The global role to revoke
+
 ###### targetAddress
 
 [`IAddress`](IAddress.md)
+
+The address to revoke the role from
 
 #### Returns
 
@@ -414,17 +488,25 @@ Sets the whitelist status for an address in the FleetCommander contract
 
 `boolean`
 
+The whitelist status to set
+
 ###### chainId
 
 [`ChainId`](../type-aliases/ChainId.md)
+
+The chain ID to set the whitelist status on
 
 ###### fleetCommanderAddress
 
 `` `0x${string}` ``
 
+The FleetCommander contract address
+
 ###### targetAddress
 
 `` `0x${string}` ``
+
+The address to set the whitelist status for
 
 #### Returns
 
@@ -452,13 +534,19 @@ Sets the whitelist status for an address in the AdmiralsQuarters contract
 
 `boolean`
 
+The whitelist status to set
+
 ###### chainId
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to set the whitelist status on
+
 ###### targetAddress
 
 `` `0x${string}` ``
+
+The address to set the whitelist status for
 
 #### Returns
 
@@ -486,17 +574,25 @@ Sets the whitelist status for multiple addresses in the FleetCommander contract
 
 `boolean`[]
 
+The whitelist statuses to set (must match the length of targetAddresses)
+
 ###### chainId
 
 [`ChainId`](../type-aliases/ChainId.md)
+
+The chain ID to set the whitelist status on
 
 ###### fleetCommanderAddress
 
 `` `0x${string}` ``
 
+The FleetCommander contract address
+
 ###### targetAddresses
 
 `` `0x${string}` ``[]
+
+The addresses to set the whitelist status for
 
 #### Returns
 
@@ -524,13 +620,19 @@ Sets the whitelist status for multiple addresses in the AdmiralsQuarters contrac
 
 `boolean`[]
 
+The whitelist statuses to set (must match the length of targetAddresses)
+
 ###### chainId
 
 [`ChainId`](../type-aliases/ChainId.md)
 
+The chain ID to set the whitelist status on
+
 ###### targetAddresses
 
 `` `0x${string}` ``[]
+
+The addresses to set the whitelist status for
 
 #### Returns
 

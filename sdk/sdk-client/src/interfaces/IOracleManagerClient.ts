@@ -16,17 +16,17 @@ export interface IOracleManagerClient {
   /**
    * Returns the prevailing market price for a single token
    *
-   * @param baseToken requested base token
-   * @param denomination optional denomination either fiat or token, defaults to USD
+   * @param params.baseToken requested base token
+   * @param params.denomination optional denomination either fiat or token, defaults to USD
    */
   getSpotPrice(params: { baseToken: IToken; denomination?: Denomination }): Promise<ISpotPriceInfo>
 
   /**
    * Returns the prevailing market prices for multiple tokens
    *
-   * @param chainInfo The chain info for specific chain
-   * @param baseTokens An array of requested base tokens
-   * @param quote A quote currency, defaults to USD
+   * @param params.chainInfo The chain info for specific chain
+   * @param params.baseTokens An array of requested base tokens
+   * @param params.quoteCurrency A quote currency, defaults to USD
    */
   getSpotPrices(params: {
     chainInfo: IChainInfo

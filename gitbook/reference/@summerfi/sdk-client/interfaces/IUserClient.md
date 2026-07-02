@@ -115,6 +115,8 @@ Creates a new order for the user based on the given simulation
 
 [`ISimulation`](ISimulation.md)
 
+The simulation to create the order for
+
 #### Returns
 
 `Promise`\<[`Maybe`](../type-aliases/Maybe.md)\<[`Order`](Order.md)\>\>

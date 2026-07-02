@@ -9,7 +9,7 @@ export interface IValueConverter {
   /**
    * Converts the instance into a Solidity value
    *
-   * @param decimals The number of decimals used to represent the value in Solidity
+   * @param params.decimals The number of decimals used to represent the value in Solidity
    *
    * @returns The value as a TypeScript bigint that can be passed to a Solidity contract
    *

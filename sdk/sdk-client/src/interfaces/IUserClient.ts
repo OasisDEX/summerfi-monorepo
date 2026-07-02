@@ -35,7 +35,7 @@ export interface IUserClient {
   /**
    * Creates a new order for the user based on the given simulation
    *
-   * @param simulation The simulation to create the order for
+   * @param params.simulation The simulation to create the order for
    *
    * @returns The new order created for the user
    */

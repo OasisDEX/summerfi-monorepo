@@ -132,14 +132,14 @@ import { getRwaSetWhitelistOpenTxHandler } from '../handlers/getRwaSetWhitelistO
 import { getRwaIsWhitelistedHandler } from '../handlers/getRwaIsWhitelistedHandler'
 import { getRwaIsWhitelistOpenHandler } from '../handlers/getRwaIsWhitelistOpenHandler'
 
-type UseSdk = {
+export type UseSdk = {
   walletAddress?: string
   chainId?: number
   clientId?: string
   insti?: boolean
 }
 
-type SdkStateParams = {
+export type SdkStateParams = {
   chainId?: number
   walletAddress?: string
 }
@@ -149,7 +149,7 @@ type SdkStateParams = {
  * (`makeAdminSDK` / `makeInstiSdk`) instances. These only touch `ISDKManager` members, so an
  * `ISDKInstiManager` (a structural superset) satisfies the parameter too.
  */
-const useSDKManagerHandlers = (
+export const useSDKManagerHandlers = (
   sdk: ISDKManager,
   { chainId, walletAddress: walletAddressString }: SdkStateParams,
 ) => {
@@ -514,7 +514,7 @@ const useSDKManagerHandlers = (
  * `sdk.armada.accessControl`, `sdk.rwa`) and are therefore exposed only for managed instances
  * created via `makeAdminSDK` / `makeInstiSdk`.
  */
-const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
+export const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
   // region Admin Handlers
   const isWhitelisted = useMemo(() => isWhitelistedHandler(sdk), [sdk])
   const setWhitelistedTx = useMemo(() => setWhitelistedTxHandler(sdk), [sdk])

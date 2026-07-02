@@ -10,5 +10,6 @@
   "skipErrorChecking": true,
   "disableGit": true,
   "sourceLinkTemplate": "https://github.com/OasisDEX/summerfi-monorepo/blob/dev/{path}#L{line}",
-  "basePath": "."
+  "basePath": ".",
+  "excludeExternals": true
 }

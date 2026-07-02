@@ -40,7 +40,7 @@ export type IMorphoLendingPoolIdData = Readonly<z.infer<typeof MorphoLendingPool
 /**
  * Type guard for IMorphoLendingPoolId
  *
- * @param poolId Object to be checked
+ * @param maybeLendingPoolId Object to be checked
  * @returns true if the object is an IMorphoLendingPoolId
  */
 export function isMorphoLendingPoolId(

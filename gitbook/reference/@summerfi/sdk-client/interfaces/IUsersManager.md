@@ -24,9 +24,13 @@ Retrieves a user by their wallet and network
 
 [`ChainInfo`](../classes/ChainInfo.md)
 
+The chain to retrieve the user for
+
 ###### walletAddress
 
 [`Address`](../classes/Address.md)
+
+The wallet to retrieve the user for
 
 #### Returns
 

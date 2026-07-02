@@ -19,9 +19,9 @@ export type QuoteData = {
 /** A single swap route: an ordered list of hops the swap is split across. */
 export type SwapRoute = SwapHop[]
 
-type SwapHop = SwapHopPart[]
+export type SwapHop = SwapHopPart[]
 
-type SwapHopPart = {
+export type SwapHopPart = {
   name: string
   part: IPercentage
   fromTokenAddress: IAddress

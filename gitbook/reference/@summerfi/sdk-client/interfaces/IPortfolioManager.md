@@ -26,9 +26,13 @@ their IDs
 
 [`ChainInfo`](../classes/ChainInfo.md)[]
 
+The list of networks to retrieve the positions for
+
 ###### wallet
 
 [`Wallet`](../classes/Wallet.md)
+
+The wallet to retrieve the positions for
 
 #### Returns
 

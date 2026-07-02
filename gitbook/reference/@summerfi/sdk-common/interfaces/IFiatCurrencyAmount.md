@@ -168,6 +168,8 @@ Defined in: [src/common/interfaces/IFiatCurrencyAmount.ts:52](https://github.com
 
 `IFiatCurrencyAmount`
 
+FiatCurrencyAmount to subtract
+
 #### Returns
 
 `IFiatCurrencyAmount`
@@ -225,6 +227,8 @@ Converts the instance into a Solidity value
 ###### decimals
 
 `number`
+
+The number of decimals used to represent the value in Solidity
 
 #### Returns
 
