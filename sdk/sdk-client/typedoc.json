@@ -1,0 +1,14 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts"],
+  "tsconfig": "tsconfig.build.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": false,
+    "skipLibCheck": true
+  },
+  "skipErrorChecking": true,
+  "disableGit": true,
+  "sourceLinkTemplate": "https://github.com/OasisDEX/summerfi-monorepo/blob/dev/{path}#L{line}",
+  "basePath": "."
+}

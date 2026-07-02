@@ -1,3 +1,9 @@
+/**
+ * Typed definitions for the individual steps (and their inputs/outputs) that compose a simulation
+ * strategy. Re-exported under the `steps` namespace from the package entry point.
+ *
+ * @packageDocumentation
+ */
 import { SwapProviderType } from '../../swap/enums/SwapProviderType'
 import { ProtocolName } from '../../common/enums/ProtocolName'
 import { IPercentage } from '../../common/interfaces/IPercentage'

@@ -16,10 +16,14 @@ export enum RoundState {
   Settled = 3,
 }
 
+/** Zod schema validating a value against the {@link RoundState} enum. */
 export const RoundStateSchema = z.nativeEnum(RoundState)
 
 /**
- * Type guard for RoundState
+ * Type guard that checks whether a value is a valid {@link RoundState}.
+ *
+ * @param maybeRoundState - The value to test.
+ * @returns `true` if the value is a {@link RoundState}, narrowing its type.
  */
 export function isRoundState(maybeRoundState: unknown): maybeRoundState is RoundState {
   return RoundStateSchema.safeParse(maybeRoundState).success

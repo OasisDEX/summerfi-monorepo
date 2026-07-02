@@ -208,6 +208,21 @@
     },
     "deploy:staging": {
       "dependsOn": ["cicheck", "^deploy:staging"]
+    },
+    "//#docs:gen": {
+      "dependsOn": [
+        "@summerfi/sdk-client#build",
+        "@summerfi/sdk-client-react#build",
+        "@summerfi/sdk-common#build"
+      ],
+      "inputs": [
+        "sdk/sdk-client/src/**",
+        "sdk/sdk-client-react/src/**",
+        "sdk/sdk-common/src/**",
+        "typedoc.json",
+        "sdk/*/typedoc.json"
+      ],
+      "outputs": ["docs/generated/sdk/**"]
     }
   }
 }

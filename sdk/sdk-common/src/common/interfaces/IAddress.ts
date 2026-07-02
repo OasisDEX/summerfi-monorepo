@@ -50,7 +50,8 @@ export type IAddressData = Readonly<z.infer<typeof AddressDataSchema>>
 
 /**
  * @description Type guard for IAddress
- * @param maybeAddress
+ * @param maybeAddress The value to check
+ * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is an IAddress
  */
 export function isAddress(

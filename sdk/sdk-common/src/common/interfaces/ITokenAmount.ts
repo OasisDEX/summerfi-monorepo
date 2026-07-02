@@ -17,6 +17,7 @@ export const __signature__: unique symbol = Symbol()
  * This helps callers to know what to expect from the result of the operation
  */
 export type TokenAmountMulDivParamType = string | number | IPrice | IPercentage
+/** Infers the result type of multiplying/dividing a token amount by an operand of type `T`. */
 export type TokenAmountMulDivReturnType<T> = T extends IPrice
   ? ITokenAmount | IFiatCurrencyAmount
   : T extends IPercentage | string | number
@@ -138,7 +139,8 @@ export type ITokenAmountData = Readonly<z.infer<typeof TokenAmountDataSchema>>
 
 /**
  * @description Type guard for ITokenAmount
- * @param maybeTokenAmount
+ * @param maybeTokenAmount The value to check
+ * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is an ITokenAmount
  */
 export function isTokenAmount(

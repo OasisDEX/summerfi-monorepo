@@ -21,6 +21,13 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
     super(params)
   }
 
+  /**
+   * Builds a {@link Chain} instance (with its tokens and protocols managers) from chain info.
+   *
+   * @param params - Parameters object.
+   * @param params.chainInfo - Identifying information of the chain to build.
+   * @returns A promise resolving to the configured {@link Chain}.
+   */
   public async getChain(params: { chainInfo: IChainInfoData }): Promise<Chain> {
     const chainInfo = ChainInfo.createFrom(params.chainInfo)
 
@@ -34,6 +41,13 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
     })
   }
 
+  /**
+   * Builds a {@link Chain} instance by resolving chain info from a numeric chain id.
+   *
+   * @param params - Parameters object.
+   * @param params.chainId - The numeric id of the chain to build.
+   * @returns A promise resolving to the configured {@link Chain}.
+   */
   public async getChainById(params: { chainId: number }): Promise<Chain> {
     const chainFamily = getChainFamilyInfoByChainId(params.chainId)
 

@@ -17,6 +17,7 @@ export type QuoteData = {
   estimatedGas: string
 }
 
+/** A single swap route: an ordered list of hops the swap is split across. */
 export type SwapRoute = SwapHop[]
 
 type SwapHop = SwapHopPart[]

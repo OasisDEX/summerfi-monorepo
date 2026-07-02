@@ -76,7 +76,8 @@ export type IPercentageData = Readonly<z.infer<typeof PercentageDataSchema>>
 
 /**
  * @description Type guard for IPercentage
- * @param maybePercentage
+ * @param maybePercentage The value to check
+ * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is an IPercentage
  */
 export function isPercentage(
@@ -88,7 +89,8 @@ export function isPercentage(
 
 /**
  * @description Type guard for IPercentageData
- * @param maybePercentageData
+ * @param maybePercentageData The value to check
+ * @param returnedErrors Optional array that, on failure, is populated with validation error messages
  * @returns true if the object is an IPercentageData
  */
 export function isPercentageData(

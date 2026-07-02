@@ -674,11 +674,27 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
 }
 
 /**
+ * Builds and memoizes a Summer.fi SDK client bound to the current React context, exposing the set
+ * of handlers (vaults, swaps, governance, claims, and — for managed instances — admin/RWA) suited
+ * to the requested instance type.
+ *
  * Managed (admin / institutional) clients expose the full surface: every `ISDKManager` method plus
  * the admin + RWA handlers. A `clientId` (passed by `makeAdminSDK` / `makeInstiSdk`) selects this.
+ *
+ * @param params - Instance configuration.
+ * @param params.walletAddress - Optional connected wallet address used to scope user-specific calls.
+ * @param params.chainId - Optional chain id the client should operate against.
+ * @param params.clientId - Client id identifying a managed (admin/institutional) instance.
+ * @param params.insti - When `true` together with `clientId`, selects an institutional instance.
+ * @returns The full managed client surface ({@link SdkInstiManagerClient}).
  */
 export function useSDK(params: UseSdk & { clientId: string }): SdkInstiManagerClient
-/** Public clients (`makeSDK`, no `clientId`) expose only the `ISDKManager` surface. */
+/**
+ * Public clients (`makeSDK`, no `clientId`) expose only the `ISDKManager` surface.
+ *
+ * @param params - Instance configuration (see the managed overload for field descriptions).
+ * @returns The public client surface ({@link SdkManagerClient}).
+ */
 export function useSDK(params: UseSdk): SdkManagerClient
 export function useSDK(params: UseSdk): SdkManagerClient | SdkInstiManagerClient {
   const { apiURL } = useSDKContext()

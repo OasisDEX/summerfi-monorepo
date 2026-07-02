@@ -4,8 +4,13 @@ import type { JSONValue } from 'superjson/dist/types'
 import { SuperJSON } from 'superjson'
 import { LoggingService } from './LoggingService'
 
+/** A class constructor or instance that can be registered for serialization. */
 export type Class = object
 
+/**
+ * Static facade over SuperJSON for registering classes and custom transformers so SDK domain
+ * objects can be serialized and deserialized across the RPC boundary.
+ */
 export class SerializationService {
   static registerClass(v: Class, options?: string | RegisterOptions | undefined): void {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

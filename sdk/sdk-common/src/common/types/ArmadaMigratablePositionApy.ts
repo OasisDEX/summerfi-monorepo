@@ -1,5 +1,6 @@
 import type { IPercentage } from '../interfaces/IPercentage'
 
+/** APY figures (current, 7-day and 30-day SMA) for a migratable Armada position. */
 export type ArmadaMigratablePositionApy = {
   // position id
   positionId: string

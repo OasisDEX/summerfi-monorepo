@@ -3,6 +3,7 @@ import type { AddressValue } from '../types/AddressValue'
 import type { ChainId } from '../types/ChainId'
 import type { IChainlinkFeed } from './IChainlinkFeed'
 
+/** A configured DCA (dollar-cost-averaging) strategy and its current on-chain execution state. */
 export interface IDcaStrategy {
   /** Unique identifier for the DCA strategy in graph */
   id: string

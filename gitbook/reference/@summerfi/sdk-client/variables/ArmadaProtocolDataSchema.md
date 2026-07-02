@@ -1,0 +1,20 @@
+# Variable: ArmadaProtocolDataSchema
+
+```ts
+const ArmadaProtocolDataSchema: ZodObject<{
+  chainInfo: ZodType<IChainInfo, ZodTypeDef, IChainInfo>;
+  name: ZodLiteral<Armada>;
+}, "strip", ZodTypeAny, {
+  chainInfo: IChainInfo;
+  name: Armada;
+}, {
+  chainInfo: IChainInfo;
+  name: Armada;
+}>;
+```
+
+Defined in: [../sdk-common/src/common/interfaces/IArmadaProtocol.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaProtocol.ts#L25)
+
+## Description
+
+Zod schema for IArmadaProtocol

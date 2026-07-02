@@ -9,6 +9,12 @@ import { PositionType } from '../enums/PositionType'
 // TODO: add a proper internal position type only used by the simulator that can be instantiated
 // TODO implement Simulated position
 
+/**
+ * Creates an empty lending position (zero collateral and debt) for a given pool.
+ *
+ * @param pool - The lending pool the position belongs to.
+ * @returns A new lending position with zeroed amounts.
+ */
 export function newEmptyPositionFromPool(pool: ILendingPoolData): ILendingPosition {
   return {
     type: PositionType.Lending,
@@ -23,6 +29,13 @@ export function newEmptyPositionFromPool(pool: ILendingPoolData): ILendingPositi
   } as unknown as LendingPosition
 }
 
+/**
+ * Returns a copy of the position with the deposited amount added to its collateral.
+ *
+ * @param position - The position to deposit into.
+ * @param amount - The collateral amount to add.
+ * @returns A new position with increased collateral.
+ */
 export function depositToPosition(
   position: ILendingPosition,
   amount: ITokenAmount,
@@ -37,6 +50,13 @@ export function depositToPosition(
   } as unknown as LendingPosition
 }
 
+/**
+ * Returns a copy of the position with the withdrawn amount subtracted from its collateral.
+ *
+ * @param position - The position to withdraw from.
+ * @param amount - The collateral amount to remove.
+ * @returns A new position with decreased collateral.
+ */
 export function withdrawFromPosition(
   position: ILendingPosition,
   amount: ITokenAmount,
@@ -51,6 +71,13 @@ export function withdrawFromPosition(
   } as unknown as LendingPosition
 }
 
+/**
+ * Returns a copy of the position with the borrowed amount added to its debt.
+ *
+ * @param position - The position to borrow against.
+ * @param amount - The debt amount to add.
+ * @returns A new position with increased debt.
+ */
 export function borrowFromPosition(
   position: ILendingPosition,
   amount: ITokenAmount,
@@ -65,6 +92,13 @@ export function borrowFromPosition(
   } as unknown as LendingPosition
 }
 
+/**
+ * Returns a copy of the position with the repaid amount subtracted from its debt.
+ *
+ * @param position - The position to repay.
+ * @param amount - The debt amount to remove.
+ * @returns A new position with decreased debt.
+ */
 export function repayPositionDebt(
   position: ILendingPosition,
   amount: ITokenAmount,

@@ -3,11 +3,15 @@ import { IPrice } from '../common/interfaces/IPrice'
 import { IPercentage } from '../common/interfaces/IPercentage'
 
 /**
+ * Computes the price impact of a swap as the percentage by which the quoted price deviates from the
+ * spot price.
  *
  * @param spotPrice - This price represents a blend of spot prices from various exchanges.
  * @param quotePrice - The offer price is price quoted to us by a liquidity provider and takes
  *      into account price impact - where price impact is a measure of how much our trade
  *      affects the price. It is determined by the breadth and depth of liquidity.
+ * @returns The price impact as a percentage (never negative), or `null` when either price is zero
+ *      or negative.
  */
 export function calculatePriceImpact(spotPrice: IPrice, quotePrice: IPrice): IPercentage | null {
   // check for zeros and return 0

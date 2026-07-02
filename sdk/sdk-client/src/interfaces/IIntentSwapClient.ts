@@ -11,6 +11,10 @@ import type {
 import type { EnrichedOrder, UnsignedOrder } from '@cowprotocol/cow-sdk'
 import type { Account, PublicClient, WalletClient } from 'viem'
 
+/**
+ * A CoW Protocol pre- or post-interaction hook: an arbitrary call (`target` + `callData`) executed
+ * around a swap order, with an associated `gasLimit`.
+ */
 export type CowHook = {
   target: HexData
   callData: HexData

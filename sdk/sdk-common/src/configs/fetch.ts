@@ -21,6 +21,13 @@ export function createTimeoutSignal(timeout: number = FETCH_CONFIG.TIMEOUT): Abo
   return AbortSignal.timeout(timeout)
 }
 
+/**
+ * Performs a `fetch` that aborts after the SDK's standard timeout ({@link FETCH_CONFIG.TIMEOUT}).
+ *
+ * @param url - The URL to request.
+ * @param options - Optional `fetch` request options (merged with the timeout abort signal).
+ * @returns The `fetch` response promise.
+ */
 export function fetchWithTimeout(url: string, options?: RequestInit) {
   const signal = createTimeoutSignal()
   return fetch(url, { signal, ...options })

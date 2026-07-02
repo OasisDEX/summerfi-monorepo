@@ -4,6 +4,10 @@ import { BigNumber } from 'bignumber.js'
 // TODO: refactor BigNumbers to use the SDK's TokenAmount operations
 // TODO: refactor priceInUsd to use the SDK's Price class when FE have Position from the SDK
 
+/**
+ * Stateless helpers for deriving lending-position metrics such as loan-to-value and liquidation
+ * price from token amounts and USD prices.
+ */
 export class PositionUtils {
   static getLTV({
     collateralTokenAmount,

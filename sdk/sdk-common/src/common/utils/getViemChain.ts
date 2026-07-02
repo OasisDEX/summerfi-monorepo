@@ -2,6 +2,7 @@ import type { ChainId } from '@summerfi/sdk-common'
 import { defineChain, extractChain } from 'viem'
 import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
 
+/** viem chain definition for HyperEVM (Hyperliquid), which is not bundled in `viem/chains`. */
 export const hyperliquid = defineChain({
   id: 999,
   name: 'HyperEVM',
@@ -26,6 +27,12 @@ export const hyperliquid = defineChain({
   },
 })
 
+/**
+ * Resolves the viem chain definition for a supported chain id.
+ *
+ * @param chainId - The chain id to resolve.
+ * @returns The matching viem chain definition.
+ */
 export const getViemChain = (chainId: ChainId) => {
   return extractChain({
     chains: [base, mainnet, arbitrum, sonic, optimism, hyperliquid],

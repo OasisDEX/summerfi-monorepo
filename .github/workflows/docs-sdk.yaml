@@ -1,0 +1,71 @@
+name: SDK Docs
+on:
+  pull_request:
+    branches: [dev]
+    paths:
+      - 'sdk/sdk-client/**'
+      - 'sdk/sdk-client-react/**'
+      - 'sdk/sdk-common/**'
+      - 'typedoc.json'
+      - 'sdk/*/typedoc.json'
+      - 'gitbook/**'
+      - 'scripts/docs/**'
+      - '.gitbook.yaml'
+  push:
+    branches: [dev]
+
+jobs:
+  drift-check:
+    name: SDK reference drift check
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 8.15.9
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Regenerate SDK gitbook and check for drift
+        run: |
+          pnpm docs:gen
+          if ! git diff --exit-code -- gitbook; then
+            echo '::error::gitbook/ is stale. Run `pnpm docs:gen` locally and commit the result.'
+            exit 1
+          fi
+
+  regen-safety-net:
+    name: Regenerate SDK gitbook on dev
+    if: github.event_name == 'push'
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 8.15.9
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Regenerate and push if stale
+        run: |
+          pnpm docs:gen
+          if ! git diff --quiet -- gitbook; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add gitbook
+            git commit -m "docs(sdk): regenerate gitbook reference [skip ci]"
+            git push
+          fi
