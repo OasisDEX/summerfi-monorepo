@@ -1,5 +1,6 @@
-import { Api, Function, StackContext } from 'sst/constructs'
+import { Api, Function, StackContext, use } from 'sst/constructs'
 import { attachVPC } from './vpc'
+import { API } from './summer-stack'
 
 export function ExternalAPI(stackContext: StackContext) {
   const { stack } = stackContext
@@ -21,6 +22,11 @@ export function ExternalAPI(stackContext: StackContext) {
         : undefined,
   })
   const vpc = attachVPC({ ...stackContext, isDev })
+
+  // Reuse the SST-managed ElastiCache created in the `API` stack (same cache get-rates-function uses) instead
+  // of a separate/external Redis. `cache` is null in dev stages (no managed cache) — consumers fall back to a
+  // noop cache. This is a cross-stack dependency: `ExternalAPI` deploys after `API`.
+  const { cache } = use(API)
 
   const { SUBGRAPH_BASE } = process.env
   if (!SUBGRAPH_BASE) {
@@ -67,19 +73,24 @@ export function ExternalAPI(stackContext: StackContext) {
     disableCloudWatchLogs: false,
     applicationLogLevel: 'INFO',
     systemLogLevel: 'INFO',
+    // The /vaults route caches in the SST-managed ElastiCache, which is VPC-internal, so the function must run
+    // in the VPC to reach it (mirrors get-rates-function and get-campaign-data in this stack). The private
+    // subnets have NAT egress, so SUBGRAPH_BASE / RPC_GATEWAY remain reachable.
+    ...(vpc && {
+      vpc: vpc.vpc,
+      vpcSubnets: {
+        subnets: [...vpc.vpc.privateSubnets],
+      },
+      securityGroups: [vpc.securityGroup],
+    }),
   })
 
-  // Optional Redis cache for the /vaults route. Passed through from the deploy env when present; the handler
-  // falls back to a noop cache when unset, so the function is fully functional without Redis configured.
-  const { REDIS_CACHE_URL, REDIS_CACHE_USER, REDIS_CACHE_PASSWORD } = process.env
-  if (REDIS_CACHE_URL) {
-    getProtocolInfo.addEnvironment('REDIS_CACHE_URL', REDIS_CACHE_URL)
-  }
-  if (REDIS_CACHE_USER) {
-    getProtocolInfo.addEnvironment('REDIS_CACHE_USER', REDIS_CACHE_USER)
-  }
-  if (REDIS_CACHE_PASSWORD) {
-    getProtocolInfo.addEnvironment('REDIS_CACHE_PASSWORD', REDIS_CACHE_PASSWORD)
+  // Redis cache for the /vaults route: reuse the SST-managed ElastiCache from the `API` stack (same cache
+  // get-rates-function uses). This replaces the previous external Redis Cloud env passthrough. When there is no
+  // managed cache (dev stages, `cache === null`) the handler falls back to a noop cache and still works.
+  if (cache) {
+    getProtocolInfo.addToRolePolicy(cache.policyStatement)
+    getProtocolInfo.addEnvironment('REDIS_CACHE_URL', cache.url)
   }
 
   const getCampaignData = new Function(stack, 'get-campaign-data', {
