@@ -6,6 +6,8 @@ function isPool(maybePool): maybePool is IPool;
 
 Defined in: [src/common/interfaces/IPool.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPool.ts#L45)
 
+Type guard for IPool
+
 ## Parameters
 
 ### maybePool
@@ -17,7 +19,3 @@ Defined in: [src/common/interfaces/IPool.ts:45](https://github.com/OasisDEX/summ
 `maybePool is IPool`
 
 true if the object is an IPool
-
-## Description
-
-Type guard for IPool

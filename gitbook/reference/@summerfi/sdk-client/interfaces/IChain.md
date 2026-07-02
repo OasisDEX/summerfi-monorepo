@@ -1,10 +1,6 @@
 # Interface: IChain
 
-Defined in: [src/interfaces/IChain.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChain.ts#L9)
-
-IChain
-
-## Description
+Defined in: [src/interfaces/IChain.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChain.ts#L8)
 
 Represents a blockchain network and allows to access the tokens and protocols of the chain
 
@@ -16,7 +12,7 @@ Represents a blockchain network and allows to access the tokens and protocols of
 chainInfo: IChainInfo;
 ```
 
-Defined in: [src/interfaces/IChain.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChain.ts#L11)
+Defined in: [src/interfaces/IChain.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChain.ts#L10)
 
 The information of the chain
 
@@ -28,7 +24,7 @@ The information of the chain
 protocols: IProtocolsManagerClient;
 ```
 
-Defined in: [src/interfaces/IChain.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChain.ts#L15)
+Defined in: [src/interfaces/IChain.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChain.ts#L14)
 
 The protocols manager client for the chain, allows to retrieve protocols on the chain
 
@@ -40,6 +36,6 @@ The protocols manager client for the chain, allows to retrieve protocols on the 
 tokens: ITokensManagerClient;
 ```
 
-Defined in: [src/interfaces/IChain.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChain.ts#L13)
+Defined in: [src/interfaces/IChain.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChain.ts#L12)
 
 The tokens manager client for the chain, allows to retrieve tokens on the chain

@@ -4,13 +4,7 @@
 type IntentQuoteData = object;
 ```
 
-Defined in: [src/swap/implementation/IntentQuoteData.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L10)
-
-## Name
-
-IntentQuoteData
-
-## Description
+Defined in: [src/swap/implementation/IntentQuoteData.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L9)
 
 Represents the requested quote data for a swap between two tokens
 
@@ -22,7 +16,7 @@ Represents the requested quote data for a swap between two tokens
 fromAmount: ITokenAmount;
 ```
 
-Defined in: [src/swap/implementation/IntentQuoteData.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L12)
+Defined in: [src/swap/implementation/IntentQuoteData.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L11)
 
 ***
 
@@ -32,7 +26,7 @@ Defined in: [src/swap/implementation/IntentQuoteData.ts:12](https://github.com/O
 limitPrice: IPrice;
 ```
 
-Defined in: [src/swap/implementation/IntentQuoteData.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L14)
+Defined in: [src/swap/implementation/IntentQuoteData.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L13)
 
 ***
 
@@ -42,7 +36,7 @@ Defined in: [src/swap/implementation/IntentQuoteData.ts:14](https://github.com/O
 order: UnsignedOrder;
 ```
 
-Defined in: [src/swap/implementation/IntentQuoteData.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L16)
+Defined in: [src/swap/implementation/IntentQuoteData.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L15)
 
 ***
 
@@ -52,7 +46,7 @@ Defined in: [src/swap/implementation/IntentQuoteData.ts:16](https://github.com/O
 providerType: IntentSwapProviderType;
 ```
 
-Defined in: [src/swap/implementation/IntentQuoteData.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L11)
+Defined in: [src/swap/implementation/IntentQuoteData.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L10)
 
 ***
 
@@ -62,7 +56,7 @@ Defined in: [src/swap/implementation/IntentQuoteData.ts:11](https://github.com/O
 toAmount: ITokenAmount;
 ```
 
-Defined in: [src/swap/implementation/IntentQuoteData.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L13)
+Defined in: [src/swap/implementation/IntentQuoteData.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L12)
 
 ***
 
@@ -72,4 +66,4 @@ Defined in: [src/swap/implementation/IntentQuoteData.ts:13](https://github.com/O
 validTo: number;
 ```
 
-Defined in: [src/swap/implementation/IntentQuoteData.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L15)
+Defined in: [src/swap/implementation/IntentQuoteData.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/IntentQuoteData.ts#L14)

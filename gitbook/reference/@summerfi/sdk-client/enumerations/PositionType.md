@@ -1,10 +1,6 @@
 # Enumeration: PositionType
 
-Defined in: [../sdk-common/src/common/enums/PositionType.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L7)
-
-PositionType
-
-## Description
+Defined in: [../sdk-common/src/common/enums/PositionType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L6)
 
 Indicates the type of position
 
@@ -16,7 +12,7 @@ Indicates the type of position
 Armada: "Armada";
 ```
 
-Defined in: [../sdk-common/src/common/enums/PositionType.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L13)
+Defined in: [../sdk-common/src/common/enums/PositionType.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L12)
 
 Armada Protocol position, aggregated liquidity
 
@@ -28,7 +24,7 @@ Armada Protocol position, aggregated liquidity
 Lending: "Lending";
 ```
 
-Defined in: [../sdk-common/src/common/enums/PositionType.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L11)
+Defined in: [../sdk-common/src/common/enums/PositionType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L10)
 
 Lending position, adding some collateral allows to borrow some debt
 
@@ -40,6 +36,6 @@ Lending position, adding some collateral allows to borrow some debt
 Supply: "Supply";
 ```
 
-Defined in: [../sdk-common/src/common/enums/PositionType.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L9)
+Defined in: [../sdk-common/src/common/enums/PositionType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L8)
 
 Staking position: adding 1 token to the pool generates some interest earnings

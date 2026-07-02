@@ -4,6 +4,6 @@
 type IPoolInfoData = Readonly<z.infer<typeof PoolInfoDataSchema>>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPoolInfo.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L36)
+Defined in: [../sdk-common/src/common/interfaces/IPoolInfo.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolInfo.ts#L35)
 
 Type for the data part of the IPoolInfo interface

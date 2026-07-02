@@ -2,8 +2,6 @@
 
 Defined in: [../sdk-common/src/swap/enums/SwapErrorType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/enums/SwapErrorType.ts#L6)
 
-## Description
-
 Swap error types
 
 Error types for the swap service

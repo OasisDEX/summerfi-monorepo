@@ -4,7 +4,10 @@
 const ChainFamilyMap: object;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/ChainFamilies.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainFamilies.ts#L68)
+Defined in: [../sdk-common/src/common/implementation/ChainFamilies.ts:69](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainFamilies.ts#L69)
+
+A map of chain family names to chain families. It can be used to
+retrieve the ChainId of a chain family + chain combination
 
 ## Type Declaration
 
@@ -43,8 +46,3 @@ Optimism: Record<"Optimism", ChainInfo> = OptimismFamily;
 ```ts
 Sonic: Record<"Sonic", ChainInfo> = SonicFamily;
 ```
-
-## Description
-
-A map of chain family names to chain families. It can be used to
-             retrieve the ChainId of a chain family + chain combination

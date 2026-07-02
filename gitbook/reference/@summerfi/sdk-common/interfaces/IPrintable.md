@@ -1,12 +1,6 @@
 # Interface: IPrintable
 
-Defined in: [src/common/interfaces/IPrintable.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L7)
-
-## Name
-
-IPrintable
-
-## Description
+Defined in: [src/common/interfaces/IPrintable.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L6)
 
 Interface for printable objects.
 
@@ -36,7 +30,9 @@ This enables more readable debug objects
 toString(): string;
 ```
 
-Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [src/common/interfaces/IPrintable.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L14)
+
+Returns a string representation of the object
 
 #### Returns
 
@@ -45,11 +41,3 @@ Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX
 string
 
 The string representation should have enough info to debug the object
-
-#### Name
-
-toString
-
-#### Description
-
-Returns a string representation of the object

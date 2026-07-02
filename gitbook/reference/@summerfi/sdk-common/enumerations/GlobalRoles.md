@@ -1,12 +1,6 @@
 # Enumeration: GlobalRoles
 
-Defined in: [src/common/types/GlobalRoles.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L7)
-
-## Name
-
-GlobalRoles
-
-## Description
+Defined in: [src/common/types/GlobalRoles.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L6)
 
 Enum for all global protocol roles
 
@@ -18,7 +12,7 @@ Enum for all global protocol roles
 ADMIRALS_QUARTERS_ROLE: "ADMIRALS_QUARTERS_ROLE";
 ```
 
-Defined in: [src/common/types/GlobalRoles.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L11)
+Defined in: [src/common/types/GlobalRoles.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L10)
 
 ***
 
@@ -28,7 +22,7 @@ Defined in: [src/common/types/GlobalRoles.ts:11](https://github.com/OasisDEX/sum
 DECAY_CONTROLLER_ROLE: "DECAY_CONTROLLER_ROLE";
 ```
 
-Defined in: [src/common/types/GlobalRoles.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L10)
+Defined in: [src/common/types/GlobalRoles.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L9)
 
 ***
 
@@ -38,7 +32,7 @@ Defined in: [src/common/types/GlobalRoles.ts:10](https://github.com/OasisDEX/sum
 GOVERNOR_ROLE: "GOVERNOR_ROLE";
 ```
 
-Defined in: [src/common/types/GlobalRoles.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L8)
+Defined in: [src/common/types/GlobalRoles.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L7)
 
 ***
 
@@ -48,4 +42,4 @@ Defined in: [src/common/types/GlobalRoles.ts:8](https://github.com/OasisDEX/summ
 SUPER_KEEPER_ROLE: "SUPER_KEEPER_ROLE";
 ```
 
-Defined in: [src/common/types/GlobalRoles.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L9)
+Defined in: [src/common/types/GlobalRoles.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/GlobalRoles.ts#L8)

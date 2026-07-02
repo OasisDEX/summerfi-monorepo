@@ -4,7 +4,7 @@
 type CancelDcaStrategyTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:209](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L209)
+Defined in: [src/orders/common/types/TransactionInfo.ts:207](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L207)
 
 Transaction info for cancelling a DCA strategy.
 

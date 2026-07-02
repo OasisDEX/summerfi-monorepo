@@ -6,6 +6,8 @@ function isChainInfo(maybeChainInfo, returnedErrors?): maybeChainInfo is IChainI
 
 Defined in: [src/common/interfaces/IChainInfo.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IChainInfo.ts#L52)
 
+Type guard for IChainInfo
+
 ## Parameters
 
 ### maybeChainInfo
@@ -25,7 +27,3 @@ Optional array that, on failure, is populated with validation error messages
 `maybeChainInfo is IChainInfo`
 
 true if the object is an IChainInfo
-
-## Description
-
-Type guard for IChainInfo

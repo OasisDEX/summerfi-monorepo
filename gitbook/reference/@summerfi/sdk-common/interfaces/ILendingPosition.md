@@ -1,12 +1,6 @@
 # Interface: ILendingPosition
 
-Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L18)
-
-## Name
-
-ILendingPosition
-
-## Description
+Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L17)
 
 Represents a position in a Lending protocol
 
@@ -26,7 +20,7 @@ Represents a position in a Lending protocol
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L20)
+Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L19)
 
 Signature to differentiate from similar interfaces
 
@@ -42,7 +36,7 @@ Signature to differentiate from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IPosition.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L17)
+Defined in: [src/common/interfaces/IPosition.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPosition.ts#L16)
 
 Signature to differentiate from similar interfaces
 
@@ -60,7 +54,7 @@ IPosition.[___signature__]
 readonly collateralAmount: ITokenAmount;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L28)
+Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L27)
 
 Amount of collateral deposited in the pool
 
@@ -78,7 +72,7 @@ ILendingPositionData.collateralAmount
 readonly debtAmount: ITokenAmount;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L26)
+Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L25)
 
 Amount of debt borrowed from the pool
 
@@ -96,7 +90,7 @@ ILendingPositionData.debtAmount
 readonly id: ILendingPositionId;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L24)
+Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L23)
 
 Unique identifier for the position inside the Summer.fi system
 
@@ -112,7 +106,7 @@ Unique identifier for the position inside the Summer.fi system
 readonly pool: ILendingPool;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L30)
+Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L29)
 
 Pool where the position is
 
@@ -128,7 +122,7 @@ Pool where the position is
 readonly subtype: LendingPositionType;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L22)
+Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L21)
 
 Subtype of the position in the Summer.fi system
 
@@ -146,7 +140,7 @@ ILendingPositionData.subtype
 readonly type: Lending;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L33)
+Defined in: [src/lending-protocols/interfaces/ILendingPosition.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPosition.ts#L32)
 
 Type of the position in the Summer.fi system
 

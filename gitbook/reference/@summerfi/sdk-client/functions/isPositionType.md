@@ -4,7 +4,7 @@
 function isPositionType(maybePositionType): maybePositionType is PositionType;
 ```
 
-Defined in: [../sdk-common/src/common/enums/PositionType.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L31)
+Defined in: [../sdk-common/src/common/enums/PositionType.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PositionType.ts#L30)
 
 Type guard for PositionType
 

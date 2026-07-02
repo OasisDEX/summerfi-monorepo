@@ -4,6 +4,6 @@
 type IRiskRatioData = Readonly<z.infer<typeof RiskRatioDataSchema>>;
 ```
 
-Defined in: [src/common/interfaces/IRiskRatio.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L56)
+Defined in: [src/common/interfaces/IRiskRatio.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRiskRatio.ts#L54)
 
 Type for the data part of the IRiskRatio interface

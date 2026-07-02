@@ -28,12 +28,6 @@ const RwaRoleSchema: ZodUnion<[ZodObject<{
 }>]>;
 ```
 
-Defined in: [../sdk-common/src/common/types/RwaRole.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/RwaRole.ts#L36)
-
-## Name
-
-RwaRoleSchema
-
-## Description
+Defined in: [../sdk-common/src/common/types/RwaRole.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/RwaRole.ts#L34)
 
 Zod schema for [RwaRole](../type-aliases/RwaRole.md), used to validate the role descriptor at the tRPC boundary.

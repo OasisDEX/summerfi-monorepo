@@ -6,6 +6,8 @@ function getChainInfoByChainId(chainId): ChainInfo;
 
 Defined in: [src/common/implementation/ChainFamilies.ts:133](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainFamilies.ts#L133)
 
+Retrieves the ChainInfo for a given chainId
+
 ## Parameters
 
 ### chainId
@@ -19,14 +21,6 @@ The chainId to retrieve the ChainInfo for
 [`ChainInfo`](../classes/ChainInfo.md)
 
 The ChainInfo for the given chainId
-
-## Method
-
-getChainInfoByChainId
-
-## Description
-
-Retrieves the ChainInfo for a given chainId
 
 ## Throws
 

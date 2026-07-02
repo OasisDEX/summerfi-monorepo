@@ -33,6 +33,4 @@ const ArmadaWithdrawalDataSchema: ZodObject<{
 
 Defined in: [src/common/interfaces/IArmadaWithdrawal.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaWithdrawal.ts#L10)
 
-## Description
-
 Zod schema for IArmadaWithdrawal

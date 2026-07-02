@@ -13,8 +13,6 @@ const FiatCurrencyAmountDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:85](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L85)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IFiatCurrencyAmount.ts:80](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IFiatCurrencyAmount.ts#L80)
 
 Zod schema for IFiatCurrencyAmount

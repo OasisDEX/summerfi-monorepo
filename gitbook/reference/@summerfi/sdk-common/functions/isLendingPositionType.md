@@ -4,7 +4,7 @@
 function isLendingPositionType(maybeLendingPositionType): maybeLendingPositionType is LendingPositionType;
 ```
 
-Defined in: [src/lending-protocols/types/LendingPositionType.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/types/LendingPositionType.ts#L31)
+Defined in: [src/lending-protocols/types/LendingPositionType.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/types/LendingPositionType.ts#L30)
 
 Type guard for LendingPositionType
 

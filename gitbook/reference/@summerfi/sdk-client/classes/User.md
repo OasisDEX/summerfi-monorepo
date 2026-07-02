@@ -1,10 +1,6 @@
 # Class: User
 
-Defined in: [../sdk-common/src/user/implementation/User.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L19)
-
-## Name
-
-User
+Defined in: [../sdk-common/src/user/implementation/User.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L18)
 
 ## See
 
@@ -22,7 +18,7 @@ IUser
 protected new User(params): User;
 ```
 
-Defined in: [../sdk-common/src/user/implementation/User.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L42)
+Defined in: [../sdk-common/src/user/implementation/User.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L41)
 
 SEALED CONSTRUCTOR
 
@@ -44,7 +40,7 @@ SEALED CONSTRUCTOR
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/user/implementation/User.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L21)
+Defined in: [../sdk-common/src/user/implementation/User.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L20)
 
 SIGNATURE
 
@@ -60,7 +56,7 @@ SIGNATURE
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [../sdk-common/src/user/implementation/User.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L25)
+Defined in: [../sdk-common/src/user/implementation/User.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L24)
 
 The chain the user is connected to
 
@@ -76,7 +72,7 @@ The chain the user is connected to
 readonly wallet: IWallet;
 ```
 
-Defined in: [../sdk-common/src/user/implementation/User.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L24)
+Defined in: [../sdk-common/src/user/implementation/User.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L23)
 
 ATTRIBUTES
 
@@ -92,7 +88,7 @@ ATTRIBUTES
 equals(token): boolean;
 ```
 
-Defined in: [../sdk-common/src/user/implementation/User.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L50)
+Defined in: [../sdk-common/src/user/implementation/User.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L49)
 
 #### Parameters
 
@@ -116,7 +112,7 @@ IUser.equals
 toString(): string;
 ```
 
-Defined in: [../sdk-common/src/user/implementation/User.ts:55](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L55)
+Defined in: [../sdk-common/src/user/implementation/User.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L54)
 
 #### Returns
 
@@ -138,7 +134,7 @@ IPrintable.toString
 static createFrom(params): User;
 ```
 
-Defined in: [../sdk-common/src/user/implementation/User.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L28)
+Defined in: [../sdk-common/src/user/implementation/User.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L27)
 
 FACTORY
 
@@ -160,7 +156,7 @@ FACTORY
 static createFromEthereum(chainId, addressValue): User;
 ```
 
-Defined in: [../sdk-common/src/user/implementation/User.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L32)
+Defined in: [../sdk-common/src/user/implementation/User.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/user/implementation/User.ts#L31)
 
 #### Parameters
 

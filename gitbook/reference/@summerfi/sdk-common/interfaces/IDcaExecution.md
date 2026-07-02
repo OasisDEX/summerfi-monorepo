@@ -1,12 +1,6 @@
 # Interface: IDcaExecution
 
-Defined in: [src/common/interfaces/IDcaExecution.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L5)
-
-## Name
-
-IDcaExecution
-
-## Description
+Defined in: [src/common/interfaces/IDcaExecution.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L4)
 
 Represents a single execution of a DCA strategy
 
@@ -18,7 +12,7 @@ Represents a single execution of a DCA strategy
 amountIn: string;
 ```
 
-Defined in: [src/common/interfaces/IDcaExecution.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L13)
+Defined in: [src/common/interfaces/IDcaExecution.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L12)
 
 Amount of input tokens used in this execution (in token units, as string)
 
@@ -30,7 +24,7 @@ Amount of input tokens used in this execution (in token units, as string)
 amountOut: string;
 ```
 
-Defined in: [src/common/interfaces/IDcaExecution.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L15)
+Defined in: [src/common/interfaces/IDcaExecution.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L14)
 
 Amount of output tokens received in this execution (in token units, as string)
 
@@ -42,7 +36,7 @@ Amount of output tokens received in this execution (in token units, as string)
 executionTimestamp: number;
 ```
 
-Defined in: [src/common/interfaces/IDcaExecution.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L11)
+Defined in: [src/common/interfaces/IDcaExecution.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L10)
 
 Unix timestamp of when the execution occurred
 
@@ -54,7 +48,7 @@ Unix timestamp of when the execution occurred
 id: string;
 ```
 
-Defined in: [src/common/interfaces/IDcaExecution.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L7)
+Defined in: [src/common/interfaces/IDcaExecution.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L6)
 
 Unique identifier of this execution
 
@@ -66,7 +60,7 @@ Unique identifier of this execution
 tradesExecutedAfter: number;
 ```
 
-Defined in: [src/common/interfaces/IDcaExecution.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L17)
+Defined in: [src/common/interfaces/IDcaExecution.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L16)
 
 Total number of trades executed after this execution
 
@@ -78,6 +72,6 @@ Total number of trades executed after this execution
 txHash: string;
 ```
 
-Defined in: [src/common/interfaces/IDcaExecution.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L9)
+Defined in: [src/common/interfaces/IDcaExecution.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaExecution.ts#L8)
 
 Transaction hash of this execution

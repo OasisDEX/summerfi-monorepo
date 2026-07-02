@@ -4,7 +4,9 @@
 function isOracleProviderType(maybeOracleProviderType): maybeOracleProviderType is OracleProviderType;
 ```
 
-Defined in: [../sdk-common/src/oracle/OracleProviderType.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/OracleProviderType.ts#L21)
+Defined in: [../sdk-common/src/oracle/OracleProviderType.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/OracleProviderType.ts#L22)
+
+Type guard for OracleProviderType
 
 ## Parameters
 
@@ -17,7 +19,3 @@ Defined in: [../sdk-common/src/oracle/OracleProviderType.ts:21](https://github.c
 `maybeOracleProviderType is OracleProviderType`
 
 true if the object is an OracleProviderType
-
-## Description
-
-Type guard for OracleProviderType

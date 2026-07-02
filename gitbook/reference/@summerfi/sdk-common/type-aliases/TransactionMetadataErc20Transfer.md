@@ -4,7 +4,7 @@
 type TransactionMetadataErc20Transfer = object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:166](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L166)
+Defined in: [src/orders/common/types/TransactionInfo.ts:164](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L164)
 
 Metadata for an ERC-20 transfer transaction: token, recipient and amount.
 
@@ -16,7 +16,7 @@ Metadata for an ERC-20 transfer transaction: token, recipient and amount.
 amount: ITokenAmount;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:169](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L169)
+Defined in: [src/orders/common/types/TransactionInfo.ts:167](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L167)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:169](https://github.com/
 recipient: IAddress;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:168](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L168)
+Defined in: [src/orders/common/types/TransactionInfo.ts:166](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L166)
 
 ***
 
@@ -36,4 +36,4 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:168](https://github.com/
 token: IAddress;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:167](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L167)
+Defined in: [src/orders/common/types/TransactionInfo.ts:165](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L165)

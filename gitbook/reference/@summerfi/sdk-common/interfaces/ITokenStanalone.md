@@ -1,12 +1,6 @@
 # Interface: ITokenStanalone
 
-Defined in: [src/common/interfaces/IToken.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L15)
-
-## Name
-
-IToken
-
-## Description
+Defined in: [src/common/interfaces/IToken.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L14)
 
 Represents an token in a Chain, typically used to represent ERC-20 tokens
 
@@ -22,7 +16,7 @@ Represents an token in a Chain, typically used to represent ERC-20 tokens
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IToken.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L17)
+Defined in: [src/common/interfaces/IToken.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L16)
 
 Signature to differentiate from similar interfaces
 
@@ -34,7 +28,7 @@ Signature to differentiate from similar interfaces
 readonly address: IAddress;
 ```
 
-Defined in: [src/common/interfaces/IToken.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L21)
+Defined in: [src/common/interfaces/IToken.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L20)
 
 Token address
 
@@ -52,7 +46,7 @@ ITokenData.address
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [src/common/interfaces/IToken.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L19)
+Defined in: [src/common/interfaces/IToken.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L18)
 
 Chain where the token is deployed
 
@@ -70,7 +64,7 @@ ITokenData.chainInfo
 readonly decimals: number;
 ```
 
-Defined in: [src/common/interfaces/IToken.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L27)
+Defined in: [src/common/interfaces/IToken.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L26)
 
 Number of decimals for the token
 
@@ -88,7 +82,7 @@ ITokenData.decimals
 readonly name: string;
 ```
 
-Defined in: [src/common/interfaces/IToken.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L25)
+Defined in: [src/common/interfaces/IToken.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L24)
 
 Full token name
 
@@ -106,7 +100,7 @@ ITokenData.name
 readonly symbol: string;
 ```
 
-Defined in: [src/common/interfaces/IToken.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L23)
+Defined in: [src/common/interfaces/IToken.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L22)
 
 Token symbol, usually a short representation of name and used in tickers
 
@@ -124,7 +118,9 @@ ITokenData.symbol
 equals(token): boolean;
 ```
 
-Defined in: [src/common/interfaces/IToken.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L37)
+Defined in: [src/common/interfaces/IToken.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L36)
+
+Checks if two tokens are equal
 
 #### Parameters
 
@@ -142,14 +138,6 @@ true if the tokens are equal
 
 Equality is determined by the address and chain information
 
-#### Name
-
-equals
-
-#### Description
-
-Checks if two tokens are equal
-
 ***
 
 ### toString()
@@ -158,7 +146,9 @@ Checks if two tokens are equal
 toString(): string;
 ```
 
-Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [src/common/interfaces/IPrintable.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L14)
+
+Returns a string representation of the object
 
 #### Returns
 
@@ -167,14 +157,6 @@ Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX
 string
 
 The string representation should have enough info to debug the object
-
-#### Name
-
-toString
-
-#### Description
-
-Returns a string representation of the object
 
 #### Inherited from
 

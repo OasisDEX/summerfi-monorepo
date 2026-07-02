@@ -1,12 +1,6 @@
 # Enumeration: SwapProviderType
 
-Defined in: [../sdk-common/src/swap/enums/SwapProviderType.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/enums/SwapProviderType.ts#L5)
-
-## Name
-
-SwapProviderType
-
-## Description
+Defined in: [../sdk-common/src/swap/enums/SwapProviderType.ts:4](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/enums/SwapProviderType.ts#L4)
 
 Represents the different swap providers
 
@@ -18,4 +12,4 @@ Represents the different swap providers
 OneInch: "OneInch";
 ```
 
-Defined in: [../sdk-common/src/swap/enums/SwapProviderType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/enums/SwapProviderType.ts#L6)
+Defined in: [../sdk-common/src/swap/enums/SwapProviderType.ts:5](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/enums/SwapProviderType.ts#L5)

@@ -6,6 +6,8 @@ function isAddress(maybeAddress, returnedErrors?): maybeAddress is IAddress;
 
 Defined in: [src/common/interfaces/IAddress.ts:57](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L57)
 
+Type guard for IAddress
+
 ## Parameters
 
 ### maybeAddress
@@ -25,7 +27,3 @@ Optional array that, on failure, is populated with validation error messages
 `maybeAddress is IAddress`
 
 true if the object is an IAddress
-
-## Description
-
-Type guard for IAddress

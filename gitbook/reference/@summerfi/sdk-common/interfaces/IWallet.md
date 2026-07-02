@@ -1,12 +1,6 @@
 # Interface: IWallet
 
-Defined in: [src/common/interfaces/IWallet.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L16)
-
-## Name
-
-IWallet
-
-## Description
+Defined in: [src/common/interfaces/IWallet.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L15)
 
 Interface for the implementors of the wallet
 
@@ -25,7 +19,7 @@ wallet type
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IWallet.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L18)
+Defined in: [src/common/interfaces/IWallet.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L17)
 
 Signature to differentiate from similar interfaces
 
@@ -37,7 +31,7 @@ Signature to differentiate from similar interfaces
 readonly address: IAddress;
 ```
 
-Defined in: [src/common/interfaces/IWallet.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L20)
+Defined in: [src/common/interfaces/IWallet.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L19)
 
 Address of the wallet, valid for the different chains
 
@@ -55,7 +49,9 @@ IWalletData.address
 equals(token): boolean;
 ```
 
-Defined in: [src/common/interfaces/IWallet.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L30)
+Defined in: [src/common/interfaces/IWallet.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L29)
+
+Checks if two wallets are equal
 
 #### Parameters
 
@@ -70,11 +66,3 @@ Defined in: [src/common/interfaces/IWallet.ts:30](https://github.com/OasisDEX/su
 true if the wallets are equal
 
 Equality is determined by the address
-
-#### Name
-
-equals
-
-#### Description
-
-Checks if two wallets are equal

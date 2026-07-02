@@ -1,10 +1,6 @@
 # Enumeration: LendingPositionType
 
-Defined in: [../sdk-common/src/lending-protocols/types/LendingPositionType.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/types/LendingPositionType.ts#L7)
-
-LendingPositionType
-
-## Description
+Defined in: [../sdk-common/src/lending-protocols/types/LendingPositionType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/types/LendingPositionType.ts#L6)
 
 Indicates the type of lending position in the Summer system
 
@@ -16,7 +12,7 @@ Indicates the type of lending position in the Summer system
 Borrow: "Borrow";
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/types/LendingPositionType.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/types/LendingPositionType.ts#L9)
+Defined in: [../sdk-common/src/lending-protocols/types/LendingPositionType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/types/LendingPositionType.ts#L8)
 
 Simple borrow with added collateral
 
@@ -28,7 +24,7 @@ Simple borrow with added collateral
 Earn: "Earn";
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/types/LendingPositionType.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/types/LendingPositionType.ts#L13)
+Defined in: [../sdk-common/src/lending-protocols/types/LendingPositionType.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/types/LendingPositionType.ts#L12)
 
 Yield loops
 
@@ -40,6 +36,6 @@ Yield loops
 Multiply: "Multiply";
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/types/LendingPositionType.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/types/LendingPositionType.ts#L11)
+Defined in: [../sdk-common/src/lending-protocols/types/LendingPositionType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/types/LendingPositionType.ts#L10)
 
 Borrow with leveraged collateral

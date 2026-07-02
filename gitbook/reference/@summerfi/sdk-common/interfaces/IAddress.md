@@ -1,12 +1,6 @@
 # Interface: IAddress
 
-Defined in: [src/common/interfaces/IAddress.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L19)
-
-## Name
-
-IAddress
-
-## Description
+Defined in: [src/common/interfaces/IAddress.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L18)
 
 Represents an address with a certain format, specified by the type
 
@@ -24,7 +18,7 @@ Currently only Ethereum type is supported
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IAddress.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L21)
+Defined in: [src/common/interfaces/IAddress.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L20)
 
 Signature to differentiate from similar interfaces
 
@@ -36,7 +30,7 @@ Signature to differentiate from similar interfaces
 readonly type: AddressType;
 ```
 
-Defined in: [src/common/interfaces/IAddress.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L25)
+Defined in: [src/common/interfaces/IAddress.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L24)
 
 The type of the address
 
@@ -54,7 +48,7 @@ IAddressData.type
 readonly value: `0x${string}`;
 ```
 
-Defined in: [src/common/interfaces/IAddress.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L23)
+Defined in: [src/common/interfaces/IAddress.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L22)
 
 The address value in the format specified by type
 
@@ -72,7 +66,9 @@ IAddressData.value
 equals(address): boolean;
 ```
 
-Defined in: [src/common/interfaces/IAddress.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L35)
+Defined in: [src/common/interfaces/IAddress.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IAddress.ts#L34)
+
+Checks if two addresses are equal
 
 #### Parameters
 
@@ -90,14 +86,6 @@ true if the addresses are equal
 
 Equality is determined by the address value and type
 
-#### Name
-
-equals
-
-#### Description
-
-Checks if two addresses are equal
-
 ***
 
 ### toSolidityValue()
@@ -106,7 +94,7 @@ Checks if two addresses are equal
 toSolidityValue(): `0x${string}`;
 ```
 
-Defined in: [src/common/interfaces/ISolidityValue.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISolidityValue.ts#L9)
+Defined in: [src/common/interfaces/ISolidityValue.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISolidityValue.ts#L8)
 
 Converts the instance into a Solidity value
 
@@ -128,7 +116,9 @@ ISolidityValue.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L15)
+Defined in: [src/common/interfaces/IPrintable.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrintable.ts#L14)
+
+Returns a string representation of the object
 
 #### Returns
 
@@ -137,14 +127,6 @@ Defined in: [src/common/interfaces/IPrintable.ts:15](https://github.com/OasisDEX
 string
 
 The string representation should have enough info to debug the object
-
-#### Name
-
-toString
-
-#### Description
-
-Returns a string representation of the object
 
 #### Inherited from
 

@@ -6,6 +6,8 @@ function isWallet(maybeWallet): maybeWallet is IWallet;
 
 Defined in: [src/common/interfaces/IWallet.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IWallet.ts#L50)
 
+Type guard for IWallet
+
 ## Parameters
 
 ### maybeWallet
@@ -17,7 +19,3 @@ Defined in: [src/common/interfaces/IWallet.ts:50](https://github.com/OasisDEX/su
 `maybeWallet is IWallet`
 
 true if the object is an IWallet
-
-## Description
-
-Type guard for IWallet

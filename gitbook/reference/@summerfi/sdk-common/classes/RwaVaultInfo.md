@@ -1,8 +1,6 @@
 # Class: RwaVaultInfo
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L23)
-
-RwaVaultInfo
+Defined in: [src/common/implementation/RwaVaultInfo.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L22)
 
 ## See
 
@@ -24,7 +22,7 @@ IRwaVaultInfo
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L25)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L24)
 
 SIGNATURE
 
@@ -40,7 +38,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/common/implementation/PoolInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolInfo.ts#L18)
+Defined in: [src/common/implementation/PoolInfo.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolInfo.ts#L17)
 
 SIGNATURE
 
@@ -64,7 +62,7 @@ PoolInfo.[___signature__]
 readonly apy: IPercentage | null;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L36)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L35)
 
 Vault apy
 
@@ -80,7 +78,7 @@ Vault apy
 readonly apys: VaultApys;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L37)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L36)
 
 Vault apys for different time periods
 
@@ -96,7 +94,7 @@ Vault apys for different time periods
 readonly assetToken: ITokenStanalone;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L31)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L30)
 
 Underlying asset token that can be deposited into the vault
 
@@ -112,7 +110,7 @@ Underlying asset token that can be deposited into the vault
 readonly depositCap: ITokenAmount;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L32)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L31)
 
 Maximum amount that can be deposited into the vault at this moment
 
@@ -128,7 +126,7 @@ Maximum amount that can be deposited into the vault at this moment
 readonly id: IArmadaVaultId;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L29)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L28)
 
 ID of the vault
 
@@ -150,7 +148,7 @@ PoolInfo.id
 readonly merklRewards: object[] | undefined;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L44)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L43)
 
 Vault Merkl rewards apy
 
@@ -166,7 +164,7 @@ Vault Merkl rewards apy
 readonly rewardsApys: object[] | undefined;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L38)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L37)
 
 Vault SUMR rewards apy
 
@@ -182,7 +180,7 @@ Vault SUMR rewards apy
 readonly sharePrice: IPrice;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L35)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L34)
 
 Current price per share of the vault
 
@@ -198,7 +196,7 @@ Current price per share of the vault
 readonly token: ITokenStanalone;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L30)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L29)
 
 Token of the vault
 
@@ -214,7 +212,7 @@ Token of the vault
 readonly totalDeposits: ITokenAmount;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L33)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L32)
 
 Total amount of assets currently deposited in the vault
 
@@ -230,7 +228,7 @@ Total amount of assets currently deposited in the vault
 readonly totalShares: ITokenAmount;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L34)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L33)
 
 Total amount of shares currently minted in the vault
 
@@ -246,7 +244,7 @@ Total amount of shares currently minted in the vault
 readonly tvlUsd: IFiatCurrencyAmount;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L50)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L49)
 
 Total value locked in USD
 
@@ -262,7 +260,7 @@ Total value locked in USD
 readonly type: Rwa = PoolType.Rwa;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L28)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L27)
 
 ATTRIBUTES
 
@@ -284,7 +282,7 @@ PoolInfo.type
 toString(): string;
 ```
 
-Defined in: [src/common/implementation/PoolInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolInfo.ts#L32)
+Defined in: [src/common/implementation/PoolInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PoolInfo.ts#L31)
 
 #### Returns
 
@@ -308,7 +306,7 @@ PoolInfo.toString
 static createFrom(params): RwaVaultInfo;
 ```
 
-Defined in: [src/common/implementation/RwaVaultInfo.ts:53](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L53)
+Defined in: [src/common/implementation/RwaVaultInfo.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/RwaVaultInfo.ts#L52)
 
 FACTORY
 

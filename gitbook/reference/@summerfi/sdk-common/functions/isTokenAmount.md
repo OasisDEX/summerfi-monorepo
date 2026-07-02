@@ -4,7 +4,9 @@
 function isTokenAmount(maybeTokenAmount, returnedErrors?): maybeTokenAmount is ITokenAmount;
 ```
 
-Defined in: [src/common/interfaces/ITokenAmount.ts:146](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L146)
+Defined in: [src/common/interfaces/ITokenAmount.ts:142](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ITokenAmount.ts#L142)
+
+Type guard for ITokenAmount
 
 ## Parameters
 
@@ -25,7 +27,3 @@ Optional array that, on failure, is populated with validation error messages
 `maybeTokenAmount is ITokenAmount`
 
 true if the object is an ITokenAmount
-
-## Description
-
-Type guard for ITokenAmount

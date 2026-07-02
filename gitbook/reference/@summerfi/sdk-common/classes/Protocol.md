@@ -1,8 +1,6 @@
 # Abstract Class: Protocol
 
-Defined in: [src/common/implementation/Protocol.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L16)
-
-Protocol
+Defined in: [src/common/implementation/Protocol.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L15)
 
 ## See
 
@@ -25,7 +23,7 @@ IProtocol
 protected new Protocol(params): Protocol;
 ```
 
-Defined in: [src/common/implementation/Protocol.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L25)
+Defined in: [src/common/implementation/Protocol.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L24)
 
 SEALED CONSTRUCTOR
 
@@ -47,7 +45,7 @@ SEALED CONSTRUCTOR
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/common/implementation/Protocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L18)
+Defined in: [src/common/implementation/Protocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L17)
 
 SIGNATURE
 
@@ -63,7 +61,7 @@ SIGNATURE
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [src/common/implementation/Protocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L22)
+Defined in: [src/common/implementation/Protocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L21)
 
 The chain information
 
@@ -79,7 +77,7 @@ The chain information
 abstract readonly name: ProtocolName;
 ```
 
-Defined in: [src/common/implementation/Protocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L21)
+Defined in: [src/common/implementation/Protocol.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L20)
 
 ATTRIBUTES
 
@@ -95,7 +93,7 @@ ATTRIBUTES
 equals(protocol): boolean;
 ```
 
-Defined in: [src/common/implementation/Protocol.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L32)
+Defined in: [src/common/implementation/Protocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L31)
 
 #### Parameters
 
@@ -123,7 +121,7 @@ IProtocol.equals
 toString(): string;
 ```
 
-Defined in: [src/common/implementation/Protocol.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L37)
+Defined in: [src/common/implementation/Protocol.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L36)
 
 #### Returns
 

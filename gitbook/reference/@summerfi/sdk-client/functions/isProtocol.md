@@ -6,6 +6,8 @@ function isProtocol(maybeProtocol): maybeProtocol is IProtocol;
 
 Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L52)
 
+Type guard for IProtocol
+
 ## Parameters
 
 ### maybeProtocol
@@ -17,7 +19,3 @@ Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:52](https://github
 `maybeProtocol is IProtocol`
 
 true if the object is an IProtocol
-
-## Description
-
-Type guard for IProtocol

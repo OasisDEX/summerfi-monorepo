@@ -1,8 +1,6 @@
 # Class: AaveV3LendingPosition
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts#L19)
-
-AaveV3Position
+Defined in: [../protocol-plugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts#L18)
 
 ## See
 
@@ -24,7 +22,7 @@ IAaveV3LendingPosition
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts#L21)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts#L20)
 
 SIGNATURE
 
@@ -46,7 +44,7 @@ IAaveV3LendingPosition.[___signature__]
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L25)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L24)
 
 SIGNATURE
 
@@ -68,7 +66,7 @@ IAaveV3LendingPosition.[___signature__]
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/Position.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L18)
+Defined in: [../sdk-common/src/common/implementation/Position.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L17)
 
 SIGNATURE
 
@@ -90,7 +88,7 @@ IAaveV3LendingPosition.[___signature__]
 readonly collateralAmount: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L31)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L30)
 
 Amount of collateral deposited in the pool
 
@@ -112,7 +110,7 @@ IAaveV3LendingPosition.collateralAmount
 readonly debtAmount: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L30)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L29)
 
 Amount of debt borrowed from the pool
 
@@ -134,7 +132,7 @@ IAaveV3LendingPosition.debtAmount
 readonly id: IAaveV3LendingPositionId;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts#L25)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts#L24)
 
 Unique identifier for the position inside the Summer.fi system
 
@@ -156,7 +154,7 @@ IAaveV3LendingPosition.id
 readonly pool: IAaveV3LendingPool;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts#L24)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts#L23)
 
 ATTRIBUTES
 
@@ -178,7 +176,7 @@ IAaveV3LendingPosition.pool
 readonly subtype: LendingPositionType;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L28)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L27)
 
 ATTRIBUTES
 
@@ -200,7 +198,7 @@ IAaveV3LendingPosition.subtype
 readonly type: Lending = PositionType.Lending;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L33)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L32)
 
 ATTRIBUTES
 
@@ -222,7 +220,7 @@ IAaveV3LendingPosition.type
 static createFrom(params): AaveV3LendingPosition;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts#L28)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/implementation/AaveV3LendingPosition.ts#L27)
 
 FACTORY
 

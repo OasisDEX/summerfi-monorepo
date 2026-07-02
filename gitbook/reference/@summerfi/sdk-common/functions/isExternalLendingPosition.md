@@ -6,6 +6,8 @@ function isExternalLendingPosition(maybeExternalLendingPosition): maybeExternalL
 
 Defined in: [src/orders/importing/interfaces/IExternalLendingPosition.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/interfaces/IExternalLendingPosition.ts#L45)
 
+Type guard for IExternalLendingPosition
+
 ## Parameters
 
 ### maybeExternalLendingPosition
@@ -17,7 +19,3 @@ Defined in: [src/orders/importing/interfaces/IExternalLendingPosition.ts:45](htt
 `maybeExternalLendingPosition is IExternalLendingPosition`
 
 true if the object is an IExternalLendingPosition
-
-## Description
-
-Type guard for IExternalLendingPosition

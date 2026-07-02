@@ -1,8 +1,6 @@
 # Class: MorphoLendingPositionId
 
-Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts#L17)
-
-MorphoLendingPositionId
+Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts#L16)
 
 ## See
 
@@ -24,7 +22,7 @@ IMorphoLendingPositionId
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts#L19)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts#L18)
 
 SIGNATURE
 
@@ -46,7 +44,7 @@ IMorphoLendingPositionId.[___signature__]
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPositionId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPositionId.ts#L17)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPositionId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPositionId.ts#L16)
 
 SIGNATURE
 
@@ -70,7 +68,7 @@ LendingPositionId.[___signature__]
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/PositionId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L16)
+Defined in: [../sdk-common/src/common/implementation/PositionId.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L15)
 
 SIGNATURE
 
@@ -94,7 +92,7 @@ LendingPositionId.[___signature__]
 readonly id: string;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/PositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L19)
+Defined in: [../sdk-common/src/common/implementation/PositionId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L18)
 
 ATTRIBUTES
 
@@ -116,7 +114,7 @@ IMorphoLendingPositionId.id
 readonly type: Lending = PositionType.Lending;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPositionId.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPositionId.ts#L20)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPositionId.ts#L19)
 
 ATTRIBUTES
 
@@ -138,7 +136,7 @@ IMorphoLendingPositionId.type
 toString(): string;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPositionId.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPositionId.ts#L30)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPositionId.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPositionId.ts#L29)
 
 #### Returns
 
@@ -160,7 +158,7 @@ IPrintable.toString
 static createFrom(params): MorphoLendingPositionId;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts#L22)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/implementation/MorphoLendingPositionId.ts#L21)
 
 FACTORY
 

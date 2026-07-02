@@ -4,7 +4,9 @@
 function getChainFamilyInfoByChainId(chainId): ChainFamilyInfo;
 ```
 
-Defined in: [src/common/implementation/ChainFamilies.ts:115](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainFamilies.ts#L115)
+Defined in: [src/common/implementation/ChainFamilies.ts:116](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainFamilies.ts#L116)
+
+Retrieves the ChainFamilyInfo for a given chainId
 
 ## Parameters
 
@@ -19,14 +21,6 @@ The chainId to retrieve the ChainFamilyInfo for
 [`ChainFamilyInfo`](../type-aliases/ChainFamilyInfo.md)
 
 The ChainFamilyInfo for the given chainId
-
-## Method
-
-getChainFamilyInfoByChainId
-
-## Description
-
-Retrieves the ChainFamilyInfo for a given chainId
 
 ## Throws
 

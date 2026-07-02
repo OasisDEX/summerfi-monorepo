@@ -1,8 +1,6 @@
 # Abstract Class: PositionId
 
-Defined in: [src/common/implementation/PositionId.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L14)
-
-PositionId
+Defined in: [src/common/implementation/PositionId.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L13)
 
 ## See
 
@@ -25,7 +23,7 @@ IPositionIdData
 protected new PositionId(params): PositionId;
 ```
 
-Defined in: [src/common/implementation/PositionId.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L23)
+Defined in: [src/common/implementation/PositionId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L22)
 
 SEALED CONSTRUCTOR
 
@@ -47,7 +45,7 @@ SEALED CONSTRUCTOR
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/common/implementation/PositionId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L16)
+Defined in: [src/common/implementation/PositionId.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L15)
 
 SIGNATURE
 
@@ -63,7 +61,7 @@ SIGNATURE
 readonly id: string;
 ```
 
-Defined in: [src/common/implementation/PositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L19)
+Defined in: [src/common/implementation/PositionId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L18)
 
 ATTRIBUTES
 
@@ -79,7 +77,7 @@ ATTRIBUTES
 abstract readonly type: PositionType;
 ```
 
-Defined in: [src/common/implementation/PositionId.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L20)
+Defined in: [src/common/implementation/PositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L19)
 
 Type of the position
 
@@ -95,7 +93,7 @@ Type of the position
 toString(): string;
 ```
 
-Defined in: [src/common/implementation/PositionId.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L30)
+Defined in: [src/common/implementation/PositionId.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/PositionId.ts#L29)
 
 #### Returns
 

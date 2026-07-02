@@ -16,8 +16,6 @@ const SDKErrorDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/common/interfaces/ISDKError.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L28)
-
-## Description
+Defined in: [src/common/interfaces/ISDKError.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/ISDKError.ts#L27)
 
 Zod schema for ISDKError

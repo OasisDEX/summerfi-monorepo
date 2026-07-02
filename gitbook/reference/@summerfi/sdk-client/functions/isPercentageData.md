@@ -4,7 +4,9 @@
 function isPercentageData(maybePercentageData, returnedErrors?): maybePercentageData is Readonly<{ value: number }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPercentage.ts:96](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L96)
+Defined in: [../sdk-common/src/common/interfaces/IPercentage.ts:91](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L91)
+
+Type guard for IPercentageData
 
 ## Parameters
 
@@ -25,7 +27,3 @@ Optional array that, on failure, is populated with validation error messages
 `maybePercentageData is Readonly<{ value: number }>`
 
 true if the object is an IPercentageData
-
-## Description
-
-Type guard for IPercentageData

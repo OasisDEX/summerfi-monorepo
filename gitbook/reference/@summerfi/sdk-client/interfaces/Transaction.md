@@ -1,10 +1,6 @@
 # Interface: Transaction
 
-Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Transaction.ts#L8)
-
-Transaction
-
-## Description
+Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Transaction.ts#L9)
 
 Low level transaction that can be sent to the blockchain
 
@@ -16,7 +12,7 @@ Low level transaction that can be sent to the blockchain
 calldata: `0x${string}`;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Transaction.ts#L10)
+Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Transaction.ts#L11)
 
 ***
 
@@ -26,7 +22,7 @@ Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:10](https://gi
 optional gasLimit: string;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Transaction.ts#L12)
+Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Transaction.ts#L13)
 
 ***
 
@@ -36,7 +32,7 @@ Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:12](https://gi
 target: IAddress;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Transaction.ts#L9)
+Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Transaction.ts#L10)
 
 ***
 
@@ -46,4 +42,4 @@ Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:9](https://git
 value: string;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Transaction.ts#L11)
+Defined in: [../sdk-common/src/orders/common/types/Transaction.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Transaction.ts#L12)

@@ -4,7 +4,7 @@
 type PauseDcaStrategyTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:196](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L196)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:194](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L194)
 
 Transaction info for pausing a DCA strategy.
 

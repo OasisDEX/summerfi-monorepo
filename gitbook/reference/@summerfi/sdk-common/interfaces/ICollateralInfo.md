@@ -1,10 +1,6 @@
 # Interface: ICollateralInfo
 
-Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L17)
-
-ICollateralInfo
-
-## Description
+Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L16)
 
 Contains extended information about a collateral token of a lending pool
 
@@ -20,7 +16,7 @@ Contains extended information about a collateral token of a lending pool
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L19)
+Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L18)
 
 Signature to differentiate from similar interfaces
 
@@ -32,7 +28,7 @@ Signature to differentiate from similar interfaces
 readonly liquidationPenalty: IPercentage;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L33)
+Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L32)
 
 The penalty that is charged for liquidating a position
 
@@ -50,7 +46,7 @@ ICollateralInfoData.liquidationPenalty
 readonly liquidationThreshold: IRiskRatio;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L27)
+Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L26)
 
 The ratio between the collateral and the debt at which the position could be liquidated
 
@@ -68,7 +64,7 @@ ICollateralInfoData.liquidationThreshold
 readonly maxSupply: ITokenAmount;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L29)
+Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L28)
 
 The maximum amount of the token that can be supplied
 
@@ -86,7 +82,7 @@ ICollateralInfoData.maxSupply
 readonly price: IPrice;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L23)
+Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L22)
 
 The price of the token in the protocol's default denomination
 
@@ -104,7 +100,7 @@ ICollateralInfoData.price
 readonly priceUSD: IPrice;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L25)
+Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L24)
 
 The price of the token in USD
 
@@ -122,7 +118,7 @@ ICollateralInfoData.priceUSD
 readonly token: ITokenStanalone;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L21)
+Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L20)
 
 The token that represents the collateral
 
@@ -140,7 +136,7 @@ ICollateralInfoData.token
 readonly tokensLocked: ITokenAmount;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L31)
+Defined in: [src/lending-protocols/interfaces/ICollateralInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ICollateralInfo.ts#L30)
 
 The amount of the token that is currently locked in the pool
 

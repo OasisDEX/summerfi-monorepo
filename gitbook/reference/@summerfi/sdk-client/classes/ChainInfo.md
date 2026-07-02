@@ -1,10 +1,6 @@
 # Class: ChainInfo
 
-Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L14)
-
-## Name
-
-ChainInfo
+Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L13)
 
 ## See
 
@@ -22,7 +18,7 @@ IChainInfo
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L16)
+Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L15)
 
 SIGNATURE
 
@@ -38,7 +34,7 @@ SIGNATURE
 readonly chainId: ChainId;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L19)
+Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L18)
 
 ATTRIBUTES
 
@@ -54,7 +50,7 @@ ATTRIBUTES
 readonly name: string;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L20)
+Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L19)
 
 The name of the network
 
@@ -70,7 +66,7 @@ The name of the network
 equals(chainInfo): boolean;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L39)
+Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L38)
 
 Determines whether this chain refers to the same network as another.
 
@@ -100,7 +96,7 @@ The other chain to compare against.
 toString(): string;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L48)
+Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L47)
 
 Returns a human-readable representation of the chain (its name and id).
 
@@ -122,7 +118,7 @@ A string in the form `"<name> (ID: <chainId>)"`.
 static createFrom(params): ChainInfo;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L23)
+Defined in: [../sdk-common/src/common/implementation/ChainInfo.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/ChainInfo.ts#L22)
 
 FACTORY METHODS
 

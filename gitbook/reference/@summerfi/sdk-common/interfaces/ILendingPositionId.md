@@ -1,12 +1,6 @@
 # Interface: ILendingPositionId
 
-Defined in: [src/lending-protocols/interfaces/ILendingPositionId.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPositionId.ts#L14)
-
-## Name
-
-ILendingPositionId
-
-## Description
+Defined in: [src/lending-protocols/interfaces/ILendingPositionId.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPositionId.ts#L13)
 
 Represents a position ID for a lending position
 
@@ -26,7 +20,7 @@ Represents a position ID for a lending position
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPositionId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPositionId.ts#L16)
+Defined in: [src/lending-protocols/interfaces/ILendingPositionId.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPositionId.ts#L15)
 
 Signature to differentiate from similar interfaces
 
@@ -42,7 +36,7 @@ Signature to differentiate from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IPositionId.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L15)
+Defined in: [src/common/interfaces/IPositionId.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L14)
 
 Signature to differentiate from similar interfaces
 
@@ -60,7 +54,7 @@ IPositionId.[___signature__]
 readonly id: string;
 ```
 
-Defined in: [src/common/interfaces/IPositionId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L17)
+Defined in: [src/common/interfaces/IPositionId.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L16)
 
 #### Inherited from
 
@@ -74,7 +68,7 @@ Defined in: [src/common/interfaces/IPositionId.ts:17](https://github.com/OasisDE
 readonly type: Lending;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPositionId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPositionId.ts#L19)
+Defined in: [src/lending-protocols/interfaces/ILendingPositionId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPositionId.ts#L18)
 
 Type of the position
 

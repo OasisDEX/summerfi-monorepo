@@ -1,10 +1,6 @@
 # Enumeration: PoolType
 
-Defined in: [src/common/enums/PoolType.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PoolType.ts#L7)
-
-PoolType
-
-## Description
+Defined in: [src/common/enums/PoolType.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PoolType.ts#L6)
 
 Indicates the type of pool (supply or lending)
 
@@ -16,7 +12,7 @@ Indicates the type of pool (supply or lending)
 Armada: "Armada";
 ```
 
-Defined in: [src/common/enums/PoolType.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PoolType.ts#L13)
+Defined in: [src/common/enums/PoolType.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PoolType.ts#L12)
 
 Armada pool type, aggregated liquidity for yield
 
@@ -28,7 +24,7 @@ Armada pool type, aggregated liquidity for yield
 Lending: "Lending";
 ```
 
-Defined in: [src/common/enums/PoolType.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PoolType.ts#L11)
+Defined in: [src/common/enums/PoolType.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PoolType.ts#L10)
 
 Lending pool, adding some collateral allows to borrow some debt
 
@@ -40,7 +36,7 @@ Lending pool, adding some collateral allows to borrow some debt
 Rwa: "Rwa";
 ```
 
-Defined in: [src/common/enums/PoolType.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PoolType.ts#L15)
+Defined in: [src/common/enums/PoolType.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PoolType.ts#L14)
 
 RWA pool type, used for RWA vaults
 
@@ -52,6 +48,6 @@ RWA pool type, used for RWA vaults
 Supply: "Supply";
 ```
 
-Defined in: [src/common/enums/PoolType.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PoolType.ts#L9)
+Defined in: [src/common/enums/PoolType.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/PoolType.ts#L8)
 
 Staking pool: adding 1 token to the pool generates some interest earnings

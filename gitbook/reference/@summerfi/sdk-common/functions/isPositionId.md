@@ -6,6 +6,8 @@ function isPositionId(maybePositionId): maybePositionId is IPositionId;
 
 Defined in: [src/common/interfaces/IPositionId.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L40)
 
+Type guard for IPositionId
+
 ## Parameters
 
 ### maybePositionId
@@ -17,7 +19,3 @@ Defined in: [src/common/interfaces/IPositionId.ts:40](https://github.com/OasisDE
 `maybePositionId is IPositionId`
 
 true if the object is an IPositionId
-
-## Description
-
-Type guard for IPositionId

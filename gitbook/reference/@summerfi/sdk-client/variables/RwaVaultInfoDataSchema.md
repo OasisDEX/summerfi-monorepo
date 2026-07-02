@@ -89,8 +89,6 @@ const RwaVaultInfoDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L68)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IRwaVaultInfo.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaVaultInfo.ts#L67)
 
 Zod schema for IRwaVaultInfo

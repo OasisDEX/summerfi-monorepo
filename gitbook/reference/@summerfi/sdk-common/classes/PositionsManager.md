@@ -1,8 +1,6 @@
 # Class: PositionsManager
 
-Defined in: [src/orders/common/implementation/PositionsManager.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L10)
-
-PositionsManager
+Defined in: [src/orders/common/implementation/PositionsManager.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L9)
 
 ## See
 
@@ -21,7 +19,7 @@ IPositionsManager
 address: IAddress;
 ```
 
-Defined in: [src/orders/common/implementation/PositionsManager.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L11)
+Defined in: [src/orders/common/implementation/PositionsManager.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L10)
 
 Address of the Positions Manager
 
@@ -37,7 +35,7 @@ Address of the Positions Manager
 toString(): string;
 ```
 
-Defined in: [src/orders/common/implementation/PositionsManager.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L23)
+Defined in: [src/orders/common/implementation/PositionsManager.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L22)
 
 Returns a string representation of an object.
 
@@ -57,7 +55,7 @@ Returns a string representation of an object.
 static createFrom(params): PositionsManager;
 ```
 
-Defined in: [src/orders/common/implementation/PositionsManager.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L14)
+Defined in: [src/orders/common/implementation/PositionsManager.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/implementation/PositionsManager.ts#L13)
 
 Factory method
 

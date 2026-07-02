@@ -1,13 +1,9 @@
 # Interface: IChainsManagerClient
 
-Defined in: [src/interfaces/IChainsManager.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L9)
-
-IChainsManagerClient
-
-## Description
+Defined in: [src/interfaces/IChainsManager.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L8)
 
 Interface for the ChainsManager client implementation. Allows to retrieve information for
-            a Chain given its ChainInfo. It also supports to lookup a chain by its name or chain ID
+a Chain given its ChainInfo. It also supports to lookup a chain by its name or chain ID
 
 ## Methods
 
@@ -17,7 +13,9 @@ Interface for the ChainsManager client implementation. Allows to retrieve inform
 getChain(params): Promise<Chain>;
 ```
 
-Defined in: [src/interfaces/IChainsManager.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L18)
+Defined in: [src/interfaces/IChainsManager.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L16)
+
+Retrieves a chain by its chain info
 
 #### Parameters
 
@@ -33,14 +31,6 @@ Defined in: [src/interfaces/IChainsManager.ts:18](https://github.com/OasisDEX/su
 
 The chain for the given chain info
 
-#### Method
-
-getChain
-
-#### Description
-
-Retrieves a chain by its chain info
-
 ***
 
 ### getChainById()
@@ -49,7 +39,9 @@ Retrieves a chain by its chain info
 getChainById(params): Promise<Maybe<Chain>>;
 ```
 
-Defined in: [src/interfaces/IChainsManager.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L28)
+Defined in: [src/interfaces/IChainsManager.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IChainsManager.ts#L25)
+
+Retrieves a network by its chain ID
 
 #### Parameters
 
@@ -64,11 +56,3 @@ Defined in: [src/interfaces/IChainsManager.ts:28](https://github.com/OasisDEX/su
 `Promise`\<[`Maybe`](../type-aliases/Maybe.md)\<[`Chain`](../classes/Chain.md)\>\>
 
 The network with the given chain ID
-
-#### Method
-
-getChainById
-
-#### Description
-
-Retrieves a network by its chain ID

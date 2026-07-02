@@ -1,10 +1,6 @@
 # Enumeration: FiatCurrency
 
-Defined in: [src/common/enums/FiatCurrency.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L9)
-
-FiatCurrency
-
-## Description
+Defined in: [src/common/enums/FiatCurrency.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L8)
 
 Used to indicate a currency
 
@@ -18,7 +14,7 @@ It is the counterpart of a Token in real world assets
 EUR: "EUR";
 ```
 
-Defined in: [src/common/enums/FiatCurrency.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L11)
+Defined in: [src/common/enums/FiatCurrency.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L10)
 
 ***
 
@@ -28,4 +24,4 @@ Defined in: [src/common/enums/FiatCurrency.ts:11](https://github.com/OasisDEX/su
 USD: "USD";
 ```
 
-Defined in: [src/common/enums/FiatCurrency.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L10)
+Defined in: [src/common/enums/FiatCurrency.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L9)

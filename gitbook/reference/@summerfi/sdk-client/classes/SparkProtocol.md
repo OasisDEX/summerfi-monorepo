@@ -1,8 +1,6 @@
 # Class: SparkProtocol
 
-Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkProtocol.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkProtocol.ts#L13)
-
-SparkProtocol
+Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkProtocol.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkProtocol.ts#L12)
 
 ## See
 
@@ -24,7 +22,7 @@ ISparkProtocol
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkProtocol.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkProtocol.ts#L15)
+Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkProtocol.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkProtocol.ts#L14)
 
 SIGNATURE
 
@@ -44,7 +42,7 @@ SIGNATURE
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/Protocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L18)
+Defined in: [../sdk-common/src/common/implementation/Protocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L17)
 
 SIGNATURE
 
@@ -68,7 +66,7 @@ Protocol.[___signature__]
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/Protocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L22)
+Defined in: [../sdk-common/src/common/implementation/Protocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L21)
 
 The chain information
 
@@ -88,7 +86,7 @@ The chain information
 readonly name: Spark = ProtocolName.Spark;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkProtocol.ts#L18)
+Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkProtocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkProtocol.ts#L17)
 
 ATTRIBUTES
 
@@ -108,7 +106,7 @@ ATTRIBUTES
 equals(protocol): boolean;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/Protocol.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L32)
+Defined in: [../sdk-common/src/common/implementation/Protocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L31)
 
 #### Parameters
 
@@ -140,7 +138,7 @@ IProtocol.equals
 toString(): string;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/Protocol.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L37)
+Defined in: [../sdk-common/src/common/implementation/Protocol.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Protocol.ts#L36)
 
 #### Returns
 
@@ -162,7 +160,7 @@ IPrintable.toString
 static createFrom(params): SparkProtocol;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkProtocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkProtocol.ts#L21)
+Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkProtocol.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkProtocol.ts#L20)
 
 FACTORY
 

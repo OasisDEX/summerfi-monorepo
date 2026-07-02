@@ -1,14 +1,10 @@
 # Enumeration: CommonTokenSymbols
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L7)
-
-CommonTokenSymbols
-
-## Description
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L6)
 
 Common token symbols to be used with the tokens manager. Tokens can be retrieved by their symbol
-             using the tokens manager by passing an untyped string. These list is just a convenience utility
-             to avoid typos when using the tokens manager
+using the tokens manager by passing an untyped string. These list is just a convenience utility
+to avoid typos when using the tokens manager
 
 ## Enumeration Members
 
@@ -18,7 +14,7 @@ Common token symbols to be used with the tokens manager. Tokens can be retrieved
 AAVE: "AAVE";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L38)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L37)
 
 ***
 
@@ -28,7 +24,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:38](https://gi
 BAL: "BAL";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L41)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L40)
 
 ***
 
@@ -38,7 +34,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:41](https://gi
 cbETH: "cbETH";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L35)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L34)
 
 ***
 
@@ -48,7 +44,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:35](https://gi
 CRV: "CRV";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L39)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L38)
 
 ***
 
@@ -58,7 +54,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:39](https://gi
 crvUSD: "crvUSD";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L49)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L48)
 
 ***
 
@@ -68,7 +64,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:49](https://gi
 DAI: "DAI";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L10)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L9)
 
 ***
 
@@ -78,7 +74,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:10](https://gi
 ENS: "ENS";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L42)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L41)
 
 ***
 
@@ -88,7 +84,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:42](https://gi
 ETH: "ETH";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L13)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L12)
 
 ***
 
@@ -98,7 +94,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:13](https://gi
 ezETH: "ezETH";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L17)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L16)
 
 ***
 
@@ -108,7 +104,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:17](https://gi
 FRAX: "FRAX";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L44)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L43)
 
 ***
 
@@ -118,7 +114,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:44](https://gi
 FXS: "FXS";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L48)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L47)
 
 ***
 
@@ -128,7 +124,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:48](https://gi
 GHO: "GHO";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L45)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L44)
 
 ***
 
@@ -138,7 +134,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:45](https://gi
 GNO: "GNO";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L33)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L32)
 
 ***
 
@@ -148,7 +144,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:33](https://gi
 GUSD: "GUSD";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L29)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L28)
 
 ***
 
@@ -158,7 +154,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:29](https://gi
 KNC: "KNC";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L47)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L46)
 
 ***
 
@@ -168,7 +164,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:47](https://gi
 LDO: "LDO";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L34)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L33)
 
 ***
 
@@ -178,7 +174,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:34](https://gi
 LINK: "LINK";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L22)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L21)
 
 ***
 
@@ -188,7 +184,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:22](https://gi
 LUSD: "LUSD";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L37)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L36)
 
 ***
 
@@ -198,7 +194,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:37](https://gi
 MANA: "MANA";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L23)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L22)
 
 ***
 
@@ -208,7 +204,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:23](https://gi
 MATIC: "MATIC";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L24)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L23)
 
 ***
 
@@ -218,7 +214,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:24](https://gi
 MKR: "MKR";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L25)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L24)
 
 ***
 
@@ -228,7 +224,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:25](https://gi
 ONEINCH: "1INCH";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L43)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L42)
 
 ***
 
@@ -238,7 +234,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:43](https://gi
 osETH: "osETH";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L18)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L17)
 
 ***
 
@@ -248,7 +244,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:18](https://gi
 PYUSD: "PYUSD";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L50)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L49)
 
 ***
 
@@ -258,7 +254,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:50](https://gi
 renBTC: "renBTC";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L31)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L30)
 
 ***
 
@@ -268,7 +264,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:31](https://gi
 rETH: "rETH";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L32)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L31)
 
 ***
 
@@ -278,7 +274,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:32](https://gi
 RPL: "RPL";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L36)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L35)
 
 ***
 
@@ -288,7 +284,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:36](https://gi
 sDAI: "sDAI";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L15)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L14)
 
 ***
 
@@ -298,7 +294,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:15](https://gi
 SNX: "SNX";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L40)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L39)
 
 ***
 
@@ -308,7 +304,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:40](https://gi
 stETH: "stETH";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L28)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L27)
 
 ***
 
@@ -318,7 +314,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:28](https://gi
 STG: "STG";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L46)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L45)
 
 ***
 
@@ -328,7 +324,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:46](https://gi
 sUSDe: "sUSDe";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L21)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L20)
 
 ***
 
@@ -338,7 +334,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:21](https://gi
 UNI: "UNI";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L26)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L25)
 
 ***
 
@@ -348,7 +344,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:26](https://gi
 USDA: "USDA";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L16)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L15)
 
 ***
 
@@ -358,7 +354,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:16](https://gi
 USDC: "USDC";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L9)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L8)
 
 ***
 
@@ -368,7 +364,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:9](https://git
 USDe: "USDe";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L20)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L19)
 
 ***
 
@@ -378,7 +374,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:20](https://gi
 USDP: "USDP";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L30)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L29)
 
 ***
 
@@ -388,7 +384,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:30](https://gi
 USDT: "USDT";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L8)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L7)
 
 ***
 
@@ -398,7 +394,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:8](https://git
 WBTC: "WBTC";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L12)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L11)
 
 ***
 
@@ -408,7 +404,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:12](https://gi
 weETH: "weETH";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L19)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L18)
 
 ***
 
@@ -418,7 +414,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:19](https://gi
 WETH: "WETH";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L11)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L10)
 
 ***
 
@@ -428,7 +424,7 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:11](https://gi
 wstETH: "wstETH";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L14)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L13)
 
 ***
 
@@ -438,4 +434,4 @@ Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:14](https://gi
 YFI: "YFI";
 ```
 
-Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L27)
+Defined in: [../sdk-common/src/common/enums/CommonTokenSymbols.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/CommonTokenSymbols.ts#L26)

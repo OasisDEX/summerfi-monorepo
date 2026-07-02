@@ -1,14 +1,10 @@
 # Interface: IResolvedRoundsVault
 
-Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L12)
-
-IResolvedRoundsVault
-
-## Description
+Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L11)
 
 Metadata for one side (Input or Output) of a Fleet's RoundsVault pair, resolved from
-             the RWA subgraph. Used by the RWA manager to build deposit/withdraw transactions and
-             round reads against the correct RoundsVault contract.
+the RWA subgraph. Used by the RWA manager to build deposit/withdraw transactions and
+round reads against the correct RoundsVault contract.
 
 ## Properties
 
@@ -18,7 +14,7 @@ Metadata for one side (Input or Output) of a Fleet's RoundsVault pair, resolved 
 address: `0x${string}`;
 ```
 
-Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L16)
+Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L15)
 
 The RoundsVault contract address
 
@@ -30,7 +26,7 @@ The RoundsVault contract address
 chainId: ChainId;
 ```
 
-Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L14)
+Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L13)
 
 The chain the RoundsVault is deployed on
 
@@ -42,7 +38,7 @@ The chain the RoundsVault is deployed on
 exchangeAssetToken: ITokenStanalone;
 ```
 
-Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L20)
+Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L19)
 
 Token returned at settlement (Input: Fleet shares; Output: Fleet underlying e.g. USDC)
 
@@ -54,7 +50,7 @@ Token returned at settlement (Input: Fleet shares; Output: Fleet underlying e.g.
 minPositionSize: ITokenAmount;
 ```
 
-Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L22)
+Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L21)
 
 Minimum position size in underlying token for the RoundsVault
 
@@ -66,6 +62,6 @@ Minimum position size in underlying token for the RoundsVault
 underlyingToken: ITokenStanalone;
 ```
 
-Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L18)
+Defined in: [src/common/interfaces/IResolvedRoundsVault.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IResolvedRoundsVault.ts#L17)
 
 Token deposited by users (Input: Fleet underlying e.g. USDC; Output: Fleet shares)

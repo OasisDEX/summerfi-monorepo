@@ -4,13 +4,7 @@
 type ISpotPriceInfo = object;
 ```
 
-Defined in: [../sdk-common/src/oracle/ISpotPriceInfo.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L10)
-
-## Name
-
-ISpotPriceInfo
-
-## Description
+Defined in: [../sdk-common/src/oracle/ISpotPriceInfo.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L9)
 
 Gives the current market price for a specific asset
 
@@ -22,7 +16,7 @@ Gives the current market price for a specific asset
 price: IPrice;
 ```
 
-Defined in: [../sdk-common/src/oracle/ISpotPriceInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L16)
+Defined in: [../sdk-common/src/oracle/ISpotPriceInfo.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L15)
 
 The price of the asset
 
@@ -34,7 +28,7 @@ The price of the asset
 provider: OracleProviderType;
 ```
 
-Defined in: [../sdk-common/src/oracle/ISpotPriceInfo.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L12)
+Defined in: [../sdk-common/src/oracle/ISpotPriceInfo.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L11)
 
 The oracle provider type
 
@@ -46,6 +40,6 @@ The oracle provider type
 token: ITokenStanalone;
 ```
 
-Defined in: [../sdk-common/src/oracle/ISpotPriceInfo.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L14)
+Defined in: [../sdk-common/src/oracle/ISpotPriceInfo.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/oracle/ISpotPriceInfo.ts#L13)
 
 The token for which the price is being requested. Also included in price, but added here for convenience

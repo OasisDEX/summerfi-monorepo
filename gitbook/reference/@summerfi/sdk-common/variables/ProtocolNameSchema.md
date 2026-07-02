@@ -4,8 +4,6 @@
 const ProtocolNameSchema: ZodNativeEnum<typeof ProtocolName>;
 ```
 
-Defined in: [src/common/enums/ProtocolName.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L20)
-
-## Description
+Defined in: [src/common/enums/ProtocolName.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L19)
 
 Zod schema for ProtocolName

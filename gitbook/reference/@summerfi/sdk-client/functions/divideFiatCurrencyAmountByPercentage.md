@@ -4,7 +4,7 @@
 function divideFiatCurrencyAmountByPercentage(fiatCurrencyAmount, percentage): IFiatCurrencyAmountData;
 ```
 
-Defined in: [../sdk-common/src/common/utils/PercentageUtils.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/utils/PercentageUtils.ts#L60)
+Defined in: [../sdk-common/src/common/utils/PercentageUtils.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/utils/PercentageUtils.ts#L56)
 
 ## Parameters
 
@@ -25,7 +25,3 @@ The percentage to divide by
 [`IFiatCurrencyAmountData`](../type-aliases/IFiatCurrencyAmountData.md)
 
 The resulting fiat currency amount
-
-## Name
-
-divideFiatCurrencyAmountByPercentage

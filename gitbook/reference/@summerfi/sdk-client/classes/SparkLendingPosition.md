@@ -1,8 +1,6 @@
 # Class: SparkLendingPosition
 
-Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkLendingPosition.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkLendingPosition.ts#L19)
-
-SparkPosition
+Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkLendingPosition.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkLendingPosition.ts#L18)
 
 ## See
 
@@ -24,7 +22,7 @@ ISparkLendingPosition
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkLendingPosition.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkLendingPosition.ts#L21)
+Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkLendingPosition.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkLendingPosition.ts#L20)
 
 SIGNATURE
 
@@ -46,7 +44,7 @@ ISparkLendingPosition.[___signature__]
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L25)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L24)
 
 SIGNATURE
 
@@ -70,7 +68,7 @@ LendingPosition.[___signature__]
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [../sdk-common/src/common/implementation/Position.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L18)
+Defined in: [../sdk-common/src/common/implementation/Position.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L17)
 
 SIGNATURE
 
@@ -94,7 +92,7 @@ LendingPosition.[___signature__]
 readonly collateralAmount: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L31)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L30)
 
 Amount of collateral deposited in the pool
 
@@ -116,7 +114,7 @@ ISparkLendingPosition.collateralAmount
 readonly debtAmount: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L30)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L29)
 
 Amount of debt borrowed from the pool
 
@@ -138,7 +136,7 @@ ISparkLendingPosition.debtAmount
 readonly id: ISparkLendingPositionId;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkLendingPosition.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkLendingPosition.ts#L24)
+Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkLendingPosition.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkLendingPosition.ts#L23)
 
 ATTRIBUTES
 
@@ -160,7 +158,7 @@ ISparkLendingPosition.id
 readonly pool: ISparkLendingPool;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkLendingPosition.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkLendingPosition.ts#L25)
+Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkLendingPosition.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkLendingPosition.ts#L24)
 
 Pool where the position is
 
@@ -182,7 +180,7 @@ ISparkLendingPosition.pool
 readonly subtype: LendingPositionType;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L28)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L27)
 
 ATTRIBUTES
 
@@ -204,7 +202,7 @@ ISparkLendingPosition.subtype
 readonly type: Lending = PositionType.Lending;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L33)
+Defined in: [../sdk-common/src/lending-protocols/implementation/LendingPosition.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/LendingPosition.ts#L32)
 
 ATTRIBUTES
 
@@ -226,7 +224,7 @@ ISparkLendingPosition.type
 static createFrom(params): SparkLendingPosition;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkLendingPosition.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkLendingPosition.ts#L28)
+Defined in: [../protocol-plugins/src/plugins/spark/implementation/SparkLendingPosition.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/spark/implementation/SparkLendingPosition.ts#L27)
 
 FACTORY
 

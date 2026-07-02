@@ -13,8 +13,6 @@ const PoolIdDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/common/interfaces/IPoolId.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolId.ts#L29)
-
-## Description
+Defined in: [src/common/interfaces/IPoolId.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolId.ts#L28)
 
 Zod schema for IPoolId

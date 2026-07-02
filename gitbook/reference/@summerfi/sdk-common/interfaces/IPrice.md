@@ -1,15 +1,9 @@
 # Interface: IPrice
 
-Defined in: [src/common/interfaces/IPrice.ts:55](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L55)
-
-## Name
-
-IPrice
-
-## Description
+Defined in: [src/common/interfaces/IPrice.ts:54](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L54)
 
 Represents a price for a token with certain denomation. The denomination can be a fiat currency
-             or another token
+or another token
 
 The price is represented as a string in floating point format without taking into consideration
 the number of decimals of the tokens. This data type can be used for calculations with other types
@@ -40,7 +34,7 @@ QUOTE/BASE
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:57](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L57)
+Defined in: [src/common/interfaces/IPrice.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L56)
 
 Signature to differentiate from similar interfaces
 
@@ -52,7 +46,7 @@ Signature to differentiate from similar interfaces
 readonly base: Denomination;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:61](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L61)
+Defined in: [src/common/interfaces/IPrice.ts:60](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L60)
 
 The token for the base of the price
 
@@ -70,7 +64,7 @@ IPriceData.base
 readonly quote: Denomination;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:63](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L63)
+Defined in: [src/common/interfaces/IPrice.ts:62](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L62)
 
 The token for the quote of the price
 
@@ -88,7 +82,7 @@ IPriceData.quote
 readonly value: string;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:59](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L59)
+Defined in: [src/common/interfaces/IPrice.ts:58](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L58)
 
 The price value in floating point format without taking into account decimals
 
@@ -106,7 +100,9 @@ IPriceData.value
 add(otherPrice): IPrice;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:97](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L97)
+Defined in: [src/common/interfaces/IPrice.ts:96](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L96)
+
+Adds the price to another price
 
 #### Parameters
 
@@ -122,14 +118,6 @@ The price to add
 
 The resulting price
 
-#### Name
-
-add
-
-#### Description
-
-Adds the price to another price
-
 #### Throws
 
 If the prices have different base tokens or quote tokens
@@ -142,7 +130,9 @@ If the prices have different base tokens or quote tokens
 divide(divider): IPrice;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:131](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L131)
+Defined in: [src/common/interfaces/IPrice.ts:130](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L130)
+
+Divides the price by another price or a constant
 
 #### Parameters
 
@@ -158,14 +148,6 @@ The numeric string, number or price to divide by
 
 The resulting price
 
-#### Name
-
-divide
-
-#### Description
-
-Divides the price by another price or a constant
-
 #### Throws
 
 If the second price base is not the same as this price base
@@ -179,7 +161,9 @@ If the second price base is not the same as this price base
 hasSameBase(otherPrice): boolean;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:79](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L79)
+Defined in: [src/common/interfaces/IPrice.ts:78](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L78)
+
+Checks if the price has the same base as another price
 
 #### Parameters
 
@@ -195,14 +179,6 @@ The price to compare against
 
 true if the prices have the same base token
 
-#### Name
-
-hasSameBase
-
-#### Description
-
-Checks if the price has the same base as another price
-
 ***
 
 ### hasSameDenominations()
@@ -211,7 +187,9 @@ Checks if the price has the same base as another price
 hasSameDenominations(otherPrice): boolean;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:87](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L87)
+Defined in: [src/common/interfaces/IPrice.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L86)
+
+Checks if the price has the same base and quote as another price
 
 #### Parameters
 
@@ -227,14 +205,6 @@ The price to compare against
 
 true if the prices have the same base and quote
 
-#### Name
-
-hasSameDenominations
-
-#### Description
-
-Checks if the price has the same base and quote as another price
-
 ***
 
 ### hasSameQuote()
@@ -243,7 +213,9 @@ Checks if the price has the same base and quote as another price
 hasSameQuote(otherPrice): boolean;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:71](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L71)
+Defined in: [src/common/interfaces/IPrice.ts:70](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L70)
+
+Checks if the price has the same quote as another price
 
 #### Parameters
 
@@ -259,14 +231,6 @@ The price to compare against
 
 true if the prices have the same quote
 
-#### Name
-
-hasSameQuote
-
-#### Description
-
-Checks if the price has the same quote as another price
-
 ***
 
 ### invert()
@@ -275,21 +239,15 @@ Checks if the price has the same quote as another price
 invert(): IPrice;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:138](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L138)
+Defined in: [src/common/interfaces/IPrice.ts:137](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L137)
+
+Inverts the price
 
 #### Returns
 
 `IPrice`
 
 The inverted price
-
-#### Name
-
-invert
-
-#### Description
-
-Inverts the price
 
 ***
 
@@ -299,7 +257,9 @@ Inverts the price
 isEqual(otherPrice): boolean;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:180](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L180)
+Defined in: [src/common/interfaces/IPrice.ts:172](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L172)
+
+Checks if the price is equal to another price
 
 #### Parameters
 
@@ -310,14 +270,6 @@ Defined in: [src/common/interfaces/IPrice.ts:180](https://github.com/OasisDEX/su
 #### Returns
 
 `boolean`
-
-#### Name
-
-isEqual
-
-#### Description
-
-Checks if the price is equal to another price
 
 ***
 
@@ -327,7 +279,9 @@ Checks if the price is equal to another price
 isGreaterThan(otherPrice): boolean;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:162](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L162)
+Defined in: [src/common/interfaces/IPrice.ts:157](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L157)
+
+Checks if the price is greater than another price
 
 #### Parameters
 
@@ -338,14 +292,6 @@ Defined in: [src/common/interfaces/IPrice.ts:162](https://github.com/OasisDEX/su
 #### Returns
 
 `boolean`
-
-#### Name
-
-isGreaterThan
-
-#### Description
-
-Checks if the price is greater than another price
 
 ***
 
@@ -355,7 +301,9 @@ Checks if the price is greater than another price
 isGreaterThanOrEqual(otherPrice): boolean;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:168](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L168)
+Defined in: [src/common/interfaces/IPrice.ts:162](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L162)
+
+Checks if the price is greater than or equal to another price
 
 #### Parameters
 
@@ -366,14 +314,6 @@ Defined in: [src/common/interfaces/IPrice.ts:168](https://github.com/OasisDEX/su
 #### Returns
 
 `boolean`
-
-#### Name
-
-isGreaterThanOrEqual
-
-#### Description
-
-Checks if the price is greater than or equal to another price
 
 ***
 
@@ -383,7 +323,9 @@ Checks if the price is greater than or equal to another price
 isLessThan(otherPrice): boolean;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:150](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L150)
+Defined in: [src/common/interfaces/IPrice.ts:147](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L147)
+
+Checks if the price is less than another price
 
 #### Parameters
 
@@ -394,14 +336,6 @@ Defined in: [src/common/interfaces/IPrice.ts:150](https://github.com/OasisDEX/su
 #### Returns
 
 `boolean`
-
-#### Name
-
-isLessThan
-
-#### Description
-
-Checks if the price is less than another price
 
 ***
 
@@ -411,7 +345,9 @@ Checks if the price is less than another price
 isLessThanOrEqual(otherPrice): boolean;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:156](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L156)
+Defined in: [src/common/interfaces/IPrice.ts:152](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L152)
+
+Checks if the price is less than or equal to another price
 
 #### Parameters
 
@@ -423,14 +359,6 @@ Defined in: [src/common/interfaces/IPrice.ts:156](https://github.com/OasisDEX/su
 
 `boolean`
 
-#### Name
-
-isLessThanOrEqual
-
-#### Description
-
-Checks if the price is less than or equal to another price
-
 ***
 
 ### isZero()
@@ -439,19 +367,13 @@ Checks if the price is less than or equal to another price
 isZero(): boolean;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:174](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L174)
+Defined in: [src/common/interfaces/IPrice.ts:167](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L167)
+
+Checks if the price is zero
 
 #### Returns
 
 `boolean`
-
-#### Name
-
-isZero
-
-#### Description
-
-Checks if the price is zero
 
 ***
 
@@ -461,7 +383,9 @@ Checks if the price is zero
 multiply<InputParams, ReturnType>(multiplier): ReturnType;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:118](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L118)
+Defined in: [src/common/interfaces/IPrice.ts:117](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L117)
+
+Multiplies the price by another price or a constant
 
 #### Type Parameters
 
@@ -487,14 +411,6 @@ The numeric string, number, price, token amount or fiat currency amount to multi
 
 The resulting price, token amount or fiat currency amount
 
-#### Name
-
-multiply
-
-#### Description
-
-Multiplies the price by another price or a constant
-
 #### Throws
 
 When it is a price, if the second price quote is not the same as this price base or
@@ -508,7 +424,9 @@ When it is a price, if the second price quote is not the same as this price base
 subtract(otherPrice): IPrice;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:107](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L107)
+Defined in: [src/common/interfaces/IPrice.ts:106](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L106)
+
+Subtracts the price from another price
 
 #### Parameters
 
@@ -524,14 +442,6 @@ The price to subtract
 
 The resulting price
 
-#### Name
-
-subtract
-
-#### Description
-
-Subtracts the price from another price
-
 #### Throws
 
 If the prices have different base tokens or quote tokens
@@ -544,7 +454,7 @@ If the prices have different base tokens or quote tokens
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [src/common/interfaces/IValueConverter.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L37)
+Defined in: [src/common/interfaces/IValueConverter.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L36)
 
 Converts the instance into a BigNumber
 
@@ -575,7 +485,7 @@ IValueConverter.toBigNumber
 toSolidityValue(params?): bigint;
 ```
 
-Defined in: [src/common/interfaces/IValueConverter.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L23)
+Defined in: [src/common/interfaces/IValueConverter.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L22)
 
 Converts the instance into a Solidity value
 
@@ -612,19 +522,13 @@ IValueConverter.toSolidityValue
 toString(): string;
 ```
 
-Defined in: [src/common/interfaces/IPrice.ts:144](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L144)
+Defined in: [src/common/interfaces/IPrice.ts:142](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPrice.ts#L142)
+
+Converts the price to a string
 
 #### Returns
 
 `string`
-
-#### Name
-
-toString
-
-#### Description
-
-Converts the price to a string
 
 #### Overrides
 

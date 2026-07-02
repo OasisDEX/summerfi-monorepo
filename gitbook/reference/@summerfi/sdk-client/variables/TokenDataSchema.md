@@ -52,8 +52,6 @@ const TokenDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IToken.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L43)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IToken.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IToken.ts#L42)
 
 Zod schema for IToken

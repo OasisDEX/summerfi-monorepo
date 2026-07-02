@@ -6,6 +6,8 @@ function isExternalLendingPositionId(maybeExternalPositionId): maybeExternalPosi
 
 Defined in: [../sdk-common/src/orders/importing/interfaces/IExternalLendingPositionId.ts:57](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/importing/interfaces/IExternalLendingPositionId.ts#L57)
 
+Type guard for IExternalPositionId
+
 ## Parameters
 
 ### maybeExternalPositionId
@@ -17,7 +19,3 @@ Defined in: [../sdk-common/src/orders/importing/interfaces/IExternalLendingPosit
 `maybeExternalPositionId is IExternalLendingPositionId`
 
 true if the object is an IExternalPositionId
-
-## Description
-
-Type guard for IExternalPositionId

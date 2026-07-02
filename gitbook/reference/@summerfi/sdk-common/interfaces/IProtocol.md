@@ -1,10 +1,6 @@
 # Interface: IProtocol
 
-Defined in: [src/common/interfaces/IProtocol.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L16)
-
-IProtocol
-
-## Description
+Defined in: [src/common/interfaces/IProtocol.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L15)
 
 Information relative to a protocol
 
@@ -26,7 +22,7 @@ This interface is used to add all the methods that the interface supports
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L18)
+Defined in: [src/common/interfaces/IProtocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L17)
 
 Signature used to differentiate it from similar interfaces
 
@@ -38,7 +34,7 @@ Signature used to differentiate it from similar interfaces
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [src/common/interfaces/IProtocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L22)
+Defined in: [src/common/interfaces/IProtocol.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L21)
 
 The chain information
 
@@ -56,7 +52,7 @@ IProtocolData.chainInfo
 readonly name: ProtocolName;
 ```
 
-Defined in: [src/common/interfaces/IProtocol.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L20)
+Defined in: [src/common/interfaces/IProtocol.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L19)
 
 The name of the protocol
 
@@ -74,7 +70,7 @@ IProtocolData.name
 equals(protocol): boolean;
 ```
 
-Defined in: [src/common/interfaces/IProtocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L31)
+Defined in: [src/common/interfaces/IProtocol.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L30)
 
 Compare if the passed protocol is equal to the current protocol
 

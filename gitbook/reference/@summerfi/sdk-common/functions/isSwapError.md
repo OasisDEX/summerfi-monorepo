@@ -6,6 +6,8 @@ function isSwapError(maybeSwapErrorData): maybeSwapErrorData is Readonly<{ apiQu
 
 Defined in: [src/swap/interfaces/ISwapError.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/interfaces/ISwapError.ts#L48)
 
+Type guard for ISwapError
+
 ## Parameters
 
 ### maybeSwapErrorData
@@ -17,7 +19,3 @@ Defined in: [src/swap/interfaces/ISwapError.ts:48](https://github.com/OasisDEX/s
 `maybeSwapErrorData is Readonly<{ apiQuery: string; message: string; reason: string; statusCode: number; subtype: SwapErrorType; type: SwapError }>`
 
 true if the object is an ISwapError
-
-## Description
-
-Type guard for ISwapError

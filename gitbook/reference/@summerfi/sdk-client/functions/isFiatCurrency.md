@@ -4,7 +4,7 @@
 function isFiatCurrency(value): value is FiatCurrency;
 ```
 
-Defined in: [../sdk-common/src/common/enums/FiatCurrency.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L25)
+Defined in: [../sdk-common/src/common/enums/FiatCurrency.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/FiatCurrency.ts#L22)
 
 ## Parameters
 
@@ -19,7 +19,3 @@ Value to check if it is a FiatCurrency
 `value is FiatCurrency`
 
 true if the value is a FiatCurrency
-
-## Name
-
-isFiatCurrency

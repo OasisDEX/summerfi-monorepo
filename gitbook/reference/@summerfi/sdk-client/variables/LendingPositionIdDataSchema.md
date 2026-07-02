@@ -13,8 +13,6 @@ const LendingPositionIdDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPositionId.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPositionId.ts#L25)
-
-## Description
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPositionId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPositionId.ts#L24)
 
 Zod schema for ILendingPositionId

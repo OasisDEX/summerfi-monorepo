@@ -10,8 +10,6 @@ const PercentageDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPercentage.ts:68](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L68)
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IPercentage.ts:61](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPercentage.ts#L61)
 
 Zod schema for IPercentage

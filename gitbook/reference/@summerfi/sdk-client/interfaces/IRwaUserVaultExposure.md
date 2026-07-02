@@ -1,22 +1,18 @@
 # Interface: IRwaUserVaultExposure
 
-Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L18)
-
-IRwaUserVaultExposure
-
-## Description
+Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L17)
 
 A single user's total economic exposure to an RWA vault, stitched from the three
-             money pools of the RoundsVault settlement model: the settled Fleet position, the
-             Input RoundsVault (pending + claimable deposits) and the Output RoundsVault (pending
-             withdrawals). All amounts are denominated in the Fleet input asset (e.g. USDC) —
-             withdrawal (share-denominated) receipts are converted via the vault `pricePerShare`.
+money pools of the RoundsVault settlement model: the settled Fleet position, the
+Input RoundsVault (pending + claimable deposits) and the Output RoundsVault (pending
+withdrawals). All amounts are denominated in the Fleet input asset (e.g. USDC) —
+withdrawal (share-denominated) receipts are converted via the vault `pricePerShare`.
 
-             `total = settledPosition + pendingDeposits + claimableDeposits + pendingWithdrawals`.
-             `claimableDeposits` is a genuine additive term: settled-but-unclaimed deposit shares
-             are held by the RoundsVault contract, not the user, so they are NOT reflected in the
-             subgraph's per-user `position.inputTokenBalance` (`settledPosition`). Claimable
-             (settled, unredeemed) withdrawals are intentionally excluded.
+`total = settledPosition + pendingDeposits + claimableDeposits + pendingWithdrawals`.
+`claimableDeposits` is a genuine additive term: settled-but-unclaimed deposit shares
+are held by the RoundsVault contract, not the user, so they are NOT reflected in the
+subgraph's per-user `position.inputTokenBalance` (`settledPosition`). Claimable
+(settled, unredeemed) withdrawals are intentionally excluded.
 
 ## Properties
 
@@ -26,7 +22,7 @@ A single user's total economic exposure to an RWA vault, stitched from the three
 claimableDeposits: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L28)
+Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L27)
 
 Input-vault receipts in settled rounds (shares awaiting claim; not in `settledPosition`)
 
@@ -38,7 +34,7 @@ Input-vault receipts in settled rounds (shares awaiting claim; not in `settledPo
 pendingDeposits: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L26)
+Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L25)
 
 Input-vault receipts in non-settled rounds (deposits awaiting settlement)
 
@@ -50,7 +46,7 @@ Input-vault receipts in non-settled rounds (deposits awaiting settlement)
 pendingWithdrawals: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L30)
+Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L29)
 
 Output-vault receipts in non-settled rounds, converted shares→input asset via pricePerShare
 
@@ -62,7 +58,7 @@ Output-vault receipts in non-settled rounds, converted shares→input asset via 
 settledPosition: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L24)
+Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L23)
 
 Settled Fleet position (subgraph `position.inputTokenBalance`)
 
@@ -74,7 +70,7 @@ Settled Fleet position (subgraph `position.inputTokenBalance`)
 total: ITokenAmount;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L20)
+Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L19)
 
 Sum of all components below, in the Fleet input asset
 
@@ -86,6 +82,6 @@ Sum of all components below, in the Fleet input asset
 totalUsd: IFiatCurrencyAmount;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L22)
+Defined in: [../sdk-common/src/common/interfaces/IRwaUserVaultExposure.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IRwaUserVaultExposure.ts#L21)
 
 `total` valued in USD via the vault `inputTokenPriceUSD`

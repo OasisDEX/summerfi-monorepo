@@ -1,13 +1,9 @@
 # Interface: TransactionInfo
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L48)
-
-TransactionInfo
-
-## Description
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L46)
 
 Contains the low level transaction plus a description of what the transaction is for.
-             This could be used to display the transaction to the user.
+This could be used to display the transaction to the user.
 
 ## Properties
 
@@ -17,9 +13,7 @@ Contains the low level transaction plus a description of what the transaction is
 description: string;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L52)
-
-#### Description
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L50)
 
 High-level description of the transaction
 
@@ -31,8 +25,6 @@ High-level description of the transaction
 transaction: Transaction;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L50)
-
-#### Description
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L48)
 
 Low level transaction that can be sent to the blockchain

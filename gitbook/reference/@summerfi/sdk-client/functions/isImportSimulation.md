@@ -6,6 +6,8 @@ function isImportSimulation(maybeImportSimulationData): maybeImportSimulationDat
 
 Defined in: [../sdk-common/src/simulation/interfaces/IImportSimulation.ts:58](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L58)
 
+Type guard for IRefinanceSimulation
+
 ## Parameters
 
 ### maybeImportSimulationData
@@ -17,7 +19,3 @@ Defined in: [../sdk-common/src/simulation/interfaces/IImportSimulation.ts:58](ht
 `maybeImportSimulationData is IImportSimulation`
 
 true if the object is an IImportSimulation
-
-## Description
-
-Type guard for IRefinanceSimulation

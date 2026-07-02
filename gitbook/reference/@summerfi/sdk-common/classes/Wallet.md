@@ -1,10 +1,6 @@
 # Class: Wallet
 
-Defined in: [src/common/implementation/Wallet.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L14)
-
-**`Interface`**
-
-Wallet
+Defined in: [src/common/implementation/Wallet.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L13)
 
 ## See
 
@@ -22,7 +18,7 @@ IWalletData
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/common/implementation/Wallet.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L16)
+Defined in: [src/common/implementation/Wallet.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L15)
 
 SIGNATURE
 
@@ -38,7 +34,7 @@ SIGNATURE
 readonly address: IAddress;
 ```
 
-Defined in: [src/common/implementation/Wallet.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L19)
+Defined in: [src/common/implementation/Wallet.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L18)
 
 ATTRIBUTES
 
@@ -54,7 +50,7 @@ ATTRIBUTES
 equals(wallet): boolean;
 ```
 
-Defined in: [src/common/implementation/Wallet.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L34)
+Defined in: [src/common/implementation/Wallet.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L33)
 
 #### Parameters
 
@@ -82,7 +78,7 @@ IWallet.equals
 toString(): string;
 ```
 
-Defined in: [src/common/implementation/Wallet.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L39)
+Defined in: [src/common/implementation/Wallet.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L38)
 
 #### Returns
 
@@ -100,7 +96,7 @@ IPrintable.toString
 static createFrom(params): Wallet;
 ```
 
-Defined in: [src/common/implementation/Wallet.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L22)
+Defined in: [src/common/implementation/Wallet.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Wallet.ts#L21)
 
 FACTORY
 

@@ -13,8 +13,6 @@ const PositionIdDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/common/interfaces/IPositionId.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L25)
-
-## Description
+Defined in: [src/common/interfaces/IPositionId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPositionId.ts#L24)
 
 Zod schema for IPositionId

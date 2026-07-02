@@ -1,12 +1,6 @@
 # Interface: ILendingPoolId
 
-Defined in: [src/lending-protocols/interfaces/ILendingPoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L21)
-
-## Name
-
-ILendingPoolId
-
-## Description
+Defined in: [src/lending-protocols/interfaces/ILendingPoolId.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L20)
 
 Identifies a generic lending pool. This will be specialized for each protocol
 
@@ -28,7 +22,7 @@ This may be fixed eventually, there is a discussion on the topic here: https://g
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPoolId.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L23)
+Defined in: [src/lending-protocols/interfaces/ILendingPoolId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L22)
 
 Signature to differentiate it from other interfaces
 
@@ -44,7 +38,7 @@ Signature to differentiate it from other interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [src/common/interfaces/IPoolId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolId.ts#L19)
+Defined in: [src/common/interfaces/IPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolId.ts#L18)
 
 Signature to differentiate from similar interfaces
 
@@ -62,7 +56,7 @@ IPoolId.[___signature__]
 readonly protocol: IProtocol;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPoolId.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L25)
+Defined in: [src/lending-protocols/interfaces/ILendingPoolId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L24)
 
 Protocol where the pool is
 
@@ -78,7 +72,7 @@ Protocol where the pool is
 readonly type: Lending;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPoolId.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L28)
+Defined in: [src/lending-protocols/interfaces/ILendingPoolId.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L27)
 
 Pool type
 

@@ -19,8 +19,6 @@ const LendingPoolDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L39)
-
-## Description
+Defined in: [src/lending-protocols/interfaces/ILendingPool.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPool.ts#L38)
 
 Zod schema for ILendingPool

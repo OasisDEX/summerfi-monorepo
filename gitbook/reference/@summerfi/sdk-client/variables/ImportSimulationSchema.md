@@ -19,8 +19,6 @@ const ImportSimulationSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/simulation/interfaces/IImportSimulation.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L40)
-
-## Description
+Defined in: [../sdk-common/src/simulation/interfaces/IImportSimulation.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/simulation/interfaces/IImportSimulation.ts#L39)
 
 Zod schema for IImportSimulation

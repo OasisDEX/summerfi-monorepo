@@ -1,10 +1,6 @@
 # Enumeration: TransactionType
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L13)
-
-TransactionType
-
-## Description
+Defined in: [src/orders/common/types/TransactionInfo.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L12)
 
 Enum of all the transaction types that can be performed.
 
@@ -16,7 +12,7 @@ Enum of all the transaction types that can be performed.
 Approve: "Approve";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L14)
+Defined in: [src/orders/common/types/TransactionInfo.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L13)
 
 ***
 
@@ -26,7 +22,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:14](https://github.com/O
 Bridge: "Bridge";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L22)
+Defined in: [src/orders/common/types/TransactionInfo.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L21)
 
 ***
 
@@ -36,7 +32,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:22](https://github.com/O
 CancelStrategy: "CancelStrategy";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L34)
+Defined in: [src/orders/common/types/TransactionInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L33)
 
 ***
 
@@ -46,7 +42,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:34](https://github.com/O
 Claim: "Claim";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L17)
+Defined in: [src/orders/common/types/TransactionInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L16)
 
 ***
 
@@ -56,7 +52,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:17](https://github.com/O
 CreateStrategy: "CreateStrategy";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L30)
+Defined in: [src/orders/common/types/TransactionInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L29)
 
 ***
 
@@ -66,7 +62,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:30](https://github.com/O
 Delegate: "Delegate";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L18)
+Defined in: [src/orders/common/types/TransactionInfo.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L17)
 
 ***
 
@@ -76,7 +72,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:18](https://github.com/O
 Deposit: "Deposit";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L15)
+Defined in: [src/orders/common/types/TransactionInfo.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L14)
 
 ***
 
@@ -86,7 +82,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:15](https://github.com/O
 EditStrategy: "EditStrategy";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L31)
+Defined in: [src/orders/common/types/TransactionInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L30)
 
 ***
 
@@ -96,7 +92,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:31](https://github.com/O
 Erc20Transfer: "Erc20Transfer";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L24)
+Defined in: [src/orders/common/types/TransactionInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L23)
 
 ***
 
@@ -106,7 +102,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:24](https://github.com/O
 MerklClaim: "MerklClaim";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L26)
+Defined in: [src/orders/common/types/TransactionInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L25)
 
 ***
 
@@ -116,7 +112,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:26](https://github.com/O
 Migration: "Migration";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L21)
+Defined in: [src/orders/common/types/TransactionInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L20)
 
 ***
 
@@ -126,7 +122,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:21](https://github.com/O
 PauseStrategy: "PauseStrategy";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L32)
+Defined in: [src/orders/common/types/TransactionInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L31)
 
 ***
 
@@ -136,7 +132,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:32](https://github.com/O
 Permit2Authorization: "Permit2Authorization";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L28)
+Defined in: [src/orders/common/types/TransactionInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L27)
 
 ***
 
@@ -146,7 +142,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:28](https://github.com/O
 Permit2Revoke: "Permit2Revoke";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L29)
+Defined in: [src/orders/common/types/TransactionInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L28)
 
 ***
 
@@ -156,7 +152,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:29](https://github.com/O
 ResumeStrategy: "ResumeStrategy";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L33)
+Defined in: [src/orders/common/types/TransactionInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L32)
 
 ***
 
@@ -166,7 +162,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:33](https://github.com/O
 Send: "Send";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L23)
+Defined in: [src/orders/common/types/TransactionInfo.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L22)
 
 ***
 
@@ -176,7 +172,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:23](https://github.com/O
 Stake: "Stake";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L19)
+Defined in: [src/orders/common/types/TransactionInfo.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L18)
 
 ***
 
@@ -186,7 +182,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:19](https://github.com/O
 ToggleAQasMerklRewardsOperator: "ToggleAQasMerklRewardsOperator";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L27)
+Defined in: [src/orders/common/types/TransactionInfo.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L26)
 
 ***
 
@@ -196,7 +192,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:27](https://github.com/O
 Unstake: "Unstake";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L20)
+Defined in: [src/orders/common/types/TransactionInfo.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L19)
 
 ***
 
@@ -206,7 +202,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:20](https://github.com/O
 VaultSwitch: "VaultSwitch";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L25)
+Defined in: [src/orders/common/types/TransactionInfo.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L24)
 
 ***
 
@@ -216,4 +212,4 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:25](https://github.com/O
 Withdraw: "Withdraw";
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L16)
+Defined in: [src/orders/common/types/TransactionInfo.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L15)

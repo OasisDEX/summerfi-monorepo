@@ -1,10 +1,6 @@
 # Interface: IMorphoProtocol
 
-Defined in: [../protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts#L18)
-
-IMorphoProtocol
-
-## Description
+Defined in: [../protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts#L17)
 
 Identifier of the Morpho protocol
 
@@ -25,7 +21,7 @@ This may be fixed eventually, there is a discussion on the topic here: https://g
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts#L20)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts#L19)
 
 Interface signature used to differentiate it from similar interfaces
 
@@ -41,7 +37,7 @@ Interface signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L18)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L17)
 
 Signature used to differentiate it from similar interfaces
 
@@ -59,7 +55,7 @@ IProtocol.[___signature__]
 readonly chainInfo: IChainInfo;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L39)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L38)
 
 The chain information
 
@@ -75,7 +71,7 @@ The chain information
 readonly name: MorphoBlue;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts#L23)
+Defined in: [../protocol-plugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/morphoblue/interfaces/IMorphoProtocol.ts#L22)
 
 The name of the protocol
 
@@ -91,7 +87,7 @@ The name of the protocol
 equals(protocol): boolean;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L31)
+Defined in: [../sdk-common/src/common/interfaces/IProtocol.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IProtocol.ts#L30)
 
 Compare if the passed protocol is equal to the current protocol
 

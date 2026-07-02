@@ -4,16 +4,10 @@
 type QuoteDataStanalone = object;
 ```
 
-Defined in: [src/swap/implementation/QuoteData.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L11)
-
-## Name
-
-QuoteData
-
-## Description
+Defined in: [src/swap/implementation/QuoteData.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L10)
 
 Gives information about a swap operation without providing
-             the data needed to perform the swap
+the data needed to perform the swap
 
 ## Properties
 
@@ -23,7 +17,7 @@ Gives information about a swap operation without providing
 estimatedGas: string;
 ```
 
-Defined in: [src/swap/implementation/QuoteData.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L17)
+Defined in: [src/swap/implementation/QuoteData.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L16)
 
 ***
 
@@ -33,7 +27,7 @@ Defined in: [src/swap/implementation/QuoteData.ts:17](https://github.com/OasisDE
 fromTokenAmount: ITokenAmount;
 ```
 
-Defined in: [src/swap/implementation/QuoteData.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L13)
+Defined in: [src/swap/implementation/QuoteData.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L12)
 
 ***
 
@@ -43,7 +37,7 @@ Defined in: [src/swap/implementation/QuoteData.ts:13](https://github.com/OasisDE
 provider: SwapProviderType;
 ```
 
-Defined in: [src/swap/implementation/QuoteData.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L12)
+Defined in: [src/swap/implementation/QuoteData.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L11)
 
 ***
 
@@ -53,7 +47,7 @@ Defined in: [src/swap/implementation/QuoteData.ts:12](https://github.com/OasisDE
 routes: SwapRoute[];
 ```
 
-Defined in: [src/swap/implementation/QuoteData.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L16)
+Defined in: [src/swap/implementation/QuoteData.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L15)
 
 ***
 
@@ -63,4 +57,4 @@ Defined in: [src/swap/implementation/QuoteData.ts:16](https://github.com/OasisDE
 toTokenAmount: ITokenAmount;
 ```
 
-Defined in: [src/swap/implementation/QuoteData.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L14)
+Defined in: [src/swap/implementation/QuoteData.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/swap/implementation/QuoteData.ts#L13)

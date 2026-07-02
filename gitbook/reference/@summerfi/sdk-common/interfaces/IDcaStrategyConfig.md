@@ -1,15 +1,9 @@
 # Interface: IDcaStrategyConfig
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L9)
-
-## Name
-
-IDcaStrategyConfig
-
-## Description
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L8)
 
 Serializable representation of the IDCAStrategyManager.StrategyConfig calldata struct.
-             Numeric fields are raw uint256 values encoded as base-10 strings.
+Numeric fields are raw uint256 values encoded as base-10 strings.
 
 ## Properties
 
@@ -19,7 +13,7 @@ Serializable representation of the IDCAStrategyManager.StrategyConfig calldata s
 endDate: bigint;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L24)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L23)
 
 ***
 
@@ -29,7 +23,7 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:24](https://github.com/
 inAsset: `0x${string}`;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L13)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L12)
 
 ***
 
@@ -39,7 +33,7 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:13](https://github.com/
 inAssetFeed: IChainlinkFeed;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L15)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L14)
 
 ***
 
@@ -49,7 +43,7 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:15](https://github.com/
 interval: bigint;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L18)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L17)
 
 ***
 
@@ -59,7 +53,7 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:18](https://github.com/
 maxPrice: bigint;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L21)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L20)
 
 Price ceiling in oracle units. Maps to the UI concept of never buy above.
 
@@ -71,7 +65,7 @@ Price ceiling in oracle units. Maps to the UI concept of never buy above.
 maxTrades: bigint;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L25)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L24)
 
 ***
 
@@ -81,7 +75,7 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:25](https://github.com/
 minPrice: bigint;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L23)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L22)
 
 Price floor in oracle units. Maps to the UI concept of never sell below.
 
@@ -93,7 +87,7 @@ Price floor in oracle units. Maps to the UI concept of never sell below.
 outAsset: `0x${string}`;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L14)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L13)
 
 ***
 
@@ -103,7 +97,7 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:14](https://github.com/
 outAssetFeed: IChainlinkFeed;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L16)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L15)
 
 ***
 
@@ -113,7 +107,7 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:16](https://github.com/
 owner: `0x${string}`;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L10)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L9)
 
 ***
 
@@ -123,7 +117,7 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:10](https://github.com/
 slippageBps: bigint;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L19)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L18)
 
 ***
 
@@ -133,7 +127,7 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:19](https://github.com/
 sourceVault: `0x${string}`;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L11)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L10)
 
 ***
 
@@ -143,7 +137,7 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:11](https://github.com/
 targetVault: `0x${string}`;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L12)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L11)
 
 ***
 
@@ -153,4 +147,4 @@ Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:12](https://github.com/
 tradeAmount: bigint;
 ```
 
-Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L17)
+Defined in: [src/common/interfaces/IDcaStrategyConfig.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategyConfig.ts#L16)

@@ -2,10 +2,6 @@
 
 Defined in: [src/interfaces/IProtocolsManagerClient.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IProtocolsManagerClient.ts#L8)
 
-IProtocolsManagerClient
-
-## Description
-
 Interface of the ProtocolsManager for the SDK Client. Allows to retrieve information for a Protocol
 
 ## See
@@ -21,6 +17,8 @@ getLendingPool(params): Promise<Maybe<ILendingPool>>;
 ```
 
 Defined in: [src/interfaces/IProtocolsManagerClient.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IProtocolsManagerClient.ts#L15)
+
+Get the lending pool from the protocol
 
 #### Parameters
 
@@ -38,14 +36,6 @@ The pool id data
 
 The lending pool
 
-#### Method
-
-getLendingPool
-
-#### Description
-
-Get the lending pool from the protocol
-
 ***
 
 ### getLendingPoolInfo()
@@ -55,6 +45,8 @@ getLendingPoolInfo(params): Promise<Maybe<ILendingPoolInfo>>;
 ```
 
 Defined in: [src/interfaces/IProtocolsManagerClient.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/IProtocolsManagerClient.ts#L23)
+
+Get the lending pool info from the protocol
 
 #### Parameters
 
@@ -71,11 +63,3 @@ The pool id data
 `Promise`\<[`Maybe`](../type-aliases/Maybe.md)\<[`ILendingPoolInfo`](ILendingPoolInfo.md)\>\>
 
 The lending pool info
-
-#### Method
-
-getLendingPoolInfo
-
-#### Description
-
-Get the lending pool info from the protocol

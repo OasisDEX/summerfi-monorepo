@@ -6,6 +6,8 @@ function isArmadaMigrationType(maybeArmadaMigrationType): maybeArmadaMigrationTy
 
 Defined in: [src/common/enums/ArmadaMigrationType.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ArmadaMigrationType.ts#L23)
 
+Type guard for ProtocolName
+
 ## Parameters
 
 ### maybeArmadaMigrationType
@@ -19,7 +21,3 @@ Object to be checked
 `maybeArmadaMigrationType is ArmadaMigrationType`
 
 true if the object is a ProtocolName
-
-## Description
-
-Type guard for ProtocolName

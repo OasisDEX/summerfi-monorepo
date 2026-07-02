@@ -1,10 +1,6 @@
 # Abstract Class: Position
 
-Defined in: [src/common/implementation/Position.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L16)
-
-## Name
-
-Position
+Defined in: [src/common/implementation/Position.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L15)
 
 ## See
 
@@ -27,7 +23,7 @@ IPosition
 protected new Position(_): Position;
 ```
 
-Defined in: [src/common/implementation/Position.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L26)
+Defined in: [src/common/implementation/Position.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L25)
 
 SEALED CONSTRUCTOR
 
@@ -49,7 +45,7 @@ SEALED CONSTRUCTOR
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/common/implementation/Position.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L18)
+Defined in: [src/common/implementation/Position.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L17)
 
 SIGNATURE
 
@@ -65,7 +61,7 @@ SIGNATURE
 abstract readonly id: IPositionId;
 ```
 
-Defined in: [src/common/implementation/Position.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L22)
+Defined in: [src/common/implementation/Position.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L21)
 
 Unique identifier for the position inside the Summer.fi system
 
@@ -81,7 +77,7 @@ Unique identifier for the position inside the Summer.fi system
 abstract readonly pool: IPool;
 ```
 
-Defined in: [src/common/implementation/Position.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L23)
+Defined in: [src/common/implementation/Position.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L22)
 
 Pool where the position is opened
 
@@ -97,7 +93,7 @@ Pool where the position is opened
 abstract readonly type: PositionType;
 ```
 
-Defined in: [src/common/implementation/Position.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L21)
+Defined in: [src/common/implementation/Position.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/implementation/Position.ts#L20)
 
 ATTRIBUTES
 

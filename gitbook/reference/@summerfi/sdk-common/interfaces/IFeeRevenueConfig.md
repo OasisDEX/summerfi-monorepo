@@ -1,12 +1,6 @@
 # Interface: IFeeRevenueConfig
 
-Defined in: [src/common/types/IFeeRevenueConfig.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFeeRevenueConfig.ts#L8)
-
-## Name
-
-IFeeRevenueConfig
-
-## Description
+Defined in: [src/common/types/IFeeRevenueConfig.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFeeRevenueConfig.ts#L7)
 
 Configuration for fee revenue settings
 
@@ -18,13 +12,7 @@ Configuration for fee revenue settings
 vaultFeeAmount: IPercentage;
 ```
 
-Defined in: [src/common/types/IFeeRevenueConfig.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFeeRevenueConfig.ts#L19)
-
-#### Name
-
-vaultFeeAmount
-
-#### Description
+Defined in: [src/common/types/IFeeRevenueConfig.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFeeRevenueConfig.ts#L16)
 
 The percentage amount of vault fees
 
@@ -36,12 +24,6 @@ The percentage amount of vault fees
 vaultFeeReceiverAddress: `0x${string}`;
 ```
 
-Defined in: [src/common/types/IFeeRevenueConfig.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFeeRevenueConfig.ts#L13)
-
-#### Name
-
-vaultFeeReceiverAddress
-
-#### Description
+Defined in: [src/common/types/IFeeRevenueConfig.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/IFeeRevenueConfig.ts#L11)
 
 The address that receives vault fees

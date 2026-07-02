@@ -1,10 +1,6 @@
 # Interface: IAaveV3LendingPoolId
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L18)
-
-IAaveV3LendingPoolId
-
-## Description
+Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L17)
 
 Identifier of a lending pool on the Aave v3 protocol
 
@@ -23,7 +19,7 @@ This may be fixed eventually, there is a discussion on the topic here: https://g
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L20)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L19)
 
 Interface signature used to differentiate it from similar interfaces
 
@@ -39,7 +35,7 @@ Interface signature used to differentiate it from similar interfaces
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L23)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L22)
 
 Signature to differentiate it from other interfaces
 
@@ -57,7 +53,7 @@ ILendingPoolId.[___signature__]
 readonly [___signature__]: symbol;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IPoolId.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolId.ts#L19)
+Defined in: [../sdk-common/src/common/interfaces/IPoolId.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IPoolId.ts#L18)
 
 Signature to differentiate from similar interfaces
 
@@ -75,7 +71,7 @@ ILendingPoolId.[___signature__]
 readonly collateralToken: ITokenStanalone;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L26)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L25)
 
 The token used to collateralized the position
 
@@ -93,7 +89,7 @@ IAaveV3LendingPoolIdData.collateralToken
 readonly debtToken: ITokenStanalone;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L28)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L27)
 
 The token used to borrow funds
 
@@ -111,7 +107,7 @@ IAaveV3LendingPoolIdData.debtToken
 readonly emodeType: EmodeType;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L24)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L23)
 
 The pool's efficiency mode
 
@@ -129,7 +125,7 @@ IAaveV3LendingPoolIdData.emodeType
 readonly protocol: IAaveV3Protocol;
 ```
 
-Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L22)
+Defined in: [../protocol-plugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/ugins/src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId.ts#L21)
 
 Aave v3 protocol
 
@@ -145,7 +141,7 @@ Aave v3 protocol
 readonly type: Lending;
 ```
 
-Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L28)
+Defined in: [../sdk-common/src/lending-protocols/interfaces/ILendingPoolId.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/interfaces/ILendingPoolId.ts#L27)
 
 Pool type
 

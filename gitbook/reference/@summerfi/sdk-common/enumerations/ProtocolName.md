@@ -1,12 +1,6 @@
 # Enumeration: ProtocolName
 
-Defined in: [src/common/enums/ProtocolName.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L7)
-
-## Name
-
-ProtocolName
-
-## Description
+Defined in: [src/common/enums/ProtocolName.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L6)
 
 Enumerates the names of the protocols that are supported by the SDK
 
@@ -18,7 +12,7 @@ Enumerates the names of the protocols that are supported by the SDK
 AaveV2: "AAVE";
 ```
 
-Defined in: [src/common/enums/ProtocolName.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L9)
+Defined in: [src/common/enums/ProtocolName.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L8)
 
 ***
 
@@ -28,7 +22,7 @@ Defined in: [src/common/enums/ProtocolName.ts:9](https://github.com/OasisDEX/sum
 AaveV3: "AAVE_V3";
 ```
 
-Defined in: [src/common/enums/ProtocolName.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L8)
+Defined in: [src/common/enums/ProtocolName.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L7)
 
 ***
 
@@ -38,7 +32,7 @@ Defined in: [src/common/enums/ProtocolName.ts:8](https://github.com/OasisDEX/sum
 Ajna: "Ajna_rc13";
 ```
 
-Defined in: [src/common/enums/ProtocolName.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L13)
+Defined in: [src/common/enums/ProtocolName.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L12)
 
 ***
 
@@ -48,7 +42,7 @@ Defined in: [src/common/enums/ProtocolName.ts:13](https://github.com/OasisDEX/su
 Armada: "Armada";
 ```
 
-Defined in: [src/common/enums/ProtocolName.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L14)
+Defined in: [src/common/enums/ProtocolName.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L13)
 
 ***
 
@@ -58,7 +52,7 @@ Defined in: [src/common/enums/ProtocolName.ts:14](https://github.com/OasisDEX/su
 Maker: "Maker";
 ```
 
-Defined in: [src/common/enums/ProtocolName.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L12)
+Defined in: [src/common/enums/ProtocolName.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L11)
 
 ***
 
@@ -68,7 +62,7 @@ Defined in: [src/common/enums/ProtocolName.ts:12](https://github.com/OasisDEX/su
 MorphoBlue: "MorphoBlue";
 ```
 
-Defined in: [src/common/enums/ProtocolName.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L11)
+Defined in: [src/common/enums/ProtocolName.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L10)
 
 ***
 
@@ -78,4 +72,4 @@ Defined in: [src/common/enums/ProtocolName.ts:11](https://github.com/OasisDEX/su
 Spark: "Spark";
 ```
 
-Defined in: [src/common/enums/ProtocolName.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L10)
+Defined in: [src/common/enums/ProtocolName.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/enums/ProtocolName.ts#L9)

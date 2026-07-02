@@ -6,12 +6,6 @@ type Denomination =
   | FiatCurrency;
 ```
 
-Defined in: [../sdk-common/src/common/types/Denomination.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Denomination.ts#L17)
-
-## Name
-
-Denomination
-
-## Description
+Defined in: [../sdk-common/src/common/types/Denomination.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/types/Denomination.ts#L15)
 
 Type for the instances of denomination

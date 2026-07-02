@@ -1,8 +1,6 @@
 # Class: CollateralInfo
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L23)
-
-CollateralInfo
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L22)
 
 ## See
 
@@ -20,7 +18,7 @@ ICollateralInfo
 protected new CollateralInfo(params): CollateralInfo;
 ```
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L43)
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L42)
 
 CONSTRUCTOR
 
@@ -42,7 +40,7 @@ CONSTRUCTOR
 readonly [___signature__]: symbol = __signature__;
 ```
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L25)
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L24)
 
 SIGNATURE
 
@@ -58,7 +56,7 @@ SIGNATURE
 readonly liquidationPenalty: IPercentage;
 ```
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L34)
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L33)
 
 The penalty that is charged for liquidating a position
 
@@ -74,7 +72,7 @@ The penalty that is charged for liquidating a position
 readonly liquidationThreshold: IRiskRatio;
 ```
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L31)
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L30)
 
 The ratio between the collateral and the debt at which the position could be liquidated
 
@@ -90,7 +88,7 @@ The ratio between the collateral and the debt at which the position could be liq
 readonly maxSupply: ITokenAmount;
 ```
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L32)
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L31)
 
 The maximum amount of the token that can be supplied
 
@@ -106,7 +104,7 @@ The maximum amount of the token that can be supplied
 readonly price: IPrice;
 ```
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L29)
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L28)
 
 The price of the token in the protocol's default denomination
 
@@ -122,7 +120,7 @@ The price of the token in the protocol's default denomination
 readonly priceUSD: IPrice;
 ```
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L30)
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L29)
 
 The price of the token in USD
 
@@ -138,7 +136,7 @@ The price of the token in USD
 readonly token: ITokenStanalone;
 ```
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L28)
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L27)
 
 ATTRIBUTES
 
@@ -154,7 +152,7 @@ ATTRIBUTES
 readonly tokensLocked: ITokenAmount;
 ```
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L33)
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L32)
 
 The amount of the token that is currently locked in the pool
 
@@ -170,7 +168,7 @@ The amount of the token that is currently locked in the pool
 static createFrom(params): CollateralInfo;
 ```
 
-Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L38)
+Defined in: [src/lending-protocols/implementation/CollateralInfo.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/lending-protocols/implementation/CollateralInfo.ts#L37)
 
 FACTORY METHODS
 

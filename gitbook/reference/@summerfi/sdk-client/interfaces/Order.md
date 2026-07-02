@@ -1,10 +1,6 @@
 # Interface: Order
 
-Defined in: [../sdk-common/src/orders/common/types/Order.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Order.ts#L8)
-
-Order
-
-## Description
+Defined in: [../sdk-common/src/orders/common/types/Order.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Order.ts#L7)
 
 Simulation of a position. Specialized into the different types of simulations needed
 
@@ -16,9 +12,7 @@ Simulation of a position. Specialized into the different types of simulations ne
 simulation: ISimulation;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/Order.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Order.ts#L10)
-
-#### Description
+Defined in: [../sdk-common/src/orders/common/types/Order.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Order.ts#L9)
 
 Simulation
 
@@ -30,8 +24,6 @@ Simulation
 transactions: TransactionInfo[];
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/Order.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Order.ts#L12)
-
-#### Description
+Defined in: [../sdk-common/src/orders/common/types/Order.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/Order.ts#L11)
 
 Transaction info

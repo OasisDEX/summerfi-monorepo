@@ -1,10 +1,6 @@
 # Interface: IArmadaDeposit
 
-Defined in: [src/common/interfaces/IArmadaDeposit.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaDeposit.ts#L25)
-
-IArmadaDeposit
-
-## Description
+Defined in: [src/common/interfaces/IArmadaDeposit.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IArmadaDeposit.ts#L26)
 
 Interface for an Armada Protocol deposit transaction
 

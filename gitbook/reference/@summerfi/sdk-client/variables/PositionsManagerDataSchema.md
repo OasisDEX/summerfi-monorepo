@@ -25,8 +25,6 @@ const PositionsManagerDataSchema: ZodObject<{
 }>;
 ```
 
-Defined in: [../sdk-common/src/orders/common/interfaces/IPositionsManager.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/interfaces/IPositionsManager.ts#L18)
-
-## Description
+Defined in: [../sdk-common/src/orders/common/interfaces/IPositionsManager.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/interfaces/IPositionsManager.ts#L17)
 
 Zod schema for IPositionsManager
