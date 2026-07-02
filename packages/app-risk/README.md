@@ -11,7 +11,7 @@ request so provider corrections are reflected quickly.
 | Export      | Kind                                | Description                                                                                                                                                |
 | ----------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `getRisk`   | Server (Next.js App Router handler) | Core route handler — takes `{ req, trmApiKey, db, jwtSecret }`, validates the request JWT cookie, queries/updates the DB, calls TRM, returns `{ isRisky }` |
-| `useRisk`   | React hook (`'use client'`)         | Calls `/api/risk` and returns `{ isRisky, isLoading, error }`                                                                                              |
+| `useRisk`   | React hook (`'use client'`)         | Takes `{ chainId, walletAddress, cookiePrefix, host? }`, calls `/api/risk`, and returns `{ isRisky, isLoading, error }`                                    |
 | `fetchRisk` | Async function                      | Promise-based variant of `useRisk` for non-hook contexts                                                                                                   |
 | `RiskState` | Type                                | Public type contract exported from the package index; extends `RiskResponse` with `isLoading`                                                              |
 

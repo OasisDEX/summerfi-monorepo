@@ -13,6 +13,12 @@ module-level `Map`, and routes all RPC calls through Summer.fi's RPC gateway, co
 | `SSRChainConfigs`              | `src/get-ssr-public-client.ts` | Array of `{ chain, chainId, chainName }` entries for the currently supported chains (mainnet, base, arbitrum, sonic, hyperliquid). Not re-exported from `index.ts`.                                                         |
 | `SDKChainIdToSSRRpcGatewayMap` | `src/rpc-gateway-ssr.ts`       | Typed `{ [key in SupportedNetworkIds]: string \| undefined }` map of pre-built RPC URLs. Not re-exported from `index.ts`.                                                                                                   |
 
+## RPC gateway defaults
+
+Every request built by `getRpcGatewayUrl` (`src/rpc-gateway.ts`) uses these fixed query params:
+`skipCache=false`, `skipMulticall=false`, `skipGraph=true`, `stage=prod`, `source=borrow-prod`. They
+are not currently configurable per call.
+
 ## Commands
 
 ```bash
