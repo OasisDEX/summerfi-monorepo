@@ -37,13 +37,14 @@ There is no `test` script in `package.json`.
 **Consumes:** `@summerfi/protocol-plugins-common` (interfaces + context types),
 `@summerfi/sdk-common` (`ProtocolName` enum), `@summerfi/abis`, `@summerfi/address-book-common`,
 `@summerfi/oracle-common`, `@summerfi/swap-common`, `@summerfi/tokens-common`,
-`@summerfi/deployment-types`, `@summerfi/deployment-utils`.
+`@summerfi/deployment-types`.
 
 **Consumed by:** `sdk-server` (builds the registry in
 `src/context/CreateProtocolPluginsRegistry.ts`), `protocol-manager-service` (dispatches
 `getLendingPool`/`getLendingPoolInfo`/`getLendingPosition`/`getImportPositionTransaction` through
-the registry), `order-planner-common`/`order-planner-service`, `simulator-service`, `sdk-client`,
-`sdk-client-react`, `sdk-e2e`.
+the registry), `order-planner-service`, `simulator-service`, `sdk-client`, `sdk-e2e`, and
+`sdk/tools/genStrategyDefinitions`. (`order-planner-common` and `sdk-client-react` declare the
+dependency but do not import it in source.)
 
 **Gotchas:**
 

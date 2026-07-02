@@ -36,6 +36,8 @@ every `set` call.
 
 - `summerfi-api/get-apy-function`
 - `summerfi-api/get-rates-function`
+- `external-api/get-protocol-info-function` (the `/vaults` handler, which treats Redis as
+  best-effort via `connectTimeoutMs`/`maxReconnectAttempts`)
 
 **Gotchas**
 

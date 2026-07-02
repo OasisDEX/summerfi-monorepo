@@ -39,8 +39,8 @@ Both `dev` and `build:apps` load `../../.env` and `../../.env.local` via `dotenv
 - `@summerfi/app-earn-ui` — all shared UI components and global styles.
 - `@summerfi/app-types` — shared TypeScript types.
 - `@summerfi/app-utils` — utility helpers (e.g. `slugify`).
-- `@summerfi/sdk-client` / `@summerfi/sdk-client-react` / `@summerfi/sdk-common` — SDK surface used
-  in features.
+- `@summerfi/sdk-client` / `@summerfi/sdk-client-react` / `@summerfi/sdk-common` — declared deps
+  listed in `next.config.ts` `optimizePackageImports`; not currently imported anywhere in source.
 
 **Consumed by:** Nothing in the monorepo imports this package; it is a leaf application.
 

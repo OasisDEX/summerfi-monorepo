@@ -40,14 +40,19 @@ pnpm testw      # jest --watch
 - `@summerfi/contracts-provider-common` — `IContractsProvider` for ERC-20 contract wrappers
 - `@summerfi/sdk-common` — `LoggingService`, `TransactionType`, `getChainInfoByChainId`, token
   address constants
-- `@summerfi/common` — base utilities (runtime dependency)
 - `@uniswap/permit2-sdk` — `permit2Address` helper
+
+(`@summerfi/common` is declared in `package.json` but is not imported by any source file.)
 
 **Consumed by:**
 
-- `sdk-server` — wires `AllowanceManagerFactory` into the router's `allowance` namespace
-- `armada-protocol-service` — injects `AllowanceManager` into its managers
-- `swap-service` — injects `AllowanceManager` into `CowSwapProvider`
+- `sdk-server` — wires `AllowanceManagerFactory` into the router's `allowance` namespace; the only
+  package that imports this `-service`
+- `armada-protocol-service` — declares this package in `package.json` but no longer imports it; it
+  consumes the `allowance-manager-common` interface and receives an `AllowanceManager` instance by
+  injection (stale dependency)
+- `swap-service` — consumes `allowance-manager-common` only (injects an `AllowanceManager` into
+  `CowSwapProvider`), not this `-service` package
 
 **Gotchas:**
 

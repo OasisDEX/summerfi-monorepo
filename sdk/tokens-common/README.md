@@ -33,8 +33,9 @@ There is no `test` script in `package.json`.
 (`IManagerWithProviders`, `IManagerProvider`).
 
 **Consumed by:** `tokens-service`, `armada-protocol-service`, `contracts-provider-service`,
-`order-planner-service`, `protocol-plugins`, `protocol-plugins-common`, `swap-service`,
-`testing-utils`, `sdk-server`.
+`order-planner-service`, `protocol-plugins`, `protocol-plugins-common`, `swap-service`, `sdk-server`.
+(`testing-utils` declares `@summerfi/tokens-common` in its `package.json` but does not import it in
+source — stale dep.)
 
 **Gotchas:** This package contains no runtime code — only TypeScript interfaces. Any change to
 `ITokensManager` or `ITokensProvider` must be implemented in every consuming package that provides a

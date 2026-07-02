@@ -35,8 +35,8 @@ pnpm bundle:npm    # esbuild CJS bundle + declarations (for npm publish)
 
 ## Cross-package connections
 
-**Consumes:** `@summerfi/common` (root `/packages`), `zod`, `viem`, `superjson`,
-`@cowprotocol/cow-sdk`
+**Consumes:** `zod`, `viem`, `superjson`, `@cowprotocol/cow-sdk` — no `@summerfi/*` runtime deps;
+this is the foundation layer.
 
 **Consumed by:** effectively every `sdk/*` package and all apps that work with SDK domain objects.
 

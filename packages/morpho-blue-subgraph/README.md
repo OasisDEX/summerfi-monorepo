@@ -49,7 +49,9 @@ building.
 
 - The subgraph base URL (`urlBase`) is injected at call-site; there is no env-var fallback inside
   the package itself — callers must supply it.
-- `src/types/graphql/generated.ts` is auto-generated and committed; it must be regenerated whenever
-  `schema.graphql` or any file under `queries/` changes, or TypeScript compilation will fail.
+- `src/types/graphql/generated.ts` is auto-generated and **not committed** (covered by the root
+  `.gitignore` pattern `/**/types/graphql/*.ts`); it must be generated before the first build and
+  regenerated whenever `schema.graphql` or any file under `queries/` changes, or TypeScript
+  compilation will fail. The `prebuild` hook runs `generate-ts-types` automatically on every build.
 - Pagination in `getInterestRates` fetches 1 000 records per page; after 11 pages total (1 initial +
   10 additional), the next loop iteration throws `'Too many requests'`.

@@ -32,12 +32,13 @@ pnpm lint:fix   # eslint . --fix
 
 ## Cross-package connections
 
-**Consumes:** `@summerfi/common`, `@summerfi/sdk-common`, `@summerfi/configuration-provider-common`,
-`@summerfi/configuration-provider-mock`.
+**Consumes:** `@summerfi/sdk-common`, `@summerfi/configuration-provider-common` (src);
+`@summerfi/configuration-provider-mock` (tests only). `@summerfi/common` is a declared dependency
+but is not imported anywhere.
 
-**Consumed by:** `armada-protocol-service`, `oracle-common`, `oracle-service`,
-`subgraph-manager-service`, `swap-common`, `swap-service`, `testing-utils`, `tokens-common`,
-`tokens-service`, `sdk-server`.
+**Consumed by:** `oracle-common`, `oracle-service`, `swap-common`, `swap-service`, `testing-utils`,
+`tokens-common`, `tokens-service`. Note: `armada-protocol-service`, `subgraph-manager-service` and
+`sdk-server` declare this package in `package.json` but never import it (stale deps).
 
 **Gotcha:** despite the `-server-common` name, the package is also consumed by pure `-common`
 packages (`oracle-common`, `swap-common`, `tokens-common`) — the "server" in the name refers to the

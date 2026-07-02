@@ -42,7 +42,8 @@ There is no test script in `package.json`.
 **Consumed by (workspace):**
 
 - `@summerfi/app-earn-ui`, `@summerfi/app-risk`, `@summerfi/app-server-handlers`,
-  `@summerfi/app-tos`, `@summerfi/ssr-public-client`
+  `@summerfi/app-tos` (`@summerfi/ssr-public-client` declares the dep in `package.json` but no
+  longer imports it — stale)
 - Apps: `earn-protocol`, `earn-protocol-landing-page`, `earn-protocol-institutions`
 
 **Gotchas:**

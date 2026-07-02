@@ -33,8 +33,8 @@ pnpm lint:fix   # eslint . --fix
 
 **Consumes:** `@summerfi/oracle-common` (interfaces), `@summerfi/sdk-server-common` (base
 manager/provider classes), `@summerfi/sdk-common` (domain types),
-`@summerfi/configuration-provider-common` (config interface), `@summerfi/configuration-provider`
-(runtime config), `@summerfi/common` (shared utilities).
+`@summerfi/configuration-provider-common` (config interface). `@summerfi/configuration-provider`
+is used only by the `e2e/` tests.
 
 **Consumed by:** `@summerfi/sdk-server` (wires the factory into the server).
 

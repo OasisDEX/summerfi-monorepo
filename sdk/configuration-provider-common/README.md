@@ -28,7 +28,9 @@ pnpm lint:fix # eslint . --fix
 
 ## Cross-package connections
 
-**Consumes:** `@summerfi/sdk-common`
+**Consumes:** nothing at runtime — this is an interface-only leaf (`IConfigurationProvider`,
+`ConfigKey`, `ConfigItem`, all string-based, no `@summerfi/*` imports). `@summerfi/sdk-common` is
+declared in `package.json` but never imported.
 
 **Consumed by:** all `-service` packages (abi-provider-service, address-book-service,
 allowance-manager-service, armada-protocol-service, contracts-provider-service, oracle-service,

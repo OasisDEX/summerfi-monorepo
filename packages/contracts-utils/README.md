@@ -37,8 +37,10 @@ There is no test script in `package.json`.
 
 **Consumed by**
 
-- `@summerfi/deployment-utils`
-- `@summerfi/core-contracts`
+- `@summerfi/core-contracts` — real importer: `getContractsHashes` used in
+  `src/lib/versions/{types,utils}.ts` (the `gen-versions` path)
+- `@summerfi/deployment-utils` — declares this in `package.json` but no longer imports it in `src`
+  (stale dependency)
 
 **Gotchas**
 

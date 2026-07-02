@@ -32,8 +32,9 @@ pnpm lint:fix   # eslint . --fix
 chain, `chainIdToGraphChain`), `viem` (used directly but not declared in `package.json`; resolved as
 a hoisted workspace dependency)
 
-**Consumed by:** `sdk-server`, `allowance-manager-service`, `contracts-provider-service`,
-`testing-utils`
+**Consumed by:** `sdk-server`, `testing-utils`, and `armada-protocol-service` (in `e2e/` only).
+(`allowance-manager-service` and `contracts-provider-service` declare the dependency but do not
+import it.)
 
 **Gotchas:**
 

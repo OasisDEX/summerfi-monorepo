@@ -37,11 +37,12 @@ pnpm watch      # tsc -w
 ## Cross-package connections
 
 **Consumes:** `@summerfi/sdk-common`, `@summerfi/armada-protocol-common`,
-`@summerfi/protocol-plugins-common`, `@summerfi/protocol-plugins`, `@summerfi/swap-common`,
-`@summerfi/address-book-common`, `@summerfi/contracts-provider-common`
+`@summerfi/protocol-plugins-common`, `@summerfi/swap-common`, `@summerfi/address-book-common`,
+`@summerfi/contracts-provider-common`
 
-**Consumed by:** `order-planner-service` (concrete implementation), `protocol-manager-common`,
-`protocol-manager-service`, `sdk-server`
+**Consumed by:** `order-planner-service` (concrete implementation), `sdk-server`.
+(`protocol-manager-common` and `protocol-manager-service` declare it as a `devDependency` but do not
+import it in source.)
 
 **Gotchas:** The package uses live TypeScript source exports (`./src/*/index.ts`) — there is no
 compiled output consumed at dev time. `encodeStrategy` returns `undefined` when the `actions` array

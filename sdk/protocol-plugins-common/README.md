@@ -39,11 +39,11 @@ There are no test scripts in this package; testing is handled by downstream pack
 
 **Consumes:** `@summerfi/sdk-common`, `@summerfi/address-book-common`,
 `@summerfi/blockchain-client-common`, `@summerfi/oracle-common`, `@summerfi/swap-common`,
-`@summerfi/tokens-common`, `@summerfi/deployment-types`, `@summerfi/deployment-utils`
+`@summerfi/tokens-common`, `@summerfi/deployment-types`
 
 **Consumed by:** `protocol-plugins` (concrete implementations),
-`protocol-manager-common`/`-service`, `order-planner-common`/`-service`, `simulator-service`,
-`testing-utils`, `sdk-e2e`, `sdk-server`
+`protocol-manager-common`/`-service`, `order-planner-common`/`-service`, `testing-utils`,
+`sdk-server`, `tools/genStrategyDefinitions`
 
 **Gotchas:** This package is source-only (exports point directly to `src/index.ts`); consumers must
 compile it as part of their own build — running `pnpm build` here emits declaration files via

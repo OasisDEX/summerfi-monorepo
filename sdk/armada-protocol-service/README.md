@@ -37,10 +37,12 @@ pnpm lint:fix # eslint . --fix
 `armada-protocol-abis` (ABIs), and below `sdk-server` / `sdk-client`, following the common/service
 split used across the monorepo.
 
-**Consumes**: `armada-protocol-common`, `armada-protocol-abis`, `allowance-manager-common/-service`,
+**Consumes**: `armada-protocol-common`, `armada-protocol-abis`, `allowance-manager-common`,
 `blockchain-client-common`, `contracts-provider-common/-service`, `oracle-common`,
-`subgraph-manager-common/-service`, `swap-common/-service`, `tokens-common`, `summer-protocol-db`,
-`configuration-provider-common`, `sdk-common`.
+`subgraph-manager-common`, `swap-common`, `tokens-common`, `summer-protocol-db`,
+`configuration-provider-common`, `sdk-common`. (`subgraph-manager-service`, `swap-service`,
+`blockchain-client-provider`, and `configuration-provider` are imported only in `e2e/`;
+`allowance-manager-service` is declared but never imported.)
 
 **Consumed by**: `sdk-server`, `sdk-client`, `sdk-e2e`.
 

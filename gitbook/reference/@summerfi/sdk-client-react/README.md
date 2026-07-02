@@ -28,8 +28,8 @@ pnpm lint:fix   # eslint . --fix
 
 ## Cross-package connections
 
-**Consumes:** `@summerfi/sdk-client` (SDK factory functions), `@summerfi/sdk-common` (shared types),
-`@summerfi/protocol-plugins` (protocol-level plugin types). React 19 is a peer dependency.
+**Consumes:** `@summerfi/sdk-client` (SDK factory functions), `@summerfi/sdk-common` (shared types).
+React 19 is a peer dependency.
 
 **Consumed by:** React applications outside the `sdk/` directory (nothing inside `sdk/` depends on
 this package).
