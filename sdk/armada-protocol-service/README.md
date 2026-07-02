@@ -10,14 +10,14 @@ resolution per chain for public vs institutional deployments), `ArmadaSimulator`
 
 ## Key exports
 
-| Export                                | Purpose                                                                                              |
-| ------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `ArmadaManagerFactory`                | Entry point; builds `ArmadaManager` for vault/fleet/staking/governance/rewards/bridge/migrations/DCA |
-| `RWAManager`                          | Rounds-vault deposits, withdrawals, whitelisting, exchange rates                                     |
-| `DeploymentProvider`                  | Resolves contract addresses per chain and deployment type                                            |
-| `fetchPublicDeploymentProviderConfig` | Reads addresses from the bundled deployments JSON for public chains                                  |
-| `fetchInstiDeploymentProviderConfig`  | Fetches institutional contract addresses from the subgraph at request time                           |
-| `ArmadaSimulator`                     | Off-chain position simulation                                                                        |
+| Export                                | Purpose                                                                                                                                                        |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ArmadaManagerFactory`                | Entry point; builds `ArmadaManager` for vault/fleet/staking/governance/rewards/bridge/migrations/DCA                                                           |
+| `RWAManager`                          | Rounds-vault deposits, withdrawals, whitelisting, exchange rates, round lifecycle (next/settle/retry/rollback), fleet-share transferability, role grant/revoke |
+| `DeploymentProvider`                  | Resolves contract addresses per chain and deployment type                                                                                                      |
+| `fetchPublicDeploymentProviderConfig` | Reads addresses from the bundled deployments JSON for public chains                                                                                            |
+| `fetchInstiDeploymentProviderConfig`  | Fetches institutional contract addresses from the subgraph at request time                                                                                     |
+| `ArmadaSimulator`                     | Off-chain position simulation                                                                                                                                  |
 
 ## Scripts
 
@@ -51,6 +51,16 @@ split used across the monorepo.
   an empty result, so missing deployments are silent.
 - `ArmadaManager` reads the `SUMMER_HUB_CHAIN_ID` env var to distinguish the hub chain from
   satellite chains; this must be set in any server or e2e environment.
+- `DCAManager` and `RWAManager` require an `IConfigurationProvider` in their constructors and
+  validate chains against the `SUMMER_DEPLOYED_CHAINS_ID_DCA` / `SUMMER_DEPLOYED_CHAINS_ID_RWA`
+  config items — most public methods call `assertSupportedChain` (on the `ArmadaManagerShared` base)
+  and throw for unconfigured chains.
+- `DCAManager.createStrategyTx` targets the v5 `DCAStrategyManager`: it encodes
+  `depositAndCreate(config, assetAmount, expectedMinShares)` (feeds are `IChainlinkFeed`
+  `{ feed, maxStaleness }` structs), computes `expectedMinShares` via the fleet's ERC-4626
+  `convertToShares`, and may prepend an approval — the return type is
+  `[CreateDcaStrategyTransactionInfo]` or
+  `[ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]`.
 - `fetchPublicDeploymentProviderConfig` depends on the deployments JSON bundled in
   `armada-protocol-common`; adding a new chain requires the protocol to be deployed and that JSON
   updated first.

@@ -9,10 +9,10 @@ service that pairs with the `allowance-manager-common` interface package.
 
 ## Key exports
 
-| Export                    | Description                                                                                                                                        |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AllowanceManager`        | Implements `IAllowanceManager`: `getApproval`, `isPermit2AuthorizationNeeded`, `getPermit2AuthorizationTx`, `getPermit2RevokeTx`, `getPermit2Data` |
-| `AllowanceManagerFactory` | Static `newAllowanceManager({ configProvider, contractsProvider, blockchainClientProvider })` factory                                              |
+| Export                    | Description                                                                                                                                                                   |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AllowanceManager`        | Implements `IAllowanceManager`: `getApproval`, `getApprovalFromBaseUnit`, `isPermit2AuthorizationNeeded`, `getPermit2AuthorizationTx`, `getPermit2RevokeTx`, `getPermit2Data` |
+| `AllowanceManagerFactory` | Static `newAllowanceManager({ configProvider, contractsProvider, blockchainClientProvider })` factory                                                                         |
 
 SDK reference docs live in `gitbook/reference`.
 

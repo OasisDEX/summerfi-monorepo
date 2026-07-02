@@ -9,9 +9,13 @@ consumers decoupled from the implementation at compile time. SDK reference docs 
 
 ## Key exports
 
-| Export              | Description                                                                                                                               |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `IAllowanceManager` | Interface covering `getApproval`, `isPermit2AuthorizationNeeded`, `getPermit2AuthorizationTx`, `getPermit2RevokeTx`, and `getPermit2Data` |
+| Export              | Description                                                                                                                                                          |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `IAllowanceManager` | Interface covering `getApproval`, `getApprovalFromBaseUnit`, `isPermit2AuthorizationNeeded`, `getPermit2AuthorizationTx`, `getPermit2RevokeTx`, and `getPermit2Data` |
+
+`getApprovalFromBaseUnit` is a primitive-argument variant of `getApproval` (plain `chainId` /
+addresses / base-unit `bigint` amount instead of `Token`/`TokenAmount` value objects); it returns
+`undefined` when `ownerAddress` is supplied and the existing allowance already covers the amount.
 
 Entry point: `src/index.ts` (source) / `dist/index.js` (built).
 

@@ -10,7 +10,9 @@ every `set` call.
 - `getRedisInstance(config: RedisConfig, logger: Logger): Promise<DistributedCache>` — the single
   exported function; connects to Redis and returns a `{ get, set }` object.
 - `RedisConfig` — exported interface: `url`, `ttlInSeconds`, `stage` (required); `username`,
-  `password`, `database` (optional).
+  `password`, `database`, `connectTimeoutMs`, `maxReconnectAttempts` (optional). The last two make
+  `connect()` fail fast instead of retrying forever — for callers that treat Redis as best-effort
+  (e.g. the protocol-info `/vaults` handler).
 
 ## Commands
 

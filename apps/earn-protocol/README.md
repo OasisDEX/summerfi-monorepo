@@ -10,17 +10,20 @@ runs on port 3002 in development and is deployed as a standalone Next.js output 
   data-fetching logic (vault lists, subgraph queries, SDK calls, portfolio, staking).
 - `app/server-handlers/subgraphs-map.ts` — maps each supported network to its subgraph URL (Mainnet:
   `$SUBGRAPH_BASE/summer-protocol`; other chains: `$SUBGRAPH_BASE/summer-protocol-<chain>` e.g.
-  `-base`, `-arbitrum`, `-sonic`, `-hyperliquid`); the RWA subgraph is `summer-institutions-v2-base`
-  (Base only).
+  `-base`, `-arbitrum`, `-sonic`, `-hyperliquid`). `rwaSubgraphsMap` (Mainnet:
+  `summer-institutions-v2-staging`; Base: `summer-institutions-v2-base-staging`) is the app's single
+  source of truth for which chains have an RWA subgraph — `rwaSupportedSdkNetworks`,
+  `rwaSupportedChainIds`, and `rwaSubgraphUrlByChainId` all derive from it.
 - `constants/networks-list.ts` — app-local `NetworkNames`/`NetworkIds` enums and
   `SDKChainIdToRpcGatewayMap` (client-side RPC via `/earn/api/rpcGateway`).
 - `helpers/rpc-gateway-ssr.ts` — `SDKChainIdToSSRRpcGatewayMap` for server-side RPC; must not be
   imported in client components.
-- `constants/rwa.ts` — `RWA_CLIENT_ID` and `RWA_INSTI_VERSION` used when constructing the
-  institutional SDK client for RWA vault calls; `RWA_CLIENT_ID` is currently a placeholder
-  (`ExtDemoCorp_v2`).
-- `graphql/clients/` — auto-generated GraphQL clients for `rates`, `position-history`, and
-  `rwa-vault-nav-history`; regenerate with `pnpm codegen`.
+- `constants/rwa.ts` — `RWA_INSTI_VERSION` (`'v2'`), shared by every RWA institution when
+  constructing the institutional SDK client. The per-institution `Client-Id` is not a constant: it
+  is derived from each vault's `vaultInstitutionId` fleet-config field via `getVaultRwaClientId` /
+  `getRwaClientIdsForChain` in `helpers/vault-custom-value-helpers.ts`.
+- `graphql/clients/` — auto-generated GraphQL clients for `rates`, `position-history`,
+  `rwa-vault-nav-history`, and `rwa-receipts-history`; regenerate with `pnpm codegen`.
 
 ## Build / dev commands
 
@@ -52,9 +55,12 @@ runs on port 3002 in development and is deployed as a standalone Next.js output 
   `SDKChainIdToRpcGatewayMap`), `helpers/rpc-gateway-ssr.ts` (`SDKChainIdToSSRRpcGatewayMap`),
   `app/server-handlers/subgraphs-map.ts`, and `constants/network-id-to-icon.tsx`. Per-network
   `next.config.ts` redirects to `pro.summer.fi` may also need a new entry.
-- **New RWA fleet:** `RWA_CLIENT_ID` in `constants/rwa.ts` is a placeholder; RWA vaults are
-  currently filtered to Base (chain 8453) only in `app/server-handlers/sdk/get-rwa-vaults-list.ts`
-  (and `get-rwa-vaults-info-list.ts`).
+- **New RWA fleet / institution / chain:** RWA discovery is config-driven.
+  `app/server-handlers/sdk/get-rwa-vaults-list.ts` iterates `rwaSupportedChainIds` (from
+  `rwaSubgraphsMap`) and, per chain, `getRwaClientIdsForChain(...)` — client IDs come from each
+  fleet's `vaultInstitutionId` config field. Onboarding a new institution means setting
+  `vaultInstitutionId` in the fleet config; onboarding a new RWA chain is a one-line edit to
+  `rwaSubgraphsMap`.
 - **GraphQL codegen:** `graphql/clients/` files are generated; run `pnpm codegen` after any subgraph
   schema change. `$SUBGRAPH_BASE` must be set (via `.env` / `.env.local`) at codegen time.
 - **CSS module types:** `graphql/clients/` aside, `.module.css` typings in `components/`,

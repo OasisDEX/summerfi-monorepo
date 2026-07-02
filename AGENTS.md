@@ -277,20 +277,23 @@ common changes that span multiple packages. File paths are relative to the repo 
    JSON config fetched by `configEarnAppFetcher`
    (`packages/app-server-handlers/src/system-config/index.ts`) and merged in
    `packages/app-utils/src/decorators/decorateWithFleetConfig.ts` via
-   `systemConfig.fleetMap[chainId][vaultAddressLowercase]` (risk label, curatedBy → isRwaVault flag,
-   etc.). Add the new fleet's entry to the config service; no repo change needed unless the config
-   JSON shape changes — the `EarnAppFleetCustomConfigType` type is regenerated from the live config
-   by `packages/app-types/scripts/get-earn-config-types.js` (run via `pnpm get-config-types`, writes
+   `systemConfig.fleetMap[chainId][vaultAddressLowercase]` (risk label, `vaultCurator` →
+   `isRwaVault` flag, `vaultInstitutionId` → RWA SDK `Client-Id`, etc.). Add the new fleet's entry
+   to the config service; no repo change needed unless the config JSON shape changes — the
+   `EarnAppFleetCustomConfigType` type is regenerated from the live config by
+   `packages/app-types/scripts/get-earn-config-types.js` (run via `pnpm get-config-types`, writes
    `types/src/generated/earn-app-config`).
 3. **Filtering gotcha** — `decorateWithFleetConfig` filters out vaults with `depositCap <= 0` and
    (if the `FilterZeroTokenVaults` feature flag is on in remote config) `inputTokenBalance <= 0`,
    unless the user already has a position — a freshly deployed empty/capped fleet may be invisible
    until seeded or capped > 0.
-4. **`@summerfi/earn-protocol`** — `apps/earn-protocol/constants/rwa.ts`: RWA (institutions-v2)
-   fleets are an exception: `get-rwa-vaults-list.ts` uses `backendInstiSDK.rwa.getVaultsRaw` with a
-   hard-coded `RWA_CLIENT_ID` (`'ExtDemoCorp_v2'`, flagged as a placeholder) and is temporarily
-   filtered to Base (8453) only — onboarding a new RWA fleet on another chain or institution
-   requires editing these files.
+4. **`@summerfi/earn-protocol`** — RWA (institutions-v2) fleets are config-driven:
+   `get-rwa-vaults-list.ts` iterates `rwaSupportedChainIds` (derived from `rwaSubgraphsMap` in
+   `app/server-handlers/subgraphs-map.ts`; currently Mainnet + Base) and, per chain,
+   `getRwaClientIdsForChain(...)` — client IDs come from each fleet's `vaultInstitutionId` config
+   field. Onboarding a new institution = set `vaultInstitutionId` in the fleet config; a new RWA
+   chain = a one-line `rwaSubgraphsMap` edit. Only `RWA_INSTI_VERSION` remains in
+   `apps/earn-protocol/constants/rwa.ts`.
 5. **`@summerfi/earn-protocol-institutions`** —
    `apps/earn-protocol-institutions/constants/vaults-starting-nav-values.ts`:
    `VAULTS_STARTING_NAV_VALUES` is an explicitly hand-maintained map of `'<vaultAddress>-<chainId>'`
@@ -333,8 +336,9 @@ common changes that span multiple packages. File paths are relative to the repo 
 5. **Infra** — off-repo prerequisites: institution + vaults deployed and indexed by the
    summer-institutions(-v2) subgraphs, institution registered in the SDK backend's deployment config
    under the institution clientId, Cognito user pool entries, and (if surfaced in the public earn
-   app as an RWA vault) the fleet's `curatedBy` entry in the `CONFIG_URL_EARN` `fleetMap` plus the
-   `RWA_CLIENT_ID` in `apps/earn-protocol/constants/rwa.ts`.
+   app as an RWA vault) the fleet's `vaultCurator` and `vaultInstitutionId` entries in the
+   `CONFIG_URL_EARN` `fleetMap` — the per-institution `Client-Id` is derived from
+   `vaultInstitutionId` at runtime (no repo constant to edit).
 
 ### Add a new API function/lambda
 

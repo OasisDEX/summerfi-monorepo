@@ -4,8 +4,10 @@ Implementation package that provides `ContractsProviderFactory` and `ContractsPr
 create typed read/write contract wrappers from ABIs (`@summerfi/armada-protocol-abis`) over a
 blockchain client. The concrete wrappers — `Erc20Contract`, `Erc4626Contract`,
 `FleetCommanderContract`, `ArkContract`, `AdmiralsQuartersContract`, `SummerStakingContract`,
-`ProtocolAccessManagerWhiteListContract`, and `GenericContractWrapper` — handle all on-chain calls
-and transaction encoding used by the allowance, armada, and RWA managers.
+`ProtocolAccessManagerWhiteListContract`, `ProtocolAccessManagerV2Contract` (RWA role grant/revoke),
+`RoundsVaultContract` (RWA round lifecycle: next/settle/settle-batch/retry/rollback), and
+`GenericContractWrapper` — handle all on-chain calls and transaction encoding used by the allowance,
+armada, and RWA managers.
 
 ## Key exports (`src/index.ts`)
 
