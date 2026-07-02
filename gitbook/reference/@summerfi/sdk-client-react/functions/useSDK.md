@@ -6,7 +6,7 @@
 function useSDK(params): SdkInstiManagerClient;
 ```
 
-Defined in: [src/hooks/useSDK.ts:635](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L635)
+Defined in: [src/hooks/useSDK.ts:691](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L691)
 
 Builds and memoizes a Summer.fi SDK client bound to the current React context, exposing the set
 of handlers (vaults, swaps, governance, claims, and — for managed instances — admin/RWA) suited
@@ -35,7 +35,7 @@ The full managed client surface ([SdkInstiManagerClient](../type-aliases/SdkInst
 function useSDK(params): object;
 ```
 
-Defined in: [src/hooks/useSDK.ts:642](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L642)
+Defined in: [src/hooks/useSDK.ts:698](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L698)
 
 Public clients (`makeSDK`, no `clientId`) expose only the `ISDKManager` surface.
 
@@ -108,7 +108,9 @@ cancelStrategyTx: (__namedParameters) => Promise<[CancelDcaStrategyTransactionIn
 #### createStrategyTx()
 
 ```ts
-createStrategyTx: (__namedParameters) => Promise<[CreateDcaStrategyTransactionInfo]>;
+createStrategyTx: (__namedParameters) => Promise<
+  | [CreateDcaStrategyTransactionInfo]
+| [ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]>;
 ```
 
 ##### Parameters
@@ -116,6 +118,10 @@ createStrategyTx: (__namedParameters) => Promise<[CreateDcaStrategyTransactionIn
 ###### \_\_namedParameters
 
 ###### amountShares
+
+`string`
+
+###### assetAmount
 
 `string`
 
@@ -137,7 +143,7 @@ createStrategyTx: (__namedParameters) => Promise<[CreateDcaStrategyTransactionIn
 
 ###### inAssetFeed
 
-`` `0x${string}` ``
+[`IChainlinkFeed`](../../sdk-common/interfaces/IChainlinkFeed.md)
 
 ###### intervalSeconds
 
@@ -161,7 +167,7 @@ createStrategyTx: (__namedParameters) => Promise<[CreateDcaStrategyTransactionIn
 
 ###### outAssetFeed
 
-`` `0x${string}` ``
+[`IChainlinkFeed`](../../sdk-common/interfaces/IChainlinkFeed.md)
 
 ###### slippagePercentage
 
@@ -177,7 +183,9 @@ createStrategyTx: (__namedParameters) => Promise<[CreateDcaStrategyTransactionIn
 
 ##### Returns
 
-`Promise`\<\[[`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
+`Promise`\<
+  \| \[[`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`ApproveTransactionInfo`](../../sdk-common/type-aliases/ApproveTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
 
 #### editStrategyTx()
 

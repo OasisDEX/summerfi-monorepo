@@ -1,6 +1,6 @@
 # Interface: IDcaStrategy
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:6](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L6)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:7](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L7)
 
 A configured DCA (dollar-cost-averaging) strategy and its current on-chain execution state.
 
@@ -12,7 +12,7 @@ A configured DCA (dollar-cost-averaging) strategy and its current on-chain execu
 chainId: ChainId;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:12](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L12)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L13)
 
 The chain on which the strategy is executed
 
@@ -24,7 +24,7 @@ The chain on which the strategy is executed
 createdAtUnixTimestamp: bigint;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:50](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L50)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:51](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L51)
 
 Unix timestamp when the strategy was created
 
@@ -36,7 +36,7 @@ Unix timestamp when the strategy was created
 deadlineUnixTimestamp: bigint;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:38](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L38)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:39](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L39)
 
 Unix timestamp after which the order stops executing
 
@@ -48,7 +48,7 @@ Unix timestamp after which the order stops executing
 id: string;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:8](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L8)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:9](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L9)
 
 Unique identifier for the DCA strategy in graph
 
@@ -60,7 +60,7 @@ Unique identifier for the DCA strategy in graph
 inAsset: `0x${string}`;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L20)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L21)
 
 The underlying asset of the source vault (input asset for DCA trades)
 
@@ -69,12 +69,12 @@ The underlying asset of the source vault (input asset for DCA trades)
 ### inAssetFeed
 
 ```ts
-inAssetFeed: `0x${string}`;
+inAssetFeed: IChainlinkFeed;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:24](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L24)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L25)
 
-Oracle price feed address for the input asset
+Oracle price feed (address + max staleness) for the input asset
 
 ***
 
@@ -84,7 +84,7 @@ Oracle price feed address for the input asset
 intervalSeconds: bigint;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L32)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L33)
 
 Interval between consecutive trades, in seconds
 
@@ -96,7 +96,7 @@ Interval between consecutive trades, in seconds
 lastScheduledAtUnixTimestamp: bigint;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L36)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L37)
 
 Unix timestamp of the last scheduled execution
 
@@ -108,7 +108,7 @@ Unix timestamp of the last scheduled execution
 maxTrades: bigint;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L42)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L43)
 
 Maximum number of trades to execute before the order completes
 
@@ -120,7 +120,7 @@ Maximum number of trades to execute before the order completes
 neverBuyAbove: string;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:46](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L46)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:47](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L47)
 
 Price ceiling — skip execution if the fromVault token price is above this value. Zero means no ceiling. Full token units
 
@@ -132,7 +132,7 @@ Price ceiling — skip execution if the fromVault token price is above this valu
 neverSellBelow: string;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:48](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L48)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L49)
 
 Price floor — skip execution if the toVault token price is below this value. Zero means no floor. Full token units
 
@@ -144,7 +144,7 @@ Price floor — skip execution if the toVault token price is below this value. Z
 nextTriggerAtUnixTimestamp: bigint;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L34)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L35)
 
 Unix timestamp of the next scheduled execution
 
@@ -156,7 +156,7 @@ Unix timestamp of the next scheduled execution
 outAsset: `0x${string}`;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L22)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:23](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L23)
 
 The underlying asset of the target vault (output asset for DCA trades)
 
@@ -165,12 +165,12 @@ The underlying asset of the target vault (output asset for DCA trades)
 ### outAssetFeed
 
 ```ts
-outAssetFeed: `0x${string}`;
+outAssetFeed: IChainlinkFeed;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:26](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L26)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:27](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L27)
 
-Oracle price feed address for the output asset
+Oracle price feed (address + max staleness) for the output asset
 
 ***
 
@@ -180,7 +180,7 @@ Oracle price feed address for the output asset
 ownerAddress: `0x${string}`;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L14)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:15](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L15)
 
 The EOA that owns the strategy
 
@@ -192,7 +192,7 @@ The EOA that owns the strategy
 slippagePercentage: number;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L30)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L31)
 
 Maximum allowed slippage for each trade, expressed as a percentage
 
@@ -204,7 +204,7 @@ Maximum allowed slippage for each trade, expressed as a percentage
 sourceVault: `0x${string}`;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:16](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L16)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:17](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L17)
 
 The vault from which assets will be sold in DCA trades
 
@@ -216,7 +216,7 @@ The vault from which assets will be sold in DCA trades
 status: DcaStrategyStatusEnum;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:40](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L40)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L41)
 
 Current status of the strategy
 
@@ -228,7 +228,7 @@ Current status of the strategy
 strategyId: bigint;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:10](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L10)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:11](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L11)
 
 On-chain strategy ID
 
@@ -240,7 +240,7 @@ On-chain strategy ID
 targetVault: `0x${string}`;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:18](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L18)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L19)
 
 The vault to which assets will be bought in DCA trades
 
@@ -252,7 +252,7 @@ The vault to which assets will be bought in DCA trades
 tradeAmount: bigint;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L28)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L29)
 
 Amount to trade in each execution, denominated in the source vault's underlying asset decimals
 
@@ -264,7 +264,7 @@ Amount to trade in each execution, denominated in the source vault's underlying 
 tradesExecuted: bigint;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:44](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L44)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:45](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L45)
 
 Number of trades that have been executed so far
 
@@ -276,6 +276,6 @@ Number of trades that have been executed so far
 updatedAtUnixTimestamp: bigint;
 ```
 
-Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:52](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L52)
+Defined in: [../sdk-common/src/common/interfaces/IDcaStrategy.ts:53](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IDcaStrategy.ts#L53)
 
 Unix timestamp when the strategy was last updated
