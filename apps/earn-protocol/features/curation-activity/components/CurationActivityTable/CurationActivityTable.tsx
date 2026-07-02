@@ -57,7 +57,7 @@ export const CurationActivityTable: FC<CurationActivityTableProps> = ({
             color: 'var(--color-text-secondary)',
           }}
         >
-          No curation activity available for the previous 30 days
+          No Portfolio Composition History available for the previous 30 days
         </Text>
       )}
     </>

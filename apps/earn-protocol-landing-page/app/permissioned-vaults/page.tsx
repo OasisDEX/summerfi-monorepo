@@ -1,12 +1,13 @@
 'use client'
-import { useEffect } from 'react'
 import { Audits, Button, Emphasis, Icon, Text, UseCasesSlider } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { TagButton } from '@/components/atoms/TagButton'
 import { HeroWrapper } from '@/components/layout/HeroWrapper/HeroWrapper'
 import { CheckLine } from '@/components/layout/LandingPageContent/components/CheckLine'
+import { BuildBySummerFiPlain } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { LandingRwaFaqSection } from '@/components/layout/LandingPageContent/content/LandingFaqSection'
 import { SubLandingPageSection } from '@/components/layout/SubLandingPageSection/SubLandingPageSection'
 import { FractalGlassBackground } from '@/components/molecules/FractalGlassBackground/FractalGlassBackground'
@@ -15,11 +16,10 @@ import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 import sherlockLogo from '@/public/img/landing-page/auditor-logos/sherlock.svg'
+import avantgardeLogo from '@/public/img/landing-page/private-markets/avantgarde.svg'
 import balanceLogo from '@/public/img/landing-page/private-markets/logo_balance.svg'
-import cryptoFinanceLogo from '@/public/img/landing-page/private-markets/logo_crypto_finance.svg'
 import summerLogo from '@/public/img/landing-page/private-markets/logo_summer.svg'
 import utilaLogo from '@/public/img/landing-page/private-markets/logo_utila.svg'
-import m1CapitalLogo from '@/public/img/landing-page/private-markets/m1_capital.svg'
 
 import rwaVaultsStyles from './RwaVaults.module.css'
 
@@ -30,7 +30,7 @@ import stacMarketLogo from '@/public/img/landing-page/private-markets/stac.png'
 import superstateMarketLogo from '@/public/img/landing-page/private-markets/superstate.png'
 import vaneckMarketLogo from '@/public/img/landing-page/private-markets/vaneck.png'
 import wisdomTreeMarketLogo from '@/public/img/landing-page/private-markets/wisdomtree.png'
-import vaultExposureScreenshot from '@/public/img/landing-page/vault-exposure-screenshot.png'
+import vaultExposureInstiScreenshot from '@/public/img/landing-page/vault-exposure-screenshot-insti.png'
 
 export default function RwaVaults() {
   const smoothScrollToId = (id: string) => {
@@ -56,13 +56,8 @@ export default function RwaVaults() {
     })
   }
 
-  useEffect(() => {
-    window.location.replace('/') // hide
-  }, [])
-
   return (
-    <div style={{ display: 'none' }}>
-      {/* hide */}
+    <>
       <HeroWrapper className={rwaVaultsStyles.heroWrapper}>
         <div className={rwaVaultsStyles.heroBackground}>
           <FractalGlassBackground />
@@ -70,13 +65,13 @@ export default function RwaVaults() {
         <div className={rwaVaultsStyles.heroContent}>
           <TagButton>Permissioned RWA Vault</TagButton>
           <Text variant="h1">
-            <Emphasis variant="h1colorful">Institutional grade DeFi yield.</Emphasis> Private,
+            <Emphasis variant="h1colorful">Institutional grade onchain yield.</Emphasis> Private,
             diversified and automated.
           </Text>
           <Text variant="p1" className={rwaVaultsStyles.heroParagraph}>
-            The Summer.fi institutional Private access RWA vault managed by M1 Capital gives
-            automated access to the highest quality RWA markets designed exclusively for qualified
-            investors.
+            The Summer.fi Strategically Allocated RWA Vault, curated by Avantgarde, gives automated
+            access to the highest quality RWA’s and private markets, designed exclusively for
+            accredited and qualified investors, institutions and funds.
           </Text>
           <div className={rwaVaultsStyles.heroButtons}>
             {/* <Button variant="primaryMedium">View Vault</Button> */}
@@ -88,14 +83,13 @@ export default function RwaVaults() {
       </HeroWrapper>
       <SubLandingPageSection className={rwaVaultsStyles.subLandingPageSection}>
         <div className={rwaVaultsStyles.subSectionColumn}>
-          <Text variant="h3">
-            Seamlessly earn onchain yield from the highest quality RWA markets
-          </Text>
-          <Text variant="p1" className={rwaVaultsStyles.subSectionTextSecondary}>
-            This private access Vault allows approved depositors to earn from the leading tokenized
-            assets and private credit markets on Ethereum, all from a single Vault with no
-            additional KYC. The Vault automatically rebalances towards a set target allocation of
-            assets, which is periodically adjusted by the Vault Manager, M1 Capital.
+          <Text variant="h3">Earn directly from the highest quality RWA’s and private markets</Text>
+          <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
+            This new Vault concept allows approved depositors to earn directly from the leading
+            tokenized assets and private credit markets on Ethereum, all from a single Vault with no
+            additional KYC when accessing through an approved custodian or MPC provider. The Vault
+            automatically allocates towards a set target of assets, which is periodically adjusted
+            by the Vault curator, Avantgarde, to achieve a strong, diversified yield.
           </Text>
           <div className={rwaVaultsStyles.partnerLogos}>
             <Image alt="Vaneck" src={vaneckMarketLogo} className={rwaVaultsStyles.partnerLogo} />
@@ -118,15 +112,15 @@ export default function RwaVaults() {
       <SubLandingPageSection className={rwaVaultsStyles.subLandingPageSection}>
         <div className={rwaVaultsStyles.subSectionRow}>
           <div className={rwaVaultsStyles.subSectionColumn}>
-            <Text variant="h3">
-              Managed exposure to RWA and tokenized private credit by M1 Capital
-            </Text>
-            <Text variant="p1" className={rwaVaultsStyles.subSectionTextSecondary}>
-              M1 Capital is an Amsterdam based Digital Hedge Fund. They bring over 4 years of
-              experience managing delta neutral strategies onchain, covering DeFi and Real World
-              Assets. With the Summer Institutional RWA Vault, they set and manage the supported
-              tokenized funds, target allocations and the onboarding of Custodians and other
-              institutions to access the Vault.
+            <Text variant="h3">Strategically allocated by Avantgarde</Text>
+            <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
+              Avantgarde is a Panama-based digital asset management and DeFi software firm. They
+              bring over 8 years of experience (building in DeFi since 2016) managing non-custodial,
+              on-chain investment strategies, covering DeFi yield curation and Real World Assets
+              (RWA). With their curated Morpho Vaults and Separately Managed Accounts (SMAs), they
+              set and manage conservative and dynamic yield allocations, monitor continuous protocol
+              risk, and structure tailored RWA-backed looping strategies for institutional and
+              crypto-native investors.
             </Text>
             <Button
               variant="secondaryMedium"
@@ -137,7 +131,7 @@ export default function RwaVaults() {
             </Button>
           </div>
           <div className={rwaVaultsStyles.partnerLogoFrame}>
-            <Image alt="M1 Capital" src={m1CapitalLogo} width={290} />
+            <Image alt="Avantgarde" src={avantgardeLogo} width={290} />
           </div>
         </div>
       </SubLandingPageSection>
@@ -156,22 +150,24 @@ export default function RwaVaults() {
             <div className={rwaVaultsStyles.iconBadge}>
               <Icon iconName="chart" size={18} className={rwaVaultsStyles.icon} />
             </div>
-            <Text variant="h4">Deep liquidity yield sources designed for institutions</Text>
+            <Text variant="h4">
+              Deep liquidity yield sources designed for institutions and funds
+            </Text>
             <Text
               variant="p2"
               className={`${rwaVaultsStyles.subSectionTextSecondary} ${rwaVaultsStyles.cardSubtitle}`}
             >
-              RWA Private access vaults have thoughtfully curated underlying yield sources with deep
-              liquidity and quality collateral in mind.
+              The Strategically Allocated RWA Vault has exposure to thoughtfully curated underlying
+              yield sources with deep liquidity and quality collateral in mind
             </Text>
             <div className={rwaVaultsStyles.iconColumn}>
-              <CheckLine text="Curated, institutional-Grade Assets" />
-              <CheckLine text="Permissioned environments that protect large-scale institutional capital" />
-              <CheckLine text="Large amounts of capital can be deployed or withdrawn efficiently" />
+              <CheckLine text="Only top-tier institutional-grade assets" />
+              <CheckLine text="Permissioned markets that means funds are never mixed with non-KYC’d users." />
+              <CheckLine text="Capable of handling large amounts of capital which can be deployed or withdrawn efficiently" />
             </div>
           </div>
           <div className={rwaVaultsStyles.vaultExposurePosition}>
-            <Image src={vaultExposureScreenshot} alt="vault exposure screenshot" />
+            <Image src={vaultExposureInstiScreenshot} alt="vault exposure screenshot" />
           </div>
         </div>
         <div className={rwaVaultsStyles.card}>
@@ -195,7 +191,7 @@ export default function RwaVaults() {
               The Summer Institutional RWA Vaults put security above all else, and are built on top
               of robust smart contracts developed for the Lazy Summer Protocol. With additional
               layers to handle permissioned access, the Summer Institutional Vaults enable approved
-              depositors to access to a basket of RWA markets.
+              depositors to access to a basket of RWA’s and private markets.
             </Text>
             <div className={rwaVaultsStyles.infrastructureColumns}>
               <div className={rwaVaultsStyles.infrastructureColumn}>
@@ -205,31 +201,33 @@ export default function RwaVaults() {
                   Ring-Fenced Liquidity (Permissioned Access)
                 </Text>
                 <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
-                  Summer.fi&apos;s institutional RWA Vaults are restricted to deposits exclusively
-                  from pre-approved addresses.
+                  Summer.fi&apos;s permissioned Vaults are restricted to deposits exclusively from
+                  whitelisted addresses. And if accessed through a partner custodian, no additional
+                  KYC is needed.
                 </Text>
               </div>
               <div className={rwaVaultsStyles.infrastructureColumn}>
                 <Text variant="p1semi">
                   <Text variant="p3colorful">02.</Text>
                   <br />
-                  Independent Management by M1 Capital
+                  Earn directly from the assets, not from borrowers
                 </Text>
                 <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
-                  M1 Capital are a professional and experienced team with a proven track record.
-                  While the Vault infrastructure is designed and developed by Summer.fi.
+                  Unlike almost all other RWA Vaults in DeFi where you earn from users borrowing
+                  against RWA’s, this Vault earns the yield from the underlying RWA’s and private
+                  markets directly.
                 </Text>
               </div>
               <div className={rwaVaultsStyles.infrastructureColumn}>
                 <Text variant="p1semi">
                   <Text variant="p3colorful">03.</Text>
                   <br />
-                  Self-custodial
+                  Fully self-custodial, always
                 </Text>
                 <Text variant="p2" className={rwaVaultsStyles.subSectionTextSecondary}>
-                  The Summer Institutional Vaults are entirely self-custodial, you never give
-                  custody of your assets to others. Only you can deposit or withdraw your assets,
-                  and there is no access to your funds by Summer.fi or the Vault Manager.
+                  The Summer.fi RWA Vaults are entirely self-custodial. You never give custody of
+                  your assets to others and all accounting is transparent and onchain. There is no
+                  access to any funds by Summer.fi or the Curator.
                 </Text>
               </div>
             </div>
@@ -252,6 +250,7 @@ export default function RwaVaults() {
             <div className={rwaVaultsStyles.custodyChecks}>
               <CheckLine text="Advanced MPC-CMP cryptography" />
               <CheckLine text="Streamlined multi-chain asset management" />
+              <CheckLine text="Will require KYC" />
             </div>
           </div>
           <div className={rwaVaultsStyles.custodyColumn}>
@@ -265,26 +264,7 @@ export default function RwaVaults() {
             <div className={rwaVaultsStyles.custodyChecks}>
               <CheckLine text="Canadian and US qualified custodian" />
               <CheckLine text="Integrated off-chain settlements and automated compliance" />
-            </div>
-          </div>
-          <div className={rwaVaultsStyles.custodyColumn}>
-            <div className={rwaVaultsStyles.custodyLogoWrapper}>
-              <Image
-                alt="Summer.fi"
-                src={cryptoFinanceLogo}
-                className={rwaVaultsStyles.custodyLogo}
-                style={{
-                  height: '45px',
-                }}
-              />
-            </div>
-            <Text variant="p2" className={rwaVaultsStyles.custodyDescription}>
-              An attested, client-centric custody platform to securely store, manage, and settle
-              digital assets with complete operational flexibility and peace of mind.
-            </Text>
-            <div className={rwaVaultsStyles.custodyChecks}>
-              <CheckLine text="Backed by Deutsche Börse Group" />
-              <CheckLine text="Secure crypto integration within regulated frameworks" />
+              <CheckLine text="No additional KYC, access immediatley" />
             </div>
           </div>
           <div className={rwaVaultsStyles.custodyColumn}>
@@ -292,18 +272,56 @@ export default function RwaVaults() {
               <Image alt="Summer.fi" src={summerLogo} className={rwaVaultsStyles.custodyLogo} />
             </div>
             <Text variant="p2" className={rwaVaultsStyles.custodyDescription}>
-              Provided you have an approved wallet address, you will also be able to access the
-              Vault via the{' '}
-              <a href="https://summer.fi" target="_blank" rel="noopener noreferrer">
+              Provided you meet the requirements and complete KYC, you will also be able to access
+              the Vault via the{' '}
+              <Link
+                href="/earn?vaults=permissioned-rwa-vaults"
+                style={{
+                  borderBottom: '1px dashed rgba(255,255,255,0.3)',
+                }}
+              >
                 Summer.fi
-              </a>{' '}
+              </Link>{' '}
               UI.
             </Text>
             <div className={rwaVaultsStyles.custodyChecks}>
               <CheckLine text="Still fully non-custodial" />
-              <CheckLine text="Book an appointment to get approved access" />
+              <CheckLine text="Complete picture of the Vault in real time." />
+              <CheckLine
+                text={
+                  <>
+                    Requires KYC. Book an appointment to get approved access{' '}
+                    <span
+                      onClick={handleScrollToForm}
+                      style={{
+                        cursor: 'pointer',
+                        color: 'var(--color-background-primary)',
+                      }}
+                    >
+                      here
+                    </span>
+                  </>
+                }
+              />
             </div>
           </div>
+        </div>
+        <div
+          style={{
+            textAlign: 'center',
+          }}
+        >
+          <Text variant="p2">
+            Want to integrate this Vault to your platform? Find out more{' '}
+            <Link
+              href="/integrations"
+              style={{
+                color: 'var(--color-background-primary)',
+              }}
+            >
+              here
+            </Link>
+          </Text>
         </div>
       </SubLandingPageSection>
       <UseCasesSlider />
@@ -317,9 +335,12 @@ export default function RwaVaults() {
         />
       </SubLandingPageSection>
       <LandingPageContactForm formType="rwa" />
+      <div className={rwaVaultsStyles.buildBySummerWrapper}>
+        <BuildBySummerFiPlain />
+      </div>
       <div className={rwaVaultsStyles.faqWrapper}>
         <LandingRwaFaqSection />
       </div>
-    </div>
+    </>
   )
 }

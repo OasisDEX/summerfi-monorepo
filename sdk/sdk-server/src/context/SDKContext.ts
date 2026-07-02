@@ -317,6 +317,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
   // wired for institutional (Client-Id) requests;
   const rwaManager = new RWAManager({
     clientId,
+    configProvider,
     rwaSubgraphManager,
     tokensManager,
     contractsProvider,

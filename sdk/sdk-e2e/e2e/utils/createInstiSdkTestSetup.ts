@@ -21,7 +21,7 @@ import { createSendTransactionTool } from '@summerfi/testing-utils'
  */
 export function createInstiSdkTestSetup(
   params: {
-    clientId?: string
+    clientId?: TestClientIds
     instiVersion?: InstiVersion
     simulateOnly?: boolean
   } = {},
@@ -34,16 +34,17 @@ export function createInstiSdkTestSetup(
   let fleetAddress: Address
 
   if (instiVersion) {
+    const config = InstiTestConfigs[clientId || TestClientIds.ACME_v2]
     sdk = makeInstiSdk({
       clientId: clientId ?? TestClientIds.ACME_v2,
       instiVersion,
       apiDomainUrl: SDKApiUrl,
       logging: process.env.SDK_LOGGING_ENABLED === 'true',
     })
-    chainId = RwaTestConfig.chainId
-    rpcUrl = RwaTestConfig.rpcUrl
+    chainId = config.chainId
+    rpcUrl = config.rpcUrl
     fleetAddress = Address.createFromEthereum({
-      value: RwaTestConfig.fleetAddressValue,
+      value: config.fleetAddressValue,
     })
   } else {
     const _clientId = clientId ?? TestClientIds.ACME

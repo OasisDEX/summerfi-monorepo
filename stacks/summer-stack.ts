@@ -53,4 +53,8 @@ export function API(stackContext: StackContext) {
   stack.addOutputs({
     ApiEndpoint: api.url,
   })
+
+  // Exposed for cross-stack consumers (e.g. the partners `ExternalAPI` stack) via SST `use(API)`, so they can
+  // reuse the SST-managed ElastiCache instead of standing up their own. `cache`/`vpc` are null in dev stages.
+  return { cache, vpc }
 }

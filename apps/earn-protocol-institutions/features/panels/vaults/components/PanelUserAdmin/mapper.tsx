@@ -12,10 +12,10 @@ import clsx from 'clsx'
 import dayjs from 'dayjs'
 
 import { type InstiVaultActiveUsersResponse } from '@/app/server-handlers/institution/institution-vaults/types'
+import { type SDKTransactionItem } from '@/contexts/TransactionQueueContext/types'
 import { CHART_TIMESTAMP_FORMAT_SHORT } from '@/features/charts/helpers'
 import { type ActiveUsersListColumns } from '@/features/panels/vaults/components/PanelUserAdmin/types'
 import { getRevokeAQWhitelistId, getRevokeWhitelistId } from '@/helpers/get-transaction-id'
-import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
 
 import styles from './PanelUser.module.css'
 

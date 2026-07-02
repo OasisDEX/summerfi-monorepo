@@ -25,12 +25,13 @@ import {
 } from '@summerfi/app-utils'
 import { type AddressValue } from '@summerfi/sdk-common'
 import { useRouter } from 'next/navigation'
+import { parseUnits } from 'viem'
 
-import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
 import { VaultSwitchBox } from '@/components/molecules/SidebarElements/VaultSwitchBox'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { DCASidebar } from '@/features/dca/components/DCASidebar/DCASidebar'
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
+import { DEFAULT_FEED_MAX_STALENESS, getDcaFeed } from '@/features/dca/lib/dca-feeds'
 import { MAX_TRADES } from '@/features/dca/lib/dca-wizard-constants'
 import { type DCAConfig, type DCAResolvedPair } from '@/features/dca/lib/types'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -145,6 +146,29 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
         : Math.floor(Date.now() / 1000) + oneYearInSeconds
 
     try {
+      const maxStaleness =
+        config.feedMaxStalenessSeconds != null
+          ? BigInt(config.feedMaxStalenessSeconds)
+          : DEFAULT_FEED_MAX_STALENESS
+
+      const inAssetFeed = getDcaFeed(
+        dcaChainId,
+        pair.fromVault.inputToken.id as AddressValue,
+        maxStaleness,
+      )
+      const outAssetFeed = getDcaFeed(
+        dcaChainId,
+        pair.toVault.inputToken.id as AddressValue,
+        maxStaleness,
+      )
+
+      // config.amount is a display-unit number (e.g. 250 = 250 USDC).
+      // Convert to base units using the source vault's inputToken.decimals.
+      const inDecimals = pair.fromVault.inputToken.decimals
+      const perTradeBase = parseUnits(config.amount.toString(), inDecimals) // bigint, base units
+      const amountShares = perTradeBase.toString() // per-trade amount in base units
+      const assetAmount = (perTradeBase * BigInt(config.maxTrades)).toString() // full principal = amount × maxTrades
+
       const [txInfo] = await createStrategyTx({
         userAddress: address as AddressValue,
         chainId: dcaChainId,
@@ -152,10 +176,10 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
         toVault: pair.toVault.id as AddressValue,
         inAsset: pair.fromVault.inputToken.id as AddressValue,
         outAsset: pair.toVault.inputToken.id as AddressValue,
-        // TODO: replace with real oracle feed addresses
-        inAssetFeed: '0x0000000000000000000000000000000000000000' as AddressValue,
-        outAssetFeed: '0x0000000000000000000000000000000000000000' as AddressValue,
-        amountShares: config.amount.toString(),
+        inAssetFeed,
+        outAssetFeed,
+        amountShares,
+        assetAmount,
         slippagePercentage: '0.5',
         intervalSeconds,
         deadlineUnixTimestamp,
@@ -192,6 +216,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
     dcaChainId,
     config.amount,
     config.deadline,
+    config.feedMaxStalenessSeconds,
     config.frequency,
     config.maxTrades,
     config.neverBuyAbove,
@@ -536,15 +561,6 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
               {errorMessage}
             </Text>
           ) : null}
-        </DCAWizardStepCard>
-        <DCAWizardStepCard title="Execute transactions">
-          <PendingTransactionsList
-            chainId={dcaChainId}
-            transactions={[]}
-            style={{
-              marginTop: '2px',
-            }}
-          />
         </DCAWizardStepCard>
         {address && tosState.status !== TOSStatus.DONE && tosState.status !== TOSStatus.INIT ? (
           <DCAWizardStepCard title={tosSidebarProps.title}>

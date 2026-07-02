@@ -144,6 +144,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             onTooltipOpen={onTooltipOpen}
             isNewVault={isNewVault}
             isRwaVault={isRwaVault}
+            vaultName={customFields?.name}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
@@ -225,7 +226,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
                 </Text>
                 <div style={{ width: 'fit-content' }}>
                   <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                    {customFields?.curatedBy ?? 'n/a'}
+                    {customFields?.vaultCurator ?? 'n/a'}
                   </Text>
                 </div>
               </div>

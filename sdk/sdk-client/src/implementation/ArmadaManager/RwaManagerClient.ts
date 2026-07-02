@@ -101,6 +101,60 @@ export class RwaManagerClient extends IRPCClient implements IRwaManagerClient {
     return this.rpcClient.rwa.getSetMinimumPositionSizeTx.query(params)
   }
 
+  async getNextRoundTx(
+    params: Parameters<IRwaManagerClient['getNextRoundTx']>[0],
+  ): ReturnType<IRwaManagerClient['getNextRoundTx']> {
+    return this.rpcClient.rwa.getNextRoundTx.query(params)
+  }
+
+  async getSetRoundSettledTx(
+    params: Parameters<IRwaManagerClient['getSetRoundSettledTx']>[0],
+  ): ReturnType<IRwaManagerClient['getSetRoundSettledTx']> {
+    return this.rpcClient.rwa.getSetRoundSettledTx.query(params)
+  }
+
+  async getSetRoundSettledBatchTx(
+    params: Parameters<IRwaManagerClient['getSetRoundSettledBatchTx']>[0],
+  ): ReturnType<IRwaManagerClient['getSetRoundSettledBatchTx']> {
+    return this.rpcClient.rwa.getSetRoundSettledBatchTx.query(params)
+  }
+
+  async getRetryRoundTx(
+    params: Parameters<IRwaManagerClient['getRetryRoundTx']>[0],
+  ): ReturnType<IRwaManagerClient['getRetryRoundTx']> {
+    return this.rpcClient.rwa.getRetryRoundTx.query(params)
+  }
+
+  async getEmergencyRollbackRoundTx(
+    params: Parameters<IRwaManagerClient['getEmergencyRollbackRoundTx']>[0],
+  ): ReturnType<IRwaManagerClient['getEmergencyRollbackRoundTx']> {
+    return this.rpcClient.rwa.getEmergencyRollbackRoundTx.query(params)
+  }
+
+  async getSetFleetTransferabilityTx(
+    params: Parameters<IRwaManagerClient['getSetFleetTransferabilityTx']>[0],
+  ): ReturnType<IRwaManagerClient['getSetFleetTransferabilityTx']> {
+    return this.rpcClient.rwa.getSetFleetTransferabilityTx.query(params)
+  }
+
+  async isFleetTransfersEnabled(
+    params: Parameters<IRwaManagerClient['isFleetTransfersEnabled']>[0],
+  ): ReturnType<IRwaManagerClient['isFleetTransfersEnabled']> {
+    return this.rpcClient.rwa.isFleetTransfersEnabled.query(params)
+  }
+
+  async getGrantRoleTx(
+    params: Parameters<IRwaManagerClient['getGrantRoleTx']>[0],
+  ): ReturnType<IRwaManagerClient['getGrantRoleTx']> {
+    return this.rpcClient.rwa.getGrantRoleTx.query(params)
+  }
+
+  async getRevokeRoleTx(
+    params: Parameters<IRwaManagerClient['getRevokeRoleTx']>[0],
+  ): ReturnType<IRwaManagerClient['getRevokeRoleTx']> {
+    return this.rpcClient.rwa.getRevokeRoleTx.query(params)
+  }
+
   async getSetWhitelistedTx(
     params: Parameters<IRwaManagerClient['getSetWhitelistedTx']>[0],
   ): ReturnType<IRwaManagerClient['getSetWhitelistedTx']> {

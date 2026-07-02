@@ -1,5 +1,6 @@
 declare const styles: {
   readonly "backgroundOrb": string;
+  readonly "buildBySummerWrapper": string;
   readonly "buttonAlignStart": string;
   readonly "card": string;
   readonly "cardContent": string;

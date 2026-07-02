@@ -146,6 +146,15 @@ export class FleetCommanderContract<
     })
   }
 
+  /** @see IFleetCommanderContract.setPerformanceFeeRate */
+  setPerformanceFeeRate(params: { rate: IPercentage }): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'setPerformanceFeeRate',
+      args: [params.rate.toSolidityValue({ decimals: 18 })],
+      description: `Set the performance fee rate to ${params.rate}`,
+    })
+  }
+
   /** @see IFleetCommanderContract.addArk */
   addArk(params: { ark: IAddress }): Promise<TransactionInfo> {
     return this._createTransaction({
@@ -349,6 +358,20 @@ export class FleetCommanderContract<
   /** @see IFleetCommanderContract.tipRate */
   async tipRate(): Promise<bigint> {
     return await this.contract.read.tipRate()
+  }
+
+  /** @see IFleetCommanderContract.setFleetTokenTransferability */
+  async setFleetTokenTransferability(): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'setFleetTokenTransferability',
+      args: [],
+      description: `Toggle fleet-token transferability for FleetCommander ${this.address.value}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.transfersEnabled */
+  async transfersEnabled(): Promise<boolean> {
+    return await this.contract.read.transfersEnabled()
   }
 
   /** CASTING METHODS */

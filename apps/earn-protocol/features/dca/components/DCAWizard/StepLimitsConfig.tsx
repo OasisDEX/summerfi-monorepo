@@ -1,5 +1,5 @@
 import { type ChangeEvent, type FC, useEffect, useRef, useState } from 'react'
-import { DatePicker, Input, Text, useAmount } from '@summerfi/app-earn-ui'
+import { DatePicker, Expander, Input, Text, useAmount } from '@summerfi/app-earn-ui'
 import { type IToken } from '@summerfi/app-types'
 
 import { DCAWizardStepCard } from '@/features/dca/components/DCAWizard/DCAWizardStepCard'
@@ -262,6 +262,34 @@ export const StepLimitsConfig: FC<StepLimitsConfigProps> = ({
           />
         </div>
       </div>
+      <Expander title="Advanced">
+        <div className={classNames.conditionCardContent}>
+          <div className={classNames.conditionHeader}>
+            <div>
+              <Text as="h4" variant="p2semi" style={{ marginTop: '24px' }}>
+                Oracle staleness
+              </Text>
+            </div>
+          </div>
+          <Text as="p" variant="p4" className={classNames.mutedText}>
+            Maximum age of the Chainlink price feed used to validate DCA trades. Leave empty to use
+            the contract default (24 hours). The value is in <b>seconds</b>.
+          </Text>
+          <Input
+            variant="dark"
+            type="number"
+            min={0}
+            step={1}
+            value={config.feedMaxStalenessSeconds ?? ''}
+            onChange={(ev) => {
+              patchConfig({
+                feedMaxStalenessSeconds:
+                  ev.target.value === '' ? undefined : Math.max(0, Number(ev.target.value)),
+              })
+            }}
+          />
+        </div>
+      </Expander>
     </DCAWizardStepCard>
   )
 }

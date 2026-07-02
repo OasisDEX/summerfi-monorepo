@@ -1,12 +1,20 @@
 'use client'
 import { type FC } from 'react'
-import { Card, Expander, getUniqueVaultId, Text, VaultExposure } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  Expander,
+  getDisplayToken,
+  getUniqueVaultId,
+  Text,
+  VaultExposure,
+} from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
   type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
   type SingleSourceChartData,
+  type SupportedSDKNetworks,
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
@@ -20,6 +28,7 @@ import { capitalize } from 'lodash-es'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { RwaDepositsWithdrawals } from '@/components/layout/VaultManageView/RwaDepositsWithdrawals'
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { RwaNavPriceChart } from '@/components/organisms/Charts/RwaNavPriceChart'
@@ -30,8 +39,9 @@ import { LatestActivity } from '@/features/latest-activity/components/LatestActi
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
+import { type RwaReceipt } from '@/hooks/use-rwa-claim'
 
-import { detailsLinks } from './vault-details-links'
+import { getDetailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 
 import styles from './VaultOpenViewDetails.module.css'
@@ -48,6 +58,16 @@ interface VaultOpenViewDetailsProps {
   vaultApyData: VaultApyData
   isDaoManaged?: boolean
   isRwaVault?: boolean
+  // RWA-only: powers the "Deposits and Withdrawals" history table for pre-claim users (receipts,
+  // no Fleet position) who land on the open view. Claim/cancel wiring is owned by the parent.
+  // Optional because this view is also reused by the (non-RWA) migration page.
+  network?: SupportedSDKNetworks
+  vaultId?: string
+  walletAddress?: string
+  isWhitelisted?: boolean
+  onRwaAction?: (receipt: RwaReceipt) => void
+  rwaActionInProgressKey?: string
+  rwaActionError?: string
 }
 
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
@@ -62,6 +82,13 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   vaultApyData,
   isDaoManaged,
   isRwaVault,
+  network,
+  vaultId,
+  walletAddress,
+  isWhitelisted,
+  onRwaAction,
+  rwaActionInProgressKey,
+  rwaActionError,
 }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
@@ -91,17 +118,17 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   return (
     <div className={styles.vaultOpenViewDetailsWrapper}>
       <VaultOpenHeaderBlock
-        detailsLinks={detailsLinks}
+        detailsLinks={getDetailsLinks(vault.customFields?.vaultFactSheetUrl)}
         vault={vault}
         isDaoManaged={isDaoManaged}
         isRwaVault={isRwaVault}
       />
-      {isRwaVault ? (
+      {isRwaVault && vault.customFields?.vaultCurator ? (
         <Expander
           onExpand={handleExpanderToggle('vault-asset-manager')}
           title={
             <Text as="p" variant="p1semi">
-              Avantgarde Asset Management (Vault Curator)
+              {vault.customFields.vaultCurator}
             </Text>
           }
           defaultExpanded
@@ -114,9 +141,32 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
               margin: '0 10px',
             }}
           >
-            This Vault is curated and managed by Avantgarde Asset Managment. Avantgarde have over 8
-            years of experience....blah blah blah
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+            {vault.customFields.vaultCuratorDescription ??
+              `This Vault is curated and managed by ${vault.customFields.vaultCurator}`}
           </Text>
+        </Expander>
+      ) : null}
+      {isRwaVault && isWhitelisted && walletAddress && network && vaultId ? (
+        <Expander
+          onExpand={handleExpanderToggle('rwa-deposits-withdrawals')}
+          title={
+            <Text as="p" variant="p1semi">
+              Deposits and Withdrawals
+            </Text>
+          }
+          defaultExpanded
+        >
+          <RwaDepositsWithdrawals
+            network={network}
+            vaultId={vaultId}
+            walletAddress={walletAddress}
+            enabled
+            tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
+            actionInProgressKey={rwaActionInProgressKey}
+            actionError={rwaActionError}
+            onAction={onRwaAction}
+          />
         </Expander>
       ) : null}
       <Expander
@@ -150,7 +200,11 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         }
         defaultExpanded
       >
-        <VaultExposureDescription humanReadableNetwork={humanReadableNetwork} vault={vault}>
+        <VaultExposureDescription
+          humanReadableNetwork={humanReadableNetwork}
+          vault={vault}
+          isRwaVault={isRwaVault}
+        >
           <VaultExposure
             vault={vault}
             arksInterestRates={arksInterestRates}
@@ -177,13 +231,15 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
           tableId="vault-open-rebalancing-activity"
           buttonClickEventHandler={buttonClickEventHandler}
           tooltipEventHandler={tooltipEventHandler}
+          isRwaVault={isRwaVault}
+          marketTargetAllocationPercentage={vault.customFields?.marketTargetAllocationPercentage}
         />
       </Expander>
       <Expander
         onExpand={handleExpanderToggle('curation-activity')}
         title={
           <Text as="p" variant="p1semi">
-            Curation activity
+            Portfolio Composition History
           </Text>
         }
         defaultExpanded
@@ -213,7 +269,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         onExpand={handleExpanderToggle('strategy-management-fee')}
         title={
           <Text as="p" variant="p1semi">
-            Strategy management fee
+            Strategy fees
           </Text>
         }
         defaultExpanded
@@ -244,9 +300,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
               : `A ${formatDecimalAsPercent(managementFee)} annualised management fee is charged for using this strategy. `}
             The fees are continually accounted for and reflected in the market value of your
             position.
-            {performanceFee !== null
-              ? ' There are no restrictions or delays when withdrawing.'
-              : ' This strategy has no other fees, and there are no restrictions or delays when withdrawing.'}
+            {performanceFee === null ? ' This strategy has no other fees.' : ''}{' '}
             {vaultApyData.sma30d
               ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d - managementFee)}.`
               : ''}

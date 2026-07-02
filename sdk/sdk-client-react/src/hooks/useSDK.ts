@@ -89,6 +89,8 @@ import { setFleetDepositCapHandler } from '../handlers/setFleetDepositCapHandler
 import { setMinimumBufferBalanceHandler } from '../handlers/setMinimumBufferBalanceHandler'
 import { setArkDepositCapHandler } from '../handlers/setArkDepositCapHandler'
 import { setArkMaxDepositPercentageOfTVLHandler } from '../handlers/setArkMaxDepositPercentageOfTVLHandler'
+import { setTipRateHandler } from '../handlers/setTipRateHandler'
+import { setPerformanceFeeRateHandler } from '../handlers/setPerformanceFeeRateHandler'
 import { isPermit2AuthorizationNeededHandler } from '../handlers/isPermit2AuthorizationNeededHandler'
 import { getPermit2AuthorizationTxHandler } from '../handlers/getPermit2AuthorizeTxHandler'
 import { getPermit2RevokeTxHandler } from '../handlers/getPermit2UnauthorizeTxHandler'
@@ -115,6 +117,15 @@ import { getRwaReceiptBalancesHandler } from '../handlers/getRwaReceiptBalancesH
 import { getRwaUserVaultExposureHandler } from '../handlers/getRwaUserVaultExposureHandler'
 import { getRwaVaultMarketValueHandler } from '../handlers/getRwaVaultMarketValueHandler'
 import { getRwaSetMinimumPositionSizeTxHandler } from '../handlers/getRwaSetMinimumPositionSizeTxHandler'
+import { getRwaNextRoundTxHandler } from '../handlers/getRwaNextRoundTxHandler'
+import { getRwaSetRoundSettledTxHandler } from '../handlers/getRwaSetRoundSettledTxHandler'
+import { getRwaSetRoundSettledBatchTxHandler } from '../handlers/getRwaSetRoundSettledBatchTxHandler'
+import { getRwaRetryRoundTxHandler } from '../handlers/getRwaRetryRoundTxHandler'
+import { getRwaEmergencyRollbackRoundTxHandler } from '../handlers/getRwaEmergencyRollbackRoundTxHandler'
+import { getRwaSetFleetTransferabilityTxHandler } from '../handlers/getRwaSetFleetTransferabilityTxHandler'
+import { getRwaIsFleetTransfersEnabledHandler } from '../handlers/getRwaIsFleetTransfersEnabledHandler'
+import { getRwaGrantRoleTxHandler } from '../handlers/getRwaGrantRoleTxHandler'
+import { getRwaRevokeRoleTxHandler } from '../handlers/getRwaRevokeRoleTxHandler'
 import { getRwaSetWhitelistedTxHandler } from '../handlers/getRwaSetWhitelistedTxHandler'
 import { getRwaSetWhitelistedBatchTxHandler } from '../handlers/getRwaSetWhitelistedBatchTxHandler'
 import { getRwaSetWhitelistOpenTxHandler } from '../handlers/getRwaSetWhitelistOpenTxHandler'
@@ -521,6 +532,8 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
     () => setArkMaxDepositPercentageOfTVLHandler(sdk),
     [sdk],
   )
+  const setTipRate = useMemo(() => setTipRateHandler(sdk), [sdk])
+  const setPerformanceFeeRate = useMemo(() => setPerformanceFeeRateHandler(sdk), [sdk])
   const getTipRate = useMemo(() => getTipRateHandler(sdk), [sdk])
 
   // region RWA
@@ -539,6 +552,27 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
     () => getRwaSetMinimumPositionSizeTxHandler(sdk),
     [sdk],
   )
+  const getRwaNextRoundTx = useMemo(() => getRwaNextRoundTxHandler(sdk), [sdk])
+  const getRwaSetRoundSettledTx = useMemo(() => getRwaSetRoundSettledTxHandler(sdk), [sdk])
+  const getRwaSetRoundSettledBatchTx = useMemo(
+    () => getRwaSetRoundSettledBatchTxHandler(sdk),
+    [sdk],
+  )
+  const getRwaRetryRoundTx = useMemo(() => getRwaRetryRoundTxHandler(sdk), [sdk])
+  const getRwaEmergencyRollbackRoundTx = useMemo(
+    () => getRwaEmergencyRollbackRoundTxHandler(sdk),
+    [sdk],
+  )
+  const getRwaSetFleetTransferabilityTx = useMemo(
+    () => getRwaSetFleetTransferabilityTxHandler(sdk),
+    [sdk],
+  )
+  const getRwaIsFleetTransfersEnabled = useMemo(
+    () => getRwaIsFleetTransfersEnabledHandler(sdk),
+    [sdk],
+  )
+  const getRwaGrantRoleTx = useMemo(() => getRwaGrantRoleTxHandler(sdk), [sdk])
+  const getRwaRevokeRoleTx = useMemo(() => getRwaRevokeRoleTxHandler(sdk), [sdk])
   const getRwaSetWhitelistedTx = useMemo(() => getRwaSetWhitelistedTxHandler(sdk), [sdk])
   const getRwaSetWhitelistedBatchTx = useMemo(() => getRwaSetWhitelistedBatchTxHandler(sdk), [sdk])
   const getRwaSetWhitelistOpenTx = useMemo(() => getRwaSetWhitelistOpenTxHandler(sdk), [sdk])
@@ -562,6 +596,8 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       setMinimumBufferBalance,
       setArkDepositCap,
       setArkMaxDepositPercentageOfTVL,
+      setTipRate,
+      setPerformanceFeeRate,
       // RWA
       getRwaDepositTx,
       getRwaWithdrawTx,
@@ -575,6 +611,15 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       getRwaUserVaultExposure,
       getRwaVaultMarketValue,
       getRwaSetMinimumPositionSizeTx,
+      getRwaNextRoundTx,
+      getRwaSetRoundSettledTx,
+      getRwaSetRoundSettledBatchTx,
+      getRwaRetryRoundTx,
+      getRwaEmergencyRollbackRoundTx,
+      getRwaSetFleetTransferabilityTx,
+      getRwaIsFleetTransfersEnabled,
+      getRwaGrantRoleTx,
+      getRwaRevokeRoleTx,
       getRwaSetWhitelistedTx,
       getRwaSetWhitelistedBatchTx,
       getRwaSetWhitelistOpenTx,
@@ -596,6 +641,8 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       setMinimumBufferBalance,
       setArkDepositCap,
       setArkMaxDepositPercentageOfTVL,
+      setTipRate,
+      setPerformanceFeeRate,
       getRwaDepositTx,
       getRwaWithdrawTx,
       getRwaClaimSharesTx,
@@ -608,6 +655,15 @@ const useSDKInstiManagerHandlers = (sdk: ISDKInstiManager) => {
       getRwaUserVaultExposure,
       getRwaVaultMarketValue,
       getRwaSetMinimumPositionSizeTx,
+      getRwaNextRoundTx,
+      getRwaSetRoundSettledTx,
+      getRwaSetRoundSettledBatchTx,
+      getRwaRetryRoundTx,
+      getRwaEmergencyRollbackRoundTx,
+      getRwaSetFleetTransferabilityTx,
+      getRwaIsFleetTransfersEnabled,
+      getRwaGrantRoleTx,
+      getRwaRevokeRoleTx,
       getRwaSetWhitelistedTx,
       getRwaSetWhitelistedBatchTx,
       getRwaSetWhitelistOpenTx,

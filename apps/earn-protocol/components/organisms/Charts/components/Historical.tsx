@@ -17,6 +17,7 @@ import {
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import {
   type ActiveDotProps,
   ComposedChart,
@@ -25,6 +26,7 @@ import {
   ReferenceDot,
   ResponsiveContainer,
   Tooltip,
+  type TooltipContentProps,
   useActiveTooltipDataPoints,
   useIsTooltipActive,
   XAxis,
@@ -32,7 +34,11 @@ import {
 } from 'recharts'
 
 import { ChartCross } from '@/components/organisms/Charts/components/ChartCross'
-import { HistoricalLegend } from '@/components/organisms/Charts/components/HistoricalLegend'
+import {
+  HistoricalLegend,
+  type HistoricalLegendData,
+  type HistoricalLegendItemKey,
+} from '@/components/organisms/Charts/components/HistoricalLegend'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import {
   CHART_TIMESTAMP_FORMAT_DETAILED,
@@ -45,6 +51,9 @@ import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 import historicalChartStyles from './Historical.module.css'
 
 dayjs.extend(duration)
+// `duration(...).humanize()` (used in the base-point compare tooltip) relies on the relativeTime
+// plugin. Extend it here so the chart works on any page, not just ones that load it elsewhere.
+dayjs.extend(relativeTime)
 
 type HistoricalChartProps = {
   data?: ChartDataPoints[]
@@ -54,6 +63,11 @@ type HistoricalChartProps = {
     vault: SDKVaultishType
   }
   timeframe: TimeframesType
+  // Render the (otherwise right-sidebar) legend values inside the hover tooltip instead.
+  legendInTooltip?: boolean
+  // Which legend items to show (defaults to all). Lets callers hide irrelevant ones — e.g. RWA
+  // positions earn no $SUMR, so they drop `sumrEarned`.
+  legendItems?: HistoricalLegendItemKey[]
 }
 
 type LegendData = {
@@ -119,6 +133,8 @@ export const HistoricalChart = ({
   tokenSymbol,
   portfolioPosition,
   timeframe,
+  legendInTooltip = false,
+  legendItems,
 }: HistoricalChartProps) => {
   const isAltPressed = useHoldAlt()
   const { deviceType } = useDeviceType()
@@ -171,7 +187,12 @@ export const HistoricalChart = ({
 
   const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART[timeframe]
 
-  const handleLabelFormatter = (label: ReactNode) => {
+  const handleLabelFormatter = (
+    label: ReactNode,
+    // The hovered point's net value. Defaults to the sidebar-legend's tracked value; the in-tooltip
+    // legend passes the value straight from the hovered payload (no external state to lag behind).
+    hoveredNetValueRaw: number | string | undefined = highlightedData.netValueRaw,
+  ) => {
     if (typeof label !== 'string') {
       return label
     }
@@ -182,8 +203,8 @@ export const HistoricalChart = ({
         : CHART_TIMESTAMP_FORMAT_SHORT,
     )
 
-    if (basePoint && highlightedData.netValueRaw !== undefined) {
-      const currentValue = Number(highlightedData.netValueRaw)
+    if (basePoint && hoveredNetValueRaw !== undefined) {
+      const currentValue = Number(hoveredNetValueRaw)
       const timestamp = basePoint.basePointTimestamp
       const timeDifference = dayjs(label).diff(dayjs(timestamp))
       const timeDifferenceLabel = `${timeDifference < 0 ? '-' : ''}${dayjs
@@ -217,9 +238,7 @@ export const HistoricalChart = ({
     }
 
     if (isAltPressed) {
-      return (
-        <NetValueTooltip formattedDate={formattedDate} netValue={highlightedData.netValueRaw} />
-      )
+      return <NetValueTooltip formattedDate={formattedDate} netValue={hoveredNetValueRaw} />
     }
 
     if (!basePoint) {
@@ -236,6 +255,54 @@ export const HistoricalChart = ({
     }
 
     return formattedDate
+  }
+
+  // Custom tooltip used when `legendInTooltip`: the date/compare label plus the legend values for the
+  // hovered point (net value / contributions read straight from the payload; earnings / $SUMR are
+  // position totals). Filtered by `legendItems`.
+  const renderLegendTooltipContent = ({
+    active,
+    label,
+    payload,
+  }: TooltipContentProps<number | string, number | string>): ReactNode => {
+    if (!active || !payload.length) {
+      return null
+    }
+
+    const point = payload[0].payload as ChartDataPoints | undefined
+    const hoveredNetValueRaw = point ? Number(point.netValue) : undefined
+
+    const tooltipLegendData: HistoricalLegendData = {
+      netValue: point
+        ? `${formatCryptoBalance(Number(point.netValue))} ${positionToken}`
+        : legendBaseData.netValue,
+      depositedValue: point
+        ? `${formatCryptoBalance(Number(point.depositedValue))} ${positionToken}`
+        : legendBaseData.depositedValue,
+      earnings: legendBaseData.earnings,
+      sumrEarned: legendBaseData.sumrEarned,
+    }
+
+    return (
+      <div
+        style={{
+          borderRadius: '14px',
+          backgroundColor: 'var(--color-surface-subtle)',
+          padding: '10px 14px',
+        }}
+      >
+        <div style={{ color: 'white', fontSize: '12px', marginBottom: 'var(--general-space-8)' }}>
+          {handleLabelFormatter(label, hoveredNetValueRaw)}
+        </div>
+        <HistoricalLegend
+          inTooltip
+          tokenSymbol={tokenSymbol}
+          highlightedData={tooltipLegendData}
+          legendItems={legendItems}
+          isMobile={isMobile}
+        />
+      </div>
+    )
   }
 
   return (
@@ -299,25 +366,29 @@ export const HistoricalChart = ({
               ]}
               hide={chartHidden}
             />
-            <Tooltip
-              formatter={() => {
-                return ''
-              }}
-              itemStyle={{
-                display: 'none',
-              }}
-              labelStyle={{
-                color: 'white',
-                fontSize: '12px',
-              }}
-              labelFormatter={handleLabelFormatter}
-              contentStyle={{
-                borderRadius: '14px',
-                backgroundColor: 'var(--color-surface-subtle)',
-                border: 'none',
-              }}
-              cursor={false}
-            />
+            {legendInTooltip ? (
+              <Tooltip cursor={false} content={renderLegendTooltipContent} />
+            ) : (
+              <Tooltip
+                formatter={() => {
+                  return ''
+                }}
+                itemStyle={{
+                  display: 'none',
+                }}
+                labelStyle={{
+                  color: 'white',
+                  fontSize: '12px',
+                }}
+                labelFormatter={(label) => handleLabelFormatter(label)}
+                contentStyle={{
+                  borderRadius: '14px',
+                  backgroundColor: 'var(--color-surface-subtle)',
+                  border: 'none',
+                }}
+                cursor={false}
+              />
+            )}
             <Line
               dot={false}
               type="monotone"
@@ -340,11 +411,13 @@ export const HistoricalChart = ({
               animateNewValues
               hide={chartHidden}
             />
-            <TooltipDataIntermediary
-              setHighlightedData={setHighlightedData}
-              legendBaseData={legendBaseData}
-              positionToken={positionToken}
-            />
+            {!legendInTooltip && (
+              <TooltipDataIntermediary
+                setHighlightedData={setHighlightedData}
+                legendBaseData={legendBaseData}
+                positionToken={positionToken}
+              />
+            )}
             {basePoint && (
               <ReferenceDot
                 x={basePoint.timestamp}
@@ -358,11 +431,14 @@ export const HistoricalChart = ({
           </ComposedChart>
         </ResponsiveContainer>
       </RechartResponsiveWrapper>
-      <HistoricalLegend
-        tokenSymbol={tokenSymbol}
-        highlightedData={highlightedData}
-        isMobile={isMobile}
-      />
+      {!legendInTooltip && (
+        <HistoricalLegend
+          tokenSymbol={tokenSymbol}
+          highlightedData={highlightedData}
+          isMobile={isMobile}
+          legendItems={legendItems}
+        />
+      )}
     </div>
   )
 }

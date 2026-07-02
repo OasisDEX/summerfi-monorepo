@@ -5,11 +5,15 @@ import {
   supportedSDKNetworkId,
 } from '@summerfi/app-utils'
 
+import { getCachedConfig } from '@/app/server-handlers/config'
 import {
   getCachedInstitutionVaultActivityLog,
+  getCachedRwaVaultActivity,
   getCachedVaultDetails,
 } from '@/app/server-handlers/institution/institution-vaults'
 import { PanelActivity } from '@/features/panels/vaults/components/PanelActivity/PanelActivity'
+import { PanelRwaActivity } from '@/features/panels/vaults/components/PanelRwaActivity/PanelRwaActivity'
+import { getRwaClientIdForVault } from '@/helpers/rwa'
 
 export default async function InstitutionVaultActivityPage({
   params,
@@ -21,13 +25,30 @@ export default async function InstitutionVaultActivityPage({
   const chainId = supportedSDKNetworkId(subgraphNetworkToId(parsedNetwork))
   const parsedVaultAddress = vaultAddress.toLowerCase()
 
-  const [vault] = await Promise.all([
-    getCachedVaultDetails({
+  const config = await getCachedConfig()
+  const isRwa = !!getRwaClientIdForVault({
+    systemConfig: config,
+    networkId: subgraphNetworkToId(parsedNetwork),
+    vaultAddress: parsedVaultAddress,
+  })
+
+  // RWA deposits/withdrawals flow through the rounds vaults and are recorded as receipt activities in
+  // the institutions-v2 subgraph — not on the standard `vault.deposits/withdraws`. Show those instead.
+  if (isRwa) {
+    const activity = await getCachedRwaVaultActivity({
       institutionName,
-      vaultAddress: parsedVaultAddress,
       network: parsedNetwork,
-    }),
-  ])
+      vaultAddress: parsedVaultAddress,
+    })
+
+    return <PanelRwaActivity activity={activity} />
+  }
+
+  const vault = await getCachedVaultDetails({
+    institutionName,
+    vaultAddress: parsedVaultAddress,
+    network: parsedNetwork,
+  })
 
   if (!vault) {
     return (
@@ -37,15 +58,13 @@ export default async function InstitutionVaultActivityPage({
     )
   }
 
-  const [activityLogBaseDataRaw] = await Promise.all([
-    getCachedInstitutionVaultActivityLog({
-      vaultAddress: parsedVaultAddress,
-      chainId,
-      weekNo: 0,
-      institutionName,
-      targetContractsList: [parsedVaultAddress, ...vault.arks.map((ark) => ark.id)],
-    }),
-  ])
+  const activityLogBaseDataRaw = await getCachedInstitutionVaultActivityLog({
+    vaultAddress: parsedVaultAddress,
+    chainId,
+    weekNo: 0,
+    institutionName,
+    targetContractsList: [parsedVaultAddress, ...vault.arks.map((ark) => ark.id)],
+  })
 
   return (
     <PanelActivity

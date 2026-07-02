@@ -71,7 +71,7 @@ export type ArksHistoricalChartData = {
 
 type VaultCustomFields = {
   // custom fields for vaults - decorated within the earn/lp apps
-  customFields?: EarnAppFleetCustomConfigType
+  customFields?: EarnAppFleetCustomConfigType & { minimumDeposit?: number }
   isDaoManaged?: boolean
   isRwaVault?: boolean
   // day-over-day change of pricePerShare (NAV) as a decimal fraction (e.g. 0.0034 = +0.34%)

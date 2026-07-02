@@ -1,6 +1,9 @@
 import { type ReactNode, Suspense } from 'react'
+import { redirect } from 'next/navigation'
 
+import { getCachedConfig } from '@/app/server-handlers/config'
 import { DashboardContentLayout } from '@/components/layout/DashboardContentLayout/DashboardContentLayout'
+import { getRwaClientIdForVault, urlNetworkToChainId } from '@/helpers/rwa'
 
 import { VaultDetailHeader } from './VaultDetailHeader'
 import { VaultDetailPanel } from './VaultDetailPanel'
@@ -24,6 +27,22 @@ export default async function InstitutionVaultLayout({
 
   if (!vaultAddress) {
     return <div>Vault ID not provided.</div>
+  }
+
+  // RWA vaults are owned by the institution whose name equals their config clientId. Their detail
+  // fetchers resolve the SDK clientId from the vault config (not the URL `institutionName`), so
+  // without this guard an RWA vault belonging to another institution would leak its data under this
+  // institution's URL. This runs in the layout body so it blocks the tab content (`children`), unlike
+  // the streamed `VaultDetailPanel`. Non-RWA vaults resolve no clientId and pass through.
+  const config = await getCachedConfig()
+  const rwaClientId = getRwaClientIdForVault({
+    systemConfig: config,
+    networkId: urlNetworkToChainId(network),
+    vaultAddress,
+  })
+
+  if (rwaClientId && rwaClientId !== institutionName) {
+    redirect(`/${institutionName}/overview/institution`)
   }
 
   return (

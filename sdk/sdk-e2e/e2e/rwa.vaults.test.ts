@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ChainIds, getChainInfoByChainId, type IRwaVaultInfo } from '@summerfi/sdk-common'
+import { getChainInfoByChainId, type IRwaVaultInfo } from '@summerfi/sdk-common'
 
 import assert from 'assert'
 import { stringifyRwaVaultInfo } from './utils/stringifiers'
-import { RwaTestConfig } from './utils/testConfig'
+import { TestClientIds } from './utils/testConfig'
 import { createInstiSdkTestSetup } from './utils/createInstiSdkTestSetup'
 
 jest.setTimeout(300000)
@@ -14,19 +14,19 @@ jest.setTimeout(300000)
 
 describe('RWA - All Vaults', () => {
   const scenarios: {
-    chainId: typeof ChainIds.Base
+    clientId: TestClientIds
   }[] = [
     {
-      chainId: RwaTestConfig.chainId,
+      clientId: TestClientIds.Orthodox,
     },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { chainId } = scenario
+    const { clientId } = scenario
 
     it('should get all RWA vaults with info', async () => {
-      const setup = createInstiSdkTestSetup({})
-      const { sdk, clientId } = setup
+      const setup = createInstiSdkTestSetup({ clientId })
+      const { sdk, chainId } = setup
 
       const chainInfo = getChainInfoByChainId(chainId)
 

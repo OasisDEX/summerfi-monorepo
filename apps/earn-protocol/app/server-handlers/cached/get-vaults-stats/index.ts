@@ -11,7 +11,14 @@ import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 const getVaultsStatsRaw = async () => {
   const [{ vaults }, { vaults: rwaVaults }] = await Promise.all([
     getCachedVaultsList(),
-    getCachedRwaVaultsList(),
+    // The RWA list is additive to these shared stats — isolate its failure so an
+    // institutional-subgraph hiccup can't break instant-liquidity/protocols for the DeFi tab too.
+    getCachedRwaVaultsList().catch((error: unknown) => {
+      // eslint-disable-next-line no-console
+      console.error('getVaultsStats: RWA vaults list failed; continuing without RWA', error)
+
+      return { vaults: [] as Awaited<ReturnType<typeof getCachedRwaVaultsList>>['vaults'] }
+    }),
   ])
 
   const allVaults = [...vaults, ...rwaVaults]

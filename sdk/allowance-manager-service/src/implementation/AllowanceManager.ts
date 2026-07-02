@@ -3,8 +3,11 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
+  Address,
   LoggingService,
   NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+  Token,
+  TokenAmount,
   TransactionType,
   getChainInfoByChainId,
 } from '@summerfi/sdk-common'
@@ -66,6 +69,69 @@ export class AllowanceManager implements IAllowanceManager {
       metadata: {
         approvalAmount: params.amount,
         approvalSpender: params.spender,
+      },
+    }
+  }
+
+  /** @see IAllowanceManager.getApprovalFromBaseUnit */
+  async getApprovalFromBaseUnit(
+    params: Parameters<IAllowanceManager['getApprovalFromBaseUnit']>[0],
+  ): ReturnType<IAllowanceManager['getApprovalFromBaseUnit']> {
+    const chainInfo = getChainInfoByChainId(params.chainId)
+    const tokenAddress = params.tokenAddress as `0x${string}`
+    const spenderAddress = params.spenderAddress as `0x${string}`
+    const publicClient = this._blockchainClientProvider.getBlockchainClient({ chainInfo })
+
+    // Read the token's real metadata (decimals/symbol/name) + (when an owner is given) the current
+    // allowance in one batch. The allowance comparison stays on raw base-unit bigints — the token
+    // metadata only feeds the display-only `approvalAmount`.
+    const [decimals, symbol, name, currentAllowance] = await Promise.all([
+      publicClient.readContract({ address: tokenAddress, abi: erc20Abi, functionName: 'decimals' }),
+      publicClient.readContract({ address: tokenAddress, abi: erc20Abi, functionName: 'symbol' }),
+      publicClient.readContract({ address: tokenAddress, abi: erc20Abi, functionName: 'name' }),
+      params.ownerAddress != null
+        ? publicClient.readContract({
+            address: tokenAddress,
+            abi: erc20Abi,
+            functionName: 'allowance',
+            args: [params.ownerAddress as `0x${string}`, spenderAddress],
+          })
+        : Promise.resolve(null),
+    ])
+
+    if (currentAllowance != null && currentAllowance >= params.amount) {
+      return undefined
+    }
+
+    // Approve calldata is built directly from the raw base-unit bigint.
+    const calldata = encodeFunctionData({
+      abi: erc20Abi,
+      functionName: 'approve',
+      args: [spenderAddress, params.amount],
+    })
+
+    return {
+      type: TransactionType.Approve,
+      description: `Approve ${params.amount} of ${params.tokenAddress} for ${params.spenderAddress}`,
+      transaction: {
+        target: Address.createFromEthereum({ value: params.tokenAddress }),
+        calldata,
+        value: '0',
+      },
+      metadata: {
+        // Display-only metadata; the on-chain approve above uses the raw bigint directly. The token's
+        // decimals/symbol/name are read on-chain so the human-readable amount is correct.
+        approvalAmount: TokenAmount.createFromBaseUnit({
+          token: Token.createFrom({
+            address: Address.createFromEthereum({ value: params.tokenAddress }),
+            chainInfo,
+            symbol,
+            name,
+            decimals,
+          }),
+          amount: params.amount.toString(),
+        }),
+        approvalSpender: Address.createFromEthereum({ value: params.spenderAddress }),
       },
     }
   }

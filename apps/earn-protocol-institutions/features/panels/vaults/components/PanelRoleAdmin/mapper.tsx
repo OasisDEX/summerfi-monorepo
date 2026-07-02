@@ -1,9 +1,9 @@
 import { Button, Icon, TableCellNodes, TableCellText, Tooltip } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 
+import { type SDKTransactionItem } from '@/contexts/TransactionQueueContext/types'
 import { getRevokeContractRoleTransactionId } from '@/helpers/get-transaction-id'
 import { contractSpecificRolesToHuman } from '@/helpers/wallet-roles'
-import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
 import { type InstitutionVaultRole, type InstitutionVaultRoleType } from '@/types/institution-data'
 
 import styles from './PanelRoleAdmin.module.css'

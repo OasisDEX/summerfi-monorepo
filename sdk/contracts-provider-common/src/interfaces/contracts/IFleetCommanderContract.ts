@@ -87,6 +87,16 @@ export interface IFleetCommanderContract extends IContractWrapper {
   setTipRate(params: { rate: IPercentage }): Promise<TransactionInfo>
 
   /**
+   * @name setPerformanceFeeRate
+   * @description Sets the performance fee rate of the fleet.
+   *
+   * @param rate The new performance fee rate
+   *
+   * @returns The transaction information
+   */
+  setPerformanceFeeRate(params: { rate: IPercentage }): Promise<TransactionInfo>
+
+  /**
    * @name addArk
    * @description Adds a new ark to the fleet.
    *
@@ -200,6 +210,15 @@ export interface IFleetCommanderContract extends IContractWrapper {
    */
   forceRebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
 
+  /**
+   * @name setFleetTokenTransferability
+   * @description Toggles (flips) the fleet share-token transferability flag. Governor-gated; takes no
+   *              argument — read `transfersEnabled` first to label the action.
+   *
+   * @returns The transaction information
+   */
+  setFleetTokenTransferability(): Promise<TransactionInfo>
+
   /** READ METHODS */
 
   /**
@@ -240,6 +259,12 @@ export interface IFleetCommanderContract extends IContractWrapper {
    * @description Returns the tip rate of the fleet
    */
   tipRate(): Promise<bigint>
+
+  /**
+   * @name transfersEnabled
+   * @description Returns whether the fleet's share token is currently transferable.
+   */
+  transfersEnabled(): Promise<boolean>
 
   /** CASTING METHODS */
 

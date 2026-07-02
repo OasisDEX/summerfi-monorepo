@@ -17,6 +17,7 @@ import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedRwaUserVaultExposure } from '@/app/server-handlers/cached/get-rwa-user-vault-exposure'
 import { getCachedRwaVaultDetails } from '@/app/server-handlers/cached/get-rwa-vault-details'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
@@ -32,6 +33,7 @@ import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   getVaultCuratedBy,
   getVaultIdByVaultCustomName,
+  getVaultRwaClientId,
 } from '@/helpers/vault-custom-value-helpers'
 
 type EarnVaultManagePageProps = {
@@ -70,20 +72,33 @@ const VaultManageWithData = async ({
     !!parsedVaultId && !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
 
   if (isRwaVault) {
-    const position = parsedVaultId
-      ? await getUserPosition({
-          vaultAddress: parsedVaultId,
-          network: parsedNetwork,
-          walletAddress,
-          isRwaVault,
-        })
+    const rwaClientId = parsedVaultId
+      ? getVaultRwaClientId(parsedVaultId, parsedNetworkId, systemConfig)
       : undefined
+    const [position, exposure] =
+      parsedVaultId && rwaClientId
+        ? await Promise.all([
+            getUserPosition({
+              vaultAddress: parsedVaultId,
+              network: parsedNetwork,
+              walletAddress,
+              isRwaVault,
+            }),
+            getCachedRwaUserVaultExposure({
+              chainId: parsedNetworkId,
+              fleetAddress: parsedVaultId,
+              walletAddress,
+              clientId: rwaClientId,
+            }),
+          ])
+        : [undefined, null]
     const hasShares = !!position && new BigNumber(position.amount.amount).gt(0)
+    // A pre-claim user with no settled shares but pending/claimable exposure still belongs on the
+    // manage view (it synthesizes a "settling" position from this exposure). Only fall back to the
+    // deposit view when there is genuinely nothing (no shares AND no exposure).
+    const hasExposure = !!exposure && new BigNumber(exposure.total).gt(0)
 
-    if (!hasShares) {
-      // No Fleet shares yet (receipts only) — render the open/deposit view (same sidebar + pending
-      // positions). `resolveVaultManageContext` is RWA-aware so the manage path below also works
-      // once the user does hold shares.
+    if (!hasShares && !hasExposure) {
       await queryClient.prefetchQuery({
         queryKey: getVaultOpenCoreQueryKey(network, vaultId),
         queryFn: () => getVaultOpenCoreData({ network, vaultId }),
@@ -108,7 +123,12 @@ const VaultManageWithData = async ({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <VaultManageView network={network} vaultId={vaultId} walletAddress={walletAddress} />
+      <VaultManageView
+        network={network}
+        vaultId={vaultId}
+        walletAddress={walletAddress}
+        isRwaVault={isRwaVault}
+      />
     </HydrationBoundary>
   )
 }
@@ -132,8 +152,13 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     redirect('/not-found')
   }
 
+  // Cheap, cached RWA check (same lookup VaultManageWithData uses) so the Suspense fallback renders
+  // the RWA manage skeleton (30D Net APY stat, Deposits & Withdrawals expander, Deposit/Withdraw
+  // tabs) for RWA vaults.
+  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
+
   return (
-    <Suspense fallback={<VaultManageLoadingView />}>
+    <Suspense fallback={<VaultManageLoadingView isRwaVault={isRwaVault} />}>
       <VaultManageWithData network={network} vaultId={vaultId} walletAddress={walletAddress} />
     </Suspense>
   )

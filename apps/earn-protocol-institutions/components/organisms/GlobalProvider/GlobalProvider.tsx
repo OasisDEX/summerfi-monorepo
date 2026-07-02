@@ -8,6 +8,7 @@ import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { AuthContextProvider } from '@/contexts/AuthContext/AuthContext'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
 import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { TransactionQueueProvider } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { WalletProvider } from '@/providers/WalletProvider/WalletProvider'
 
 type GlobalProviderProps = {
@@ -29,7 +30,9 @@ export const GlobalProvider = ({
         <SystemConfigProvider value={config}>
           <DeviceProvider value={deviceType}>
             <WalletProvider>
-              <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
+              <TransactionQueueProvider>
+                <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
+              </TransactionQueueProvider>
             </WalletProvider>
           </DeviceProvider>
         </SystemConfigProvider>

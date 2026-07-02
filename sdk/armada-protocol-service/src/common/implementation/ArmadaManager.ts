@@ -188,8 +188,11 @@ export class ArmadaManager implements IArmadaManager {
     })
     this.dca = new DCAManager({
       clientId: this._clientId,
+      configProvider: this._configProvider,
       deploymentProvider: this._deploymentProvider,
       dcaSubgraphManager: this._dcaSubgraphManager,
+      contractsProvider: this._contractsProvider,
+      allowanceManager: this._allowanceManager,
     })
   }
 }

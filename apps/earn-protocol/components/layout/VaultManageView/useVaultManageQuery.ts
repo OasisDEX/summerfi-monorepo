@@ -1,8 +1,12 @@
 'use client'
 
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
+import {
+  type RwaReceiptHistorySide,
+  type RwaReceiptsHistoryPage,
+} from '@/app/server-handlers/rwa-receipts-history/get-rwa-receipts-history'
 import { type VaultManageCoreData } from '@/app/server-handlers/vault-manage/get-vault-manage-core-data'
 import {
   type VaultManageCurationData,
@@ -14,6 +18,7 @@ import {
   type VaultManageYieldChartData,
 } from '@/app/server-handlers/vault-manage/get-vault-manage-section-data'
 import {
+  getRwaReceiptsHistoryQueryKey,
   getVaultManageCoreQueryKey,
   getVaultManageSectionQueryKey,
 } from '@/components/layout/VaultManageView/vault-manage-query-keys'
@@ -174,3 +179,42 @@ export const useVaultManageUserActivityQuery = (
     walletAddress,
     enabled,
   )
+
+const RWA_RECEIPTS_PAGE_LIMIT = 10
+
+const fetchRwaReceiptsHistoryPage = async (
+  network: SupportedSDKNetworks,
+  vaultId: string,
+  walletAddress: string,
+  side: RwaReceiptHistorySide,
+  page: number,
+): Promise<RwaReceiptsHistoryPage> => {
+  const response = await fetch(
+    `/earn/api/rwa-receipts-history/${encodeSegment(network)}/${encodeSegment(vaultId)}/${encodeSegment(walletAddress)}?side=${side}&page=${page}&limit=${RWA_RECEIPTS_PAGE_LIMIT}`,
+  )
+
+  if (!response.ok) {
+    throw new Error(`rwa-receipts-history ${response.status}`)
+  }
+
+  return response.json() as Promise<RwaReceiptsHistoryPage>
+}
+
+// Backend-paginated (load-more) RWA deposit/withdrawal history for one side. Lazily enabled when the
+// expander is open (and its tab is active), then cached across collapse/expand and tab switches.
+export const useRwaReceiptsHistory = (
+  network: SupportedSDKNetworks,
+  vaultId: string,
+  walletAddress: string,
+  side: RwaReceiptHistorySide,
+  enabled: boolean,
+) =>
+  useInfiniteQuery({
+    queryKey: getRwaReceiptsHistoryQueryKey(network, vaultId, walletAddress, side),
+    queryFn: ({ pageParam }) =>
+      fetchRwaReceiptsHistoryPage(network, vaultId, walletAddress, side, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.page + 1 : undefined),
+    enabled,
+    ...sharedQueryOptions,
+  })

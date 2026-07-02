@@ -108,8 +108,11 @@ export const useTransaction = ({
     getPermit2AuthorizationTx,
     isPermit2AuthorizationNeeded,
   } = useAppSDK()
-  // RWA deposit/withdraw builders live only on the institutional SDK surface.
-  const { getRwaDepositTx: getRwaDepositTX, getRwaWithdrawTx: getRwaWithdrawTX } = useRwaSDK()
+  // RWA deposit/withdraw builders live only on the institutional SDK surface, scoped to the
+  // institution that owns this vault (its `vaultInstitutionId`).
+  const { getRwaDepositTx: getRwaDepositTX, getRwaWithdrawTx: getRwaWithdrawTX } = useRwaSDK(
+    vault.customFields?.vaultInstitutionId,
+  )
   const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain, chain } = useEarnProtocolChain()

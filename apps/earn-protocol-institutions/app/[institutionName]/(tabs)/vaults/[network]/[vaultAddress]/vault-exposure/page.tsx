@@ -33,13 +33,18 @@ export default async function InstitutionVaultVaultExposurePage({
     ],
   }
 
-  const [vault, config, arksDeployedOnChain] = await Promise.all([
+  // RWA vaults are FleetCommander vaults with real multi-ark allocation (the same arks driven by the
+  // Risk Parameters tab), so the exposure view applies to them too — `getCachedVaultDetails` is
+  // RWA-aware and resolves them via the v2 SDK. APY / on-chain-ark data is sourced from earn-protocol
+  // and may be sparse for RWA arks, which the panel renders as N/A rather than failing.
+  const config = await getCachedConfig()
+
+  const [vault, arksDeployedOnChain] = await Promise.all([
     getCachedVaultDetails({
       institutionName,
       vaultAddress: parsedVaultAddress,
       network: parsedNetwork,
     }),
-    getCachedConfig(),
     getCachedArksDeployedOnChain({ network: parsedNetwork }),
   ])
 

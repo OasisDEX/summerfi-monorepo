@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode, useMemo } from 'react'
-import { Card, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
+import { Card, RechartResponsiveWrapper, Text } from '@summerfi/app-earn-ui'
 import { type SingleSourceChartData, type TimeframesType } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 import { ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
@@ -31,6 +31,28 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
 
     return chartData.data[timeframe ?? defaultTimeframe]
   }, [chartData, timeframe])
+
+  if (parsedData.length === 0) {
+    return (
+      <Card className={aumChartStyles.aumChartCardWrapper}>
+        <div className={aumChartStyles.aumChart}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              height: '270px',
+            }}
+          >
+            <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+              No data available
+            </Text>
+          </div>
+        </div>
+      </Card>
+    )
+  }
 
   return (
     <Card className={aumChartStyles.aumChartCardWrapper}>

@@ -22,6 +22,7 @@ import { resolveVaultOpenContext } from '@/app/server-handlers/vault-open/resolv
 import { type VaultCurationEvent } from '@/features/curation-activity/types'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getRwaNavHistoricalData } from '@/helpers/chart-helpers/get-rwa-nav-historical-data'
+import { getVaultNavPriceSkipFirstNDays } from '@/helpers/vault-custom-value-helpers'
 
 export type VaultOpenDetailsData = {
   latestActivity: LatestActivityPagination
@@ -52,7 +53,14 @@ export const getVaultOpenDetailsData = async ({
     return null
   }
 
-  const { parsedNetwork, parsedVaultId, vaultWithConfig, isRwaVault } = ctx
+  const {
+    parsedNetwork,
+    parsedNetworkId,
+    parsedVaultId,
+    vaultWithConfig,
+    isRwaVault,
+    systemConfig,
+  } = ctx
   const strategy = `${parsedVaultId}-${parsedNetwork}`
 
   // Data needed regardless of vault kind. Kicked off immediately so it runs concurrently with the
@@ -99,7 +107,11 @@ export const getVaultOpenDetailsData = async ({
       vaultId: parsedVaultId,
     })
 
-    rwaNavHistoricalChartData = getRwaNavHistoricalData({ navHistory })
+    rwaNavHistoricalChartData = getRwaNavHistoricalData({
+      navHistory,
+      skipFirstNDays: getVaultNavPriceSkipFirstNDays(parsedVaultId, parsedNetworkId, systemConfig),
+      vaultCreatedTimestamp: vaultWithConfig.createdTimestamp,
+    })
   } else {
     const [{ chartData: vaultBenchmark }, fullArkInterestRatesMap, vaultInterestRates] =
       await Promise.all([

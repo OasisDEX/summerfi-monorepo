@@ -1,0 +1,54 @@
+# Skip docs — code-only extraction needs no LLM API key
+*.md
+*.MD
+*.mdx
+*.rst
+*.txt
+*.html
+*.hbs
+*.yml
+*.yaml
+*.log
+*.zst
+*.http
+*.template
+LICENSE
+Dockerfile
+
+# Skip binary/image assets — graphify cannot extract code meaning from these
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.webp
+*.ico
+*.avif
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.otf
+*.mp4
+*.mp3
+*.wav
+*.pdf
+
+# Skip generated and build output
+dist/
+.next/
+out/
+build/
+.turbo/
+.nx/
+.cache/
+coverage/
+graphify-out/
+
+# Skip lock files and minified assets
+*.lock
+*.min.js
+*.min.css
+pnpm-lock.yaml
+package-lock.json
+yarn.lock

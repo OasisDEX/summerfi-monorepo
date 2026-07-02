@@ -33,7 +33,7 @@ export const updateRebalanceActivity = async ({
   arbitrumGraphQlClient,
   sonicGraphQlClient,
   hyperliquidGraphQlClient,
-  baseRwaGraphQlClient,
+  rwaGraphQlClients,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
@@ -41,7 +41,7 @@ export const updateRebalanceActivity = async ({
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
   hyperliquidGraphQlClient: GraphQLClient
-  baseRwaGraphQlClient?: GraphQLClient
+  rwaGraphQlClients?: GraphQLClient[]
 }) => {
   const startTime = Date.now()
   const [
@@ -75,12 +75,14 @@ export const updateRebalanceActivity = async ({
     },
   })
 
-  // RWA (Base) rebalances from its clone deployment — full-scan from 0 (RWA rows aren't
-  // network-distinguishable to share the Base watermark) + idempotent insert. Fault-tolerant so a
-  // RWA failure never breaks standard ingestion. Likely few/none for rounds-based RWA vaults.
-  const rwaRebalanceActivities =
-    baseRwaGraphQlClient !== undefined
-      ? await fetchAllRebalanceActivities(baseRwaGraphQlClient, '0')
+  // RWA rebalances from the institutions deployments (one client per RWA network) — full-scan from 0
+  // + idempotent insert (RWA rows share the standard per-network watermark). Per-client fault
+  // tolerance so one RWA network failing never breaks standard ingestion or the other RWA networks.
+  // Likely few/none for rounds-based RWA vaults.
+  const rwaRebalanceActivities = (
+    await Promise.all(
+      (rwaGraphQlClients ?? []).map((client) =>
+        fetchAllRebalanceActivities(client, '0')
           .then((rwa) =>
             rwa.rebalances.map((rebalance) => ({
               ...rebalance,
@@ -92,8 +94,10 @@ export const updateRebalanceActivity = async ({
             console.error('Failed to fetch RWA rebalance activities', error)
 
             return []
-          })
-      : []
+          }),
+      ),
+    )
+  ).flat()
 
   const { updated } = await insertRebalanceActivitiesInBatches(db, [
     ...allRebalanceActivities,

@@ -4,6 +4,7 @@ import {
   FiatCurrency,
   FiatCurrencyAmount,
   getChainInfoByChainId,
+  isChainId,
   Price,
   RoundState,
   RoundsVaultType,
@@ -13,6 +14,7 @@ import {
   User,
   type AddressValue,
   type ChainId,
+  type IChainInfo,
   type IFiatCurrencyAmount,
   type IResolvedRoundsVault,
   type IToken,
@@ -21,10 +23,12 @@ import {
 } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
+import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type {
   IContractsProvider,
   IRoundsVaultContract,
   IProtocolAccessManagerV2Contract,
+  IFleetCommanderContract,
 } from '@summerfi/contracts-provider-common'
 import type { IRwaSubgraphManager, GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import { RoundStateRwa } from '@summerfi/subgraph-manager-common'
@@ -53,9 +57,11 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   private readonly _contractsProvider: IContractsProvider
   private readonly _allowanceManager: IAllowanceManager
   private readonly _deploymentProvider: IDeploymentProvider
+  private readonly _supportedChains: IChainInfo[]
 
   constructor(params: {
     clientId?: string
+    configProvider: IConfigurationProvider
     rwaSubgraphManager: IRwaSubgraphManager
     tokensManager: ITokensManager
     contractsProvider: IContractsProvider
@@ -68,12 +74,27 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     this._contractsProvider = params.contractsProvider
     this._allowanceManager = params.allowanceManager
     this._deploymentProvider = params.deploymentProvider
+    this._supportedChains = params.configProvider
+      .getConfigurationItem({ name: 'SUMMER_DEPLOYED_CHAINS_ID_RWA' })
+      .split(',')
+      .map(Number)
+      .filter(isChainId)
+      .map(getChainInfoByChainId)
+  }
+
+  /**
+   * @name _assertSupportedChain
+   * @description Throws unless the RWA module is deployed on `chainId`.
+   */
+  private _assertSupportedChain(chainId: ChainId): void {
+    this.assertSupportedChain({ chainId, supportedChains: this._supportedChains })
   }
 
   async getVaultInfoListPerChain(
     params: Parameters<IRWAManager['getVaultInfoListPerChain']>[0],
   ): ReturnType<IRWAManager['getVaultInfoListPerChain']> {
     const { chainId, clientId } = params
+    this._assertSupportedChain(chainId)
     const queryResult = await this._rwaSubgraphManager.getVaults({
       chainId,
       clientId,
@@ -103,6 +124,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getVaultsRaw(
     params: Parameters<IRWAManager['getVaultsRaw']>[0],
   ): ReturnType<IRWAManager['getVaultsRaw']> {
+    this._assertSupportedChain(params.chainInfo.chainId)
     return this._rwaSubgraphManager.getVaults({
       chainId: params.chainInfo.chainId,
       clientId: params.clientId,
@@ -113,6 +135,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getVaultRaw(
     params: Parameters<IRWAManager['getVaultRaw']>[0],
   ): ReturnType<IRWAManager['getVaultRaw']> {
+    this._assertSupportedChain(params.vaultId.chainInfo.chainId)
     return this._rwaSubgraphManager.getVault({
       chainId: params.vaultId.chainInfo.chainId,
       vaultId: params.vaultId.fleetAddress.value,
@@ -123,6 +146,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getDepositTx(
     params: Parameters<IRWAManager['getDepositTx']>[0],
   ): ReturnType<IRWAManager['getDepositTx']> {
+    this._assertSupportedChain(params.chainId)
     // Deposit the Fleet underlying (e.g. USDC) into the Input RoundsVault for the current round.
     const vault = await this._resolveRoundsVault(
       params.chainId,
@@ -175,6 +199,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getClaimSharesTx(
     params: Parameters<IRWAManager['getClaimSharesTx']>[0],
   ): ReturnType<IRWAManager['getClaimSharesTx']> {
+    this._assertSupportedChain(params.chainId)
     // Exchange a settled Input-round receipt for Fleet shares.
     const vault = await this._resolveRoundsVault(
       params.chainId,
@@ -204,6 +229,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getWithdrawTx(
     params: Parameters<IRWAManager['getWithdrawTx']>[0],
   ): ReturnType<IRWAManager['getWithdrawTx']> {
+    this._assertSupportedChain(params.chainId)
     // Deposit Fleet shares into the Output RoundsVault for the current round.
     const vault = await this._resolveRoundsVault(
       params.chainId,
@@ -272,6 +298,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getClaimAssetsTx(
     params: Parameters<IRWAManager['getClaimAssetsTx']>[0],
   ): ReturnType<IRWAManager['getClaimAssetsTx']> {
+    this._assertSupportedChain(params.chainId)
     // Exchange a settled Output-round receipt for the underlying asset (e.g. USDC).
     const vault = await this._resolveRoundsVault(
       params.chainId,
@@ -301,6 +328,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getCancelRoundDepositTx(
     params: Parameters<IRWAManager['getCancelRoundDepositTx']>[0],
   ): ReturnType<IRWAManager['getCancelRoundDepositTx']> {
+    this._assertSupportedChain(params.chainId)
     // Redeem an open current-round receipt back into the originally deposited asset.
     const vault = await this._resolveRoundsVault(
       params.chainId,
@@ -325,6 +353,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getCurrentRound(
     params: Parameters<IRWAManager['getCurrentRound']>[0],
   ): ReturnType<IRWAManager['getCurrentRound']> {
+    this._assertSupportedChain(params.chainId)
     const vault = await this._resolveRoundsVault(
       params.chainId,
       params.fleetAddress,
@@ -338,6 +367,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getRoundState(
     params: Parameters<IRWAManager['getRoundState']>[0],
   ): ReturnType<IRWAManager['getRoundState']> {
+    this._assertSupportedChain(params.chainId)
     const vault = await this._resolveRoundsVault(
       params.chainId,
       params.fleetAddress,
@@ -352,6 +382,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getExchangeRate(
     params: Parameters<IRWAManager['getExchangeRate']>[0],
   ): ReturnType<IRWAManager['getExchangeRate']> {
+    this._assertSupportedChain(params.chainId)
     const vault = await this._resolveRoundsVault(
       params.chainId,
       params.fleetAddress,
@@ -378,6 +409,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getReceiptBalances(
     params: Parameters<IRWAManager['getReceiptBalances']>[0],
   ): ReturnType<IRWAManager['getReceiptBalances']> {
+    this._assertSupportedChain(params.chainId)
     const vault = await this._resolveRoundsVault(
       params.chainId,
       params.fleetAddress,
@@ -400,6 +432,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     params: Parameters<IRWAManager['getUserVaultExposure']>[0],
   ): ReturnType<IRWAManager['getUserVaultExposure']> {
     const { chainId, fleetAddress, userAddress } = params
+    this._assertSupportedChain(chainId)
 
     const inputVault = await this._resolveRoundsVault(chainId, fleetAddress, RoundsVaultType.Input)
     const outputVault = await this._resolveRoundsVault(
@@ -491,6 +524,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     params: Parameters<IRWAManager['getVaultMarketValue']>[0],
   ): ReturnType<IRWAManager['getVaultMarketValue']> {
     const { chainId, fleetAddress } = params
+    this._assertSupportedChain(chainId)
 
     const inputVault = await this._resolveRoundsVault(chainId, fleetAddress, RoundsVaultType.Input)
     const outputVault = await this._resolveRoundsVault(
@@ -564,6 +598,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getSetMinimumPositionSizeTx(
     params: Parameters<IRWAManager['getSetMinimumPositionSizeTx']>[0],
   ): ReturnType<IRWAManager['getSetMinimumPositionSizeTx']> {
+    this._assertSupportedChain(params.chainId)
     const vault = await this._resolveRoundsVault(
       params.chainId,
       params.fleetAddress,
@@ -578,10 +613,123 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     return contract.setMinPositionSize({ minSize: minSize.toSolidityValue() })
   }
 
+  /** @see IRWAManager.getNextRoundTx */
+  async getNextRoundTx(
+    params: Parameters<IRWAManager['getNextRoundTx']>[0],
+  ): ReturnType<IRWAManager['getNextRoundTx']> {
+    this._assertSupportedChain(params.chainId)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    return contract.nextRound()
+  }
+
+  /** @see IRWAManager.getSetRoundSettledTx */
+  async getSetRoundSettledTx(
+    params: Parameters<IRWAManager['getSetRoundSettledTx']>[0],
+  ): ReturnType<IRWAManager['getSetRoundSettledTx']> {
+    this._assertSupportedChain(params.chainId)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    return contract.setRoundSettled({ roundId: params.roundId })
+  }
+
+  /** @see IRWAManager.getSetRoundSettledBatchTx */
+  async getSetRoundSettledBatchTx(
+    params: Parameters<IRWAManager['getSetRoundSettledBatchTx']>[0],
+  ): ReturnType<IRWAManager['getSetRoundSettledBatchTx']> {
+    this._assertSupportedChain(params.chainId)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    return contract.setRoundSettledBatch({ roundIds: params.roundIds })
+  }
+
+  /** @see IRWAManager.getRetryRoundTx */
+  async getRetryRoundTx(
+    params: Parameters<IRWAManager['getRetryRoundTx']>[0],
+  ): ReturnType<IRWAManager['getRetryRoundTx']> {
+    this._assertSupportedChain(params.chainId)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    return contract.retryRound({ roundId: params.roundId })
+  }
+
+  /** @see IRWAManager.getEmergencyRollbackRoundTx */
+  async getEmergencyRollbackRoundTx(
+    params: Parameters<IRWAManager['getEmergencyRollbackRoundTx']>[0],
+  ): ReturnType<IRWAManager['getEmergencyRollbackRoundTx']> {
+    this._assertSupportedChain(params.chainId)
+    const vault = await this._resolveRoundsVault(
+      params.chainId,
+      params.fleetAddress,
+      params.vaultType,
+    )
+    const contract = await this._getRoundsVaultContract(vault)
+    return contract.emergencyRollbackRound({ roundId: params.roundId })
+  }
+
+  /** @see IRWAManager.getSetFleetTransferabilityTx */
+  async getSetFleetTransferabilityTx(
+    params: Parameters<IRWAManager['getSetFleetTransferabilityTx']>[0],
+  ): ReturnType<IRWAManager['getSetFleetTransferabilityTx']> {
+    this._assertSupportedChain(params.chainId)
+    const contract = await this._getFleetCommanderContract(params.chainId, params.fleetAddress)
+    return contract.setFleetTokenTransferability()
+  }
+
+  /** @see IRWAManager.isFleetTransfersEnabled */
+  async isFleetTransfersEnabled(
+    params: Parameters<IRWAManager['isFleetTransfersEnabled']>[0],
+  ): ReturnType<IRWAManager['isFleetTransfersEnabled']> {
+    this._assertSupportedChain(params.chainId)
+    const contract = await this._getFleetCommanderContract(params.chainId, params.fleetAddress)
+    return contract.transfersEnabled()
+  }
+
+  /** @see IRWAManager.getGrantRoleTx */
+  async getGrantRoleTx(
+    params: Parameters<IRWAManager['getGrantRoleTx']>[0],
+  ): ReturnType<IRWAManager['getGrantRoleTx']> {
+    this._assertSupportedChain(params.chainId)
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
+    return contract.grantRole({
+      role: params.role,
+      account: Address.createFromEthereum({ value: params.account }),
+    })
+  }
+
+  /** @see IRWAManager.getRevokeRoleTx */
+  async getRevokeRoleTx(
+    params: Parameters<IRWAManager['getRevokeRoleTx']>[0],
+  ): ReturnType<IRWAManager['getRevokeRoleTx']> {
+    this._assertSupportedChain(params.chainId)
+    const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
+    return contract.revokeRole({
+      role: params.role,
+      account: Address.createFromEthereum({ value: params.account }),
+    })
+  }
+
   /** @see IRWAManager.getSetWhitelistedTx */
   async getSetWhitelistedTx(
     params: Parameters<IRWAManager['getSetWhitelistedTx']>[0],
   ): ReturnType<IRWAManager['getSetWhitelistedTx']> {
+    this._assertSupportedChain(params.chainId)
     const context = Address.createFromEthereum({ value: params.fleetAddress })
     const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
     return contract.setWhitelisted({
@@ -595,6 +743,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getSetWhitelistedBatchTx(
     params: Parameters<IRWAManager['getSetWhitelistedBatchTx']>[0],
   ): ReturnType<IRWAManager['getSetWhitelistedBatchTx']> {
+    this._assertSupportedChain(params.chainId)
     const context = Address.createFromEthereum({ value: params.fleetAddress })
     const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
     return contract.setWhitelistedBatch({
@@ -608,6 +757,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async getSetWhitelistOpenTx(
     params: Parameters<IRWAManager['getSetWhitelistOpenTx']>[0],
   ): ReturnType<IRWAManager['getSetWhitelistOpenTx']> {
+    this._assertSupportedChain(params.chainId)
     const context = Address.createFromEthereum({ value: params.fleetAddress })
     const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
     return contract.setWhitelistOpen({
@@ -620,6 +770,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async isWhitelisted(
     params: Parameters<IRWAManager['isWhitelisted']>[0],
   ): ReturnType<IRWAManager['isWhitelisted']> {
+    this._assertSupportedChain(params.chainId)
     const context = Address.createFromEthereum({ value: params.fleetAddress })
     const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
     return contract.isWhitelisted({
@@ -632,6 +783,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   async isWhitelistOpen(
     params: Parameters<IRWAManager['isWhitelistOpen']>[0],
   ): ReturnType<IRWAManager['isWhitelistOpen']> {
+    this._assertSupportedChain(params.chainId)
     const context = Address.createFromEthereum({ value: params.fleetAddress })
     const contract = await this._getProtocolAccessManagerV2Contract(params.chainId)
     return contract.isWhitelistOpen({ context })
@@ -760,6 +912,20 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
     return this._contractsProvider.getRoundsVaultContract({
       chainInfo: getChainInfoByChainId(vault.chainId),
       address: Address.createFromEthereum({ value: vault.address }),
+    })
+  }
+
+  /**
+   * @name _getFleetCommanderContract
+   * @description Returns the IFleetCommanderContract wrapper for a Fleet address on a chain.
+   */
+  private _getFleetCommanderContract(
+    chainId: ChainId,
+    fleetAddress: AddressValue,
+  ): Promise<IFleetCommanderContract> {
+    return this._contractsProvider.getFleetCommanderContract({
+      chainInfo: getChainInfoByChainId(chainId),
+      address: Address.createFromEthereum({ value: fleetAddress }),
     })
   }
 

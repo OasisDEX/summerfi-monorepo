@@ -3,6 +3,7 @@ import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
 import { NextResponse } from 'next/server'
 
+import { rwaSubgraphsMap, subgraphsMap } from '@/app/server-handlers/subgraphs-map'
 import { updateVaultsBenchmark } from '@/app/server-handlers/tables-data/vaults-benchmark/updater'
 
 import { updateLatestActivities } from './latest-activity/updater'
@@ -32,18 +33,6 @@ export const updateTablesData = async ({
       throw new Error('SUBGRAPH_BASE is not set')
     }
 
-    const subgraphsMap = {
-      [SupportedSDKNetworks.Mainnet]: `${baseUrl}/summer-protocol`,
-      [SupportedSDKNetworks.Base]: `${baseUrl}/summer-protocol-base`,
-      [SupportedSDKNetworks.ArbitrumOne]: `${baseUrl}/summer-protocol-arbitrum`,
-      [SupportedSDKNetworks.SonicMainnet]: `${baseUrl}/summer-protocol-sonic`,
-      [SupportedSDKNetworks.Hyperliquid]: `${baseUrl}/summer-protocol-hyperliquid`,
-    }
-
-    const rwaSubgraphsMap = {
-      [SupportedSDKNetworks.Base]: `${baseUrl}/summer-institutions-v2-base`,
-    }
-
     const mainnetGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.Mainnet])
     const baseGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.Base])
     const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.ArbitrumOne])
@@ -52,8 +41,11 @@ export const updateTablesData = async ({
       subgraphsMap[SupportedSDKNetworks.Hyperliquid],
     )
 
-    // RWA (rounds-based)
-    const baseRwaGraphQlClient = new GraphQLClient(rwaSubgraphsMap[SupportedSDKNetworks.Base])
+    // RWA (rounds-based): one client per RWA-enabled network (derived from rwaSubgraphsMap, the
+    // single source of truth). Each is full-scanned + fault-tolerant in the updaters, and rows are
+    // tagged with their own network (BASE/MAINNET) by the inserters — so adding a network is a
+    // one-line edit to rwaSubgraphsMap.
+    const rwaGraphQlClients = Object.values(rwaSubgraphsMap).map((url) => new GraphQLClient(url))
 
     let updatedLatestActivities
     let updatedTopDepositors
@@ -68,7 +60,7 @@ export const updateTablesData = async ({
         arbitrumGraphQlClient,
         sonicGraphQlClient,
         hyperliquidGraphQlClient,
-        baseRwaGraphQlClient,
+        rwaGraphQlClients,
       })
     }
 
@@ -80,7 +72,7 @@ export const updateTablesData = async ({
         arbitrumGraphQlClient,
         sonicGraphQlClient,
         hyperliquidGraphQlClient,
-        baseRwaGraphQlClient,
+        rwaGraphQlClients,
       })
     }
 
@@ -92,7 +84,7 @@ export const updateTablesData = async ({
         arbitrumGraphQlClient,
         sonicGraphQlClient,
         hyperliquidGraphQlClient,
-        baseRwaGraphQlClient,
+        rwaGraphQlClients,
       })
     }
 

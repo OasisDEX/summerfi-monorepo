@@ -3,7 +3,7 @@ import { type FC } from 'react'
 import { Expander, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 
-import { detailsLinks } from './vault-details-links'
+import { getDetailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 
 import styles from './VaultOpenViewDetails.module.css'
@@ -12,9 +12,9 @@ const getDetailsExpanderLabels = (isRwaVault: boolean) => [
   isRwaVault ? 'Historical NAV price' : 'Historical yield',
   'Vault exposure',
   'Rebalancing activity',
-  'Curation activity',
+  'Portfolio Composition History',
   'Users activity',
-  'Strategy management fee',
+  'Strategy fees',
 ]
 
 // Shown in place of VaultOpenViewDetails while the details query unit streams in (only ever
@@ -28,7 +28,7 @@ export const VaultOpenDetailsLoading: FC<{
   return (
     <div className={styles.vaultOpenViewDetailsWrapper}>
       <VaultOpenHeaderBlock
-        detailsLinks={detailsLinks}
+        detailsLinks={getDetailsLinks()}
         vault={vault}
         isDaoManaged={isDaoManaged}
         isRwaVault={isRwaVault}

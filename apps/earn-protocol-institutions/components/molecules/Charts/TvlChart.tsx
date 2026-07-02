@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode, useMemo } from 'react'
-import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
+import { RechartResponsiveWrapper, Text } from '@summerfi/app-earn-ui'
 import { type MultipleSourceChartData, type TimeframesType } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 import { Area, ComposedChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
@@ -56,6 +56,26 @@ export const TvlChart = ({ chartData, timeframe, syncId, stacked }: TvlChartProp
       )
     })
   }, [chartData, stacked])
+
+  if (parsedData.length === 0) {
+    return (
+      <div className={tvlChartStyles.tvlChart}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '350px',
+          }}
+        >
+          <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+            No data available
+          </Text>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={tvlChartStyles.tvlChart}>

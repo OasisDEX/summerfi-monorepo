@@ -10,16 +10,21 @@ import { getInstitutionVaultUrl } from '@/helpers/get-url'
 enum DashboardVaultsPanel {
   OVERVIEW = 'overview',
   VAULT_EXPOSURE = 'vault-exposure',
-  ASSET_REALLOCATION = 'asset-reallocation',
+  ASSET_REALLOCATION = 'asset-relocation',
   ASSET_MANAGEMENT = 'asset-management',
   RISK_PARAMETERS = 'risk-parameters',
   ROLE_ADMIN = 'role-admin',
   USER_ADMIN = 'user-admin',
   FEE_REVENUE_ADMIN = 'fee-revenue-admin',
   ACTIVITY = 'activity',
+  ROUNDS = 'rounds',
+  ROLES = 'roles',
 }
 
-const panelItems = [
+type PanelItem = { id: DashboardVaultsPanel; label: string; disabled?: boolean }
+
+// Standard institutional (FleetCommander) vaults: the full fleet-management surface.
+const standardPanelItems: PanelItem[] = [
   {
     id: DashboardVaultsPanel.OVERVIEW,
     label: 'Overview',
@@ -39,7 +44,6 @@ const panelItems = [
   {
     id: DashboardVaultsPanel.ASSET_REALLOCATION,
     label: 'Asset reallocation',
-    disabled: true,
   },
   {
     id: DashboardVaultsPanel.ASSET_MANAGEMENT,
@@ -59,6 +63,42 @@ const panelItems = [
   },
 ]
 
+// RWA (rounds-based) vaults: the standard fleet/ark fleet-management tabs don't apply, so swap in
+// the RWA admin surface — Rounds (lifecycle) and Roles (grant/revoke on the access manager).
+// Share transferability now lives inside Risk Parameters, and the whitelist controls live at the
+// bottom of Roles. Read-only RWA monitoring lives at the bottom of Overview. Standard "Asset
+// management" (fleet deposit), "User admin" and "Asset reallocation" are omitted.
+const rwaPanelItems: PanelItem[] = [
+  {
+    id: DashboardVaultsPanel.OVERVIEW,
+    label: 'Overview',
+  },
+  {
+    id: DashboardVaultsPanel.VAULT_EXPOSURE,
+    label: 'Vault exposure',
+  },
+  {
+    id: DashboardVaultsPanel.RISK_PARAMETERS,
+    label: 'Risk Parameters',
+  },
+  {
+    id: DashboardVaultsPanel.FEE_REVENUE_ADMIN,
+    label: 'Fee & revenue admin',
+  },
+  {
+    id: DashboardVaultsPanel.ROUNDS,
+    label: 'Rounds',
+  },
+  {
+    id: DashboardVaultsPanel.ROLES,
+    label: 'Roles',
+  },
+  {
+    id: DashboardVaultsPanel.ACTIVITY,
+    label: 'Activity',
+  },
+]
+
 export const VaultsPanelNavigationWrapper = ({
   selectedVault,
   institutionName,
@@ -69,6 +109,8 @@ export const VaultsPanelNavigationWrapper = ({
   const { push } = useRouter()
   const pathname = usePathname()
   const panelNavigationTabId = getPanelVaultNavigationTabId(pathname)
+
+  const panelItems = selectedVault.isRwaVault ? rwaPanelItems : standardPanelItems
 
   const navigation = [
     {

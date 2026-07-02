@@ -2,8 +2,10 @@ import { type IArmadaPosition, type SupportedSDKNetworks } from '@summerfi/app-t
 import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
-import { backendInstiSDK, backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { backendSDK, getBackendInstiSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { getVaultRwaClientId } from '@/helpers/vault-custom-value-helpers'
 
 export async function getUserPosition({
   network,
@@ -40,12 +42,26 @@ export async function getUserPosition({
       wallet,
     })
 
-    const position = await (isRwaVault ? backendInstiSDK : backendSDK).armada.users.getUserPosition(
-      {
-        fleetAddress,
-        user,
-      },
-    )
+    // RWA Fleet positions are read through the institution's SDK instance (its Client-Id header selects
+    // the right deployment). The institution is resolved from the vault's `vaultInstitutionId`; a
+    // disabled/unconfigured RWA vault has no client id → no position to read.
+    let instiSdk: ReturnType<typeof getBackendInstiSDK> | undefined
+
+    if (isRwaVault) {
+      const systemConfig = await getCachedConfig()
+      const clientId = getVaultRwaClientId(vaultAddress, chainId, systemConfig)
+
+      if (!clientId) {
+        return undefined
+      }
+
+      instiSdk = getBackendInstiSDK(clientId)
+    }
+
+    const position = await (instiSdk ?? backendSDK).armada.users.getUserPosition({
+      fleetAddress,
+      user,
+    })
 
     return position as IArmadaPosition | undefined
   } catch (error) {

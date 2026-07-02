@@ -53,16 +53,15 @@ import {
   zero,
 } from '@summerfi/app-utils'
 import { RoundState, RoundsVaultType, TransactionType } from '@summerfi/sdk-common'
+import { useQueryClient } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import dynamic from 'next/dynamic'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
-import { RwaPendingPositions } from '@/components/layout/RwaVault/RwaPendingPositions'
-import { RwaRoundNotice } from '@/components/layout/RwaVault/RwaRoundNotice'
-import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
 import { RewardTokenClaimBox } from '@/components/layout/VaultManageView/RewardTokenClaimBox'
+import { getRwaReceiptsHistoryBaseQueryKey } from '@/components/layout/VaultManageView/vault-manage-query-keys'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
@@ -86,7 +85,6 @@ import {
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 import { useRwaClaim } from '@/hooks/use-rwa-claim'
-import { useRwaReceipts } from '@/hooks/use-rwa-receipts'
 import { useRwaRoundInfo } from '@/hooks/use-rwa-round-info'
 import { useRwaSDK } from '@/hooks/use-rwa-sdk'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
@@ -196,6 +194,7 @@ export const VaultManageViewComponent = ({
   )
   const [isDepositWithSwap, setIsDepositWithSwap] = useState<boolean>(false)
   const revalidatePositionData = useRevalidatePositionData()
+  const queryClient = useQueryClient()
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 
@@ -205,8 +204,9 @@ export const VaultManageViewComponent = ({
   const isRwaVault = vault.isRwaVault ?? false
 
   // RWA (rounds-based) calls go through the institutional SDK; standard vault calls use `sdk`.
-  // Defined ahead of useTransaction so its success callback can refresh the pending receipts.
-  const rwaSdk = useRwaSDK()
+  // Defined ahead of useTransaction so its success callback can refresh the pending receipts. The
+  // institution is the vault's `vaultInstitutionId` (merged into customFields on decoration).
+  const rwaSdk = useRwaSDK(vault.customFields?.vaultInstitutionId)
 
   const { isWhitelisted } = useIsWhitelisted({
     isRwaVault,
@@ -219,11 +219,7 @@ export const VaultManageViewComponent = ({
   // Surface the current round so the user knows which round a deposit/withdrawal enters and
   // so the action can be blocked when that round is not open. Input vault for deposits,
   // Output vault for withdrawals — they are independent rounds.
-  const {
-    roundId: rwaRoundId,
-    roundState: rwaRoundState,
-    isLoading: isRwaRoundLoading,
-  } = useRwaRoundInfo({
+  const { roundState: rwaRoundState, isLoading: isRwaRoundLoading } = useRwaRoundInfo({
     enabled: isRwaVault && isWhitelisted,
     sdk: rwaSdk,
     fleetAddress: vault.id,
@@ -234,19 +230,13 @@ export const VaultManageViewComponent = ({
         : RoundsVaultType.Input,
   })
 
-  // Pending RWA positions (ERC-1155 receipts) the user can claim once settled or cancel while the
-  // round is still open.
-  const {
-    receipts: rwaReceipts,
-    isLoading: isRwaReceiptsLoading,
-    refresh: refreshRwaReceipts,
-  } = useRwaReceipts({
-    enabled: isRwaVault && isWhitelisted,
-    sdk: rwaSdk,
-    fleetAddress: vault.id,
-    walletAddress: userWalletAddress,
-    chainId: vaultChainId,
-  })
+  // Refresh the manage-view "Deposits and Withdrawals" history after a deposit/withdraw/claim/cancel.
+  const handleRwaReceiptsRefresh = useCallback(() => {
+    // Prefix key (no side) → invalidates both the deposits and withdrawals history queries.
+    queryClient.invalidateQueries({
+      queryKey: getRwaReceiptsHistoryBaseQueryKey(network, vaultId, viewWalletAddress),
+    })
+  }, [queryClient, network, vaultId, viewWalletAddress])
 
   const {
     executeAction: executeRwaAction,
@@ -259,7 +249,7 @@ export const VaultManageViewComponent = ({
     tokenDecimals: vault.inputToken.decimals,
     walletAddress: userWalletAddress,
     onSuccess: () => {
-      refreshRwaReceipts()
+      handleRwaReceiptsRefresh()
       if (userWalletAddress) {
         revalidatePositionData({
           chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
@@ -323,6 +313,19 @@ export const VaultManageViewComponent = ({
     position,
     vault,
   })
+
+  // Pre-claim RWA user: the position is synthesized from exposure (no settled Fleet shares yet), so
+  // the manage view shows a "settling" summary rather than a real position.
+  const isRwaPendingPosition = isRwaVault && new BigNumber(position.shares.amount).lte(0)
+
+  // Current vault share price (USDC per share); used to value RWA share receipts in USDC terms in
+  // the manage-view deposits/withdrawals history. With no settled shares (pending RWA), fall back to
+  // the vault NAV per share so withdrawal-receipt valuation still works.
+  const vaultSharePrice = new BigNumber(position.shares.amount).gt(0)
+    ? netValue.div(new BigNumber(position.shares.amount))
+    : vault.pricePerShare
+      ? new BigNumber(vault.pricePerShare)
+      : undefined
 
   const {
     amountParsed,
@@ -427,7 +430,7 @@ export const VaultManageViewComponent = ({
     isDepositWithSwap,
     setIsDepositWithSwap,
     // Reload the pending RWA receipts once a deposit/withdraw settles so the new round entry appears.
-    onTransactionSuccess: refreshRwaReceipts,
+    onTransactionSuccess: handleRwaReceiptsRefresh,
   })
 
   const sdk = useAppSDK()
@@ -697,18 +700,7 @@ export const VaultManageViewComponent = ({
             }
             tokenBalanceLoading={selectedTokenBalanceLoading}
             manualSetAmount={manualSetAmount}
-            contentAfterInput={
-              isRwaVault ? (
-                <RwaRoundNotice
-                  roundId={rwaRoundId}
-                  roundState={rwaRoundState}
-                  isLoading={isRwaRoundLoading}
-                  isDeposit={isDeposit}
-                />
-              ) : (
-                considerSwitchingContent
-              )
-            }
+            contentAfterInput={isRwaVault ? null : considerSwitchingContent}
           />
         )
       } else {
@@ -821,10 +813,6 @@ export const VaultManageViewComponent = ({
     manualSetAmount,
     considerSwitchingContent,
     isRwaVault,
-    isDeposit,
-    rwaRoundId,
-    rwaRoundState,
-    isRwaRoundLoading,
     switchAmountDisplay,
     switchManualSetAmount,
     sidebar.primaryButton.loading,
@@ -988,32 +976,20 @@ export const VaultManageViewComponent = ({
             vaultId={vaultId}
             viewWalletAddress={viewWalletAddress}
             vault={vault}
+            position={position}
             vaultApyData={vaultApyData}
+            isRwaVault={isRwaVault}
+            isRwaPendingPosition={isRwaPendingPosition}
+            vaultSharePrice={vaultSharePrice}
+            // Only the position owner can claim/cancel; non-owners view the history read-only.
+            onRwaAction={ownerView ? executeRwaAction : undefined}
+            rwaActionInProgressKey={rwaActionInProgressKey}
+            rwaActionError={rwaActionError}
           />
         }
         sidebarContent={<Sidebar {...resovledSidebarProps} />}
         rightExtraContent={
-          isRwaVault ? (
-            <>
-              {isWhitelisted ? (
-                <RwaPendingPositions
-                  receipts={rwaReceipts}
-                  isLoading={isRwaReceiptsLoading}
-                  tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
-                  tokenDecimals={vault.inputToken.decimals}
-                  vaultSharePrice={
-                    new BigNumber(position.shares.amount).gt(0)
-                      ? netValue.div(new BigNumber(position.shares.amount))
-                      : undefined
-                  }
-                  actionInProgressKey={rwaActionInProgressKey}
-                  error={rwaActionError}
-                  onAction={executeRwaAction}
-                />
-              ) : null}
-              <RwaSidebarInfo />
-            </>
-          ) : (
+          isRwaVault ? null : (
             <>
               <RewardTokenClaimBox
                 vaultChainId={vaultChainId}

@@ -106,11 +106,12 @@ export const PortfolioPosition = ({
       : 'n/a'
     : 'New Strategy'
 
-  const { tokenBonus } = getRewardsTokenBonus({
+  const { tokenBonus, rawTokenBonus } = getRewardsTokenBonus({
     merklRewards: portfolioPosition.vaultInfo.merklRewards,
     tokensPriceMap: sumrPrice ? { SUMR: sumrPrice } : {},
     totalValueLockedUSD,
   })
+  const hasTokenBonus = Number(rawTokenBonus) > 0
 
   const linkToPosition = (
     <Link
@@ -168,19 +169,22 @@ export const PortfolioPosition = ({
               isNewVault={isNewVault}
               isRwaVault={portfolioPosition.vault.isRwaVault}
               isDaoManagedVault={portfolioPosition.vault.isDaoManaged}
+              vaultName={customFields?.name}
             />
             {isMobile && buttonsWrapper}
           </div>
-          <PortfolioPositionHeaderValue
-            titleVariant="p3semiColorful"
-            title={
-              <>
-                $SUMR&nbsp;
-                <Icon iconName="stars_colorful" size={24} style={{ display: 'inline' }} />
-              </>
-            }
-            value={tokenBonus}
-          />
+          {hasTokenBonus && (
+            <PortfolioPositionHeaderValue
+              titleVariant="p3semiColorful"
+              title={
+                <>
+                  $SUMR&nbsp;
+                  <Icon iconName="stars_colorful" size={24} style={{ display: 'inline' }} />
+                </>
+              }
+              value={tokenBonus}
+            />
+          )}
           <PortfolioPositionHeaderValue title="30d APY" value={apy30dParsed} />
           {isRwaVault ? (
             <PortfolioPositionHeaderValue

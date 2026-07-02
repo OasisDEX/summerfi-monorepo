@@ -26,15 +26,15 @@ import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getDepositId, getWithdrawId } from '@/helpers/get-transaction-id'
 import { getInstitutionVaultUrl } from '@/helpers/get-url'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
 import { useNetworkAlignedClient } from '@/hooks/useNetworkAlignedClient'
 import { usePosition } from '@/hooks/usePosition'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 import { useTokenBalance } from '@/hooks/useTokenBalance'
 
 import panelAssetManagementStyles from './PanelAssetManagement.module.css'
@@ -46,14 +46,18 @@ interface PanelAssetManagementProps {
 
 export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, institutionName }) => {
   const { chain, isSettingChain } = useEarnProtocolChain()
-  const { addTransaction, removeTransaction, updateTransaction, transactionQueue } =
-    useSDKTransactionQueue()
-  const { revalidateTags } = useRevalidateTags()
+  const { addTransaction, updateTransaction } = useTransactionQueue()
   const { isLoadingAccount, address: userWalletAddress } = useEarnProtocolWallet()
   const { publicClient } = useNetworkAlignedClient()
   const { getDepositTx, getWithdrawTx, isWhitelisted } = useAdminAppSDK(institutionName)
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
   const sdkNetworkName = chainIdToSDKNetwork(vaultChainId)
+  const revalidateTags = useMemo(
+    () => [
+      `vault-details-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+    ],
+    [institutionName, vault.id, sdkNetworkName],
+  )
   const vaultInputToken = vault.inputToken.symbol
   const vaultOutputToken = vault.outputToken?.symbol
   const inputTokenBalance = new BigNumber(vault.inputTokenBalance.toString())
@@ -273,18 +277,6 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
     manualSetAmountWithdraw,
   ])
 
-  const onTxSuccess = (txId: string) => {
-    if (!txId.includes(TransactionType.Approve)) {
-      revalidateTags({
-        tags: [
-          `vault-details-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
-        ],
-      })
-      reFetchPosition()
-      refetchSelectedTokenBalance()
-    }
-  }
-
   const onDeposit = useCallback(
     ({ address }: { address: string }) => {
       if (!userWalletAddress || amountDepositParsed.isZero() || !vaultToken) return
@@ -296,31 +288,15 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       })
 
       const approveTxId = `${transactionId}-${TransactionType.Approve}`
-      const approveTxDescription = (
-        <Text variant="p3">
-          {formatCryptoBalance(amountDepositParsed)}&nbsp;{vaultInputToken}
-        </Text>
-      )
-      const approveNotNeededTxDescription = (
-        <Text variant="p3">
-          {formatCryptoBalance(amountDepositParsed)}&nbsp;{vaultInputToken} approved already
-        </Text>
-      )
+      const approveTxDescription = `${formatCryptoBalance(amountDepositParsed)} ${vaultInputToken}`
+      const approveNotNeededTxDescription = `${formatCryptoBalance(amountDepositParsed)} ${vaultInputToken} approved already`
       const approveTxLabel = {
         label: capitalize(TransactionType.Approve),
         charge: 'positive' as const,
       }
 
       const depositTxId = `${transactionId}-${TransactionType.Deposit}`
-      const depositTxDescription = (
-        <Text variant="p3">
-          {formatCryptoBalance(amountDepositParsed)}&nbsp;{vaultInputToken}
-          &nbsp;from&nbsp;
-          <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-            {address}
-          </Text>
-        </Text>
-      )
+      const depositTxDescription = `${formatCryptoBalance(amountDepositParsed)} ${vaultInputToken} from ${address}`
       const depositTxLabel = {
         label: capitalize(TransactionType.Deposit),
         charge: 'positive' as const,
@@ -332,11 +308,17 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
           id: approveTxId,
           txDescription: approveTxDescription,
           txLabel: approveTxLabel,
+          chainId: vaultChainId,
+          vaultAddress: vault.id,
+          revalidateTags: [],
         })
         addTransaction({
           id: depositTxId,
           txDescription: depositTxDescription,
           txLabel: depositTxLabel,
+          chainId: vaultChainId,
+          vaultAddress: vault.id,
+          revalidateTags,
         })
 
         // then we get the real txs and update the entries accordingly
@@ -389,6 +371,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       vaultInputToken,
       addTransaction,
       getDepositTx,
+      revalidateTags,
       vault.id,
       updateTransaction,
     ],
@@ -406,31 +389,15 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       })
 
       const approveTxId = `${transactionId}-${TransactionType.Approve}`
-      const approveTxDescription = (
-        <Text variant="p3">
-          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultOutputToken}
-        </Text>
-      )
-      const approveNotNeededTxDescription = (
-        <Text variant="p3">
-          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultOutputToken} approved already
-        </Text>
-      )
+      const approveTxDescription = `${formatCryptoBalance(amountWithdrawParsed)} ${vaultOutputToken}`
+      const approveNotNeededTxDescription = `${formatCryptoBalance(amountWithdrawParsed)} ${vaultOutputToken} approved already`
       const approveTxLabel = {
         label: capitalize(TransactionType.Approve),
         charge: 'positive' as const,
       }
 
       const withdrawTxId = `${transactionId}-${TransactionType.Withdraw}`
-      const withdrawTxDescription = (
-        <Text variant="p3">
-          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultInputToken}
-          &nbsp;from&nbsp;
-          <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-            {address}
-          </Text>
-        </Text>
-      )
+      const withdrawTxDescription = `${formatCryptoBalance(amountWithdrawParsed)} ${vaultInputToken} from ${address}`
       const withdrawTxLabel = {
         label: capitalize(TransactionType.Withdraw),
         charge: 'positive' as const,
@@ -442,11 +409,17 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
           id: approveTxId,
           txDescription: approveTxDescription,
           txLabel: approveTxLabel,
+          chainId: vaultChainId,
+          vaultAddress: vault.id,
+          revalidateTags: [],
         })
         addTransaction({
           id: withdrawTxId,
           txDescription: withdrawTxDescription,
           txLabel: withdrawTxLabel,
+          chainId: vaultChainId,
+          vaultAddress: vault.id,
+          revalidateTags,
         })
 
         // then we get the real txs and update the entries accordingly
@@ -504,6 +477,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       vaultOutputToken,
       addTransaction,
       getWithdrawTx,
+      revalidateTags,
       vault.id,
       updateTransaction,
     ],
@@ -514,6 +488,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       variant="cardSecondary"
       className={panelAssetManagementStyles.panelAssetManagementWrapper}
     >
+      <SwitchChainButton requiredChainId={vaultChainId as SupportedNetworkIds} />
       <div className={panelAssetManagementStyles.assetManagementBlocks}>
         <div className={panelAssetManagementStyles.statsSection}>
           <Card style={{ flexDirection: 'column' }}>
@@ -658,10 +633,12 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
         Transaction Queue
       </Text>
       <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={vaultChainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
+        onLocalTxSuccess={(txId) => {
+          if (!txId.includes(TransactionType.Approve)) {
+            reFetchPosition()
+            refetchSelectedTokenBalance()
+          }
+        }}
       />
     </Card>
   )

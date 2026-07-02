@@ -131,3 +131,169 @@ export const getWithdrawId = ({
 }) => {
   return `withdraw-${address}-${chainId}-${withdrawAmount}`
 }
+
+// region RWA
+
+export const getRwaSetWhitelistOpenId = ({
+  address,
+  chainId,
+  isOpen,
+}: {
+  address: string
+  chainId: number
+  isOpen: boolean
+}) => {
+  return `rwa-set-whitelist-open-${address}-${chainId}-${isOpen}`
+}
+
+export const getRwaGrantWhitelistId = ({
+  address,
+  chainId,
+}: {
+  address: string
+  chainId: number
+}) => {
+  return `rwa-grant-whitelist-${address}-${chainId}`
+}
+
+export const getRwaRevokeWhitelistId = ({
+  address,
+  chainId,
+}: {
+  address: string
+  chainId: number
+}) => {
+  return `rwa-revoke-whitelist-${address}-${chainId}`
+}
+
+export const getRwaSetMinimumPositionSizeId = ({
+  address,
+  chainId,
+  vaultType,
+  minimumPositionSize,
+}: {
+  address: string
+  chainId: number
+  vaultType: string
+  minimumPositionSize: string
+}) => {
+  return `rwa-set-minimum-position-size-${address}-${chainId}-${vaultType}-${minimumPositionSize}`
+}
+
+export const getRwaNextRoundId = ({
+  address,
+  chainId,
+  vaultType,
+}: {
+  address: string
+  chainId: number
+  vaultType: string
+}) => {
+  return `rwa-next-round-${address}-${chainId}-${vaultType}`
+}
+
+export const getRwaSetRoundSettledId = ({
+  address,
+  chainId,
+  vaultType,
+  roundId,
+}: {
+  address: string
+  chainId: number
+  vaultType: string
+  roundId: string
+}) => {
+  return `rwa-set-round-settled-${address}-${chainId}-${vaultType}-${roundId}`
+}
+
+export const getRwaRetryRoundId = ({
+  address,
+  chainId,
+  vaultType,
+  roundId,
+}: {
+  address: string
+  chainId: number
+  vaultType: string
+  roundId: string
+}) => {
+  return `rwa-retry-round-${address}-${chainId}-${vaultType}-${roundId}`
+}
+
+export const getRwaEmergencyRollbackRoundId = ({
+  address,
+  chainId,
+  vaultType,
+  roundId,
+}: {
+  address: string
+  chainId: number
+  vaultType: string
+  roundId: string
+}) => {
+  return `rwa-emergency-rollback-round-${address}-${chainId}-${vaultType}-${roundId}`
+}
+
+export const getRwaGrantRoleId = ({
+  chainId,
+  role,
+  target,
+  account,
+}: {
+  chainId: number
+  role: string
+  target?: string
+  account: string
+}) => {
+  return `rwa-grant-role-${role}-${target ?? 'global'}-${account}-${chainId}`
+}
+
+export const getRwaRevokeRoleId = ({
+  chainId,
+  role,
+  target,
+  account,
+}: {
+  chainId: number
+  role: string
+  target?: string
+  account: string
+}) => {
+  return `rwa-revoke-role-${role}-${target ?? 'global'}-${account}-${chainId}`
+}
+
+export const getRwaSetTransferabilityId = ({
+  address,
+  chainId,
+}: {
+  address: string
+  chainId: number
+}) => {
+  return `rwa-set-transferability-${address}-${chainId}`
+}
+
+export const getRwaSetTipRateId = ({
+  address,
+  chainId,
+  rate,
+}: {
+  address: string
+  chainId: number
+  rate: string
+}) => {
+  return `rwa-set-tip-rate-${address}-${chainId}-${rate}`
+}
+
+export const getRwaSetPerformanceFeeRateId = ({
+  address,
+  chainId,
+  rate,
+}: {
+  address: string
+  chainId: number
+  rate: string
+}) => {
+  return `rwa-set-performance-fee-rate-${address}-${chainId}-${rate}`
+}
+
+// endregion

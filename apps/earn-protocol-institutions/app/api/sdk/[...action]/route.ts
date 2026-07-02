@@ -27,6 +27,13 @@ export async function POST(req: NextRequest) {
   const headers: { [key: string]: string } = {
     'client-id': req.headers.get('client-id') ?? '',
   }
+  // Forward the institutional deployment-config version so RWA (institutions-v2) reads resolve the
+  // correct deployment; without it the SDK server defaults to 'v1' and RWA client-ids 404.
+  const instiVersion = req.headers.get('insti-version')
+
+  if (instiVersion) {
+    headers['insti-version'] = instiVersion
+  }
   const authorization = req.headers.get('Authorization') ?? req.headers.get('authorization')
 
   if (authorization) {
@@ -67,6 +74,13 @@ export async function GET(req: NextRequest) {
 
   const headers: { [key: string]: string } = {
     'client-id': req.headers.get('client-id') ?? '',
+  }
+  // Forward the institutional deployment-config version so RWA (institutions-v2) reads resolve the
+  // correct deployment; without it the SDK server defaults to 'v1' and RWA client-ids 404.
+  const instiVersion = req.headers.get('insti-version')
+
+  if (instiVersion) {
+    headers['insti-version'] = instiVersion
   }
   const authorization = req.headers.get('Authorization') ?? req.headers.get('authorization')
 

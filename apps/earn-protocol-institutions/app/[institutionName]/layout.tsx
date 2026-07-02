@@ -3,9 +3,11 @@ import Link from 'next/link'
 
 import { readSession } from '@/app/server-handlers/auth/session'
 import {
+  getCachedAllInstitutionsList,
   getCachedInstitutionData,
   getCachedUserInstitutionsList,
 } from '@/app/server-handlers/institution/institution-data'
+import { validateInstitutionUserSession } from '@/app/server-handlers/institution/utils/validate-user-session'
 import { InstitutionPageHeader } from '@/components/layout/InstitutionPageHeader/InstitutionPageHeader'
 
 import institutionMainLayoutStyles from './InstitutionMainLayout.module.css'
@@ -39,9 +41,18 @@ export default async function InstitutionMainLayout({
     )
   }
 
+  // Authorize: the user must belong to this institution (global admins may access any). This guards
+  // the ENTIRE institution subtree — without it, any authenticated user could read another
+  // institution's data by changing the URL. Redirects (and logs out) on failure.
+  await validateInstitutionUserSession({ institutionName })
+
   const [institution, userInstitutionsList] = await Promise.all([
     getCachedInstitutionData({ institutionName }),
-    getCachedUserInstitutionsList({ userSub: session.sub }),
+    // Global admins can access any institution, so feed the selector every institution. Regular
+    // users see only the institutions they belong to (their institution_users rows).
+    session.user?.isGlobalAdmin
+      ? getCachedAllInstitutionsList()
+      : getCachedUserInstitutionsList({ userSub: session.sub }),
   ])
 
   if (!institutionName || !institution) {

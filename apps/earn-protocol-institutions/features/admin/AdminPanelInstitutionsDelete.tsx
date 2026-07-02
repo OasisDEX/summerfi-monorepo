@@ -1,10 +1,10 @@
-import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
+import { Card, Text } from '@summerfi/app-earn-ui'
 
 import {
   rootAdminActionDeleteInstitution,
   rootAdminActionGetInstitutionData,
 } from '@/app/server-handlers/admin/institution'
+import { ConfirmDeleteForm } from '@/features/admin/ConfirmDeleteForm'
 
 import styles from './AdminPanelInstitutions.module.css'
 
@@ -21,9 +21,18 @@ const DeleteInstitutionForm = ({
           Deleting the institution will remove: the institution itself and all of the users added to
           that institution (from the DB and cognito user pool)
         </Text>
-        <form action={rootAdminActionDeleteInstitution} className={styles.editInstitutionForm}>
+        {/* Cascading + irreversible → require typing the institution name to confirm. */}
+        <ConfirmDeleteForm
+          action={rootAdminActionDeleteInstitution}
+          className={styles.editInstitutionForm}
+          confirmation={{ mode: 'type', match: institution?.name ?? '' }}
+          submitLabel={<>Delete&nbsp;Institution</>}
+          pendingLabel={<>Deleting&nbsp;Institution...</>}
+          pendingToast="Deleting institution..."
+          backHref="/admin/institutions"
+        >
+          <input type="hidden" name="id" value={institution?.id} />
           <div className={styles.formFields}>
-            <input type="hidden" name="id" value={institution?.id} />
             <div className={styles.formField}>
               <label htmlFor="name" className={styles.formLabel}>
                 Name
@@ -52,20 +61,7 @@ const DeleteInstitutionForm = ({
               />
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Button
-              variant="primarySmall"
-              type="submit"
-              style={{ alignSelf: 'flex-start' }}
-              className={styles.submitButton}
-            >
-              Delete&nbsp;Institution
-            </Button>
-            <Link href="/admin/institutions">
-              <Button variant="secondarySmall">Go back</Button>
-            </Link>
-          </div>
-        </form>
+        </ConfirmDeleteForm>
       </div>
     </Card>
   )

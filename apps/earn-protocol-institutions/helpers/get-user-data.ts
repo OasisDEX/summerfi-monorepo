@@ -12,6 +12,9 @@ export const getUserData = async ({
   | {
       walletAddressRoles: GlobalRoles[]
       roles: { [key in GlobalRoles]: boolean }
+      // Human-readable labels for the connected wallet's RWA roles (e.g. "Curator", "Keeper"). Empty
+      // for standard institutions / wallets with no RWA role.
+      rwaRoleLabels: string[]
     }
   | undefined
 > => {
@@ -26,6 +29,7 @@ export const getUserData = async ({
   const data = (await res.json()) as {
     walletAddressRoles: GlobalRoles[]
     roles: { [key in GlobalRoles]: boolean }
+    rwaRoleLabels: string[]
   } | null
 
   return data ?? undefined

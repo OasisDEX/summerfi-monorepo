@@ -1,12 +1,33 @@
 import { useCallback, useState } from 'react'
 import { useEarnProtocolSendUserOperation } from '@summerfi/app-earn-ui'
 import { type SdkClient } from '@summerfi/sdk-client-react'
-import { type ChainId, RoundsVaultType } from '@summerfi/sdk-common'
+import { type ChainId, type IPrice, type RoundState, RoundsVaultType } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
-import { type RwaReceipt } from '@/hooks/use-rwa-receipts'
+
+export type RwaReceiptStatus = 'claimable' | 'cancellable' | 'pending'
+
+/**
+ * A single ERC-1155 receipt the user holds for a given rounds-vault round, enriched
+ * with the round's state and (when settled) its exchange rate, plus a derived status:
+ *  - `claimable`   round is Settled  → claim shares (Input) / assets (Output)
+ *  - `cancellable` round is Opened   → cancel the pending deposit/withdraw
+ *  - `pending`     round is settling (or not yet open) → no action available
+ */
+export type RwaReceipt = {
+  vaultType: RoundsVaultType
+  roundId: bigint
+  balance: bigint
+  roundState: RoundState
+  exchangeRate?: IPrice
+  status: RwaReceiptStatus
+  // For a partial cancel: the amount (in the vault's underlying base units) to redeem. When omitted
+  // the full `balance` is acted on (always the case for claims). Ignored unless `status` is
+  // `cancellable`.
+  amount?: bigint
+}
 
 type UseRwaClaimProps = {
   sdk: SdkClient
@@ -56,13 +77,15 @@ export const useRwaClaim = ({
       setActionInProgressKey(getRwaReceiptKey(receipt))
 
       try {
+        // Claims act on the full balance; a cancel may redeem only part of it (receipt.amount).
+        const actionBaseAmount = receipt.amount ?? receipt.balance
         const baseParams = {
           fleetAddress: fleetAddress as `0x${string}`,
           chainId: chainId as ChainId,
           userAddress: walletAddress as `0x${string}`,
           roundId: receipt.roundId,
-          // Convert the raw receipt balance to the human-readable amount the SDK expects.
-          amount: new BigNumber(receipt.balance.toString()).shiftedBy(-tokenDecimals).toString(),
+          // Convert the raw base-unit amount to the human-readable amount the SDK expects.
+          amount: new BigNumber(actionBaseAmount.toString()).shiftedBy(-tokenDecimals).toString(),
         }
 
         const txInfo =

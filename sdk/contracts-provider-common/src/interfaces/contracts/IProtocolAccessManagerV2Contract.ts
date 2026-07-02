@@ -1,4 +1,4 @@
-import { IAddress, TransactionInfo } from '@summerfi/sdk-common'
+import { IAddress, type RwaRole, TransactionInfo } from '@summerfi/sdk-common'
 import { IContractWrapper } from './IContractWrapper'
 
 /**
@@ -55,6 +55,30 @@ export interface IProtocolAccessManagerV2Contract extends IContractWrapper {
    * @returns The transaction information
    */
   setWhitelistOpen(params: { context: IAddress; isOpen: boolean }): Promise<TransactionInfo>
+
+  /**
+   * @name grantRole
+   * @description Grants a role to an account via the matching on-chain typed wrapper
+   *              (`grantGovernorRole`, `grantKeeperRole`, …). Restricted on-chain to the governor.
+   *
+   * @param role The role descriptor (carries a `target` for contract-specific roles)
+   * @param account The account to grant the role to
+   *
+   * @returns The transaction information
+   */
+  grantRole(params: { role: RwaRole; account: IAddress }): Promise<TransactionInfo>
+
+  /**
+   * @name revokeRole
+   * @description Revokes a role from an account via the matching on-chain typed wrapper
+   *              (`revokeGovernorRole`, `revokeKeeperRole`, …). Restricted on-chain to the governor.
+   *
+   * @param role The role descriptor (carries a `target` for contract-specific roles)
+   * @param account The account to revoke the role from
+   *
+   * @returns The transaction information
+   */
+  revokeRole(params: { role: RwaRole; account: IAddress }): Promise<TransactionInfo>
 
   /** READ METHODS */
 

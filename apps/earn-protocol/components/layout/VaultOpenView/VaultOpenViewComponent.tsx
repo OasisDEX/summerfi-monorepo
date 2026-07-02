@@ -35,12 +35,7 @@ import {
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
-import {
-  sdkNetworkToHumanNetwork,
-  slugify,
-  subgraphNetworkToSDKId,
-  supportedSDKNetwork,
-} from '@summerfi/app-utils'
+import { slugify, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import {
   // getChainInfoByChainId,
   type IArmadaVaultInfo,
@@ -48,13 +43,14 @@ import {
   RoundState,
   TransactionType,
 } from '@summerfi/sdk-common'
+import { useQueryClient } from '@tanstack/react-query'
+import BigNumber from 'bignumber.js'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
-import { RwaPendingPositions } from '@/components/layout/RwaVault/RwaPendingPositions'
-import { RwaRoundNotice } from '@/components/layout/RwaVault/RwaRoundNotice'
 import { RwaSidebarInfo } from '@/components/layout/RwaVault/RwaSidebarInfo'
+import { getRwaReceiptsHistoryBaseQueryKey } from '@/components/layout/VaultManageView/vault-manage-query-keys'
 import { useVaultOpenDetailsQuery } from '@/components/layout/VaultOpenView/useVaultOpenQuery'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
@@ -80,11 +76,18 @@ import {
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
-import { useRevalidatePositionData } from '@/hooks/use-revalidate'
+import { useRevalidatePositionData, useRevalidateUser } from '@/hooks/use-revalidate'
 import { useRwaClaim } from '@/hooks/use-rwa-claim'
-import { useRwaReceipts } from '@/hooks/use-rwa-receipts'
 import { useRwaRoundInfo } from '@/hooks/use-rwa-round-info'
 import { useRwaSDK } from '@/hooks/use-rwa-sdk'
+import {
+  getRwaUserVaultExposureQueryKey,
+  useRwaUserVaultExposure,
+} from '@/hooks/use-rwa-user-vault-exposure'
+import {
+  getRwaVaultMarketValueQueryKey,
+  useRwaVaultMarketValue,
+} from '@/hooks/use-rwa-vault-market-value'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -158,8 +161,10 @@ export const VaultOpenViewComponent = ({
     state: { slippageConfig },
   } = useLocalConfig()
   const sdk = useAppSDK()
-  // RWA (rounds-based) calls go through the institutional SDK; standard vault calls use `sdk`.
-  const rwaSdk = useRwaSDK()
+  // RWA (rounds-based) calls go through the institutional SDK; standard vault calls use `sdk`. The
+  // institution is the vault's `vaultInstitutionId` (merged into customFields on decoration).
+  const rwaClientId = vault.customFields?.vaultInstitutionId
+  const rwaSdk = useRwaSDK(rwaClientId)
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   // const [migratablePositions, setMigratablePositions] = useState<MigratablePosition[]>([])
@@ -171,6 +176,8 @@ export const VaultOpenViewComponent = ({
 
   const [isNewUser, setIsNewUser] = useState(false)
   const revalidatePositionData = useRevalidatePositionData()
+  const revalidateUser = useRevalidateUser()
+  const queryClient = useQueryClient()
 
   const beachClubEnabled = !!features?.BeachClub && !!userWalletAddress && isNewUser
 
@@ -349,11 +356,7 @@ export const VaultOpenViewComponent = ({
   // RWA vaults are rounds-based: surface the current deposit round so the user
   // knows which round their deposit enters, and block deposits when that round
   // is not currently open.
-  const {
-    roundId: rwaRoundId,
-    roundState: rwaRoundState,
-    isLoading: isRwaRoundLoading,
-  } = useRwaRoundInfo({
+  const { roundState: rwaRoundState, isLoading: isRwaRoundLoading } = useRwaRoundInfo({
     enabled: isRwaVault && isWhitelisted,
     sdk: rwaSdk,
     fleetAddress: vault.id,
@@ -365,19 +368,28 @@ export const VaultOpenViewComponent = ({
   const blockRwaDeposit =
     isRwaVault && isWhitelisted && !isRwaRoundLoading && rwaRoundState !== RoundState.Opened
 
-  // Pending RWA positions (ERC-1155 receipts) the user can claim once settled or
-  // cancel while the round is still open.
-  const {
-    receipts: rwaReceipts,
-    isLoading: isRwaReceiptsLoading,
-    refresh: refreshRwaReceipts,
-  } = useRwaReceipts({
-    enabled: isRwaVault && isWhitelisted,
-    sdk: rwaSdk,
-    fleetAddress: vault.id,
-    walletAddress: userWalletAddress,
-    chainId: vaultChainId,
-  })
+  // Pre-claim RWA users (receipts, no Fleet shares) land on this open view, so the deposits/
+  // withdrawals history table (with claim/cancel) lives here too. Refresh it + the portfolio
+  // user-data cache after a deposit/claim/cancel.
+  const handleRwaReceiptsRefresh = useCallback(() => {
+    if (!userWalletAddress) {
+      return
+    }
+    queryClient.invalidateQueries({
+      queryKey: getRwaReceiptsHistoryBaseQueryKey(network, vaultId, userWalletAddress),
+    })
+    // Also refresh the exposure query so `hasRwaExposure` flips once the deposit is indexed, which
+    // forwards a receipts-only holder to their manage view (mirrors the regular-vault post-deposit
+    // redirect that fires when the settled position appears).
+    queryClient.invalidateQueries({
+      queryKey: getRwaUserVaultExposureQueryKey(vaultChainId, vault.id, userWalletAddress),
+    })
+    // And the vault-wide market value, whose pending-deposits component grows with this deposit.
+    queryClient.invalidateQueries({
+      queryKey: getRwaVaultMarketValueQueryKey(vaultChainId, vault.id),
+    })
+    revalidateUser(userWalletAddress)
+  }, [queryClient, network, vaultId, userWalletAddress, revalidateUser, vaultChainId, vault.id])
 
   const {
     executeAction: executeRwaAction,
@@ -389,16 +401,7 @@ export const VaultOpenViewComponent = ({
     chainId: vaultChainId,
     tokenDecimals: vault.inputToken.decimals,
     walletAddress: userWalletAddress,
-    onSuccess: () => {
-      refreshRwaReceipts()
-      if (userWalletAddress) {
-        revalidatePositionData({
-          chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
-          vaultId: vault.id,
-          walletAddress: userWalletAddress,
-        })
-      }
-    },
+    onSuccess: handleRwaReceiptsRefresh,
   })
 
   const {
@@ -427,8 +430,8 @@ export const VaultOpenViewComponent = ({
     sidebarTransactionType: TransactionAction.DEPOSIT,
     referralCode,
     referralCodeError,
-    // Reload the pending RWA receipts once a deposit settles so the new round entry appears.
-    onTransactionSuccess: refreshRwaReceipts,
+    // Refresh the RWA history table once a deposit mints its pending receipt.
+    onTransactionSuccess: handleRwaReceiptsRefresh,
   })
 
   const { position } = usePosition({
@@ -437,6 +440,7 @@ export const VaultOpenViewComponent = ({
     // RWA Fleet positions live in the institutional subgraph; read them via the RWA SDK so a
     // whitelisted holder who has claimed shares is redirected from the open page to their position.
     isRwaVault,
+    rwaClientId,
   })
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
@@ -493,7 +497,28 @@ export const VaultOpenViewComponent = ({
       }
     }
   })
-  useRedirectToPositionView({ vault, position })
+  // A whitelisted, receipts-only RWA holder (no settled Fleet position) is forwarded to their manage
+  // view, which renders a "settling" position from this exposure.
+  const { data: rwaExposure } = useRwaUserVaultExposure({
+    enabled: isRwaVault && isWhitelisted,
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    walletAddress: userWalletAddress,
+    chainId: vaultChainId,
+  })
+  const hasRwaExposure = !!rwaExposure && new BigNumber(rwaExposure.total.amount).gt(0)
+
+  // Vault-wide true TVL (Fleet assets + pending deposits + claimable withdrawals). The subgraph TVL
+  // only reflects settled Fleet assets, so the open-view "Market Value" uses this to include the
+  // settling deposits. Public (no wallet), so it loads for any visitor of an RWA vault.
+  const { data: rwaMarketValue, isLoading: rwaMarketValueLoading } = useRwaVaultMarketValue({
+    enabled: isRwaVault,
+    sdk: rwaSdk,
+    fleetAddress: vault.id,
+    chainId: vaultChainId,
+  })
+
+  useRedirectToPositionView({ vault, position, hasRwaExposure })
 
   const displaySimulationGraph = amountParsed.gt(0)
 
@@ -553,13 +578,7 @@ export const VaultOpenViewComponent = ({
       manualSetAmount={manualSetAmount}
       ownerView
       contentAfterInput={
-        isRwaVault && isWhitelisted ? (
-          <RwaRoundNotice
-            roundId={rwaRoundId}
-            roundState={rwaRoundState}
-            isLoading={isRwaRoundLoading}
-          />
-        ) : beachClubEnabled ? (
+        isRwaVault && isWhitelisted ? null : beachClubEnabled ? (
           <BeachClubReferralForm
             onError={handleReferralCodeError}
             onChange={handleReferralCodeChange}
@@ -623,21 +642,35 @@ export const VaultOpenViewComponent = ({
 
   const permissionedSidebarProps: SidebarProps = {
     title: 'Permissioned Vault',
+    // Show the standard deposit inputs but disabled (no ownerView) — the wallet isn't
+    // whitelisted yet — and tuck the restriction notice underneath as a small footnote.
     content: (
-      <Text
-        as="p"
-        variant="p3semi"
-        style={{ color: 'var(--earn-protocol-secondary-60)', margin: '8px 0 24px 0' }}
-      >
-        This Vault is restricted to users and their wallets which have been approved for access
-        through KYC/AML checks either through Summer.fi or an approved custodian or wallet provider.
-      </Text>
+      <ControlsDepositWithdraw
+        amountDisplay={amountDisplay}
+        amountDisplayUSD={amountDisplayUSDWithSwap}
+        handleAmountChange={handleAmountChange}
+        handleDropdownChange={handleTokenSelectionChangeWrapper}
+        options={tokenOptions}
+        dropdownValue={selectedTokenOption}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        tokenSymbol={selectedTokenOption.value}
+        tokenBalance={selectedTokenBalance}
+        tokenBalanceLoading={selectedTokenBalanceLoading}
+        manualSetAmount={manualSetAmount}
+      />
     ),
     primaryButton: {
       label: 'Connect a whitelisted wallet',
       action: handleConnectWhitelistedWallet,
       loading: isWhitelistedLoading,
     },
+    footnote: (
+      <Text as="p" variant="p4" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+        This Vault is restricted to users and their wallets which have been approved for access
+        through KYC/AML checks either through Summer.fi or an approved custodian or wallet provider.
+      </Text>
+    ),
     isMobileOrTablet,
     handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
   }
@@ -658,6 +691,8 @@ export const VaultOpenViewComponent = ({
         isMobileOrTablet={isMobileOrTablet}
         vault={vault}
         vaultInfo={vaultInfo}
+        rwaMarketValue={rwaMarketValue}
+        rwaMarketValueLoading={rwaMarketValueLoading}
         rewardTokenPrices={rewardTokenPrices}
         vaults={vaults}
         medianDefiYield={medianDefiYield}
@@ -689,6 +724,13 @@ export const VaultOpenViewComponent = ({
               vaultApyData={vaultApyData}
               isDaoManaged={vault.isDaoManaged}
               isRwaVault={vault.isRwaVault}
+              network={network}
+              vaultId={vaultId}
+              walletAddress={userWalletAddress}
+              isWhitelisted={isWhitelisted}
+              onRwaAction={executeRwaAction}
+              rwaActionInProgressKey={rwaActionInProgressKey}
+              rwaActionError={rwaActionError}
             />
           ) : (
             <VaultOpenDetailsLoading vault={vault} isDaoManaged={vault.isDaoManaged} />
@@ -726,24 +768,7 @@ export const VaultOpenViewComponent = ({
         //     />
         //   )
         // }
-        rightExtraContent={
-          isRwaVault ? (
-            <>
-              {isWhitelisted ? (
-                <RwaPendingPositions
-                  receipts={rwaReceipts}
-                  isLoading={isRwaReceiptsLoading}
-                  tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
-                  tokenDecimals={vault.inputToken.decimals}
-                  actionInProgressKey={rwaActionInProgressKey}
-                  error={rwaActionError}
-                  onAction={executeRwaAction}
-                />
-              ) : null}
-              <RwaSidebarInfo />
-            </>
-          ) : null
-        }
+        rightExtraContent={isRwaVault ? <RwaSidebarInfo /> : null}
       />
     </>
   )

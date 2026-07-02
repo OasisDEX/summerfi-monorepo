@@ -12,7 +12,7 @@ const tabBarStyle = {
   paddingTop: 'var(--spacing-space-medium)',
   position: 'sticky' as const,
   top: 0,
-  zIndex: 10000, // has to be above chart tooltips, otherwise it looks weird
+  zIndex: 1001, // has to be above chart tooltips, otherwise it looks weird
   backdropFilter: 'blur(20px)',
   backgroundColor: 'rgba(28,28,28, 0.5)',
 }
@@ -26,7 +26,7 @@ export const InstitutionTabsHeader = async ({ institutionName }: { institutionNa
   const institutionVaults = await getCachedInstitutionVaults({ institutionName })
 
   if (!institutionVaults?.vaults.length) {
-    return <div>Institution not found.</div>
+    return null
   }
 
   const performanceValues = institutionVaults.vaults

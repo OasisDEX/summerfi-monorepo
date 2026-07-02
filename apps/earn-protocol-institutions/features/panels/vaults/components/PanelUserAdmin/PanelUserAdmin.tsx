@@ -23,7 +23,9 @@ import {
 import { type Role } from '@summerfi/sdk-common'
 
 import { type InstiVaultActiveUsersResponse } from '@/app/server-handlers/institution/institution-vaults/types'
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { AddWhitelistForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddWhitelistForm'
 import {
   activeUsersListColumns,
@@ -44,8 +46,6 @@ import {
   getRevokeWhitelistId,
 } from '@/helpers/get-transaction-id'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 import panelUserStyles from './PanelUser.module.css'
 
@@ -76,8 +76,16 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
   const chainId = networkNameToSDKId(network)
   const sdkNetworkName = chainIdToSDKNetwork(chainId)
   const { setWhitelistedTx, setWhitelistedAQTx } = useAdminAppSDK(institutionName)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
-  const { revalidateTags } = useRevalidateTags()
+  const { addTransaction, transactionQueue } = useTransactionQueue()
+
+  const revalidateTags = useMemo(
+    () => [
+      `vault-aq-whitelist-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+      `vault-whitelist-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+      `institution-vault-active-users-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+    ],
+    [institutionName, vaultAddress, sdkNetworkName],
+  )
 
   const aqAddress = useMemo(() => {
     return institutionBasicData?.institution?.admiralsQuarters ?? ''
@@ -102,18 +110,14 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         addTransaction(
           {
             id: transactionId,
-            txDescription: (
-              <Text variant="p3">
-                whitelist&nbsp;from&nbsp;
-                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                  {address}
-                </Text>
-              </Text>
-            ),
+            txDescription: `whitelist from ${address}`,
             txLabel: {
               label: 'Revoke',
               charge: 'negative',
             },
+            chainId,
+            vaultAddress,
+            revalidateTags,
           },
           setWhitelistedTx({
             chainId,
@@ -128,7 +132,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [addTransaction, chainId, setWhitelistedTx, vaultAddress],
+    [addTransaction, chainId, revalidateTags, setWhitelistedTx, vaultAddress],
   )
 
   const onGrantWhitelist = useCallback(
@@ -148,18 +152,14 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         addTransaction(
           {
             id: transactionId,
-            txDescription: (
-              <Text variant="p3">
-                whitelist&nbsp;to&nbsp;
-                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                  {address}
-                </Text>
-              </Text>
-            ),
+            txDescription: `whitelist to ${address}`,
             txLabel: {
               label: 'Grant',
               charge: 'positive',
             },
+            chainId,
+            vaultAddress,
+            revalidateTags,
           },
           setWhitelistedTx({
             chainId,
@@ -177,6 +177,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
     [
       addTransaction,
       chainId,
+      revalidateTags,
       setWhitelistedTx,
       vaultAddress,
       whitelistedAQWallets,
@@ -192,18 +193,14 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         addTransaction(
           {
             id: transactionId,
-            txDescription: (
-              <Text variant="p3">
-                AQ&nbsp;whitelist&nbsp;from&nbsp;
-                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                  {address}
-                </Text>
-              </Text>
-            ),
+            txDescription: `AQ whitelist from ${address}`,
             txLabel: {
               label: 'Revoke',
               charge: 'negative',
             },
+            chainId,
+            vaultAddress,
+            revalidateTags,
           },
           setWhitelistedAQTx({
             chainId,
@@ -217,7 +214,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [addTransaction, chainId, setWhitelistedAQTx],
+    [addTransaction, chainId, revalidateTags, setWhitelistedAQTx, vaultAddress],
   )
 
   const onGrantAQWhitelist = useCallback(
@@ -234,18 +231,14 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         addTransaction(
           {
             id: transactionId,
-            txDescription: (
-              <Text variant="p3">
-                AQ&nbsp;whitelist&nbsp;to&nbsp;
-                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                  {address}
-                </Text>
-              </Text>
-            ),
+            txDescription: `AQ whitelist to ${address}`,
             txLabel: {
               label: 'Grant',
               charge: 'positive',
             },
+            chainId,
+            vaultAddress,
+            revalidateTags,
           },
           setWhitelistedAQTx({
             chainId,
@@ -259,7 +252,14 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [addTransaction, chainId, setWhitelistedAQTx, whitelistedAQWallets],
+    [
+      addTransaction,
+      chainId,
+      revalidateTags,
+      setWhitelistedAQTx,
+      vaultAddress,
+      whitelistedAQWallets,
+    ],
   )
 
   const whitelistedListRows = useMemo(
@@ -323,16 +323,6 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
     [activeUsers, activeUsersSortConfig, activeUsersFilter, isLoadingAccount, userWalletAddress],
   )
 
-  const onTxSuccess = () => {
-    revalidateTags({
-      tags: [
-        `vault-aq-whitelist-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
-        `vault-whitelist-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
-        `institution-vault-active-users-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
-      ],
-    })
-  }
-
   const handleGrantWhitelist = ({ address }: { address: `0x${string}` }) => {
     // need to check if we need to add both whitelist and AQ whitelist
     onGrantWhitelist({ address })
@@ -343,6 +333,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
 
   return (
     <Card variant="cardSecondary" className={panelUserStyles.panelUserAdminWrapper}>
+      <SwitchChainButton requiredChainId={chainId} />
       <div className={panelUserStyles.titleWithInput}>
         <Text as="h5" variant="h5">
           Active Users
@@ -418,12 +409,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={chainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
-      />
+      <TransactionQueue />
     </Card>
   )
 }

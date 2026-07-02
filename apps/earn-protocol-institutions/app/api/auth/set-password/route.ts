@@ -122,18 +122,24 @@ export async function POST(request: NextRequest) {
 
       await createSession(enriched, user.id, user.cognitoUsername)
 
+      // Match the cookie attributes used by the signin / respond-challenge routes: `path: '/'` so
+      // the freshly-set tokens are sent on every subsequent app request (without it the cookie
+      // defaults to the `/api/auth` request path and the session looks "lost"), and the same TTLs
+      // (15m access / 7d refresh) so the post-set-password session window is consistent.
       cookieStore.set(ACCESS_TOKEN_COOKIE, user.accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 60 * 60, // 1 hour
+        path: '/',
+        maxAge: 15 * 60,
       })
 
       cookieStore.set(REFRESH_TOKEN_COOKIE, user.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7,
       })
 
       return NextResponse.json({ user: enriched })

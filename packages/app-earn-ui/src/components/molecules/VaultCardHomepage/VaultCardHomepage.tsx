@@ -315,6 +315,8 @@ export const VaultCardHomepage = ({
             networkName={supportedSDKNetwork(protocol.network)}
             isVaultCard
             isNewVault={isNewVault}
+            isRwaVault={vault.isRwaVault}
+            vaultName={customFields?.name}
           />
         </div>
         <div className={vaultCardHomepageStyles.vaultCardHomepageDatablocksWrapper}>

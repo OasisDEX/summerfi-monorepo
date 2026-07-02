@@ -15,9 +15,13 @@ import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-lis
 import { decorateVaultsWithFees } from '@/app/server-handlers/fleet-fees/decorate-vaults-with-fees'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import {
+  buildRwaLiveMinDepositMap,
   decorateVaultsWithConfig,
   getVaultCuratedBy,
   getVaultIdByVaultCustomName,
+  getVaultRwaClientId,
+  isVaultDisabled,
+  withRwaLiveMinDeposit,
 } from '@/helpers/vault-custom-value-helpers'
 
 // Shared resolution step for the vault-manage query units. The core + per-section handlers each
@@ -51,13 +55,24 @@ export const resolveVaultManageContext = async ({
   // return nothing and the page reports "no such vault".
   const isRwaVault = !!getVaultCuratedBy(parsedVaultId ?? '', parsedNetworkId, systemConfig)
 
-  if (!parsedVaultId || !isAddress(walletAddress)) {
+  // Institution that owns this (RWA) vault, from its `vaultInstitutionId` — selects the SDK instance
+  // for the exposure read below and is threaded to the client for RWA SDK calls.
+  const rwaClientId = getVaultRwaClientId(parsedVaultId ?? '', parsedNetworkId, systemConfig)
+
+  // A vault flagged `disabled: true` in config is hidden/unused: resolve to not-found before any data
+  // fetch, so a direct URL never displays or pulls data for it.
+  if (
+    !parsedVaultId ||
+    !isAddress(walletAddress) ||
+    isVaultDisabled(parsedVaultId, parsedNetworkId, systemConfig)
+  ) {
     return {
       systemConfig,
       parsedNetwork,
       parsedNetworkId,
       parsedVaultId,
       isRwaVault,
+      rwaClientId,
       vault: null,
       position: null,
       vaultWithConfig: null,
@@ -94,6 +109,7 @@ export const resolveVaultManageContext = async ({
       parsedNetworkId,
       parsedVaultId,
       isRwaVault,
+      rwaClientId,
       vault: vault ?? null,
       position: position ?? null,
       vaultWithConfig: null,
@@ -103,6 +119,10 @@ export const resolveVaultManageContext = async ({
 
   const daoManagedVaultsList = await getDaoManagedVaultsIDsList(allVaults)
 
+  // RWA min deposit lives in the subgraph (inputVault.minPositionSize), not in fleet config, so the
+  // decorated vault's customFields.minimumDeposit is empty — overlay the live value (mirrors the list).
+  const liveMinDepositMap = isRwaVault ? buildRwaLiveMinDepositMap(rwaVaults) : {}
+
   const [[vaultWithConfig], allVaultsWithConfig] = await Promise.all([
     decorateVaultsWithFees(
       decorateVaultsWithConfig({
@@ -110,14 +130,14 @@ export const resolveVaultManageContext = async ({
         systemConfig,
         userPositions: position ? [position] : undefined,
         daoManagedVaultsList,
-      }),
+      }).map((decoratedVault) => withRwaLiveMinDeposit(decoratedVault, liveMinDepositMap)),
     ),
     decorateVaultsWithFees(
       decorateVaultsWithConfig({
         vaults: allVaults,
         systemConfig,
         daoManagedVaultsList,
-      }),
+      }).map((decoratedVault) => withRwaLiveMinDeposit(decoratedVault, liveMinDepositMap)),
     ),
   ])
 
@@ -127,6 +147,7 @@ export const resolveVaultManageContext = async ({
     parsedNetworkId,
     parsedVaultId,
     isRwaVault,
+    rwaClientId,
     vault,
     position,
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

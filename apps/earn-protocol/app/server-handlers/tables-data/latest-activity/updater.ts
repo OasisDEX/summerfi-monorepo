@@ -34,7 +34,7 @@ export const updateLatestActivities = async ({
   arbitrumGraphQlClient,
   sonicGraphQlClient,
   hyperliquidGraphQlClient,
-  baseRwaGraphQlClient,
+  rwaGraphQlClients,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
@@ -42,7 +42,7 @@ export const updateLatestActivities = async ({
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
   hyperliquidGraphQlClient: GraphQLClient
-  baseRwaGraphQlClient?: GraphQLClient
+  rwaGraphQlClients?: GraphQLClient[]
 }) => {
   const startTime = Date.now()
   const [
@@ -76,13 +76,15 @@ export const updateLatestActivities = async ({
     },
   })
 
-  // RWA (Base) activity from its clone deployment. RWA rows aren't network-distinguishable in the DB
-  // (they're tagged network='base'), so they can't share the Base watermark — we full-scan from 0 and
-  // rely on the idempotent insert (onConflict doNothing). Fault-tolerant: a RWA failure must not break
-  // the standard ingestion. `network='base'` is derived from the subgraph data in the inserter.
-  const rwaLatestActivities =
-    baseRwaGraphQlClient !== undefined
-      ? await fetchAllLatestActivities(baseRwaGraphQlClient, '0')
+  // RWA activity from the institutions deployments (one client per RWA network). Each row is tagged
+  // with its own network (BASE/MAINNET) by the inserter (derived from the subgraph data), but since
+  // RWA rows share the standard per-network watermark we full-scan from 0 and rely on the idempotent
+  // insert (onConflict doNothing). Per-client fault tolerance: one RWA network failing must not break
+  // the standard ingestion or the other RWA networks.
+  const rwaLatestActivities = (
+    await Promise.all(
+      (rwaGraphQlClients ?? []).map((client) =>
+        fetchAllLatestActivities(client, '0')
           .then((rwa) => [
             ...rwa.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
             ...rwa.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
@@ -92,8 +94,10 @@ export const updateLatestActivities = async ({
             console.error('Failed to fetch RWA latest activities', error)
 
             return []
-          })
-      : []
+          }),
+      ),
+    )
+  ).flat()
 
   const { updated } = await insertLatestActivitiesInBatches(db, [
     ...allLatestActivities,

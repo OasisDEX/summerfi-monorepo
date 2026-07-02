@@ -1263,6 +1263,19 @@
   },
   {
     "type": "function",
+    "name": "setPerformanceFeeRate",
+    "inputs": [
+      {
+        "name": "newRate",
+        "type": "uint256",
+        "internalType": "Percentage"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "setTipRate",
     "inputs": [
       {

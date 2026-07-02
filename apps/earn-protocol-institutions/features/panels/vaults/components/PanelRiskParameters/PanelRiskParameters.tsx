@@ -26,7 +26,9 @@ import {
   EditPercentageValueModal,
   EditTokenValueModal,
 } from '@/components/molecules/EditValueModal/EditValueModal'
+import { SwitchChainButton } from '@/components/molecules/SwitchChainButton/SwitchChainButton'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { marketRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/market-risk-parameters-table/mapper'
 import { vaultRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/mapper'
 import {
@@ -36,8 +38,6 @@ import {
   getChangeVaultCapId,
 } from '@/helpers/get-transaction-id'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
-import { useRevalidateTags } from '@/hooks/useRevalidateTags'
-import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 import { marketRiskParametersColumns } from './market-risk-parameters-table/columns'
 import { type MarketRiskParameters } from './market-risk-parameters-table/types'
@@ -162,12 +162,19 @@ export const PanelRiskParameters = ({
     getTargetChainInfo,
     getTokenBySymbol,
   } = useAdminAppSDK(institutionName)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
+  const { addTransaction } = useTransactionQueue()
   const chainId = networkNameToSDKId(network)
   const sdkNetworkName = chainIdToSDKNetwork(chainId)
   const { refresh: refreshView } = useRouter()
   const { chain, isSettingChain } = useEarnProtocolChain()
-  const { revalidateTags } = useRevalidateTags()
+
+  const revalidateTags = useMemo(
+    () => [
+      `institution-vault-arks-implied-caps-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+      `vault-details-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+    ],
+    [vault.id, institutionName, sdkNetworkName],
+  )
 
   const isProperChain = useMemo(() => {
     return chain.id === chainId
@@ -195,19 +202,11 @@ export const PanelRiskParameters = ({
           chainId,
           vaultCap: nextDepositCap,
         }),
-        txDescription: (
-          <Text variant="p3">
-            vault&nbsp;cap&nbsp;from&nbsp;
-            <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-              {depositCapNormalized.toString()}
-            </Text>
-            &nbsp;to&nbsp;
-            <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-              {nextDepositCapNormalized.toString()}
-            </Text>
-          </Text>
-        ),
+        txDescription: `vault cap from ${depositCapNormalized.toString()} to ${nextDepositCapNormalized.toString()}`,
         txLabel: createTransactionLabel(nextDepositCap, vault.depositCap),
+        chainId,
+        vaultAddress: vault.id,
+        revalidateTags,
       },
       setFleetDepositCap({
         fleetAddress: vault.id,
@@ -235,19 +234,11 @@ export const PanelRiskParameters = ({
           chainId,
           minimumBufferBalance,
         }),
-        txDescription: (
-          <Text variant="p3">
-            minimum&nbsp;buffer&nbsp;balance&nbsp;from&nbsp;
-            <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-              {minimumBufferBalanceNormalized.toString()}&nbsp;{vault.inputToken.symbol}
-            </Text>
-            &nbsp;to&nbsp;
-            <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-              {nextMinimumBufferBalanceNormalized.toString()}&nbsp;{vault.inputToken.symbol}
-            </Text>
-          </Text>
-        ),
+        txDescription: `minimum buffer balance from ${minimumBufferBalanceNormalized.toString()} ${vault.inputToken.symbol} to ${nextMinimumBufferBalanceNormalized.toString()} ${vault.inputToken.symbol}`,
         txLabel: createTransactionLabel(minimumBufferBalance, vault.minimumBufferBalance),
+        chainId,
+        vaultAddress: vault.id,
+        revalidateTags,
       },
       setMinimumBufferBalance({
         fleetAddress: vault.id,
@@ -282,23 +273,14 @@ export const PanelRiskParameters = ({
             arkId: ark.id,
             arkMaxDepositPercentage: nextArkMaxDepositPercentage,
           }),
-          txDescription: (
-            <Text variant="p3">
-              {getArkNiceName(ark) ?? formatAddress(ark.id)}
-              &nbsp;ark&nbsp;max&nbsp;deposit&nbsp;%&nbsp;of&nbsp;TVL&nbsp;from&nbsp;
-              <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                {formatPercent(currentArkMaxDepositPercentageNormalized, { precision: 4 })}
-              </Text>
-              &nbsp;to&nbsp;
-              <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                {formatPercent(nextArkMaxDepositPercentageNormalized, { precision: 4 })}
-              </Text>
-            </Text>
-          ),
+          txDescription: `${getArkNiceName(ark) ?? formatAddress(ark.id)} ark max deposit % of TVL from ${formatPercent(currentArkMaxDepositPercentageNormalized, { precision: 4 })} to ${formatPercent(nextArkMaxDepositPercentageNormalized, { precision: 4 })}`,
           txLabel: createTransactionLabel(
             nextArkMaxDepositPercentage,
             ark.maxDepositPercentageOfTVL,
           ),
+          chainId,
+          vaultAddress: vault.id,
+          revalidateTags,
         },
         setArkMaxDepositPercentageOfTVL({
           fleetAddress: vault.id,
@@ -332,20 +314,11 @@ export const PanelRiskParameters = ({
             arkDepositCap: nextArkDepositCap,
             arkId: ark.id,
           }),
-          txDescription: (
-            <Text variant="p3">
-              {getArkNiceName(ark) ?? formatAddress(ark.id)}
-              &nbsp;ark&nbsp;deposit&nbsp;cap&nbsp;from&nbsp;
-              <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                {currentArkDepositCapNormalized.toString()}
-              </Text>
-              &nbsp;to&nbsp;
-              <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                {nextArkDepositCapNormalized.toString()}
-              </Text>
-            </Text>
-          ),
+          txDescription: `${getArkNiceName(ark) ?? formatAddress(ark.id)} ark deposit cap from ${currentArkDepositCapNormalized.toString()} to ${nextArkDepositCapNormalized.toString()}`,
           txLabel: createTransactionLabel(nextArkDepositCap, ark.depositCap),
+          chainId,
+          vaultAddress: vault.id,
+          revalidateTags,
         },
         setArkDepositCap({
           fleetAddress: vault.id,
@@ -433,17 +406,9 @@ export const PanelRiskParameters = ({
     updateVaultTokenSymbol()
   }, [getTokenBySymbol, network, vault.inputToken.symbol])
 
-  const onTxSuccess = () => {
-    revalidateTags({
-      tags: [
-        `institution-vault-arks-implied-caps-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
-        `vault-details-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
-      ],
-    })
-  }
-
   return (
     <Card variant="cardSecondary" className={styles.panelRiskParametersWrapper}>
+      <SwitchChainButton requiredChainId={chainId} />
       <Text as="h5" variant="h5">
         Vault Risk Parameters
         <div onClick={refreshView} style={{ display: 'inline-block', cursor: 'pointer' }}>
@@ -472,12 +437,7 @@ export const PanelRiskParameters = ({
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
-      <TransactionQueue
-        transactionQueue={transactionQueue}
-        chainId={chainId}
-        removeTransaction={removeTransaction}
-        onTxSuccess={onTxSuccess}
-      />
+      <TransactionQueue />
     </Card>
   )
 }

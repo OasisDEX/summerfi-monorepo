@@ -33,6 +33,7 @@ export { RebalanceDataSchema, isRebalanceData } from './common/types/IRebalanceD
 export type { IRebalanceData, IRebalanceDataData } from './common/types/IRebalanceData'
 export { GlobalRoles, GLOBAL_ROLE_HASHES } from './common/types/GlobalRoles'
 export { InstiContractRoles } from './common/types/InstiContractRoles'
+export { type RwaRole, RwaRoleSchema } from './common/types/RwaRole'
 export { AddressType } from './common/enums/AddressType'
 export { CommonTokenSymbols } from './common/enums/CommonTokenSymbols'
 export {
@@ -233,6 +234,7 @@ export type { IArmadaWithdrawal } from './common/interfaces/IArmadaWithdrawal'
 export type { IDcaStrategy } from './common/interfaces/IDcaStrategy'
 export type { IDcaExecution } from './common/interfaces/IDcaExecution'
 export type { IDcaStrategyConfig } from './common/interfaces/IDcaStrategyConfig'
+export type { IChainlinkFeed } from './common/interfaces/IChainlinkFeed'
 export type { EarnAppCookieVerifier } from './common/types/EarnAppCookieVerifier'
 export { getViemChain, hyperliquid } from './common/utils/getViemChain'
 export {

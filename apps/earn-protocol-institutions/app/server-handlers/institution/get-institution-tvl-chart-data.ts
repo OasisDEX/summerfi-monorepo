@@ -43,18 +43,19 @@ export const getInstitutionTvlChartData = async ({
 
   const tvlChartData = mapMultiVaultChartData({
     institutionName,
-    performanceDataArray: vaultsPerformanceDataMap.map((performanceData) => ({
+    performanceDataArray: vaultsPerformanceDataMap.map((performanceData, index) => ({
       performanceData,
       pointName: 'netValue',
       currentPointValue: new BigNumber(performanceData.vault.inputTokenBalance)
         .div(ten.pow(performanceData.vault.inputToken.decimals))
         .toString(),
+      customName: institutionVaults.vaults[index]?.customFields?.name,
     })),
   })
 
   const navChartData = mapMultiVaultChartData({
     institutionName,
-    performanceDataArray: vaultsPerformanceDataMap.map((performanceData) => {
+    performanceDataArray: vaultsPerformanceDataMap.map((performanceData, index) => {
       const chainId = subgraphNetworkToId(
         supportedSDKNetwork(performanceData.vault.protocol.network),
       )
@@ -71,6 +72,7 @@ export const getInstitutionTvlChartData = async ({
         performanceData,
         pointName: 'navPrice',
         currentPointValue: sharePrice ?? lastPoint.navPrice,
+        customName: institutionVaults.vaults[index]?.customFields?.name,
       }
     }),
   })

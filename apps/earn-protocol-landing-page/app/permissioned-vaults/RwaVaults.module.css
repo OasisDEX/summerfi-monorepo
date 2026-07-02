@@ -275,7 +275,7 @@
 .vaultExposurePosition {
   position: absolute;
   right: -5%;
-  top: 15%;
+  top: 20%;
 }
 
 @media (max-width: 1100px) {
@@ -310,6 +310,10 @@
     width: 100%;
     gap: 12px;
   }
+}
+
+.buildBySummerWrapper {
+  margin-top: var(--spacing-space-3x-large);
 }
 
 .faqWrapper {

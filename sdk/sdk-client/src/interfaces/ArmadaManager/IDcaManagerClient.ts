@@ -1,8 +1,10 @@
 import type {
   AddressValue,
   ChainId,
+  IChainlinkFeed,
   IDcaStrategy,
   IDcaExecution,
+  ApproveTransactionInfo,
   CreateDcaStrategyTransactionInfo,
   EditDcaStrategyTransactionInfo,
   PauseDcaStrategyTransactionInfo,
@@ -30,16 +32,21 @@ export interface IDcaManagerClient {
     toVault: AddressValue
     inAsset: AddressValue
     outAsset: AddressValue
-    inAssetFeed: AddressValue
-    outAssetFeed: AddressValue
+    inAssetFeed: IChainlinkFeed
+    outAssetFeed: IChainlinkFeed
+    /** Per-trade amount (source asset base units). */
     amountShares: string
+    /** Initial principal deposited at creation (source asset base units). See plan Open Question 2. */
+    assetAmount: string
     slippagePercentage: string
     intervalSeconds: number
     maxTrades: number
     neverBuyAbove?: string
     neverSellBelow?: string
     deadlineUnixTimestamp: number
-  }): Promise<[CreateDcaStrategyTransactionInfo]>
+  }): Promise<
+    [CreateDcaStrategyTransactionInfo] | [ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]
+  >
 
   /**
    * Builds the transaction that updates the parameters of an existing DCA strategy.

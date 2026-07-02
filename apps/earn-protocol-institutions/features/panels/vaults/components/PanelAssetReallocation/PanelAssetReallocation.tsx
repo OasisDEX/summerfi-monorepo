@@ -1,10 +1,19 @@
 'use client'
 
 import { type FC, useCallback, useMemo, useState } from 'react'
-import { AllocationBar, Button, Card, Table, Text } from '@summerfi/app-earn-ui'
-import { type SDKVaultType } from '@summerfi/app-types'
-import { formatWithSeparators } from '@summerfi/app-utils'
+import { toast } from 'react-toastify'
+import { AllocationBar, Button, Card, ERROR_TOAST_CONFIG, Table, Text } from '@summerfi/app-earn-ui'
+import { type NetworkNames, type SDKVaultType } from '@summerfi/app-types'
+import { formatWithSeparators, networkNameToSDKId } from '@summerfi/app-utils'
+import { type TransactionInfo } from '@summerfi/sdk-common'
+import BigNumber from 'bignumber.js'
 
+import {
+  buildRebalanceTransaction,
+  type RebalanceMove,
+} from '@/app/server-handlers/institution/build-rebalance-transaction'
+import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { useTransactionQueue } from '@/contexts/TransactionQueueContext/TransactionQueueContext'
 import { getArksAllocation } from '@/features/panels/vaults/components/PanelVaultExposure/get-arks-allocation'
 
 import { assetReallocationColumns } from './columns'
@@ -18,14 +27,27 @@ import styles from './PanelAssetReallocation.module.css'
 
 interface PanelAssetReallocationProps {
   vault: SDKVaultType
+  institutionName: string
+  network: NetworkNames
 }
 
-export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({ vault }) => {
+export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({
+  vault,
+  institutionName,
+  network,
+}) => {
   const [balanceAddChange, setBalanceAddChange] = useState(
     getAssetReallocationInitialBalanceState(vault),
   )
   const [balanceRemoveChange, setBalanceRemoveChange] = useState(
     getAssetReallocationInitialBalanceState(vault),
+  )
+  const chainId = networkNameToSDKId(network)
+  const { addTransaction } = useTransactionQueue()
+
+  const revalidateTags = useMemo(
+    () => [`institution-vault-${institutionName.toLowerCase()}`],
+    [institutionName],
   )
 
   const onChange = useCallback(
@@ -56,11 +78,39 @@ export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({ vault 
     setBalanceRemoveChange(getAssetReallocationInitialBalanceState(vault))
   }, [vault])
 
-  const onConfirm = useCallback(() => {
-    // TODO: Implement the confirm logic
-    // eslint-disable-next-line no-console
-    console.log('confirm')
-  }, [])
+  // Convert the per-ark add/remove amounts into discrete ark→ark moves: greedily pour each ark's
+  // removed balance (source) into the arks gaining balance (destinations). A valid rebalance is
+  // net-zero (total removed === total added), so this fully consumes both sides.
+  const buildMoves = useCallback((): RebalanceMove[] => {
+    const sources = vault.arks
+      .map((ark) => ({ ark: ark.id, remaining: new BigNumber(balanceRemoveChange[ark.id] || '0') }))
+      .filter((source) => source.remaining.gt(0))
+    const destinations = vault.arks
+      .map((ark) => ({ ark: ark.id, remaining: new BigNumber(balanceAddChange[ark.id] || '0') }))
+      .filter((destination) => destination.remaining.gt(0))
+
+    const moves: RebalanceMove[] = []
+    let sourceIndex = 0
+    let destinationIndex = 0
+
+    while (sourceIndex < sources.length && destinationIndex < destinations.length) {
+      const source = sources[sourceIndex]
+      const destination = destinations[destinationIndex]
+      const amount = BigNumber.min(source.remaining, destination.remaining)
+
+      if (amount.gt(0)) {
+        moves.push({ fromArk: source.ark, toArk: destination.ark, amount: amount.toString() })
+      }
+
+      source.remaining = source.remaining.minus(amount)
+      destination.remaining = destination.remaining.minus(amount)
+
+      if (source.remaining.lte(0)) sourceIndex += 1
+      if (destination.remaining.lte(0)) destinationIndex += 1
+    }
+
+    return moves
+  }, [vault.arks, balanceAddChange, balanceRemoveChange])
 
   const totalBalance = useMemo(
     () =>
@@ -73,11 +123,63 @@ export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({ vault 
     [vault.arks, vault.inputToken.decimals],
   )
 
-  const netBalanceChange = vault.arks.reduce((acc, ark) => {
-    const arkBalanceChange = Number(balanceAddChange[ark.id]) - Number(balanceRemoveChange[ark.id])
+  const totalAdded = vault.arks.reduce(
+    (acc, ark) => acc.plus(new BigNumber(balanceAddChange[ark.id] || '0')),
+    new BigNumber(0),
+  )
+  const totalRemoved = vault.arks.reduce(
+    (acc, ark) => acc.plus(new BigNumber(balanceRemoveChange[ark.id] || '0')),
+    new BigNumber(0),
+  )
+  const netBalanceChange = totalAdded.minus(totalRemoved).toNumber()
+  // A rebalance only moves funds between arks, so it must be net-zero with something actually moved.
+  const isBalanced = totalRemoved.gt(0) && totalAdded.eq(totalRemoved)
+  const hasAnyInput = totalAdded.gt(0) || totalRemoved.gt(0)
 
-    return acc + arkBalanceChange
-  }, 0)
+  const onConfirm = useCallback(() => {
+    const moves = buildMoves()
+
+    if (moves.length === 0) {
+      return
+    }
+
+    const transactionId = `rebalance-${vault.id}-${chainId}-${moves
+      .map((move) => `${move.fromArk}:${move.toArk}:${move.amount}`)
+      .join(',')}`
+
+    try {
+      addTransaction(
+        {
+          id: transactionId,
+          txDescription: `${moves.length} move${moves.length > 1 ? 's' : ''}`,
+          txLabel: { label: 'Rebalance', charge: 'neutral' },
+          chainId,
+          vaultAddress: vault.id,
+          revalidateTags,
+        },
+        buildRebalanceTransaction({
+          institutionName,
+          network,
+          vaultAddress: vault.id,
+          moves,
+        }).then(
+          (plain) =>
+            ({
+              transaction: {
+                target: { value: plain.target },
+                calldata: plain.calldata,
+                value: plain.value,
+              },
+              description: plain.description,
+            }) as unknown as TransactionInfo,
+        ),
+      )
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to add rebalance transaction to queue', error)
+      toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
+    }
+  }, [addTransaction, buildMoves, chainId, institutionName, network, revalidateTags, vault.id])
 
   const rows = assetReallocationMapper({
     vault,
@@ -85,8 +187,6 @@ export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({ vault 
     balanceAddChange,
     balanceRemoveChange,
   })
-
-  const buttonsDisabled = netBalanceChange === 0
 
   const beforeAllocation = getArksAllocation(vault)
 
@@ -127,17 +227,22 @@ export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({ vault 
             variant="p3semi"
             style={{
               color:
-                netBalanceChange >= 0 ? 'var(--color-text-primary)' : 'var(--color-text-critical)',
+                netBalanceChange === 0 ? 'var(--color-text-primary)' : 'var(--color-text-critical)',
             }}
           >
             {formatWithSeparators(netBalanceChange, { precision: 2, cutOffNegative: false })}
           </Text>
         </div>
+        {hasAnyInput && !isBalanced ? (
+          <Text as="p" variant="p4" style={{ color: 'var(--color-text-critical)' }}>
+            A rebalance must be net-zero — the amount removed must equal the amount added.
+          </Text>
+        ) : null}
         <div className={styles.buttons}>
-          <Button variant="secondarySmall" disabled={buttonsDisabled} onClick={onCancel}>
+          <Button variant="secondarySmall" disabled={!hasAnyInput} onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="primarySmall" disabled={buttonsDisabled} onClick={onConfirm}>
+          <Button variant="primarySmall" disabled={!isBalanced} onClick={onConfirm}>
             Confirm
           </Button>
         </div>
@@ -154,6 +259,10 @@ export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({ vault 
         </Text>
         <AllocationBar items={afterAllocation} variant="large" />
       </div>
+      <Text as="h5" variant="h5">
+        Transaction Queue
+      </Text>
+      <TransactionQueue onLocalTxSuccess={() => onCancel()} />
     </Card>
   )
 }

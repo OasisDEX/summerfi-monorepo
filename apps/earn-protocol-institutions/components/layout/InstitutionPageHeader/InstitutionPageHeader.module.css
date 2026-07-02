@@ -6,6 +6,11 @@
   justify-content: space-between;
   gap: var(--spacing-space-medium);
   margin-bottom: 52px;
+  position: relative;
+  z-index: 1002;
+  /* dropdownOptionsStyle={{
+              zIndex: 1002, // above the InstitutionTabsHeader
+            }} */
 
   .leftWrapper {
     display: flex;

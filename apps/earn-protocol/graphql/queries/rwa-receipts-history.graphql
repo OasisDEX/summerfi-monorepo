@@ -1,0 +1,60 @@
+# Resolve a fleet's Input (deposits) + Output (withdrawals) rounds-vault addresses from its pair,
+# so receipts can be paged per side by exact `vault` id (a 1-level filter graph-node supports —
+# unlike the rejected receipt -> vault -> pair -> targetVault nesting).
+query GetRwaRoundsVaultPair($fleet: String!) {
+  roundsVaultPairs(where: { targetVault: $fleet }) {
+    id
+    inputVault {
+      id
+    }
+    outputVault {
+      id
+    }
+  }
+}
+
+# One backend page of a wallet's receipts for a single rounds-vault (one side), newest-touched
+# first. Includes already-claimed (balance 0) receipts. The caller fetches `first: limit + 1` to
+# detect whether a further page exists.
+query GetRwaReceiptsHistoryPage(
+  $account: String!
+  $vault: String!
+  $first: Int!
+  $skip: Int!
+) {
+  receipts(
+    first: $first
+    skip: $skip
+    orderBy: lastUpdated
+    orderDirection: desc
+    where: { account: $account, vault: $vault }
+  ) {
+    id
+    balance
+    vault {
+      id
+      flavor
+      minPositionSize
+      underlyingToken {
+        decimals
+      }
+    }
+    round {
+      roundId
+      state
+      openedAt
+      settledAt
+    }
+    activities(orderBy: timestamp, orderDirection: asc) {
+      type
+      timestamp
+      txHash
+      assetAmount
+      receiptAmount
+      assetToken {
+        symbol
+        decimals
+      }
+    }
+  }
+}

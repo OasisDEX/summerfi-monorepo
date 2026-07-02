@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { Button, LoadingSpinner, Text, Tooltip } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
 
-import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
+import { type SDKTransactionItem } from '@/contexts/TransactionQueueContext/types'
 import { useSimpleTransaction } from '@/hooks/useSimpleTransaction'
 
 import transactionButtonStyles from './SimpleTransactionButton.module.css'

@@ -16,7 +16,7 @@ import tabStyles from '@/components/layout/LandingPageContent/components/OurProd
 const tabs = [
   { id: 'all-products', label: 'All Products' },
   { id: 'permissionless-defi-vaults', label: 'Permissionless DeFi Vaults' },
-  // { id: 'permissioned-vaults', label: 'Permissioned RWA Vaults' },
+  { id: 'permissioned-vaults', label: 'Permissioned RWA Vaults' },
   { id: 'build-your-own-defi-vault', label: 'Build your own DeFi Vault' },
   { id: 'integrate-high-quality-defi-yield', label: 'Integrate high quality DeFi yield' },
 ]

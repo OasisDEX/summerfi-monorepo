@@ -4,6 +4,7 @@ import {
   Card,
   Expander,
   getDisplayToken,
+  getPositionValues,
   getUniqueVaultId,
   getVaultDetailsUrl,
   SkeletonLine,
@@ -12,8 +13,10 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
+  type IArmadaPosition,
   type SDKVaultishType,
   type SupportedSDKNetworks,
+  type TokenSymbolsList,
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
@@ -22,9 +25,11 @@ import {
   sdkNetworkToHumanNetwork,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
+import { type BigNumber } from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
+import { RwaDepositsWithdrawals } from '@/components/layout/VaultManageView/RwaDepositsWithdrawals'
 import {
   useVaultManageCurationQuery,
   useVaultManageExposureQuery,
@@ -33,16 +38,20 @@ import {
   useVaultManageUserActivityQuery,
   useVaultManageYieldChartQuery,
 } from '@/components/layout/VaultManageView/useVaultManageQuery'
-import { detailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
+import { getDetailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
+import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
+import { PositionHistoricalMarketValueChart } from '@/components/organisms/Charts/PositionHistoricalMarketValueChart'
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
+import { RwaNavPriceChart } from '@/components/organisms/Charts/RwaNavPriceChart'
 import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { CurationActivity } from '@/features/curation-activity/components/CurationActivity/CurationActivity'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
+import { type RwaReceipt } from '@/hooks/use-rwa-claim'
 
 import vaultManageViewStyles from './VaultManageView.module.css'
 
@@ -60,8 +69,33 @@ export const VaultManageViewDetails: FC<{
   vaultId: string
   viewWalletAddress: string
   vault: SDKVaultishType
+  // Needed for the RWA "Historical Market Value" chart's legend (current net value / earnings / SUMR).
+  position: IArmadaPosition
   vaultApyData: VaultApyData
-}> = ({ network, vaultId, viewWalletAddress, vault, vaultApyData }) => {
+  // RWA-only: powers the "Deposits and Withdrawals" history expander. The receipt actions are
+  // owned by the parent (shared useRwaClaim wiring) and passed down here.
+  isRwaVault?: boolean
+  // RWA pre-claim (synthetic position from exposure): hide the position performance/forecast
+  // expander, which has no real position history to chart and whose section handler returns null.
+  isRwaPendingPosition?: boolean
+  vaultSharePrice?: BigNumber
+  onRwaAction?: (receipt: RwaReceipt) => void
+  rwaActionInProgressKey?: string
+  rwaActionError?: string
+}> = ({
+  network,
+  vaultId,
+  viewWalletAddress,
+  vault,
+  position,
+  vaultApyData,
+  isRwaVault = false,
+  isRwaPendingPosition = false,
+  vaultSharePrice,
+  onRwaAction,
+  rwaActionInProgressKey,
+  rwaActionError,
+}) => {
   const vaultBenchmarkAsset = ['ETH', 'WETH'].includes(vault.inputToken.symbol.toUpperCase())
     ? 'ETH'
     : 'USD'
@@ -81,16 +115,28 @@ export const VaultManageViewDetails: FC<{
     sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
   )
 
+  // The user's current settled Fleet position value (input asset, e.g. USDC). For a pre-claim RWA
+  // user `position` is synthesized from total exposure (so its amount already includes the pending
+  // deposit) — `isRwaPendingPosition` lets the receipts table treat the settled base as zero and add
+  // the live receipt balances instead, so the min-position cancel check isn't double-counted.
+  const { netValue: positionNetValue } = getPositionValues({ position, vault })
+
   // Each lazy expander tracks its own open state so the matching query is only `enabled` (and thus
   // only fetched) once the user reveals it. The performance chart is open by default, so it starts
   // enabled. Re-collapsing keeps the cached data; re-expanding doesn't refetch within staleTime.
-  const [performanceOpen, setPerformanceOpen] = useState(true)
+  // Pending RWA positions have no settled history/forecast to show, so the performance expander is
+  // hidden — keep its query disabled (start closed) to avoid a fetch for a section that won't render.
+  const [performanceOpen, setPerformanceOpen] = useState(!isRwaPendingPosition)
+  const [rwaReceiptsOpen, setRwaReceiptsOpen] = useState(false)
   const [yieldOpen, setYieldOpen] = useState(false)
   const [exposureOpen, setExposureOpen] = useState(false)
   const [rebalancingOpen, setRebalancingOpen] = useState(false)
   const [curationOpen, setCurationOpen] = useState(false)
   const [userActivityOpen, setUserActivityOpen] = useState(false)
 
+  // The performance section returns the forecast chart for non-RWA vaults and the position's market
+  // value over time (Historical Market Value) for RWA vaults — computed server-side from the manage
+  // context's already-resolved position, so it's reliable even when the portfolio can't resolve it.
   const performanceQuery = useVaultManagePerformanceQuery(
     network,
     vaultId,
@@ -129,91 +175,172 @@ export const VaultManageViewDetails: FC<{
       buttonClickEventHandler(`vault-manage-expander-${expanderId}-${isOpen ? 'open' : 'close'}`)
     }
 
+  const detailsLinks = getDetailsLinks(vault.customFields?.vaultFactSheetUrl)
+
   return [
-    <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
-      <Expander
-        title={
-          <Text as="p" variant="p1semi">
-            Forecasted Market Value
-          </Text>
-        }
-        onExpand={handleExpand('performance', setPerformanceOpen)}
-        defaultExpanded
-      >
-        {performanceQuery.data ? (
-          <PositionPerformanceChart
-            chartData={performanceQuery.data.performanceChartData}
-            inputToken={getDisplayToken(vault.inputToken.symbol)}
-          />
-        ) : (
-          <SectionLoader />
-        )}
-      </Expander>
-    </div>,
-    <div className={vaultManageViewStyles.leftContentWrapper} key="AboutTheStrategy">
-      <div>
-        <Text
-          as="p"
-          variant="p1semi"
-          style={{
-            marginBottom: 'var(--spacing-space-medium)',
-          }}
+    isRwaPendingPosition ? null : (
+      <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
+        <Expander
+          title={
+            <Text as="p" variant="p1semi">
+              {isRwaVault ? 'Historical Market Value' : 'Forecasted Market Value'}
+            </Text>
+          }
+          onExpand={handleExpand('performance', setPerformanceOpen)}
+          defaultExpanded
         >
-          About the strategy
-        </Text>
-        <Text
-          as="p"
-          variant="p2"
-          style={{
-            color: 'var(--color-text-secondary)',
-          }}
-        >
-          The Lazy Summer Protocol is a permissionless passive lending product, which sets out to
-          offer effortless and secure optimised yield, while diversifying risk.
-        </Text>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            flexWrap: 'wrap',
-            gap: 'var(--general-space-24)',
-            marginTop: 'var(--general-space-20)',
-          }}
-        >
-          {detailsLinks.map(({ label, id }) => (
-            <Link key={label} href={`${getVaultDetailsUrl(vault)}#${id}`}>
-              <Text
-                as="p"
-                variant="p3semi"
-                style={{
-                  color: 'var(--color-text-link)',
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                  paddingRight: 'var(--spacing-space-medium)',
-                }}
-              >
-                <WithArrow>{label}</WithArrow>
-              </Text>
-            </Link>
-          ))}
-        </div>
+          {isRwaVault ? (
+            performanceQuery.data ? (
+              <PositionHistoricalMarketValueChart
+                chartId="manage-view"
+                chartData={performanceQuery.data.rwaHistoricalChartData}
+                position={{ position, vault }}
+                tokenSymbol={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
+                legendInTooltip
+                // RWA positions earn no $SUMR, so drop that legend item.
+                legendItems={['netValue', 'depositedValue', 'earnings']}
+              />
+            ) : (
+              <SectionLoader />
+            )
+          ) : performanceQuery.data?.performanceChartData ? (
+            <PositionPerformanceChart
+              chartData={performanceQuery.data.performanceChartData}
+              inputToken={getDisplayToken(vault.inputToken.symbol)}
+            />
+          ) : (
+            <SectionLoader />
+          )}
+        </Expander>
       </div>
+    ),
+    <div className={vaultManageViewStyles.leftContentWrapper} key="AboutTheStrategy">
+      {/* RWA vaults reuse the open view's RWA-aware header block (single source of the RWA copy);
+          non-RWA vaults keep the existing generic "About the strategy" block. */}
+      {isRwaVault ? (
+        <VaultOpenHeaderBlock vault={vault} detailsLinks={detailsLinks} isRwaVault />
+      ) : (
+        <div>
+          <Text
+            as="p"
+            variant="p1semi"
+            style={{
+              marginBottom: 'var(--spacing-space-medium)',
+            }}
+          >
+            About the strategy
+          </Text>
+          <Text
+            as="p"
+            variant="p2"
+            style={{
+              color: 'var(--color-text-secondary)',
+            }}
+          >
+            The Lazy Summer Protocol is a permissionless passive lending product, which sets out to
+            offer effortless and secure optimised yield, while diversifying risk.
+          </Text>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              flexWrap: 'wrap',
+              gap: 'var(--general-space-24)',
+              marginTop: 'var(--general-space-20)',
+            }}
+          >
+            {detailsLinks.map(({ label, id }) => (
+              <Link key={label} href={`${getVaultDetailsUrl(vault)}#${id}`}>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{
+                    color: 'var(--color-text-link)',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    paddingRight: 'var(--spacing-space-medium)',
+                  }}
+                >
+                  <WithArrow>{label}</WithArrow>
+                </Text>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+      {isRwaVault && vault.customFields?.vaultCurator ? (
+        <Expander
+          title={
+            <Text as="p" variant="p1semi">
+              {vault.customFields.vaultCurator}
+            </Text>
+          }
+          onExpand={handleExpand('vault-asset-manager', () => undefined)}
+          defaultExpanded
+        >
+          <Text
+            as="p"
+            variant="p3"
+            style={{
+              color: 'var(--color-text-secondary)',
+              margin: '0 10px',
+            }}
+          >
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+            {vault.customFields.vaultCuratorDescription ??
+              `This Vault is curated and managed by ${vault.customFields.vaultCurator}`}
+          </Text>
+        </Expander>
+      ) : null}
+      {isRwaVault ? (
+        <Expander
+          title={
+            <Text as="p" variant="p1semi">
+              Deposits and Withdrawals
+            </Text>
+          }
+          onExpand={handleExpand('rwa-deposits-withdrawals', setRwaReceiptsOpen)}
+        >
+          <RwaDepositsWithdrawals
+            network={network}
+            vaultId={vaultId}
+            walletAddress={viewWalletAddress}
+            enabled={rwaReceiptsOpen}
+            tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
+            vaultSharePrice={vaultSharePrice}
+            positionNetValue={positionNetValue}
+            isRwaPendingPosition={isRwaPendingPosition}
+            actionInProgressKey={rwaActionInProgressKey}
+            actionError={rwaActionError}
+            onAction={onRwaAction}
+          />
+        </Expander>
+      ) : null}
       <Expander
         title={
           <Text as="p" variant="p1semi">
-            Historical yield
+            {isRwaVault ? 'Historical NAV price' : 'Historical yield'}
           </Text>
         }
         onExpand={handleExpand('historical-yield', setYieldOpen)}
       >
         {yieldQuery.data ? (
-          <ArkHistoricalYieldChart
-            chartId="manage-view"
-            chartData={yieldQuery.data.arksHistoricalChartData}
-            summerVaultName={getVaultNiceName({ vault })}
-            vaultBenchmarkName={vaultBenchmarkName}
-          />
+          isRwaVault ? (
+            <RwaNavPriceChart
+              chartId="manage-view"
+              chartData={yieldQuery.data.rwaNavHistoricalChartData}
+            />
+          ) : (
+            yieldQuery.data.arksHistoricalChartData && (
+              <ArkHistoricalYieldChart
+                chartId="manage-view"
+                chartData={yieldQuery.data.arksHistoricalChartData}
+                summerVaultName={getVaultNiceName({ vault })}
+                vaultBenchmarkName={vaultBenchmarkName}
+              />
+            )
+          )
         ) : (
           <SectionLoader />
         )}
@@ -227,7 +354,11 @@ export const VaultManageViewDetails: FC<{
         onExpand={handleExpand('vault-exposure', setExposureOpen)}
       >
         {exposureQuery.data ? (
-          <VaultExposureDescription humanReadableNetwork={humanReadableNetwork} vault={vault}>
+          <VaultExposureDescription
+            humanReadableNetwork={humanReadableNetwork}
+            vault={vault}
+            isRwaVault={isRwaVault}
+          >
             <VaultExposure
               vault={vault}
               arksInterestRates={exposureQuery.data.arksInterestRates}
@@ -244,7 +375,7 @@ export const VaultManageViewDetails: FC<{
       <Expander
         title={
           <Text as="p" variant="p1semi">
-            Strategy management fee
+            Strategy fees
           </Text>
         }
         onExpand={handleExpand('strategy-management-fee', () => undefined)}
@@ -275,9 +406,7 @@ export const VaultManageViewDetails: FC<{
               : `A ${formatDecimalAsPercent(managementFee)} annualised management fee is charged for using this strategy. `}
             The fees are continually accounted for and reflected in the market value of your
             position.
-            {performanceFee !== null
-              ? ' There are no restrictions or delays when withdrawing.'
-              : ' This strategy has no other fees, and there are no restrictions or delays when withdrawing.'}{' '}
+            {performanceFee === null ? ' This strategy has no other fees.' : ''}{' '}
             {vaultApyData.sma30d
               ? ` The 30d APY for this strategy after fees is ${formatDecimalAsPercent(vaultApyData.sma30d - managementFee)}.`
               : ''}
@@ -299,6 +428,8 @@ export const VaultManageViewDetails: FC<{
             tableId="vault-manage-rebalancing-activity"
             buttonClickEventHandler={buttonClickEventHandler}
             tooltipEventHandler={tooltipEventHandler}
+            isRwaVault={isRwaVault}
+            marketTargetAllocationPercentage={vault.customFields?.marketTargetAllocationPercentage}
           />
         ) : (
           <SectionLoader />
@@ -307,7 +438,7 @@ export const VaultManageViewDetails: FC<{
       <Expander
         title={
           <Text as="p" variant="p1semi">
-            Curation activity
+            Portfolio Composition History
           </Text>
         }
         onExpand={handleExpand('curation-activity', setCurationOpen)}

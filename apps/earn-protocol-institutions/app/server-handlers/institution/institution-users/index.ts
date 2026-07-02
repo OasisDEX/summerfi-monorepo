@@ -8,7 +8,7 @@ import {
   ListUsersCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { slugify } from '@summerfi/app-utils'
-import { type GlobalRoles } from '@summerfi/sdk-common'
+import { type ChainId, type GlobalRoles } from '@summerfi/sdk-common'
 import {
   getSummerProtocolInstitutionDB,
   type UserRole,
@@ -16,14 +16,21 @@ import {
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
+import { getCachedConfig } from '@/app/server-handlers/config'
 import { getCachedInstitutionRoles } from '@/app/server-handlers/institution/institution-data'
 import {
   cognitoGroupTag,
   getCachedCognitoGroupUsers,
 } from '@/app/server-handlers/institution/institution-users/cached-cognito-users'
 import { escapeCognitoFilterValue } from '@/app/server-handlers/institution/institution-users/helpers'
-import { validateInstitutionUserSession } from '@/app/server-handlers/institution/utils/validate-user-session'
+import {
+  validateInstitutionAdminSession,
+  validateInstitutionUserSession,
+} from '@/app/server-handlers/institution/utils/validate-user-session'
+import { getInstitutionsRwaSDK } from '@/app/server-handlers/sdk'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
+import { getInstitutionRwaVaults } from '@/helpers/rwa'
+import { buildContractRoleHashMap, resolveRwaRoleLabel } from '@/helpers/rwa-roles'
 
 // this is just a simple helper function to extract user attributes
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -171,7 +178,7 @@ export const addInstitutionUser = async (_prevState: unknown, formData: FormData
   }
 
   try {
-    await validateInstitutionUserSession({ institutionName })
+    await validateInstitutionAdminSession({ institutionName })
 
     const role = roleRaw ? (String(roleRaw) as UserRole) : null
     // ...existing code...
@@ -305,7 +312,7 @@ export const updateInstitutionUser = async (_prevState: unknown, formData: FormD
   }
 
   try {
-    await validateInstitutionUserSession({ institutionId: String(institutionIdRaw) })
+    await validateInstitutionAdminSession({ institutionId: String(institutionIdRaw) })
 
     const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
     const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
@@ -333,6 +340,19 @@ export const updateInstitutionUser = async (_prevState: unknown, formData: FormD
 
       if (!Number.isFinite(institutionId)) {
         return { success: false, error: 'Invalid institutionId' }
+      }
+
+      // Only edit a user who is ALREADY a member of this institution — otherwise an admin could pull
+      // an arbitrary user (by sub) from another institution into theirs via the `userSub` form field.
+      const existingMembership = await db
+        .selectFrom('institutionUsers')
+        .select('id')
+        .where('userSub', '=', userSub)
+        .where('institutionId', '=', institutionId)
+        .executeTakeFirst()
+
+      if (!existingMembership) {
+        return { success: false, error: 'User is not a member of this institution' }
       }
 
       // get the user by sub
@@ -414,7 +434,7 @@ export const updateInstitutionUser = async (_prevState: unknown, formData: FormD
 
 export async function institutionDeleteCognitoUser(userSub: string, institutionIdRaw: string) {
   'use server'
-  await validateInstitutionUserSession({ institutionId: String(institutionIdRaw) })
+  await validateInstitutionAdminSession({ institutionId: String(institutionIdRaw) })
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -463,7 +483,7 @@ export const removeInstitutionUser = async (_prevState: unknown, formData: FormD
   'use server'
   const institutionName = formData.get('institutionName')
 
-  await validateInstitutionUserSession({ institutionName: String(institutionName) })
+  await validateInstitutionAdminSession({ institutionName: String(institutionName) })
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -530,21 +550,35 @@ export const removeInstitutionUser = async (_prevState: unknown, formData: FormD
   }
 }
 
-export const getWalletDetails: (props: {
-  institutionName: string
-  walletAddress?: string
-}) => Promise<
-  | {
-      walletAddressRoles: GlobalRoles[]
-      roles: {
-        [key in GlobalRoles]: boolean
-      }
-    }
-  | undefined
-> = async ({ institutionName, walletAddress }) => {
-  if (!walletAddress) {
-    return undefined
+type WalletGlobalRoles = {
+  walletAddressRoles: GlobalRoles[]
+  roles: {
+    [key in GlobalRoles]: boolean
   }
+}
+
+const EMPTY_GLOBAL_ROLES: WalletGlobalRoles = {
+  walletAddressRoles: [],
+  roles: {
+    ADMIRALS_QUARTERS_ROLE: false,
+    DECAY_CONTROLLER_ROLE: false,
+    GOVERNOR_ROLE: false,
+    SUPER_KEEPER_ROLE: false,
+  },
+}
+
+// Global protocol roles (Governor / Super Keeper / Admiral's Quarters / Decay Controller) the wallet
+// holds, read from the v1 institutions deployment on Base. Correct for standard institutions; returns
+// nothing for RWA-only institutions (their access control lives on the institutions-v2 deployment and
+// frequently on other chains — see getWalletRwaRoleLabels). Guarded independently so an RWA
+// institution where this v1 call fails still yields RWA roles.
+const getWalletGlobalRoles = async ({
+  institutionName,
+  walletAddress,
+}: {
+  institutionName: string
+  walletAddress: string
+}): Promise<WalletGlobalRoles> => {
   try {
     const { ADMIRALS_QUARTERS_ROLE, DECAY_CONTROLLER_ROLE, GOVERNOR_ROLE, SUPER_KEEPER_ROLE } =
       await getCachedInstitutionRoles({ institutionName })
@@ -587,7 +621,109 @@ export const getWalletDetails: (props: {
         SUPER_KEEPER_ROLE: hasSuperKeeperRole,
       },
     }
-  } catch (error) {
+  } catch {
+    return EMPTY_GLOBAL_ROLES
+  }
+}
+
+// Resolved on-chain roles the wallet holds on the institution's RWA (institutions-v2) vaults —
+// labelled exactly like the grants table (see resolveRwaRoleLabel). The global-role lookup above runs
+// against the v1 deployment on Base, so it misses RWA roles entirely (Curator/Keeper/Operator per
+// fleet, Commander per ark — frequently on Arbitrum/Mainnet), which is why RWA admins showed
+// "No role" in the header. Reads each unique (clientId, chain) the institution's RWA vaults span,
+// using the v2 SDK keyed by `clientId` (the vault's `vaultInstitutionId`, NOT the institution name).
+// Empty when the institution has no RWA vaults or the wallet holds no RWA role.
+const getWalletRwaRoleLabels = async ({
+  institutionName,
+  walletAddress,
+}: {
+  institutionName: string
+  walletAddress: string
+}): Promise<string[]> => {
+  try {
+    const systemConfig = await getCachedConfig()
+    const rwaVaults = getInstitutionRwaVaults({ systemConfig, institutionName })
+
+    if (rwaVaults.length === 0) {
+      return []
+    }
+
+    // One getAllRoles call per unique (clientId, chain): the SDK resolves the subgraph from the
+    // clientId, so several vaults sharing a clientId+chain are covered by a single fetch.
+    const seenPair = new Set<string>()
+    const pairs = rwaVaults.filter(({ clientId, networkId }) => {
+      const key = `${clientId}-${networkId}`
+
+      if (seenPair.has(key)) {
+        return false
+      }
+      seenPair.add(key)
+
+      return true
+    })
+
+    const roleSets = await Promise.all(
+      pairs.map(async ({ clientId, networkId }) => {
+        try {
+          const { roles } = await getInstitutionsRwaSDK(clientId).armada.accessControl.getAllRoles({
+            chainId: networkId as ChainId,
+          })
+
+          return roles
+        } catch {
+          return []
+        }
+      }),
+    )
+
+    const allRoles = roleSets.flat()
+
+    // Reverse-lookup for raw contract-role hashes the subgraph couldn't decode (Commander / account-
+    // targeted), built from the institution's RWA vault (fleet) addresses plus every address in the
+    // role set — mirrors the grants table's candidate set (see buildContractRoleHashMap).
+    const contractRoleMap = buildContractRoleHashMap([
+      ...rwaVaults.map((vault) => vault.vaultAddress),
+      ...allRoles.flatMap((role) => [role.owner, role.targetContract]),
+    ])
+
+    const normalizedWalletAddress = walletAddress.toLowerCase()
+    const labels = allRoles
+      .filter((role) => role.owner.toLowerCase() === normalizedWalletAddress)
+      .map((role) => resolveRwaRoleLabel(role.name, role.targetContract, contractRoleMap).label)
+
+    return Array.from(new Set(labels))
+  } catch {
+    return []
+  }
+}
+
+export const getWalletDetails: (props: {
+  institutionName: string
+  walletAddress?: string
+}) => Promise<
+  | {
+      walletAddressRoles: GlobalRoles[]
+      roles: {
+        [key in GlobalRoles]: boolean
+      }
+      // Human-readable labels for the RWA roles the wallet holds (e.g. "Curator", "Keeper"). Empty for
+      // standard institutions and for wallets with no RWA role.
+      rwaRoleLabels: string[]
+    }
+  | undefined
+> = async ({ institutionName, walletAddress }) => {
+  if (!walletAddress) {
     return undefined
+  }
+
+  const [globalRoles, rwaRoleLabels] = await Promise.all([
+    getWalletGlobalRoles({ institutionName, walletAddress }),
+    getWalletRwaRoleLabels({ institutionName, walletAddress }),
+  ])
+
+  return {
+    walletAddressRoles: globalRoles.walletAddressRoles,
+    roles: globalRoles.roles,
+    rwaRoleLabels,
   }
 }
