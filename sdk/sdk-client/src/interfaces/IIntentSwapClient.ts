@@ -30,13 +30,13 @@ export interface IIntentSwapClient {
   /**
    * Returns a quote data for the swap between two tokens, by providing the exact amount of input tokens to swap
    *
-   * @param fromAmount The amount of tokens to swap
-   * @param toToken The token to swap to
-   * @param sender The address that will send the tokens
-   * @param receiver The address that will receive the tokens
-   * @param partiallyFillable Whether the order can be partially filled (default: false)
-   * @param limitPrice The maximum price the user is willing to accept (optional)
-   * @param slippagePercentage The maximum slippage the user is willing to accept (optional) in percentage (e.g. 1 for 1%)
+   * @param params.fromAmount The amount of tokens to swap
+   * @param params.toToken The token to swap to
+   * @param params.sender The address that will send the tokens
+   * @param params.receiver The address that will receive the tokens
+   * @param params.partiallyFillable Whether the order can be partially filled (default: false)
+   * @param params.limitPrice The maximum price the user is willing to accept (optional)
+   * @param params.slippagePercentage The maximum slippage the user is willing to accept (optional) in percentage (e.g. 1 for 1%)
    * @returns The quote data for the swap, including the order data which can be signed and sent to the provider
    *
    * Note: The quote does not guarantee the execution of the swap at the quoted amounts, as the market conditions may change.
@@ -55,12 +55,12 @@ export interface IIntentSwapClient {
   /**
    * Sends the order to the swap provider
    *
-   * @param order The order data for the swap
-   * @param fromAmount The amount of tokens to swap
-   * @param sender The address that will send the tokens
-   * @param chainId The chain ID where the order will be sent
-   * @param account The account to use for signing the order
-   * @param publicClient The public client to use for sending the transaction
+   * @param params.order The order data for the swap
+   * @param params.fromAmount The amount of tokens to swap
+   * @param params.sender The address that will send the tokens
+   * @param params.chainId The chain ID where the order will be sent
+   * @param params.account The account to use for signing the order
+   * @param params.publicClient The public client to use for sending the transaction
    * @returns The result of sending the order, which can be one of:
    * - 'wrap_to_native': if the input token is a wrapped native token and needs to be unwrapped before sending the order
    * - 'allowance_needed': if the input token is an ERC20 token and needs to be approved for spending before sending the order
@@ -86,16 +86,16 @@ export interface IIntentSwapClient {
   /**
    * Approves and sends the order to the swap provider
    *
-   * @param order The order data for the swap
-   * @param fromAmount The amount of tokens to swap
-   * @param sender The address that will send the tokens
-   * @param chainId The chain ID where the order will be sent
-   * @param account The account to use for signing the order
-   * @param publicClient The public client to use for sending the transaction
-   * @param preHooks Pre-interaction hooks to execute before the swap
-   * @param postHooks Post-interaction hooks to execute after the swap
-   * @param apiKey Optional API key for the swap provider from the client side, which can be used for enhanced rate limits and analytics
-   * @param slippagePercentage The maximum slippage used for the quote
+   * @param params.order The order data for the swap
+   * @param params.fromAmount The amount of tokens to swap
+   * @param params.sender The address that will send the tokens
+   * @param params.chainId The chain ID where the order will be sent
+   * @param params.account The account to use for signing the order
+   * @param params.publicClient The public client to use for sending the transaction
+   * @param params.preHooks Pre-interaction hooks to execute before the swap
+   * @param params.postHooks Post-interaction hooks to execute after the swap
+   * @param params.apiKey Optional API key for the swap provider from the client side, which can be used for enhanced rate limits and analytics
+   * @param params.slippagePercentage The maximum slippage used for the quote
    * @returns The result of sending the order, which can be one of:
    * - 'order_sent': if the order has been successfully sent, along with the order ID
    */
@@ -118,10 +118,10 @@ export interface IIntentSwapClient {
   /**
    * Cancels an existing order by its ID
    *
-   * @param chainId The chain ID where the order exists
-   * @param orderId The ID of the order to cancel
-   * @param account The account to use for signing the cancellation
-   * @param publicClient The public client to use for sending the cancellation transaction
+   * @param params.chainId The chain ID where the order exists
+   * @param params.orderId The ID of the order to cancel
+   * @param params.account The account to use for signing the cancellation
+   * @param params.publicClient The public client to use for sending the cancellation transaction
    * @returns The result of the cancellation request
    */
   cancelOrder(params: {
@@ -135,8 +135,8 @@ export interface IIntentSwapClient {
   /**
    * Checks the status of the order by its ID
    *
-   * @param chainId The chain ID where the order exists
-   * @param orderId The ID of the order to check
+   * @param params.chainId The chain ID where the order exists
+   * @param params.orderId The ID of the order to check
    * @returns The order info if found, otherwise null
    */
   checkOrder(params: {

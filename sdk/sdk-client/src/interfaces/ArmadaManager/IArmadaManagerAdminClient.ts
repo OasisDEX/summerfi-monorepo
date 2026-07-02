@@ -23,8 +23,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Rebalances the fleet using the provided rebalance data. Used by the keeper
    *
-   * @param vaultId The ID of the pool
-   * @param rebalanceData The data for the rebalance
+   * @param params.vaultId The ID of the pool
+   * @param params.rebalanceData The data for the rebalance
    *
    * @returns The transaction information
    */
@@ -36,8 +36,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Sets the deposit cap of the fleet. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param cap The new deposit cap
+   * @param params.vaultId The ID of the pool
+   * @param params.cap The new deposit cap
    *
    * @returns The transaction information
    */
@@ -56,8 +56,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Sets the tip rate of the fleet. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param rate The new tip rate
+   * @param params.vaultId The ID of the pool
+   * @param params.rate The new tip rate
    *
    * @returns The transaction information
    */
@@ -66,8 +66,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Sets the performance fee rate of the fleet. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param rate The new performance fee rate
+   * @param params.vaultId The ID of the pool
+   * @param params.rate The new performance fee rate
    *
    * @returns The transaction information
    */
@@ -79,11 +79,11 @@ export interface IArmadaManagerAdminClient {
   /**
    * Adds an ark to the fleet. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param ark The address of the ark to add
-   * @param maxDepositCap The maximum deposit cap of the ark
-   * @param maxRebalanceOutflow The maximum rebalance outflow of the ark
-   * @param maxRebalanceInflow The maximum rebalance inflow of the ark
+   * @param params.vaultId The ID of the pool
+   * @param params.ark The address of the ark to add
+   * @param params.maxDepositCap The maximum deposit cap of the ark
+   * @param params.maxRebalanceOutflow The maximum rebalance outflow of the ark
+   * @param params.maxRebalanceInflow The maximum rebalance inflow of the ark
    *
    * @returns The transaction information
    */
@@ -98,11 +98,11 @@ export interface IArmadaManagerAdminClient {
   /**
    * Adds multiple arks to the fleet. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param arks The addresses of the arks to add
-   * @param maxDepositCaps The maximum deposit caps of the arks
-   * @param maxRebalanceOutflows The maximum rebalance outflows of the arks
-   * @param maxRebalanceInflows The maximum rebalance inflows of the arks
+   * @param params.vaultId The ID of the pool
+   * @param params.arks The addresses of the arks to add
+   * @param params.maxDepositCaps The maximum deposit caps of the arks
+   * @param params.maxRebalanceOutflows The maximum rebalance outflows of the arks
+   * @param params.maxRebalanceInflows The maximum rebalance inflows of the arks
    *
    * @returns The transaction information
    */
@@ -117,8 +117,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Removes an ark from the fleet. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param ark The address of the ark to remove
+   * @param params.vaultId The ID of the pool
+   * @param params.ark The address of the ark to remove
    *
    * @returns The transaction information
    */
@@ -127,7 +127,7 @@ export interface IArmadaManagerAdminClient {
   /**
    * Gets the list of active arks for a fleet
    *
-   * @param vaultId The ID of the vault
+   * @param params.vaultId The ID of the vault
    *
    * @returns The list of active ark addresses
    */
@@ -136,9 +136,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Sets the deposit cap of an ark. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param ark The address of the ark
-   * @param cap The new deposit cap
+   * @param params.vaultId The ID of the pool
+   * @param params.cap The new deposit cap
    *
    * @returns The transaction information
    */
@@ -151,9 +150,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Sets the maximum deposit percentage of TVL for an ark
    *
-   * @param vaultId The ID of the vault
-   * @param ark The address of the ark
-   * @param maxDepositPercentageOfTVL The new maximum deposit percentage of TVL
+   * @param params.vaultId The ID of the vault
+   * @param params.maxDepositPercentageOfTVL The new maximum deposit percentage of TVL
    *
    * @returns The transaction information
    */
@@ -166,9 +164,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Sets the maximum rebalance outflow of an ark. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param ark The address of the ark
-   * @param maxRebalanceOutflow The new maximum rebalance outflow
+   * @param params.vaultId The ID of the pool
+   * @param params.maxRebalanceOutflow The new maximum rebalance outflow
    *
    * @returns The transaction information
    */
@@ -181,9 +178,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Sets the maximum rebalance inflow of an ark. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param ark The address of the ark
-   * @param maxRebalanceInflow The new maximum rebalance inflow
+   * @param params.vaultId The ID of the pool
+   * @param params.maxRebalanceInflow The new maximum rebalance inflow
    *
    * @returns The transaction information
    */
@@ -196,9 +192,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Sets the minimum buffer balance of an ark. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param ark The address of the ark
-   * @param minimumBufferBalance The new minimum buffer balance
+   * @param params.vaultId The ID of the pool
+   * @param params.minimumBufferBalance The new minimum buffer balance
    *
    * @returns The transaction information
    */
@@ -210,8 +205,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Sets the rebalance cooldown of the fleet. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param cooldown The new rebalance cooldown
+   * @param params.vaultId The ID of the pool
+   * @param params.cooldown The new rebalance cooldown
    *
    * @returns The transaction information
    */
@@ -223,8 +218,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Forces a rebalance of the fleet. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param rebalanceData The data for the rebalance
+   * @param params.vaultId The ID of the pool
+   * @param params.rebalanceData The data for the rebalance
    *
    * @returns The transaction information
    */
@@ -236,7 +231,7 @@ export interface IArmadaManagerAdminClient {
   /**
    * Shuts down the fleet in case of an emergency. Used by the governance
    *
-   * @param vaultId The ID of the pool
+   * @param params.vaultId The ID of the pool
    *
    * @returns The transaction information
    */
@@ -245,8 +240,8 @@ export interface IArmadaManagerAdminClient {
   /**
    * Gets the configuration of an ark. Used to fetch data from the blockchain
    *
-   * @param chainId The chain ID where the ark is deployed
-   * @param arkAddressValue The address of the ark
+   * @param params.chainId The chain ID where the ark is deployed
+   * @param params.arkAddressValue The address of the ark
    *
    * @returns Promise<IArkConfig> The ark configuration
    */
@@ -255,7 +250,7 @@ export interface IArmadaManagerAdminClient {
   /**
    * Gets the fee revenue configuration with hardcoded values per chain
    *
-   * @param vaultId The ID of the vault
+   * @param params.vaultId The ID of the vault
    *
    * @returns Promise<IFeeRevenueConfig> The fee revenue configuration
    */
@@ -264,7 +259,7 @@ export interface IArmadaManagerAdminClient {
   /**
    * Gets the tip rate of the fleet. Used to fetch data from the blockchain
    *
-   * @param vaultId The ID of the vault
+   * @param params.vaultId The ID of the vault
    *
    * @returns Promise<bigint> The tip rate as a bigint
    */
@@ -273,7 +268,7 @@ export interface IArmadaManagerAdminClient {
   /**
    * Retrieves all protocol vaults
    *
-   * @param chainInfo Chain information
+   * @param params.chainInfo Chain information
    *
    * @returns All Armada vaults
    */
@@ -282,7 +277,7 @@ export interface IArmadaManagerAdminClient {
   /**
    * Retrieves a specific protocol vault
    *
-   * @param vaultId ID of the vault
+   * @param params.vaultId ID of the vault
    *
    * @returns The corresponding Armada vault
    */

@@ -59,8 +59,8 @@ export class Price implements IPrice {
   /**
    * Creates a price from the ratio of two token amounts
    *
-   * @param numerator the token amount in the numerator
-   * @param denominator the token amount in the denominator
+   * @param params.numerator the token amount in the numerator
+   * @param params.denominator the token amount in the denominator
    * @returns the price calculated from the amounts ratio of numerator divided by denominator
    *
    * @remarks The denominator becomes the base of the price and the numerator becomes the quote

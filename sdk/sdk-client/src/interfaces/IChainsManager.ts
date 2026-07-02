@@ -9,7 +9,7 @@ export interface IChainsManagerClient {
   /**
    * Retrieves a chain by its chain info
    *
-   * @param chainInfo The info associated with the chain to retrieve
+   * @param params.chainInfo The info associated with the chain to retrieve
    *
    * @returns The chain for the given chain info
    */
@@ -18,7 +18,7 @@ export interface IChainsManagerClient {
   /**
    * Retrieves a network by its chain ID
    *
-   * @param chainId The chain ID of the network to retrieve
+   * @param params.chainId The chain ID of the network to retrieve
    *
    * @returns The network with the given chain ID
    */

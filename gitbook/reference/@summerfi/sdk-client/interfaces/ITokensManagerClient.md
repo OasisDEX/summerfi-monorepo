@@ -30,6 +30,8 @@ Retrieves a token by its address
 
 [`Address`](../classes/Address.md)
 
+The address of the token to retrieve
+
 #### Returns
 
 `Promise`\<[`Token`](../classes/Token.md)\>
@@ -56,6 +58,8 @@ Retrieves a token by its name
 
 `string`
 
+The name of the token to retrieve
+
 #### Returns
 
 `Promise`\<[`Token`](../classes/Token.md)\>
@@ -81,6 +85,8 @@ Retrieves a token by its symbol
 ###### symbol
 
 `string`
+
+The symbol of the token to retrieve
 
 #### Returns
 

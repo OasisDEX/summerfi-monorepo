@@ -35,8 +35,6 @@ export class UserClient extends IRPCClient implements IUserClient {
   /**
    * Returns the user's positions for a given protocol.
    *
-   * @param params - Parameters object.
-   * @param params.protocol - The protocol whose positions should be returned.
    * @returns A promise resolving to the user's positions in that protocol.
    * @remarks Not yet implemented — currently returns an empty array.
    */
@@ -49,8 +47,6 @@ export class UserClient extends IRPCClient implements IUserClient {
   /**
    * Returns the user's positions matching the given position ids.
    *
-   * @param params - Parameters object.
-   * @param params.positionIds - The ids of the positions to return.
    * @returns A promise resolving to the matching positions.
    * @remarks Not yet implemented — currently returns an empty array.
    */

@@ -71,7 +71,7 @@ IRPCClient.rpcClient
 getPositions(_params): Promise<Position[]>;
 ```
 
-Defined in: [src/implementation/PortfolioManager.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/PortfolioManager.ts#L25)
+Defined in: [src/implementation/PortfolioManager.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/PortfolioManager.ts#L22)
 
 Returns the wallet's positions across the requested networks.
 

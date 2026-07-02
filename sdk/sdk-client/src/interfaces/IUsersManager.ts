@@ -8,8 +8,8 @@ export interface IUsersManager {
   /**
    * Retrieves a user by their wallet and network
    *
-   * @param chainInfo The chain to retrieve the user for
-   * @param walletAddress The wallet to retrieve the user for
+   * @param params.chainInfo The chain to retrieve the user for
+   * @param params.walletAddress The wallet to retrieve the user for
    *
    * @returns The user for the given wallet and network
    */

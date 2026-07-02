@@ -16,7 +16,7 @@ client version.
 
 ### params
 
-`MakeSDKParams`
+[`MakeSDKParams`](../type-aliases/MakeSDKParams.md)
 
 Connection options: `apiDomainUrl` or `apiURL`, optional `version` and `logging`.
 

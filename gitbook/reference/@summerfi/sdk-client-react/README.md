@@ -54,6 +54,8 @@ SDK reference docs live in `gitbook/reference`.
 - [SDKContextType](type-aliases/SDKContextType.md)
 - [SdkInstiManagerClient](type-aliases/SdkInstiManagerClient.md)
 - [SdkManagerClient](type-aliases/SdkManagerClient.md)
+- [SdkStateParams](type-aliases/SdkStateParams.md)
+- [UseSdk](type-aliases/UseSdk.md)
 
 ## Variables
 
@@ -64,3 +66,5 @@ SDK reference docs live in `gitbook/reference`.
 - [SDKProvider](functions/SDKProvider.md)
 - [useSDK](functions/useSDK.md)
 - [useSDKContext](functions/useSDKContext.md)
+- [useSDKInstiManagerHandlers](functions/useSDKInstiManagerHandlers.md)
+- [useSDKManagerHandlers](functions/useSDKManagerHandlers.md)

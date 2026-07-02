@@ -117,7 +117,7 @@ Builds the EIP-712 typed data for a PermitTransferFrom operation, ready to be si
 
 `Promise`\<\{
   `permitData`: [`Permit2PermitData`](../type-aliases/Permit2PermitData.md);
-  `signTypedDataParameters`: `SignTypedDataParameters`;
+  `signTypedDataParameters`: [`SignTypedDataParameters`](https://viem.sh/docs/);
 \}\>
 
 ***

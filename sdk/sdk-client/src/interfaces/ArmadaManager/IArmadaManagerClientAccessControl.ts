@@ -15,9 +15,9 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Checks if an address has a specific global protocol role
    *
-   * @param chainId The chain ID to check the role on
-   * @param role The global role to check
-   * @param targetAddress The address to check for the role
+   * @param params.chainId The chain ID to check the role on
+   * @param params.role The global role to check
+   * @param params.targetAddress The address to check for the role
    *
    * @returns Promise<boolean> True if the address has the role
    */
@@ -30,10 +30,10 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Checks if an address has a specific contract-specific role
    *
-   * @param chainId The chain ID to check the role on
-   * @param role The contract-specific role to check
-   * @param contractAddress The target contract address
-   * @param targetAddress The address to check for the role
+   * @param params.chainId The chain ID to check the role on
+   * @param params.role The contract-specific role to check
+   * @param params.contractAddress The target contract address
+   * @param params.targetAddress The address to check for the role
    *
    * @returns Promise<boolean> True if the target address has the role
    */
@@ -47,9 +47,9 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Grants a global protocol role to an address
    *
-   * @param chainId The chain ID to grant the role on
-   * @param role The global role to grant
-   * @param targetAddress The address to grant the role to
+   * @param params.chainId The chain ID to grant the role on
+   * @param params.role The global role to grant
+   * @param params.targetAddress The address to grant the role to
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
@@ -62,9 +62,9 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Revokes a global protocol role from an address
    *
-   * @param chainId The chain ID to revoke the role on
-   * @param role The global role to revoke
-   * @param targetAddress The address to revoke the role from
+   * @param params.chainId The chain ID to revoke the role on
+   * @param params.role The global role to revoke
+   * @param params.targetAddress The address to revoke the role from
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
@@ -77,10 +77,10 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Grants a contract-specific role to an address
    *
-   * @param chainId The chain ID to grant the role on
-   * @param role The contract-specific role to grant
-   * @param contractAddress The target contract address
-   * @param targetAddress The address to grant the role to
+   * @param params.chainId The chain ID to grant the role on
+   * @param params.role The contract-specific role to grant
+   * @param params.contractAddress The target contract address
+   * @param params.targetAddress The address to grant the role to
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
@@ -94,10 +94,10 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Revokes a contract-specific role from an address
    *
-   * @param chainId The chain ID to revoke the role on
-   * @param role The contract-specific role to revoke
-   * @param contractAddress The target contract address
-   * @param targetAddress The address to revoke the role from
+   * @param params.chainId The chain ID to revoke the role on
+   * @param params.role The contract-specific role to revoke
+   * @param params.contractAddress The target contract address
+   * @param params.targetAddress The address to revoke the role from
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
@@ -111,8 +111,8 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Gets all addresses that currently have a specific global protocol role
    *
-   * @param chainId The chain ID to check the role on
-   * @param role The global role to check for
+   * @param params.chainId The chain ID to check the role on
+   * @param params.role The global role to check for
    *
    * @returns Promise<AddressValue[]> Array of addresses that have the role
    */
@@ -124,9 +124,9 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Gets all addresses that currently have a specific contract-specific role
    *
-   * @param chainId The chain ID to check the role on
-   * @param role The contract-specific role to check for
-   * @param contractAddress The target contract address
+   * @param params.chainId The chain ID to check the role on
+   * @param params.role The contract-specific role to check for
+   * @param params.contractAddress The target contract address
    *
    * @returns Promise<AddressValue[]> Array of addresses that have the role
    */
@@ -139,9 +139,9 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Checks if an address is whitelisted in the FleetCommander contract
    *
-   * @param chainId The chain ID to check the whitelist status on
-   * @param fleetCommanderAddress The FleetCommander contract address
-   * @param targetAddress The address to check for whitelist status
+   * @param params.chainId The chain ID to check the whitelist status on
+   * @param params.fleetCommanderAddress The FleetCommander contract address
+   * @param params.targetAddress The address to check for whitelist status
    *
    * @returns Promise<boolean> True if the address is whitelisted
    */
@@ -154,10 +154,10 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Sets the whitelist status for an address in the FleetCommander contract
    *
-   * @param chainId The chain ID to set the whitelist status on
-   * @param fleetCommanderAddress The FleetCommander contract address
-   * @param targetAddress The address to set the whitelist status for
-   * @param allowed The whitelist status to set
+   * @param params.chainId The chain ID to set the whitelist status on
+   * @param params.fleetCommanderAddress The FleetCommander contract address
+   * @param params.targetAddress The address to set the whitelist status for
+   * @param params.allowed The whitelist status to set
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
@@ -171,10 +171,10 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Sets the whitelist status for multiple addresses in the FleetCommander contract
    *
-   * @param chainId The chain ID to set the whitelist status on
-   * @param fleetCommanderAddress The FleetCommander contract address
-   * @param targetAddresses The addresses to set the whitelist status for
-   * @param allowed The whitelist statuses to set (must match the length of targetAddresses)
+   * @param params.chainId The chain ID to set the whitelist status on
+   * @param params.fleetCommanderAddress The FleetCommander contract address
+   * @param params.targetAddresses The addresses to set the whitelist status for
+   * @param params.allowed The whitelist statuses to set (must match the length of targetAddresses)
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
@@ -188,8 +188,8 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Checks if an address is whitelisted in the AdmiralsQuarters contract
    *
-   * @param chainId The chain ID to check the whitelist status on
-   * @param targetAddress The address to check for whitelist status
+   * @param params.chainId The chain ID to check the whitelist status on
+   * @param params.targetAddress The address to check for whitelist status
    *
    * @returns Promise<boolean> True if the address is whitelisted
    */
@@ -198,9 +198,9 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Sets the whitelist status for an address in the AdmiralsQuarters contract
    *
-   * @param chainId The chain ID to set the whitelist status on
-   * @param targetAddress The address to set the whitelist status for
-   * @param allowed The whitelist status to set
+   * @param params.chainId The chain ID to set the whitelist status on
+   * @param params.targetAddress The address to set the whitelist status for
+   * @param params.allowed The whitelist status to set
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
@@ -213,9 +213,9 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Sets the whitelist status for multiple addresses in the AdmiralsQuarters contract
    *
-   * @param chainId The chain ID to set the whitelist status on
-   * @param targetAddresses The addresses to set the whitelist status for
-   * @param allowed The whitelist statuses to set (must match the length of targetAddresses)
+   * @param params.chainId The chain ID to set the whitelist status on
+   * @param params.targetAddresses The addresses to set the whitelist status for
+   * @param params.allowed The whitelist statuses to set (must match the length of targetAddresses)
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
@@ -228,12 +228,12 @@ export interface IArmadaManagerClientAccessControl {
   /**
    * Gets all roles for a given chainId with pagination and filtering support
    *
-   * @param chainId The chain ID to get roles for
-   * @param first Number of items to return (default: 1000)
-   * @param skip Number of items to skip for pagination (default: 0)
-   * @param name Optional role name filter
-   * @param targetContract Optional target contract address filter
-   * @param owner Optional owner address filter
+   * @param params.chainId The chain ID to get roles for
+   * @param params.first Number of items to return (default: 1000)
+   * @param params.skip Number of items to skip for pagination (default: 0)
+   * @param params.name Optional role name filter
+   * @param params.targetContract Optional target contract address filter
+   * @param params.owner Optional owner address filter
    *
    * @returns Promise with array of role objects containing id, name, owner, targetContract, and institution
    */

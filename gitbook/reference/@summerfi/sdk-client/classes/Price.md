@@ -592,9 +592,13 @@ Creates a price from the ratio of two token amounts
 
 [`ITokenAmount`](../interfaces/ITokenAmount.md)
 
+the token amount in the denominator
+
 ###### numerator
 
 [`ITokenAmount`](../interfaces/ITokenAmount.md)
+
+the token amount in the numerator
 
 #### Returns
 

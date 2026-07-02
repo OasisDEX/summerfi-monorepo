@@ -25,6 +25,8 @@ Retrieves a chain by its chain info
 
 [`ChainInfo`](../classes/ChainInfo.md)
 
+The info associated with the chain to retrieve
+
 #### Returns
 
 `Promise`\<[`Chain`](../classes/Chain.md)\>
@@ -50,6 +52,8 @@ Retrieves a network by its chain ID
 ###### chainId
 
 `number`
+
+The chain ID of the network to retrieve
 
 #### Returns
 

@@ -14,6 +14,8 @@ Type guard for ISparkLendingPoolId
 
 `unknown`
 
+Object to be checked
+
 ## Returns
 
 `maybeLendingPoolId is ISparkLendingPoolId`

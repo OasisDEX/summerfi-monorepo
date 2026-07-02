@@ -24,21 +24,31 @@ Adds an ark to the fleet. Used by the governance
 
 [`IAddress`](IAddress.md)
 
+The address of the ark to add
+
 ###### maxDepositCap
 
 [`ITokenAmount`](ITokenAmount.md)
+
+The maximum deposit cap of the ark
 
 ###### maxRebalanceInflow
 
 [`ITokenAmount`](ITokenAmount.md)
 
+The maximum rebalance inflow of the ark
+
 ###### maxRebalanceOutflow
 
 [`ITokenAmount`](ITokenAmount.md)
 
+The maximum rebalance outflow of the ark
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -66,21 +76,31 @@ Adds multiple arks to the fleet. Used by the governance
 
 [`IAddress`](IAddress.md)[]
 
+The addresses of the arks to add
+
 ###### maxDepositCaps
 
 [`ITokenAmount`](ITokenAmount.md)[]
+
+The maximum deposit caps of the arks
 
 ###### maxRebalanceInflows
 
 [`ITokenAmount`](ITokenAmount.md)[]
 
+The maximum rebalance inflows of the arks
+
 ###### maxRebalanceOutflows
 
 [`ITokenAmount`](ITokenAmount.md)[]
 
+The maximum rebalance outflows of the arks
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -96,7 +116,7 @@ The transaction information
 arkConfig(params): Promise<IArkConfig>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:253](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L253)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:248](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L248)
 
 Gets the configuration of an ark. Used to fetch data from the blockchain
 
@@ -108,9 +128,13 @@ Gets the configuration of an ark. Used to fetch data from the blockchain
 
 `` `0x${string}` ``
 
+The address of the ark
+
 ###### chainId
 
 [`ChainId`](../type-aliases/ChainId.md)
+
+The chain ID where the ark is deployed
 
 #### Returns
 
@@ -138,6 +162,8 @@ Gets the list of active arks for a fleet
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
 
+The ID of the vault
+
 #### Returns
 
 `Promise`\<[`IAddress`](IAddress.md)[]\>
@@ -152,7 +178,7 @@ The list of active ark addresses
 emergencyShutdown(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:243](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L243)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:238](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L238)
 
 Shuts down the fleet in case of an emergency. Used by the governance
 
@@ -163,6 +189,8 @@ Shuts down the fleet in case of an emergency. Used by the governance
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -178,7 +206,7 @@ The transaction information
 forceRebalance(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:231](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L231)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:226](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L226)
 
 Forces a rebalance of the fleet. Used by the governance
 
@@ -190,9 +218,13 @@ Forces a rebalance of the fleet. Used by the governance
 
 [`IRebalanceData`](IRebalanceData.md)[]
 
+The data for the rebalance
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -208,7 +240,7 @@ The transaction information
 getFeeRevenueConfig(params): Promise<IFeeRevenueConfig>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:262](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L262)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:257](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L257)
 
 Gets the fee revenue configuration with hardcoded values per chain
 
@@ -219,6 +251,8 @@ Gets the fee revenue configuration with hardcoded values per chain
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the vault
 
 #### Returns
 
@@ -234,7 +268,7 @@ Promise<IFeeRevenueConfig> The fee revenue configuration
 getVaultRaw(params): Promise<GetVaultQuery>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:289](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L289)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:284](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L284)
 
 Retrieves a specific protocol vault
 
@@ -245,6 +279,8 @@ Retrieves a specific protocol vault
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+ID of the vault
 
 #### Returns
 
@@ -260,7 +296,7 @@ The corresponding Armada vault
 getVaultsRaw(params): Promise<GetVaultsQuery>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:280](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L280)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:275](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L275)
 
 Retrieves all protocol vaults
 
@@ -271,6 +307,8 @@ Retrieves all protocol vaults
 ###### chainInfo
 
 [`IChainInfo`](IChainInfo.md)
+
+Chain information
 
 #### Returns
 
@@ -298,9 +336,13 @@ Rebalances the fleet using the provided rebalance data. Used by the keeper
 
 [`IRebalanceData`](IRebalanceData.md)[]
 
+The data for the rebalance
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -328,9 +370,13 @@ Removes an ark from the fleet. Used by the governance
 
 [`IAddress`](IAddress.md)
 
+The address of the ark to remove
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -346,7 +392,7 @@ The transaction information
 setArkDepositCap(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:145](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L145)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:144](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L144)
 
 Sets the deposit cap of an ark. Used by the governance
 
@@ -362,9 +408,13 @@ Sets the deposit cap of an ark. Used by the governance
 
 [`ITokenAmount`](ITokenAmount.md)
 
+The new deposit cap
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -380,7 +430,7 @@ The transaction information
 setArkMaxDepositPercentageOfTVL(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:160](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L160)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:158](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L158)
 
 Sets the maximum deposit percentage of TVL for an ark
 
@@ -396,9 +446,13 @@ Sets the maximum deposit percentage of TVL for an ark
 
 [`IPercentage`](IPercentage.md)
 
+The new maximum deposit percentage of TVL
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the vault
 
 #### Returns
 
@@ -414,7 +468,7 @@ The transaction information
 setArkMaxRebalanceInflow(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:190](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L190)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:186](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L186)
 
 Sets the maximum rebalance inflow of an ark. Used by the governance
 
@@ -430,9 +484,13 @@ Sets the maximum rebalance inflow of an ark. Used by the governance
 
 [`ITokenAmount`](ITokenAmount.md)
 
+The new maximum rebalance inflow
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -448,7 +506,7 @@ The transaction information
 setArkMaxRebalanceOutflow(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:175](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L175)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:172](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L172)
 
 Sets the maximum rebalance outflow of an ark. Used by the governance
 
@@ -464,9 +522,13 @@ Sets the maximum rebalance outflow of an ark. Used by the governance
 
 [`ITokenAmount`](ITokenAmount.md)
 
+The new maximum rebalance outflow
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -494,9 +556,13 @@ Sets the deposit cap of the fleet. Used by the governance
 
 [`ITokenAmount`](ITokenAmount.md)
 
+The new deposit cap
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -512,7 +578,7 @@ The transaction information
 setMinimumBufferBalance(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:205](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L205)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:200](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L200)
 
 Sets the minimum buffer balance of an ark. Used by the governance
 
@@ -524,9 +590,13 @@ Sets the minimum buffer balance of an ark. Used by the governance
 
 [`ITokenAmount`](ITokenAmount.md)
 
+The new minimum buffer balance
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -554,9 +624,13 @@ Sets the performance fee rate of the fleet. Used by the governance
 
 [`IPercentage`](IPercentage.md)
 
+The new performance fee rate
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -614,9 +688,13 @@ Sets the tip rate of the fleet. Used by the governance
 
 [`IPercentage`](IPercentage.md)
 
+The new tip rate
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 
@@ -632,7 +710,7 @@ The transaction information
 tipRate(params): Promise<bigint>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:271](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L271)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:266](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L266)
 
 Gets the tip rate of the fleet. Used to fetch data from the blockchain
 
@@ -643,6 +721,8 @@ Gets the tip rate of the fleet. Used to fetch data from the blockchain
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the vault
 
 #### Returns
 
@@ -658,7 +738,7 @@ Promise<bigint> The tip rate as a bigint
 updateRebalanceCooldown(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:218](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L218)
+Defined in: [src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts:213](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IArmadaManagerAdminClient.ts#L213)
 
 Sets the rebalance cooldown of the fleet. Used by the governance
 
@@ -670,9 +750,13 @@ Sets the rebalance cooldown of the fleet. Used by the governance
 
 `number`
 
+The new rebalance cooldown
+
 ###### vaultId
 
 [`IArmadaVaultId`](IArmadaVaultId.md)
+
+The ID of the pool
 
 #### Returns
 

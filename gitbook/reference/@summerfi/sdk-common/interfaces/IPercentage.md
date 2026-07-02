@@ -142,7 +142,7 @@ the result of the subtraction
 toBigNumber(): BigNumber;
 ```
 
-Defined in: [src/common/interfaces/IValueConverter.ts:36](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L36)
+Defined in: [src/common/interfaces/IValueConverter.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L34)
 
 Converts the instance into a BigNumber
 
@@ -157,7 +157,8 @@ The value as a BigNumber
 It returns a BigNumber without explicit decimals. This function is intended for low
          level operations not accounted for in the specific data type. The BigNumber does NOT
          carry any information on how many decimals the value has, meaning that the conversion
-         of BigNumber to a Solidity value must be done manually
+         of BigNumber to a Solidity value must be done manually. Use `toSolidityValue` to
+         convert the value to a Solidity value instead.
 
 #### Inherited from
 
@@ -209,7 +210,7 @@ The proportion is the percentage divided by 100, this is, a floating value betwe
 toSolidityValue(params?): bigint;
 ```
 
-Defined in: [src/common/interfaces/IValueConverter.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L22)
+Defined in: [src/common/interfaces/IValueConverter.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/common/interfaces/IValueConverter.ts#L21)
 
 Converts the instance into a Solidity value
 
@@ -221,6 +222,8 @@ Converts the instance into a Solidity value
 
 `number`
 
+The number of decimals used to represent the value in Solidity
+
 #### Returns
 
 `bigint`
@@ -230,7 +233,9 @@ The value as a TypeScript bigint that can be passed to a Solidity contract
 #### Remarks
 
 The value is expected to be scaled by 10^decimals, thus yielding a Solidity uint256
-         value with the correct fixed point decimals
+         value with the correct fixed point decimals. The data type implementing this
+         interface should provide a default value for decimals when possible to aid in the
+         conversion.
 
 #### Inherited from
 

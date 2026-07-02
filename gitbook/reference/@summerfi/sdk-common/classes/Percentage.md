@@ -350,6 +350,8 @@ Creates a Percentage instance from a Solidity value with PERCENTAGE_DECIMALS dec
 
 `bigint`
 
+The Solidity value
+
 #### Returns
 
 `Percentage`

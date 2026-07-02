@@ -11,7 +11,7 @@ export interface ITokensManagerClient2 {
   /**
    * Retrieves a token by its symbol
    *
-   * @param symbol The symbol of the token to retrieve
+   * @param params.symbol The symbol of the token to retrieve
    *
    * @returns The token with the given symbol
    */
@@ -20,7 +20,7 @@ export interface ITokensManagerClient2 {
   /**
    * Retrieves a token by its address
    *
-   * @param address The address of the token to retrieve
+   * @param params.addressValue The address of the token to retrieve
    *
    * @returns The token with the given address
    */

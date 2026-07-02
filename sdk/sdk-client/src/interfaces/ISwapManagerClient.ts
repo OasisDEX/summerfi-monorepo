@@ -9,9 +9,9 @@ export interface ISwapManagerClient {
   /**
    * Retrieves a swap quote for a given input amount and token
    *
-   * @param fromAmount The amount to swap
-   * @param toToken The token to swap to
-   * @param slippage The slippage for the swap
+   * @param params.fromAmount The amount to swap
+   * @param params.toToken The token to swap to
+   * @param params.slippage The slippage for the swap
    *
    * @returns The swap quote for the given input amount and token
    */

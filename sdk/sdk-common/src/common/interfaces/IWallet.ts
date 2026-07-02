@@ -21,7 +21,7 @@ export interface IWallet extends IWalletData {
   /**
    * Checks if two wallets are equal
    *
-   * @param wallet The wallet to compare
+   * @param token The wallet to compare
    * @returns true if the wallets are equal
    *
    * Equality is determined by the address

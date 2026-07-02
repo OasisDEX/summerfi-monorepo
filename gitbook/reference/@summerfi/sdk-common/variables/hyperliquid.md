@@ -42,14 +42,6 @@ readonly name: "HyperEVMScan" = 'HyperEVMScan';
 readonly url: "https://hyperevmscan.io" = 'https://hyperevmscan.io';
 ```
 
-### blockTime?
-
-```ts
-optional blockTime: number;
-```
-
-Block time in milliseconds.
-
 ### contracts
 
 ```ts
@@ -75,58 +67,6 @@ readonly address: "0xca11bde05977b3631167028862be2a173976ca11" = '0xca11bde05977
 ```ts
 readonly blockCreated: 13051 = 13051;
 ```
-
-### ~~custom?~~
-
-```ts
-optional custom: Record<string, unknown>;
-```
-
-Custom chain data.
-
-#### Deprecated
-
-use `.extend` instead.
-
-### ensTlds?
-
-```ts
-optional ensTlds: readonly string[];
-```
-
-Collection of ENS TLDs for the chain.
-
-### experimental\_preconfirmationTime?
-
-```ts
-optional experimental_preconfirmationTime: number;
-```
-
-Preconfirmation time in milliseconds.
-
-### extendSchema?
-
-```ts
-optional extendSchema: Record<string, unknown>;
-```
-
-Extend schema.
-
-### fees?
-
-```ts
-optional fees: ChainFees<undefined>;
-```
-
-Modifies how fees are derived.
-
-### formatters?
-
-```ts
-optional formatters: undefined;
-```
-
-Modifies how data is formatted and typed (e.g. blocks and transactions)
 
 ### id
 
@@ -170,16 +110,6 @@ readonly name: "HYPE" = 'HYPE';
 readonly symbol: "HYPE" = 'HYPE';
 ```
 
-### prepareTransactionRequest?
-
-```ts
-optional prepareTransactionRequest: 
-  | PrepareTransactionRequestFn
-  | [PrepareTransactionRequestFn, object];
-```
-
-Function to prepare a transaction request. Runs before the transaction is filled.
-
 ### rpcUrls
 
 ```ts
@@ -199,35 +129,3 @@ readonly default: object;
 ```ts
 readonly http: readonly ["https://rpc.hyperliquid.xyz/evm"];
 ```
-
-### serializers?
-
-```ts
-optional serializers: ChainSerializers<undefined, TransactionSerializable>;
-```
-
-Modifies how data is serialized (e.g. transactions).
-
-### sourceId?
-
-```ts
-optional sourceId: number;
-```
-
-Source Chain ID (ie. the L1 chain)
-
-### testnet?
-
-```ts
-optional testnet: boolean;
-```
-
-Flag for test networks
-
-### verifyHash?
-
-```ts
-optional verifyHash: ChainVerifyHashFn;
-```
-
-Chain-specific signature verification.

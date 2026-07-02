@@ -46,7 +46,7 @@ export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IValueConv
   add(fiatToAdd: IFiatCurrencyAmount): IFiatCurrencyAmount
 
   /**
-   * @param tokenToSubstract FiatCurrencyAmount to subtract
+   * @param fiatToSubtract FiatCurrencyAmount to subtract
    * @returns The resulting FiatCurrencyAmount
    */
   subtract(fiatToSubtract: IFiatCurrencyAmount): IFiatCurrencyAmount

@@ -16,5 +16,13 @@
   "githubPages": false,
   "includeVersion": false,
   "disableGit": true,
-  "sourceLinkTemplate": "https://github.com/OasisDEX/summerfi-monorepo/blob/dev/{path}#L{line}"
+  "sourceLinkTemplate": "https://github.com/OasisDEX/summerfi-monorepo/blob/dev/{path}#L{line}",
+  "externalSymbolLinkMappings": {
+    "viem": {
+      "*": "https://viem.sh/docs/"
+    },
+    "@cowprotocol/cow-sdk": {
+      "*": "https://docs.cow.fi/cow-protocol/reference/sdks/cow-sdk"
+    }
+  }
 }
