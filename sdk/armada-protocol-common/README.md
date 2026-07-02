@@ -36,11 +36,14 @@ No `test` script is defined in this package.
 
 ## Cross-package connections
 
-**Consumes:** `@summerfi/sdk-common`, `@summerfi/contracts-provider-common`,
-`@summerfi/subgraph-manager-common` (subgraph query types are re-exported directly from here).
+**Consumes:** `@summerfi/sdk-common`, `@summerfi/subgraph-manager-common` (subgraph query types are
+re-exported directly from here). (`@summerfi/contracts-provider-common` is declared in package.json
+but is not imported by any source file.)
 
-**Consumed by:** `armada-protocol-service`, `contracts-provider-service`, `order-planner-common`,
-`order-planner-service`, `simulator-service`, `sdk-client`, `sdk-server`, `sdk-e2e`.
+**Consumed by:** `armada-protocol-service`, `order-planner-common`, `order-planner-service`,
+`sdk-client`, `sdk-server`, and `apps/earn-protocol` (raw-calls types + `helpers/merkle.ts`).
+(`contracts-provider-service`, `simulator-service`, and `sdk-e2e` declare the dependency but do not
+import it.)
 
 **Gotchas:**
 

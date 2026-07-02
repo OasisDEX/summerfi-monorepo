@@ -40,6 +40,8 @@ pnpm view-versions      # hardhat run scripts/view-versions.ts
 - `@summerfi/deployment-utils`, `@summerfi/deployment-types` — chain/flag types for the deploy
   script
 - `@summerfi/hardhat-utils` — `ChainsType` and Hardhat helpers
+- `@summerfi/common` — the `Address` type imported by `src/lib/deployment/configuration.ts` and
+  `verification.ts`
 - `@openzeppelin/contracts 4.9.6`, `@prb/math 2.5.0` — Solidity library dependencies (pinned
   versions)
 

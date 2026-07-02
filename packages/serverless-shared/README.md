@@ -33,7 +33,11 @@ from here rather than defining its own copies.
 
 ## Cross-package connections
 
-**Consumed by** (packages that list `@summerfi/serverless-shared` as a dependency):
+**Consumed by**: the whole lambda layer — most `summerfi-api/*` and `external-api/*` functions
+(get-apy, get-rates, get-triggers, setup-trigger, get-migrations, get-morpho-claims,
+get-meta-morpho-details, portfolio-*, spark-rewards-claim, get-protocol-info, get-campaign-data,
+get-collateral-locked, …), `background-jobs/update-summer-earn-rewards-apr`, plus `apps/earn-protocol`
+and `apps/earn-protocol-institutions`. Among workspace library packages:
 `@summerfi/triggers-shared`, `@summerfi/triggers-calculations`, `@summerfi/app-types`,
 `@summerfi/app-tos`, `@summerfi/morpho-blue-external-api-client`, `@summerfi/summer-protocol-db`,
 `@summerfi/summer-institutions-db`, and several subgraph packages (`aave-spark-subgraph`,

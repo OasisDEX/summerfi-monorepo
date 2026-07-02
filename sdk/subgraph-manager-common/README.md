@@ -46,7 +46,10 @@ from `SUBGRAPH_BASE` env var at codegen time (see `summer-protocol.yml`, `summer
 `summer-dca.yml`, `summer-rwa.yml`).
 
 **Consumed by:** `subgraph-manager-service` (implements the interfaces), `armada-protocol-common`,
-`armada-protocol-service`, `sdk-client`.
+`armada-protocol-service`, `sdk-client`; also the frontend — `packages/app-types`
+(`types/src/earn-protocol/index.ts` maps `Network.*` into the `SupportedSDKNetworks` enum) and
+`apps/earn-protocol` (~14 files, e.g. RWA/table-data server handlers). `apps/earn-protocol-institutions`
+declares it but does not import it (stale dep).
 
 **Gotchas:**
 

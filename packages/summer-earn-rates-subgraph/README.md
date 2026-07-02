@@ -38,9 +38,13 @@ pnpm lint:fix   # eslint . --fix
 
 **Consumed by**
 
-- `@summerfi/app-earn-ui`
-- `@summerfi/app-server-handlers`
-- `@summerfi/app-types`
+- `summerfi-api/get-rates-function` — `getAllClients` to serve `/api/rates`
+- `background-jobs/update-summer-earn-rewards-apr` — reward-fetchers query interest-rate data
+- `@summerfi/app-server-handlers` — `arks-interest-rates/*` helpers
+- `@summerfi/app-types` — `types/src/earn-protocol/index.ts`
+
+(`@summerfi/app-earn-ui` and `apps/earn-protocol-institutions` declare the dependency in
+`package.json` but no longer import it — stale entries.)
 
 **Gotchas**
 

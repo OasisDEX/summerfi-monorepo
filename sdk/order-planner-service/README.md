@@ -32,11 +32,11 @@ turbo pipeline.
 
 **Consumes:** `order-planner-common` (interfaces), `sdk-common`, `protocol-plugins` (action
 builders), `protocol-plugins-common`, `armada-protocol-common`, `address-book-common`,
-`contracts-provider-common`, `configuration-provider-common`, `core-contracts`, `deployment-types`,
-`deployment-utils`, `oracle-common`, `swap-common`, `tokens-common`.
+`contracts-provider-common`, `deployment-utils`, `oracle-common`, `swap-common`, `tokens-common`.
 
 **Consumed by:** `sdk-server` — instantiated once in `SDKContext.ts` as `new OrderPlannerService()`
-(no injection factory; direct instantiation).
+(no injection factory; direct instantiation) — and `sdk/tools/genStrategyDefinitions`, which imports
+`OrderPlannerService`.
 
 **Gotchas:**
 

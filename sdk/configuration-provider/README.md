@@ -32,9 +32,10 @@ pnpm lint:fix # eslint . --fix
 (`@summerfi/sdk-common` is listed in package.json dependencies but is not imported by any source
 file in this package.)
 
-**Consumed by:** `sdk-server`, `contracts-provider-service`, `oracle-service`,
-`subgraph-manager-service`, `tenderly-utils`, `testing-utils`. Tests and local mocks use
-`configuration-provider-mock` instead.
+**Consumed by:** `sdk-server` (in `src/context/`) and, in `e2e/` only, `armada-protocol-service`,
+`contracts-provider-service`, `oracle-service`, and `tenderly-utils`. `configuration-provider-mock`
+also imports it. (`subgraph-manager-service` and `testing-utils` declare the dependency but do not
+import it.) Tests and local mocks use `configuration-provider-mock` instead.
 
 **Gotchas:**
 

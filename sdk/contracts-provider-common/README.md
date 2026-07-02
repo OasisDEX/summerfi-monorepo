@@ -42,8 +42,7 @@ No test script is defined in this package.
 `@summerfi/sdk-common`
 
 **Consumed by:** `contracts-provider-service` (implementations), `allowance-manager-service`,
-`armada-protocol-common`, `armada-protocol-service`, `order-planner-common`,
-`order-planner-service`, `sdk-server`
+`armada-protocol-service`, `order-planner-common`, `order-planner-service`, `sdk-server`
 
 **Gotchas:**
 

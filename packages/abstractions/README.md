@@ -39,6 +39,8 @@ pnpm lint:fix   # eslint . --fix
 - `@summerfi/borrow-db`
 - `@summerfi/summer-protocol-institutions-db`
 - `@summerfi/summer-events-subgraph`
+- Lambdas — `summerfi-api/get-apy-function`, `summerfi-api/get-rates-function`,
+  `external-api/get-protocol-info-function` (import the `Logger` / `DistributedCache` contracts)
 
 **Gotchas:**
 

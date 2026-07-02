@@ -30,9 +30,9 @@ pnpm lint:fix   # eslint . --fix
 ## Cross-package connections
 
 **Consumes:** `@summerfi/subgraph-manager-common` (interfaces + GraphQL client factories),
-`@summerfi/configuration-provider-common` / `@summerfi/configuration-provider` /
-`@summerfi/configuration-provider-mock` (config access), `@summerfi/sdk-common`,
-`@summerfi/sdk-server-common`.
+`@summerfi/configuration-provider-common` (config access), `@summerfi/sdk-common`;
+`@summerfi/configuration-provider-mock` (tests only). Note: `@summerfi/configuration-provider` and
+`@summerfi/sdk-server-common` are declared in `package.json` but never imported.
 
 **Consumed by:** `sdk-server`, `armada-protocol-service`.
 

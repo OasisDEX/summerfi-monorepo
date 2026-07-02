@@ -36,15 +36,17 @@ No `test` script is declared in this package's `package.json`.
 - `@summerfi/swap-common` — `ISwapManager` (swap quotes at simulation time)
 - `@summerfi/oracle-common` — `IOracleManager` (spot prices)
 - `@summerfi/protocol-manager-common` — `IProtocolManager` (pool data)
-- `@summerfi/protocol-plugins` / `@summerfi/protocol-plugins-common` — declared as dependencies;
-  protocol-specific data shapes used by the step processor
-- `@summerfi/armada-protocol-common` — declared as a dependency in `package.json`; not imported in
-  source files at the time of writing
+- `@summerfi/protocol-plugins` — declared as a dependency; imported only in test mocks
+  (`tests/mocks/testSourcePosition.ts`), not in `src`
+- `@summerfi/protocol-plugins-common` / `@summerfi/armada-protocol-common` — declared as
+  dependencies in `package.json`; not imported anywhere at the time of writing
 
 **Consumed by:**
 
 - `@summerfi/sdk-server` — calls `refinanceLendingToLending` and `importPosition` from this package
   in its tRPC handlers (`getRefinanceSimulation`, `getImportSimulation`)
+- `sdk/tools/genStrategyDefinitions` — dev tool; imports
+  `refinanceLendingToLendingAnyPairStrategy` from `@summerfi/simulator-service/strategies`
 
 **Gotchas:**
 

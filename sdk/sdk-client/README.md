@@ -37,8 +37,8 @@ pnpm lint:fix       # eslint . --fix
 ## Cross-package connections
 
 **Consumes:** `@summerfi/sdk-common` (SerializationService, types), `@summerfi/sdk-server`
-(SDKAppRouter type), `@summerfi/armada-protocol-common`, `@summerfi/armada-protocol-service`,
-`@summerfi/armada-protocol-abis`, `@summerfi/subgraph-manager-common`, `@summerfi/protocol-plugins`.
+(SDKAppRouter type), `@summerfi/armada-protocol-common`, `@summerfi/subgraph-manager-common`,
+`@summerfi/protocol-plugins`.
 
 **Consumed by:** `sdk-client-react`, `sdk-e2e`, `sdk-speed-test`, and frontend apps outside `sdk/`.
 

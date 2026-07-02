@@ -38,11 +38,10 @@ pnpm testw       # jest --watch
 ## Cross-package connections
 
 **Consumes:** `@summerfi/contracts-provider-common` (interfaces), `@summerfi/abi-provider-common`,
-`@summerfi/armada-protocol-abis`, `@summerfi/armada-protocol-common`,
-`@summerfi/blockchain-client-common`, `@summerfi/blockchain-client-provider`,
-`@summerfi/configuration-provider`, `@summerfi/configuration-provider-common`,
-`@summerfi/tokens-common`, `@summerfi/tokens-service`, `@summerfi/tenderly-utils`,
-`@summerfi/sdk-common`, `@summerfi/common`
+`@summerfi/armada-protocol-abis`, `@summerfi/blockchain-client-common`,
+`@summerfi/configuration-provider-common`, `@summerfi/tokens-common`, `@summerfi/sdk-common`.
+`@summerfi/configuration-provider`, `@summerfi/tenderly-utils` and `@summerfi/tokens-service` are
+used only by the `e2e/` tests.
 
 **Consumed by:** `sdk-server`, `allowance-manager-service`, `armada-protocol-service`
 

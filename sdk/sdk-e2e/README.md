@@ -29,11 +29,8 @@ There is no `build` script; this is a test-only leaf package.
 ## Cross-package connections
 
 **Consumes:** `@summerfi/sdk-client` (SDK factory functions), `@summerfi/sdk-common` (types/chain
-ids), `@summerfi/armada-protocol-common`, `@summerfi/armada-protocol-service`,
-`@summerfi/protocol-manager-service`, `@summerfi/protocol-plugins`,
-`@summerfi/protocol-plugins-common`, `@summerfi/core-contracts`, `@summerfi/tenderly-utils`,
-`@summerfi/testing-utils`. The common/service split follows the pattern used across Armada and
-protocol-plugins packages.
+ids), `@summerfi/protocol-plugins`, `@summerfi/armada-protocol-abis`, `@summerfi/core-contracts`,
+`@summerfi/deployment-utils`, `@summerfi/testing-utils`.
 
 **Consumed by:** nothing — this is a test leaf with no dependents.
 

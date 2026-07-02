@@ -43,7 +43,8 @@ the workspace test runner or directly with `jest`.
 **Consumed by**
 
 - `@summerfi/sdk-server` — wires `ProtocolManager` into the server router
-- `@summerfi/sdk-e2e` — used in end-to-end test scenarios
+- `@summerfi/sdk-e2e` — declares the dependency in `package.json` but no longer imports it in source
+  (stale entry)
 
 **Gotchas**
 

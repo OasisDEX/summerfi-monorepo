@@ -40,8 +40,9 @@ built with Vite. CSS Modules are compiled in parallel and their type declaration
   other protocol types.
 - `@summerfi/app-icons`, `@summerfi/app-token-config`, `@summerfi/app-utils` — icons, token
   metadata, utilities.
-- `@summerfi/armada-protocol-common`, `@summerfi/summer-earn-rates-subgraph` — peer deps; must be
-  satisfied by consuming apps.
+- `@summerfi/armada-protocol-common`, `@summerfi/summer-earn-rates-subgraph` — declared peer deps
+  and marked `external` in `vite.config.ts`, but not currently imported by `src/`; consuming apps
+  still provide them.
 
 **Consumed by**
 

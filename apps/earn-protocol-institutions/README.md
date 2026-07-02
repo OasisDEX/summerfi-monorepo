@@ -77,8 +77,8 @@ as a Safe Transaction Builder batch (`components/organisms/ExportToSafe/`).
 - `@summerfi/sdk-client` — `makeAdminSDK` / `SDKAdminManager` for standard vaults and `makeInstiSdk`
   (with `Insti-Version: v2` header) for RWA vaults; proxy URL set to `EARN_APP_URL`.
 - `@summerfi/app-earn-ui`, `@summerfi/app-types`, `@summerfi/app-utils`,
-  `@summerfi/app-server-handlers`, `@summerfi/sdk-common` — shared UI components, types, and
-  utilities from the monorepo.
+  `@summerfi/app-server-handlers`, `@summerfi/sdk-common`, `@summerfi/sdk-client-react` — shared UI
+  components, types, utilities, and SDK React hooks from the monorepo.
 - `@summerfi/armada-protocol-abis` — `FleetCommanderAbi` for on-chain reads in
   `institution-vaults/index.ts`.
 - `@safe-global/safe-apps-sdk` / `@safe-global/safe-apps-provider` — Safe App detection and the
