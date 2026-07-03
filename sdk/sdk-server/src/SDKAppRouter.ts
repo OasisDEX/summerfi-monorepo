@@ -93,6 +93,7 @@ import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
 import { getSummerPrice } from './armada-protocol-handlers/users/getSummerPrice'
 import { getDelegationChainLength } from './armada-protocol-handlers/users/getDelegationChainLength'
 import { pingHandler } from './handlers/pingHandler'
+import { versionHandler } from './handlers/versionHandler'
 import { getMigratablePositions } from './armada-protocol-handlers/users/getMigratablePositions'
 import { getMigrationTX } from './armada-protocol-handlers/users/getMigrationTX'
 import { getBridgeTx } from './armada-protocol-handlers/users/getBridgeTx'
@@ -185,6 +186,7 @@ import { getProtocolAddresses } from './armada-protocol-handlers/users/getProtoc
 export const sdkAppRouter = router({
   debug: {
     ping: pingHandler,
+    version: versionHandler,
   },
   protocols: {
     getPosition: getPosition,
