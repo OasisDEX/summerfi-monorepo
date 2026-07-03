@@ -9,7 +9,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - DCA Strategies Edit', () => {
-  const scenarios: { strategyId: string }[] = [{ strategyId: '3' }]
+  const scenarios: { strategyId: string }[] = [{ strategyId: '0' }]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { strategyId } = scenario
@@ -18,7 +18,7 @@ describe('Armada Protocol - DCA Strategies Edit', () => {
       const setup = createSdkTestSetup({ chainId: ChainIds.Base, simulateOnly: false })
       const { sdk, chainId, walletClient, publicClient } = setup
 
-      const strategy = await retryUntilDefined(() => sdk.dca.getStrategy({ strategyId, chainId }))
+      const strategy = await sdk.dca.getStrategy({ strategyId, chainId })
 
       assert(strategy, `Expected strategy ${strategyId} to exist`)
       assert(
@@ -53,7 +53,9 @@ describe('Armada Protocol - DCA Strategies Edit', () => {
 
       assert(updatedStrategy, `Expected strategy ${strategyId} to exist after edit`)
       assert.strictEqual(updatedStrategy.slippagePercentage, newSlippagePercentage)
-      console.log(`[Edit] Edited DCA strategy with ID: ${strategyId}`)
+      console.log(
+        `[Edit] Edited DCA strategy with ID: ${strategyId} by changing slippagePercentage to ${newSlippagePercentage}`,
+      )
     })
   })
 })
