@@ -65,6 +65,7 @@
     "e2e:protocoltvl": "jest --roots e2e -- ./e2e/armadaProtocol.getProtocolTvl.test.ts",
     "e2e:protocoladdresses": "jest --roots e2e -- ./e2e/armadaProtocol.getProtocolAddresses.test.ts",
     "e2e:dca:strategies:create": "jest --roots e2e -- ./e2e/dcaStrategies.create.test.ts",
+    "e2e:dca:strategies:depositAndCreate": "jest --roots e2e -- ./e2e/dcaStrategies.depositAndCreate.test.ts",
     "e2e:dca:strategies:edit": "jest --roots e2e -- ./e2e/dcaStrategies.edit.test.ts",
     "e2e:dca:strategies:getStrategies": "jest --roots e2e -- ./e2e/dcaStrategies.getStrategies.test.ts",
     "e2e:dca:strategies:getStrategy": "jest --roots e2e -- ./e2e/dcaStrategies.getStrategy.test.ts",
