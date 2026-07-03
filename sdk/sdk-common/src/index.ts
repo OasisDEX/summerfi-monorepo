@@ -360,6 +360,7 @@ export type {
   ToggleAQasMerklRewardsOperatorTransactionInfo,
   Erc20TransferTransactionInfo,
   Permit2AuthorizationTransactionInfo,
+  Permit2SubAllowanceTransactionInfo,
   Permit2RevokeTransactionInfo,
   CreateDcaStrategyTransactionInfo,
   EditDcaStrategyTransactionInfo,

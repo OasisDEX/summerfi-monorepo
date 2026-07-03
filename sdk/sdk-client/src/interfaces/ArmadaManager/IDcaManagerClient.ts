@@ -11,6 +11,8 @@ import type {
   PauseDcaStrategyTransactionInfo,
   ResumeDcaStrategyTransactionInfo,
   CancelDcaStrategyTransactionInfo,
+  Permit2AuthorizationTransactionInfo,
+  Permit2SubAllowanceTransactionInfo,
   DcaStrategyStatusEnum,
 } from '@summerfi/sdk-common'
 
@@ -19,15 +21,71 @@ import type {
  */
 export interface IDcaManagerClient {
   /**
-   * Builds the transaction(s) that create a new DCA (dollar-cost-averaging) strategy.
+   * Builds the transactions that create a new DCA strategy AND make the initial deposit
+   * (`depositAndCreate`).
    *
-   * The strategy creation pulls the initial `assetAmount` from the user, so the result is prefixed
-   * with an ERC20 approval transaction when the current allowance is insufficient; otherwise it is a
-   * single-element tuple. Send the transactions in order, mining the approval before the create.
+   * Ordered: `[permit2 authorization?, permit2 sub-allowance, inAsset approval?, create]`. The
+   * Permit2 steps set up the keeper's recurring pull of source-vault shares (authorization is
+   * included only when the ERC20 allowance to Permit2 is insufficient); the inAsset approval is
+   * included only when the allowance to the manager is insufficient. Send the transactions in array
+   * order — the `CreateStrategy` transaction is always last.
    *
-   * @param params - Strategy configuration (chain, user, source/target vaults and assets, price
-   *   feeds, share amount, slippage, interval, trade count, optional price guards and deadline).
-   * @returns A promise resolving to `[createTx]`, or `[approveTx, createTx]` when an approval is needed.
+   * @param params - Strategy configuration plus the `assetAmount` to deposit at creation.
+   * @returns A promise resolving to the ordered array of transactions to send.
+   * @throws If the DCA module is not deployed on `params.chainId`.
+   * @example
+   * ```ts
+   * const txs = await dcaManager.depositAndCreateStrategyTx({ chainId: ChainIds.Base, userAddress, ...config })
+   * ```
+   */
+  depositAndCreateStrategyTx(params: {
+    chainId: ChainId
+    userAddress: AddressValue
+    fromVault: AddressValue
+    toVault: AddressValue
+    inAsset: AddressValue
+    outAsset: AddressValue
+    inAssetFeed: IChainlinkFeed
+    outAssetFeed: IChainlinkFeed
+    /** Per-trade amount (source asset base units). */
+    amountShares: string
+    /** Initial principal deposited at creation (in-asset base units). Must be non-zero. */
+    assetAmount: string
+    slippagePercentage: string
+    intervalSeconds: number
+    maxTrades: number
+    neverBuyAbove?: string
+    neverSellBelow?: string
+    deadlineUnixTimestamp: number
+  }): Promise<
+    // Ordered [permit2 authorization?, permit2 sub-allowance, inAsset approval?, create]; the two
+    // optional slots yield these four exact shapes (CreateStrategy is always last).
+    | [Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+    | [
+        Permit2AuthorizationTransactionInfo,
+        Permit2SubAllowanceTransactionInfo,
+        CreateDcaStrategyTransactionInfo,
+      ]
+    | [Permit2SubAllowanceTransactionInfo, ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]
+    | [
+        Permit2AuthorizationTransactionInfo,
+        Permit2SubAllowanceTransactionInfo,
+        ApproveTransactionInfo,
+        CreateDcaStrategyTransactionInfo,
+      ]
+  >
+
+  /**
+   * Builds the transactions that create a new DCA strategy WITHOUT an initial deposit
+   * (`createStrategy`). The user is expected to already hold the source-vault shares the keeper will
+   * pull.
+   *
+   * Ordered: `[permit2 authorization?, permit2 sub-allowance, create]` — no inAsset approval, since
+   * nothing is deposited. Send the transactions in array order — the `CreateStrategy` transaction is
+   * always last. Same params as {@link depositAndCreateStrategyTx} minus `assetAmount`.
+   *
+   * @param params - Strategy configuration (no deposit).
+   * @returns A promise resolving to the ordered array of transactions to send.
    * @throws If the DCA module is not deployed on `params.chainId`.
    * @example
    * ```ts
@@ -43,10 +101,8 @@ export interface IDcaManagerClient {
     outAsset: AddressValue
     inAssetFeed: IChainlinkFeed
     outAssetFeed: IChainlinkFeed
-    /** Per-trade amount (source asset base units). */
+    /** Per-trade amount (source-vault share base units). */
     amountShares: string
-    /** Initial principal deposited at creation (source asset base units). See plan Open Question 2. */
-    assetAmount: string
     slippagePercentage: string
     intervalSeconds: number
     maxTrades: number
@@ -54,7 +110,14 @@ export interface IDcaManagerClient {
     neverSellBelow?: string
     deadlineUnixTimestamp: number
   }): Promise<
-    [CreateDcaStrategyTransactionInfo] | [ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]
+    // Ordered [permit2 authorization?, permit2 sub-allowance, create]; the optional auth slot yields
+    // these two exact shapes (CreateStrategy is always last).
+    | [Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+    | [
+        Permit2AuthorizationTransactionInfo,
+        Permit2SubAllowanceTransactionInfo,
+        CreateDcaStrategyTransactionInfo,
+      ]
   >
 
   /**

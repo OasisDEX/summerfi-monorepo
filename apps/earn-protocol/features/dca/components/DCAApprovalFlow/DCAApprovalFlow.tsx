@@ -52,7 +52,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
   const { login } = useEarnProtocolLogin()
   const { walletClient, address } = useEarnProtocolWallet()
   const { chain, setChain, isSettingChain } = useEarnProtocolChain()
-  const { createStrategyTx } = useAppSDK()
+  const { depositAndCreateStrategyTx } = useAppSDK()
   const dcaChainId = subgraphNetworkToSDKId(supportedSDKNetwork(pair.fromVault.protocol.network))
   const { publicClient } = useNetworkAlignedClient({
     chainId: dcaChainId,
@@ -169,7 +169,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
       const amountShares = perTradeBase.toString() // per-trade amount in base units
       const assetAmount = (perTradeBase * BigInt(config.maxTrades)).toString() // full principal = amount × maxTrades
 
-      const [txInfo] = await createStrategyTx({
+      const [txInfo] = await depositAndCreateStrategyTx({
         userAddress: address as AddressValue,
         chainId: dcaChainId,
         fromVault: pair.fromVault.id as AddressValue,
@@ -221,7 +221,7 @@ export const DCAApprovalFlow: FC<DCAApprovalFlowProps> = ({ config, pair, onBack
     config.maxTrades,
     config.neverBuyAbove,
     config.neverSellBelow,
-    createStrategyTx,
+    depositAndCreateStrategyTx,
     pair.fromVault,
     pair.toVault,
     walletClient,

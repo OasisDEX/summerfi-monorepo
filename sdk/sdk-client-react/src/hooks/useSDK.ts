@@ -100,6 +100,7 @@ import { getIntentSwapsCancelOrderHandler } from '../handlers/getIntentSwapsCanc
 import { getIntentSwapsCheckOrderHandler } from '../handlers/getIntentSwapsCheckOrderHandler'
 import { getAddressesHandler } from '../handlers/getAddressesHandler'
 import { createStrategyTxHandler } from '../handlers/createStrategyTxHandler'
+import { depositAndCreateStrategyTxHandler } from '../handlers/depositAndCreateStrategyTxHandler'
 import { getStrategyHandler } from '../handlers/getStrategyHandler'
 import { cancelStrategyTxHandler } from '../handlers/cancelStrategyTxHandler'
 import { editStrategyTxHandler } from '../handlers/editStrategyTxHandler'
@@ -317,6 +318,7 @@ export const useSDKManagerHandlers = (
 
   // region DCA
   const createStrategyTx = useMemo(() => createStrategyTxHandler(sdk), [sdk])
+  const depositAndCreateStrategyTx = useMemo(() => depositAndCreateStrategyTxHandler(sdk), [sdk])
   const editStrategyTx = useMemo(() => editStrategyTxHandler(sdk), [sdk])
   const pauseStrategyTx = useMemo(() => pauseStrategyTxHandler(sdk), [sdk])
   const resumeStrategyTx = useMemo(() => resumeStrategyTxHandler(sdk), [sdk])
@@ -410,6 +412,7 @@ export const useSDKManagerHandlers = (
       getIntentSwapsPermit2RevokeTx,
       getAddresses,
       createStrategyTx,
+      depositAndCreateStrategyTx,
       editStrategyTx,
       pauseStrategyTx,
       resumeStrategyTx,
@@ -500,6 +503,7 @@ export const useSDKManagerHandlers = (
       getIntentSwapsPermit2RevokeTx,
       getAddresses,
       createStrategyTx,
+      depositAndCreateStrategyTx,
       editStrategyTx,
       pauseStrategyTx,
       resumeStrategyTx,

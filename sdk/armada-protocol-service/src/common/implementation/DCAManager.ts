@@ -12,6 +12,7 @@ import {
   type IDcaStrategy,
   type IDcaExecution,
   type IDcaStrategyConfig,
+  type IChainlinkFeed,
   Address,
   Token,
   TokenAmount,
@@ -20,13 +21,15 @@ import {
   DcaStrategyStatusEnum,
   TransactionType,
   type CreateDcaStrategyTransactionInfo,
+  type Permit2AuthorizationTransactionInfo,
+  type Permit2SubAllowanceTransactionInfo,
   type EditDcaStrategyTransactionInfo,
   type PauseDcaStrategyTransactionInfo,
   type ResumeDcaStrategyTransactionInfo,
   type CancelDcaStrategyTransactionInfo,
   LoggingService,
 } from '@summerfi/sdk-common'
-import { encodeFunctionData } from 'viem'
+import { encodeFunctionData, maxUint48, maxUint160 } from 'viem'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { DCAStrategyManagerAbi } from './abi/DCAStrategyManagerAbi'
 
@@ -66,10 +69,10 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     this.assertSupportedChain({ chainId, supportedChains: this._supportedChains })
   }
 
-  /** @see IDCAManager.createStrategyTx */
-  async createStrategyTx(
-    params: Parameters<IDCAManager['createStrategyTx']>[0],
-  ): ReturnType<IDCAManager['createStrategyTx']> {
+  /** @see IDCAManager.depositAndCreateStrategyTx */
+  async depositAndCreateStrategyTx(
+    params: Parameters<IDCAManager['depositAndCreateStrategyTx']>[0],
+  ): ReturnType<IDCAManager['depositAndCreateStrategyTx']> {
     this._assertSupportedChain(params.chainId)
     const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'dcaStrategyManager',
@@ -88,7 +91,138 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       slippageBps,
     })
 
-    const config = {
+    const config = this._buildStrategyConfig(params, slippageBps)
+
+    const calldata = encodeFunctionData({
+      abi: DCAStrategyManagerAbi,
+      functionName: 'depositAndCreate',
+      args: [config, assetAmount, expectedMinShares],
+    }) as HexData
+
+    const createTx: CreateDcaStrategyTransactionInfo = {
+      type: TransactionType.CreateStrategy,
+      description: 'Create DCA strategy (with deposit)',
+      transaction: this._buildTransaction({
+        target: strategyManagerAddress.value,
+        calldata,
+      }),
+    }
+
+    const { permit2AuthTx, permit2SubAllowanceTx } = await this._buildPermit2KeeperPullTxs({
+      chainId: params.chainId,
+      userAddress: params.userAddress,
+      sourceVault: params.fromVault,
+      strategyManagerAddress: strategyManagerAddress.value,
+      amountShares: params.amountShares,
+      maxTrades: params.maxTrades,
+    })
+
+    // depositAndCreate pulls `assetAmount` of `inAsset` from the user via transferFrom, so the
+    // strategy manager must be approved to spend it — otherwise the tx reverts with
+    // "ERC20: transfer amount exceeds allowance". getApproval returns undefined when the existing
+    // allowance already covers the amount.
+    const approvalTx = await this._allowanceManager.getApprovalFromBaseUnit({
+      chainId: params.chainId,
+      spenderAddress: strategyManagerAddress.value,
+      tokenAddress: params.inAsset,
+      amount: assetAmount,
+      ownerAddress: params.userAddress,
+    })
+
+    LoggingService.debug(
+      `DCA depositAndCreateStrategyTx: permit2Auth=${permit2AuthTx ? 'needed' : 'not needed'}, inAssetApproval=${approvalTx ? 'needed' : 'not needed'}`,
+    )
+
+    // Order: [permit2 authorization?, permit2 sub-allowance, inAsset approval?, create]. The
+    // CreateStrategy tx is always last; send them in tuple order. Returned as one of four exact
+    // tuple shapes (not a loose array) so the ordering is encoded in the type.
+    if (permit2AuthTx && approvalTx) {
+      return [permit2AuthTx, permit2SubAllowanceTx, approvalTx, createTx]
+    }
+    if (permit2AuthTx) {
+      return [permit2AuthTx, permit2SubAllowanceTx, createTx]
+    }
+    if (approvalTx) {
+      return [permit2SubAllowanceTx, approvalTx, createTx]
+    }
+    return [permit2SubAllowanceTx, createTx]
+  }
+
+  /** @see IDCAManager.createStrategyTx */
+  async createStrategyTx(
+    params: Parameters<IDCAManager['createStrategyTx']>[0],
+  ): ReturnType<IDCAManager['createStrategyTx']> {
+    this._assertSupportedChain(params.chainId)
+    const strategyManagerAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'dcaStrategyManager',
+      chainId: params.chainId,
+    })
+
+    const slippageBps = BigInt(Math.round(Number(params.slippagePercentage) * 100))
+    const config = this._buildStrategyConfig(params, slippageBps)
+
+    // `createStrategy` only registers the strategy — it does NOT deposit, so there is no `inAsset`
+    // pull and hence no ERC20 approval to the manager. The user is expected to already hold the
+    // source-vault shares the keeper will pull (via the Permit2 sub-allowance below).
+    const calldata = encodeFunctionData({
+      abi: DCAStrategyManagerAbi,
+      functionName: 'createStrategy',
+      args: [config],
+    }) as HexData
+
+    const createTx: CreateDcaStrategyTransactionInfo = {
+      type: TransactionType.CreateStrategy,
+      description: 'Create DCA strategy',
+      transaction: this._buildTransaction({
+        target: strategyManagerAddress.value,
+        calldata,
+      }),
+    }
+
+    const { permit2AuthTx, permit2SubAllowanceTx } = await this._buildPermit2KeeperPullTxs({
+      chainId: params.chainId,
+      userAddress: params.userAddress,
+      sourceVault: params.fromVault,
+      strategyManagerAddress: strategyManagerAddress.value,
+      amountShares: params.amountShares,
+      maxTrades: params.maxTrades,
+    })
+
+    LoggingService.debug(
+      `DCA createStrategyTx: permit2Auth=${permit2AuthTx ? 'needed' : 'not needed'}`,
+    )
+
+    // Order: [permit2 authorization?, permit2 sub-allowance, create]. No inAsset approval because
+    // there is no deposit. CreateStrategy is always last.
+    if (permit2AuthTx) {
+      return [permit2AuthTx, permit2SubAllowanceTx, createTx]
+    }
+    return [permit2SubAllowanceTx, createTx]
+  }
+
+  /**
+   * Builds the on-chain `StrategyConfig` tuple shared by `createStrategy` and `depositAndCreate`.
+   * `assetAmount` is NOT part of the config — it is a separate arg of `depositAndCreate` only.
+   */
+  private _buildStrategyConfig(
+    params: {
+      userAddress: AddressValue
+      fromVault: AddressValue
+      toVault: AddressValue
+      inAsset: AddressValue
+      outAsset: AddressValue
+      inAssetFeed: IChainlinkFeed
+      outAssetFeed: IChainlinkFeed
+      amountShares: string
+      intervalSeconds: number
+      maxTrades: number
+      neverBuyAbove?: string
+      neverSellBelow?: string
+      deadlineUnixTimestamp: number
+    },
+    slippageBps: bigint,
+  ) {
+    return {
       owner: params.userAddress,
       sourceVault: params.fromVault,
       targetVault: params.toVault,
@@ -104,37 +238,54 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       endDate: BigInt(params.deadlineUnixTimestamp),
       maxTrades: BigInt(params.maxTrades),
     }
+  }
 
-    const calldata = encodeFunctionData({
-      abi: DCAStrategyManagerAbi,
-      functionName: 'depositAndCreate',
-      args: [config, assetAmount, expectedMinShares],
-    }) as HexData
+  /**
+   * Builds the two Permit2 setup steps the keeper needs to pull source-vault shares each execution
+   * (mirrors the DCA app's usePermit2Approval), on the SOURCE-VAULT SHARE token:
+   *   1. ERC20 authorization: `sourceVault.approve(PERMIT2, MaxUint256)` — only when insufficient.
+   *   2. Sub-allowance: `PERMIT2.approve(sourceVault, manager, amount, expiration)`.
+   * We grant an infinite (MaxUint160), non-expiring (MaxUint48) sub-allowance to the manager: the
+   * Permit2 allowance slot is keyed by (owner, token, spender) and is therefore shared across all
+   * DCA strategies on the same source vault, so a per-strategy exact amount/expiration would clobber
+   * a sibling strategy's remaining allowance. It is revocable anytime via `getPermit2RevokeTx`.
+   */
+  private async _buildPermit2KeeperPullTxs(params: {
+    chainId: ChainId
+    userAddress: AddressValue
+    sourceVault: AddressValue
+    strategyManagerAddress: AddressValue
+    amountShares: string
+    maxTrades: number
+  }): Promise<{
+    permit2AuthTx?: Permit2AuthorizationTransactionInfo
+    permit2SubAllowanceTx: Permit2SubAllowanceTransactionInfo
+  }> {
+    const ownerAddress = Address.createFromEthereum({ value: params.userAddress })
+    const sourceVaultAddress = Address.createFromEthereum({ value: params.sourceVault })
+    const keeperPullTotal = BigInt(params.amountShares) * BigInt(params.maxTrades)
 
-    const createTx: CreateDcaStrategyTransactionInfo = {
-      type: TransactionType.CreateStrategy,
-      description: 'Create DCA strategy',
-      transaction: this._buildTransaction({
-        target: strategyManagerAddress.value,
-        calldata,
-      }),
-    }
-
-    // depositAndCreate pulls `assetAmount` of `inAsset` from the user via transferFrom, so the
-    // strategy manager must be approved to spend it — otherwise the tx reverts with
-    // "ERC20: transfer amount exceeds allowance". getApproval returns undefined when the existing
-    // allowance already covers the amount.
-    const approvalTx = await this._allowanceManager.getApprovalFromBaseUnit({
+    const isPermit2AuthNeeded = await this._allowanceManager.isPermit2AuthorizationNeeded({
       chainId: params.chainId,
-      spenderAddress: strategyManagerAddress.value,
-      tokenAddress: params.inAsset,
-      amount: assetAmount,
-      ownerAddress: params.userAddress,
+      ownerAddress,
+      tokenAddress: sourceVaultAddress,
+      amount: keeperPullTotal,
+    })
+    const [permit2AuthTx] = isPermit2AuthNeeded
+      ? this._allowanceManager.getPermit2AuthorizationTx({
+          chainId: params.chainId,
+          tokenAddress: sourceVaultAddress,
+        })
+      : []
+    const [permit2SubAllowanceTx] = this._allowanceManager.getPermit2SubAllowanceTx({
+      chainId: params.chainId,
+      tokenAddress: sourceVaultAddress,
+      spenderAddress: Address.createFromEthereum({ value: params.strategyManagerAddress }),
+      amount: maxUint160,
+      expiration: Number(maxUint48),
     })
 
-    LoggingService.debug(`DCA createStrategyTx: approvalTx=${approvalTx ? 'needed' : 'not needed'}`)
-
-    return approvalTx ? [approvalTx, createTx] : [createTx]
+    return { permit2AuthTx, permit2SubAllowanceTx }
   }
 
   /**

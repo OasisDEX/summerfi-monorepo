@@ -1,8 +1,8 @@
 import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId, IChainlinkFeed } from '@summerfi/sdk-common'
 
-/** @see IDcaManagerClient.createStrategyTx */
-export const createStrategyTxHandler =
+/** @see IDcaManagerClient.depositAndCreateStrategyTx */
+export const depositAndCreateStrategyTxHandler =
   (sdk: ISDKManager | ISDKInstiManager) =>
   async ({
     chainId,
@@ -14,6 +14,7 @@ export const createStrategyTxHandler =
     inAssetFeed,
     outAssetFeed,
     amountShares,
+    assetAmount,
     slippagePercentage,
     intervalSeconds,
     maxTrades,
@@ -30,6 +31,7 @@ export const createStrategyTxHandler =
     inAssetFeed: IChainlinkFeed
     outAssetFeed: IChainlinkFeed
     amountShares: string
+    assetAmount: string
     slippagePercentage: string
     intervalSeconds: number
     maxTrades: number
@@ -37,7 +39,7 @@ export const createStrategyTxHandler =
     neverSellBelow?: string
     deadlineUnixTimestamp: number
   }) => {
-    return sdk.dca.createStrategyTx({
+    return sdk.dca.depositAndCreateStrategyTx({
       chainId,
       userAddress,
       fromVault,
@@ -47,6 +49,7 @@ export const createStrategyTxHandler =
       inAssetFeed,
       outAssetFeed,
       amountShares,
+      assetAmount,
       slippagePercentage,
       intervalSeconds,
       maxTrades,

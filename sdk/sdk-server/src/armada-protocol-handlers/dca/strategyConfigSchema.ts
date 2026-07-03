@@ -26,7 +26,8 @@ const MAX_SLIPPAGE_PERCENTAGE = 100 // 100% = 10000 bps, matching _BPS in DCAStr
 
 export const strategyIdSchema = uint256StringSchema
 
-export const createStrategyTxInputSchema = z.object({
+// Fields shared by createStrategy (no deposit) and depositAndCreate (with deposit).
+const strategyTxBaseShape = {
   chainId: z.custom<ChainId>(isChainId),
   userAddress: addressSchema,
   fromVault: addressSchema,
@@ -36,7 +37,6 @@ export const createStrategyTxInputSchema = z.object({
   inAssetFeed: chainlinkFeedSchema,
   outAssetFeed: chainlinkFeedSchema,
   amountShares: uint256StringSchema.refine((v) => v !== '0', 'Trade amount must not be zero'),
-  assetAmount: uint256StringSchema.refine((v) => v !== '0', 'Deposit amount must not be zero'),
   slippagePercentage: z
     .string()
     .refine(
@@ -51,6 +51,15 @@ export const createStrategyTxInputSchema = z.object({
   neverBuyAbove: z.string().optional(),
   neverSellBelow: z.string().optional(),
   deadlineUnixTimestamp: z.number().int(),
+}
+
+/** Input for `createStrategyTx` — registers a strategy with no initial deposit. */
+export const createStrategyTxInputSchema = z.object(strategyTxBaseShape)
+
+/** Input for `depositAndCreateStrategyTx` — creates a strategy and makes the initial deposit. */
+export const depositAndCreateStrategyTxInputSchema = z.object({
+  ...strategyTxBaseShape,
+  assetAmount: uint256StringSchema.refine((v) => v !== '0', 'Deposit amount must not be zero'),
 })
 
 export const strategySchema: z.ZodType<IDcaStrategy> = z.object({

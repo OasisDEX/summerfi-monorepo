@@ -16,6 +16,22 @@ import { encodeFunctionData, erc20Abi, maxUint256, type SignTypedDataParameters 
 
 const PERMIT2_EXPIRATION_MINUTES = 10
 
+/** Minimal Permit2 `AllowanceTransfer.approve` fragment (the package otherwise only needs erc20Abi). */
+const permit2ApproveAbi = [
+  {
+    type: 'function',
+    name: 'approve',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'token', type: 'address' },
+      { name: 'spender', type: 'address' },
+      { name: 'amount', type: 'uint160' },
+      { name: 'expiration', type: 'uint48' },
+    ],
+    outputs: [],
+  },
+] as const
+
 /**
  * @name AllowanceManager
  * @description This class is the implementation of the IAllowanceManager interface. Takes care of generating transactions for setting an allowance
@@ -187,6 +203,38 @@ export class AllowanceManager implements IAllowanceManager {
           value: '0',
         },
         description: `Authorize Permit2 to spend token ${params.tokenAddress.toSolidityValue()}`,
+      },
+    ]
+  }
+
+  /** @see IAllowanceManager.getPermit2SubAllowanceTx */
+  getPermit2SubAllowanceTx(
+    params: Parameters<IAllowanceManager['getPermit2SubAllowanceTx']>[0],
+  ): ReturnType<IAllowanceManager['getPermit2SubAllowanceTx']> {
+    if (params.tokenAddress.toSolidityValue() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
+      throw new Error('Native token does not support a Permit2 sub-allowance')
+    }
+
+    const permit2 = permit2Address(params.chainId) as `0x${string}`
+    const calldata = encodeFunctionData({
+      abi: permit2ApproveAbi,
+      functionName: 'approve',
+      args: [
+        params.tokenAddress.toSolidityValue() as `0x${string}`,
+        params.spenderAddress.toSolidityValue() as `0x${string}`,
+        params.amount,
+        params.expiration,
+      ],
+    })
+    return [
+      {
+        type: TransactionType.Permit2SubAllowance,
+        transaction: {
+          target: Address.createFromEthereum({ value: permit2 }),
+          calldata,
+          value: '0',
+        },
+        description: `Grant Permit2 sub-allowance on ${params.tokenAddress.toSolidityValue()} to ${params.spenderAddress.toSolidityValue()}`,
       },
     ]
   }

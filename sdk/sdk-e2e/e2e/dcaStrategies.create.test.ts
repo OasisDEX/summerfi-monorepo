@@ -7,6 +7,15 @@ import { TransactionType } from '@summerfi/sdk-common'
 
 jest.setTimeout(300000)
 
+// Flip this to choose which Permit2 branch of `createStrategyTx` this run exercises:
+const REVOKE_PERMIT2_FIRST = false
+// This test exercises the deposit-less `createStrategyTx` (encodes `createStrategy`), so it makes no
+// deposit and needs no USDC balance — it only sets up the Permit2 keeper-pull allowance and registers
+// the strategy. `amount` (= amountShares * maxTrades) is used only for the Permit2 authorization check.
+const amountShares = 1000000n // per-trade source-vault share amount (6 decimals)
+const maxTrades = 1n
+const amount = amountShares * maxTrades
+
 /**
  * @group e2e
  */
@@ -19,6 +28,51 @@ describe('Armada Protocol - DCA Strategies', () => {
       chainId,
     })
 
+    // Send a returned TransactionInfo and wait for it to mine.
+    const sendTxInfo = async (
+      label: string,
+      txInfo: {
+        transaction: { target: { value: `0x${string}` }; value: string; calldata: `0x${string}` }
+      },
+    ) => {
+      const hash = await walletClient.sendTransaction({
+        account: walletClient.account!,
+        to: txInfo.transaction.target.value,
+        value: BigInt(txInfo.transaction.value),
+        data: txInfo.transaction.calldata,
+        chain: walletClient.chain,
+      })
+      console.log(`Sent ${label} transaction, hash:`, hash)
+      await publicClient.waitForTransactionReceipt({ hash, confirmations: 3 })
+    }
+
+    // Put the source-vault → Permit2 ERC20 allowance into the state this run wants to test, so the
+    // subsequent `createStrategyTx` deterministically includes (or omits) the Permit2Authorization tx.
+    const sourceVaultShares = fromVault.fleetAddressValue
+    const isAuthorized = !(await sdk.allowance.isPermit2AuthorizationNeeded({
+      chainId,
+      ownerAddress: userAddress.toSolidityValue(),
+      tokenAddress: sourceVaultShares,
+      amount, // any non-zero amount will do, since we only care about whether the allowance is non-zero
+    }))
+
+    // Make the branch deterministic regardless of leftover on-chain state:
+    //  - REVOKE branch: if currently authorized, revoke so createStrategyTx MUST include the auth tx.
+    //  - non-REVOKE branch: if currently not authorized, authorize so createStrategyTx OMITS the auth tx.
+    if (REVOKE_PERMIT2_FIRST && isAuthorized) {
+      const [revokeTx] = await sdk.allowance.getPermit2RevokeTx({
+        chainId,
+        tokenAddress: sourceVaultShares,
+      })
+      await sendTxInfo('Permit2 revoke (approve Permit2 → 0)', revokeTx)
+    } else if (!REVOKE_PERMIT2_FIRST && !isAuthorized) {
+      const [authTx] = await sdk.allowance.getPermit2AuthorizationTx({
+        chainId,
+        tokenAddress: sourceVaultShares,
+      })
+      await sendTxInfo('Permit2 authorization (approve Permit2 → max)', authTx)
+    }
+
     const [fromVaultToken, toVaultToken] = await Promise.all([
       sdk.tokens.getTokenBySymbol({
         chainId,
@@ -30,9 +84,6 @@ describe('Armada Protocol - DCA Strategies', () => {
       }),
     ])
 
-    const amountShares = '1000000' // 1 USDC per trade (6 decimals)
-    const assetAmount = '1000000' // 1 USDC principal deposited at creation (6 decimals, maxTrades=1)
-
     const txs = await sdk.dca.createStrategyTx({
       chainId,
       userAddress: userAddress.toSolidityValue(),
@@ -42,114 +93,75 @@ describe('Armada Protocol - DCA Strategies', () => {
       outAsset: toVaultToken.address.toSolidityValue(),
       inAssetFeed: { feed: fromVault.chainlinkOracleAddressValue!, maxStaleness: 0n },
       outAssetFeed: { feed: toVault.chainlinkOracleAddressValue!, maxStaleness: 0n },
-      amountShares,
-      assetAmount,
+      amountShares: amountShares.toString(),
       slippagePercentage: '0.5',
       intervalSeconds: 60 * 60 * 24, // daily
-      maxTrades: 1,
+      maxTrades: Number(maxTrades.toString()),
       deadlineUnixTimestamp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 1 week from now
     })
 
     expect(txs).toBeDefined()
     expect(txs.length).toBeGreaterThan(0)
 
-    const approveTx = txs.find((tx) => tx.type === TransactionType.Approve)
     const strategyTx = txs.find((tx) => tx.type === TransactionType.CreateStrategy)
     assert(strategyTx, 'Expected a CreateStrategy transaction')
+    // The CreateStrategy tx must be the last element — all setup (permit2 + approval) precedes it.
+    assert.strictEqual(
+      txs[txs.length - 1],
+      strategyTx,
+      'CreateStrategy transaction should be the last element',
+    )
 
-    // Assert the calldata targets depositAndCreate (selector 0x1a218843).
-    // Decoded without a live network call — pure ABI decode.
-    /**
-     * Minimal ABI fragment for depositAndCreate — used for the selector assertion only.
-     * Duplicates the relevant subset of DCAStrategyManagerAbi (which is not re-exported
-     * from @summerfi/armada-protocol-service's package root).
-     */
-    const depositAndCreateAbi = [
+    const permit2AuthTx = txs.find((tx) => tx.type === TransactionType.Permit2Authorization)
+    if (REVOKE_PERMIT2_FIRST) {
+      assert(
+        permit2AuthTx,
+        'Expected a leading Permit2Authorization tx after revoking the allowance',
+      )
+      assert.strictEqual(txs[0], permit2AuthTx, 'Permit2Authorization must be the first element')
+    } else {
+      assert(!permit2AuthTx, 'Did not expect a Permit2Authorization tx when already authorized')
+    }
+
+    // A Permit2 sub-allowance (recurring keeper-pull allowance on the source-vault shares) is always
+    // returned; the ERC20 Permit2 authorization is only present when the allowance is insufficient.
+    const permit2SubAllowanceTx = txs.find((tx) => tx.type === TransactionType.Permit2SubAllowance)
+    assert(permit2SubAllowanceTx, 'Expected a Permit2SubAllowance transaction')
+    // Decode the sub-allowance: PERMIT2.approve(sourceVault, manager, MaxUint160, MaxUint48).
+    const permit2ApproveAbi = [
       {
-        inputs: [
-          {
-            components: [
-              { internalType: 'address', name: 'owner', type: 'address' },
-              { internalType: 'contract IFleetCommander', name: 'sourceVault', type: 'address' },
-              { internalType: 'contract IFleetCommander', name: 'targetVault', type: 'address' },
-              { internalType: 'contract IERC20', name: 'inAsset', type: 'address' },
-              { internalType: 'contract IERC20', name: 'outAsset', type: 'address' },
-              {
-                components: [
-                  { internalType: 'address', name: 'feed', type: 'address' },
-                  { internalType: 'uint256', name: 'maxStaleness', type: 'uint256' },
-                ],
-                internalType: 'struct ChainlinkFeed',
-                name: 'inAssetFeed',
-                type: 'tuple',
-              },
-              {
-                components: [
-                  { internalType: 'address', name: 'feed', type: 'address' },
-                  { internalType: 'uint256', name: 'maxStaleness', type: 'uint256' },
-                ],
-                internalType: 'struct ChainlinkFeed',
-                name: 'outAssetFeed',
-                type: 'tuple',
-              },
-              { internalType: 'uint256', name: 'tradeAmount', type: 'uint256' },
-              { internalType: 'uint256', name: 'interval', type: 'uint256' },
-              { internalType: 'uint256', name: 'slippageBps', type: 'uint256' },
-              { internalType: 'uint256', name: 'maxPrice', type: 'uint256' },
-              { internalType: 'uint256', name: 'minPrice', type: 'uint256' },
-              { internalType: 'uint256', name: 'endDate', type: 'uint256' },
-              { internalType: 'uint256', name: 'maxTrades', type: 'uint256' },
-            ],
-            internalType: 'struct IDCAStrategyManager.StrategyConfig',
-            name: 'config',
-            type: 'tuple',
-          },
-          { internalType: 'uint256', name: 'assetAmount', type: 'uint256' },
-          { internalType: 'uint256', name: 'expectedMinShares', type: 'uint256' },
-        ],
-        name: 'depositAndCreate',
-        outputs: [{ internalType: 'uint256', name: 'strategyId', type: 'uint256' }],
-        stateMutability: 'nonpayable',
         type: 'function',
+        name: 'approve',
+        stateMutability: 'nonpayable',
+        inputs: [
+          { name: 'token', type: 'address' },
+          { name: 'spender', type: 'address' },
+          { name: 'amount', type: 'uint160' },
+          { name: 'expiration', type: 'uint48' },
+        ],
+        outputs: [],
       },
     ] as const
-    const decoded = decodeFunctionData({
-      abi: depositAndCreateAbi,
-      data: strategyTx.transaction.calldata,
+    const decodedSubAllowance = decodeFunctionData({
+      abi: permit2ApproveAbi,
+      data: permit2SubAllowanceTx.transaction.calldata,
     })
+    assert.strictEqual(decodedSubAllowance.functionName, 'approve')
     assert.strictEqual(
-      decoded.functionName,
-      'depositAndCreate',
-      'createStrategyTx should encode depositAndCreate, not createStrategy',
+      decodedSubAllowance.args[0].toLowerCase(),
+      fromVault.fleetAddressValue.toLowerCase(),
+      'sub-allowance token should be the source vault share token',
     )
-    const [_config, decodedAssetAmount, decodedExpectedMinShares] = decoded.args
-    assert.strictEqual(
-      decodedAssetAmount,
-      BigInt(assetAmount),
-      'args[1] (assetAmount) should match the input assetAmount',
-    )
-    assert(
-      decodedExpectedMinShares > 0n,
-      'args[2] (expectedMinShares) should be non-zero (slippage floor)',
-    )
+    assert(decodedSubAllowance.args[2] > 0n, 'sub-allowance amount should be non-zero')
 
-    // NOTE: depositAndCreate pulls assetAmount of the in-asset from the user, so this live send
-    // requires a prior ERC-20 approval (USDC → DCA manager) and a funded wallet.
-    if (approveTx) {
-      const approveTxHash = await walletClient.sendTransaction({
-        account: walletClient.account!,
-        to: approveTx.transaction.target.value,
-        value: BigInt(approveTx.transaction.value),
-        data: approveTx.transaction.calldata,
-        chain: walletClient.chain,
-      })
-      console.log('Sent approve transaction, hash:', approveTxHash)
-
-      await publicClient.waitForTransactionReceipt({ hash: approveTxHash })
-    } else {
-      console.log('No approve transaction needed (already approved)')
+    // Send every setup transaction (permit2 authorization?, permit2 sub-allowance) in tuple order,
+    // then the create last. The keeper pull needs the Permit2 sub-allowance, so it must be mined first.
+    const setupTxs = txs.slice(0, txs.length - 1)
+    for (const setupTx of setupTxs) {
+      await sendTxInfo(setupTx.type, setupTx)
     }
-    // Send the depositAndCreate transaction and extract strategyId from the StrategyCreated event.
+
+    // Send the createStrategy transaction and extract strategyId from the StrategyCreated event.
     const txHash = await walletClient.sendTransaction({
       account: walletClient.account!,
       to: strategyTx.transaction.target.value,

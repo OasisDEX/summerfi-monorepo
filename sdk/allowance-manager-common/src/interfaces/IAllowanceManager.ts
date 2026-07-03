@@ -8,6 +8,7 @@ import type {
   Permit2AuthorizationTransactionInfo,
   Permit2PermitData,
   Permit2RevokeTransactionInfo,
+  Permit2SubAllowanceTransactionInfo,
 } from '@summerfi/sdk-common'
 import type { SignTypedDataParameters } from 'viem'
 
@@ -85,6 +86,27 @@ export interface IAllowanceManager {
     chainId: ChainId
     tokenAddress: IAddress
   }): [Permit2AuthorizationTransactionInfo]
+
+  /**
+   * @name getPermit2SubAllowanceTx
+   * @description Creates a transaction granting a spender a Permit2 sub-allowance for a token via
+   * `PERMIT2.approve(token, spender, amount, expiration)` — the recurring Permit2 `AllowanceTransfer`
+   * allowance the spender draws down (e.g. the DCA keeper pulling source-vault shares each trade).
+   * Requires a prior ERC-20 authorization of Permit2 for the token (see {@link getPermit2AuthorizationTx}).
+   * @param chainId The chain ID where the token lives
+   * @param tokenAddress The ERC-20 token address the sub-allowance is granted on
+   * @param spenderAddress The address authorized to pull the token via Permit2
+   * @param amount The sub-allowance amount (must fit in uint160)
+   * @param expiration Unix-seconds expiration of the sub-allowance (must fit in uint48)
+   * @returns A TransactionInfo for the `PERMIT2.approve(token, spender, amount, expiration)` transaction
+   */
+  getPermit2SubAllowanceTx(params: {
+    chainId: ChainId
+    tokenAddress: IAddress
+    spenderAddress: IAddress
+    amount: bigint
+    expiration: number
+  }): [Permit2SubAllowanceTransactionInfo]
 
   /**
    * @name getPermit2RevokeTx

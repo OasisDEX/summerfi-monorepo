@@ -141,6 +141,7 @@ import { setWhitelistedAQ } from './armada-protocol-handlers/access-control/setW
 import { setWhitelistedBatchAQ } from './armada-protocol-handlers/access-control/setWhitelistedBatchAQ'
 import { getAllRoles } from './armada-protocol-handlers/access-control/getAllRoles'
 import { createStrategyTx } from './armada-protocol-handlers/dca/createStrategyTx'
+import { depositAndCreateStrategyTx } from './armada-protocol-handlers/dca/depositAndCreateStrategyTx'
 import { getStrategies } from './armada-protocol-handlers/dca/getStrategies'
 import { getStrategy } from './armada-protocol-handlers/dca/getStrategy'
 import { getExecutions } from './armada-protocol-handlers/dca/getExecutions'
@@ -352,6 +353,7 @@ export const sdkAppRouter = router({
     },
     dca: {
       createStrategyTx: createStrategyTx,
+      depositAndCreateStrategyTx: depositAndCreateStrategyTx,
       editStrategyTx: editStrategyTx,
       pauseStrategyTx: pauseStrategyTx,
       resumeStrategyTx: resumeStrategyTx,

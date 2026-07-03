@@ -17,6 +17,13 @@ export class DcaManagerClient extends IRPCClient implements IDcaManagerClient {
     return this.rpcClient.armada.dca.createStrategyTx.query(params)
   }
 
+  /** @see IDcaManagerClient.depositAndCreateStrategyTx */
+  async depositAndCreateStrategyTx(
+    params: Parameters<IDcaManagerClient['depositAndCreateStrategyTx']>[0],
+  ): ReturnType<IDcaManagerClient['depositAndCreateStrategyTx']> {
+    return this.rpcClient.armada.dca.depositAndCreateStrategyTx.query(params)
+  }
+
   /** @see IDcaManagerClient.editStrategyTx */
   async editStrategyTx(
     params: Parameters<IDcaManagerClient['editStrategyTx']>[0],
