@@ -24,15 +24,6 @@ dotenv.config({ path: path.resolve(__dirname, '../../../../.env') })
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-/**
- * Mainnet token addresses for symbols whose fetcher reads on-chain state from
- * the token contract (e.g. Benji walks the token's Transfer logs). Symbol-based
- * fetchers (Superstate/WisdomTree) ignore the address, so they need no entry.
- */
-const SAMPLE_TOKEN_ADDRESS: Record<string, string> = {
-  BENJI: '0x3ddc84940ab509c11b20b76b466933f40b750dc9',
-}
-
 function makeSampleProduct(protocol: string, symbol: string): Product {
   return {
     id: `${protocol.toLowerCase()}-${symbol.toLowerCase()}`,
@@ -42,7 +33,7 @@ function makeSampleProduct(protocol: string, symbol: string): Product {
     protocol,
     // The rates subgraph exposes the token address as the token entity `id`.
     token: {
-      id: SAMPLE_TOKEN_ADDRESS[symbol.toUpperCase()] ?? ZERO_ADDRESS,
+      id: ZERO_ADDRESS,
       symbol,
       decimals: '18',
       precision: '18',

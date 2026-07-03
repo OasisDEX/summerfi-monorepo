@@ -2,7 +2,6 @@ import { Product } from '@summerfi/summer-earn-rates-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { IAprFetcher, OffchainAprRate } from './apr-fetchers/IAprFetcher'
-import { BenjiAprFetcher } from './apr-fetchers/BenjiAprFetcher'
 import { SuperstateAprFetcher } from './apr-fetchers/SuperstateAprFetcher'
 import { WisdomTreeAprFetcher } from './apr-fetchers/WisdomTreeAprFetcher'
 
@@ -28,7 +27,6 @@ export class AprService {
     this.fetchersByProtocol = {
       // TODO: confirm the exact `product.protocol` strings once these arks are
       // indexed by the rates subgraph.
-      Benji: new BenjiAprFetcher(logger),
       Superstate: new SuperstateAprFetcher(logger),
       WisdomTree: new WisdomTreeAprFetcher(logger),
     }
