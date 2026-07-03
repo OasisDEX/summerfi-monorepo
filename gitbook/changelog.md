@@ -4,7 +4,62 @@ description: Version history of the @summer_fi/sdk-client bundle.
 
 # Changelog
 
-Version history for `@summer_fi/sdk-client`. Latest version: **v2.3.0**.
+Version history for `@summer_fi/sdk-client`. Latest version: **v2.4.0**.
+
+## v2.4.0
+
+**Features:**
+
+- **DCA Strategies (`sdk.dca`)**: New module for automated dollar-cost-averaging — recurring,
+  on-chain buy orders that periodically swap out of one vault and into another.
+  - **createStrategyTx** — create and fund a new DCA strategy in a single flow. Configure the
+    source/target vaults, in/out assets and their price feeds, the per-trade amount, interval,
+    number of trades, slippage tolerance, optional price guards (never-buy-above / never-sell-below),
+    and a deadline. Returns the create transaction, prefixed with an ERC-20 approval transaction when
+    the initial deposit needs one — send them in order.
+  - **editStrategyTx** — change an existing strategy's parameters (e.g. slippage, interval, trade
+    amount, price guards). Pass the current strategy plus an `update` object carrying only the fields
+    to change.
+  - **pauseStrategyTx** / **resumeStrategyTx** — temporarily halt an active strategy and resume a
+    paused one.
+  - **cancelStrategyTx** — permanently cancel a strategy.
+  - **getStrategies** — list strategies on a chain, optionally filtered by owner and status.
+  - **getStrategy** — fetch a single strategy by its on-chain id.
+  - **getExecutions** / **getExecution** — read the individual trades a strategy has executed.
+  - Available on Base and Mainnet.
+- **Real-World Assets / Institutional Vaults (`sdk.rwa`)**: New top-level module for RWA
+  rounds-based vaults, covering the full deposit → settle → claim lifecycle, portfolio reads, and
+  institutional whitelisting.
+  - Deposits & withdrawals (rounds model):
+    - **getDepositTx** — deposit the vault's asset into the current round (with an approval
+      transaction if needed).
+    - **getClaimSharesTx** — claim vault shares once a deposit round has settled.
+    - **getWithdrawTx** — request a withdrawal into the current round (with an approval transaction
+      if needed).
+    - **getClaimAssetsTx** — claim the underlying assets once a withdrawal round has settled.
+    - **getCancelRoundDepositTx** — cancel a deposit or withdrawal while its round is still open.
+  - Round & receipt reads:
+    - **getCurrentRound** / **getRoundState** — inspect the active round and its lifecycle state.
+    - **getExchangeRate** — the settled exchange rate for a round.
+    - **getReceiptBalances** — the caller's outstanding round receipts (pending and claimable
+      positions).
+  - Portfolio reads:
+    - **getUserVaultExposure** — a user's total exposure to a vault (settled position plus pending
+      deposits, claimable deposits, and pending withdrawals), with a USD valuation and a
+      per-component breakdown.
+    - **getVaultMarketValue** — a vault's total value (TVL) across the Fleet and both rounds vaults,
+      with a USD valuation and breakdown.
+  - Position sizing: **getSetMinimumPositionSizeTx** — set a vault's minimum position size (manager
+    action).
+  - Institutional whitelisting (requires the institutional SDK — see **makeInstiSdk**):
+    - **getSetWhitelistedTx** / **getSetWhitelistedBatchTx** — allow or disallow one or many
+      accounts on a vault.
+    - **getSetWhitelistOpenTx** — toggle open (permissionless) access for a vault.
+    - **isWhitelisted** / **isWhitelistOpen** — read a vault's whitelist status.
+  - **makeInstiSdk** — new client factory for institutional (v2) access; sends the institution's
+    `Client-Id` and resolves per-institution deployments so RWA and whitelisting calls target the
+    right vaults.
+  - Available on Mainnet and Base.
 
 ## v2.3.0
 
