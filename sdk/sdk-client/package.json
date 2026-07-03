@@ -27,7 +27,7 @@
     "declarations": "tsc --emitDeclarationOnly -p tsconfig.bundle.json",
     "bundle:types": "pnpm declarations && tsx scripts/generate-declarations.ts",
     "bundle:npm": "pnpm bundle:clean && pnpm bundle:js && pnpm bundle:types",
-    "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
+    "publish:npm": "pnpm bundle:npm && cd bundle && npm publish --access public && cd .."
   },
   "dependencies": {
     "@cowprotocol/cow-sdk": "8.1.0",
