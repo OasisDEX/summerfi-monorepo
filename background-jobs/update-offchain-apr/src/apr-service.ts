@@ -24,9 +24,14 @@ export class AprService {
   constructor(logger: Logger) {
     this.logger = logger
 
+    // Keys must equal the rates-subgraph `Product.protocol` verbatim
+    // (case-sensitive): they are used both as the `GetProducts({ protocols })`
+    // filter and as the dispatch key in `getAprRates`. `Product.protocol` is the
+    // raw `protocol` field from the ark's on-chain details JSON (the same value
+    // used as the productId prefix in `getArkProductId`), preserved as-is except
+    // for the gearbox->Gearbox / fluid->Fluid remap in the subgraph mapping.
+    // `Superstate` / `WisdomTree` are the confirmed details.protocol strings.
     this.fetchersByProtocol = {
-      // TODO: confirm the exact `product.protocol` strings once these arks are
-      // indexed by the rates subgraph.
       Superstate: new SuperstateAprFetcher(logger),
       WisdomTree: new WisdomTreeAprFetcher(logger),
     }
