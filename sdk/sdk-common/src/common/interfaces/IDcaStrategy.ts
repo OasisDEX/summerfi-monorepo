@@ -52,3 +52,29 @@ export interface IDcaStrategy {
   /** Unix timestamp when the strategy was last updated */
   updatedAtUnixTimestamp: bigint
 }
+
+/**
+ * The subset of {@link IDcaStrategy} fields that can be changed by an on-chain `editStrategy` call.
+ *
+ * Excludes the owner (the contract reverts on owner change) and all read-only/derived fields
+ * (`id`, `strategyId`, `chainId`, `status`, execution counters and timestamps). Used as the `update`
+ * payload of `editStrategyTx`: the SDK merges it over the current strategy to build the new config.
+ */
+export type IDcaStrategyUpdate = Partial<
+  Pick<
+    IDcaStrategy,
+    | 'sourceVault'
+    | 'targetVault'
+    | 'inAsset'
+    | 'outAsset'
+    | 'inAssetFeed'
+    | 'outAssetFeed'
+    | 'tradeAmount'
+    | 'slippagePercentage'
+    | 'intervalSeconds'
+    | 'deadlineUnixTimestamp'
+    | 'maxTrades'
+    | 'neverBuyAbove'
+    | 'neverSellBelow'
+  >
+>

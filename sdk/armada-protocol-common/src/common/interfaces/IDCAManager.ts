@@ -2,6 +2,7 @@ import type {
   AddressValue,
   IChainlinkFeed,
   IDcaStrategy,
+  IDcaStrategyUpdate,
   IDcaExecution,
   ChainId,
   ApproveTransactionInfo,
@@ -40,9 +41,18 @@ export interface IDCAManager {
     [CreateDcaStrategyTransactionInfo] | [ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]
   >
 
+  /**
+   * Builds the transaction that edits an existing DCA strategy.
+   *
+   * The on-chain `editStrategy(strategyId, oldConfig, newConfig)` proves ownership by hashing
+   * `oldConfig` against the stored commitment, so `strategy` MUST be the current on-chain strategy
+   * (as returned by `getStrategy`). `update` carries only the fields to change; the SDK merges it
+   * over `strategy` to build `newConfig`.
+   */
   editStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy
+    update: IDcaStrategyUpdate
   }): Promise<[EditDcaStrategyTransactionInfo]>
 
   pauseStrategyTx(params: {

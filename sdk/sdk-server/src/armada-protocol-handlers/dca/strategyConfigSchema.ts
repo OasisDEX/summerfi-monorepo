@@ -79,49 +79,78 @@ export const strategySchema: z.ZodType<IDcaStrategy> = z.object({
   updatedAtUnixTimestamp: z.bigint(),
 })
 
-export const editStrategyTxInputSchema = z.object({
-  chainId: z.custom<ChainId>(isChainId),
-  strategy: strategySchema.superRefine((s, ctx) => {
-    if (s.intervalSeconds < BigInt(MIN_INTERVAL_SECONDS)) {
+/**
+ * The subset of strategy fields an edit may change (mirrors `IDcaStrategyUpdate`). The SDK merges
+ * this over the current strategy to build the on-chain `newConfig`; owner and all read-only/derived
+ * fields are intentionally omitted.
+ */
+export const strategyUpdateSchema = z
+  .object({
+    sourceVault: addressSchema,
+    targetVault: addressSchema,
+    inAsset: addressSchema,
+    outAsset: addressSchema,
+    inAssetFeed: chainlinkFeedSchema,
+    outAssetFeed: chainlinkFeedSchema,
+    tradeAmount: z.bigint(),
+    slippagePercentage: z.number(),
+    intervalSeconds: z.bigint(),
+    deadlineUnixTimestamp: z.bigint(),
+    maxTrades: z.bigint(),
+    neverBuyAbove: z.string(),
+    neverSellBelow: z.string(),
+  })
+  .partial()
+
+export const editStrategyTxInputSchema = z
+  .object({
+    chainId: z.custom<ChainId>(isChainId),
+    strategy: strategySchema,
+    update: strategyUpdateSchema,
+  })
+  // Validate the merged result — i.e. the on-chain `newConfig` the edit will commit — rather than
+  // the (already-valid) current strategy on its own.
+  .superRefine(({ strategy, update }, ctx) => {
+    const merged = { ...strategy, ...update }
+    if (merged.intervalSeconds < BigInt(MIN_INTERVAL_SECONDS)) {
       ctx.addIssue({
         code: z.ZodIssueCode.too_small,
         minimum: MIN_INTERVAL_SECONDS,
         type: 'bigint',
         inclusive: true,
         message: `Interval must be at least ${MIN_INTERVAL_SECONDS} seconds (1 day)`,
-        path: ['intervalSeconds'],
+        path: ['update', 'intervalSeconds'],
       })
     }
-    if (s.slippagePercentage > MAX_SLIPPAGE_PERCENTAGE) {
+    if (merged.slippagePercentage > MAX_SLIPPAGE_PERCENTAGE) {
       ctx.addIssue({
         code: z.ZodIssueCode.too_big,
         maximum: MAX_SLIPPAGE_PERCENTAGE,
         type: 'number',
         inclusive: true,
         message: `Slippage percentage must be between 0 and ${MAX_SLIPPAGE_PERCENTAGE}`,
-        path: ['slippagePercentage'],
+        path: ['update', 'slippagePercentage'],
       })
     }
-    if (s.tradeAmount === BigInt(0)) {
+    if (merged.tradeAmount === BigInt(0)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'Trade amount must not be zero',
-        path: ['tradeAmount'],
+        path: ['update', 'tradeAmount'],
       })
     }
-    if (s.inAssetFeed.feed === '0x0000000000000000000000000000000000000000') {
+    if (merged.inAssetFeed.feed === '0x0000000000000000000000000000000000000000') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'inAssetFeed.feed must not be the zero address',
-        path: ['inAssetFeed', 'feed'],
+        path: ['update', 'inAssetFeed', 'feed'],
       })
     }
-    if (s.outAssetFeed.feed === '0x0000000000000000000000000000000000000000') {
+    if (merged.outAssetFeed.feed === '0x0000000000000000000000000000000000000000') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'outAssetFeed.feed must not be the zero address',
-        path: ['outAssetFeed', 'feed'],
+        path: ['update', 'outAssetFeed', 'feed'],
       })
     }
-  }),
-})
+  })

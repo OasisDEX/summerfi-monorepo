@@ -3,6 +3,7 @@ import type {
   ChainId,
   IChainlinkFeed,
   IDcaStrategy,
+  IDcaStrategyUpdate,
   IDcaExecution,
   ApproveTransactionInfo,
   CreateDcaStrategyTransactionInfo,
@@ -52,12 +53,24 @@ export interface IDcaManagerClient {
    *
    * @param params - Parameters object.
    * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategy - The strategy (with its updated fields) to apply.
+   * @param params.strategy - The current on-chain strategy (as returned by `getStrategy`); used as
+   *   the `oldConfig` whose hash must match the stored commitment.
+   * @param params.update - The fields to change, merged over `strategy` to form the `newConfig`.
    * @returns A promise resolving to the edit-strategy transaction info.
+   * @throws If the strategy is not active or paused.
+   * @example
+   * ```ts
+   * const [editTx] = await dcaManager.editStrategyTx({
+   *   chainId: ChainIds.Base,
+   *   strategy: existingStrategy,
+   *   update: { slippagePercentage: 1 },
+   * })
+   * ```
    */
   editStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy
+    update: IDcaStrategyUpdate
   }): Promise<[EditDcaStrategyTransactionInfo]>
 
   /**

@@ -231,7 +231,7 @@ export {
   isArmadaWithdrawal,
 } from './common/interfaces/IArmadaWithdrawal'
 export type { IArmadaWithdrawal } from './common/interfaces/IArmadaWithdrawal'
-export type { IDcaStrategy } from './common/interfaces/IDcaStrategy'
+export type { IDcaStrategy, IDcaStrategyUpdate } from './common/interfaces/IDcaStrategy'
 export type { IDcaExecution } from './common/interfaces/IDcaExecution'
 export type { IDcaStrategyConfig } from './common/interfaces/IDcaStrategyConfig'
 export type { IChainlinkFeed } from './common/interfaces/IChainlinkFeed'

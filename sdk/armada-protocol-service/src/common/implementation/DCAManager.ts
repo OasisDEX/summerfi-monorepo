@@ -175,6 +175,24 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     return (expected * (bps - params.slippageBps)) / bps
   }
 
+  /**
+   * @name editStrategyTx
+   * @description Returns a transaction to edit an existing DCA strategy.
+   * @param params.chainId The chain ID of the strategy.
+   * @param params.strategy The current on-chain strategy (as returned by `getStrategy`); used
+   *   verbatim as the `oldConfig` whose hash must match the stored commitment.
+   * @param params.update The fields to change, merged over `strategy` to form the `newConfig`.
+   * @returns A transaction to edit the strategy.
+   * @throws If the strategy is not active or paused.
+   * @example
+   * ```ts
+   * const [editTx] = await dcaManager.editStrategyTx({
+   *   chainId: ChainIds.Base,
+   *   strategy: existingStrategy,
+   *   update: { slippagePercentage: 1 },
+   * })
+   * ```
+   */
   async editStrategyTx(
     params: Parameters<IDCAManager['editStrategyTx']>[0],
   ): ReturnType<IDCAManager['editStrategyTx']> {
@@ -187,18 +205,21 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       contractName: 'dcaStrategyManager',
       chainId: params.chainId,
     }).value
-    const strategyConfig = this._strategyToStrategyConfig({
-      strategy: params.strategy,
-    })
+    // oldConfig must hash to the on-chain commitment (proven by `onlyStrategyOwner`), so it is
+    // built from the unmodified current strategy; newConfig is the merge of the requested update.
+    const oldStrategyConfig = this._strategyToStrategyConfig({ strategy: params.strategy })
+    const updatedStrategy: IDcaStrategy = { ...params.strategy, ...params.update }
+    const newStrategyConfig = this._strategyToStrategyConfig({ strategy: updatedStrategy })
     return [
       this._buildStrategyConfigTransaction({
         strategyManagerAddress,
         strategyId: params.strategy.strategyId,
-        strategyConfig,
+        oldStrategyConfig,
+        newStrategyConfig,
         functionName: 'editStrategy',
         description: 'Edit DCA strategy',
         type: TransactionType.EditStrategy,
-        metadata: { strategy: params.strategy },
+        metadata: { strategy: updatedStrategy },
       }),
     ] as [EditDcaStrategyTransactionInfo]
   }
@@ -247,7 +268,10 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       this._buildStrategyConfigTransaction({
         strategyManagerAddress,
         strategyId: params.strategy.strategyId,
-        strategyConfig,
+        // resumeStrategy takes only the current config; both slots carry it so the shared builder
+        // encodes a single-config call.
+        oldStrategyConfig: strategyConfig,
+        newStrategyConfig: strategyConfig,
         functionName: 'resumeStrategy',
         description: 'Resume DCA strategy',
         type: TransactionType.ResumeStrategy,
@@ -409,7 +433,10 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   private _buildStrategyConfigTransaction(params: {
     strategyManagerAddress: AddressValue
     strategyId: bigint
-    strategyConfig: IDcaStrategyConfig
+    /** Current on-chain config; hashed against the stored commitment for ownership proof. */
+    oldStrategyConfig: IDcaStrategyConfig
+    /** Desired config. Equal to `oldStrategyConfig` for `resumeStrategy` (which takes one config). */
+    newStrategyConfig: IDcaStrategyConfig
     functionName: 'editStrategy' | 'resumeStrategy'
     description: string
     type: TransactionType.EditStrategy | TransactionType.ResumeStrategy
@@ -417,14 +444,16 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       strategy: IDcaStrategy
     }
   }): EditDcaStrategyTransactionInfo | ResumeDcaStrategyTransactionInfo {
-    const viemConfig = this._toViemStrategyConfig(params.strategyConfig)
+    const oldViemConfig = this._toViemStrategyConfig(params.oldStrategyConfig)
+    const newViemConfig = this._toViemStrategyConfig(params.newStrategyConfig)
     const calldata = encodeFunctionData({
       abi: DCAStrategyManagerAbi,
       functionName: params.functionName,
+      // editStrategy(strategyId, oldConfig, newConfig); resumeStrategy(strategyId, config).
       args:
         params.functionName === 'editStrategy'
-          ? [params.strategyId, viemConfig, viemConfig]
-          : [params.strategyId, viemConfig],
+          ? [params.strategyId, oldViemConfig, newViemConfig]
+          : [params.strategyId, oldViemConfig],
     }) as HexData
 
     return {
