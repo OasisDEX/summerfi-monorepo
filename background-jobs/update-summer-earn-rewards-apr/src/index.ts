@@ -61,6 +61,10 @@ export const DAY_IN_SECONDS = 86400
 export const WEEK_IN_SECONDS = 604800
 export const EPOCH_WEEK_OFFSET = 345600 // 4 days
 export const MIN_UPDATE_INTERVAL = 10 * 60 // 10 minutes in seconds
+// Offchain base-APR samples (update-offchain-apr job) track provider NAVs that
+// refresh daily at most and pause over weekends/holidays, so accept samples
+// considerably older than the reward-rate 1h window.
+export const OFFCHAIN_APR_MAX_AGE_SECONDS = 4 * DAY_IN_SECONDS
 
 type VaultsForApr = {
   vaults: Array<{
@@ -232,36 +236,76 @@ export async function updateVaultAprs(
 
     const arksRewardsRatesMap = new Map(fleetArksRewardsRates.map((rate) => [rate.productId, rate]))
 
-    const fleetArksTotalRates = arksRates.products.map((product) => ({
-      ...product,
-      interestRates: product.interestRates.map((rate) => {
-        const rewardRate = parseFloat(
-          arksRewardsRatesMap.get(rate.productId)?.rate.toString() || '0',
-        )
-        const totalRate = rewardRate + +rate.rate || +rate.rate
-        logger.debug('Calculated total rate', {
-          network: network.network,
-          productId: rate.productId,
-          baseRate: rate.rate,
-          rewardRate,
-          totalRate,
-        })
-        return {
-          ...rate,
-          rate: totalRate,
-        }
-      }),
-    }))
-
-    const weightedFleetRate = fleetArksTotalRates.reduce((acc, product) => {
-      const ark = fleetArksWithRatios.find(
-        (ark) => ark.productId === product.interestRates[0].productId,
+    // Offchain base APRs for arks whose protocol has no on-chain rate signal
+    // (e.g. institutional RWAs), sampled by the update-offchain-apr job. One
+    // row per (network, productId, timestamp), so the latest-timestamp join
+    // yields at most one row per product.
+    const fleetArksOffchainRates = await trx
+      .with('latest_offchain_timestamps', (qb) =>
+        qb
+          .selectFrom('offchainApr')
+          .select(['productId', 'network'])
+          .select((eb) => eb.fn.max('timestamp').as('maxTimestamp'))
+          .where('network', '=', network.network)
+          .where(
+            'timestamp',
+            '>=',
+            (updateStartTimestamp - OFFCHAIN_APR_MAX_AGE_SECONDS).toString(),
+          )
+          .where(
+            'productId',
+            'in',
+            fleetArksWithRatios.map((ark) => ark.productId),
+          )
+          .groupBy(['productId', 'network']),
       )
-      const contribution = +product.interestRates[0].rate * ark!.ratio
-      logger.debug('Calculating weighted rate', {
+      .selectFrom('offchainApr')
+      .innerJoin('latest_offchain_timestamps', (join) =>
+        join
+          .onRef('offchainApr.productId', '=', 'latest_offchain_timestamps.productId')
+          .onRef('offchainApr.network', '=', 'latest_offchain_timestamps.network')
+          .onRef('offchainApr.timestamp', '=', 'latest_offchain_timestamps.maxTimestamp'),
+      )
+      .select(['offchainApr.productId', 'offchainApr.rate'])
+      .execute()
+
+    const arksOffchainRatesMap = new Map(
+      fleetArksOffchainRates.map((rate) => [rate.productId, Number(rate.rate)]),
+    )
+
+    const fleetArksTotalRates = arksRates.products.flatMap((product) => {
+      const subgraphRate = product.interestRates[0] ? +product.interestRates[0].rate : undefined
+      const offchainRate = arksOffchainRatesMap.get(product.id)
+      // Offchain samples exist only for protocols without a usable on-chain
+      // signal, so they take over whenever the subgraph has no (or a zero) rate.
+      const baseRate = subgraphRate ? subgraphRate : (offchainRate ?? subgraphRate)
+      if (baseRate === undefined) {
+        logger.warn('No base rate for product - it will not contribute to the fleet rate', {
+          network: network.network,
+          productId: product.id,
+        })
+        return []
+      }
+      const rewardRate = parseFloat(arksRewardsRatesMap.get(product.id)?.rate.toString() || '0')
+      const totalRate = rewardRate + baseRate || baseRate
+      logger.debug('Calculated total rate', {
         network: network.network,
         productId: product.id,
-        rate: product.interestRates[0].rate,
+        baseRate,
+        offchainRate,
+        rewardRate,
+        totalRate,
+      })
+      return [{ productId: product.id, totalRate }]
+    })
+
+    const weightedFleetRate = fleetArksTotalRates.reduce((acc, { productId, totalRate }) => {
+      const ark = fleetArksWithRatios.find((ark) => ark.productId === productId)
+      const contribution = totalRate * ark!.ratio
+      logger.debug('Calculating weighted rate', {
+        network: network.network,
+        productId,
+        rate: totalRate,
         ratio: ark!.ratio,
         totalValueLockedUSD: ark!.totalValueLockedUSD,
         contribution,
