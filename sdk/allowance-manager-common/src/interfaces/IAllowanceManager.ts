@@ -109,6 +109,27 @@ export interface IAllowanceManager {
   }): [Permit2SubAllowanceTransactionInfo]
 
   /**
+   * @name isPermit2SubAllowanceNeeded
+   * @description Checks whether the spender's current Permit2 sub-allowance for a token is
+   * insufficient — reads the `PERMIT2.allowance(owner, token, spender)` ledger and returns true when
+   * the granted amount is below `amount` OR the allowance has expired (or was never set). Use to
+   * decide whether to prepend a {@link getPermit2SubAllowanceTx} transaction.
+   * @param chainId The chain ID to read the allowance on
+   * @param ownerAddress The token owner's address
+   * @param tokenAddress The ERC-20 token the sub-allowance is on
+   * @param spenderAddress The spender the sub-allowance is granted to
+   * @param amount The required amount (in token base units) to check against the current sub-allowance
+   * @returns True if a fresh sub-allowance grant is needed
+   */
+  isPermit2SubAllowanceNeeded(params: {
+    chainId: ChainId
+    ownerAddress: IAddress
+    tokenAddress: IAddress
+    spenderAddress: IAddress
+    amount: bigint
+  }): Promise<boolean>
+
+  /**
    * @name getPermit2RevokeTx
    * @description Creates a transaction to revoke the Permit2 contract authorization for a specific token
    * @param chainId The chain ID where the token lives

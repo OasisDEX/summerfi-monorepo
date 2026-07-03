@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { ChainIds, DcaStrategyStatusEnum } from '@summerfi/sdk-common'
+import { ChainIds, DcaStrategyStatusEnum, TransactionType } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 import { retryUntilDefined } from './utils/retryUntilDefined'
 
@@ -29,32 +29,53 @@ describe('Armada Protocol - DCA Strategies Edit', () => {
       // Flip the slippage to a different valid value so the edit is observable after re-fetch.
       // `strategy` stays the current on-chain config (the oldConfig hashed against the commitment);
       // `update` carries only the changed field, which the SDK merges to build the newConfig.
-      const newSlippagePercentage = strategy.slippagePercentage >= 1 ? 0.5 : 1
+      const newTradeAmount = strategy.tradeAmount <= 500000n ? 2000001n : 5000000n
 
-      const [editTx] = await sdk.dca.editStrategyTx({
+      const txs = await sdk.dca.editStrategyTx({
         chainId,
         strategy,
-        update: { slippagePercentage: newSlippagePercentage },
+        update: { tradeAmount: newTradeAmount },
       })
 
-      const txHash = await walletClient.sendTransaction({
-        account: walletClient.account!,
-        to: editTx.transaction.target.value,
-        value: BigInt(editTx.transaction.value),
-        data: editTx.transaction.calldata,
-        chain: walletClient.chain,
-      })
-      await publicClient.waitForTransactionReceipt({ hash: txHash })
+      // The EditStrategy tx is always last; any leading txs are Permit2 setup (authorization /
+      // sub-allowance) prepended only when the new config's keeper-pull needs it.
+      const editTx = txs[txs.length - 1]
+      assert.strictEqual(
+        editTx.type,
+        TransactionType.EditStrategy,
+        'Last tx should be EditStrategy',
+      )
+      for (const setupTx of txs.slice(0, txs.length - 1)) {
+        assert(
+          setupTx.type === TransactionType.Permit2Authorization ||
+            setupTx.type === TransactionType.Permit2SubAllowance,
+          `Unexpected leading tx type ${setupTx.type}`,
+        )
+      }
+
+      // Send every tx in order (setup first, then the edit).
+      for (const tx of txs) {
+        const txHash = await walletClient.sendTransaction({
+          account: walletClient.account!,
+          to: tx.transaction.target.value,
+          value: BigInt(tx.transaction.value),
+          data: tx.transaction.calldata,
+          chain: walletClient.chain,
+        })
+        console.log(`Sent ${tx.type} transaction, hash:`, txHash)
+
+        await publicClient.waitForTransactionReceipt({ hash: txHash, confirmations: 5 })
+      }
 
       const updatedStrategy = await retryUntilDefined(
         () => sdk.dca.getStrategy({ strategyId, chainId }),
-        (s) => s !== undefined && s.slippagePercentage === newSlippagePercentage,
+        (s) => s !== undefined && s.tradeAmount === newTradeAmount,
       )
 
       assert(updatedStrategy, `Expected strategy ${strategyId} to exist after edit`)
-      assert.strictEqual(updatedStrategy.slippagePercentage, newSlippagePercentage)
+      assert.strictEqual(updatedStrategy.tradeAmount, newTradeAmount)
       console.log(
-        `[Edit] Edited DCA strategy with ID: ${strategyId} by changing slippagePercentage to ${newSlippagePercentage}`,
+        `[Edit] Edited DCA strategy with ID: ${strategyId} by changing tradeAmount to ${newTradeAmount}`,
       )
     })
   })

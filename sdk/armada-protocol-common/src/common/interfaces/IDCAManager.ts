@@ -101,12 +101,31 @@ export interface IDCAManager {
       ]
   >
 
-  /** Builds the transaction to edit an existing DCA strategy: `strategy` is the current on-chain config (the `oldConfig` proving ownership), `update` the fields to change. */
+  /**
+   * Builds the transactions to edit an existing DCA strategy: `strategy` is the current on-chain
+   * config (the `oldConfig` proving ownership), `update` the fields to change. When the edit changes
+   * the keeper's pull requirement (`tradeAmount`/`maxTrades`) or the pulled token (`sourceVault`), the
+   * result is prefixed with the Permit2 setup the new config needs — authorization only when the ERC20
+   * allowance to Permit2 is insufficient, and a sub-allowance only when the current one is short or
+   * expired (evaluated against the NEW source vault). The `EditStrategy` transaction is always last —
+   * send them in order.
+   */
   editStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy
     update: IDcaStrategyUpdate
-  }): Promise<[EditDcaStrategyTransactionInfo]>
+  }): Promise<
+    // Ordered [permit2 authorization?, permit2 sub-allowance?, edit]; the two optional slots yield
+    // these four exact shapes (EditStrategy is always last).
+    | [EditDcaStrategyTransactionInfo]
+    | [Permit2SubAllowanceTransactionInfo, EditDcaStrategyTransactionInfo]
+    | [Permit2AuthorizationTransactionInfo, EditDcaStrategyTransactionInfo]
+    | [
+        Permit2AuthorizationTransactionInfo,
+        Permit2SubAllowanceTransactionInfo,
+        EditDcaStrategyTransactionInfo,
+      ]
+  >
 
   /** Builds the transaction to pause an active DCA strategy. */
   pauseStrategyTx(params: {

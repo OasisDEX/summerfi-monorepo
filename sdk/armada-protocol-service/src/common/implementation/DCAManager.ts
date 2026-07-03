@@ -34,6 +34,17 @@ import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { DCAStrategyManagerAbi } from './abi/DCAStrategyManagerAbi'
 
 /**
+ * Permit2 sub-allowance granted to the DCA manager for keeper share-pulls. The Permit2
+ * AllowanceTransfer slot is keyed by `(owner, token, spender)` and is therefore shared across every
+ * strategy the user has on the same source vault, so we grant an infinite (`MaxUint160`),
+ * non-expiring (`MaxUint48`) allowance rather than a per-strategy amount/expiration that would clobber
+ * a sibling. Used by both create paths and edit — keep them in lockstep via these constants.
+ * (`Number(MaxUint48)` is exact: `2^48-1` fits a JS number.)
+ */
+const KEEPER_SUBALLOWANCE_AMOUNT = maxUint160
+const KEEPER_SUBALLOWANCE_EXPIRATION = Number(maxUint48)
+
+/**
  * Handles creation and persistence of recurring DCA buy orders.
  */
 export class DCAManager extends ArmadaManagerShared implements IDCAManager {
@@ -281,8 +292,8 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       chainId: params.chainId,
       tokenAddress: sourceVaultAddress,
       spenderAddress: Address.createFromEthereum({ value: params.strategyManagerAddress }),
-      amount: maxUint160,
-      expiration: Number(maxUint48),
+      amount: KEEPER_SUBALLOWANCE_AMOUNT,
+      expiration: KEEPER_SUBALLOWANCE_EXPIRATION,
     })
 
     return { permit2AuthTx, permit2SubAllowanceTx }
@@ -341,18 +352,82 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     const oldStrategyConfig = this._strategyToStrategyConfig({ strategy: params.strategy })
     const updatedStrategy: IDcaStrategy = { ...params.strategy, ...params.update }
     const newStrategyConfig = this._strategyToStrategyConfig({ strategy: updatedStrategy })
-    return [
-      this._buildStrategyConfigTransaction({
-        strategyManagerAddress,
-        strategyId: params.strategy.strategyId,
-        oldStrategyConfig,
-        newStrategyConfig,
-        functionName: 'editStrategy',
-        description: 'Edit DCA strategy',
-        type: TransactionType.EditStrategy,
-        metadata: { strategy: updatedStrategy },
+
+    const editTx = this._buildStrategyConfigTransaction({
+      strategyManagerAddress,
+      strategyId: params.strategy.strategyId,
+      oldStrategyConfig,
+      newStrategyConfig,
+      functionName: 'editStrategy',
+      description: 'Edit DCA strategy',
+      type: TransactionType.EditStrategy,
+      metadata: { strategy: updatedStrategy },
+    }) as EditDcaStrategyTransactionInfo
+
+    // Editing `tradeAmount`/`maxTrades` changes how much the keeper may pull; editing `sourceVault`
+    // changes WHICH token it pulls (a different Permit2 slot entirely). Evaluate the keeper's Permit2
+    // setup against the NEW source vault + remaining pull requirement, and prepend only what's
+    // missing. A single sufficiency check covers both cases: a sourceVault change targets an empty
+    // slot (both needed); a tradeAmount/maxTrades bump on the same vault only tops up when the current
+    // sub-allowance is short or expired. The OLD vault's allowance is intentionally not revoked — it
+    // may be shared with the user's other strategies on that vault.
+    const ownerAddress = Address.createFromEthereum({ value: params.strategy.ownerAddress })
+    const newSourceVault = Address.createFromEthereum({ value: newStrategyConfig.sourceVault })
+    const remainingTrades =
+      newStrategyConfig.maxTrades > params.strategy.tradesExecuted
+        ? newStrategyConfig.maxTrades - params.strategy.tradesExecuted
+        : 0n
+    // Total the keeper may still pull under the new config; 0 short-circuits both checks to false.
+    const requiredTotal = newStrategyConfig.tradeAmount * remainingTrades
+
+    const [needAuth, needSubAllowance] = await Promise.all([
+      this._allowanceManager.isPermit2AuthorizationNeeded({
+        chainId: params.chainId,
+        ownerAddress,
+        tokenAddress: newSourceVault,
+        amount: requiredTotal,
       }),
-    ] as [EditDcaStrategyTransactionInfo]
+      this._allowanceManager.isPermit2SubAllowanceNeeded({
+        chainId: params.chainId,
+        ownerAddress,
+        tokenAddress: newSourceVault,
+        spenderAddress: Address.createFromEthereum({ value: strategyManagerAddress }),
+        amount: requiredTotal,
+      }),
+    ])
+
+    const [permit2AuthTx] = needAuth
+      ? this._allowanceManager.getPermit2AuthorizationTx({
+          chainId: params.chainId,
+          tokenAddress: newSourceVault,
+        })
+      : []
+    const [permit2SubAllowanceTx] = needSubAllowance
+      ? this._allowanceManager.getPermit2SubAllowanceTx({
+          chainId: params.chainId,
+          tokenAddress: newSourceVault,
+          spenderAddress: Address.createFromEthereum({ value: strategyManagerAddress }),
+          amount: KEEPER_SUBALLOWANCE_AMOUNT,
+          expiration: KEEPER_SUBALLOWANCE_EXPIRATION,
+        })
+      : []
+
+    LoggingService.debug(
+      `DCA editStrategyTx: sourceVault=${newStrategyConfig.sourceVault} newTradeAmount=${newStrategyConfig.tradeAmount} maxTrades=${newStrategyConfig.maxTrades} tradesExecuted=${params.strategy.tradesExecuted} remainingTrades=${remainingTrades} requiredTotal=${requiredTotal} => permit2Auth=${permit2AuthTx ? 'needed' : 'not needed'}, permit2SubAllowance=${permit2SubAllowanceTx ? 'needed' : 'not needed'} (grant amount if needed: ${KEEPER_SUBALLOWANCE_AMOUNT})`,
+    )
+
+    // Order: [permit2 authorization?, permit2 sub-allowance?, edit]. The EditStrategy tx is always
+    // last; returned as one of four exact tuple shapes so the ordering is encoded in the type.
+    if (permit2AuthTx && permit2SubAllowanceTx) {
+      return [permit2AuthTx, permit2SubAllowanceTx, editTx]
+    }
+    if (permit2AuthTx) {
+      return [permit2AuthTx, editTx]
+    }
+    if (permit2SubAllowanceTx) {
+      return [permit2SubAllowanceTx, editTx]
+    }
+    return [editTx]
   }
 
   /** @see IDCAManager.pauseStrategyTx */

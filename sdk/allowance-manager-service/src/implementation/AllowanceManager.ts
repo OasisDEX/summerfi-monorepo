@@ -16,8 +16,8 @@ import { encodeFunctionData, erc20Abi, maxUint256, type SignTypedDataParameters 
 
 const PERMIT2_EXPIRATION_MINUTES = 10
 
-/** Minimal Permit2 `AllowanceTransfer.approve` fragment (the package otherwise only needs erc20Abi). */
-const permit2ApproveAbi = [
+/** Minimal Permit2 `AllowanceTransfer` fragment (the package otherwise only needs erc20Abi). */
+const permit2Abi = [
   {
     type: 'function',
     name: 'approve',
@@ -29,6 +29,21 @@ const permit2ApproveAbi = [
       { name: 'expiration', type: 'uint48' },
     ],
     outputs: [],
+  },
+  {
+    type: 'function',
+    name: 'allowance',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'token', type: 'address' },
+      { name: 'spender', type: 'address' },
+    ],
+    outputs: [
+      { name: 'amount', type: 'uint160' },
+      { name: 'expiration', type: 'uint48' },
+      { name: 'nonce', type: 'uint48' },
+    ],
   },
 ] as const
 
@@ -217,7 +232,7 @@ export class AllowanceManager implements IAllowanceManager {
 
     const permit2 = permit2Address(params.chainId) as `0x${string}`
     const calldata = encodeFunctionData({
-      abi: permit2ApproveAbi,
+      abi: permit2Abi,
       functionName: 'approve',
       args: [
         params.tokenAddress.toSolidityValue() as `0x${string}`,
@@ -237,6 +252,48 @@ export class AllowanceManager implements IAllowanceManager {
         description: `Grant Permit2 sub-allowance on ${params.tokenAddress.toSolidityValue()} to ${params.spenderAddress.toSolidityValue()}`,
       },
     ]
+  }
+
+  /** @see IAllowanceManager.isPermit2SubAllowanceNeeded */
+  async isPermit2SubAllowanceNeeded(
+    params: Parameters<IAllowanceManager['isPermit2SubAllowanceNeeded']>[0],
+  ): ReturnType<IAllowanceManager['isPermit2SubAllowanceNeeded']> {
+    if (params.amount === 0n) {
+      LoggingService.debug('Sub-allowance amount is zero')
+      return false
+    }
+
+    if (params.tokenAddress.toSolidityValue() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
+      LoggingService.debug('Token is native currency, no sub-allowance needed')
+      return false
+    }
+
+    const chainInfo = getChainInfoByChainId(params.chainId)
+    const publicClient = this._blockchainClientProvider.getBlockchainClient({ chainInfo })
+    const permit2 = permit2Address(params.chainId) as `0x${string}`
+
+    // PERMIT2.allowance ledger: [amount (uint160), expiration (uint48), nonce (uint48)].
+    const [amount, expiration] = await publicClient.readContract({
+      address: permit2,
+      abi: permit2Abi,
+      functionName: 'allowance',
+      args: [
+        params.ownerAddress.toSolidityValue() as `0x${string}`,
+        params.tokenAddress.toSolidityValue() as `0x${string}`,
+        params.spenderAddress.toSolidityValue() as `0x${string}`,
+      ],
+    })
+
+    // A fresh grant is needed if the sub-allowance can't cover the amount, or is expired / unset
+    // (expiration is a uint48 unix timestamp; 0 means uninitialised). MaxUint160 grants pass the
+    // amount test and our MaxUint48 expiry passes the expiry test, so create-time grants read as
+    // sufficient.
+    const nowSeconds = BigInt(Math.floor(Date.now() / 1000))
+    const needed = amount < params.amount || BigInt(expiration) <= nowSeconds
+    LoggingService.debug(
+      `isPermit2SubAllowanceNeeded: owner=${params.ownerAddress.toSolidityValue()} token=${params.tokenAddress.toSolidityValue()} spender=${params.spenderAddress.toSolidityValue()} onchainAmount=${amount} required=${params.amount} expiration=${expiration} now=${nowSeconds} => needed=${needed}`,
+    )
+    return needed
   }
 
   /** @see IAllowanceManager.getPermit2RevokeTx */

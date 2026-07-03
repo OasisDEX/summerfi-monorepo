@@ -128,11 +128,15 @@ export interface IDcaManagerClient {
    * @param params.strategy - The current on-chain strategy (as returned by `getStrategy`); used as
    *   the `oldConfig` whose hash must match the stored commitment.
    * @param params.update - The fields to change, merged over `strategy` to form the `newConfig`.
-   * @returns A promise resolving to the edit-strategy transaction info.
+   * @returns A promise resolving to the ordered transactions to send. When the edit changes the
+   *   keeper's pull requirement (`tradeAmount`/`maxTrades`) or the pulled token (`sourceVault`), the
+   *   edit is prefixed with the Permit2 setup the new config needs (authorization only when the ERC20
+   *   allowance to Permit2 is insufficient; a sub-allowance only when the current one is short or
+   *   expired). The `EditStrategy` transaction is always last.
    * @throws If the strategy is not active or paused.
    * @example
    * ```ts
-   * const [editTx] = await dcaManager.editStrategyTx({
+   * const txs = await dcaManager.editStrategyTx({
    *   chainId: ChainIds.Base,
    *   strategy: existingStrategy,
    *   update: { slippagePercentage: 1 },
@@ -143,7 +147,18 @@ export interface IDcaManagerClient {
     chainId: ChainId
     strategy: IDcaStrategy
     update: IDcaStrategyUpdate
-  }): Promise<[EditDcaStrategyTransactionInfo]>
+  }): Promise<
+    // Ordered [permit2 authorization?, permit2 sub-allowance?, edit]; the two optional slots yield
+    // these four exact shapes (EditStrategy is always last).
+    | [EditDcaStrategyTransactionInfo]
+    | [Permit2SubAllowanceTransactionInfo, EditDcaStrategyTransactionInfo]
+    | [Permit2AuthorizationTransactionInfo, EditDcaStrategyTransactionInfo]
+    | [
+        Permit2AuthorizationTransactionInfo,
+        Permit2SubAllowanceTransactionInfo,
+        EditDcaStrategyTransactionInfo,
+      ]
+  >
 
   /**
    * Builds the transaction that pauses an active DCA strategy.
