@@ -8,7 +8,7 @@ import { TransactionType } from '@summerfi/sdk-common'
 jest.setTimeout(300000)
 
 // Flip this to choose which Permit2 branch of `createStrategyTx` this run exercises:
-const REVOKE_PERMIT2_FIRST = false
+const REVOKE_PERMIT2_FIRST = true
 // This test exercises the deposit-less `createStrategyTx` (encodes `createStrategy`), so it makes no
 // deposit and needs no USDC balance — it only sets up the Permit2 keeper-pull allowance and registers
 // the strategy. `amount` (= amountShares * maxTrades) is used only for the Permit2 authorization check.
@@ -34,6 +34,7 @@ describe('Armada Protocol - DCA Strategies', () => {
       txInfo: {
         transaction: { target: { value: `0x${string}` }; value: string; calldata: `0x${string}` }
       },
+      confirmations = 3,
     ) => {
       const hash = await walletClient.sendTransaction({
         account: walletClient.account!,
@@ -43,7 +44,11 @@ describe('Armada Protocol - DCA Strategies', () => {
         chain: walletClient.chain,
       })
       console.log(`Sent ${label} transaction, hash:`, hash)
-      await publicClient.waitForTransactionReceipt({ hash, confirmations: 3 })
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash,
+        confirmations,
+      })
+      return { hash, receipt }
     }
 
     // Put the source-vault → Permit2 ERC20 allowance into the state this run wants to test, so the
@@ -64,7 +69,7 @@ describe('Armada Protocol - DCA Strategies', () => {
         chainId,
         tokenAddress: sourceVaultShares,
       })
-      await sendTxInfo('Permit2 revoke (approve Permit2 → 0)', revokeTx)
+      await sendTxInfo('Permit2 revoke (approve Permit2 → 0)', revokeTx, 5)
     } else if (!REVOKE_PERMIT2_FIRST && !isAuthorized) {
       const [authTx] = await sdk.allowance.getPermit2AuthorizationTx({
         chainId,
@@ -161,15 +166,7 @@ describe('Armada Protocol - DCA Strategies', () => {
       await sendTxInfo(setupTx.type, setupTx)
     }
 
-    // Send the createStrategy transaction and extract strategyId from the StrategyCreated event.
-    const txHash = await walletClient.sendTransaction({
-      account: walletClient.account!,
-      to: strategyTx.transaction.target.value,
-      value: BigInt(strategyTx.transaction.value),
-      data: strategyTx.transaction.calldata,
-      chain: walletClient.chain,
-    })
-    const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash })
+    const { receipt } = await sendTxInfo(strategyTx.type, strategyTx)
     const strategyLog = receipt.logs.find(
       (log) => log.address.toLowerCase() === strategyTx.transaction.target.value.toLowerCase(),
     )
