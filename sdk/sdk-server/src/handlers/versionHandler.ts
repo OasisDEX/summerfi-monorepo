@@ -29,5 +29,5 @@ export const versionHandler = publicProcedure.query(async ({ ctx }) => {
   const majorKey = major !== undefined ? `v${major}` : null
   const version = majorKey ? (deployedVersions[majorKey] ?? null) : null
 
-  return { version, major: majorKey, deployedVersions, raw }
+  return { version, major: majorKey, deployedVersions }
 })
