@@ -18,6 +18,7 @@ import {
 } from '@summerfi/summer-earn-institutions-subgraph'
 
 import { RewardsService } from './rewards-service'
+import { computeFleetArksTotalRates, computeWeightedFleetRate } from './fleet-rate'
 import { Transaction } from 'kysely'
 import { Database, mapDbNetworkToChainId } from '@summerfi/summer-protocol-db'
 import { ChainId } from '@summerfi/serverless-shared'
@@ -234,7 +235,9 @@ export async function updateVaultAprs(
       })),
     })
 
-    const arksRewardsRatesMap = new Map(fleetArksRewardsRates.map((rate) => [rate.productId, rate]))
+    const rewardRatesByProductId = new Map(
+      fleetArksRewardsRates.map((rate) => [rate.productId, parseFloat(rate.rate?.toString() ?? '0')]),
+    )
 
     // Offchain base APRs for arks whose protocol has no on-chain rate signal
     // (e.g. institutional RWAs), sampled by the update-offchain-apr job. One
@@ -269,50 +272,26 @@ export async function updateVaultAprs(
       .select(['offchainApr.productId', 'offchainApr.rate'])
       .execute()
 
-    const arksOffchainRatesMap = new Map(
+    const offchainRatesByProductId = new Map(
       fleetArksOffchainRates.map((rate) => [rate.productId, Number(rate.rate)]),
     )
 
-    const fleetArksTotalRates = arksRates.products.flatMap((product) => {
-      const subgraphRate = product.interestRates[0] ? +product.interestRates[0].rate : undefined
-      const offchainRate = arksOffchainRatesMap.get(product.id)
-      // Offchain samples exist only for protocols without a usable on-chain
-      // signal, so they take over whenever the subgraph has no (or a zero) rate.
-      const baseRate = subgraphRate ? subgraphRate : (offchainRate ?? subgraphRate)
-      if (baseRate === undefined) {
+    const fleetArksTotalRates = computeFleetArksTotalRates({
+      products: arksRates.products,
+      rewardRatesByProductId,
+      offchainRatesByProductId,
+      onMissingBaseRate: (productId) =>
         logger.warn('No base rate for product - it will not contribute to the fleet rate', {
           network: network.network,
-          productId: product.id,
-        })
-        return []
-      }
-      const rewardRate = parseFloat(arksRewardsRatesMap.get(product.id)?.rate.toString() || '0')
-      const totalRate = rewardRate + baseRate || baseRate
-      logger.debug('Calculated total rate', {
-        network: network.network,
-        productId: product.id,
-        baseRate,
-        offchainRate,
-        rewardRate,
-        totalRate,
-      })
-      return [{ productId: product.id, totalRate }]
+          productId,
+        }),
     })
+    for (const rate of fleetArksTotalRates) {
+      logger.debug('Calculated total rate', { network: network.network, ...rate })
+    }
 
-    const weightedFleetRate = fleetArksTotalRates.reduce((acc, { productId, totalRate }) => {
-      const ark = fleetArksWithRatios.find((ark) => ark.productId === productId)
-      const contribution = totalRate * ark!.ratio
-      logger.debug('Calculating weighted rate', {
-        network: network.network,
-        productId,
-        rate: totalRate,
-        ratio: ark!.ratio,
-        totalValueLockedUSD: ark!.totalValueLockedUSD,
-        contribution,
-        accumulatedTotal: acc + contribution,
-      })
-      return acc + contribution
-    }, 0)
+    const arkRatiosByProductId = new Map(fleetArksWithRatios.map((ark) => [ark.productId, ark.ratio]))
+    const weightedFleetRate = computeWeightedFleetRate(fleetArksTotalRates, arkRatiosByProductId)
 
     logger.debug('Final weighted fleet rate', {
       network: network.network,
