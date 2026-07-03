@@ -1,6 +1,7 @@
 import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
+/** @see IRwaManagerClient.isWhitelistOpen */
 export const getRwaIsWhitelistOpenHandler =
   (sdk: ISDKInstiManager) =>
   async ({ fleetAddress, chainId }: { fleetAddress: AddressValue; chainId: ChainId }) => {

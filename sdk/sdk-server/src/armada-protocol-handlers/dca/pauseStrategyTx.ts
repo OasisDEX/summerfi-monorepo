@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 import { strategySchema } from './strategyConfigSchema'
 
+/** @see IDCAManager.pauseStrategyTx */
 export const pauseStrategyTx = publicProcedure
   .input(
     z.object({

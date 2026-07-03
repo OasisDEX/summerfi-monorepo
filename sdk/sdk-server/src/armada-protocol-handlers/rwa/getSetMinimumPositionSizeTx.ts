@@ -8,6 +8,7 @@ import {
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
+/** @see IRWAManager.getSetMinimumPositionSizeTx */
 export const getSetMinimumPositionSizeTx = publicProcedure
   .input(
     z.object({

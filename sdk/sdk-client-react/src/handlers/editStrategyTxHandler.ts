@@ -1,6 +1,7 @@
 import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { ChainId, IDcaStrategy, IDcaStrategyUpdate } from '@summerfi/sdk-common'
 
+/** @see IDcaManagerClient.editStrategyTx */
 export const editStrategyTxHandler =
   (sdk: ISDKManager | ISDKInstiManager) =>
   async ({

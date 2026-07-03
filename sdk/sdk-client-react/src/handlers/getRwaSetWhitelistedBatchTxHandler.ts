@@ -1,6 +1,7 @@
 import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
+/** @see IRwaManagerClient.getSetWhitelistedBatchTx */
 export const getRwaSetWhitelistedBatchTxHandler =
   (sdk: ISDKInstiManager) =>
   async ({

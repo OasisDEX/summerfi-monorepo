@@ -205,6 +205,10 @@ editStrategyTx: (__namedParameters) => Promise<[EditDcaStrategyTransactionInfo]>
 
 [`IDcaStrategy`](../../sdk-common/interfaces/IDcaStrategy.md)
 
+###### update
+
+[`IDcaStrategyUpdate`](../../sdk-common/type-aliases/IDcaStrategyUpdate.md)
+
 ##### Returns
 
 `Promise`\<\[[`EditDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/EditDcaStrategyTransactionInfo.md)\]\>

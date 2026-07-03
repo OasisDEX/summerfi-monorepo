@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 import { strategySchema } from './strategyConfigSchema'
 
+/** @see IDCAManager.resumeStrategyTx */
 export const resumeStrategyTx = publicProcedure
   .input(
     z.object({

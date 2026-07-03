@@ -17,17 +17,55 @@ generated, type-level API reference see
 
 ## Installation
 
+The SDK client is a strongly typed, documented library for talking to our RPC-based API — the
+recommended path to the best developer experience. A JavaScript/TypeScript client is currently the
+only one available.
+
+### Prerequisites
+
+- Node.js (version 18 or higher) or a compatible runtime.
+- npm or pnpm. Yarn is not supported (peer dependencies are not auto-installed on any Yarn version),
+  but can be worked around.
+- An npm access token — the packages are private (see below).
+
+### Request access to the private packages
+
+Our npm packages are private and require an npm Granular Access Token to install. See npm's
+[About access tokens](https://docs.npmjs.com/about-access-tokens) for background.
+
+Request an integrator access token by email:
+[integrations@summer.fi](mailto:integrations@summer.fi).
+
+### Set the token in your project's `.npmrc`
+
+Because the package is private, add an `.npmrc` file in your project root (next to `package.json`).
+
+For local development, paste your token directly:
+
+```ini
+//registry.npmjs.org/:_authToken=replace_with_your_token
+```
+
+For CI, reference an environment variable instead (`export NPM_TOKEN=your_token`):
+
+```ini
+//registry.npmjs.org/:_authToken=${NPM_TOKEN}
+```
+
+### Install the package
+
+`@summer_fi/sdk-client` provides the API client for communicating with our API.
+
 ```bash
 npm install @summer_fi/sdk-client
 # or
 pnpm add @summer_fi/sdk-client
-# or
-yarn add @summer_fi/sdk-client
 ```
 
-> As of v2.0.0 the former `@summerfi/sdk-common` package was merged into `@summer_fi/sdk-client`.
-> If you are migrating from v1.x, update all imports to `@summer_fi/sdk-client` and remove
-> `@summerfi/sdk-common` from your dependencies.
+> As of v2.0.0 the former `@summerfi/sdk-common` package was deprecated and merged into
+> `@summerfi/sdk-client`. It is no longer needed for new projects. If you are migrating from v1.x,
+> update all imports to `@summer_fi/sdk-client` and remove `@summerfi/sdk-common` from your
+> dependencies.
 
 ## Creating the SDK client
 
@@ -52,13 +90,13 @@ routing automatically) or a direct `apiURL`, plus an optional `logging` flag. It
 
 The SDK manager exposes the following top-level managers:
 
-| Property        | Purpose                                                                        |
-| --------------- | ------------------------------------------------------------------------------ |
-| `sdk.armada`    | Armada vault flows: vault info, deposits, withdrawals, positions, and rewards. |
-| `sdk.tokens`    | Token lookup by symbol or address on a given chain.                            |
-| `sdk.oracle`    | Spot price lookups for tokens.                                                 |
-| `sdk.chains`    | Chain metadata and per-chain token access.                                     |
-| `sdk.intentSwaps` | Intent-based (CoW Protocol) swaps.                                            |
+| Property          | Purpose                                                                        |
+| ----------------- | ------------------------------------------------------------------------------ |
+| `sdk.armada`      | Armada vault flows: vault info, deposits, withdrawals, positions, and rewards. |
+| `sdk.tokens`      | Token lookup by symbol or address on a given chain.                            |
+| `sdk.oracle`      | Spot price lookups for tokens.                                                 |
+| `sdk.chains`      | Chain metadata and per-chain token access.                                     |
+| `sdk.intentSwaps` | Intent-based (CoW Protocol) swaps.                                             |
 
 Most user-facing vault operations live under `sdk.armada.users`, for example:
 

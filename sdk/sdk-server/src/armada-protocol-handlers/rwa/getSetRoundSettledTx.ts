@@ -8,6 +8,7 @@ import {
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
+/** @see IRWAManager.getSetRoundSettledTx */
 export const getSetRoundSettledTx = publicProcedure
   .input(
     z.object({

@@ -9,6 +9,18 @@ a deposit transaction ready to sign and send.
 
 > Applies to `@summer_fi/sdk-client` v2.3.0
 
+## Prerequisites
+
+The `@summer_fi/sdk-client` package is private and requires an npm access token to install. See
+[Installation](README.md#installation) for prerequisites, requesting an integrator token
+([integrations@summer.fi](mailto:integrations@summer.fi)), and configuring your `.npmrc` — then:
+
+```bash
+npm install @summer_fi/sdk-client
+# or
+pnpm add @summer_fi/sdk-client
+```
+
 ## 1. Create the client
 
 ```typescript

@@ -1,6 +1,7 @@
 import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId, RoundsVaultType } from '@summerfi/sdk-common'
 
+/** @see IRwaManagerClient.getCancelRoundDepositTx */
 export const getRwaCancelRoundDepositTxHandler =
   (sdk: ISDKInstiManager) =>
   async ({

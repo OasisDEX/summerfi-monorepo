@@ -38,18 +38,15 @@ import { mapSubgraphVaultToVaultInfoParams } from './extensions/mapSubgraphVault
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 
 /**
- * @name RWAManager
- * @implements IRWAManager
- * @description Mirrors ArmadaManagerVaults.getVaultInfoListPerChain but sources data
- *              from the RWA subgraph and returns RwaVaultInfo instances.
+ * Mirrors ArmadaManagerVaults.getVaultInfoListPerChain but sources data from the RWA subgraph and
+ * returns RwaVaultInfo instances.
  *
- *              The deposit/withdraw flow uses the RoundsVault async settlement model: the Input and
- *              Output RoundsVault addresses are resolved from the RWA subgraph (the Fleet's
- *              `roundsVaultPair`) and the on-chain transactions / reads go through the
- *              IRoundsVaultContract wrapper.
+ * The deposit/withdraw flow uses the RoundsVault async settlement model: the Input and Output
+ * RoundsVault addresses are resolved from the RWA subgraph (the Fleet's `roundsVaultPair`) and the
+ * on-chain transactions / reads go through the IRoundsVaultContract wrapper.
  *
- *              The whitelist methods go through ProtocolAccessManagerV2, resolved via the deployment
- *              provider (`protocolAccessManager`), scoping every call to the Fleet address as context.
+ * The whitelist methods go through ProtocolAccessManagerV2, resolved via the deployment provider
+ * (`protocolAccessManager`), scoping every call to the Fleet address as context.
  */
 export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   private readonly _rwaSubgraphManager: IRwaSubgraphManager
@@ -83,8 +80,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _assertSupportedChain
-   * @description Throws unless the RWA module is deployed on `chainId`.
+   * Throws unless the RWA module is deployed on `chainId`.
    */
   private _assertSupportedChain(chainId: ChainId): void {
     this.assertSupportedChain({ chainId, supportedChains: this._supportedChains })
@@ -792,9 +788,8 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   /** PRIVATE HELPERS */
 
   /**
-   * @name _buildVaultDepositTxs
-   * @description Builds the (optional) approval + RoundsVault.deposit transaction pair. The vault's
-   *              `underlyingToken` is the asset being deposited and the RoundsVault is the spender.
+   * Builds the (optional) approval + RoundsVault.deposit transaction pair. The vault's
+   * `underlyingToken` is the asset being deposited and the RoundsVault is the spender.
    */
   private async _buildVaultDepositTxs(params: {
     vault: IResolvedRoundsVault
@@ -829,11 +824,10 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _getProtocolAccessManagerV2Contract
-   * @description Resolves the institution's ProtocolAccessManagerV2 (which holds the per-context
-   *              whitelist) via the deployment provider and returns its contract wrapper. For a v2
-   *              institutional SDK the deployment config's `protocolAccessManager` is the per-context
-   *              PAM-V2; the whitelist methods scope every call to the Fleet address as `context`.
+   * Resolves the institution's ProtocolAccessManagerV2 (which holds the per-context
+   * whitelist) via the deployment provider and returns its contract wrapper. For a v2
+   * institutional SDK the deployment config's `protocolAccessManager` is the per-context
+   * PAM-V2; the whitelist methods scope every call to the Fleet address as `context`.
    */
   private async _getProtocolAccessManagerV2Contract(
     chainId: ChainId,
@@ -850,9 +844,8 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _assertRoundSettled
-   * @description Reads the on-chain round state and throws unless it is `Settled` — exchange-asset
-   *              redemptions (claim shares / claim assets) are only valid for settled rounds.
+   * Reads the on-chain round state and throws unless it is `Settled` — exchange-asset
+   * redemptions (claim shares / claim assets) are only valid for settled rounds.
    */
   private async _assertRoundSettled(
     contract: IRoundsVaultContract,
@@ -867,10 +860,9 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _assertClaimableReceipt
-   * @description Validates a claim against the account's subgraph receipt balances: the amount must be
-   *              positive, the target round must have a receipt held by the account, and the amount must
-   *              not exceed that receipt's balance.
+   * Validates a claim against the account's subgraph receipt balances: the amount must be
+   * positive, the target round must have a receipt held by the account, and the amount must
+   * not exceed that receipt's balance.
    */
   private async _assertClaimableReceipt(params: {
     vault: IResolvedRoundsVault
@@ -905,8 +897,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _getRoundsVaultContract
-   * @description Returns the IRoundsVaultContract wrapper for a resolved RoundsVault.
+   * Returns the IRoundsVaultContract wrapper for a resolved RoundsVault.
    */
   private _getRoundsVaultContract(vault: IResolvedRoundsVault): Promise<IRoundsVaultContract> {
     return this._contractsProvider.getRoundsVaultContract({
@@ -916,8 +907,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _getFleetCommanderContract
-   * @description Returns the IFleetCommanderContract wrapper for a Fleet address on a chain.
+   * Returns the IFleetCommanderContract wrapper for a Fleet address on a chain.
    */
   private _getFleetCommanderContract(
     chainId: ChainId,
@@ -930,9 +920,8 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _resolveRoundsVault
-   * @description Resolves the Input or Output RoundsVault address + token metadata for a Fleet from
-   *              the RWA subgraph (`vault.roundsVaultPair`).
+   * Resolves the Input or Output RoundsVault address + token metadata for a Fleet from
+   * the RWA subgraph (`vault.roundsVaultPair`).
    *
    * @throws Error if the Fleet (or the requested RoundsVault side) is not registered.
    */
@@ -974,10 +963,9 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _getUserPosition
-   * @description Reads the user's Fleet position from the RWA subgraph (via the inherited
-   *              `getUserPosition`). Returns the single position row, or `undefined` when the user
-   *              holds no position in the Fleet.
+   * Reads the user's Fleet position from the RWA subgraph (via the inherited
+   * `getUserPosition`). Returns the single position row, or `undefined` when the user
+   * holds no position in the Fleet.
    */
   private async _getUserPosition(
     chainId: ChainId,
@@ -992,10 +980,9 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _sumReceiptBalances
-   * @description Sums the account's open (non-zero) RoundsVault receipt balances for a resolved vault,
-   *              in the vault's underlying-token base units. Used to count pending deposits that have
-   *              not yet settled into the Fleet position.
+   * Sums the account's open (non-zero) RoundsVault receipt balances for a resolved vault,
+   * in the vault's underlying-token base units. Used to count pending deposits that have
+   * not yet settled into the Fleet position.
    */
   private async _sumReceiptBalances(
     chainId: ChainId,
@@ -1011,18 +998,16 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _formatAmount
-   * @description Formats a token amount for human-readable error messages — rounds to 6 decimal
-   *              places and appends the token symbol (display only, not used in any on-chain math).
+   * Formats a token amount for human-readable error messages — rounds to 6 decimal
+   * places and appends the token symbol (display only, not used in any on-chain math).
    */
   private _formatAmount(value: ITokenAmount): string {
     return `${value.toBigNumber().toFixed(6)} ${value.token.symbol}`
   }
 
   /**
-   * @name _toUsd
-   * @description Values a (Fleet input asset) token amount in USD using the subgraph's
-   *              `inputTokenPriceUSD` (a decimal string; treated as 0 when missing).
+   * Values a (Fleet input asset) token amount in USD using the subgraph's
+   * `inputTokenPriceUSD` (a decimal string; treated as 0 when missing).
    */
   private _toUsd(amount: ITokenAmount, priceUsd: string | null | undefined): IFiatCurrencyAmount {
     return FiatCurrencyAmount.createFrom({
@@ -1035,10 +1020,9 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _sharesToInputAsset
-   * @description Converts a share-denominated base-unit amount into the Fleet input asset via the
-   *              vault `pricePerShare` (input asset per full share). Returns zero when there is
-   *              nothing to convert or `pricePerShare` is unavailable.
+   * Converts a share-denominated base-unit amount into the Fleet input asset via the
+   * vault `pricePerShare` (input asset per full share). Returns zero when there is
+   * nothing to convert or `pricePerShare` is unavailable.
    */
   private _sharesToInputAsset(
     sharesBaseUnit: bigint,
@@ -1060,8 +1044,7 @@ export class RWAManager extends ArmadaManagerShared implements IRWAManager {
   }
 
   /**
-   * @name _buildToken
-   * @description Builds an IToken from an RWA subgraph token row.
+   * Builds an IToken from an RWA subgraph token row.
    */
   private _buildToken(
     chainId: ChainId,

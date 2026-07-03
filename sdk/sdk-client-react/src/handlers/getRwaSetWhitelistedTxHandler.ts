@@ -1,6 +1,7 @@
 import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
+/** @see IRwaManagerClient.getSetWhitelistedTx */
 export const getRwaSetWhitelistedTxHandler =
   (sdk: ISDKInstiManager) =>
   async ({

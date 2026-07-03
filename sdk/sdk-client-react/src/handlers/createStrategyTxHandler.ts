@@ -1,6 +1,7 @@
 import type { ISDKInstiManager, ISDKManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId, IChainlinkFeed } from '@summerfi/sdk-common'
 
+/** @see IDcaManagerClient.createStrategyTx */
 export const createStrategyTxHandler =
   (sdk: ISDKManager | ISDKInstiManager) =>
   async ({

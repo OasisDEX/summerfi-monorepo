@@ -18,6 +18,7 @@ import type {
  * Interface for creating and managing Armada recurring DCA buy orders
  */
 export interface IDCAManager {
+  /** Builds the transaction(s) to create a new DCA strategy (prefixed with an ERC20 approval when the allowance is insufficient). */
   createStrategyTx(params: {
     chainId: ChainId
     userAddress: AddressValue
@@ -41,30 +42,26 @@ export interface IDCAManager {
     [CreateDcaStrategyTransactionInfo] | [ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]
   >
 
-  /**
-   * Builds the transaction that edits an existing DCA strategy.
-   *
-   * The on-chain `editStrategy(strategyId, oldConfig, newConfig)` proves ownership by hashing
-   * `oldConfig` against the stored commitment, so `strategy` MUST be the current on-chain strategy
-   * (as returned by `getStrategy`). `update` carries only the fields to change; the SDK merges it
-   * over `strategy` to build `newConfig`.
-   */
+  /** Builds the transaction to edit an existing DCA strategy: `strategy` is the current on-chain config (the `oldConfig` proving ownership), `update` the fields to change. */
   editStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy
     update: IDcaStrategyUpdate
   }): Promise<[EditDcaStrategyTransactionInfo]>
 
+  /** Builds the transaction to pause an active DCA strategy. */
   pauseStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy
   }): Promise<[PauseDcaStrategyTransactionInfo]>
 
+  /** Builds the transaction to resume a paused DCA strategy. */
   resumeStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy
   }): Promise<[ResumeDcaStrategyTransactionInfo]>
 
+  /** Builds the transaction to permanently cancel a DCA strategy. */
   cancelStrategyTx(params: {
     chainId: ChainId
     strategy: IDcaStrategy

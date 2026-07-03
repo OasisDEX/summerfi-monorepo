@@ -8,6 +8,7 @@ import {
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
+/** @see IRWAManager.getRoundState */
 export const getRoundState = publicProcedure
   .input(
     z.object({

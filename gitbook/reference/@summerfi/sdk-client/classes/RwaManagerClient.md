@@ -70,7 +70,7 @@ IRPCClient.rpcClient
 getCancelRoundDepositTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:55](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L55)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:63](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L63)
 
 #### Parameters
 
@@ -108,6 +108,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:55](https://gi
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getCancelRoundDepositTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getCancelRoundDepositTx`](../interfaces/IRwaManagerClient.md#getcancelrounddeposittx)
@@ -120,7 +124,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:55](https://gi
 getClaimAssetsTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L49)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L56)
 
 #### Parameters
 
@@ -153,6 +157,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:49](https://gi
 #### Returns
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
+
+#### See
+
+IRwaManagerClient.getClaimAssetsTx
 
 #### Implementation of
 
@@ -166,7 +174,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:49](https://gi
 getClaimSharesTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L37)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L42)
 
 #### Parameters
 
@@ -200,6 +208,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:37](https://gi
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getClaimSharesTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getClaimSharesTx`](../interfaces/IRwaManagerClient.md#getclaimsharestx)
@@ -212,7 +224,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:37](https://gi
 getCurrentRound(params): Promise<bigint>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:61](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L61)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:70](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L70)
 
 #### Parameters
 
@@ -234,6 +246,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:61](https://gi
 
 `Promise`\<`bigint`\>
 
+#### See
+
+IRwaManagerClient.getCurrentRound
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getCurrentRound`](../interfaces/IRwaManagerClient.md#getcurrentround)
@@ -246,7 +262,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:61](https://gi
 getDepositTx(params): Promise<TransactionInfo[]>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L31)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L35)
 
 #### Parameters
 
@@ -272,6 +288,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:31](https://gi
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)[]\>
 
+#### See
+
+IRwaManagerClient.getDepositTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getDepositTx`](../interfaces/IRwaManagerClient.md#getdeposittx)
@@ -284,7 +304,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:31](https://gi
 getEmergencyRollbackRoundTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:127](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L127)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:147](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L147)
 
 #### Parameters
 
@@ -310,6 +330,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:127](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getEmergencyRollbackRoundTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getEmergencyRollbackRoundTx`](../interfaces/IRwaManagerClient.md#getemergencyrollbackroundtx)
@@ -322,7 +346,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:127](https://g
 getExchangeRate(params): Promise<IPrice>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:73](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L73)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:84](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L84)
 
 #### Parameters
 
@@ -348,6 +372,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:73](https://gi
 
 `Promise`\<[`IPrice`](../interfaces/IPrice.md)\>
 
+#### See
+
+IRwaManagerClient.getExchangeRate
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getExchangeRate`](../interfaces/IRwaManagerClient.md#getexchangerate)
@@ -360,7 +388,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:73](https://gi
 getGrantRoleTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:145](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L145)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:168](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L168)
 
 #### Parameters
 
@@ -382,6 +410,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:145](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getGrantRoleTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getGrantRoleTx`](../interfaces/IRwaManagerClient.md#getgrantroletx)
@@ -394,7 +426,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:145](https://g
 getNextRoundTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:103](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L103)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:119](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L119)
 
 #### Parameters
 
@@ -416,6 +448,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:103](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getNextRoundTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getNextRoundTx`](../interfaces/IRwaManagerClient.md#getnextroundtx)
@@ -428,7 +464,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:103](https://g
 getReceiptBalances(params): Promise<object[]>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:79](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L79)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:91](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L91)
 
 #### Parameters
 
@@ -454,6 +490,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:79](https://gi
 
 `Promise`\<`object`[]\>
 
+#### See
+
+IRwaManagerClient.getReceiptBalances
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getReceiptBalances`](../interfaces/IRwaManagerClient.md#getreceiptbalances)
@@ -466,7 +506,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:79](https://gi
 getRetryRoundTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:121](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L121)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:140](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L140)
 
 #### Parameters
 
@@ -492,6 +532,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:121](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getRetryRoundTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getRetryRoundTx`](../interfaces/IRwaManagerClient.md#getretryroundtx)
@@ -504,7 +548,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:121](https://g
 getRevokeRoleTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:151](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L151)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:175](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L175)
 
 #### Parameters
 
@@ -526,6 +570,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:151](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getRevokeRoleTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getRevokeRoleTx`](../interfaces/IRwaManagerClient.md#getrevokeroletx)
@@ -538,7 +586,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:151](https://g
 getRoundState(params): Promise<RoundState>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:67](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L67)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:77](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L77)
 
 #### Parameters
 
@@ -564,6 +612,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:67](https://gi
 
 `Promise`\<[`RoundState`](../enumerations/RoundState.md)\>
 
+#### See
+
+IRwaManagerClient.getRoundState
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getRoundState`](../interfaces/IRwaManagerClient.md#getroundstate)
@@ -576,7 +628,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:67](https://gi
 getSetFleetTransferabilityTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:133](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L133)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:154](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L154)
 
 #### Parameters
 
@@ -594,6 +646,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:133](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getSetFleetTransferabilityTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getSetFleetTransferabilityTx`](../interfaces/IRwaManagerClient.md#getsetfleettransferabilitytx)
@@ -606,7 +662,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:133](https://g
 getSetMinimumPositionSizeTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:97](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L97)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:112](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L112)
 
 #### Parameters
 
@@ -632,6 +688,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:97](https://gi
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getSetMinimumPositionSizeTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getSetMinimumPositionSizeTx`](../interfaces/IRwaManagerClient.md#getsetminimumpositionsizetx)
@@ -644,7 +704,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:97](https://gi
 getSetRoundSettledBatchTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:115](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L115)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:133](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L133)
 
 #### Parameters
 
@@ -670,6 +730,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:115](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getSetRoundSettledBatchTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getSetRoundSettledBatchTx`](../interfaces/IRwaManagerClient.md#getsetroundsettledbatchtx)
@@ -682,7 +746,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:115](https://g
 getSetRoundSettledTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:109](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L109)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:126](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L126)
 
 #### Parameters
 
@@ -708,6 +772,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:109](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getSetRoundSettledTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getSetRoundSettledTx`](../interfaces/IRwaManagerClient.md#getsetroundsettledtx)
@@ -720,7 +788,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:109](https://g
 getSetWhitelistedBatchTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:163](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L163)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:189](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L189)
 
 #### Parameters
 
@@ -746,6 +814,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:163](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getSetWhitelistedBatchTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getSetWhitelistedBatchTx`](../interfaces/IRwaManagerClient.md#getsetwhitelistedbatchtx)
@@ -758,7 +830,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:163](https://g
 getSetWhitelistedTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:157](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L157)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:182](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L182)
 
 #### Parameters
 
@@ -784,6 +856,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:157](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getSetWhitelistedTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getSetWhitelistedTx`](../interfaces/IRwaManagerClient.md#getsetwhitelistedtx)
@@ -796,7 +872,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:157](https://g
 getSetWhitelistOpenTx(params): Promise<TransactionInfo>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:169](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L169)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:196](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L196)
 
 #### Parameters
 
@@ -818,6 +894,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:169](https://g
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)\>
 
+#### See
+
+IRwaManagerClient.getSetWhitelistOpenTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getSetWhitelistOpenTx`](../interfaces/IRwaManagerClient.md#getsetwhitelistopentx)
@@ -830,7 +910,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:169](https://g
 getUserVaultExposure(params): Promise<IRwaUserVaultExposure>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:85](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L85)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:98](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L98)
 
 #### Parameters
 
@@ -852,6 +932,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:85](https://gi
 
 `Promise`\<[`IRwaUserVaultExposure`](../interfaces/IRwaUserVaultExposure.md)\>
 
+#### See
+
+IRwaManagerClient.getUserVaultExposure
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getUserVaultExposure`](../interfaces/IRwaManagerClient.md#getuservaultexposure)
@@ -866,9 +950,7 @@ getVaultInfoListPerChain(params): Promise<{
 }>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:13](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L13)
-
-Retrieves all RWA vaults for a given chain and institution clientId
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L14)
 
 #### Parameters
 
@@ -888,6 +970,10 @@ Retrieves all RWA vaults for a given chain and institution clientId
   `list`: [`IRwaVaultInfo`](../interfaces/IRwaVaultInfo.md)[];
 \}\>
 
+#### See
+
+IRwaManagerClient.getVaultInfoListPerChain
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getVaultInfoListPerChain`](../interfaces/IRwaManagerClient.md#getvaultinfolistperchain)
@@ -900,7 +986,7 @@ Retrieves all RWA vaults for a given chain and institution clientId
 getVaultMarketValue(params): Promise<IRwaVaultMarketValue>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:91](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L91)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:105](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L105)
 
 #### Parameters
 
@@ -918,6 +1004,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:91](https://gi
 
 `Promise`\<[`IRwaVaultMarketValue`](../interfaces/IRwaVaultMarketValue.md)\>
 
+#### See
+
+IRwaManagerClient.getVaultMarketValue
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getVaultMarketValue`](../interfaces/IRwaManagerClient.md#getvaultmarketvalue)
@@ -930,10 +1020,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:91](https://gi
 getVaultRaw(params): Promise<GetVaultQuery>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:25](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L25)
-
-Retrieves the raw RWA subgraph GetVault response for a single vault.
-RWA equivalent of armada.users.getVaultRaw.
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L28)
 
 #### Parameters
 
@@ -947,6 +1034,10 @@ RWA equivalent of armada.users.getVaultRaw.
 
 `Promise`\<`GetVaultQuery`\>
 
+#### See
+
+IRwaManagerClient.getVaultRaw
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getVaultRaw`](../interfaces/IRwaManagerClient.md#getvaultraw)
@@ -959,10 +1050,7 @@ RWA equivalent of armada.users.getVaultRaw.
 getVaultsRaw(params): Promise<GetVaultsQuery>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:19](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L19)
-
-Retrieves the raw RWA subgraph GetVaults response for a given chain
-and institution clientId. RWA equivalent of armada.users.getVaultsRaw.
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L21)
 
 #### Parameters
 
@@ -980,6 +1068,10 @@ and institution clientId. RWA equivalent of armada.users.getVaultsRaw.
 
 `Promise`\<`GetVaultsQuery`\>
 
+#### See
+
+IRwaManagerClient.getVaultsRaw
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getVaultsRaw`](../interfaces/IRwaManagerClient.md#getvaultsraw)
@@ -992,7 +1084,7 @@ and institution clientId. RWA equivalent of armada.users.getVaultsRaw.
 getWithdrawTx(params): Promise<TransactionInfo[]>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:43](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L43)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L49)
 
 #### Parameters
 
@@ -1018,6 +1110,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:43](https://gi
 
 `Promise`\<[`TransactionInfo`](../interfaces/TransactionInfo.md)[]\>
 
+#### See
+
+IRwaManagerClient.getWithdrawTx
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`getWithdrawTx`](../interfaces/IRwaManagerClient.md#getwithdrawtx)
@@ -1030,7 +1126,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:43](https://gi
 isFleetTransfersEnabled(params): Promise<boolean>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:139](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L139)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:161](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L161)
 
 #### Parameters
 
@@ -1048,6 +1144,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:139](https://g
 
 `Promise`\<`boolean`\>
 
+#### See
+
+IRwaManagerClient.isFleetTransfersEnabled
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`isFleetTransfersEnabled`](../interfaces/IRwaManagerClient.md#isfleettransfersenabled)
@@ -1060,7 +1160,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:139](https://g
 isWhitelisted(params): Promise<boolean>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:175](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L175)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:203](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L203)
 
 #### Parameters
 
@@ -1082,6 +1182,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:175](https://g
 
 `Promise`\<`boolean`\>
 
+#### See
+
+IRwaManagerClient.isWhitelisted
+
 #### Implementation of
 
 [`IRwaManagerClient`](../interfaces/IRwaManagerClient.md).[`isWhitelisted`](../interfaces/IRwaManagerClient.md#iswhitelisted)
@@ -1094,7 +1198,7 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:175](https://g
 isWhitelistOpen(params): Promise<boolean>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:181](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L181)
+Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:210](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/RwaManagerClient.ts#L210)
 
 #### Parameters
 
@@ -1111,6 +1215,10 @@ Defined in: [src/implementation/ArmadaManager/RwaManagerClient.ts:181](https://g
 #### Returns
 
 `Promise`\<`boolean`\>
+
+#### See
+
+IRwaManagerClient.isWhitelistOpen
 
 #### Implementation of
 

@@ -326,6 +326,7 @@ reference docs live in `gitbook/reference`.
 - [IArmadaVaultInfoData](type-aliases/IArmadaVaultInfoData.md)
 - [IChainInfoData](type-aliases/IChainInfoData.md)
 - [ICollateralInfoData](type-aliases/ICollateralInfoData.md)
+- [IDcaStrategyUpdate](type-aliases/IDcaStrategyUpdate.md)
 - [IDebtInfoData](type-aliases/IDebtInfoData.md)
 - [IExternalLendingPositionData](type-aliases/IExternalLendingPositionData.md)
 - [IExternalLendingPositionIdData](type-aliases/IExternalLendingPositionIdData.md)

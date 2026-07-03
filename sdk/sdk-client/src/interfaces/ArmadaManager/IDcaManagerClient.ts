@@ -19,11 +19,20 @@ import type {
  */
 export interface IDcaManagerClient {
   /**
-   * Builds the transaction that creates a new DCA (dollar-cost-averaging) strategy.
+   * Builds the transaction(s) that create a new DCA (dollar-cost-averaging) strategy.
+   *
+   * The strategy creation pulls the initial `assetAmount` from the user, so the result is prefixed
+   * with an ERC20 approval transaction when the current allowance is insufficient; otherwise it is a
+   * single-element tuple. Send the transactions in order, mining the approval before the create.
    *
    * @param params - Strategy configuration (chain, user, source/target vaults and assets, price
    *   feeds, share amount, slippage, interval, trade count, optional price guards and deadline).
-   * @returns A promise resolving to the create-strategy transaction info.
+   * @returns A promise resolving to `[createTx]`, or `[approveTx, createTx]` when an approval is needed.
+   * @throws If the DCA module is not deployed on `params.chainId`.
+   * @example
+   * ```ts
+   * const txs = await dcaManager.createStrategyTx({ chainId: ChainIds.Base, userAddress, ...config })
+   * ```
    */
   createStrategyTx(params: {
     chainId: ChainId
@@ -78,8 +87,13 @@ export interface IDcaManagerClient {
    *
    * @param params - Parameters object.
    * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategy - The strategy to pause.
+   * @param params.strategy - The current on-chain strategy to pause.
    * @returns A promise resolving to the pause-strategy transaction info.
+   * @throws If the DCA module is not deployed on `params.chainId`, or the strategy is not active.
+   * @example
+   * ```ts
+   * const [pauseTx] = await dcaManager.pauseStrategyTx({ chainId: ChainIds.Base, strategy })
+   * ```
    */
   pauseStrategyTx(params: {
     chainId: ChainId
@@ -91,8 +105,13 @@ export interface IDcaManagerClient {
    *
    * @param params - Parameters object.
    * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategy - The strategy to resume.
+   * @param params.strategy - The current on-chain strategy to resume.
    * @returns A promise resolving to the resume-strategy transaction info.
+   * @throws If the DCA module is not deployed on `params.chainId`, or the strategy is not paused.
+   * @example
+   * ```ts
+   * const [resumeTx] = await dcaManager.resumeStrategyTx({ chainId: ChainIds.Base, strategy })
+   * ```
    */
   resumeStrategyTx(params: {
     chainId: ChainId
@@ -104,8 +123,14 @@ export interface IDcaManagerClient {
    *
    * @param params - Parameters object.
    * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategy - The strategy to cancel.
+   * @param params.strategy - The current on-chain strategy to cancel.
    * @returns A promise resolving to the cancel-strategy transaction info.
+   * @throws If the DCA module is not deployed on `params.chainId`, or the strategy is not active or
+   *   paused.
+   * @example
+   * ```ts
+   * const [cancelTx] = await dcaManager.cancelStrategyTx({ chainId: ChainIds.Base, strategy })
+   * ```
    */
   cancelStrategyTx(params: {
     chainId: ChainId

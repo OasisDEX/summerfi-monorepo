@@ -8,6 +8,7 @@ import {
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
+/** @see IRWAManager.getExchangeRate */
 export const getExchangeRate = publicProcedure
   .input(
     z.object({

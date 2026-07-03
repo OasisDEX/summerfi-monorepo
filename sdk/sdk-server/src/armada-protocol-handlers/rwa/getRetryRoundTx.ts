@@ -8,6 +8,7 @@ import {
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
+/** @see IRWAManager.getRetryRoundTx */
 export const getRetryRoundTx = publicProcedure
   .input(
     z.object({

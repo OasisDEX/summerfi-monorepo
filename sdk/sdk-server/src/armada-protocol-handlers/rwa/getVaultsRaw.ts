@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 import { ChainInfo, isChainInfo } from '@summerfi/sdk-common'
 
+/** @see IRWAManager.getVaultsRaw */
 export const getVaultsRaw = publicProcedure
   .input(
     z.object({

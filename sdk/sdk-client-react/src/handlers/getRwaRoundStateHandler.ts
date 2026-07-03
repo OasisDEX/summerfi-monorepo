@@ -1,6 +1,7 @@
 import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId, RoundsVaultType } from '@summerfi/sdk-common'
 
+/** @see IRwaManagerClient.getRoundState */
 export const getRwaRoundStateHandler =
   (sdk: ISDKInstiManager) =>
   async ({

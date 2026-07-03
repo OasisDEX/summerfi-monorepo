@@ -83,6 +83,48 @@ Zero-argument methods and methods with plain (non-destructured) parameters use p
 as normal. Don't add `@param` docs to `_params`-prefixed stub parameters (methods not yet
 implemented) — TypeDoc still checks the name against the (unused) parameter and warns.
 
+### Which layer's TSDoc actually renders — document the client layer
+
+Only the three entry-point packages are converted, so a method's comment reaches GitBook **only**
+through what those packages export. This decides where to spend doc effort:
+
+- **Service layer is IDE-only.** `armada-protocol-service` classes (e.g. `DCAManager`, `RWAManager`)
+  and the `armada-protocol-common` service interfaces they implement (e.g. `IDCAManager`,
+  `IRWAManager`) are **not** re-exported through `sdk-common`/`sdk-client`, so their comments are
+  hover-help only — never a reference page. Keep the service interface **lean** (a one-line summary
+  per method).
+- **The GitBook-facing contract is the client layer.** For a manager that's its `sdk-client` surface,
+  and **both** the `I<X>Client` interface **and** the concrete `<X>Client` class are exported from
+  `sdk-client/src/index.ts`, so TypeDoc emits a page for each. Put the **canonical rich prose on the
+  interface** — summary, dotted `@param`, `@returns`, and `@throws`/`@example` where useful.
+- **Handlers are IDE-only.** `sdk-server` tRPC procedures and `sdk-client-react` handlers are not
+  exported from their package index, so they never render.
+- **`sdk-common` domain types do render** — give each an interface-level summary plus inline per-field
+  `/** */`.
+
+### The DRY rule — `@see`, not duplicated prose
+
+Write the canonical prose **once, on the interface**; the implementing class (and handlers) carry only
+a `/** @see I<X>Client.method */` one-liner (or `@see I<X>Manager.method` for the service/handler
+layers). The codebase uses this in ~800 `@see` sites; `@inheritDoc` is **not** used.
+
+How the impl class page renders — params always come from the type signature; the difference is the
+summary/tags:
+
+- **`@see` one-liner (the convention)** → the impl page shows the **signature + params only**; the
+  interface's summary / `@throws` / `@example` are not copied onto it (the `@see` counts as the
+  member's own, summary-less comment). This is the accepted norm — e.g. `OracleManagerClient`,
+  `DcaManagerClient`, `RwaManagerClient` render params-only pages, with the full prose on the
+  interface page beside them.
+- **No comment at all** → TypeDoc fully inherits the interface comment (summary + params + tags) onto
+  the impl page.
+
+Prefer the `@see` one-liner (consistency + a go-to-interface breadcrumb). Either way **no prose is
+duplicated** — the interface is the single source of truth. Note the service interface and the client
+interface are **parallel types** (no `implements` between them), so prose can't auto-flow between
+them: keep the service interface lean and invest the full prose in the client interface. DCA
+(`sdk.dca.*`) and RWA (`sdk.rwa.*`) are the reference implementations of this pattern.
+
 ### Only exported symbols get a page
 
 TypeDoc only documents what's reachable from a package's public entry (`src/index.ts`), even for

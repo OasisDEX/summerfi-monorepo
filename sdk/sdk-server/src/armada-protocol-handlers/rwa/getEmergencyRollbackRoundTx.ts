@@ -8,6 +8,7 @@ import {
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
+/** @see IRWAManager.getEmergencyRollbackRoundTx */
 export const getEmergencyRollbackRoundTx = publicProcedure
   .input(
     z.object({

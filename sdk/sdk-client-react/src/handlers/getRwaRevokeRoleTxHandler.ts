@@ -1,6 +1,7 @@
 import type { ISDKInstiManager } from '@summerfi/sdk-client'
 import type { AddressValue, ChainId, RwaRole } from '@summerfi/sdk-common'
 
+/** @see IRwaManagerClient.getRevokeRoleTx */
 export const getRwaRevokeRoleTxHandler =
   (sdk: ISDKInstiManager) =>
   async ({

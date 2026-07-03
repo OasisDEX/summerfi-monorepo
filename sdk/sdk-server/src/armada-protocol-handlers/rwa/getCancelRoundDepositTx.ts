@@ -8,6 +8,7 @@ import {
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
+/** @see IRWAManager.getCancelRoundDepositTx */
 export const getCancelRoundDepositTx = publicProcedure
   .input(
     z.object({

@@ -2,6 +2,7 @@ import { isAddressValue, isChainId, type AddressValue, type ChainId } from '@sum
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
+/** @see IRWAManager.getUserVaultExposure */
 export const getUserVaultExposure = publicProcedure
   .input(
     z.object({

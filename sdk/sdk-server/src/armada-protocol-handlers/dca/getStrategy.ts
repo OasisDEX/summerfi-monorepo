@@ -2,6 +2,7 @@ import { isChainId, type ChainId } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
+/** @see IDCAManager.getStrategy */
 export const getStrategy = publicProcedure
   .input(
     z.object({

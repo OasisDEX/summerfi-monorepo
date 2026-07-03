@@ -31,8 +31,7 @@ import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { DCAStrategyManagerAbi } from './abi/DCAStrategyManagerAbi'
 
 /**
- * @name DCAManager
- * @description Handles creation and persistence of recurring DCA buy orders.
+ * Handles creation and persistence of recurring DCA buy orders.
  */
 export class DCAManager extends ArmadaManagerShared implements IDCAManager {
   private _deploymentProvider: IDeploymentProvider
@@ -62,47 +61,12 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
       .map(getChainInfoByChainId)
   }
 
-  /**
-   * @name _assertSupportedChain
-   * @description Throws unless the DCA module is deployed on `chainId`.
-   */
+  /** Throws unless the DCA module is deployed on `chainId`. */
   private _assertSupportedChain(chainId: ChainId): void {
     this.assertSupportedChain({ chainId, supportedChains: this._supportedChains })
   }
 
-  /**
-   * Builds the transaction(s) that create a new DCA strategy via `depositAndCreate`.
-   *
-   * `depositAndCreate` pulls `assetAmount` of `inAsset` from the user, so the result is prefixed
-   * with an ERC20 approval transaction when the strategy manager's current allowance is
-   * insufficient; otherwise it is a single-element tuple. Send the transactions in order, mining the
-   * approval before the create.
-   *
-   * @param params - Strategy configuration (chain, user, source/target vaults and assets, price
-   *   feeds, per-trade share amount, initial deposit, slippage, interval, trade count, optional price
-   *   guards and deadline).
-   * @returns Either `[createTx]` or `[approveTx, createTx]`.
-   * @throws If the DCA module is not deployed on `params.chainId`.
-   * @example
-   * ```ts
-   * const txs = await dcaManager.createStrategyTx({
-   *   chainId: ChainIds.Base,
-   *   userAddress,
-   *   fromVault,
-   *   toVault,
-   *   inAsset,
-   *   outAsset,
-   *   inAssetFeed,
-   *   outAssetFeed,
-   *   amountShares: '1000000',
-   *   assetAmount: '1000000',
-   *   slippagePercentage: '0.5',
-   *   intervalSeconds: 86_400,
-   *   maxTrades: 10,
-   *   deadlineUnixTimestamp,
-   * })
-   * ```
-   */
+  /** @see IDCAManager.createStrategyTx */
   async createStrategyTx(
     params: Parameters<IDCAManager['createStrategyTx']>[0],
   ): ReturnType<IDCAManager['createStrategyTx']> {
@@ -208,26 +172,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     return (expected * (bps - params.slippageBps)) / bps
   }
 
-  /**
-   * Builds the transaction that edits an existing DCA strategy.
-   *
-   * @param params - Parameters object.
-   * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategy - The current on-chain strategy (as returned by `getStrategy`); used
-   *   verbatim as the `oldConfig` whose hash must match the stored commitment.
-   * @param params.update - The fields to change, merged over `strategy` to form the `newConfig`.
-   * @returns The edit-strategy transaction (single-element tuple).
-   * @throws If the DCA module is not deployed on `params.chainId`, or the strategy is not active or
-   *   paused.
-   * @example
-   * ```ts
-   * const [editTx] = await dcaManager.editStrategyTx({
-   *   chainId: ChainIds.Base,
-   *   strategy: existingStrategy,
-   *   update: { slippagePercentage: 1 },
-   * })
-   * ```
-   */
+  /** @see IDCAManager.editStrategyTx */
   async editStrategyTx(
     params: Parameters<IDCAManager['editStrategyTx']>[0],
   ): ReturnType<IDCAManager['editStrategyTx']> {
@@ -259,22 +204,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     ] as [EditDcaStrategyTransactionInfo]
   }
 
-  /**
-   * Builds the transaction that pauses an active DCA strategy.
-   *
-   * @param params - Parameters object.
-   * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategy - The current on-chain strategy to pause.
-   * @returns The pause-strategy transaction (single-element tuple).
-   * @throws If the DCA module is not deployed on `params.chainId`, or the strategy is not active.
-   * @example
-   * ```ts
-   * const [pauseTx] = await dcaManager.pauseStrategyTx({
-   *   chainId: ChainIds.Base,
-   *   strategy: existingStrategy,
-   * })
-   * ```
-   */
+  /** @see IDCAManager.pauseStrategyTx */
   async pauseStrategyTx(
     params: Parameters<IDCAManager['pauseStrategyTx']>[0],
   ): ReturnType<IDCAManager['pauseStrategyTx']> {
@@ -300,22 +230,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     ] as [PauseDcaStrategyTransactionInfo]
   }
 
-  /**
-   * Builds the transaction that resumes a paused DCA strategy.
-   *
-   * @param params - Parameters object.
-   * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategy - The current on-chain strategy to resume.
-   * @returns The resume-strategy transaction (single-element tuple).
-   * @throws If the DCA module is not deployed on `params.chainId`, or the strategy is not paused.
-   * @example
-   * ```ts
-   * const [resumeTx] = await dcaManager.resumeStrategyTx({
-   *   chainId: ChainIds.Base,
-   *   strategy: existingStrategy,
-   * })
-   * ```
-   */
+  /** @see IDCAManager.resumeStrategyTx */
   async resumeStrategyTx(
     params: Parameters<IDCAManager['resumeStrategyTx']>[0],
   ): ReturnType<IDCAManager['resumeStrategyTx']> {
@@ -347,23 +262,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     ] as [ResumeDcaStrategyTransactionInfo]
   }
 
-  /**
-   * Builds the transaction that permanently cancels a DCA strategy.
-   *
-   * @param params - Parameters object.
-   * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategy - The current on-chain strategy to cancel.
-   * @returns The cancel-strategy transaction (single-element tuple).
-   * @throws If the DCA module is not deployed on `params.chainId`, or the strategy is not active or
-   *   paused.
-   * @example
-   * ```ts
-   * const [cancelTx] = await dcaManager.cancelStrategyTx({
-   *   chainId: ChainIds.Base,
-   *   strategy: existingStrategy,
-   * })
-   * ```
-   */
+  /** @see IDCAManager.cancelStrategyTx */
   async cancelStrategyTx(
     params: Parameters<IDCAManager['cancelStrategyTx']>[0],
   ): ReturnType<IDCAManager['cancelStrategyTx']> {
@@ -390,20 +289,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     ] as [CancelDcaStrategyTransactionInfo]
   }
 
-  /**
-   * Lists DCA strategies on a chain from the subgraph, optionally filtered by owner and status.
-   *
-   * @param params - Parameters object.
-   * @param params.chainId - The chain to query.
-   * @param params.userAddress - Optional owner address to filter by.
-   * @param params.status - Optional strategy status to filter by.
-   * @returns The matching strategies (empty array if none).
-   * @throws If the DCA module is not deployed on `params.chainId`.
-   * @example
-   * ```ts
-   * const strategies = await dcaManager.getStrategies({ chainId: ChainIds.Base })
-   * ```
-   */
+  /** @see IDCAManager.getStrategies */
   async getStrategies(
     params: Parameters<IDCAManager['getStrategies']>[0],
   ): ReturnType<IDCAManager['getStrategies']> {
@@ -426,19 +312,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     return strategies
   }
 
-  /**
-   * Fetches a single DCA strategy by its on-chain id from the subgraph.
-   *
-   * @param params - Parameters object.
-   * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategyId - The on-chain id of the strategy to fetch.
-   * @returns The strategy, or `undefined` if not found.
-   * @throws If the DCA module is not deployed on `params.chainId`.
-   * @example
-   * ```ts
-   * const strategy = await dcaManager.getStrategy({ chainId: ChainIds.Base, strategyId: '3' })
-   * ```
-   */
+  /** @see IDCAManager.getStrategy */
   async getStrategy(
     params: Parameters<IDCAManager['getStrategy']>[0],
   ): ReturnType<IDCAManager['getStrategy']> {
@@ -448,19 +322,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     return strategy
   }
 
-  /**
-   * Lists the executions (individual trades) of a DCA strategy from the subgraph.
-   *
-   * @param params - Parameters object.
-   * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategyId - The on-chain id of the strategy whose executions to list.
-   * @returns The strategy's executions (empty array if none).
-   * @throws If the DCA module is not deployed on `params.chainId`.
-   * @example
-   * ```ts
-   * const executions = await dcaManager.getExecutions({ chainId: ChainIds.Base, strategyId: '3' })
-   * ```
-   */
+  /** @see IDCAManager.getExecutions */
   async getExecutions(
     params: Parameters<IDCAManager['getExecutions']>[0],
   ): ReturnType<IDCAManager['getExecutions']> {
@@ -472,24 +334,7 @@ export class DCAManager extends ArmadaManagerShared implements IDCAManager {
     return executions.map((e) => this._mapSubgraphExecutionToExecution(e))
   }
 
-  /**
-   * Fetches a single execution of a DCA strategy by its id from the subgraph.
-   *
-   * @param params - Parameters object.
-   * @param params.chainId - The chain the strategy lives on.
-   * @param params.strategyId - The on-chain id of the strategy the execution belongs to.
-   * @param params.executionId - The id of the execution to fetch.
-   * @returns The execution, or `undefined` if not found.
-   * @throws If the DCA module is not deployed on `params.chainId`.
-   * @example
-   * ```ts
-   * const execution = await dcaManager.getExecution({
-   *   chainId: ChainIds.Base,
-   *   strategyId: '3',
-   *   executionId,
-   * })
-   * ```
-   */
+  /** @see IDCAManager.getExecution */
   async getExecution(
     params: Parameters<IDCAManager['getExecution']>[0],
   ): ReturnType<IDCAManager['getExecution']> {

@@ -8,6 +8,7 @@ import {
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
+/** @see IDCAManager.getStrategies */
 export const getStrategies = publicProcedure
   .input(
     z.object({
