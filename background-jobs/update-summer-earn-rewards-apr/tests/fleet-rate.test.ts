@@ -104,6 +104,41 @@ describe('computeFleetArksTotalRates', () => {
     expect(onMissingBaseRate).toHaveBeenCalledWith('missing')
   })
 
+  it('drops a product whose subgraph rate is non-numeric and has no offchain fallback', () => {
+    const onMissingBaseRate = jest.fn()
+    const result = computeFleetArksTotalRates({
+      products: [product('p1', 'n/a')],
+      rewardRatesByProductId: new Map(),
+      offchainRatesByProductId: new Map(),
+      onMissingBaseRate,
+    })
+
+    // +'n/a' is NaN; treated as missing rather than poisoning the fleet rate.
+    expect(result).toEqual([])
+    expect(onMissingBaseRate).toHaveBeenCalledWith('p1')
+  })
+
+  it('falls back to the offchain rate when the subgraph rate is non-numeric', () => {
+    const result = computeFleetArksTotalRates({
+      products: [product('p1', 'n/a')],
+      rewardRatesByProductId: new Map(),
+      offchainRatesByProductId: new Map([['p1', 0.042]]),
+    })
+
+    expect(result[0].baseRate).toBe(0.042)
+    expect(result[0].totalRate).toBe(0.042)
+  })
+
+  it('never emits a non-finite totalRate even with a NaN reward rate present', () => {
+    const result = computeFleetArksTotalRates({
+      products: [product('p1', 0.05)],
+      rewardRatesByProductId: new Map(),
+      offchainRatesByProductId: new Map(),
+    })
+
+    expect(Number.isFinite(result[0].totalRate)).toBe(true)
+  })
+
   it('keeps a product whose base and reward rates are both zero (totalRate 0)', () => {
     // `rewardRate + baseRate || baseRate` collapses to baseRate when the sum is
     // falsy, so a zero subgraph rate with an offchain fallback of 0 still yields

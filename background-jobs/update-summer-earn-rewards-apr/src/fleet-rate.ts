@@ -39,12 +39,15 @@ export function computeFleetArksTotalRates(params: {
     // Offchain samples exist only for protocols without a usable on-chain
     // signal, so they take over whenever the subgraph has no (or a zero) rate.
     const baseRate = subgraphRate ? subgraphRate : (offchainRate ?? subgraphRate)
-    if (baseRate === undefined) {
+    // Drop products with no usable base rate. A non-finite rate (undefined, or a
+    // non-numeric value coerced to NaN by `+`/`Number`) is treated as missing so
+    // one bad ark cannot poison the whole fleet's weighted rate with NaN.
+    if (baseRate === undefined || !Number.isFinite(baseRate)) {
       onMissingBaseRate?.(product.id)
       return []
     }
     const rewardRate = rewardRatesByProductId.get(product.id) ?? 0
-    const totalRate = rewardRate + baseRate || baseRate
+    const totalRate = rewardRate + baseRate
     return [{ productId: product.id, baseRate, offchainRate, rewardRate, totalRate }]
   })
 }
