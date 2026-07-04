@@ -1,6 +1,6 @@
 # Interface: IDcaManagerClient
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:20](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L20)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:22](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L22)
 
 Client interface for DCA order management
 
@@ -12,7 +12,7 @@ Client interface for DCA order management
 cancelStrategyTx(params): Promise<[CancelDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:135](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L135)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:213](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L213)
 
 Builds the transaction that permanently cancels a DCA strategy.
 
@@ -57,36 +57,31 @@ const [cancelTx] = await dcaManager.cancelStrategyTx({ chainId: ChainIds.Base, s
 
 ```ts
 createStrategyTx(params): Promise<
-  | [CreateDcaStrategyTransactionInfo]
-| [ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]>;
+  | [Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+| [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:37](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L37)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:95](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L95)
 
-Builds the transaction(s) that create a new DCA (dollar-cost-averaging) strategy.
+Builds the transactions that create a new DCA strategy WITHOUT an initial deposit
+(`createStrategy`). The user is expected to already hold the source-vault shares the keeper will
+pull.
 
-The strategy creation pulls the initial `assetAmount` from the user, so the result is prefixed
-with an ERC20 approval transaction when the current allowance is insufficient; otherwise it is a
-single-element tuple. Send the transactions in order, mining the approval before the create.
+Ordered: `[permit2 authorization?, permit2 sub-allowance, create]` — no inAsset approval, since
+nothing is deposited. Send the transactions in array order — the `CreateStrategy` transaction is
+always last. Same params as [depositAndCreateStrategyTx](#depositandcreatestrategytx) minus `assetAmount`.
 
 #### Parameters
 
 ##### params
 
-Strategy configuration (chain, user, source/target vaults and assets, price
-  feeds, share amount, slippage, interval, trade count, optional price guards and deadline).
+Strategy configuration (no deposit).
 
 ###### amountShares
 
 `string`
 
-Per-trade amount (source asset base units).
-
-###### assetAmount
-
-`string`
-
-Initial principal deposited at creation (source asset base units). See plan Open Question 2.
+Per-trade amount (source-vault share base units).
 
 ###### chainId
 
@@ -147,10 +142,10 @@ Initial principal deposited at creation (source asset base units). See plan Open
 #### Returns
 
 `Promise`\<
-  \| \[[`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]
-  \| \[[`ApproveTransactionInfo`](../type-aliases/ApproveTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
 
-A promise resolving to `[createTx]`, or `[approveTx, createTx]` when an approval is needed.
+A promise resolving to the ordered array of transactions to send.
 
 #### Throws
 
@@ -164,13 +159,134 @@ const txs = await dcaManager.createStrategyTx({ chainId: ChainIds.Base, userAddr
 
 ***
 
+### depositAndCreateStrategyTx()
+
+```ts
+depositAndCreateStrategyTx(params): Promise<
+  | [Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+  | [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+  | [Permit2SubAllowanceTransactionInfo, ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]
+| [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]>;
+```
+
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:41](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L41)
+
+Builds the transactions that create a new DCA strategy AND make the initial deposit
+(`depositAndCreate`).
+
+Ordered: `[permit2 authorization?, permit2 sub-allowance, inAsset approval?, create]`. The
+Permit2 steps set up the keeper's recurring pull of source-vault shares (authorization is
+included only when the ERC20 allowance to Permit2 is insufficient); the inAsset approval is
+included only when the allowance to the manager is insufficient. Send the transactions in array
+order — the `CreateStrategy` transaction is always last.
+
+#### Parameters
+
+##### params
+
+Strategy configuration plus the `assetAmount` to deposit at creation.
+
+###### amountShares
+
+`string`
+
+Per-trade amount (source asset base units).
+
+###### assetAmount
+
+`string`
+
+Initial principal deposited at creation (in-asset base units). Must be non-zero.
+
+###### chainId
+
+[`ChainId`](../type-aliases/ChainId.md)
+
+###### deadlineUnixTimestamp
+
+`number`
+
+###### fromVault
+
+`` `0x${string}` ``
+
+###### inAsset
+
+`` `0x${string}` ``
+
+###### inAssetFeed
+
+[`IChainlinkFeed`](IChainlinkFeed.md)
+
+###### intervalSeconds
+
+`number`
+
+###### maxTrades
+
+`number`
+
+###### neverBuyAbove?
+
+`string`
+
+###### neverSellBelow?
+
+`string`
+
+###### outAsset
+
+`` `0x${string}` ``
+
+###### outAssetFeed
+
+[`IChainlinkFeed`](IChainlinkFeed.md)
+
+###### slippagePercentage
+
+`string`
+
+###### toVault
+
+`` `0x${string}` ``
+
+###### userAddress
+
+`` `0x${string}` ``
+
+#### Returns
+
+`Promise`\<
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`ApproveTransactionInfo`](../type-aliases/ApproveTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`ApproveTransactionInfo`](../type-aliases/ApproveTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
+
+A promise resolving to the ordered array of transactions to send.
+
+#### Throws
+
+If the DCA module is not deployed on `params.chainId`.
+
+#### Example
+
+```ts
+const txs = await dcaManager.depositAndCreateStrategyTx({ chainId: ChainIds.Base, userAddress, ...config })
+```
+
+***
+
 ### editStrategyTx()
 
 ```ts
-editStrategyTx(params): Promise<[EditDcaStrategyTransactionInfo]>;
+editStrategyTx(params): Promise<
+  | [EditDcaStrategyTransactionInfo]
+  | [Permit2SubAllowanceTransactionInfo, EditDcaStrategyTransactionInfo]
+  | [Permit2AuthorizationTransactionInfo, EditDcaStrategyTransactionInfo]
+| [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, EditDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:79](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L79)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:146](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L146)
 
 Builds the transaction that updates the parameters of an existing DCA strategy.
 
@@ -201,9 +317,17 @@ The fields to change, merged over `strategy` to form the `newConfig`.
 
 #### Returns
 
-`Promise`\<\[[`EditDcaStrategyTransactionInfo`](../type-aliases/EditDcaStrategyTransactionInfo.md)\]\>
+`Promise`\<
+  \| \[[`EditDcaStrategyTransactionInfo`](../type-aliases/EditDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`EditDcaStrategyTransactionInfo`](../type-aliases/EditDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../type-aliases/Permit2AuthorizationTransactionInfo.md), [`EditDcaStrategyTransactionInfo`](../type-aliases/EditDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`EditDcaStrategyTransactionInfo`](../type-aliases/EditDcaStrategyTransactionInfo.md)\]\>
 
-A promise resolving to the edit-strategy transaction info.
+A promise resolving to the ordered transactions to send. When the edit changes the
+  keeper's pull requirement (`tradeAmount`/`maxTrades`) or the pulled token (`sourceVault`), the
+  edit is prefixed with the Permit2 setup the new config needs (authorization only when the ERC20
+  allowance to Permit2 is insufficient; a sub-allowance only when the current one is short or
+  expired). The `EditStrategy` transaction is always last.
 
 #### Throws
 
@@ -212,7 +336,7 @@ If the strategy is not active or paused.
 #### Example
 
 ```ts
-const [editTx] = await dcaManager.editStrategyTx({
+const txs = await dcaManager.editStrategyTx({
   chainId: ChainIds.Base,
   strategy: existingStrategy,
   update: { slippagePercentage: 1 },
@@ -227,7 +351,7 @@ const [editTx] = await dcaManager.editStrategyTx({
 getExecution(params): Promise<IDcaExecution | undefined>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:184](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L184)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:262](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L262)
 
 Fetches a single execution of a DCA strategy by its id.
 
@@ -269,7 +393,7 @@ A promise resolving to the execution, or `undefined` if not found.
 getExecutions(params): Promise<IDcaExecution[]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:173](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L173)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:251](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L251)
 
 Lists the executions (individual trades) performed by a DCA strategy.
 
@@ -305,7 +429,7 @@ A promise resolving to the strategy's executions.
 getStrategies(params): Promise<IDcaStrategy[]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:149](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L149)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:227](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L227)
 
 Lists DCA strategies on a chain, optionally filtered by user and status.
 
@@ -347,7 +471,7 @@ A promise resolving to the matching strategies.
 getStrategy(params): Promise<IDcaStrategy | undefined>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:163](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L163)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:241](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L241)
 
 Fetches a single DCA strategy by its id.
 
@@ -383,7 +507,7 @@ A promise resolving to the strategy, or `undefined` if not found.
 pauseStrategyTx(params): Promise<[PauseDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:98](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L98)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:176](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L176)
 
 Builds the transaction that pauses an active DCA strategy.
 
@@ -429,7 +553,7 @@ const [pauseTx] = await dcaManager.pauseStrategyTx({ chainId: ChainIds.Base, str
 resumeStrategyTx(params): Promise<[ResumeDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:116](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L116)
+Defined in: [src/interfaces/ArmadaManager/IDcaManagerClient.ts:194](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/interfaces/ArmadaManager/IDcaManagerClient.ts#L194)
 
 Builds the transaction that resumes a previously paused DCA strategy.
 

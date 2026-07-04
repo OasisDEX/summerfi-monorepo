@@ -390,6 +390,7 @@ reference docs live in `gitbook/reference`.
 - [Permit2AuthorizationTransactionInfo](type-aliases/Permit2AuthorizationTransactionInfo.md)
 - [Permit2PermitData](type-aliases/Permit2PermitData.md)
 - [Permit2RevokeTransactionInfo](type-aliases/Permit2RevokeTransactionInfo.md)
+- [Permit2SubAllowanceTransactionInfo](type-aliases/Permit2SubAllowanceTransactionInfo.md)
 - [PoolIdParameters](type-aliases/PoolIdParameters.md)
 - [PoolInfoParameters](type-aliases/PoolInfoParameters.md)
 - [PoolParameters](type-aliases/PoolParameters.md)

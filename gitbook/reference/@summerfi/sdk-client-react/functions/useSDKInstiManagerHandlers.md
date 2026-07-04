@@ -4,7 +4,7 @@
 function useSDKInstiManagerHandlers(sdk): object;
 ```
 
-Defined in: [src/hooks/useSDK.ts:517](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L517)
+Defined in: [src/hooks/useSDK.ts:521](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L521)
 
 Admin + RWA handlers. These touch `ISDKInstiManager`-only members (`sdk.armada.admin`,
 `sdk.armada.accessControl`, `sdk.rwa`) and are therefore exposed only for managed instances

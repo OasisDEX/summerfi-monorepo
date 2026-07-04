@@ -70,7 +70,7 @@ IRPCClient.rpcClient
 cancelStrategyTx(params): Promise<[CancelDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L42)
+Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L49)
 
 #### Parameters
 
@@ -102,8 +102,8 @@ IDcaManagerClient.cancelStrategyTx
 
 ```ts
 createStrategyTx(params): Promise<
-  | [CreateDcaStrategyTransactionInfo]
-| [ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]>;
+  | [Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+| [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]>;
 ```
 
 Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:14](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L14)
@@ -116,13 +116,7 @@ Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:14](https://gi
 
 `string`
 
-Per-trade amount (source asset base units).
-
-###### assetAmount
-
-`string`
-
-Initial principal deposited at creation (source asset base units). See plan Open Question 2.
+Per-trade amount (source-vault share base units).
 
 ###### chainId
 
@@ -183,8 +177,8 @@ Initial principal deposited at creation (source asset base units). See plan Open
 #### Returns
 
 `Promise`\<
-  \| \[[`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]
-  \| \[[`ApproveTransactionInfo`](../type-aliases/ApproveTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
 
 #### See
 
@@ -196,13 +190,119 @@ IDcaManagerClient.createStrategyTx
 
 ***
 
-### editStrategyTx()
+### depositAndCreateStrategyTx()
 
 ```ts
-editStrategyTx(params): Promise<[EditDcaStrategyTransactionInfo]>;
+depositAndCreateStrategyTx(params): Promise<
+  | [Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+  | [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+  | [Permit2SubAllowanceTransactionInfo, ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]
+| [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]>;
 ```
 
 Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:21](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L21)
+
+#### Parameters
+
+##### params
+
+###### amountShares
+
+`string`
+
+Per-trade amount (source asset base units).
+
+###### assetAmount
+
+`string`
+
+Initial principal deposited at creation (in-asset base units). Must be non-zero.
+
+###### chainId
+
+[`ChainId`](../type-aliases/ChainId.md)
+
+###### deadlineUnixTimestamp
+
+`number`
+
+###### fromVault
+
+`` `0x${string}` ``
+
+###### inAsset
+
+`` `0x${string}` ``
+
+###### inAssetFeed
+
+[`IChainlinkFeed`](../interfaces/IChainlinkFeed.md)
+
+###### intervalSeconds
+
+`number`
+
+###### maxTrades
+
+`number`
+
+###### neverBuyAbove?
+
+`string`
+
+###### neverSellBelow?
+
+`string`
+
+###### outAsset
+
+`` `0x${string}` ``
+
+###### outAssetFeed
+
+[`IChainlinkFeed`](../interfaces/IChainlinkFeed.md)
+
+###### slippagePercentage
+
+`string`
+
+###### toVault
+
+`` `0x${string}` ``
+
+###### userAddress
+
+`` `0x${string}` ``
+
+#### Returns
+
+`Promise`\<
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`ApproveTransactionInfo`](../type-aliases/ApproveTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`ApproveTransactionInfo`](../type-aliases/ApproveTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
+
+#### See
+
+IDcaManagerClient.depositAndCreateStrategyTx
+
+#### Implementation of
+
+[`IDcaManagerClient`](../interfaces/IDcaManagerClient.md).[`depositAndCreateStrategyTx`](../interfaces/IDcaManagerClient.md#depositandcreatestrategytx)
+
+***
+
+### editStrategyTx()
+
+```ts
+editStrategyTx(params): Promise<
+  | [EditDcaStrategyTransactionInfo]
+  | [Permit2SubAllowanceTransactionInfo, EditDcaStrategyTransactionInfo]
+  | [Permit2AuthorizationTransactionInfo, EditDcaStrategyTransactionInfo]
+| [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, EditDcaStrategyTransactionInfo]>;
+```
+
+Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L28)
 
 #### Parameters
 
@@ -222,7 +322,11 @@ Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:21](https://gi
 
 #### Returns
 
-`Promise`\<\[[`EditDcaStrategyTransactionInfo`](../type-aliases/EditDcaStrategyTransactionInfo.md)\]\>
+`Promise`\<
+  \| \[[`EditDcaStrategyTransactionInfo`](../type-aliases/EditDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`EditDcaStrategyTransactionInfo`](../type-aliases/EditDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../type-aliases/Permit2AuthorizationTransactionInfo.md), [`EditDcaStrategyTransactionInfo`](../type-aliases/EditDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../type-aliases/Permit2SubAllowanceTransactionInfo.md), [`EditDcaStrategyTransactionInfo`](../type-aliases/EditDcaStrategyTransactionInfo.md)\]\>
 
 #### See
 
@@ -240,7 +344,7 @@ IDcaManagerClient.editStrategyTx
 getExecution(params): Promise<IDcaExecution | undefined>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:70](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L70)
+Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:77](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L77)
 
 #### Parameters
 
@@ -278,7 +382,7 @@ IDcaManagerClient.getExecution
 getExecutions(params): Promise<IDcaExecution[]>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:63](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L63)
+Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:70](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L70)
 
 #### Parameters
 
@@ -312,7 +416,7 @@ IDcaManagerClient.getExecutions
 getStrategies(params): Promise<IDcaStrategy[]>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:49](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L49)
+Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L56)
 
 #### Parameters
 
@@ -350,7 +454,7 @@ IDcaManagerClient.getStrategies
 getStrategy(params): Promise<IDcaStrategy | undefined>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:56](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L56)
+Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:63](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L63)
 
 #### Parameters
 
@@ -384,7 +488,7 @@ IDcaManagerClient.getStrategy
 pauseStrategyTx(params): Promise<[PauseDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L28)
+Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L35)
 
 #### Parameters
 
@@ -418,7 +522,7 @@ IDcaManagerClient.pauseStrategyTx
 resumeStrategyTx(params): Promise<[ResumeDcaStrategyTransactionInfo]>;
 ```
 
-Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:35](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L35)
+Defined in: [src/implementation/ArmadaManager/DcaManagerClient.ts:42](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/implementation/ArmadaManager/DcaManagerClient.ts#L42)
 
 #### Parameters
 

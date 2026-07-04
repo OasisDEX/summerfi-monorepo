@@ -32,7 +32,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:21](https:
 CancelStrategy: "CancelStrategy";
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L33)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:34](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L34)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:16](https:
 CreateStrategy: "CreateStrategy";
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L29)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L30)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:14](https:
 EditStrategy: "EditStrategy";
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:30](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L30)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L31)
 
 ***
 
@@ -122,7 +122,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:20](https:
 PauseStrategy: "PauseStrategy";
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:31](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L31)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L32)
 
 ***
 
@@ -142,6 +142,16 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:27](https:
 Permit2Revoke: "Permit2Revoke";
 ```
 
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:29](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L29)
+
+***
+
+### Permit2SubAllowance
+
+```ts
+Permit2SubAllowance: "Permit2SubAllowance";
+```
+
 Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:28](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L28)
 
 ***
@@ -152,7 +162,7 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:28](https:
 ResumeStrategy: "ResumeStrategy";
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:32](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L32)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:33](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L33)
 
 ***
 

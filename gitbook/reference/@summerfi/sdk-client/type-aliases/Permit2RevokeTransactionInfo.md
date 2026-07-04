@@ -4,7 +4,7 @@
 type Permit2RevokeTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:176](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L176)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:186](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L186)
 
 Transaction info for revoking a Permit2 authorization.
 

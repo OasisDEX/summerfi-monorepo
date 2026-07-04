@@ -4,7 +4,7 @@
 type BridgeTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:117](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L117)
+Defined in: [src/orders/common/types/TransactionInfo.ts:118](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L118)
 
 Transaction info for a cross-chain bridge transfer.
 

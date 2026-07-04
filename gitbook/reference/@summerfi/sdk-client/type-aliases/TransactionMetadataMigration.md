@@ -4,7 +4,7 @@
 type TransactionMetadataMigration = object;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:111](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L111)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:112](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L112)
 
 Metadata for a migration transaction: per-position swap amounts and price impacts.
 
@@ -16,7 +16,7 @@ Metadata for a migration transaction: per-position swap amounts and price impact
 priceImpactByPositionId: Record<string, TransactionPriceImpact>;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:113](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L113)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:114](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L114)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:113](https
 swapAmountByPositionId: Record<string, ITokenAmount>;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:112](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L112)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:113](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L113)

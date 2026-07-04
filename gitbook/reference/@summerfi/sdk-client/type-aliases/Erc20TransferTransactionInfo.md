@@ -4,7 +4,7 @@
 type Erc20TransferTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:159](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L159)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:160](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L160)
 
 Transaction info for a plain ERC-20 token transfer.
 

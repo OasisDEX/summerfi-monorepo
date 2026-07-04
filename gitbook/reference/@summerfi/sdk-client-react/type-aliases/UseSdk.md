@@ -4,7 +4,7 @@
 type UseSdk = object;
 ```
 
-Defined in: [src/hooks/useSDK.ts:135](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L135)
+Defined in: [src/hooks/useSDK.ts:136](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L136)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/hooks/useSDK.ts:135](https://github.com/OasisDEX/summerfi-monor
 optional chainId: number;
 ```
 
-Defined in: [src/hooks/useSDK.ts:137](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L137)
+Defined in: [src/hooks/useSDK.ts:138](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L138)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/hooks/useSDK.ts:137](https://github.com/OasisDEX/summerfi-monor
 optional clientId: string;
 ```
 
-Defined in: [src/hooks/useSDK.ts:138](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L138)
+Defined in: [src/hooks/useSDK.ts:139](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L139)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [src/hooks/useSDK.ts:138](https://github.com/OasisDEX/summerfi-monor
 optional insti: boolean;
 ```
 
-Defined in: [src/hooks/useSDK.ts:139](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L139)
+Defined in: [src/hooks/useSDK.ts:140](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L140)
 
 ***
 
@@ -44,4 +44,4 @@ Defined in: [src/hooks/useSDK.ts:139](https://github.com/OasisDEX/summerfi-monor
 optional walletAddress: string;
 ```
 
-Defined in: [src/hooks/useSDK.ts:136](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L136)
+Defined in: [src/hooks/useSDK.ts:137](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L137)

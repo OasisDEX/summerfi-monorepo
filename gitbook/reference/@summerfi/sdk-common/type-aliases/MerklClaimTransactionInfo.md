@@ -4,7 +4,7 @@
 type MerklClaimTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:149](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L149)
+Defined in: [src/orders/common/types/TransactionInfo.ts:150](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L150)
 
 Transaction info for claiming Merkl rewards.
 

@@ -4,7 +4,7 @@
 type ToggleAQasMerklRewardsOperatorTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:154](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L154)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:155](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L155)
 
 Transaction info for toggling Admirals Quarters as a Merkl rewards operator.
 

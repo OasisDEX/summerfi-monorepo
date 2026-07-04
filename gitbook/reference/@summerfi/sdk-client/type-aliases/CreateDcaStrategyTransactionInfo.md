@@ -4,7 +4,7 @@
 type CreateDcaStrategyTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:181](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L181)
+Defined in: [../sdk-common/src/orders/common/types/TransactionInfo.ts:191](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L191)
 
 Transaction info for creating a DCA strategy.
 

@@ -4,7 +4,7 @@
 function useSDKManagerHandlers(sdk, __namedParameters): object;
 ```
 
-Defined in: [src/hooks/useSDK.ts:152](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L152)
+Defined in: [src/hooks/useSDK.ts:153](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/hooks/useSDK.ts#L153)
 
 Handlers available on every SDK instance — both the public `makeSDK` instance and the managed
 (`makeAdminSDK` / `makeInstiSdk`) instances. These only touch `ISDKManager` members, so an
@@ -80,8 +80,88 @@ cancelStrategyTx: (__namedParameters) => Promise<[CancelDcaStrategyTransactionIn
 
 ```ts
 createStrategyTx: (__namedParameters) => Promise<
-  | [CreateDcaStrategyTransactionInfo]
-| [ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]>;
+  | [Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+| [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]>;
+```
+
+#### Parameters
+
+##### \_\_namedParameters
+
+###### amountShares
+
+`string`
+
+###### chainId
+
+[`ChainId`](../../sdk-common/type-aliases/ChainId.md)
+
+###### deadlineUnixTimestamp
+
+`number`
+
+###### fromVault
+
+`` `0x${string}` ``
+
+###### inAsset
+
+`` `0x${string}` ``
+
+###### inAssetFeed
+
+[`IChainlinkFeed`](../../sdk-common/interfaces/IChainlinkFeed.md)
+
+###### intervalSeconds
+
+`number`
+
+###### maxTrades
+
+`number`
+
+###### neverBuyAbove?
+
+`string`
+
+###### neverSellBelow?
+
+`string`
+
+###### outAsset
+
+`` `0x${string}` ``
+
+###### outAssetFeed
+
+[`IChainlinkFeed`](../../sdk-common/interfaces/IChainlinkFeed.md)
+
+###### slippagePercentage
+
+`string`
+
+###### toVault
+
+`` `0x${string}` ``
+
+###### userAddress
+
+`` `0x${string}` ``
+
+#### Returns
+
+`Promise`\<
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../../sdk-common/type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../../sdk-common/type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../../sdk-common/type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
+
+### depositAndCreateStrategyTx()
+
+```ts
+depositAndCreateStrategyTx: (__namedParameters) => Promise<
+  | [Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+  | [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, CreateDcaStrategyTransactionInfo]
+  | [Permit2SubAllowanceTransactionInfo, ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]
+| [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, ApproveTransactionInfo, CreateDcaStrategyTransactionInfo]>;
 ```
 
 #### Parameters
@@ -155,13 +235,19 @@ createStrategyTx: (__namedParameters) => Promise<
 #### Returns
 
 `Promise`\<
-  \| \[[`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]
-  \| \[[`ApproveTransactionInfo`](../../sdk-common/type-aliases/ApproveTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../../sdk-common/type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../../sdk-common/type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../../sdk-common/type-aliases/Permit2SubAllowanceTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../../sdk-common/type-aliases/Permit2SubAllowanceTransactionInfo.md), [`ApproveTransactionInfo`](../../sdk-common/type-aliases/ApproveTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../../sdk-common/type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../../sdk-common/type-aliases/Permit2SubAllowanceTransactionInfo.md), [`ApproveTransactionInfo`](../../sdk-common/type-aliases/ApproveTransactionInfo.md), [`CreateDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/CreateDcaStrategyTransactionInfo.md)\]\>
 
 ### editStrategyTx()
 
 ```ts
-editStrategyTx: (__namedParameters) => Promise<[EditDcaStrategyTransactionInfo]>;
+editStrategyTx: (__namedParameters) => Promise<
+  | [EditDcaStrategyTransactionInfo]
+  | [Permit2SubAllowanceTransactionInfo, EditDcaStrategyTransactionInfo]
+  | [Permit2AuthorizationTransactionInfo, EditDcaStrategyTransactionInfo]
+| [Permit2AuthorizationTransactionInfo, Permit2SubAllowanceTransactionInfo, EditDcaStrategyTransactionInfo]>;
 ```
 
 #### Parameters
@@ -182,7 +268,11 @@ editStrategyTx: (__namedParameters) => Promise<[EditDcaStrategyTransactionInfo]>
 
 #### Returns
 
-`Promise`\<\[[`EditDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/EditDcaStrategyTransactionInfo.md)\]\>
+`Promise`\<
+  \| \[[`EditDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/EditDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2SubAllowanceTransactionInfo`](../../sdk-common/type-aliases/Permit2SubAllowanceTransactionInfo.md), [`EditDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/EditDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../../sdk-common/type-aliases/Permit2AuthorizationTransactionInfo.md), [`EditDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/EditDcaStrategyTransactionInfo.md)\]
+  \| \[[`Permit2AuthorizationTransactionInfo`](../../sdk-common/type-aliases/Permit2AuthorizationTransactionInfo.md), [`Permit2SubAllowanceTransactionInfo`](../../sdk-common/type-aliases/Permit2SubAllowanceTransactionInfo.md), [`EditDcaStrategyTransactionInfo`](../../sdk-common/type-aliases/EditDcaStrategyTransactionInfo.md)\]\>
 
 ### getAddresses()
 

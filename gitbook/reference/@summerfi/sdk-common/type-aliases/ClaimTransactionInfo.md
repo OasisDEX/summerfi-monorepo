@@ -4,7 +4,7 @@
 type ClaimTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:129](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L129)
+Defined in: [src/orders/common/types/TransactionInfo.ts:130](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L130)
 
 Transaction info for claiming rewards.
 

@@ -4,7 +4,7 @@
 type VaultSwitchTransactionInfo = TransactionInfo & object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:91](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L91)
+Defined in: [src/orders/common/types/TransactionInfo.ts:92](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L92)
 
 Transaction info for moving funds from one vault to another.
 

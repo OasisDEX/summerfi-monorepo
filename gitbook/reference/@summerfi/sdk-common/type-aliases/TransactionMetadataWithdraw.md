@@ -4,7 +4,7 @@
 type TransactionMetadataWithdraw = object;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:83](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L83)
+Defined in: [src/orders/common/types/TransactionInfo.ts:84](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L84)
 
 Metadata for a withdrawal transaction: amounts, optional price impact and slippage.
 
@@ -16,7 +16,7 @@ Metadata for a withdrawal transaction: amounts, optional price impact and slippa
 fromAmount: ITokenAmount;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:84](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L84)
+Defined in: [src/orders/common/types/TransactionInfo.ts:85](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L85)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:84](https://github.com/O
 optional priceImpact: TransactionPriceImpact;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L86)
+Defined in: [src/orders/common/types/TransactionInfo.ts:87](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L87)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:86](https://github.com/O
 slippage: IPercentage;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:87](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L87)
+Defined in: [src/orders/common/types/TransactionInfo.ts:88](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L88)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/orders/common/types/TransactionInfo.ts:87](https://github.com/O
 optional toAmount: ITokenAmount;
 ```
 
-Defined in: [src/orders/common/types/TransactionInfo.ts:85](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L85)
+Defined in: [src/orders/common/types/TransactionInfo.ts:86](https://github.com/OasisDEX/summerfi-monorepo/blob/dev/src/orders/common/types/TransactionInfo.ts#L86)
