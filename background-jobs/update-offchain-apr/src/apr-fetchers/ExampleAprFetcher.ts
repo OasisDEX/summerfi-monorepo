@@ -86,9 +86,7 @@ export class ExampleAprFetcher implements IAprFetcher {
           throw error
         }
         const delay = initialDelay * Math.pow(backoffFactor, attempt - 1)
-        this.logger.warn(
-          `[ExampleAprFetcher] Attempt ${attempt} failed. Retrying in ${delay}ms...`,
-        )
+        this.logger.warn(`[ExampleAprFetcher] Attempt ${attempt} failed. Retrying in ${delay}ms...`)
         await new Promise((resolve) => setTimeout(resolve, delay))
       }
     }

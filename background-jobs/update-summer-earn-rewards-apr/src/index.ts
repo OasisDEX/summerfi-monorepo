@@ -236,7 +236,10 @@ export async function updateVaultAprs(
     })
 
     const rewardRatesByProductId = new Map(
-      fleetArksRewardsRates.map((rate) => [rate.productId, parseFloat(rate.rate?.toString() ?? '0')]),
+      fleetArksRewardsRates.map((rate) => [
+        rate.productId,
+        parseFloat(rate.rate?.toString() ?? '0'),
+      ]),
     )
 
     // Offchain base APRs for arks whose protocol has no on-chain rate signal
@@ -290,7 +293,9 @@ export async function updateVaultAprs(
       logger.debug('Calculated total rate', { network: network.network, ...rate })
     }
 
-    const arkRatiosByProductId = new Map(fleetArksWithRatios.map((ark) => [ark.productId, ark.ratio]))
+    const arkRatiosByProductId = new Map(
+      fleetArksWithRatios.map((ark) => [ark.productId, ark.ratio]),
+    )
     const weightedFleetRate = computeWeightedFleetRate(fleetArksTotalRates, arkRatiosByProductId)
 
     logger.debug('Final weighted fleet rate', {

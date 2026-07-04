@@ -212,7 +212,10 @@ describe('computeWeightedFleetRate', () => {
   })
 
   it('equals the single rate when one ark holds the whole fleet', () => {
-    const rate = computeWeightedFleetRate([{ productId: 'p1', totalRate: 0.073 }], new Map([['p1', 1]]))
+    const rate = computeWeightedFleetRate(
+      [{ productId: 'p1', totalRate: 0.073 }],
+      new Map([['p1', 1]]),
+    )
     expect(rate).toBeCloseTo(0.073)
   })
 })
