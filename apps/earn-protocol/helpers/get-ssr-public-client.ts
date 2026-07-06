@@ -1,16 +1,17 @@
 import { SupportedNetworkIds } from '@summerfi/app-types'
-import { createPublicClient, http, type PublicClient } from 'viem'
+import { type Chain, createPublicClient, http, type PublicClient } from 'viem'
 import { arbitrum, base, hyperliquid, mainnet, sonic } from 'viem/chains'
 
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
 
-export const SSRChainConfigs = [
-  { chain: base, chainId: SupportedNetworkIds.Base, chainName: 'base' },
-  { chain: mainnet, chainId: SupportedNetworkIds.Mainnet, chainName: 'mainnet' },
-  { chain: arbitrum, chainId: SupportedNetworkIds.ArbitrumOne, chainName: 'arbitrum' },
-  { chain: sonic, chainId: SupportedNetworkIds.SonicMainnet, chainName: 'sonic' },
-  { chain: hyperliquid, chainId: SupportedNetworkIds.Hyperliquid, chainName: 'hyperliquid' },
-]
+export const SSRChainConfigs: { chain: Chain; chainId: SupportedNetworkIds; chainName: string }[] =
+  [
+    { chain: base, chainId: SupportedNetworkIds.Base, chainName: 'base' },
+    { chain: mainnet, chainId: SupportedNetworkIds.Mainnet, chainName: 'mainnet' },
+    { chain: arbitrum, chainId: SupportedNetworkIds.ArbitrumOne, chainName: 'arbitrum' },
+    { chain: sonic, chainId: SupportedNetworkIds.SonicMainnet, chainName: 'sonic' },
+    { chain: hyperliquid, chainId: SupportedNetworkIds.Hyperliquid, chainName: 'hyperliquid' },
+  ]
 
 const publicClientsMap = new Map<SupportedNetworkIds, PublicClient>()
 

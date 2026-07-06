@@ -5,6 +5,7 @@ import {
   Expander,
   getDisplayToken,
   getUniqueVaultId,
+  SkeletonLine,
   Text,
   VaultExposure,
 } from '@summerfi/app-earn-ui'
@@ -24,14 +25,13 @@ import {
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
+import dynamic from 'next/dynamic'
 
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { RwaDepositsWithdrawals } from '@/components/layout/VaultManageView/RwaDepositsWithdrawals'
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
-import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
-import { RwaNavPriceChart } from '@/components/organisms/Charts/RwaNavPriceChart'
 import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { CurationActivity } from '@/features/curation-activity/components/CurationActivity/CurationActivity'
 import { type VaultCurationEvent } from '@/features/curation-activity/types'
@@ -45,6 +45,30 @@ import { getDetailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 
 import styles from './VaultOpenViewDetails.module.css'
+
+// recharts is heavy and only needed once the "Historical yield"/"Historical NAV price" expander
+// (open by default, but below the fold) renders — keep it out of the route's initial JS.
+const ChartLoadingFallback = () => (
+  <SkeletonLine
+    height={340}
+    radius="var(--radius-roundish)"
+    style={{ marginTop: 'var(--spacing-space-medium)' }}
+  />
+)
+
+const ArkHistoricalYieldChart = dynamic(
+  () =>
+    import('@/components/organisms/Charts/ArkHistoricalYieldChart').then(
+      (mod) => mod.ArkHistoricalYieldChart,
+    ),
+  { ssr: false, loading: () => <ChartLoadingFallback /> },
+)
+
+const RwaNavPriceChart = dynamic(
+  () =>
+    import('@/components/organisms/Charts/RwaNavPriceChart').then((mod) => mod.RwaNavPriceChart),
+  { ssr: false, loading: () => <ChartLoadingFallback /> },
+)
 
 interface VaultOpenViewDetailsProps {
   vault: SDKVaultType | SDKVaultishType

@@ -15,6 +15,7 @@
     "test": "jest --passWithNoTests",
     "testw": "jest --watch",
     "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "dev": "tsc -b --preserveWatchOutput -w tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

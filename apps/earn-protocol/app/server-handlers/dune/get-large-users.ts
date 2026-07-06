@@ -24,6 +24,7 @@ export const getLargeUsers = async () => {
       next: {
         revalidate: 60 * 60 * 24, // 24 hours
       },
+      signal: AbortSignal.timeout(4000),
     })
 
     if (!response.ok) {

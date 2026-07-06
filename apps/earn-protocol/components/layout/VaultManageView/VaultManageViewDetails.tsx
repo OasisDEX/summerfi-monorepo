@@ -27,6 +27,7 @@ import {
 } from '@summerfi/app-utils'
 import { type BigNumber } from 'bignumber.js'
 import { capitalize } from 'lodash-es'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 
 import { RwaDepositsWithdrawals } from '@/components/layout/VaultManageView/RwaDepositsWithdrawals'
@@ -41,10 +42,6 @@ import {
 import { getDetailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
-import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
-import { PositionHistoricalMarketValueChart } from '@/components/organisms/Charts/PositionHistoricalMarketValueChart'
-import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
-import { RwaNavPriceChart } from '@/components/organisms/Charts/RwaNavPriceChart'
 import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { CurationActivity } from '@/features/curation-activity/components/CurationActivity/CurationActivity'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
@@ -62,6 +59,39 @@ const SectionLoader = () => (
     radius="var(--radius-roundish)"
     style={{ marginTop: 'var(--spacing-space-medium)' }}
   />
+)
+
+// The chart components pull in recharts (~100KB gzip); load them in a separate chunk instead of
+// the vault-manage route's initial JS, reusing the same SectionLoader shown while their data query
+// is pending.
+const ArkHistoricalYieldChart = dynamic(
+  () =>
+    import('@/components/organisms/Charts/ArkHistoricalYieldChart').then(
+      (mod) => mod.ArkHistoricalYieldChart,
+    ),
+  { ssr: false, loading: () => <SectionLoader /> },
+)
+
+const RwaNavPriceChart = dynamic(
+  () =>
+    import('@/components/organisms/Charts/RwaNavPriceChart').then((mod) => mod.RwaNavPriceChart),
+  { ssr: false, loading: () => <SectionLoader /> },
+)
+
+const PositionHistoricalMarketValueChart = dynamic(
+  () =>
+    import('@/components/organisms/Charts/PositionHistoricalMarketValueChart').then(
+      (mod) => mod.PositionHistoricalMarketValueChart,
+    ),
+  { ssr: false, loading: () => <SectionLoader /> },
+)
+
+const PositionPerformanceChart = dynamic(
+  () =>
+    import('@/components/organisms/Charts/PositionPerformanceChart').then(
+      (mod) => mod.PositionPerformanceChart,
+    ),
+  { ssr: false, loading: () => <SectionLoader /> },
 )
 
 export const VaultManageViewDetails: FC<{

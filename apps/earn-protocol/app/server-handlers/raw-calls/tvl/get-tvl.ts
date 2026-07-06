@@ -9,7 +9,10 @@ const fallbackResponse: TvlResponse = {
 
 const getTvlResponse = async (): Promise<TvlResponse> => {
   try {
-    const response = await fetch(PROTOCOL_INFO_URL, { method: 'GET' })
+    const response = await fetch(PROTOCOL_INFO_URL, {
+      method: 'GET',
+      signal: AbortSignal.timeout(4000),
+    })
 
     if (!response.ok) {
       const errorBody = await response.text()

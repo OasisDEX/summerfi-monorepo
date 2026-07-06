@@ -273,12 +273,9 @@ export const OrderInfoIntentSwap = ({
         limitPrice: quote.limitPrice,
         sender: userWalletAddress,
         order: quote.order,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        signTypedData: signTypedDataAsync as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        walletClient: walletClient as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        publicClient: publicClient as any,
+        signTypedData: signTypedDataAsync,
+        walletClient,
+        publicClient,
         referralCode: (referralCode ?? '0x') as `0x${string}`,
         slippagePercentage,
       })
@@ -313,6 +310,13 @@ export const OrderInfoIntentSwap = ({
   const handleCancelOrder = useCallback(async () => {
     if (!orderId || isCancelling) return
 
+    if (!walletClient) {
+      setError('Wallet not connected')
+      setStep('cancel_error')
+
+      return
+    }
+
     setIsCancelling(true)
     isCancellingRef.current = true
     clearInterval(pollingIntervalRef.current)
@@ -320,10 +324,8 @@ export const OrderInfoIntentSwap = ({
       await getIntentSwapsCancelOrder({
         chainId,
         orderId,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        walletClient: walletClient as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        publicClient: publicClient as any,
+        walletClient,
+        publicClient,
       })
       setStep('cancelled')
     } catch (err) {

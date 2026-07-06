@@ -3,8 +3,8 @@
 import { getDisplayToken, SkeletonLine } from '@summerfi/app-earn-ui'
 import { type TimeframesType, type TokenSymbolsList } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
+import dynamic from 'next/dynamic'
 
-import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { usePortfolioPositionHistoryQuery } from '@/features/portfolio/api/get-portfolio-position-history-data'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { useInView } from '@/hooks/use-in-view'
@@ -51,6 +51,17 @@ const ChartLoadingSkeleton = () => (
       ))}
     </div>
   </div>
+)
+
+// recharts (~100KB gzip) is only needed once this chart actually renders; keep it out of the
+// portfolio route's initial JS and load it in its own chunk alongside the in-view-gated data fetch
+// above. `loading` reuses the same skeleton shown while the data query is pending.
+const PositionHistoricalChart = dynamic(
+  () =>
+    import('@/components/organisms/Charts/PositionHistoricalChart').then(
+      (mod) => mod.PositionHistoricalChart,
+    ),
+  { ssr: false, loading: () => <ChartLoadingSkeleton /> },
 )
 
 // Renders the per-position historical chart, but only fetches its (heavy) history data once the

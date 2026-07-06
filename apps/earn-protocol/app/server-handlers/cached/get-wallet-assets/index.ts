@@ -29,6 +29,7 @@ export const getCachedWalletAssets = async (
         revalidate: CACHE_TIMES.USER_DATA,
         tags: [getUserDataCacheHandler(walletAddress), CACHE_TAGS.PORTFOLIO_DATA],
       },
+      signal: AbortSignal.timeout(4000),
     },
   )
     .then((resp) => resp.json())

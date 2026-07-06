@@ -26,6 +26,7 @@ const getCachedDefillamaPoolYield = async (poolId: string): Promise<[number, num
       next: {
         revalidate: 600, // 10 minutes
       },
+      signal: AbortSignal.timeout(4000),
     })
     const data: PoolYieldResponse = await response.json()
 
@@ -66,6 +67,7 @@ export const getCachedMedianDefiProjectYield = async ({
       next: {
         revalidate: 600, // 10 minutes
       },
+      signal: AbortSignal.timeout(4000),
     })
     const medianData: MedianDefiYieldResponse = await response.json()
 

@@ -11,6 +11,7 @@
     "tsc": "tsc",
     "watch": "tsc -w",
     "build": "tsc -b --preserveWatchOutput tsconfig.build.json",
+    "dev": "tsc -b --preserveWatchOutput -w tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "declarations": "tsc --emitDeclarationOnly -p tsconfig.bundle.json"

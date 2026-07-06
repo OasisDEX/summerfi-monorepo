@@ -20,6 +20,7 @@
     "test": "jest --coverage=true",
     "testw": "jest --watch",
     "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "dev": "tsc -b --preserveWatchOutput -w tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "bundle:clean": "rm -rf bundle/dist bundle/tsconfig.bundle.tsbuildinfo .cache/tsbuildinfo.json tsconfig.bundle.tsbuildinfo",

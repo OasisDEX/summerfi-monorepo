@@ -2,7 +2,7 @@
 
 import { type AnalyticsCookieName } from '@summerfi/app-earn-ui'
 
-import { mixpanelBrowser } from '@/helpers/mixpanel-init'
+import { getMixpanelBrowser } from '@/helpers/mixpanel-init'
 
 export const manageAnalyticsCookies: {
   [key in AnalyticsCookieName]: { enable: () => void; disable: () => void }
@@ -12,7 +12,9 @@ export const manageAnalyticsCookies: {
     disable: () => {},
   },
   analytics: {
-    enable: () => mixpanelBrowser.opt_in_tracking(),
-    disable: () => mixpanelBrowser.opt_out_tracking(),
+    enable: () =>
+      void getMixpanelBrowser().then((mixpanelBrowser) => mixpanelBrowser.opt_in_tracking()),
+    disable: () =>
+      void getMixpanelBrowser().then((mixpanelBrowser) => mixpanelBrowser.opt_out_tracking()),
   },
 }

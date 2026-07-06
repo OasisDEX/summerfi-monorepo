@@ -47,6 +47,7 @@ export const getTokenPrice = async ({ tokenId }: { tokenId: string }) => {
     headers: {
       [COINGECKO_API_AUTH_HEADER]: COINGECKO_API_KEY,
     },
+    signal: AbortSignal.timeout(4000),
   })
 
   if (!response.ok) {

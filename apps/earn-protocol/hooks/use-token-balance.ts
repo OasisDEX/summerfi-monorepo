@@ -53,6 +53,9 @@ export const useTokenBalance = ({
   const cacheRef = useRef<Map<string, { vaultToken: IToken; token: IToken; balance: BigNumber }>>(
     new Map(),
   )
+  // Bumped on every fetch (and on effect cleanup) so a balance read for a previous
+  // wallet/chain/tokenSymbol that resolves late cannot overwrite the current state.
+  const requestIdRef = useRef(0)
 
   const sdk = useAppSDK()
   const getTokenRequest = useCallback(
@@ -68,6 +71,10 @@ export const useTokenBalance = ({
     [sdk, chainId],
   )
   const fetchTokenBalance = useCallback(async () => {
+    // Invalidate any previously in-flight request for a different wallet/chain/token: its
+    // `.then` callbacks below compare against this ref and bail out if it has moved on.
+    const requestId = ++requestIdRef.current
+
     // Check cache if enabled
     const cacheKey = `${tokenSymbol}-${vaultTokenSymbol}-${chainId}-${walletAddress}`
 
@@ -98,6 +105,10 @@ export const useTokenBalance = ({
       IToken | undefined,
     ]
 
+    if (requestId !== requestIdRef.current) {
+      return
+    }
+
     setVaultToken(fetchedVaultToken)
 
     // if its a native token, not just ETH
@@ -115,7 +126,7 @@ export const useTokenBalance = ({
           address: walletAddress as HexData,
         })
         .then((val) => {
-          if (skip) {
+          if (skip || requestId !== requestIdRef.current) {
             return
           }
 
@@ -134,7 +145,9 @@ export const useTokenBalance = ({
           console.error('Error reading ETH balance', err)
         })
         .finally(() => {
-          setTokenBalanceLoading(false)
+          if (requestId === requestIdRef.current) {
+            setTokenBalanceLoading(false)
+          }
         })
     } else {
       const fetchedOrVaultToken = fetchedToken ?? fetchedVaultToken
@@ -149,7 +162,7 @@ export const useTokenBalance = ({
           args: [walletAddress as HexData],
         })
         .then((val) => {
-          if (skip) {
+          if (skip || requestId !== requestIdRef.current) {
             return
           }
 
@@ -170,7 +183,9 @@ export const useTokenBalance = ({
           console.error('Error reading token balance', err)
         })
         .finally(() => {
-          setTokenBalanceLoading(false)
+          if (requestId === requestIdRef.current) {
+            setTokenBalanceLoading(false)
+          }
         })
     }
   }, [
@@ -186,12 +201,26 @@ export const useTokenBalance = ({
 
   useEffect(() => {
     if (!skip && walletAddress) {
-      fetchTokenBalance().catch((err) => {
+      const pendingFetch = fetchTokenBalance()
+      // `fetchTokenBalance` bumps `requestIdRef` synchronously (before its first
+      // `await`), so by this point it already reflects the id of the call above.
+      const requestIdAtStart = requestIdRef.current
+
+      pendingFetch.catch((err) => {
+        if (requestIdAtStart !== requestIdRef.current) {
+          return
+        }
         // eslint-disable-next-line no-console
         console.error('Error fetching token balance', err)
         setTokenBalance(undefined)
         setTokenBalanceLoading(false)
       })
+    }
+
+    return () => {
+      // Invalidate any in-flight request started by this effect run so a stale
+      // wallet/chain/token result cannot land after deps change or on unmount.
+      requestIdRef.current += 1
     }
   }, [
     sdk,

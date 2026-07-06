@@ -78,8 +78,13 @@ export const usePosition = ({
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const [isLoading, setIsLoading] = useState(false)
   const cacheRef = useRef<Map<string, IArmadaPosition>>(new Map())
+  // Bumped on every fetch (and on effect cleanup) so a position read for a previous
+  // vault/chain/wallet that resolves late cannot overwrite the current position.
+  const requestIdRef = useRef(0)
 
   const reFetchPosition = useCallback(async () => {
+    const requestId = ++requestIdRef.current
+
     if (!userWalletAddress) {
       return Promise.resolve(undefined)
     }
@@ -89,6 +94,10 @@ export const usePosition = ({
 
     if (cached && cacheRef.current.has(cacheKey)) {
       const cachedPos = cacheRef.current.get(cacheKey)
+
+      if (requestId !== requestIdRef.current) {
+        return cachedPos
+      }
 
       if (onlyActive && cachedPos && Number(cachedPos.assetsUSD.amount) < 0.01) {
         setPosition(undefined)
@@ -108,6 +117,10 @@ export const usePosition = ({
       getUserPosition,
     })
       .then((pos: IArmadaPosition | undefined) => {
+        if (requestId !== requestIdRef.current) {
+          return
+        }
+
         if (!pos) {
           setIsLoading(false)
 
@@ -126,6 +139,9 @@ export const usePosition = ({
         setPosition(pos)
       })
       .catch(() => {
+        if (requestId !== requestIdRef.current) {
+          return
+        }
         // eslint-disable-next-line no-console
         console.info('The user does not have a position for this vault', vaultId)
         setIsLoading(false)
@@ -134,10 +150,16 @@ export const usePosition = ({
 
   useEffect(() => {
     if (!userWalletAddress) {
-      return
+      return undefined
     }
     setPosition(undefined)
     reFetchPosition()
+
+    return () => {
+      // Invalidate any in-flight request started by this effect run so a stale
+      // vault/chain/wallet result cannot land after deps change or on unmount.
+      requestIdRef.current += 1
+    }
   }, [chainId, getUserPosition, userWalletAddress, vaultId, onlyActive, reFetchPosition])
 
   return { position, isLoading, reFetchPosition }

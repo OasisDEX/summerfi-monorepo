@@ -12,7 +12,10 @@ import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { type SavedLargeUserBannerSettings } from '@/components/molecules/LargeUserFloatingBanner/LargeUserFloatingBanner'
 import { GlobalEventTracker } from '@/components/organisms/Events/GlobalEventTracker'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
-import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import {
+  SystemConfigProvider,
+  useSystemConfig,
+} from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { WalletProvider } from '@/providers/WalletProvider/WalletProvider'
 
 type GlobalProviderProps = {
@@ -29,6 +32,15 @@ type GlobalProviderProps = {
 const TheGame = dynamic(() => import('../../../features/game/components/MainGameView'), {
   ssr: false,
 })
+
+// `TheGame` is a heavy `dynamic(..., { ssr: false })` import (~3,900 LOC incl. a Web-Audio helper
+// and a recharts import) - only mount it once the game is actually running so the chunk downloads
+// on demand instead of on every page load.
+const GameLoader = () => {
+  const { runningGame } = useSystemConfig()
+
+  return runningGame ? <TheGame /> : null
+}
 
 export const GlobalProvider = ({
   children,
@@ -54,7 +66,7 @@ export const GlobalProvider = ({
             >
               {children}
             </MasterPage>
-            <TheGame />
+            <GameLoader />
           </WalletProvider>
         </LocalConfigContextProvider>
       </DeviceProvider>

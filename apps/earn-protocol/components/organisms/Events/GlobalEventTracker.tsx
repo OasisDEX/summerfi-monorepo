@@ -1,10 +1,11 @@
 'use client'
 
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { useEarnProtocolChain, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { initMixpanel } from '@/helpers/mixpanel-init'
 import { usePageviewEvent } from '@/hooks/use-mixpanel-event'
 
 export const GlobalEventTracker = () => {
@@ -21,6 +22,23 @@ export const GlobalEventTracker = () => {
     address: undefined,
     isConnected: false,
   })
+
+  // Warm up mixpanel-browser (~50KB) off the critical render path: it's only fetched/initialized
+  // once idle after first paint (falling back to a short timeout where requestIdleCallback isn't
+  // available, e.g. Safari), rather than at module load.
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- requestIdleCallback
+    // is typed as always present, but Safari doesn't implement it at runtime.
+    if (typeof window.requestIdleCallback !== 'function') {
+      const timeout = setTimeout(initMixpanel, 1)
+
+      return () => clearTimeout(timeout)
+    }
+
+    const handle = window.requestIdleCallback(initMixpanel)
+
+    return () => window.cancelIdleCallback(handle)
+  }, [])
 
   // pageview tracking
   useLayoutEffect(() => {

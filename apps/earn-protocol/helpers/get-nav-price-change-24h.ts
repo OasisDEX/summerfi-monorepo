@@ -21,7 +21,7 @@ export const getNavPriceChange24h = (vault: GetVaultQueryRwa['vault']): number |
   const latest = Number(snapshots[0]?.pricePerShare)
   const previous = Number(snapshots[1]?.pricePerShare)
 
-  if (!Number.isFinite(latest) || !Number.isFinite(previous) || previous <= 0) {
+  if (!Number.isFinite(latest) || !Number.isFinite(previous) || latest <= 0 || previous <= 0) {
     return null
   }
 

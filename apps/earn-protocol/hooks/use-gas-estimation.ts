@@ -51,6 +51,8 @@ export const useGasEstimation = ({
   const [rawTransactionFee, setRawTransactionFee] = useState<string | undefined>(undefined)
 
   useEffect(() => {
+    let cancelled = false
+
     const fetchGasEstimation = async (
       _transaction: TransactionInfo | ClientTransaction,
       _walletAddress: HexData,
@@ -87,17 +89,27 @@ export const useGasEstimation = ({
         const nativeAmount = formatEther(txFee)
         const priceInUsd = nativePrice.multiply(nativeAmount).value.toString()
 
-        setTransactionFee(priceInUsd)
-        setRawTransactionFee(nativeAmount)
+        if (!cancelled) {
+          setTransactionFee(priceInUsd)
+          setRawTransactionFee(nativeAmount)
+        }
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('Gas Estimation failed', e)
+        if (!cancelled) {
+          // eslint-disable-next-line no-console
+          console.error('Gas Estimation failed', e)
+        }
       }
-      setLoading(false)
+      if (!cancelled) {
+        setLoading(false)
+      }
     }
 
     if (transaction !== undefined && walletAddress !== undefined) {
       fetchGasEstimation(transaction, walletAddress)
+    }
+
+    return () => {
+      cancelled = true
     }
   }, [publicClient, getTokenBySymbol, chainId, getSpotPrice, transaction, walletAddress])
 

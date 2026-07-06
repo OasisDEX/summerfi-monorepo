@@ -42,7 +42,7 @@ const baseMainnetRpc = getRpc(NetworkNames.baseMainnet)
 const sonicMainnetRpc = getRpc(NetworkNames.sonicMainnet)
 const hyperliquidRpc = getRpc(NetworkNames.hyperliquid)
 
-export const SDKChainIdToRpcGatewayMap = {
+export const SDKChainIdToRpcGatewayMap: { [key in SupportedNetworkIds]: string } = {
   [SupportedNetworkIds.ArbitrumOne]: arbitrumMainnetRpc,
   [SupportedNetworkIds.Base]: baseMainnetRpc,
   [SupportedNetworkIds.Mainnet]: mainnetRpc,

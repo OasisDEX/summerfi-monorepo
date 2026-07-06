@@ -12,6 +12,7 @@ export const getCachedMedianDefiYield = async (): Promise<number> => {
       next: {
         revalidate: 600, // 10 minutes
       },
+      signal: AbortSignal.timeout(4000),
     })
     const medianData: MedianDefiYieldResponse = await response.json()
 

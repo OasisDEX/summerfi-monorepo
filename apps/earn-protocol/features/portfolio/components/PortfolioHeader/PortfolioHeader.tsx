@@ -12,16 +12,26 @@ import {
 import { type DropdownRawOption } from '@summerfi/app-types'
 import { formatAddress, formatCryptoBalance, safeBTOA } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { SendWidget } from '@/features/send/components/SendWidget/SendWidget'
-import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
 import { useRevalidateUser } from '@/hooks/use-revalidate'
 
 import classNames from './PortfolioHeader.module.css'
+
+// The Transak SDK is heavy and only needed once a network is picked from the "Buy crypto"
+// dropdown, so it's loaded on demand instead of shipping in the portfolio route's initial bundle.
+const TransakWidget = dynamic(
+  () =>
+    import('@/features/transak/components/TransakWidget/TransakWidget').then(
+      (mod) => mod.TransakWidget,
+    ),
+  { ssr: false },
+)
 
 const TransakTrigger = ({
   isOpen,

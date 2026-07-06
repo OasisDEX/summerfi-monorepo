@@ -11,6 +11,7 @@ export const getCachedDefillamaProtocolTvl = async (
       next: {
         revalidate: 600, // 10 minutes
       },
+      signal: AbortSignal.timeout(4000),
     })
     const responseJson = await response.json()
     const tvl = String(responseJson)

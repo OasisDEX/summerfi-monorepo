@@ -1,5 +1,5 @@
 'use client'
-import { createContext, type FC, type ReactNode, useContext, useState } from 'react'
+import { createContext, type FC, type ReactNode, useContext, useMemo, useState } from 'react'
 import { type EarnAppConfigType } from '@summerfi/app-types'
 
 const SystemConfigContext = createContext<Partial<
@@ -19,13 +19,16 @@ export const SystemConfigProvider: FC<{
   const [runningGame, setRunningGame] = useState(false)
   const [isGameByInvite, setIsGameByInvite] = useState(false)
 
-  const contextValue = {
-    ...value,
-    runningGame,
-    isGameByInvite,
-    setIsGameByInvite,
-    setRunningGame,
-  }
+  const contextValue = useMemo(
+    () => ({
+      ...value,
+      runningGame,
+      isGameByInvite,
+      setIsGameByInvite,
+      setRunningGame,
+    }),
+    [value, runningGame, isGameByInvite],
+  )
 
   return (
     <SystemConfigContext.Provider value={contextValue}>{children}</SystemConfigContext.Provider>

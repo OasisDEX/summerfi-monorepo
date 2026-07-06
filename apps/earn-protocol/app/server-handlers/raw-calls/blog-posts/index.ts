@@ -11,6 +11,14 @@ const blogPostsFetchOptions = {
   },
 }
 
+// `AbortSignal.timeout(...)` starts its clock as soon as it's created, so it must be constructed
+// fresh per request rather than shared as a module-level constant (which would fire once and then
+// abort every subsequent request forever in a warm server process).
+const getBlogPostsFetchOptions = () => ({
+  ...blogPostsFetchOptions,
+  signal: AbortSignal.timeout(4000),
+})
+
 const emptyFallback = {
   news: [],
   learn: [],
@@ -40,7 +48,7 @@ export const getBlogPosts = async (): Promise<BlogPosts> => {
 
   const blogPostNewsRequest = fetch(
     `${blogPostsFetchUrl}&limit=4&filter=visibility:public`,
-    blogPostsFetchOptions,
+    getBlogPostsFetchOptions(),
   )
     .then((res) => {
       if (!res.ok) {
@@ -53,7 +61,7 @@ export const getBlogPosts = async (): Promise<BlogPosts> => {
 
   const blogPostLearnRequest = fetch(
     `${blogPostsFetchUrl}&filter=tag:learn%2Bvisibility:public`,
-    blogPostsFetchOptions,
+    getBlogPostsFetchOptions(),
   )
     .then((res) => {
       if (!res.ok) {

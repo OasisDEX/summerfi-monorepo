@@ -2,19 +2,28 @@
 'use client'
 
 import { useMemo } from 'react'
-import { Card } from '@summerfi/app-earn-ui'
+import { Card, SkeletonLine } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
   type ChartDataPoints,
   type InlineButtonOption,
   type TimeframesType,
 } from '@summerfi/app-types'
+import dynamic from 'next/dynamic'
 
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
-import { YieldsChart } from '@/components/organisms/Charts/components/Yields'
 import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
 import { useTimeframes } from '@/hooks/use-timeframes'
+
+// recharts is heavy; load it in its own chunk rather than the vault-details route's initial JS.
+const YieldsChart = dynamic(
+  () => import('@/components/organisms/Charts/components/Yields').then((mod) => mod.YieldsChart),
+  {
+    ssr: false,
+    loading: () => <SkeletonLine height={450} radius="var(--radius-roundish)" />,
+  },
+)
 
 type VaultDetailsHistoricalYieldChartProps = {
   chartData: ArksHistoricalChartData

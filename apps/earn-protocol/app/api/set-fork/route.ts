@@ -1,6 +1,7 @@
 import { forksCookieName } from '@summerfi/app-earn-ui'
 import { cookies } from 'next/headers'
 import { type NextRequest } from 'next/server'
+import { z } from 'zod'
 
 import { NetworkIds } from '@/constants/networks-list'
 
@@ -8,6 +9,22 @@ export type SetForkRequest = {
   [key in NetworkIds | 'clear']?: string
 }
 type ObjectLike<T> = { [K in keyof T as T[K] extends null | undefined ? never : K]: T[K] }
+
+// `NetworkIds` is a numeric enum, so `Object.keys` yields both the numeric chain-id strings
+// (e.g. "1", "8453") and the enum member names (e.g. "MAINNET") - both forms are accepted as
+// valid fork-override keys elsewhere in this file (see `handleClearFork`), so validation must
+// accept the same set.
+const validForkKeys = new Set(Object.keys(NetworkIds))
+
+// Fork override values are RPC URLs (or similar override strings) manually entered by a
+// developer; bound the length defensively rather than assume a URL shape.
+const MAX_FORK_VALUE_LENGTH = 2048
+
+const setForkRequestSchema = z
+  .record(z.string(), z.string().max(MAX_FORK_VALUE_LENGTH))
+  .refine((body) => Object.keys(body).every((key) => key === 'clear' || validForkKeys.has(key)), {
+    message: 'Invalid fork key: must be a valid NetworkIds key or "clear"',
+  })
 
 const getCleanObject = <T extends object, V = ObjectLike<T>>(obj: T): V => {
   return Object.fromEntries(
@@ -45,7 +62,14 @@ function handleSetFork(body: SetForkRequest, cookieStore: Awaited<ReturnType<typ
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as SetForkRequest
+    const rawBody: unknown = await request.json()
+    const result = setForkRequestSchema.safeParse(rawBody)
+
+    if (!result.success) {
+      return new Response('Invalid body data', { status: 400 })
+    }
+
+    const body = result.data as SetForkRequest
     const cookieStore = await cookies()
 
     if (typeof body.clear !== 'undefined') {

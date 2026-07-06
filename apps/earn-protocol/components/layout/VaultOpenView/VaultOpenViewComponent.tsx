@@ -45,6 +45,7 @@ import {
 } from '@summerfi/sdk-common'
 import { useQueryClient } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
+import dynamic from 'next/dynamic'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
@@ -62,7 +63,6 @@ import { BeachClubReferralForm } from '@/features/beach-club/components/BeachClu
 // import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 // import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 // import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
-import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
@@ -95,6 +95,16 @@ import { useTransaction } from '@/hooks/use-transaction'
 
 import { VaultOpenDetailsLoading } from './VaultOpenDetailsLoading'
 import { VaultOpenViewDetails } from './VaultOpenViewDetails'
+
+// The Transak SDK is heavy and only needed once the "Buy crypto" flow is opened, so it's loaded
+// on demand instead of shipping in the vault-open route's initial bundle.
+const TransakWidget = dynamic(
+  () =>
+    import('@/features/transak/components/TransakWidget/TransakWidget').then(
+      (mod) => mod.TransakWidget,
+    ),
+  { ssr: false },
+)
 
 type VaultOpenViewComponentProps = {
   network: SupportedSDKNetworks

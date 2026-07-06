@@ -8,12 +8,11 @@ import {
   sumrNetApyConfigCookieName,
   Text,
 } from '@summerfi/app-earn-ui'
-import { DeviceType } from '@summerfi/app-types'
+import { DeviceType, type EarnAppConfigType, type TokenPriceData } from '@summerfi/app-types'
 import { getDeviceType, getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
-import Script from 'next/script'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedSumrPrice } from '@/app/server-handlers/reward-token-price'
@@ -34,14 +33,31 @@ export const metadata: Metadata = {
   keywords: getSeoKeywords(),
 }
 
-const reactScanDebug = false
+const fallbackConfig: Partial<EarnAppConfigType> = {}
+const fallbackSumrPrice: TokenPriceData = {
+  usd: 0,
+  usdMarketCap: 0,
+  usd24hVol: 0,
+  usd24hChange: 0,
+}
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [config, cookieRaw, headersList, sumrPrice] = await Promise.all([
-    getCachedConfig(),
+  const [config, cookieRaw, headersList, sumrPrice, largeUsersData] = await Promise.all([
+    getCachedConfig().catch((error: unknown) => {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching remote config, falling back to defaults', error)
+
+      return fallbackConfig
+    }),
     cookies(),
     headers(),
-    getCachedSumrPrice(),
+    getCachedSumrPrice().catch((error: unknown) => {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching SUMR price, falling back to defaults', error)
+
+      return fallbackSumrPrice
+    }),
+    getLargeUsers(),
   ])
 
   const cookie = cookieRaw.toString()
@@ -94,8 +110,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     )
   }
 
-  const largeUsersData = await getLargeUsers()
-
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
   const sumrPriceUsd = getEstimatedSumrPrice({
@@ -109,13 +123,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={locale} suppressHydrationWarning style={{ backgroundColor: '#1c1c1c' }}>
       <head>
         <GlobalStyles />
-        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-        {reactScanDebug && (
-          <Script
-            src="https://cdn.jsdelivr.net/npm/react-scan/dist/auto.global.js"
-            strategy="afterInteractive"
-          />
-        )}
       </head>
       <body className={`${fontInter.className} ${fontInter.variable}`}>
         {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}

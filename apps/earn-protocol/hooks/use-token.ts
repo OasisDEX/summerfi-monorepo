@@ -58,33 +58,51 @@ export const useToken = ({
   }, [tokenCacheKey])
 
   useEffect(() => {
+    let cancelled = false
+
     if (skip) {
       setTokenLoading(false)
 
-      return
+      return () => {
+        cancelled = true
+      }
     }
 
     if (cachedToken) {
       setToken(JSON.parse(cachedToken))
       setTokenLoading(false)
 
-      return
+      return () => {
+        cancelled = true
+      }
     }
 
     setTokenLoading(true)
     getTokenRequest()
       .then((fetchedToken) => {
+        if (cancelled) {
+          return
+        }
+
         setToken(fetchedToken)
         if (typeof window !== 'undefined') {
           sessionStorage.setItem(tokenCacheKey, JSON.stringify(fetchedToken))
         }
       })
       .catch((err) => {
-        setError(err)
+        if (!cancelled) {
+          setError(err)
+        }
       })
       .finally(() => {
-        setTokenLoading(false)
+        if (!cancelled) {
+          setTokenLoading(false)
+        }
       })
+
+    return () => {
+      cancelled = true
+    }
   }, [getTokenRequest, skip, cachedToken, tokenCacheKey])
 
   return {

@@ -277,6 +277,9 @@ importers:
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
