@@ -41,56 +41,61 @@ function trackEvent<E extends EarnProtocolEventNames>(ev: E, props: EarnProtocol
     return
   }
 
-  void getMixpanelBrowser().then((mixpanelBrowser) => {
-    const isOptedOut =
-      process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
+  void getMixpanelBrowser()
+    .then((mixpanelBrowser) => {
+      const isOptedOut =
+        process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
 
-    if (isOptedOut && eventData.eventName !== EarnProtocolEventNames.PageViewed) {
-      // if the user is opted out, we track just the page view event
-      return
-    }
+      if (isOptedOut && eventData.eventName !== EarnProtocolEventNames.PageViewed) {
+        // if the user is opted out, we track just the page view event
+        return
+      }
 
-    const baseWindowObject = {
-      navigator: { userAgent: '' },
-      document: { location: { hostname: '' }, referrer: '' },
-      screen: { width: 0, height: 0 },
-      location: { href: '' },
-    } as Window
+      const baseWindowObject = {
+        navigator: { userAgent: '' },
+        document: { location: { hostname: '' }, referrer: '' },
+        screen: { width: 0, height: 0 },
+        location: { href: '' },
+      } as Window
 
-    const win = typeof window !== 'undefined' ? window : baseWindowObject
+      const win = typeof window !== 'undefined' ? window : baseWindowObject
 
-    const { name: browserName, mobile, os, versionNumber } = browserDetect()
-    const initialReferrer = mixpanelBrowser.get_property('$initial_referrer')
-    const initialReferringDomain = initialReferrer
-      ? initialReferrer === '$direct'
-        ? '$direct'
-        : new URL(initialReferrer).hostname
-      : ''
+      const { name: browserName, mobile, os, versionNumber } = browserDetect()
+      const initialReferrer = mixpanelBrowser.get_property('$initial_referrer')
+      const initialReferringDomain = initialReferrer
+        ? initialReferrer === '$direct'
+          ? '$direct'
+          : new URL(initialReferrer).hostname
+        : ''
 
-    void fetch(`/earn/api/t`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...eventData,
-        distinctId: mixpanelBrowser.get_distinct_id(),
-        currentUrl: win.location.href,
-        ...(!isOptedOut && {
-          browser: upperFirst(browserName),
-          browserVersion: versionNumber,
-          initialReferrer,
-          initialReferringDomain,
-          mobile,
-          os,
-          screenHeight: win.innerHeight,
-          screenWidth: win.innerWidth,
-          userId: mixpanelBrowser.get_property('$user_id'),
+      void fetch(`/earn/api/t`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...eventData,
+          distinctId: mixpanelBrowser.get_distinct_id(),
+          currentUrl: win.location.href,
+          ...(!isOptedOut && {
+            browser: upperFirst(browserName),
+            browserVersion: versionNumber,
+            initialReferrer,
+            initialReferringDomain,
+            mobile,
+            os,
+            screenHeight: win.innerHeight,
+            screenWidth: win.innerWidth,
+            userId: mixpanelBrowser.get_property('$user_id'),
+          }),
         }),
-      }),
+      })
     })
-  })
+    .catch(() => {
+      // mixpanel failed to load/init (e.g. missing key) — non-critical, swallow so it doesn't
+      // surface as an unhandled rejection. getMixpanelBrowser() resets its cache so a later call retries.
+    })
 }
 
 // --- Specific Event Handlers ---

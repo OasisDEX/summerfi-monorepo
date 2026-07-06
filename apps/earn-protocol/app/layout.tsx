@@ -42,7 +42,13 @@ const fallbackSumrPrice: TokenPriceData = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [config, cookieRaw, headersList, sumrPrice, largeUsersData] = await Promise.all([
+  // Kick off `getLargeUsers()` concurrently, but don't include it in the awaited tuple below:
+  // it's only needed for the normal render path (line ~139), not the maintenance fallback, so
+  // awaiting it before the maintenance early-return would add its latency to that fast path.
+  // (getLargeUsers self-catches and returns [], so this promise never rejects.)
+  const largeUsersDataPromise = getLargeUsers()
+
+  const [config, cookieRaw, headersList, sumrPrice] = await Promise.all([
     getCachedConfig().catch((error: unknown) => {
       // eslint-disable-next-line no-console
       console.error('Error fetching remote config, falling back to defaults', error)
@@ -57,7 +63,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
       return fallbackSumrPrice
     }),
-    getLargeUsers(),
   ])
 
   const cookie = cookieRaw.toString()
@@ -109,6 +114,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </html>
     )
   }
+
+  const largeUsersData = await largeUsersDataPromise
 
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))

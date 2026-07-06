@@ -30,7 +30,13 @@ const loadMixpanel = async (): Promise<MixpanelInstance> => {
  * promise rather than re-importing/re-initializing.
  */
 export const getMixpanelBrowser = (): Promise<MixpanelInstance> => {
-  mixpanelPromise ??= loadMixpanel()
+  // Reset the cache on failure so a rejected promise isn't held forever (which would break
+  // analytics for the rest of the session with no retry); a later call can then try again.
+  mixpanelPromise ??= loadMixpanel().catch((error: unknown) => {
+    mixpanelPromise = null
+
+    throw error
+  })
 
   return mixpanelPromise
 }
@@ -41,5 +47,7 @@ export const getMixpanelBrowser = (): Promise<MixpanelInstance> => {
  * mixpanel is already warm by the time real tracking calls arrive.
  */
 export const initMixpanel = (): void => {
-  void getMixpanelBrowser()
+  // Warm-up only — swallow failures here (they're retried on the next real call); without a
+  // catch, a failed load would surface as an unhandled rejection.
+  void getMixpanelBrowser().catch(() => undefined)
 }

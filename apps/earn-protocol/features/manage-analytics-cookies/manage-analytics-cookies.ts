@@ -13,8 +13,12 @@ export const manageAnalyticsCookies: {
   },
   analytics: {
     enable: () =>
-      void getMixpanelBrowser().then((mixpanelBrowser) => mixpanelBrowser.opt_in_tracking()),
+      void getMixpanelBrowser()
+        .then((mixpanelBrowser) => mixpanelBrowser.opt_in_tracking())
+        .catch(() => undefined),
     disable: () =>
-      void getMixpanelBrowser().then((mixpanelBrowser) => mixpanelBrowser.opt_out_tracking()),
+      void getMixpanelBrowser()
+        .then((mixpanelBrowser) => mixpanelBrowser.opt_out_tracking())
+        .catch(() => undefined),
   },
 }
