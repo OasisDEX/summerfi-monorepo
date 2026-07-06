@@ -61,17 +61,17 @@ export const decorateWithFleetConfig = (
         return true
       }
 
-      if (systemConfig.features?.FilterZeroTokenVaults && inputTokenBalance <= 0) {
-        // Filter zero token vaults if feature is enabled
-        return false
-      }
+      // if (systemConfig.features?.FilterZeroTokenVaults && inputTokenBalance <= 0) {
+      //   // Filter zero token vaults if feature is enabled
+      //   return false
+      // }
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (depositCap !== undefined && depositCap <= 0 && vaults.length > 1) {
-        // we want to allow zero deposit cap vaults if they are the only vault available - so the user can get into a vault with known address
-        // Filter zero deposit cap vaults
-        return false
-      }
+      // // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      // if (depositCap !== undefined && depositCap <= 0 && vaults.length > 1) {
+      //   // we want to allow zero deposit cap vaults if they are the only vault available - so the user can get into a vault with known address
+      //   // Filter zero deposit cap vaults
+      //   return false
+      // }
 
       if (customFields?.disabled) {
         // Filter disabled vaults
