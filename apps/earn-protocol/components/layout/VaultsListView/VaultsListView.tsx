@@ -28,6 +28,7 @@ import { useVaultsListQuery } from '@/components/layout/VaultsListView/useVaults
 import { VaultSimulationSidebar } from '@/components/layout/VaultsListView/VaultSimulationSidebar'
 import { VaultsListCards } from '@/components/layout/VaultsListView/VaultsListCards'
 import { VaultsListMetrics } from '@/components/layout/VaultsListView/VaultsListMetrics'
+import { VaultsListViewEmpty } from '@/components/layout/VaultsListView/VaultsListViewEmpty'
 import {
   VaultsListLeftContentLoading,
   VaultsListViewLoading,
@@ -264,6 +265,13 @@ export const VaultsListView = ({ walletAddress }: VaultsListViewProps) => {
 
   if (!data) {
     return <VaultsListViewLoading />
+  }
+
+  // Guard against an empty vaults list (e.g. a transient backend failure returning
+  // zero vaults). VaultsListView assumes at least one vault exists and would otherwise
+  // crash reading `.id` of undefined via getUniqueVaultId, taking down the whole page.
+  if (!data.vaultsList.length) {
+    return <VaultsListViewEmpty />
   }
 
   return (
