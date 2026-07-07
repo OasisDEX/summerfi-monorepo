@@ -38,10 +38,8 @@ export type VaultsListResponse = VaultsListRouteResponse &
 
 export const fetchVaultsListRoute = async (
   walletAddress?: string,
-  vaultsFilter?: string,
 ): Promise<VaultsListRouteResponse> => {
-  const endpoint =
-    vaultsFilter === 'permissioned-rwa-vaults' ? 'rwa-vaults-list' : 'defi-vaults-list'
+  const endpoint = 'defi-vaults-list'
   const qs = walletAddress ? `?walletAddress=${encodeURIComponent(walletAddress)}` : ''
   const response = await fetch(`/earn/api/${endpoint}${qs}`)
 
@@ -72,10 +70,10 @@ const sharedQueryOptions = {
   refetchOnMount: false,
 } as const
 
-export const useVaultsListQuery = (walletAddress?: string, vaultsFilter?: string) => {
+export const useVaultsListQuery = (walletAddress?: string) => {
   const listQuery = useQuery({
-    queryKey: getVaultsListRouteQueryKey(walletAddress, vaultsFilter),
-    queryFn: () => fetchVaultsListRoute(walletAddress, vaultsFilter),
+    queryKey: getVaultsListRouteQueryKey(walletAddress),
+    queryFn: () => fetchVaultsListRoute(walletAddress),
     ...sharedQueryOptions,
     placeholderData: keepPreviousData,
   })

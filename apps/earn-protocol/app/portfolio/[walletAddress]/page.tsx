@@ -24,7 +24,7 @@ type PortfolioPageProps = {
 const PortfolioWithData = async ({ walletAddress }: { walletAddress: string }) => {
   const queryClient = getServerQueryClient()
 
-  // Only the core shell (positions + values, APY, DCA, RWA-pending, carousel) is prefetched +
+  // Only the core shell (positions + values, APY, carousel) is prefetched +
   // hydrated so the portfolio paints instantly from the server cache. Each position's historical
   // chart is intentionally left to its own client query, fetched per-position as the card scrolls
   // into view — see usePortfolioPositionHistoryQuery / LazyPositionHistoryChart.

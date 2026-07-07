@@ -8,14 +8,12 @@ import {
   type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
-  type TokenSymbolsList,
 } from '@summerfi/app-types'
 import { findVaultInfo } from '@summerfi/app-utils'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
 import { getVaultApySelector } from '@/components/layout/VaultsListView/get-vault-apy-selector'
-import { VaultsListDaoManagedVaultBanner } from '@/components/layout/VaultsListView/VaultsListDaoManagedVaultBanner'
 import { VaultsListEmptyState } from '@/components/layout/VaultsListView/VaultsListEmptyState'
 import { VaultsFiltersIntermediary } from '@/components/layout/VaultsListView/VaultsListFilters'
 
@@ -26,8 +24,6 @@ type VaultsListCardsProps = {
   usingSafeVaultsList: boolean
   sortingMethodId: string
   daoManagedVaultsEnabled: boolean
-  rwaVaultsEnabled: boolean
-  isPermissionedRwaTab: boolean
   queryParams: ReadonlyURLSearchParams
   filterNetworks: string[]
   filterAssets: string[]
@@ -39,13 +35,7 @@ type VaultsListCardsProps = {
   rewardTokenPrices: RewardTokenPrices
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
-  daoManagedVaultsBannerData: {
-    assets: TokenSymbolsList[]
-    highestApy: number
-    highestApyToken: string
-  }
   onSelectVault: (vault: SDKVaultishType, id: string) => void
-  onDaoBannerClick: () => void
   onTooltipOpen: (tooltipName: string) => void
   showStakeCard: boolean
   sumrAvailableToStake: number
@@ -63,8 +53,6 @@ export const VaultsListCards = ({
   usingSafeVaultsList,
   sortingMethodId,
   daoManagedVaultsEnabled,
-  rwaVaultsEnabled,
-  isPermissionedRwaTab,
   queryParams,
   filterNetworks,
   filterAssets,
@@ -76,9 +64,7 @@ export const VaultsListCards = ({
   rewardTokenPrices,
   vaultsApyByNetworkMap,
   vaultsInfo,
-  daoManagedVaultsBannerData,
   onSelectVault,
-  onDaoBannerClick,
   onTooltipOpen,
   showStakeCard,
   sumrAvailableToStake,
@@ -103,16 +89,6 @@ export const VaultsListCards = ({
       {filteredAndSortedVaults?.length ? (
         filteredAndSortedVaults.map((vault, vaultIndex) => (
           <Fragment key={getUniqueVaultId(vault)}>
-            {vaultIndex === 1 &&
-              !rwaVaultsEnabled &&
-              !filterVaults.includes('dao-risk-managed') && (
-                <VaultsListDaoManagedVaultBanner
-                  assets={daoManagedVaultsBannerData.assets}
-                  highestApy={daoManagedVaultsBannerData.highestApy}
-                  highestApyToken={daoManagedVaultsBannerData.highestApyToken}
-                  onClick={onDaoBannerClick}
-                />
-              )}
             <VaultCard
               {...vault}
               withHover
@@ -124,7 +100,6 @@ export const VaultsListCards = ({
               onClick={(id) => onSelectVault(vault, id)}
               withTokenBonus={withSumr}
               rewardTokenPrices={rewardTokenPrices}
-              isRwaVault={isPermissionedRwaTab}
               vaultApyData={vaultsApyByNetworkMap[getVaultApySelector(vault)]}
               tooltipName="vaults-list-vault-card"
               onTooltipOpen={onTooltipOpen}
@@ -134,8 +109,6 @@ export const VaultsListCards = ({
         ))
       ) : (
         <VaultsListEmptyState
-          isPermissionedRwaTab={isPermissionedRwaTab}
-          filterVaults={filterVaults}
           filterNetworks={filterNetworks}
           filterAssets={filterAssets}
           filterWallet={filterWallet}

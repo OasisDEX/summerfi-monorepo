@@ -22,8 +22,6 @@ export const useVaultsListFiltering = ({
   vaultsInfo,
   rewardTokenPrices,
   queryParams,
-  daoManagedVaultsEnabled,
-  rwaVaultsEnabled,
 }: {
   vaultsList: SDKVaultsListType
   filteredWalletAssetsVaults: SDKVaultsListType
@@ -31,47 +29,21 @@ export const useVaultsListFiltering = ({
   vaultsInfo?: IArmadaVaultInfo[]
   rewardTokenPrices: RewardTokenPrices
   queryParams: ReadonlyURLSearchParams
-  daoManagedVaultsEnabled: boolean
-  rwaVaultsEnabled: boolean
 }) => {
   const filterNetworks = useMemo(() => queryParams.get('networks')?.split(',') ?? [], [queryParams])
   const filterAssets = useMemo(() => queryParams.get('assets')?.split(',') ?? [], [queryParams])
   const filterWallet = useMemo(() => queryParams.get('walletAddress') ?? '', [queryParams])
   const filterVaults = useMemo(() => queryParams.get('vaults')?.split(',') ?? [], [queryParams])
-  const isPermissionedRwaTab = rwaVaultsEnabled && filterVaults.includes('permissioned-rwa-vaults')
   const sortingMethodId = useMemo(
     () => queryParams.get('sort') ?? VaultsSorting.HIGHEST_APY,
     [queryParams],
   )
 
+  // Single combined list of all regular vaults (BlockAnalitica + DAO-managed). The old
+  // tab-driven isDaoManaged split has been removed — the list is no longer partitioned by type.
   const vaultsFilteredByType = useMemo(() => {
-    if (rwaVaultsEnabled) {
-      return filterWallet ? filteredWalletAssetsVaults : vaultsList
-    }
-
-    if (!daoManagedVaultsEnabled) {
-      return vaultsList
-    }
-
-    const vaultsListToUse = filterWallet ? filteredWalletAssetsVaults : vaultsList
-
-    if (filterVaults.includes('dao-risk-managed')) {
-      return vaultsListToUse.filter((vault) => {
-        return vault.isDaoManaged
-      })
-    } else {
-      return vaultsListToUse.filter((vault) => {
-        return !vault.isDaoManaged
-      })
-    }
-  }, [
-    daoManagedVaultsEnabled,
-    filterWallet,
-    filteredWalletAssetsVaults,
-    rwaVaultsEnabled,
-    vaultsList,
-    filterVaults,
-  ])
+    return filterWallet ? filteredWalletAssetsVaults : vaultsList
+  }, [filterWallet, filteredWalletAssetsVaults, vaultsList])
 
   const filterAssetVaults = useCallback(
     (vault: (typeof vaultsList)[number]) => {
@@ -196,7 +168,6 @@ export const useVaultsListFiltering = ({
     filterAssets,
     filterWallet,
     filterVaults,
-    isPermissionedRwaTab,
     sortingMethodId,
     vaultMetricsMap,
     filteredAndSortedVaults,

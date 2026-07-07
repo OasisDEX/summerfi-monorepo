@@ -4,7 +4,7 @@ import { type SDKVaultishType, type SDKVaultType, SupportedSDKNetworks } from '@
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
 
-import { rwaSubgraphsMap, subgraphsMap } from '@/app/server-handlers/subgraphs-map'
+import { subgraphsMap } from '@/app/server-handlers/subgraphs-map'
 import { CACHE_TIMES } from '@/constants/revalidation'
 import {
   GetPositionHistoryDocument,
@@ -15,7 +15,6 @@ type GetPositionHistoryParams = {
   network: SupportedSDKNetworks
   address: string
   vault: SDKVaultishType | SDKVaultType
-  isRwaVault?: boolean
 }
 
 type GetPositionHistoryResult = {
@@ -41,7 +40,6 @@ export async function getCachedPositionHistory({
   network,
   address,
   vault,
-  isRwaVault = false,
 }: GetPositionHistoryParams) {
   const cacheKey = `${network}:${address}:${vault.id}`
   const now = Date.now()
@@ -71,16 +69,11 @@ export async function getCachedPositionHistory({
   try {
     const isProperNetwork = (net: string): net is keyof typeof subgraphsMap => net in subgraphsMap
 
-    const isProperRwaNetwork = (net: string): net is keyof typeof rwaSubgraphsMap =>
-      net in rwaSubgraphsMap
-
-    if (isRwaVault ? !isProperRwaNetwork(network) : !isProperNetwork(network)) {
+    if (!isProperNetwork(network)) {
       throw new Error(`getCachedPositionHistory: No endpoint found for network: ${network}`)
     }
 
-    const networkGraphQlClient = new GraphQLClient(
-      isRwaVault && isProperRwaNetwork(network) ? rwaSubgraphsMap[network] : subgraphsMap[network],
-    )
+    const networkGraphQlClient = new GraphQLClient(subgraphsMap[network])
 
     const [positionHistory, noOfDepositsQueryResult] = await Promise.all([
       networkGraphQlClient.request<GetPositionHistoryQuery>(

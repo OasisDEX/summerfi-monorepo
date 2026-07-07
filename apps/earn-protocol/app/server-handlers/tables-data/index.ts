@@ -3,7 +3,7 @@ import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
 import { NextResponse } from 'next/server'
 
-import { rwaSubgraphsMap, subgraphsMap } from '@/app/server-handlers/subgraphs-map'
+import { subgraphsMap } from '@/app/server-handlers/subgraphs-map'
 import { updateVaultsBenchmark } from '@/app/server-handlers/tables-data/vaults-benchmark/updater'
 
 import { updateLatestActivities } from './latest-activity/updater'
@@ -41,12 +41,6 @@ export const updateTablesData = async ({
       subgraphsMap[SupportedSDKNetworks.Hyperliquid],
     )
 
-    // RWA (rounds-based): one client per RWA-enabled network (derived from rwaSubgraphsMap, the
-    // single source of truth). Each is full-scanned + fault-tolerant in the updaters, and rows are
-    // tagged with their own network (BASE/MAINNET) by the inserters — so adding a network is a
-    // one-line edit to rwaSubgraphsMap.
-    const rwaGraphQlClients = Object.values(rwaSubgraphsMap).map((url) => new GraphQLClient(url))
-
     let updatedLatestActivities
     let updatedTopDepositors
     let updatedRebalanceActivity
@@ -60,7 +54,6 @@ export const updateTablesData = async ({
         arbitrumGraphQlClient,
         sonicGraphQlClient,
         hyperliquidGraphQlClient,
-        rwaGraphQlClients,
       })
     }
 
@@ -72,7 +65,6 @@ export const updateTablesData = async ({
         arbitrumGraphQlClient,
         sonicGraphQlClient,
         hyperliquidGraphQlClient,
-        rwaGraphQlClients,
       })
     }
 
@@ -84,7 +76,6 @@ export const updateTablesData = async ({
         arbitrumGraphQlClient,
         sonicGraphQlClient,
         hyperliquidGraphQlClient,
-        rwaGraphQlClients,
       })
     }
 

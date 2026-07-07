@@ -28,7 +28,6 @@ import { transactionErrorsMap as errorsMap } from '@/helpers/transaction-errors'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleButtonClickEvent, useHandleTransactionEvent } from '@/hooks/use-mixpanel-event'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
-import { useRwaSDK } from '@/hooks/use-rwa-sdk'
 import { useTransactionCore } from '@/hooks/use-transaction-core'
 import { useTransactionSidebar } from '@/hooks/use-transaction-sidebar'
 import { useTransactionValidation } from '@/hooks/use-transaction-validation'
@@ -36,9 +35,6 @@ import { useTransactionValidation } from '@/hooks/use-transaction-validation'
 type UseTransactionParams = {
   vault: SDKVaultishType
   vaultChainId: SupportedNetworkIds
-  // RWA vaults are rounds-based: deposits/withdrawals are routed through the
-  // dedicated RWA SDK handlers instead of the standard ERC-4626 flow.
-  isRwaVault?: boolean
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
   vaultToken: IToken | undefined
@@ -55,18 +51,13 @@ type UseTransactionParams = {
   setSidebarTransactionType?: Dispatch<SetStateAction<TransactionAction>>
   referralCode?: string
   referralCodeError?: string | null
-  // For RWA withdraw: fleet shares in the current position, used to convert the
-  // user-entered USDC amount into the shares amount the SDK expects.
-  positionShares?: BigNumber
-  // Called once a deposit/withdraw completes successfully. RWA views use it to refresh the
-  // client-side pending receipts, which the server-side revalidation does not cover.
+  // Called once a deposit/withdraw completes successfully.
   onTransactionSuccess?: () => void
 }
 
 export const useTransaction = ({
   vault,
   vaultChainId,
-  isRwaVault = false,
   manualSetAmount,
   amount,
   publicClient,
@@ -77,7 +68,6 @@ export const useTransaction = ({
   flow,
   ownerView, // on non-owner views we dont want to make all of these calls
   positionAmount,
-  positionShares,
   approvalCustomValue,
   sidebarTransactionType,
   setSidebarTransactionType,
@@ -91,11 +81,6 @@ export const useTransaction = ({
   const transactionEventHandler = useHandleTransactionEvent()
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
-  // RWA tx builders live only on the institutional SDK surface, scoped to the institution that owns
-  // this vault (its `vaultInstitutionId`).
-  const { getRwaDepositTx: getRwaDepositTX, getRwaWithdrawTx: getRwaWithdrawTX } = useRwaSDK(
-    vault.customFields?.vaultInstitutionId,
-  )
   const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain, chain } = useEarnProtocolChain()
@@ -178,7 +163,6 @@ export const useTransaction = ({
       try {
         const transactionsList = await buildDepositWithdrawTransactions({
           action: sidebarTransactionType as TransactionAction.DEPOSIT | TransactionAction.WITHDRAW,
-          isRwaVault,
           token,
           vaultToken,
           amount,
@@ -189,10 +173,6 @@ export const useTransaction = ({
           referralCode,
           getDepositTx: getDepositTX,
           getWithdrawTx: getWithdrawTX,
-          getRwaDepositTx: getRwaDepositTX,
-          getRwaWithdrawTx: getRwaWithdrawTX,
-          rwaPositionShares: positionShares,
-          rwaPositionAssets: positionAmount,
         })
 
         transactionEventHandler({
@@ -272,16 +252,12 @@ export const useTransaction = ({
     selectedSwitchVault,
     setTxStatus,
     sidebarTransactionType,
-    isRwaVault,
     vault,
     vaultChainId,
     slippageConfig.slippage,
     referralCode,
     getDepositTX,
     getWithdrawTX,
-    getRwaDepositTX,
-    getRwaWithdrawTX,
-    positionShares,
     positionAmount,
     transactionEventHandler,
     setTransactions,
@@ -369,8 +345,6 @@ export const useTransaction = ({
           walletAddress: userWalletAddress,
         })
 
-        // lets RWA views reload their client-side pending receipts (server revalidation above only
-        // covers server-fetched data, not the on-chain receipt balances read via the RWA SDK).
         onTransactionSuccess?.()
 
         // makes sure the user is redirected to the correct page

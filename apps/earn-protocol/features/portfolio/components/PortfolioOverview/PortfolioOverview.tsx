@@ -26,7 +26,6 @@ import {
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import { DcaStrategyStatusEnum, type IDcaStrategy } from '@summerfi/sdk-common'
 import Link from 'next/link'
 
 // import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
@@ -37,11 +36,6 @@ import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/ty
 import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
 import { usePortfolioPositionHistoryQuery } from '@/features/portfolio/api/get-portfolio-position-history-data'
 import { LazyPositionHistoryChart } from '@/features/portfolio/components/PortfolioOverview/LazyPositionHistoryChart'
-import { PortfolioDcaPosition } from '@/features/portfolio/components/PortfolioOverview/PortfolioDcaPosition'
-import {
-  type PortfolioRwaPendingPosition,
-  PortfolioRwaPendingPositions,
-} from '@/features/portfolio/components/PortfolioOverview/PortfolioRwaPendingPositions'
 // import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSummerPro/PortfolioSummerPro'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
@@ -62,9 +56,6 @@ type PortfolioOverviewProps = {
   isRewardsDataPending: boolean
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
-  dcaOrders: IDcaStrategy[]
-  dcaEnabled?: boolean
-  rwaPendingPositions: PortfolioRwaPendingPosition[]
   viewWalletAddress: string
 }
 
@@ -79,7 +70,6 @@ const PositionsListView = ({
   isMobile,
   isTablet,
   handleButtonClick,
-  dcaOrders,
 }: {
   sortedPositions: PositionWithVault[]
   walletAddress: string
@@ -91,27 +81,7 @@ const PositionsListView = ({
   isMobile: boolean
   isTablet: boolean
   handleButtonClick: (event: string) => void
-  dcaOrders: IDcaStrategy[]
 }) => {
-  const getDcaOrderForVault = (
-    vaultId: string,
-  ): { id: string; type: 'from' | 'to' } | undefined => {
-    const normalizedId = vaultId.toLowerCase()
-
-    const order = dcaOrders.find(
-      (o) =>
-        o.sourceVault.toLowerCase() === normalizedId ||
-        o.targetVault.toLowerCase() === normalizedId,
-    )
-
-    if (!order) return undefined
-
-    const type =
-      order.sourceVault.toLowerCase() === normalizedId ? ('from' as const) : ('to' as const)
-
-    return { id: order.id, type }
-  }
-
   return sortedPositions.length ? (
     sortedPositions.map((position) => (
       <PortfolioPosition
@@ -120,8 +90,6 @@ const PositionsListView = ({
         portfolioPosition={position}
         buttonClickEventHandler={buttonClickEventHandler}
         tooltipEventHandler={tooltipEventHandler}
-        dcaOrderId={getDcaOrderForVault(position.vault.id)?.id}
-        dcaOrderType={getDcaOrderForVault(position.vault.id)?.type}
         positionGraph={
           <LazyPositionHistoryChart
             walletAddress={walletAddress}
@@ -159,40 +127,6 @@ const PositionsListView = ({
   )
 }
 
-const DcaStrategiesListView = ({
-  dcaOrders,
-  vaultsList,
-  buttonClickEventHandler,
-}: {
-  dcaOrders: IDcaStrategy[]
-  vaultsList: SDKVaultsListType
-  buttonClickEventHandler: ReturnType<typeof useHandleButtonClickEvent>
-}) => {
-  return (
-    <div className={portfolioOverviewStyles.portfolioDcaPositionsListWrapper}>
-      {dcaOrders.length ? (
-        dcaOrders.map((order) => (
-          <PortfolioDcaPosition key={order.id} order={order} vaultsList={vaultsList} />
-        ))
-      ) : (
-        <div className={portfolioOverviewStyles.noPositionsWrapper}>
-          <Text as="h5" variant="h5">
-            You don’t have any DCA strategies yet
-          </Text>
-          <Link
-            href="/dca/new"
-            onClick={() => {
-              buttonClickEventHandler('portfolio-overview-view-strategies')
-            }}
-          >
-            <Button variant="primaryMedium">View DCA strategies</Button>
-          </Link>
-        </div>
-      )}
-    </div>
-  )
-}
-
 export const PortfolioOverview = ({
   vaultsList,
   positions,
@@ -200,9 +134,6 @@ export const PortfolioOverview = ({
   isRewardsDataPending,
   vaultsApyByNetworkMap,
   rewardTokenPrices,
-  dcaOrders,
-  dcaEnabled,
-  rwaPendingPositions,
   viewWalletAddress,
 }: PortfolioOverviewProps) => {
   const [positionsTab, setPositionsTab] = useState<string>('positions')
@@ -211,10 +142,6 @@ export const PortfolioOverview = ({
 
   const [showEmptyPositions, setShowEmptyPositions] = useLocalStorage<boolean>(
     'showEmptyPositions',
-    false,
-  )
-  const [showInactiveDcaPositions, setShowInactiveDcaPositions] = useLocalStorage<boolean>(
-    'showInactiveDcaPositions',
     false,
   )
 
@@ -236,12 +163,6 @@ export const PortfolioOverview = ({
       return bValues.netValueUSD.comparedTo(aValues.netValueUSD) ?? 0
     })
   }, [filteredPositions])
-
-  const filteredDcaOrders = useMemo(() => {
-    return showInactiveDcaPositions
-      ? dcaOrders
-      : dcaOrders.filter((order) => order.status === DcaStrategyStatusEnum.Active)
-  }, [dcaOrders, showInactiveDcaPositions])
 
   const hasPositions = !!sortedPositions.length
   const firstPosition = hasPositions ? sortedPositions[0] : undefined
@@ -294,14 +215,6 @@ export const PortfolioOverview = ({
     })
   }
 
-  const handleShowInactiveDcaPositions = () => {
-    setShowInactiveDcaPositions((prev) => {
-      buttonClickEventHandler(`portfolio-overview-show-inactive-dca-positions-${!prev}`)
-
-      return !prev
-    })
-  }
-
   const dataBlocks = useMemo(() => {
     return [
       {
@@ -346,23 +259,6 @@ export const PortfolioOverview = ({
                   id: 'positions',
                   label: <Text variant="p2semi">Positions</Text>,
                 },
-                ...(dcaEnabled
-                  ? [
-                      {
-                        id: 'dca-strategies',
-                        label: <Text variant="p2semi">DCA&nbsp;Strategies</Text>,
-                      },
-                    ]
-                  : []),
-                // Only surface the Pending tab when the wallet actually has un-settled RWA receipts.
-                ...(rwaPendingPositions.length
-                  ? [
-                      {
-                        id: 'rwa-pending',
-                        label: <Text variant="p2semi">Pending</Text>,
-                      },
-                    ]
-                  : []),
               ]}
               tabBarStyle={{
                 width: 'fit-content',
@@ -386,14 +282,6 @@ export const PortfolioOverview = ({
                   activeTimeframe={timeframe}
                 />
               </div>
-            ) : positionsTab === 'dca-strategies' ? (
-              <div className={portfolioOverviewStyles.portfolioPositionsListOptions}>
-                <ToggleButton
-                  checked={showInactiveDcaPositions}
-                  title="Show inactive DCA positions"
-                  onChange={handleShowInactiveDcaPositions}
-                />
-              </div>
             ) : (
               <div className={portfolioOverviewStyles.portfolioPositionsListOptions} />
             )}
@@ -410,20 +298,6 @@ export const PortfolioOverview = ({
               isMobile={isMobile}
               isTablet={isTablet}
               handleButtonClick={handleButtonClick}
-              dcaOrders={dcaOrders}
-            />
-          ) : null}
-          {positionsTab === 'dca-strategies' ? (
-            <DcaStrategiesListView
-              dcaOrders={filteredDcaOrders}
-              vaultsList={vaultsList}
-              buttonClickEventHandler={buttonClickEventHandler}
-            />
-          ) : null}
-          {positionsTab === 'rwa-pending' ? (
-            <PortfolioRwaPendingPositions
-              pendingPositions={rwaPendingPositions}
-              viewWalletAddress={viewWalletAddress}
             />
           ) : null}
 

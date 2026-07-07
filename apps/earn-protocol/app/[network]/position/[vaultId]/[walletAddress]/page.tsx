@@ -17,23 +17,17 @@ import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getCachedRwaUserVaultExposure } from '@/app/server-handlers/cached/get-rwa-user-vault-exposure'
-import { getCachedRwaVaultDetails } from '@/app/server-handlers/cached/get-rwa-vault-details'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultManageCoreData } from '@/app/server-handlers/vault-manage/get-vault-manage-core-data'
-import { getVaultOpenCoreData } from '@/app/server-handlers/vault-open/get-vault-open-core-data'
 import { getVaultManageCoreQueryKey } from '@/components/layout/VaultManageView/vault-manage-query-keys'
 import { VaultManageLoadingView } from '@/components/layout/VaultManageView/VaultManageLoadingView'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
-import { getVaultOpenCoreQueryKey } from '@/components/layout/VaultOpenView/vault-open-query-keys'
-import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
 import { getServerQueryClient } from '@/helpers/get-server-query-client'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   getVaultCuratedBy,
   getVaultIdByVaultCustomName,
-  getVaultRwaClientId,
 } from '@/helpers/vault-custom-value-helpers'
 
 type EarnVaultManagePageProps = {
@@ -55,63 +49,6 @@ const VaultManageWithData = async ({
 }) => {
   const queryClient = getServerQueryClient()
 
-  // RWA (rounds-based) vaults: a deposit mints ERC-1155 receipts, not Fleet shares — the user only
-  // holds a real position once the round settles and they claim. Until then there is no position to
-  // show, so the position page mirrors the open view (deposit sidebar + pending receipts). Once the
-  // user holds shares, the normal position view is shown below.
-  //
-  // The RWA check is the same cheap/cached lookup the open page uses; we only pay for the extra
-  // position fetch on RWA vaults so the common (non-RWA) path is unchanged.
-  const systemConfig = parseServerResponseToClient(await getCachedConfig())
-  const parsedNetwork = humanNetworktoSDKNetwork(network)
-  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const parsedVaultId = isAddress(vaultId)
-    ? vaultId.toLowerCase()
-    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
-  const isRwaVault =
-    !!parsedVaultId && !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
-
-  if (isRwaVault) {
-    const rwaClientId = parsedVaultId
-      ? getVaultRwaClientId(parsedVaultId, parsedNetworkId, systemConfig)
-      : undefined
-    const [position, exposure] =
-      parsedVaultId && rwaClientId
-        ? await Promise.all([
-            getUserPosition({
-              vaultAddress: parsedVaultId,
-              network: parsedNetwork,
-              walletAddress,
-              isRwaVault,
-            }),
-            getCachedRwaUserVaultExposure({
-              chainId: parsedNetworkId,
-              fleetAddress: parsedVaultId,
-              walletAddress,
-              clientId: rwaClientId,
-            }),
-          ])
-        : [undefined, null]
-    const hasShares = !!position && new BigNumber(position.amount.amount).gt(0)
-    // A pre-claim user with no settled shares but pending/claimable exposure still belongs on the
-    // manage view (it synthesizes a "settling" position from this exposure). Only fall back to the
-    // deposit view when there is genuinely nothing (no shares AND no exposure).
-    const hasExposure = !!exposure && new BigNumber(exposure.total).gt(0)
-
-    if (!hasShares && !hasExposure) {
-      await queryClient.prefetchQuery({
-        queryKey: getVaultOpenCoreQueryKey(network, vaultId),
-        queryFn: () => getVaultOpenCoreData({ network, vaultId }),
-      })
-
-      return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <VaultOpenView network={network} vaultId={vaultId} />
-        </HydrationBoundary>
-      )
-    }
-  }
-
   // Only the core (shell) is prefetched + hydrated so the header + deposit/withdraw/switch sidebar
   // paint instantly from the server cache. The heavier details island (performance + yield charts,
   // exposure, activity tables) is intentionally left to its own client query, which streams it into
@@ -127,7 +64,7 @@ const VaultManageWithData = async ({
         network={network}
         vaultId={vaultId}
         walletAddress={walletAddress}
-        isRwaVault={isRwaVault}
+        isRwaVault={false}
       />
     </HydrationBoundary>
   )
@@ -152,13 +89,16 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     redirect('/not-found')
   }
 
-  // Cheap, cached RWA check (same lookup VaultManageWithData uses) so the Suspense fallback renders
-  // the RWA manage skeleton (30D Net APY stat, Deposits & Withdrawals expander, Deposit/Withdraw
-  // tabs) for RWA vaults.
+  // RWA (permissioned) vaults have been removed from the earn app. They are still detected via the
+  // curator config so a direct/bookmarked RWA position URL redirects to the regular vaults list.
   const isRwaVault = !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
 
+  if (isRwaVault) {
+    redirect('/')
+  }
+
   return (
-    <Suspense fallback={<VaultManageLoadingView isRwaVault={isRwaVault} />}>
+    <Suspense fallback={<VaultManageLoadingView isRwaVault={false} />}>
       <VaultManageWithData network={network} vaultId={vaultId} walletAddress={walletAddress} />
     </Suspense>
   )
@@ -195,18 +135,13 @@ export async function generateMetadata({
     }
   }
 
-  // RWA vaults are sourced from the RWA subgraph; use the matching detail handler so the title
-  // resolves (mirrors the open page metadata).
-  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
-
   const [position, vault] = await Promise.all([
     getUserPosition({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
       walletAddress,
-      isRwaVault,
     }),
-    (isRwaVault ? getCachedRwaVaultDetails : getCachedVaultDetails)({
+    getCachedVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),

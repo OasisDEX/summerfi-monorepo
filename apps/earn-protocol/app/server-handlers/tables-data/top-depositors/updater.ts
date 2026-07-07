@@ -10,7 +10,6 @@ import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { BigNumber } from 'bignumber.js'
 import { type GraphQLClient } from 'graphql-request'
 
-import { fetchTopDepositors } from './fetcher'
 import { getTopDepositors } from './getter'
 import { calculateTopDepositors7daysChange, getEarningStreakResetTimestamp } from './helpers'
 import { insertTopDepositorsInBatches } from './inserter'
@@ -35,7 +34,6 @@ export const updateTopDepositors = async ({
   arbitrumGraphQlClient,
   sonicGraphQlClient,
   hyperliquidGraphQlClient,
-  rwaGraphQlClients,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
@@ -43,40 +41,15 @@ export const updateTopDepositors = async ({
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
   hyperliquidGraphQlClient: GraphQLClient
-  rwaGraphQlClients?: GraphQLClient[]
 }) => {
   const startTime = Date.now()
-  const standardTopDepositors = await getTopDepositors({
+  const topDepositors = await getTopDepositors({
     mainnetGraphQlClient,
     baseGraphQlClient,
     arbitrumGraphQlClient,
     sonicGraphQlClient,
     hyperliquidGraphQlClient,
   })
-
-  // RWA positions from the institutions deployments (one client per RWA network), merged into the
-  // same combined set. Per-client fault tolerance: one RWA network failing must not break the
-  // standard update or the other RWA networks. BUT a failed fetch yields an incomplete set, and the
-  // insert below delete-reconciles (purges rows missing from the incoming IDs) — so we track any
-  // failure and skip the delete when the set is incomplete, rather than purging valid rows.
-  let rwaFetchFailed = false
-  const rwaTopDepositors = (
-    await Promise.all(
-      (rwaGraphQlClients ?? []).map((client) =>
-        fetchTopDepositors(client)
-          .then((positions) => positions.filter((position) => position.deposits.length > 0))
-          .catch((error) => {
-            // eslint-disable-next-line no-console
-            console.error('Failed to fetch RWA top depositors', error)
-            rwaFetchFailed = true
-
-            return []
-          }),
-      ),
-    )
-  ).flat()
-
-  const topDepositors = [...standardTopDepositors, ...rwaTopDepositors]
 
   // TEMPORARY: USE getVaultsApy instead of reading it from the db since it's not available in new dbs
   const uniqueFleets = Array.from(
@@ -146,9 +119,9 @@ export const updateTopDepositors = async ({
 
     // const fleetRate = vaultsApyData[fleetId]
 
-    // RWA vaults (and any vault without a standard APY entry) have no fleet rate at runtime (the index
-    // access is typed as always-present, but is undefined for RWA fleets). Default projected earnings
-    // to 0 and move on rather than throwing, so a missing rate never breaks the whole update.
+    // Any vault without a standard APY entry has no fleet rate at runtime (the index access is typed
+    // as always-present, but can be undefined). Default projected earnings to 0 and move on rather
+    // than throwing, so a missing rate never breaks the whole update.
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!fleetRate) {
       // eslint-disable-next-line no-console
@@ -180,11 +153,7 @@ export const updateTopDepositors = async ({
     }
   })
 
-  const { updated, deleted } = await insertTopDepositorsInBatches(db, extendPositions, {
-    // Don't prune the leaderboard from a partial set — a transient RWA failure would otherwise
-    // delete every RWA depositor that didn't load this run.
-    skipReconcileDelete: rwaFetchFailed,
-  })
+  const { updated, deleted } = await insertTopDepositorsInBatches(db, extendPositions)
 
   const endTime = Date.now()
   const duration = `${((endTime - startTime) / 1000).toFixed(2)}s`

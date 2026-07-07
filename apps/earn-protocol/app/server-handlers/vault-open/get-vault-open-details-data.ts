@@ -2,13 +2,11 @@ import { getArksInterestRates } from '@summerfi/app-server-handlers'
 import {
   type ArksHistoricalChartData,
   type InterestRates,
-  type SingleSourceChartData,
   type SupportedSDKNetworks,
 } from '@summerfi/app-types'
 import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 
-import { getCachedRwaVaultNavHistory } from '@/app/server-handlers/cached/get-rwa-vault-nav-history'
 import { getCachedVaultCurationEvents } from '@/app/server-handlers/cached/get-vault-curation-events'
 import { getCachedVaultsBenchmark } from '@/app/server-handlers/cached/get-vaults-benchmark'
 import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
@@ -21,18 +19,14 @@ import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/
 import { resolveVaultOpenContext } from '@/app/server-handlers/vault-open/resolve-vault-open-context'
 import { type VaultCurationEvent } from '@/features/curation-activity/types'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
-import { getRwaNavHistoricalData } from '@/helpers/chart-helpers/get-rwa-nav-historical-data'
-import { getVaultNavPriceSkipFirstNDays } from '@/helpers/vault-custom-value-helpers'
 
 export type VaultOpenDetailsData = {
   latestActivity: LatestActivityPagination
   topDepositors: TopDepositorsPagination
   rebalanceActivity: RebalanceActivityPagination
   curationEvents: VaultCurationEvent[]
-  // ARK historical yield chart (DeFi vaults). Omitted for RWA vaults, which render the NAV chart.
+  // ARK historical yield chart (DeFi vaults).
   arksHistoricalChartData?: ArksHistoricalChartData
-  // Historical NAV price chart (RWA vaults only).
-  rwaNavHistoricalChartData?: SingleSourceChartData
   arksInterestRates: InterestRates
 }
 
@@ -53,14 +47,7 @@ export const getVaultOpenDetailsData = async ({
     return null
   }
 
-  const {
-    parsedNetwork,
-    parsedNetworkId,
-    parsedVaultId,
-    vaultWithConfig,
-    isRwaVault,
-    systemConfig,
-  } = ctx
+  const { parsedNetwork, parsedVaultId, vaultWithConfig } = ctx
   const strategy = `${parsedVaultId}-${parsedNetwork}`
 
   // Data needed regardless of vault kind. Kicked off immediately so it runs concurrently with the
@@ -75,7 +62,6 @@ export const getVaultOpenDetailsData = async ({
       network: parsedNetwork,
       vault: vaultWithConfig,
       timestampFrom: dayjs().subtract(30, 'days').unix(),
-      isRwaVault,
     }),
     getPaginatedTopDepositors({
       page: 1,
@@ -95,52 +81,33 @@ export const getVaultOpenDetailsData = async ({
     }),
   ])
 
-  let arksHistoricalChartData: ArksHistoricalChartData | undefined
-  let rwaNavHistoricalChartData: SingleSourceChartData | undefined
+  const [{ chartData: vaultBenchmark }, fullArkInterestRatesMap, vaultInterestRates] =
+    await Promise.all([
+      getCachedVaultsBenchmark({
+        vaultChainId: subgraphNetworkToId(parsedNetwork),
+        vaultToken: vaultWithConfig.inputToken.symbol,
+      }),
+      getArksInterestRates({
+        network: parsedNetwork,
+        arksList: vaultWithConfig.arks.filter(
+          (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+        ),
+      }),
+      getCachedVaultsHistoricalApy({
+        // just the vault displayed
+        fleets: [vaultWithConfig].map(({ id, protocol: { network: vaultNetwork } }) => ({
+          fleetAddress: id,
+          chainId: subgraphNetworkToId(supportedSDKNetwork(vaultNetwork)),
+        })),
+      }),
+    ])
 
-  if (isRwaVault) {
-    // RWA vaults: a single Historical NAV price line sourced via an in-app subgraph call. We
-    // deliberately skip the resource-intensive ARK pipeline (benchmark + full historical ARK rates
-    // + historical APY) since it doesn't apply to RWA vaults.
-    const navHistory = await getCachedRwaVaultNavHistory({
-      network: parsedNetwork,
-      vaultId: parsedVaultId,
-    })
-
-    rwaNavHistoricalChartData = getRwaNavHistoricalData({
-      navHistory,
-      skipFirstNDays: getVaultNavPriceSkipFirstNDays(parsedVaultId, parsedNetworkId, systemConfig),
-      vaultCreatedTimestamp: vaultWithConfig.createdTimestamp,
-    })
-  } else {
-    const [{ chartData: vaultBenchmark }, fullArkInterestRatesMap, vaultInterestRates] =
-      await Promise.all([
-        getCachedVaultsBenchmark({
-          vaultChainId: subgraphNetworkToId(parsedNetwork),
-          vaultToken: vaultWithConfig.inputToken.symbol,
-        }),
-        getArksInterestRates({
-          network: parsedNetwork,
-          arksList: vaultWithConfig.arks.filter(
-            (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
-          ),
-        }),
-        getCachedVaultsHistoricalApy({
-          // just the vault displayed
-          fleets: [vaultWithConfig].map(({ id, protocol: { network: vaultNetwork } }) => ({
-            fleetAddress: id,
-            chainId: subgraphNetworkToId(supportedSDKNetwork(vaultNetwork)),
-          })),
-        }),
-      ])
-
-    arksHistoricalChartData = getArkHistoricalChartData({
-      vault: vaultWithConfig,
-      arkInterestRatesMap: fullArkInterestRatesMap,
-      vaultInterestRates,
-      vaultBenchmark,
-    })
-  }
+  const arksHistoricalChartData: ArksHistoricalChartData | undefined = getArkHistoricalChartData({
+    vault: vaultWithConfig,
+    arkInterestRatesMap: fullArkInterestRatesMap,
+    vaultInterestRates,
+    vaultBenchmark,
+  })
 
   const [
     latestArkInterestRatesMap,
@@ -156,7 +123,6 @@ export const getVaultOpenDetailsData = async ({
     rebalanceActivity,
     curationEvents,
     arksHistoricalChartData,
-    rwaNavHistoricalChartData,
     arksInterestRates: latestArkInterestRatesMap,
   }
 }
