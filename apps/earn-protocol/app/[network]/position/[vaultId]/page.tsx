@@ -143,6 +143,18 @@ export async function generateMetadata({
     }
   }
 
+  // RWA vaults are redirected away by the page; skip the standard vault fetch for them here so
+  // metadata generation doesn't waste a lookup (or resolve against the wrong, non-RWA handler).
+  if (getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)) {
+    return {
+      title: 'Lazy Summer Protocol',
+      openGraph: {
+        siteName: 'Lazy Summer Protocol',
+      },
+      keywords: getSeoKeywords(),
+    }
+  }
+
   const [vault] = await Promise.all([
     getCachedVaultDetails({
       vaultAddress: parsedVaultId,
