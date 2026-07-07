@@ -14,15 +14,12 @@ import {
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
-import { BigNumber } from 'bignumber.js'
 
 import { getCachedClaimableWSTETHMerkleRewards } from '@/app/server-handlers/cached/claimable-merkle-rewards'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
-import { getCachedRwaUserVaultExposure } from '@/app/server-handlers/cached/get-rwa-user-vault-exposure'
 import { getCachedVaultInfo } from '@/app/server-handlers/cached/get-vault-info'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedRewardTokenPrice } from '@/app/server-handlers/reward-token-price'
-import { buildSyntheticRwaPosition } from '@/app/server-handlers/vault-manage/build-synthetic-rwa-position'
 import { resolveVaultManageContext } from '@/app/server-handlers/vault-manage/resolve-vault-manage-context'
 import {
   getMerkleNowClaimableTokenAddress,
@@ -62,34 +59,10 @@ export const getVaultManageCoreData = async ({
     return null
   }
 
-  const {
-    systemConfig,
-    parsedNetwork,
-    parsedNetworkId,
-    parsedVaultId,
-    vault,
-    vaultWithConfig,
-    isRwaVault,
-    rwaClientId,
-  } = ctx
+  const { systemConfig, parsedNetwork, parsedNetworkId, parsedVaultId, vault, vaultWithConfig } =
+    ctx
 
-  // Resolve the effective position. A pre-claim RWA user has no settled Fleet position; if they hold
-  // exposure (pending/claimable deposits, pending withdrawals) we synthesize a position from it so
-  // the manage view renders a meaningful "settling" summary instead of bailing to the deposit view.
-  let { position } = ctx
-
-  if (!position && isRwaVault && parsedVaultId && rwaClientId) {
-    const exposure = await getCachedRwaUserVaultExposure({
-      chainId: Number(parsedNetworkId),
-      fleetAddress: parsedVaultId,
-      walletAddress,
-      clientId: rwaClientId,
-    })
-
-    if (exposure && new BigNumber(exposure.total).gt(0)) {
-      position = buildSyntheticRwaPosition({ exposure, vault: vaultWithConfig })
-    }
-  }
+  const { position } = ctx
 
   if (!position) {
     return null
@@ -113,7 +86,6 @@ export const getVaultManageCoreData = async ({
       network: parsedNetwork,
       address: walletAddress.toLowerCase(),
       vault,
-      isRwaVault,
     }),
     getCachedRewardTokenPrice(),
     getCachedClaimableWSTETHMerkleRewards(walletAddress),

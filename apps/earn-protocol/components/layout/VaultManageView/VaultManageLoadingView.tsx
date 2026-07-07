@@ -14,39 +14,30 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 import vaultManageViewStyles from './VaultManageView.module.css'
 
-export const VaultManageLoadingView = ({ isRwaVault = false }: { isRwaVault?: boolean }) => {
+export const VaultManageLoadingView = (
+  _props: {
+    // Retained for page-level API compatibility only; RWA vaults are no longer rendered here.
+    isRwaVault?: boolean
+  } = {},
+) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
   // Mirror the loaded VaultManageViewDetails "About the strategy" expander list (collapsed,
-  // lazy-loaded). RWA prepends the "Deposits and Withdrawals" history expander. Note: the manage
-  // view keeps the label "Historical yield" even for RWA (only the open view relabels it to NAV).
-  const aboutExpanderLabels = isRwaVault
-    ? [
-        'Deposits and Withdrawals',
-        'Historical yield',
-        'Vault exposure',
-        'Strategy fees',
-        'Rebalancing activity',
-        'Portfolio Composition History',
-        'User activity',
-      ]
-    : [
-        'Historical yield',
-        'Vault exposure',
-        'Strategy fees',
-        'Rebalancing activity',
-        'Portfolio Composition History',
-        'User activity',
-      ]
+  // lazy-loaded).
+  const aboutExpanderLabels = [
+    'Historical yield',
+    'Vault exposure',
+    'Strategy fees',
+    'Rebalancing activity',
+    'Portfolio Composition History',
+    'User activity',
+  ]
 
   return (
     <VaultManageLoadingGrid
       isMobile={isMobile}
-      isRwaVault={isRwaVault}
       detailsContent={[
-        // "Forecasted Market Value" is expanded by default in the loaded (settled) view. Pre-claim
-        // RWA hides it, but pending-vs-settled isn't knowable at load time — keep the common case.
         <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
           <Expander
             title={
@@ -121,7 +112,7 @@ export const VaultManageLoadingView = ({ isRwaVault = false }: { isRwaVault?: bo
       sidebarContent={
         <Sidebar
           title="Deposit"
-          titleTabs={isRwaVault ? ['Deposit', 'Withdraw'] : ['Deposit', 'Withdraw', 'Switch']}
+          titleTabs={['Deposit', 'Withdraw', 'Switch']}
           content={
             <div
               style={{

@@ -20,7 +20,7 @@ export const getPortfolioPositionHistoryData = async ({
 }): Promise<SingleSourceChartData | null> => {
   const viewWalletAddress = walletAddress.toLowerCase()
 
-  const { positionsWithVault, rwaFleetAddresses } = await resolvePortfolioContext({
+  const { positionsWithVault } = await resolvePortfolioContext({
     walletAddress: viewWalletAddress,
   })
 
@@ -38,9 +38,6 @@ export const getPortfolioPositionHistoryData = async ({
     network,
     address: viewWalletAddress,
     vault: match.vault,
-    // RWA position history comes from the institutional subgraph; rwaFleetAddresses is the reliable
-    // RWA source of truth (vault.isRwaVault is unreliable for list-sourced vaults).
-    isRwaVault: rwaFleetAddresses.has(match.vault.id.toLowerCase()),
   })
 
   return getPositionHistoricalData({

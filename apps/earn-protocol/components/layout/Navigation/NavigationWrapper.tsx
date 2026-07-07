@@ -110,6 +110,24 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
 
   const isCampaignPage = currentPath.startsWith('/campaigns')
 
+  // RWA (permissioned) vaults are removed from the earn app, so drop the shared nav's
+  // "Permissioned RWA Vaults" entry (id/href `permissioned-vaults`).
+  const navigationItems = (
+    getNavigationItems({
+      userWalletAddress,
+      isEarnApp: true,
+      onNavItemClick,
+      logIn: handleLogIn,
+    }) ?? []
+  ).map((item) =>
+    'itemsList' in item && Array.isArray(item.itemsList)
+      ? {
+          ...item,
+          itemsList: item.itemsList.filter((subItem) => subItem.id !== 'permissioned-vaults'),
+        }
+      : item,
+  )
+
   const beachClubEnabled = !!features?.BeachClub
 
   // check if the current URL has a `game` query parameter
@@ -139,12 +157,7 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
       currentPath={currentPath}
       logo="/earn/img/branding/logo-dark.svg"
       logoSmall="/earn/img/branding/dot-dark.svg"
-      links={getNavigationItems({
-        userWalletAddress,
-        isEarnApp: true,
-        onNavItemClick,
-        logIn: handleLogIn,
-      })}
+      links={navigationItems}
       walletConnectionComponent={!isCampaignPage ? <WalletLabel /> : null}
       mobileWalletConnectionComponents={{
         primary: <WalletLabel variant="logoutOnly" />,

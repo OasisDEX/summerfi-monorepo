@@ -12,7 +12,7 @@ const mapStrategiesToMultiselectOptions = (
   vaultsList: SDKVaultsListType,
 ): GenericMultiselectOption[] => {
   const regularVaults = vaultsList
-    .filter((v) => !v.isDaoManaged && !v.isRwaVault)
+    .filter((v) => !v.isDaoManaged)
     .map((vault) => ({
       label: getDisplayToken(vault.inputToken.symbol),
       labelSuffix: (
@@ -43,22 +43,6 @@ const mapStrategiesToMultiselectOptions = (
       value: getUniqueVaultId(vault),
     }))
     .sort((a, b) => a.label.trim().localeCompare(b.label.trim()))
-  const rwaVaults = vaultsList
-    .filter((v) => v.isRwaVault)
-    .map((vault) => ({
-      label: getDisplayToken(vault.inputToken.symbol),
-      labelSuffix: (
-        <Risk
-          risk={vault.customFields?.risk ?? 'lower'}
-          variant="p4semi"
-          styles={{ lineHeight: 'unset' }}
-        />
-      ),
-      token: getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList,
-      networkIcon: networkNameIconNameMap[supportedSDKNetwork(vault.protocol.network)],
-      value: getUniqueVaultId(vault),
-    }))
-    .sort((a, b) => a.label.trim().localeCompare(b.label.trim()))
 
   return [
     ...(daoManagedVaults.length > 0
@@ -79,16 +63,6 @@ const mapStrategiesToMultiselectOptions = (
             isSeparator: true,
           },
           ...regularVaults,
-        ]
-      : []),
-    ...(rwaVaults.length > 0
-      ? [
-          {
-            label: 'Permissioned RWA Vaults',
-            value: 'permissioned-rwa-vaults',
-            isSeparator: true,
-          },
-          ...rwaVaults,
         ]
       : []),
   ]

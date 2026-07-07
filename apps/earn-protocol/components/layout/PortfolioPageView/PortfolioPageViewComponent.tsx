@@ -30,8 +30,6 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
           vaultsList={data.vaultsList}
           vaultsApyByNetworkMap={data.vaultsApyByNetworkMap}
           rewardTokenPrices={data.rewardTokenPrices}
-          dcaOrders={data.dcaOrders}
-          rwaPendingPositions={data.rwaPendingPositions}
         />
       )}
     </SDKContextProvider>

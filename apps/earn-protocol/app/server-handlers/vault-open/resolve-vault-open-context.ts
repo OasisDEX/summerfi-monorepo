@@ -7,20 +7,14 @@ import {
 import { isAddress } from 'viem'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getCachedRwaVaultDetails } from '@/app/server-handlers/cached/get-rwa-vault-details'
-import { getCachedRwaVaultsList } from '@/app/server-handlers/cached/get-rwa-vaults-list'
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { decorateVaultsWithFees } from '@/app/server-handlers/fleet-fees/decorate-vaults-with-fees'
 import {
-  buildRwaLiveMinDepositMap,
   decorateVaultsWithConfig,
-  getVaultCuratedBy,
   getVaultIdByVaultCustomName,
-  getVaultRwaClientId,
   isVaultDisabled,
-  withRwaLiveMinDeposit,
 } from '@/helpers/vault-custom-value-helpers'
 
 // Shared resolution step for both vault-open query units. The core and details handlers each
@@ -45,12 +39,6 @@ export const resolveVaultOpenContext = async ({
     : (getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig) ??
       vaultId.toLowerCase())
 
-  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig) // rough check
-
-  // Institution that owns this (RWA) vault, from its `vaultInstitutionId` — threaded to the client so
-  // its RWA SDK calls route to the right deployment.
-  const rwaClientId = getVaultRwaClientId(parsedVaultId, parsedNetworkId, systemConfig)
-
   // A vault flagged `disabled: true` in config is hidden/unused: resolve to not-found before any data
   // fetch, so a direct URL never displays or pulls data for it.
   if (isVaultDisabled(parsedVaultId, parsedNetworkId, systemConfig)) {
@@ -59,21 +47,18 @@ export const resolveVaultOpenContext = async ({
       parsedNetwork,
       parsedNetworkId,
       parsedVaultId,
-      isRwaVault,
-      rwaClientId,
       vault: null,
       vaultWithConfig: null,
       allVaultsWithConfig: [],
     }
   }
 
-  const [vault, { vaults }, { vaults: rwaVaults }] = await Promise.all([
-    (isRwaVault ? getCachedRwaVaultDetails : getCachedVaultDetails)({
+  const [vault, { vaults }] = await Promise.all([
+    getCachedVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
     getCachedVaultsList(),
-    getCachedRwaVaultsList(),
   ])
 
   if (!vault) {
@@ -82,20 +67,13 @@ export const resolveVaultOpenContext = async ({
       parsedNetwork,
       parsedNetworkId,
       parsedVaultId,
-      isRwaVault,
-      rwaClientId,
       vault: null,
       vaultWithConfig: null,
       allVaultsWithConfig: [],
     }
   }
 
-  const allVaults = [...vaults, ...rwaVaults]
-  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(allVaults)
-
-  // RWA min deposit lives in the subgraph (inputVault.minPositionSize), not in fleet config, so the
-  // decorated vault's customFields.minimumDeposit is empty — overlay the live value (mirrors the list).
-  const liveMinDepositMap = isRwaVault ? buildRwaLiveMinDepositMap(rwaVaults) : {}
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
 
   const [[vaultWithConfig], allVaultsWithConfig] = await Promise.all([
     decorateVaultsWithFees(
@@ -103,14 +81,14 @@ export const resolveVaultOpenContext = async ({
         vaults: [vault],
         systemConfig,
         daoManagedVaultsList,
-      }).map((decoratedVault) => withRwaLiveMinDeposit(decoratedVault, liveMinDepositMap)),
+      }),
     ),
     decorateVaultsWithFees(
       decorateVaultsWithConfig({
-        vaults: allVaults,
+        vaults,
         systemConfig,
         daoManagedVaultsList,
-      }).map((decoratedVault) => withRwaLiveMinDeposit(decoratedVault, liveMinDepositMap)),
+      }),
     ),
   ])
 
@@ -119,8 +97,6 @@ export const resolveVaultOpenContext = async ({
     parsedNetwork,
     parsedNetworkId,
     parsedVaultId,
-    isRwaVault,
-    rwaClientId,
     vault,
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     vaultWithConfig: vaultWithConfig ?? null,

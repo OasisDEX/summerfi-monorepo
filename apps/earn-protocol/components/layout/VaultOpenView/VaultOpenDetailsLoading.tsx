@@ -8,8 +8,8 @@ import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
 
 import styles from './VaultOpenViewDetails.module.css'
 
-const getDetailsExpanderLabels = (isRwaVault: boolean) => [
-  isRwaVault ? 'Historical NAV price' : 'Historical yield',
+const getDetailsExpanderLabels = () => [
+  'Historical yield',
   'Vault exposure',
   'Rebalancing activity',
   'Portfolio Composition History',
@@ -23,17 +23,14 @@ export const VaultOpenDetailsLoading: FC<{
   vault?: SDKVaultType | SDKVaultishType
   isDaoManaged?: boolean
 }> = ({ vault, isDaoManaged }) => {
-  const isRwaVault = vault?.isRwaVault ?? false
-
   return (
     <div className={styles.vaultOpenViewDetailsWrapper}>
       <VaultOpenHeaderBlock
         detailsLinks={getDetailsLinks()}
         vault={vault}
         isDaoManaged={isDaoManaged}
-        isRwaVault={isRwaVault}
       />
-      {getDetailsExpanderLabels(isRwaVault).map((expanderLabel) => (
+      {getDetailsExpanderLabels().map((expanderLabel) => (
         <Expander
           key={expanderLabel}
           title={

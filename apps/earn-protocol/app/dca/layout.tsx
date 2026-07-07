@@ -1,18 +1,8 @@
-import { type ReactNode } from 'react'
-import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { redirect } from 'next/navigation'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-
-const DCALayout = async ({ children }: { children: ReactNode }) => {
-  const configRaw = await getCachedConfig()
-  const systemConfig = parseServerResponseToClient(configRaw)
-
-  if (!systemConfig.features?.DcaEnabled) {
-    redirect('/not-found')
-  }
-
-  return children
+// DCA has been removed from the earn app. Any /dca/* path redirects to the vaults list.
+const DCALayout = () => {
+  redirect('/')
 }
 
 export default DCALayout

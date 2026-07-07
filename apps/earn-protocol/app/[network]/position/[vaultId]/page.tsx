@@ -14,10 +14,10 @@ import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
 import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getCachedRwaVaultDetails } from '@/app/server-handlers/cached/get-rwa-vault-details'
 import { getCachedIsVaultDaoManaged } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
@@ -77,9 +77,9 @@ const VaultOpenWithData = async ({
 const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const { network, vaultId } = await params
 
-  // Cheap, cached resolution (mirrors generateMetadata) so the Suspense fallback renders the RWA
-  // skeleton (RWA stats grid, curator expander, NAV labels, RwaSidebarInfo) for RWA vaults. The
-  // heavier data prefetch lives inside the Suspense boundary so the skeleton streams immediately.
+  // Cheap, cached resolution (mirrors generateMetadata) to detect RWA-curated vaults so they can be
+  // redirected away (see below). The heavier data prefetch lives inside the Suspense boundary so the
+  // skeleton streams immediately.
   const systemConfig = await getCachedConfig()
   const parsedNetworkId = subgraphNetworkToId(humanNetworktoSDKNetwork(network))
   const parsedVaultId = isAddress(vaultId)
@@ -89,6 +89,13 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     ? getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
     : false
   const isRwaVault = !!vaultCurator
+
+  // RWA (permissioned) vaults have been removed from the earn app. They are still detected via the
+  // curator config so a direct/bookmarked RWA vault URL redirects to the regular vaults list
+  // instead of rendering.
+  if (isRwaVault) {
+    redirect('/')
+  }
 
   return (
     <Suspense
@@ -136,10 +143,8 @@ export async function generateMetadata({
     }
   }
 
-  const isRwaVault = !!getVaultCuratedBy(parsedVaultId, parsedNetworkId, systemConfig)
-
   const [vault] = await Promise.all([
-    (isRwaVault ? getCachedRwaVaultDetails : getCachedVaultDetails)({
+    getCachedVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),

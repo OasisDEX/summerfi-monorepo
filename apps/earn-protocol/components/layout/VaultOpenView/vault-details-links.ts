@@ -1,25 +1,4 @@
-export const getDetailsLinks = (rwaFactsLink?: string) => {
-  if (rwaFactsLink) {
-    return [
-      {
-        label: 'How it all works',
-        id: 'how-it-works',
-      },
-      {
-        label: 'Fact sheet',
-        url: rwaFactsLink,
-      },
-      {
-        label: 'Security',
-        id: 'security',
-      },
-      {
-        label: 'FAQ',
-        id: 'faq',
-      },
-    ]
-  }
-
+export const getDetailsLinks = () => {
   return [
     {
       label: 'How it all works',

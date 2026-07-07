@@ -26,7 +26,6 @@ export const CACHE_TAGS = {
   STAKING_V2_GLOBAL_DATA: 'staking-v2-global-data',
   VAULT_DAO_MANAGED: 'vault-dao-managed',
   VAULT_PERFORMANCE: 'vault-performance',
-  RWA_VAULTS_INFO: 'rwa-vaults-info',
   FLEET_FEES: 'fleet-fees',
 }
 
@@ -36,7 +35,6 @@ export const CACHE_TIMES = {
   PORTFOLIO_ASSETS: 60,
   PORTFOLIO_DATA: 300,
   POSITION_HISTORY: 120,
-  RWA_NAV_HISTORY: 300,
   POSITIONS_ACTIVE_PERIODS: 120,
   CONFIG: 60,
   MIGRATION_DATA: 30,
@@ -59,6 +57,5 @@ export const CACHE_TIMES = {
   CLAIMABLE_MERKLE_REWARDS: 600,
   STAKING_V2_GLOBAL_DATA: 300,
   ONE_DAY: 3600 * 24,
-  RWA_VAULTS_INFO: 300,
   FLEET_FEES: 3600 * 3, // 3 hours - on-chain management/performance fee rates change very rarely
 }

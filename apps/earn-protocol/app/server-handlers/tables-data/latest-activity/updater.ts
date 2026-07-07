@@ -3,7 +3,6 @@ import { type GraphQLClient } from 'graphql-request'
 
 import { getLatestTimestamp } from '@/app/server-handlers/tables-data/helpers'
 
-import { fetchAllLatestActivities } from './fetcher'
 import { getAllLatestActivities } from './getter'
 import { insertLatestActivitiesInBatches } from './inserter'
 
@@ -34,7 +33,6 @@ export const updateLatestActivities = async ({
   arbitrumGraphQlClient,
   sonicGraphQlClient,
   hyperliquidGraphQlClient,
-  rwaGraphQlClients,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
@@ -42,7 +40,6 @@ export const updateLatestActivities = async ({
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
   hyperliquidGraphQlClient: GraphQLClient
-  rwaGraphQlClients?: GraphQLClient[]
 }) => {
   const startTime = Date.now()
   const [
@@ -76,33 +73,7 @@ export const updateLatestActivities = async ({
     },
   })
 
-  // RWA activity from the institutions deployments (one client per RWA network). Each row is tagged
-  // with its own network (BASE/MAINNET) by the inserter (derived from the subgraph data), but since
-  // RWA rows share the standard per-network watermark we full-scan from 0 and rely on the idempotent
-  // insert (onConflict doNothing). Per-client fault tolerance: one RWA network failing must not break
-  // the standard ingestion or the other RWA networks.
-  const rwaLatestActivities = (
-    await Promise.all(
-      (rwaGraphQlClients ?? []).map((client) =>
-        fetchAllLatestActivities(client, '0')
-          .then((rwa) => [
-            ...rwa.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
-            ...rwa.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
-          ])
-          .catch((error) => {
-            // eslint-disable-next-line no-console
-            console.error('Failed to fetch RWA latest activities', error)
-
-            return []
-          }),
-      ),
-    )
-  ).flat()
-
-  const { updated } = await insertLatestActivitiesInBatches(db, [
-    ...allLatestActivities,
-    ...rwaLatestActivities,
-  ])
+  const { updated } = await insertLatestActivitiesInBatches(db, allLatestActivities)
 
   const endTime = Date.now()
   const duration = `${((endTime - startTime) / 1000).toFixed(2)}s`

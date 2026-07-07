@@ -1,39 +1,22 @@
 import { type FC, type PropsWithChildren } from 'react'
 import { Card, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import Link from 'next/link'
 
 import styles from './VaultExposureDescription.module.css'
 
 interface VaultExposureDescriptionProps extends PropsWithChildren {
   humanReadableNetwork: string
   vault: SDKVaultishType
-  isRwaVault?: boolean
 }
 
 export const VaultExposureDescription: FC<VaultExposureDescriptionProps> = ({
   children,
   humanReadableNetwork,
   vault,
-  isRwaVault = false,
 }) => {
   // One description per vault kind. Early returns keep each variant readable instead of nesting
   // ternaries.
   const renderDescription = () => {
-    if (isRwaVault) {
-      return (
-        <>
-          This strategy is composed of various tokenised RWA and private credit markets across
-          through our rigorous selection process. Vetted for security, performance and trustworthy
-          teams. You can read more about our strategy and any upcoming changes{' '}
-          <Link href="#" style={{ color: 'var(--color-text-link)' }}>
-            here
-          </Link>
-          .
-        </>
-      )
-    }
-
     if (vault.isDaoManaged) {
       return (
         <>

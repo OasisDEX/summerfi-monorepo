@@ -8,16 +8,12 @@ import { capitalize } from 'lodash-es'
 import vaultsListViewStyles from './VaultsListView.module.css'
 
 type VaultsListEmptyStateProps = {
-  isPermissionedRwaTab: boolean
-  filterVaults: string[]
   filterNetworks: string[]
   filterAssets: string[]
   filterWallet: string
 }
 
 export const VaultsListEmptyState = ({
-  isPermissionedRwaTab,
-  filterVaults,
   filterNetworks,
   filterAssets,
   filterWallet,
@@ -42,13 +38,7 @@ export const VaultsListEmptyState = ({
             margin: '30px auto 30px auto',
           }}
         >
-          {`No ${
-            isPermissionedRwaTab
-              ? 'Permissioned RWA '
-              : filterVaults.includes('dao-risk-managed')
-                ? 'DAO Risk Managed '
-                : ''
-          }vaults available`}
+          No vaults available
           {filterNetworks.length
             ? ` on ${filterNetworks.map((network) => capitalize(sdkNetworkToHumanNetwork(network as SupportedSDKNetworks))).join(' and ')}`
             : ''}

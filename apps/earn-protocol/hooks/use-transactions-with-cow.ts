@@ -28,13 +28,11 @@ import { useRouter } from 'next/navigation'
 import { type PublicClient } from 'viem'
 
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
-import { buildDepositWithdrawTransactions } from '@/helpers/build-deposit-withdraw-txs'
 import { formatTxAmount } from '@/helpers/transaction-analytics'
 import { transactionErrorsMap as errorsMap } from '@/helpers/transaction-errors'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleButtonClickEvent, useHandleTransactionEvent } from '@/hooks/use-mixpanel-event'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
-import { useRwaSDK } from '@/hooks/use-rwa-sdk'
 import { useTransactionCore } from '@/hooks/use-transaction-core'
 import { useTransactionSidebar } from '@/hooks/use-transaction-sidebar'
 import { useTransactionValidation } from '@/hooks/use-transaction-validation'
@@ -42,9 +40,6 @@ import { useTransactionValidation } from '@/hooks/use-transaction-validation'
 type UseTransactionParams = {
   vault: SDKVaultishType
   vaultChainId: SupportedNetworkIds
-  // RWA (rounds-based) vaults route deposits/withdrawals through the dedicated RWA SDK handlers
-  // instead of the standard ERC-4626 / CoW-swap flow.
-  isRwaVault?: boolean
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
   vaultToken: IToken | undefined
@@ -63,18 +58,13 @@ type UseTransactionParams = {
   referralCodeError?: string | null
   isDepositWithSwap: boolean
   setIsDepositWithSwap: Dispatch<SetStateAction<boolean>>
-  // For RWA withdraw: fleet shares in the current position, used to convert the
-  // user-entered USDC amount into the shares amount the SDK expects.
-  positionShares?: BigNumber
-  // Called once a deposit/withdraw completes successfully. RWA views use it to refresh the
-  // client-side pending receipts, which the server-side revalidation does not cover.
+  // Called once a deposit/withdraw completes successfully.
   onTransactionSuccess?: () => void
 }
 
 export const useTransaction = ({
   vault,
   vaultChainId,
-  isRwaVault = false,
   manualSetAmount,
   amount,
   publicClient,
@@ -85,7 +75,6 @@ export const useTransaction = ({
   flow,
   ownerView, // on non-owner views we dont want to make all of these calls
   positionAmount,
-  positionShares,
   approvalCustomValue,
   sidebarTransactionType,
   setSidebarTransactionType,
@@ -108,11 +97,6 @@ export const useTransaction = ({
     getPermit2AuthorizationTx,
     isPermit2AuthorizationNeeded,
   } = useAppSDK()
-  // RWA deposit/withdraw builders live only on the institutional SDK surface, scoped to the
-  // institution that owns this vault (its `vaultInstitutionId`).
-  const { getRwaDepositTx: getRwaDepositTX, getRwaWithdrawTx: getRwaWithdrawTX } = useRwaSDK(
-    vault.customFields?.vaultInstitutionId,
-  )
   const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain, chain } = useEarnProtocolChain()
@@ -191,61 +175,6 @@ export const useTransaction = ({
       amount &&
       userWalletAddress
     ) {
-      // RWA (rounds-based) vaults bypass the CoW-swap / standard ERC-4626 path entirely and route
-      // through the dedicated round handlers: a deposit enters the Input round, a withdraw the
-      // Output round (each minting an ERC-1155 receipt claimable once the round settles).
-      if (isRwaVault) {
-        try {
-          setTxStatus('loadingTx')
-          const rwaTransactions = await buildDepositWithdrawTransactions({
-            action: sidebarTransactionType as
-              | TransactionAction.DEPOSIT
-              | TransactionAction.WITHDRAW,
-            isRwaVault: true,
-            token,
-            vaultToken,
-            amount,
-            userWalletAddress: userWalletAddress as `0x${string}`,
-            fleetAddress: vault.id,
-            vaultChainId,
-            slippage: Number(slippageConfig.slippage),
-            getDepositTx: getDepositTX,
-            getWithdrawTx: getWithdrawTX,
-            getRwaDepositTx: getRwaDepositTX,
-            getRwaWithdrawTx: getRwaWithdrawTX,
-            rwaPositionShares: positionShares,
-            rwaPositionAssets: positionAmount,
-          })
-
-          transactionEventHandler({
-            transactionType: isWithdraw ? 'withdraw' : 'deposit',
-            txAmount: formatTxAmount(amount, token),
-            txEvent: 'transactionSimulated',
-            vaultSlug: slugifyVault(vault),
-            result: 'success',
-          })
-
-          if (rwaTransactions.length <= 0) {
-            throw new Error('Error getting the transactions list')
-          }
-          setTransactions(rwaTransactions)
-          setTxStatus('txPrepared')
-        } catch (err) {
-          transactionEventHandler({
-            transactionType: isWithdraw ? 'withdraw' : 'deposit',
-            txEvent: 'transactionSimulated',
-            txAmount: formatTxAmount(amount, token),
-            vaultSlug: slugifyVault(vault),
-            result: 'failure',
-          })
-          setSidebarTransactionError(
-            err instanceof Error ? err.message : errorsMap.transactionRetrievalError,
-          )
-        }
-
-        return
-      }
-
       try {
         let transactionsList: TransactionInfo[] = []
 
@@ -410,7 +339,6 @@ export const useTransaction = ({
     userWalletAddress,
     isSwitch,
     selectedSwitchVault,
-    isRwaVault,
     setTxStatus,
     sidebarTransactionType,
     vault,
@@ -418,9 +346,6 @@ export const useTransaction = ({
     slippageConfig.slippage,
     getDepositTX,
     getWithdrawTX,
-    getRwaDepositTX,
-    getRwaWithdrawTX,
-    positionShares,
     positionAmount,
     transactionEventHandler,
     setTransactions,
@@ -522,22 +447,13 @@ export const useTransaction = ({
           walletAddress: userWalletAddress,
         })
 
-        // lets RWA views reload their client-side pending receipts (server revalidation above only
-        // covers server-fetched data, not the on-chain receipt balances read via the RWA SDK).
         onTransactionSuccess?.()
 
         // makes sure the user is redirected to the correct page
         // after closing or opening
         const isOpening = isDeposit && flow === 'open'
-        // RWA withdrawals are rounds-based: a full withdraw only requests redemption (Output round)
-        // and the user keeps their shares until it settles, so we never bounce them to the open
-        // page — they stay on manage to track the pending redemption.
         const isClosing =
-          !isRwaVault &&
-          isWithdraw &&
-          positionAmount &&
-          flow === 'manage' &&
-          amount?.eq(positionAmount)
+          isWithdraw && positionAmount && flow === 'manage' && amount?.eq(positionAmount)
 
         if (isOpening || isClosing) {
           push(
@@ -568,7 +484,6 @@ export const useTransaction = ({
     userWalletAddress,
     isDeposit,
     isWithdraw,
-    isRwaVault,
     transactions,
     isDepositWithSwap,
     onTransactionSuccess,

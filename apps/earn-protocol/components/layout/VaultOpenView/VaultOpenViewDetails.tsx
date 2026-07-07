@@ -1,20 +1,11 @@
 'use client'
 import { type FC } from 'react'
-import {
-  Card,
-  Expander,
-  getDisplayToken,
-  getUniqueVaultId,
-  Text,
-  VaultExposure,
-} from '@summerfi/app-earn-ui'
+import { Card, Expander, getUniqueVaultId, Text, VaultExposure } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
   type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
-  type SingleSourceChartData,
-  type SupportedSDKNetworks,
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
@@ -28,10 +19,8 @@ import { capitalize } from 'lodash-es'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { RwaDepositsWithdrawals } from '@/components/layout/VaultManageView/RwaDepositsWithdrawals'
 import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
-import { RwaNavPriceChart } from '@/components/organisms/Charts/RwaNavPriceChart'
 import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { CurationActivity } from '@/features/curation-activity/components/CurationActivity/CurationActivity'
 import { type VaultCurationEvent } from '@/features/curation-activity/types'
@@ -39,7 +28,6 @@ import { LatestActivity } from '@/features/latest-activity/components/LatestActi
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
-import { type RwaReceipt } from '@/hooks/use-rwa-claim'
 
 import { getDetailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
@@ -53,21 +41,9 @@ interface VaultOpenViewDetailsProps {
   rebalanceActivity: RebalanceActivityPagination
   curationEvents?: VaultCurationEvent[]
   arksHistoricalChartData?: ArksHistoricalChartData
-  rwaNavHistoricalChartData?: SingleSourceChartData
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   isDaoManaged?: boolean
-  isRwaVault?: boolean
-  // RWA-only: powers the "Deposits and Withdrawals" history table for pre-claim users (receipts,
-  // no Fleet position) who land on the open view. Claim/cancel wiring is owned by the parent.
-  // Optional because this view is also reused by the (non-RWA) migration page.
-  network?: SupportedSDKNetworks
-  vaultId?: string
-  walletAddress?: string
-  isWhitelisted?: boolean
-  onRwaAction?: (receipt: RwaReceipt) => void
-  rwaActionInProgressKey?: string
-  rwaActionError?: string
 }
 
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
@@ -77,18 +53,9 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   rebalanceActivity,
   curationEvents = [],
   arksHistoricalChartData,
-  rwaNavHistoricalChartData,
   arksInterestRates,
   vaultApyData,
   isDaoManaged,
-  isRwaVault,
-  network,
-  vaultId,
-  walletAddress,
-  isWhitelisted,
-  onRwaAction,
-  rwaActionInProgressKey,
-  rwaActionError,
 }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
@@ -118,77 +85,26 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   return (
     <div className={styles.vaultOpenViewDetailsWrapper}>
       <VaultOpenHeaderBlock
-        detailsLinks={getDetailsLinks(vault.customFields?.vaultFactSheetUrl)}
+        detailsLinks={getDetailsLinks()}
         vault={vault}
         isDaoManaged={isDaoManaged}
-        isRwaVault={isRwaVault}
       />
-      {isRwaVault && vault.customFields?.vaultCurator ? (
-        <Expander
-          onExpand={handleExpanderToggle('vault-asset-manager')}
-          title={
-            <Text as="p" variant="p1semi">
-              {vault.customFields.vaultCurator}
-            </Text>
-          }
-          defaultExpanded
-        >
-          <Text
-            as="p"
-            variant="p3"
-            style={{
-              color: 'var(--color-text-secondary)',
-              margin: '0 10px',
-            }}
-          >
-            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-            {vault.customFields.vaultCuratorDescription ??
-              `This Vault is curated and managed by ${vault.customFields.vaultCurator}`}
-          </Text>
-        </Expander>
-      ) : null}
-      {isRwaVault && isWhitelisted && walletAddress && network && vaultId ? (
-        <Expander
-          onExpand={handleExpanderToggle('rwa-deposits-withdrawals')}
-          title={
-            <Text as="p" variant="p1semi">
-              Deposits and Withdrawals
-            </Text>
-          }
-          defaultExpanded
-        >
-          <RwaDepositsWithdrawals
-            network={network}
-            vaultId={vaultId}
-            walletAddress={walletAddress}
-            enabled
-            tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
-            actionInProgressKey={rwaActionInProgressKey}
-            actionError={rwaActionError}
-            onAction={onRwaAction}
-          />
-        </Expander>
-      ) : null}
       <Expander
         onExpand={handleExpanderToggle('historical-yield')}
         title={
           <Text as="p" variant="p1semi">
-            {isRwaVault ? 'Historical NAV price' : 'Historical yield'}
+            Historical yield
           </Text>
         }
         defaultExpanded
       >
-        {isRwaVault ? (
-          <RwaNavPriceChart chartId="open-view" chartData={rwaNavHistoricalChartData} />
-        ) : (
-          arksHistoricalChartData && (
-            <ArkHistoricalYieldChart
-              chartId="open-view"
-              chartData={arksHistoricalChartData}
-              summerVaultName={summerVaultName}
-              vaultBenchmarkName={vaultBenchmarkName}
-            />
-          )
+        {arksHistoricalChartData && (
+          <ArkHistoricalYieldChart
+            chartId="open-view"
+            chartData={arksHistoricalChartData}
+            summerVaultName={summerVaultName}
+            vaultBenchmarkName={vaultBenchmarkName}
+          />
         )}
       </Expander>
       <Expander
@@ -200,11 +116,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         }
         defaultExpanded
       >
-        <VaultExposureDescription
-          humanReadableNetwork={humanReadableNetwork}
-          vault={vault}
-          isRwaVault={isRwaVault}
-        >
+        <VaultExposureDescription humanReadableNetwork={humanReadableNetwork} vault={vault}>
           <VaultExposure
             vault={vault}
             arksInterestRates={arksInterestRates}
@@ -231,8 +143,6 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
           tableId="vault-open-rebalancing-activity"
           buttonClickEventHandler={buttonClickEventHandler}
           tooltipEventHandler={tooltipEventHandler}
-          isRwaVault={isRwaVault}
-          marketTargetAllocationPercentage={vault.customFields?.marketTargetAllocationPercentage}
         />
       </Expander>
       <Expander

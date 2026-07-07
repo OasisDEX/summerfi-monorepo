@@ -35,8 +35,6 @@ type PortfolioPositionProps = {
   sumrPrice?: number
   vaultApyData: VaultApyData
   isMobile?: boolean
-  dcaOrderId?: string
-  dcaOrderType?: 'from' | 'to'
   tooltipEventHandler: (tooltipName: string) => void
   buttonClickEventHandler: (buttonName: string) => void
 }
@@ -66,8 +64,6 @@ export const PortfolioPosition = ({
   sumrPrice,
   vaultApyData,
   isMobile,
-  dcaOrderId,
-  dcaOrderType,
   buttonClickEventHandler,
   tooltipEventHandler,
 }: PortfolioPositionProps): React.ReactNode => {
@@ -132,24 +128,9 @@ export const PortfolioPosition = ({
     </Link>
   )
 
-  const dcaButton = dcaOrderId ? (
-    <Link href={`/dca/position/${walletAddress}/${dcaOrderId}`}>
-      <Button variant="secondarySmall" style={{ width: 'fit-content', margin: '0 auto' }}>
-        DCA&nbsp;{dcaOrderType === 'from' ? 'source' : 'target'}&nbsp;
-        <Icon iconName="stars_colorful" size={18} style={{ marginLeft: '-4px' }} />
-      </Button>
-    </Link>
-  ) : null
-
-  const buttonsWrapper = isMobile ? (
+  const buttonsWrapper = (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--general-space-12)' }}>
       {linkToPosition}
-      {dcaButton}
-    </div>
-  ) : (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--general-space-12)' }}>
-      {linkToPosition}
-      {dcaButton}
     </div>
   )
 

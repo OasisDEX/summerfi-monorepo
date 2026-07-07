@@ -65,8 +65,7 @@ type HistoricalChartProps = {
   timeframe: TimeframesType
   // Render the (otherwise right-sidebar) legend values inside the hover tooltip instead.
   legendInTooltip?: boolean
-  // Which legend items to show (defaults to all). Lets callers hide irrelevant ones — e.g. RWA
-  // positions earn no $SUMR, so they drop `sumrEarned`.
+  // Which legend items to show (defaults to all). Lets callers hide irrelevant ones.
   legendItems?: HistoricalLegendItemKey[]
 }
 

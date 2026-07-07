@@ -21,16 +21,13 @@ import { convertWethToEth, slugifyVault, supportedSDKNetwork } from '@summerfi/a
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import { useDaoManagedBannerData } from '@/components/layout/VaultsListView/use-dao-managed-banner-data'
 import { useSumrStakingRewards } from '@/components/layout/VaultsListView/use-sumr-staking-rewards'
 import { useVaultSimulation } from '@/components/layout/VaultsListView/use-vault-simulation'
 import { useVaultsListFiltering } from '@/components/layout/VaultsListView/use-vaults-list-filtering'
-import { useVaultsListQueryParams } from '@/components/layout/VaultsListView/use-vaults-list-query-params'
 import { useVaultsListQuery } from '@/components/layout/VaultsListView/useVaultsListQuery'
 import { VaultSimulationSidebar } from '@/components/layout/VaultsListView/VaultSimulationSidebar'
 import { VaultsListCards } from '@/components/layout/VaultsListView/VaultsListCards'
 import { VaultsListMetrics } from '@/components/layout/VaultsListView/VaultsListMetrics'
-import { VaultsListTabs } from '@/components/layout/VaultsListView/VaultsListTabs'
 import {
   VaultsListLeftContentLoading,
   VaultsListViewLoading,
@@ -85,12 +82,10 @@ const VaultsListViewInner = ({
     state: { sumrNetApyConfig },
   } = useLocalConfig()
   const { sumrStakeInfo } = useUserStakeInfo()
-  const { updateQueryParams } = useVaultsListQueryParams()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
 
   const stakingV2Enabled = !!features?.StakingV2
   const daoManagedVaultsEnabled = !!features?.DaoManagedVaults
-  const rwaVaultsEnabled = !!features?.RwaEnabled
 
   const sumrAvailableToStake =
     Number(sumrStakeInfo?.sumrBalances.total ?? 0) +
@@ -102,9 +97,7 @@ const VaultsListViewInner = ({
     filterAssets,
     filterWallet,
     filterVaults,
-    isPermissionedRwaTab,
     sortingMethodId,
-    vaultMetricsMap,
     filteredAndSortedVaults,
     filteredSafeVaultsList,
   } = useVaultsListFiltering({
@@ -114,8 +107,6 @@ const VaultsListViewInner = ({
     vaultsInfo,
     rewardTokenPrices,
     queryParams,
-    daoManagedVaultsEnabled,
-    rwaVaultsEnabled,
   })
 
   const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
@@ -155,7 +146,6 @@ const VaultsListViewInner = ({
 
   const simulation = useVaultSimulation(activeVaultData)
   const { maxApy, sumrRewardApy, isLoadingRewardRates } = useSumrStakingRewards(sumrPriceUsd)
-  const daoManagedVaultsBannerData = useDaoManagedBannerData({ vaultsList, vaultMetricsMap })
 
   const handleChangeVault = (nextselectedVaultId: string) => {
     if (nextselectedVaultId === selectedVaultId) {
@@ -201,19 +191,6 @@ const VaultsListViewInner = ({
     buttonClickEventHandler('vaults-list-what-is-lazy')
   }
 
-  const handleTabChange = (tabId: string) => {
-    updateQueryParams(queryParams, {
-      vaults: tabId,
-    })
-  }
-
-  const handleDaoBannerClick = () => {
-    buttonClickEventHandler('vaults-list-dao-managed-vaults-banner-click')
-    updateQueryParams(queryParams, {
-      vaults: 'dao-risk-managed',
-    })
-  }
-
   const handleStakeCardClick = () => {
     buttonClickEventHandler('vaults-list-sumr-stake-card-click')
     push(`/staking`)
@@ -234,16 +211,6 @@ const VaultsListViewInner = ({
           onTooltipOpen={tooltipEventHandler}
         />
       }
-      additionalFullWithTopContent={
-        rwaVaultsEnabled || daoManagedVaultsEnabled ? (
-          <VaultsListTabs
-            rwaVaultsEnabled={rwaVaultsEnabled}
-            isPermissionedRwaTab={isPermissionedRwaTab}
-            filterVaults={filterVaults}
-            onTabChange={handleTabChange}
-          />
-        ) : null
-      }
       leftContent={
         vaultsListLoading ? (
           <VaultsListLeftContentLoading />
@@ -255,8 +222,6 @@ const VaultsListViewInner = ({
             usingSafeVaultsList={usingSafeVaultsList}
             sortingMethodId={sortingMethodId}
             daoManagedVaultsEnabled={daoManagedVaultsEnabled}
-            rwaVaultsEnabled={rwaVaultsEnabled}
-            isPermissionedRwaTab={isPermissionedRwaTab}
             queryParams={queryParams}
             filterNetworks={filterNetworks}
             filterAssets={filterAssets}
@@ -268,9 +233,7 @@ const VaultsListViewInner = ({
             rewardTokenPrices={rewardTokenPrices}
             vaultsApyByNetworkMap={vaultsApyByNetworkMap}
             vaultsInfo={vaultsInfo}
-            daoManagedVaultsBannerData={daoManagedVaultsBannerData}
             onSelectVault={handleSelectVault}
-            onDaoBannerClick={handleDaoBannerClick}
             onTooltipOpen={tooltipEventHandler}
             showStakeCard={showStakeCard}
             sumrAvailableToStake={sumrAvailableToStake}
@@ -297,12 +260,7 @@ const VaultsListViewInner = ({
 }
 
 export const VaultsListView = ({ walletAddress }: VaultsListViewProps) => {
-  const queryParams = useSearchParams()
-  const selectedVaultsFilter = queryParams.get('vaults') ?? undefined
-  const { data, isFetching, isPlaceholderData } = useVaultsListQuery(
-    walletAddress,
-    selectedVaultsFilter,
-  )
+  const { data, isFetching, isPlaceholderData } = useVaultsListQuery(walletAddress)
 
   if (!data) {
     return <VaultsListViewLoading />
