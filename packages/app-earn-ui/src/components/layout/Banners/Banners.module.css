@@ -56,8 +56,8 @@
   padding: var(--general-space-16);
   background: linear-gradient(90deg,
       transparent 0%,
-      var(--earn-protocol-critical-10) 5%,
-      var(--earn-protocol-critical-10) 95%,
+      var(--earn-protocol-primary-10) 5%,
+      var(--earn-protocol-primary-10) 95%,
       transparent 100%);
   color: var(--earn-protocol-secondary-100);
   position: relative;

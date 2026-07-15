@@ -76,7 +76,10 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
   return (
     <div className={landingMasterPageStyles.mainContainer}>
       {landingPageData?.systemConfig.bannerMessage && (
-        <GlobalIssueBanner message={landingPageData.systemConfig.bannerMessage} />
+        <GlobalIssueBanner
+          message={landingPageData.systemConfig.bannerMessage}
+          readMoreUrl={landingPageData.systemConfig.bannerMessageUrl}
+        />
       )}
       {isMainPage && <LandingPageBlobs />}
       <div className={landingMasterPageStyles.appContainer}>

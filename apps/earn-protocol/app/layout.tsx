@@ -74,7 +74,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <GlobalStyles />
         </head>
         <body className={`${fontInter.className} ${fontInter.variable}`}>
-          {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}
+          {config.bannerMessage && (
+            <GlobalIssueBanner
+              message={config.bannerMessage}
+              readMoreUrl={config.bannerMessageUrl}
+            />
+          )}
           <GoogleTagManager />
           <MasterPage
             skipNavigation
@@ -118,7 +123,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         )}
       </head>
       <body className={`${fontInter.className} ${fontInter.variable}`}>
-        {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}
+        {config.bannerMessage && (
+          <GlobalIssueBanner message={config.bannerMessage} readMoreUrl={config.bannerMessageUrl} />
+        )}
         <GoogleTagManager />
         <GlobalProvider
           config={config}
