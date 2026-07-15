@@ -1,11 +1,5 @@
 import { ToastContainer } from 'react-toastify'
-import {
-  analyticsCookieName,
-  GlobalIssueBanner,
-  GlobalStyles,
-  GoogleTagManager,
-  Text,
-} from '@summerfi/app-earn-ui'
+import { analyticsCookieName, GlobalStyles, GoogleTagManager, Text } from '@summerfi/app-earn-ui'
 import { DeviceType } from '@summerfi/app-types'
 import { getDeviceType, getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
@@ -61,12 +55,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <GlobalStyles />
         </head>
         <body className={`${fontInter.className} ${fontInter.variable}`}>
-          {config.bannerMessage && (
-            <GlobalIssueBanner
-              message={config.bannerMessage}
-              readMoreUrl={config.bannerMessageUrl}
-            />
-          )}
           <GoogleTagManager />
           <MasterPage skipNavigation analyticsCookie={analyticsCookie}>
             <Image src={logoMaintenance} alt="Summer.fi" width={200} style={{ margin: '4rem' }} />
@@ -96,9 +84,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         )}
       </head>
       <body className={`${fontInter.className} ${fontInter.variable}`}>
-        {config.bannerMessage && (
-          <GlobalIssueBanner message={config.bannerMessage} readMoreUrl={config.bannerMessageUrl} />
-        )}
         <GoogleTagManager />
         <GlobalProvider
           config={config}
