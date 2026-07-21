@@ -5,6 +5,7 @@
     "dev-earn-frontend": "turbo run dev --concurrency=100 --filter=@summerfi/earn-protocol... --filter=@summerfi/earn-protocol-landing-page... --filter=@summerfi/earn-protocol-institutions...",
     "dev-earn-app": "turbo run dev --concurrency=100 --filter=@summerfi/earn-protocol...",
     "dev-earn-landing": "turbo run dev --concurrency=100 --filter=@summerfi/earn-protocol-landing-page...",
+    "dev-earn-exit": "turbo run dev --concurrency=100 --filter=@summerfi/earn-exit...",
     "dev-earn-institutions": "turbo run dev --concurrency=100 --filter=@summerfi/earn-protocol-institutions...",
     "prebuild": "turbo run prebuild --cache-dir=.turbo",
     "build": "turbo run build --cache-dir=.turbo",

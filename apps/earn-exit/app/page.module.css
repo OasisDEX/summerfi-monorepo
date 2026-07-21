@@ -1,0 +1,116 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.hero {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.heroBackground {
+  position: absolute;
+  inset: 0;
+}
+
+.heroVignette {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to right,
+      rgba(0, 0, 0, 0.6),
+      transparent 40%,
+      transparent 60%,
+      rgba(0, 0, 0, 0.6)),
+    linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.6));
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+  margin: 0 auto;
+  padding: 96px 24px;
+}
+
+.heroLogo {
+  display: flex;
+}
+
+.heroCta {
+  margin-top: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.heroFooter {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.portfolioBackground {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.portfolioVignette {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to right,
+      rgba(0, 0, 0, 0.6),
+      transparent 40%,
+      transparent 60%,
+      rgba(0, 0, 0, 0.6)),
+    linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.6));
+}
+
+.portfolioContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.blogLink {
+  color: var(--earn-protocol-primary-100);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.blogLink:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .heroContent {
+    width: 100%;
+    padding: 96px 24px;
+  }
+}

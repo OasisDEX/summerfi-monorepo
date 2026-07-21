@@ -90,3 +90,10 @@ cdk.context.json
 
 # graphify
 graphify-out/
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads
+.agents
