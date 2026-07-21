@@ -18,6 +18,8 @@ export type VaultsListRouteResponse = {
   filteredWalletAssetsVaults: SDKVaultsListType
   vaultsApyByNetworkMap?: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
+  // `<chainId>-<vaultAddressLowercase>` -> on-chain paused() state (missing key = not paused)
+  vaultsPausedMap?: { [key: string]: boolean }
 }
 
 type VaultsListAdditionalDataResponse = {

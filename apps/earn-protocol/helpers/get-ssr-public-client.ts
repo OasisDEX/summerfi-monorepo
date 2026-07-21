@@ -1,8 +1,22 @@
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { createPublicClient, http, type PublicClient } from 'viem'
-import { arbitrum, base, hyperliquid, mainnet, sonic } from 'viem/chains'
+import { arbitrum, base, hyperliquid as hyperliquidBase, mainnet, sonic } from 'viem/chains'
 
 import { SDKChainIdToSSRRpcGatewayMap } from '@/helpers/rpc-gateway-ssr'
+
+// viem's bundled HyperEVM chain has no multicall3 entry, but the canonical multicall3 is deployed
+// there (same address/block as the SDK's own chain definition) — without it `multicall` throws
+// ChainDoesNotSupportContract.
+const hyperliquid = {
+  ...hyperliquidBase,
+  contracts: {
+    ...hyperliquidBase.contracts,
+    multicall3: {
+      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 13051,
+    },
+  },
+} as const
 
 export const SSRChainConfigs = [
   { chain: base, chainId: SupportedNetworkIds.Base, chainName: 'base' },

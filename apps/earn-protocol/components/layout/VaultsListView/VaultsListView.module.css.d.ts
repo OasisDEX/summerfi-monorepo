@@ -8,6 +8,8 @@ declare const styles: {
   readonly "leftHeaderFiltersRow": string;
   readonly "leftHeaderRow": string;
   readonly "noVaultsWrapper": string;
+  readonly "pausedVaultOverlay": string;
+  readonly "pausedVaultWrapper": string;
   readonly "pillShaped": string;
   readonly "pillShapedWrapper": string;
   readonly "pillWrapperGeneral": string;

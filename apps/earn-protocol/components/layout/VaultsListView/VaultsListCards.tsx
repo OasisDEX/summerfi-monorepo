@@ -9,13 +9,16 @@ import {
   type SDKVaultishType,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
-import { findVaultInfo } from '@summerfi/app-utils'
+import { findVaultInfo, subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
 import { getVaultApySelector } from '@/components/layout/VaultsListView/get-vault-apy-selector'
 import { VaultsListEmptyState } from '@/components/layout/VaultsListView/VaultsListEmptyState'
 import { VaultsFiltersIntermediary } from '@/components/layout/VaultsListView/VaultsListFilters'
+import { getVaultVisibilityKey } from '@/constants/always-visible-vaults'
+
+import vaultsListViewStyles from '@/components/layout/VaultsListView/VaultsListView.module.css'
 
 type VaultsListCardsProps = {
   vaultsList: SDKVaultsListType
@@ -35,6 +38,7 @@ type VaultsListCardsProps = {
   rewardTokenPrices: RewardTokenPrices
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
+  vaultsPausedMap?: { [key: string]: boolean }
   onSelectVault: (vault: SDKVaultishType, id: string) => void
   onTooltipOpen: (tooltipName: string) => void
   showStakeCard: boolean
@@ -64,6 +68,7 @@ export const VaultsListCards = ({
   rewardTokenPrices,
   vaultsApyByNetworkMap,
   vaultsInfo,
+  vaultsPausedMap,
   onSelectVault,
   onTooltipOpen,
   showStakeCard,
@@ -74,6 +79,14 @@ export const VaultsListCards = ({
   sumrRewardApy,
   onStakeCardClick,
 }: VaultsListCardsProps) => {
+  const isVaultPaused = (vault: SDKVaultishType) =>
+    !!vaultsPausedMap?.[
+      getVaultVisibilityKey(
+        subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network)),
+        vault.id,
+      )
+    ]
+
   return (
     <>
       <VaultsFiltersIntermediary
@@ -89,22 +102,29 @@ export const VaultsListCards = ({
       {filteredAndSortedVaults?.length ? (
         filteredAndSortedVaults.map((vault, vaultIndex) => (
           <Fragment key={getUniqueVaultId(vault)}>
-            <VaultCard
-              {...vault}
-              withHover
-              deviceType={deviceType}
-              selected={
-                selectedVaultId === getUniqueVaultId(vault) ||
-                (!selectedVaultId && vaultIndex === 0)
-              }
-              onClick={(id) => onSelectVault(vault, id)}
-              withTokenBonus={withSumr}
-              rewardTokenPrices={rewardTokenPrices}
-              vaultApyData={vaultsApyByNetworkMap[getVaultApySelector(vault)]}
-              tooltipName="vaults-list-vault-card"
-              onTooltipOpen={onTooltipOpen}
-              merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
-            />
+            <div
+              className={isVaultPaused(vault) ? vaultsListViewStyles.pausedVaultWrapper : undefined}
+            >
+              <VaultCard
+                {...vault}
+                withHover
+                deviceType={deviceType}
+                selected={
+                  selectedVaultId === getUniqueVaultId(vault) ||
+                  (!selectedVaultId && vaultIndex === 0)
+                }
+                onClick={(id) => onSelectVault(vault, id)}
+                withTokenBonus={withSumr}
+                rewardTokenPrices={rewardTokenPrices}
+                vaultApyData={vaultsApyByNetworkMap[getVaultApySelector(vault)]}
+                tooltipName="vaults-list-vault-card"
+                onTooltipOpen={onTooltipOpen}
+                merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
+              />
+              {isVaultPaused(vault) && (
+                <div className={vaultsListViewStyles.pausedVaultOverlay}>Paused</div>
+              )}
+            </div>
           </Fragment>
         ))
       ) : (

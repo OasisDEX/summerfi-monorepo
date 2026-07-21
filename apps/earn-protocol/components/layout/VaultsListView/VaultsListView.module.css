@@ -139,3 +139,26 @@
   border-radius: var(--radius-rounder);
   background: var(--gradient-earn-protocol-light);
 }
+.pausedVaultWrapper {
+  position: relative;
+}
+
+.pausedVaultWrapper > *:first-child {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.pausedVaultOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-large);
+  color: var(--earn-protocol-secondary-100);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}

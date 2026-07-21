@@ -27,6 +27,7 @@ export const CACHE_TAGS = {
   VAULT_DAO_MANAGED: 'vault-dao-managed',
   VAULT_PERFORMANCE: 'vault-performance',
   FLEET_FEES: 'fleet-fees',
+  VAULTS_PAUSED: 'vaults-paused',
 }
 
 export const CACHE_TIMES = {
@@ -58,4 +59,5 @@ export const CACHE_TIMES = {
   STAKING_V2_GLOBAL_DATA: 300,
   ONE_DAY: 3600 * 24,
   FLEET_FEES: 3600 * 3, // 3 hours - on-chain management/performance fee rates change very rarely
+  VAULTS_PAUSED: 60, // paused vaults should fade in/out of the list within a minute
 }

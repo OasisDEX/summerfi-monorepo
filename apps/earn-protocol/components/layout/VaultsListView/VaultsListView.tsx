@@ -53,6 +53,7 @@ type VaultsListViewInnerProps = {
     allVaultsProtocols: string[]
   }
   vaultsListLoading?: boolean
+  vaultsPausedMap?: { [key: string]: boolean }
 }
 
 type VaultsListViewProps = {
@@ -70,6 +71,7 @@ const VaultsListViewInner = ({
   instantLiquidity,
   protocolsList,
   vaultsListLoading,
+  vaultsPausedMap,
 }: VaultsListViewInnerProps) => {
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
@@ -234,6 +236,7 @@ const VaultsListViewInner = ({
             rewardTokenPrices={rewardTokenPrices}
             vaultsApyByNetworkMap={vaultsApyByNetworkMap}
             vaultsInfo={vaultsInfo}
+            vaultsPausedMap={vaultsPausedMap}
             onSelectVault={handleSelectVault}
             onTooltipOpen={tooltipEventHandler}
             showStakeCard={showStakeCard}
@@ -286,6 +289,7 @@ export const VaultsListView = ({ walletAddress }: VaultsListViewProps) => {
       instantLiquidity={data.instantLiquidity}
       protocolsList={data.protocolsList}
       vaultsListLoading={isFetching && isPlaceholderData}
+      vaultsPausedMap={data.vaultsPausedMap}
     />
   )
 }

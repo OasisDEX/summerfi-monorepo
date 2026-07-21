@@ -11,6 +11,8 @@ import { subgraphNetworkToId, supportedSDKNetwork } from '@/helpers/earn-network
  * Decorates vault objects with additional configuration from the fleet map
  * @param vaults - Array of vault objects to be decorated
  * @param fleetMap - Configuration map containing network-specific vault settings
+ * @param alwaysVisibleVaults - Vaults (keyed `<chainId>-<vaultAddressLowercase>`) that bypass the
+ * visibility filters and are always kept in the list
  * @returns Array of vaults with merged custom fields from fleet configuration
  */
 export const decorateWithFleetConfig = (
@@ -18,6 +20,7 @@ export const decorateWithFleetConfig = (
   systemConfig: Partial<EarnAppConfigType>,
   userPositions?: IArmadaPosition[],
   daoManagedVaultsList: `0x${string}`[] = [],
+  alwaysVisibleVaults: string[] = [],
 ): SDKVaultishType[] =>
   vaults
     .map((vault) => {
@@ -50,9 +53,18 @@ export const decorateWithFleetConfig = (
             isRwaVault,
           }
     })
-    .filter(({ inputTokenBalance, depositCap, customFields, id }) => {
+    .filter((vault) => {
+      const { inputTokenBalance, depositCap, customFields, id } = vault
+
       if (systemConfig.features?.ShowAllVaults) {
         // Just show everything if this is enabled
+        return true
+      }
+
+      const vaultNetworkId = subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))
+
+      if (alwaysVisibleVaults.includes(`${vaultNetworkId}-${id.toLowerCase()}`)) {
+        // Hardcoded exceptions (e.g. withdrawal-only fleets) skip the visibility filters entirely
         return true
       }
       const hasUserPosition = userPositions?.some(

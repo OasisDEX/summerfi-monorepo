@@ -11,6 +11,7 @@ import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vau
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
+import { getCachedVaultsPausedMap } from '@/app/server-handlers/cached/get-vaults-paused'
 import {
   emptyWalletAssets,
   getCachedWalletAssets,
@@ -30,16 +31,21 @@ export const getDefiVaultsListData = async (walletAddress?: string) => {
     })),
   })
 
-  const [configRaw, vaultsInfoRaw, walletAssets, daoManagedVaultsList, vaultsApyByNetworkMap] =
-    await Promise.all([
-      getCachedConfig(),
-      getCachedVaultsInfo(),
-      walletAddress
-        ? getCachedWalletAssets(walletAddress, true)
-        : Promise.resolve(emptyWalletAssets),
-      getDaoManagedVaultsIDsList(vaults),
-      vaultsApyPromise,
-    ])
+  const [
+    configRaw,
+    vaultsInfoRaw,
+    walletAssets,
+    daoManagedVaultsList,
+    vaultsApyByNetworkMap,
+    vaultsPausedMap,
+  ] = await Promise.all([
+    getCachedConfig(),
+    getCachedVaultsInfo(),
+    walletAddress ? getCachedWalletAssets(walletAddress, true) : Promise.resolve(emptyWalletAssets),
+    getDaoManagedVaultsIDsList(vaults),
+    vaultsApyPromise,
+    getCachedVaultsPausedMap(),
+  ])
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
@@ -69,5 +75,6 @@ export const getDefiVaultsListData = async (walletAddress?: string) => {
     filteredWalletAssetsVaults,
     vaultsApyByNetworkMap,
     vaultsInfo,
+    vaultsPausedMap,
   }
 }

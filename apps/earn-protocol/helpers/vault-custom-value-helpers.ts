@@ -6,6 +6,8 @@ import {
 } from '@summerfi/app-types'
 import { decorateWithFleetConfig } from '@summerfi/app-utils'
 
+import { alwaysVisibleVaults, isAlwaysVisibleVault } from '@/constants/always-visible-vaults'
+
 type VaultConfigDecorator = {
   vaults: SDKVaultishType[]
   systemConfig: Partial<EarnAppConfigType>
@@ -24,12 +26,13 @@ export const decorateVaultsWithConfig = ({
     systemConfig,
     userPositions,
     daoManagedVaultsList,
+    alwaysVisibleVaults,
   )
   const daoManagedVaultsEnabled = systemConfig.features?.DaoManagedVaults
 
   if (!daoManagedVaultsEnabled) {
     return vaultsWithConfig.filter((vault) => {
-      return !vault.isDaoManaged
+      return !vault.isDaoManaged || isAlwaysVisibleVault(vault)
     })
   }
 
