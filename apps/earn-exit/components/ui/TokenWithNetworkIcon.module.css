@@ -1,0 +1,8 @@
+.iconWithNetworkWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.iconWithNetworkWrapper .networkIcon {
+  position: absolute;
+}

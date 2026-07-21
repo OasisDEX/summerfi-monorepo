@@ -1,8 +1,8 @@
 'use client'
 
 import { type FC, useEffect } from 'react'
-import { Button, Card, LoadingSpinner, Modal, Text } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance } from '@summerfi/app-utils'
+import { Button, Card, LoadingSpinner, Modal, Text } from '@/components/ui'
+import { formatCryptoBalance } from '@/lib/format'
 import { formatUnits } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 

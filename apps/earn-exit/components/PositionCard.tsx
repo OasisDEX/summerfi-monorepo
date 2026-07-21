@@ -1,9 +1,9 @@
 'use client'
 
 import { type FC } from 'react'
-import { Button, Card, Text, TokenWithNetworkIcon } from '@summerfi/app-earn-ui'
-import { type SupportedNetworkIds, type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import { Button, Card, Text, TokenWithNetworkIcon } from '@/components/ui'
+import { type SupportedNetworkIds, type TokenSymbolsList } from '@/components/ui'
+import { formatCryptoBalance, formatFiatBalance } from '@/lib/format'
 import { formatUnits } from 'viem'
 
 import { type FleetPosition } from '@/lib/positions'

@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { queryClient } from '@summerfi/app-earn-ui'
+import { queryClient } from '@/lib/query-client'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { fallback, http } from 'viem'
 import { arbitrum, base, mainnet, sonic } from 'viem/chains'

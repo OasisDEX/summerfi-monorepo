@@ -1,27 +1,54 @@
 {
-  "extends": "@summerfi/typescript-config/tsconfig.nextjs.json",
   "compilerOptions": {
+    "target": "es2022",
+    "lib": [
+      "dom",
+      "esnext",
+      "dom.iterable"
+    ],
     "baseUrl": ".",
-    "lib": ["dom", "esnext", "dom.iterable"],
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "paths": {
-      "@/*": ["./*"]
-    },
-    "noEmit": true,
     "module": "esnext",
-    "strictNullChecks": true
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "incremental": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "allowUnreachableCode": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": [
+      "node",
+      "jest"
+    ],
+    "tsBuildInfoFile": "./.cache/tsbuildinfo.json"
   },
   "include": [
     "next-env.d.ts",
-    "next.config.mjs",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "./.eslintrc.cjs"
+    ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "dist", "out/**/*", "scripts/**/*", ".next"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "out/**/*",
+    "scripts/**/*",
+    ".next"
+  ]
 }

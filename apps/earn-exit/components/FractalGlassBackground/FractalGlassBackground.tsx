@@ -21,7 +21,7 @@ function parseRgba(input: string): [number, number, number, number] {
   const g = Math.min(255, Number(match[2])) / 255
   const b = Math.min(255, Number(match[3])) / 255
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+   
   const a = match[4] !== undefined ? Math.max(0, Math.min(1, Number(match[4]))) : 1
 
   return [r, g, b, a]
@@ -71,7 +71,7 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
     const gl = canvas.getContext('webgl')
 
     if (!gl) {
-      // eslint-disable-next-line no-console
+       
       console.error('WebGL not supported')
 
       return
@@ -165,7 +165,7 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
       gl.shaderSource(shader, source)
       gl.compileShader(shader)
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        // eslint-disable-next-line no-console
+         
         console.error(gl.getShaderInfoLog(shader))
         gl.deleteShader(shader)
 
@@ -184,7 +184,7 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
 
     const program = gl.createProgram()
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+     
     if (!program) {
       return
     }
@@ -193,7 +193,7 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
     gl.linkProgram(program)
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      // eslint-disable-next-line no-console
+       
       console.error(gl.getProgramInfoLog(program))
 
       return
@@ -390,7 +390,7 @@ export function FractalGlassBackground({ skewed = false }: { skewed?: boolean })
 
     render()
 
-    // eslint-disable-next-line consistent-return
+     
     return () => {
       cancelAnimationFrame(animationFrameId)
       observer.disconnect()

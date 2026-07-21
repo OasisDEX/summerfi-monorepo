@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, useEffect } from 'react'
-import { Button, Card, LoadingSpinner, Modal, Text } from '@summerfi/app-earn-ui'
+import { Button, Card, LoadingSpinner, Modal, Text } from '@/components/ui'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 import { CHAIN_LABELS } from '@/constants/chains'

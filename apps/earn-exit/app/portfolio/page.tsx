@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
-import { Button, Card, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import { Button, Card, SkeletonLine, Text } from '@/components/ui'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'

@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button, Text } from '@summerfi/app-earn-ui'
-import { formatAddress } from '@summerfi/app-utils'
+import { Button, Text } from '@/components/ui'
+import { formatAddress } from '@/lib/format'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 
 export const ConnectButton = () => {
@@ -41,7 +41,7 @@ export const ConnectButton = () => {
         const injectedConnector =
           connectors.find((connector) => connector.type === 'injected') ?? connectors[0]
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+         
         if (injectedConnector) connect({ connector: injectedConnector })
       }}
     >

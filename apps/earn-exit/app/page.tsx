@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Text } from '@summerfi/app-earn-ui'
+import { Text } from '@/components/ui'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'

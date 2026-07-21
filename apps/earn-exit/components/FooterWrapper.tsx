@@ -1,6 +1,6 @@
 'use client'
 
-import { Text } from '@summerfi/app-earn-ui'
+import { Text } from '@/components/ui'
 
 export const FooterWrapper = () => {
   return (
