@@ -38,3 +38,31 @@
   height: 500px;
   background: linear-gradient(180deg, rgba(16, 16, 16, 0) 0%, rgb(16, 16, 16) 100%);
 }
+
+.farewell {
+  position: absolute;
+  top: 50%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 2.5s ease-in 0.3s;
+  pointer-events: none;
+}
+
+.farewellVisible {
+  opacity: 1;
+}
+
+.farewellTitle {
+  font-size: 42px;
+  font-weight: 600;
+  color: rgb(255 255 255 / 95%);
+  margin: 0;
+}
+
+.farewellSubtitle {
+  font-size: 16px;
+  color: rgb(255 255 255 / 60%);
+  margin-top: 12px;
+}

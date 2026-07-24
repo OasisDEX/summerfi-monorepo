@@ -1,8 +1,7 @@
 /* eslint-disable no-mixed-operators */
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useLandingPageBlobs } from '@/components/layout/LandingMasterPage/landingPageBlobs.hook'
 import landingPageGrid from '@/public/img/landing-page/grid.svg'
@@ -19,6 +18,7 @@ export const LandingPageBlobs = ({
   largeBlobCount = 5,
 }: LandingPageBlobsProps) => {
   const [localSmallBlobCount, setLocalSmallBlobCount] = useState(smallBlobCount)
+  const [showFarewell, setShowFarewell] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const canvasRectRef = useRef<DOMRect | null>(null)
 
@@ -31,29 +31,32 @@ export const LandingPageBlobs = ({
     }
   }, [])
 
+  const handleFinale = useCallback(() => setShowFarewell(true), [])
+
   useLandingPageBlobs({
     canvasRef,
     canvasRectRef,
     smallBlobCount: localSmallBlobCount,
     largeBlobCount,
+    gridSrc: landingPageGrid.src,
+    onFinale: handleFinale,
   })
 
   return (
     <div className={landingPageBlobsStyles.blobsContainer}>
-      <Image
-        src={landingPageGrid}
-        alt="landing_page_grid"
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          zIndex: -1,
-          transform: 'scale(1.5)',
-        }}
-        priority
-      />
       <canvas ref={canvasRef} className={landingPageBlobsStyles.canvas} />
       <div className={landingPageBlobsStyles.gradientBottom} />
+      <div
+        className={
+          showFarewell
+            ? `${landingPageBlobsStyles.farewell} ${landingPageBlobsStyles.farewellVisible}`
+            : landingPageBlobsStyles.farewell
+        }
+        aria-hidden={!showFarewell}
+      >
+        <p className={landingPageBlobsStyles.farewellTitle}>Thank you</p>
+        <p className={landingPageBlobsStyles.farewellSubtitle}>— the Summer.fi team</p>
+      </div>
     </div>
   )
 }

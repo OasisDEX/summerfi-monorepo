@@ -3,7 +3,13 @@ import { type RefObject, useEffect } from 'react'
 import { debounce } from 'lodash-es'
 
 import {
+  AFTER_PULSE_STRENGTH,
+  AFTER_SPAWN_FRACTION,
   BLACKHOLE_DEATH_FADE,
+  COLLAPSE_DEBRIS_BOOST,
+  COLLAPSE_MAX_PULSE_STRENGTH,
+  COLLAPSE_RADIUS_MULTIPLIER,
+  COLLAPSE_SPAWN_BOOST,
   COMET_DEBRIS_CAP_MULTIPLIER,
   COMET_DEBRIS_DRAG,
   COMET_DEBRIS_LIFETIME_MAX,
@@ -46,6 +52,13 @@ import {
   spawnSmallBlob,
   updateSmallBlob,
 } from '@/components/layout/LandingMasterPage/landingPageBlobs.helpers'
+import { createLensPipeline } from '@/components/layout/LandingMasterPage/landingPageBlobs.lens'
+import {
+  FINALE_CALM_END_S,
+  FINALE_FLASH_START_S,
+  finalePhase,
+  type FinaleState,
+} from '@/components/layout/LandingMasterPage/landingPageBlobs.timeline'
 import {
   type DebrisParticle,
   type LargeBlob,
@@ -57,16 +70,27 @@ export const useLandingPageBlobs = ({
   canvasRectRef,
   smallBlobCount,
   largeBlobCount,
+  gridSrc,
+  onFinale,
 }: {
   canvasRef?: RefObject<HTMLCanvasElement | null>
   canvasRectRef: RefObject<DOMRect | null>
   smallBlobCount: number
   largeBlobCount: number
+  gridSrc: string
+  onFinale: () => void
 }) => {
   useEffect(() => {
     const canvas = canvasRef?.current
 
     if (!canvas) return undefined
+
+    let finaleFired = false
+    const fireFinale = () => {
+      if (finaleFired) return
+      finaleFired = true
+      onFinale()
+    }
 
     // ---- WebGL2 context ----
     const gl = canvas.getContext('webgl2', {
@@ -75,7 +99,11 @@ export const useLandingPageBlobs = ({
       antialias: false,
     }) as WebGL2RenderingContext | null
 
-    if (!gl) return undefined
+    if (!gl) {
+      const fallbackTimer = window.setTimeout(fireFinale, FINALE_FLASH_START_S * 1000)
+
+      return () => window.clearTimeout(fallbackTimer)
+    }
 
     gl.enable(gl.BLEND)
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA) // premultiplied
@@ -92,7 +120,9 @@ export const useLandingPageBlobs = ({
       debrisProg = linkProgram(gl, DEBRIS_VERT, DEBRIS_FRAG)
       largeProg = linkProgram(gl, LARGE_VERT, LARGE_FRAG)
     } catch {
-      return undefined
+      const fallbackTimer = window.setTimeout(fireFinale, FINALE_FLASH_START_S * 1000)
+
+      return () => window.clearTimeout(fallbackTimer)
     }
 
     // ---- small blob geometry: unit quad (-1..1) ----
@@ -221,6 +251,10 @@ export const useLandingPageBlobs = ({
 
     gl.bindVertexArray(null)
 
+    // ---- lens/finale pipeline ----
+    const lens = createLensPipeline(gl, canvas, gridSrc)
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
     // ---- simulation state ----
     let width = 0
     let height = 0
@@ -234,8 +268,21 @@ export const useLandingPageBlobs = ({
     let resizeObserver: ResizeObserver | null = null
     let smallBlobs: SmallBlob[] = []
     let largeBlobs: LargeBlob[] = []
+    let elapsedS = 0
+    let reducedMotionTimer = 0
+    let renderFinale: FinaleState = {
+      phase: 'CALM',
+      collapseProgress: 0,
+      flash: 0,
+      lensStrength: 0,
+      horizon: 0,
+    }
     const debrisParticles: DebrisParticle[] = []
     const debrisParticleCap = Math.max(200, smallBlobCount * COMET_DEBRIS_CAP_MULTIPLIER)
+
+    if (reducedMotion) {
+      reducedMotionTimer = window.setTimeout(fireFinale, FINALE_CALM_END_S * 1000)
+    }
 
     // cached typed arrays (grown as needed)
     let smallInstData = new Float32Array(smallBlobCount * SMALL_STRIDE)
@@ -263,6 +310,7 @@ export const useLandingPageBlobs = ({
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
       gl.viewport(0, 0, canvas.width, canvas.height)
+      lens?.resize(width, height, dpr)
       canvasRectRef.current = rect
       dynamicMouseRadius = Math.max(width, height) * GRAVITY_MOUSE_RADIUS
       largeBlobs = Array.from({ length: largeBlobCount }, (_, i) =>
@@ -277,9 +325,14 @@ export const useLandingPageBlobs = ({
       )
     }
 
-    const ensureSmallBlobs = () => {
-      while (smallBlobs.length < smallBlobCount) {
-        smallBlobs.push(spawnSmallBlob(width, height, undefined))
+    const ensureSmallBlobs = (target: number, matured = false) => {
+      while (smallBlobs.length < target) {
+        const sb = spawnSmallBlob(width, height, undefined)
+
+        // post-collapse spawns skip the slow fade-in (it scales with lifetime,
+        // 20-200s) so the black hole's food is visible from the moment it appears
+        if (matured) sb.age = sb.lifetime * rand(0.16, 0.5)
+        smallBlobs.push(sb)
       }
     }
 
@@ -305,29 +358,56 @@ export const useLandingPageBlobs = ({
         frameAccumulator -= FRAME_DURATION_MS
         const dt = FRAME_DT
 
+        elapsedS += dt
+        const finale = reducedMotion
+          ? { phase: 'CALM' as const, collapseProgress: 0, flash: 0, lensStrength: 0, horizon: 0 }
+          : finalePhase(elapsedS)
+
+        if (finale.phase === 'FLASH' || finale.phase === 'AFTER') fireFinale()
+
+        renderFinale = finale
+
         // ---------- gravity ----------
         const simGravCx = GRAVITY_CENTER_X * width
         const simGravCy = GRAVITY_CENTER_Y * height
         const simInvMaxDist = 1 / Math.sqrt(width * width + height * height)
         const baseMouseRadius = height * GRAVITY_MOUSE_RADIUS
 
-        if (pulseDuration > 0) {
-          pulseElapsed += dt
+        if (finale.phase === 'CALM') {
+          if (pulseDuration > 0) {
+            pulseElapsed += dt
 
-          if (pulseElapsed >= pulseDuration) {
-            pulseDuration = 0
-            pulseElapsed = 0
-            pulseCooldown = rand(3, 5)
+            if (pulseElapsed >= pulseDuration) {
+              pulseDuration = 0
+              pulseElapsed = 0
+              pulseCooldown = rand(3, 5)
+            }
+          } else {
+            pulseCooldown -= dt
+
+            if (pulseCooldown <= 0) {
+              pulseDuration = rand(2.5, 4)
+              pulseElapsed = 0
+              pulseStrength = rand(0.6, 1.2)
+              pulseRadiusMultiplier = rand(1.5, 3)
+            }
           }
         } else {
-          pulseCooldown -= dt
+          // lensStrength is the LINEAR collapse ramp (collapseProgress is eased and
+          // surges mid-collapse) — linear makes the suction build up gradually;
+          // max() keeps full strength once reached, even as lensStrength decays in AFTER
+          const ramp = finale.phase === 'COLLAPSE' ? finale.lensStrength : 1
 
-          if (pulseCooldown <= 0) {
-            pulseDuration = rand(2.5, 4)
-            pulseElapsed = 0
-            pulseStrength = rand(0.6, 1.2)
-            pulseRadiusMultiplier = rand(1.5, 3)
+          pulseDuration = 0
+
+          if (finale.phase === 'AFTER') {
+            // relax toward a steady feeding pull — at full collapse strength new
+            // comets cross the screen in <1s and are never seen
+            autoPulseStrength = Math.max(AFTER_PULSE_STRENGTH, autoPulseStrength - dt * 0.5)
+          } else {
+            autoPulseStrength = Math.max(autoPulseStrength, ramp * COLLAPSE_MAX_PULSE_STRENGTH)
           }
+          pulseRadiusMultiplier = lerp(pulseRadiusMultiplier, COLLAPSE_RADIUS_MULTIPLIER, ramp)
         }
 
         const pulseT = pulseDuration > 0 ? Math.min(pulseElapsed / pulseDuration, 1) : 0
@@ -352,7 +432,11 @@ export const useLandingPageBlobs = ({
           targetRadius,
           Math.min(dt * GRAVITY_RADIUS_GROW_SPEED * 0.02, 1),
         )
-        const targetActivation = easeInOutCubic(rawActivation)
+        // easeInOutCubic blows up cubically outside 0..1 — collapse pulse strength
+        // exceeds 1, so ease only the 0..1 part and add the excess back linearly
+        // (keeps the >1 gravity boost without the cubic explosion)
+        const targetActivation =
+          easeInOutCubic(Math.min(rawActivation, 1)) + Math.max(rawActivation - 1, 0)
 
         smoothedActivation = lerp(
           smoothedActivation,
@@ -366,7 +450,17 @@ export const useLandingPageBlobs = ({
         )
 
         // ---------- update small blobs ----------
-        ensureSmallBlobs()
+        // comets keep spawning forever: boosted through the collapse, then easing
+        // back to the base count — never a gap, so the feeding stream stays fluid
+        const isPostCollapse = finale.phase === 'FLASH' || finale.phase === 'AFTER'
+        const spawnTarget = isPostCollapse
+          ? Math.floor(smallBlobCount * AFTER_SPAWN_FRACTION)
+          : Math.floor(smallBlobCount * (1 + finale.collapseProgress * COLLAPSE_SPAWN_BOOST))
+
+        // once the finale starts, replacements must be visible immediately — the
+        // default fade-in scales with lifetime (20-200s), so age-0 spawns are
+        // invisible while the gravity eats the visible field, draining the sky
+        ensureSmallBlobs(spawnTarget, finale.phase !== 'CALM')
 
         let writeIndex = 0
 
@@ -438,7 +532,17 @@ export const useLandingPageBlobs = ({
                   COMET_DEBRIS_MIN + normalizedSize * (COMET_DEBRIS_MAX - COMET_DEBRIS_MIN)
                 const emitCount = Math.max(
                   1,
-                  Math.min(COMET_DEBRIS_MAX, Math.floor(targetDebris * gravityFactor)),
+                  Math.min(
+                    Math.round(
+                      COMET_DEBRIS_MAX *
+                        (1 + finale.collapseProgress * (COLLAPSE_DEBRIS_BOOST - 1)),
+                    ),
+                    Math.floor(
+                      targetDebris *
+                        gravityFactor *
+                        (1 + finale.collapseProgress * COLLAPSE_DEBRIS_BOOST),
+                    ),
+                  ),
                 )
 
                 const shouldEmitDebris = sb.gravityInfluence > GRAVITY_DEBRIS_THRESHOLD
@@ -488,8 +592,15 @@ export const useLandingPageBlobs = ({
       }
 
       // ---------- build GPU data & render ----------
-      gl.clearColor(0, 0, 0, 0)
-      gl.clear(gl.COLOR_BUFFER_BIT)
+      if (lens) {
+        lens.beginScenePass()
+        lens.drawGrid()
+      } else {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+        gl.viewport(0, 0, canvas.width, canvas.height)
+        gl.clearColor(0, 0, 0, 0)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+      }
 
       const renderGravCx = GRAVITY_CENTER_X * width
       const renderGravCy = GRAVITY_CENTER_Y * height
@@ -705,7 +816,7 @@ export const useLandingPageBlobs = ({
         largeInstData = new Float32Array(largeBlobCount * LARGE_STRIDE * 2)
       }
 
-      const activationEased = easeInOutCubic(largeBlobActivation)
+      const activationEased = easeInOutCubic(Math.min(Math.max(largeBlobActivation, 0), 1))
       let lCount = 0
 
       const lrgInvMaxDist = 1 / Math.sqrt(width * width + height * height)
@@ -723,9 +834,12 @@ export const useLandingPageBlobs = ({
         const currentRadius = lb.size * wobble * activeScale
 
         const fadeAlpha =
-          LARGE_BLOB_IDLE_ALPHA +
-          activationEased * LARGE_BLOB_ACTIVE_ALPHA_BOOST +
-          0.2 * Math.sin(lb.fadeSpeed * t + lb.fadePhase)
+          (LARGE_BLOB_IDLE_ALPHA +
+            activationEased * LARGE_BLOB_ACTIVE_ALPHA_BOOST +
+            0.2 * Math.sin(lb.fadeSpeed * t + lb.fadePhase)) *
+          // large blobs die in the first third of the collapse so their pink bloom
+          // never halos the growing event horizon — only comets keep feeding it
+          Math.max(0, 1 - renderFinale.collapseProgress * 3)
 
         const { pullX, pullY } = calcGravityPull(
           centeredCx,
@@ -772,6 +886,14 @@ export const useLandingPageBlobs = ({
         gl.bindVertexArray(null)
       }
 
+      if (lens) {
+        lens.drawLensPass({
+          lensStrength: renderFinale.lensStrength,
+          flash: renderFinale.flash,
+          horizon: renderFinale.horizon,
+        })
+      }
+
       rafId = requestAnimationFrame(tick)
     }
 
@@ -792,6 +914,8 @@ export const useLandingPageBlobs = ({
       cancelAnimationFrame(initRafId)
       cancelAnimationFrame(rafId)
       resizeObserver?.disconnect()
+      window.clearTimeout(reducedMotionTimer)
+      lens?.dispose()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [smallBlobCount, largeBlobCount])
