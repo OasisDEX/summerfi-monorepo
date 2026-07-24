@@ -1,6 +1,5 @@
 import { type ReactNode } from 'react'
 import { Fragment } from 'react/jsx-runtime'
-import { type EarnAppConfigType } from '@summerfi/app-types'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -10,7 +9,6 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { type EarnNavigationProps } from '@/components/layout/Navigation/Navigation'
 import { NavigationItems } from '@/components/layout/Navigation/NavigationItems'
-import { INTERNAL_LINKS } from '@/helpers/application-links.ts'
 
 import navigationMenuMobileStyles from '@/components/layout/Navigation/NavigationMenuMobile.module.css'
 
@@ -22,9 +20,6 @@ type NavigationMobileMenuType = {
   signUpComponent?: ReactNode
   walletConnectionComponent?: ReactNode
   secondaryWalletConnectionComponent?: ReactNode
-  featuresConfig?: EarnAppConfigType['features']
-  userWalletAddress?: string
-  isEarnApp?: boolean
 }
 
 export const NavigationMenuMobile = ({
@@ -35,18 +30,7 @@ export const NavigationMenuMobile = ({
   signUpComponent,
   walletConnectionComponent,
   secondaryWalletConnectionComponent,
-  featuresConfig,
-  userWalletAddress,
-  isEarnApp,
 }: NavigationMobileMenuType): React.ReactNode => {
-  const beachClubEnabled = !!featuresConfig?.BeachClub
-  const host = typeof window !== 'undefined' ? window.location.origin : ''
-
-  const resolvedBeachClubLink =
-    isEarnApp && userWalletAddress
-      ? `/portfolio/${userWalletAddress}?tab=beach-club`
-      : `${host}${INTERNAL_LINKS.beachClub}`
-
   return (
     <>
       <div className={navigationMenuMobileStyles.topBar}>
@@ -67,22 +51,6 @@ export const NavigationMenuMobile = ({
       <div className={navigationMenuMobileStyles.spacer} />
       <div className={navigationMenuMobileStyles.linksListWrapper}>
         <div className={navigationMenuMobileStyles.linksList}>
-          {beachClubEnabled && (
-            <a href={resolvedBeachClubLink}>
-              <Button
-                variant="textSecondaryLarge"
-                disabled={false}
-                style={{
-                  padding: `0.25em 0.375em 0.25em 0px`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--general-space-4)',
-                }}
-              >
-                Beach club <Icon iconName="beach_club_icon" size={24} />
-              </Button>
-            </a>
-          )}
           {links?.map((link) =>
             link.link ? (
               <Link

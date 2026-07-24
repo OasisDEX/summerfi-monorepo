@@ -334,7 +334,6 @@ export const VaultManageViewComponent = ({
     vaultToken,
     token: selectedToken,
     tokenBalance: selectedTokenBalance,
-    tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'manage',
     ownerView,
     positionAmount: netValue,

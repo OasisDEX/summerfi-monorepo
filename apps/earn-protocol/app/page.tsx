@@ -66,15 +66,10 @@ const EarnAllVaultsPage = async ({
   )
 }
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}): Promise<Metadata> {
-  const [{ vaults }, headersList, params, tvl] = await Promise.all([
+export async function generateMetadata(): Promise<Metadata> {
+  const [{ vaults }, headersList, tvl] = await Promise.all([
     getCachedVaultsList(),
     headers(),
-    searchParams,
     getCachedTvl(),
   ])
   const prodHost = headersList.get('host')
@@ -83,13 +78,7 @@ export async function generateMetadata({
   const tvlFormatted = formatCryptoBalance(tvl)
   const { allVaultsProtocols: protocolsSupported } = getVaultsProtocolsList(vaults)
 
-  let ogImageUrl = ''
-
-  if (typeof params.game !== 'undefined') {
-    ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
-  } else {
-    ogImageUrl = `${baseUrl}earn/api/og/vaults-list?tvl=${tvlFormatted}&protocols=${protocolsSupported.length}`
-  }
+  const ogImageUrl = `${baseUrl}earn/api/og/vaults-list?tvl=${tvlFormatted}&protocols=${protocolsSupported.length}`
 
   return {
     title: `Lazy Summer Protocol - $${tvlFormatted} TVL with ${protocolsSupported.length} protocols supported`,

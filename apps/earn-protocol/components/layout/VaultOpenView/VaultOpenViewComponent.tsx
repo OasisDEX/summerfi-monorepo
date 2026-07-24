@@ -55,7 +55,6 @@ import { BeachClubReferralForm } from '@/features/beach-club/components/BeachClu
 // import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 // import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 // import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
-import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
@@ -318,8 +317,6 @@ export const VaultOpenViewComponent = ({
     sidebar,
     nextTransaction,
     backToInit,
-    isTransakOpen,
-    setIsTransakOpen,
   } = useTransaction({
     vault,
     vaultChainId,
@@ -329,7 +326,6 @@ export const VaultOpenViewComponent = ({
     vaultToken,
     token: selectedToken,
     tokenBalance: selectedTokenBalance,
-    tokenBalanceLoading: selectedTokenBalanceLoading,
     flow: 'open',
     ownerView: true,
     approvalCustomValue: approvalAmountParsed,
@@ -562,19 +558,7 @@ export const VaultOpenViewComponent = ({
             <VaultOpenDetailsLoading vault={vault} isDaoManaged={vault.isDaoManaged} />
           )
         }
-        sidebarContent={
-          <>
-            <Sidebar {...resovledSidebarProps} />
-            {userWalletAddress && (
-              <TransakWidget
-                cryptoCurrency={vault.inputToken.symbol}
-                walletAddress={userWalletAddress}
-                isOpen={isTransakOpen}
-                onClose={() => setIsTransakOpen(false)}
-              />
-            )}
-          </>
-        }
+        sidebarContent={<Sidebar {...resovledSidebarProps} />}
         // rightExtraContent={
         //   migrationsEnabled &&
         //   migratablePositions.length > 0 &&

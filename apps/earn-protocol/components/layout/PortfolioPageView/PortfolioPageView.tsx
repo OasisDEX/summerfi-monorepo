@@ -1,13 +1,7 @@
 'use client'
 
 import { type FC, useEffect, useReducer } from 'react'
-import {
-  Icon,
-  NonOwnerPortfolioBanner,
-  TabBar,
-  Text,
-  useEarnProtocolWallet,
-} from '@summerfi/app-earn-ui'
+import { NonOwnerPortfolioBanner, TabBar, Text, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
   type RewardTokenPrices,
@@ -20,14 +14,10 @@ import {
   emptyRewardsData,
 } from '@/components/layout/PortfolioPageView/constants'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
-import { BeachClubPalmBackground } from '@/features/beach-club/components/BeachClubPalmBackground/BeachClubPalmBackground'
-import { beachClubDefaultState, beachClubReducer } from '@/features/beach-club/state'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { usePortfolioRewardsDataQuery } from '@/features/portfolio/api/get-portfolio-rewards-data'
-import { PortfolioBeachClub } from '@/features/portfolio/components/PortfolioBeachClub/PortfolioBeachClub'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
-import { PortfolioRebalanceActivity } from '@/features/portfolio/components/PortfolioRebalanceActivity/PortfolioRebalanceActivity'
 import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewards/PortfolioRewards'
 import { PortfolioRewardsV2 } from '@/features/portfolio/components/PortfolioRewardsV2/PortfolioRewardsV2'
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
@@ -79,11 +69,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     walletAddress: viewWalletAddress,
   })
 
-  const [beachClubState, beachClubDispatch] = useReducer(beachClubReducer, {
-    ...beachClubDefaultState,
-    walletAddress: viewWalletAddress,
-  })
-
   useEffect(() => {
     dispatch({
       type: 'update-delegatee',
@@ -93,13 +78,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       type: 'update-merkl-is-authorized-per-chain',
       payload: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
     })
-    beachClubDispatch({
-      type: 'update-merkl-is-authorized-per-chain',
-      payload: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
-    })
   }, [rewardsData])
 
-  const beachClubEnabled = !!features?.BeachClub
   const stakingV2Enabled = !!features?.StakingV2
 
   const handleTabChange = (tab: { id: string }) => {
@@ -148,17 +128,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
         />
       ),
     },
-    {
-      id: PortfolioTabs.REBALANCE_ACTIVITY,
-      label: 'Rebalance Activity',
-      content: (
-        <PortfolioRebalanceActivity
-          viewWalletAddress={viewWalletAddress}
-          positions={positions}
-          vaultsList={vaultsList}
-        />
-      ),
-    },
     ...(stakingV2Enabled
       ? [
           {
@@ -199,24 +168,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             ),
           },
         ]),
-    ...(beachClubEnabled
-      ? [
-          {
-            id: PortfolioTabs.BEACH_CLUB,
-            label: 'Beach Club',
-            icon: <Icon iconName="beach_club_icon" size={24} />,
-            content: (
-              <PortfolioBeachClub
-                viewWalletAddress={viewWalletAddress}
-                merklIsAuthorizedPerChain={rewardsData.sumrToClaim.merklIsAuthorizedPerChain}
-                state={beachClubState}
-                dispatch={beachClubDispatch}
-              />
-            ),
-            activeColor: 'var(--beach-club-tab-underline)',
-          },
-        ]
-      : []),
   ]
 
   return (
@@ -240,7 +191,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           useAsControlled
         />
       </div>
-      <BeachClubPalmBackground />
     </>
   )
 }

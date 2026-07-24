@@ -54,12 +54,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.5,
     },
-    {
-      url: 'https://summer.fi/team',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.5,
-    },
   ]
 
   const vaultsMap: MetadataRoute.Sitemap = vaultsWithConfig.map((vault) => ({

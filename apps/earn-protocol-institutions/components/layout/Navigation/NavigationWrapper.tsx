@@ -8,7 +8,6 @@ import {
   Navigation,
   NavigationConfig,
   SkeletonLine,
-  useEarnProtocolWallet,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
@@ -17,7 +16,6 @@ import { usePathname, useRouter } from 'next/navigation'
 import { MFASetting } from '@/components/molecules/MFASetting/MFASetting'
 import { useAuth } from '@/contexts/AuthContext/AuthContext'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 
 const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
   ssr: false,
@@ -33,8 +31,6 @@ export const NavigationWrapper: FC = () => {
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const router = useRouter()
   const currentPath = usePathname()
-  const { address: userWalletAddress } = useEarnProtocolWallet()
-  const { features } = useSystemConfig()
   const { authSignOutHandler, user } = useAuth()
 
   const isLoginPage = currentPath === '/'
@@ -42,7 +38,6 @@ export const NavigationWrapper: FC = () => {
   return (
     <Navigation
       isEarnApp
-      userWalletAddress={userWalletAddress}
       currentPath={currentPath}
       logo="/img/branding/logo-dark.svg"
       logoSmall="/img/branding/dot-dark.svg"
@@ -81,7 +76,6 @@ export const NavigationWrapper: FC = () => {
         ) : undefined
       }
       onLogoClick={() => router.push('/')}
-      featuresConfig={features}
     />
   )
 }

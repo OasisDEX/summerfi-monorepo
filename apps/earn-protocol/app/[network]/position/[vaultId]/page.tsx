@@ -116,14 +116,12 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   )
 }
 
-export async function generateMetadata({
-  params,
-  searchParams,
-}: EarnVaultOpenPageProps & {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}): Promise<Metadata> {
-  const [{ network: paramsNetwork, vaultId }, systemConfig, headersList, searchParamsAwaited] =
-    await Promise.all([params, getCachedConfig(), headers(), searchParams])
+export async function generateMetadata({ params }: EarnVaultOpenPageProps): Promise<Metadata> {
+  const [{ network: paramsNetwork, vaultId }, systemConfig, headersList] = await Promise.all([
+    params,
+    getCachedConfig(),
+    headers(),
+  ])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const prodHost = headersList.get('host')
@@ -220,13 +218,7 @@ export async function generateMetadata({
       : 'n/a'
     : 'New'
 
-  let ogImageUrl = ''
-
-  if (typeof searchParamsAwaited.game !== 'undefined') {
-    ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
-  } else {
-    ogImageUrl = `${baseUrl}earn/api/og/vault?tvl=${totalValueLockedTokenParsed}&apy30d=${apy30d}&token=${vaultWithConfig.inputToken.symbol}`
-  }
+  const ogImageUrl = `${baseUrl}earn/api/og/vault?tvl=${totalValueLockedTokenParsed}&apy30d=${apy30d}&token=${vaultWithConfig.inputToken.symbol}`
 
   return {
     title: `Lazy Summer Protocol - ${getDisplayToken(vault.inputToken.symbol)} on ${capitalize(paramsNetwork)}, $${totalValueLockedTokenParsed} TVL`,

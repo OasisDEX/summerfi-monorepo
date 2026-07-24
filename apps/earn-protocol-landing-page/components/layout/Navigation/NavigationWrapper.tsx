@@ -1,24 +1,16 @@
 'use client'
 
 import { type FC } from 'react'
-import {
-  Button,
-  getNavigationItems,
-  Navigation,
-  NavigationExtraComponents,
-} from '@summerfi/app-earn-ui'
+import { Button, getNavigationItems, Navigation } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import navigationWrapperStyles from './NavigationWrapper.module.css'
 
 export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
-  const { landingPageData } = useLandingPageData()
-  const { features } = landingPageData?.systemConfig ?? {}
   const isBeachClub = currentPath.includes('beach-club')
 
   const onNavItemClick = ({
@@ -60,25 +52,11 @@ export const NavigationWrapper: FC = () => {
             </Button>
           </Link>
         }
-        startTheGame={
-          features?.Game
-            ? () => {
-                window.location.href = '/earn?game'
-              }
-            : undefined
-        }
         onLogoClick={() => {
           onNavItemClick({ buttonName: 'logo', isEarnApp: false })
           // because router will use base path...
           window.location.href = '/'
         }}
-        featuresConfig={features}
-        extraComponents={
-          <NavigationExtraComponents
-            beachClubEnabled={!!features?.BeachClub}
-            onNavItemClick={onNavItemClick}
-          />
-        }
       />
     </div>
   )

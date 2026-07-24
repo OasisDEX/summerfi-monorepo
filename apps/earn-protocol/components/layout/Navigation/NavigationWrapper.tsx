@@ -6,9 +6,7 @@ import {
   getNavigationItems,
   Navigation,
   NavigationConfig,
-  NavigationExtraComponents,
   SkeletonLine,
-  useCurrentUrl,
   useEarnProtocolLogin,
   useEarnProtocolWallet,
   useMobileCheck,
@@ -17,7 +15,6 @@ import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
@@ -32,15 +29,10 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
 
 export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd }) => {
   const currentPath = usePathname()
-  const path = useCurrentUrl()
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { login, isOpen } = useEarnProtocolLogin()
-  const { features, setRunningGame, setIsGameByInvite } = useSystemConfig()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
-  const startGame = () => {
-    setRunningGame?.(true)
-  }
 
   const loginResolverRef = useRef<((value: `0x${string}` | undefined) => void) | null>(null)
   const loginTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -110,50 +102,16 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
 
   const isCampaignPage = currentPath.startsWith('/campaigns')
 
-  // RWA (permissioned) vaults are removed from the earn app, so drop the shared nav's
-  // "Permissioned RWA Vaults" entry (id/href `permissioned-vaults`).
-  const navigationItems = (
-    getNavigationItems({
-      userWalletAddress,
-      isEarnApp: true,
-      onNavItemClick,
-      logIn: handleLogIn,
-    }) ?? []
-  ).map((item) =>
-    'itemsList' in item && Array.isArray(item.itemsList)
-      ? {
-          ...item,
-          itemsList: item.itemsList.filter((subItem) => subItem.id !== 'permissioned-vaults'),
-        }
-      : item,
-  )
-
-  const beachClubEnabled = !!features?.BeachClub
-
-  // check if the current URL has a `game` query parameter
-
-  useEffect(() => {
-    const url = new URL(`${path.startsWith('/') ? window.location.origin : ''}${path}`)
-
-    const isLinkedToGame = url.searchParams.has('game')
-
-    if (isLinkedToGame) {
-      // scroll to the top of the page
-      window.scrollTo(0, 0)
-      setRunningGame?.(true)
-      setIsGameByInvite?.(true) // Set the game as being started by an invite link
-      // remove the `game` from the URL search params
-      if (typeof window !== 'undefined') {
-        url.searchParams.delete('game')
-        window.history.replaceState({}, '', url.toString())
-      }
-    }
-  }, [setRunningGame, setIsGameByInvite, path])
+  const navigationItems = getNavigationItems({
+    userWalletAddress,
+    isEarnApp: true,
+    onNavItemClick,
+    logIn: handleLogIn,
+  })
 
   return (
     <Navigation
       isEarnApp
-      userWalletAddress={userWalletAddress}
       currentPath={currentPath}
       logo="/earn/img/branding/logo-dark.svg"
       logoSmall="/earn/img/branding/dot-dark.svg"
@@ -174,16 +132,6 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
         onNavItemClick({ buttonName: 'logo', isEarnApp: true })
         window.location.replace('/earn')
       }}
-      startTheGame={features?.Game ? startGame : undefined}
-      featuresConfig={features}
-      extraComponents={
-        <NavigationExtraComponents
-          beachClubEnabled={beachClubEnabled}
-          isEarnApp
-          userWalletAddress={userWalletAddress}
-          onNavItemClick={onNavItemClick}
-        />
-      }
     />
   )
 }

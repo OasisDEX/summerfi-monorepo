@@ -1,2 +1,0 @@
-export const getMerchandiseMessageToSign = ({ walletAddress }: { walletAddress: string }) =>
-  `I consent to the processing of my personal data by OAZO APPS LIMITED collect through Getform for the purposes of: (i) receiving information about Summer.fi’s programmes (including the Beach Club Programme), products and services, including via newsletter; and (ii) receiving rewards or merchandise related to these programmes, products or services. Wallet address: ${walletAddress.toLowerCase()}.`

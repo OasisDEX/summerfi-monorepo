@@ -57,15 +57,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   )
 }
 
-export async function generateMetadata({
-  params,
-  searchParams,
-}: PortfolioPageProps & {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}): Promise<Metadata> {
-  const [{ walletAddress: walletAddressRaw }, headersList, searchParamsAwaited] = await Promise.all(
-    [params, headers(), searchParams],
-  )
+export async function generateMetadata({ params }: PortfolioPageProps): Promise<Metadata> {
+  const [{ walletAddress: walletAddressRaw }, headersList] = await Promise.all([params, headers()])
   const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
@@ -89,13 +82,7 @@ export async function generateMetadata({
     )
   }, zero)
 
-  let ogImageUrl = ''
-
-  if (typeof searchParamsAwaited.game !== 'undefined') {
-    ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
-  } else {
-    ogImageUrl = `${baseUrl}earn/api/og/portfolio?amount=$${formatFiatBalance(totalSummerPortfolioUSD)}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`
-  }
+  const ogImageUrl = `${baseUrl}earn/api/og/portfolio?amount=$${formatFiatBalance(totalSummerPortfolioUSD)}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`
 
   return {
     title: `Lazy Summer Protocol - ${formatAddress(walletAddress, { first: 6 })} - $${formatFiatBalance(totalSummerPortfolioUSD)} in Lazy Summer`,
