@@ -29,7 +29,7 @@ export const alwaysVisibleVaults: string[] = [
   `${SupportedNetworkIds.Hyperliquid}-0x2cc190fb654141dfbeac4c0f718f4d511674d346`,
   // Mainnet
   // LazyVault_HigherRisk_USDC
-  `${SupportedNetworkIds.Mainnet}-0xe9cda459bed6dcfb8ac61cd8ce08e2d52370cb06`,
+  // `${SupportedNetworkIds.Mainnet}-0xe9cda459bed6dcfb8ac61cd8ce08e2d52370cb06`,
   // DAO_LazyVault_WETH_1
   `${SupportedNetworkIds.Mainnet}-0x0c1fbccc019320032d9acd193447560c8c632114`,
   // LazyVault_LowerRisk_USDT
