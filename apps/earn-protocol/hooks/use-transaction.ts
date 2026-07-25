@@ -40,7 +40,6 @@ type UseTransactionParams = {
   vaultToken: IToken | undefined
   token: IToken | undefined
   tokenBalance: BigNumber | undefined
-  tokenBalanceLoading: boolean
   publicClient?: PublicClient
   flow: 'open' | 'manage'
   ownerView?: boolean
@@ -64,7 +63,6 @@ export const useTransaction = ({
   vaultToken,
   token,
   tokenBalance,
-  tokenBalanceLoading,
   flow,
   ownerView, // on non-owner views we dont want to make all of these calls
   positionAmount,
@@ -82,7 +80,6 @@ export const useTransaction = ({
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
   const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
-  const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain, chain } = useEarnProtocolChain()
   const [selectedSwitchVault, setSelectedSwitchVault] = useState<
     `${string}-${number}` | undefined
@@ -298,8 +295,6 @@ export const useTransaction = ({
     isSettingChain,
     vaultChainId,
     flow,
-    tokenBalanceLoading,
-    tokenBalance,
     isSwitch,
     isDepositAmountOverBalance,
     isWithdrawAmountOverPosition,
@@ -315,7 +310,6 @@ export const useTransaction = ({
     login,
     setChain,
     buttonClickEventHandler,
-    setIsTransakOpen,
     getTransactionsList,
     executeNextTransaction,
     push,
@@ -410,8 +404,6 @@ export const useTransaction = ({
     approvalTokenSymbol,
     approvalType,
     setApprovalType,
-    isTransakOpen,
-    setIsTransakOpen,
     setSelectedSwitchVault,
     selectedSwitchVault,
     transactions,

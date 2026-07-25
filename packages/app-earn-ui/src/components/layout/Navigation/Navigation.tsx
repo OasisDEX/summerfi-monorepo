@@ -1,7 +1,7 @@
 'use client'
 
 import { type CSSProperties, type FC, type ReactNode, useEffect, useMemo, useState } from 'react'
-import { type EarnAppConfigType, type NavigationMenuPanelLinkType } from '@summerfi/app-types'
+import { type NavigationMenuPanelLinkType } from '@summerfi/app-types'
 
 import { NavigationActions } from '@/components/layout/Navigation/NavigationActions'
 import { NavigationBranding } from '@/components/layout/Navigation/NavigationBranding'
@@ -42,13 +42,9 @@ export interface EarnNavigationProps {
   extraComponents?: ReactNode
   noNavMargin?: boolean
   onLogoClick?: () => void
-  startTheGame?: () => void
-  featuresConfig?: EarnAppConfigType['features']
-  userWalletAddress?: string
 }
 
 export const Navigation: FC<EarnNavigationProps> = ({
-  isEarnApp = false,
   logo,
   logoSmall,
   links,
@@ -60,9 +56,6 @@ export const Navigation: FC<EarnNavigationProps> = ({
   extraComponents,
   noNavMargin = false,
   onLogoClick,
-  startTheGame,
-  featuresConfig,
-  userWalletAddress,
 }) => {
   const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
@@ -111,7 +104,6 @@ export const Navigation: FC<EarnNavigationProps> = ({
           signUpComponent={signupComponent}
           toggleMobileMenu={toggleMobileMenu}
           configComponent={configComponent}
-          startTheGame={startTheGame}
           extraComponents={extraComponents}
         />
       </header>
@@ -126,7 +118,6 @@ export const Navigation: FC<EarnNavigationProps> = ({
         >
           <MobileDrawerDefaultWrapper slideFrom="top">
             <NavigationMenuMobile
-              featuresConfig={featuresConfig}
               logo={logoSmall}
               links={links}
               currentPath={currentPath}
@@ -138,8 +129,6 @@ export const Navigation: FC<EarnNavigationProps> = ({
                 mobileWalletConnectionComponents?.secondary ?? walletConnectionComponent
               }
               signUpComponent={signupComponent}
-              userWalletAddress={userWalletAddress}
-              isEarnApp={isEarnApp}
             />
           </MobileDrawerDefaultWrapper>
         </MobileDrawer>

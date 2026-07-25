@@ -31,16 +31,17 @@
 .heroTextGroup {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 36px;
   max-width: 760px;
 }
 
 .heroTitle {
-  white-space: nowrap;
+  max-width: 500px;
 }
 
 .heroSubtitle {
   color: #b9b8ba;
+  max-width: 500px;
 }
 
 .heroButtons {

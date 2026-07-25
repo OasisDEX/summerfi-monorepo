@@ -8,7 +8,7 @@ module.exports = {
     sourceType: 'module',
     tsconfigRootDir: __dirname,
   },
-  ignorePatterns: ['next-env.d.ts'],
+  ignorePatterns: ['next-env.d.ts', 'jest.config.js'],
   rules: {
     'no-magic-numbers': 'off',
   },

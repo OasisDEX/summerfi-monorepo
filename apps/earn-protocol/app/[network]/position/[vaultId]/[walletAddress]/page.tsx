@@ -104,18 +104,9 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   )
 }
 
-export async function generateMetadata({
-  params,
-  searchParams,
-}: EarnVaultManagePageProps & {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}): Promise<Metadata> {
-  const [
-    { network: paramsNetwork, vaultId, walletAddress },
-    systemConfig,
-    headersList,
-    searchParamsAwaited,
-  ] = await Promise.all([params, getCachedConfig(), headers(), searchParams])
+export async function generateMetadata({ params }: EarnVaultManagePageProps): Promise<Metadata> {
+  const [{ network: paramsNetwork, vaultId, walletAddress }, systemConfig, headersList] =
+    await Promise.all([params, getCachedConfig(), headers()])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const prodHost = headersList.get('host')
@@ -173,13 +164,7 @@ export async function generateMetadata({
       )
     : zero
 
-  let ogImageUrl = ''
-
-  if (typeof searchParamsAwaited.game !== 'undefined') {
-    ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
-  } else {
-    ogImageUrl = `${baseUrl}earn/api/og/vault-position?amount=${formatCryptoBalance(netValue)}&token=${vault ? getDisplayToken(vault.inputToken.symbol) : ''}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`
-  }
+  const ogImageUrl = `${baseUrl}earn/api/og/vault-position?amount=${formatCryptoBalance(netValue)}&token=${vault ? getDisplayToken(vault.inputToken.symbol) : ''}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`
 
   return {
     title: `Lazy Summer Protocol - ${formatCryptoBalance(netValue)} ${vault ? getDisplayToken(vault.inputToken.symbol) : ''} position on ${capitalize(paramsNetwork)}`,

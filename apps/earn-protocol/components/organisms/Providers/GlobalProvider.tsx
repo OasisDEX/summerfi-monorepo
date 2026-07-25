@@ -6,7 +6,6 @@ import {
   type SavedAnalyticsCookiesSettings,
 } from '@summerfi/app-earn-ui'
 import { type DeviceType, type EarnAppConfigType } from '@summerfi/app-types'
-import dynamic from 'next/dynamic'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { type SavedLargeUserBannerSettings } from '@/components/molecules/LargeUserFloatingBanner/LargeUserFloatingBanner'
@@ -25,10 +24,6 @@ type GlobalProviderProps = {
   largeUsersData?: string[]
   sumrPriceUsd?: number
 }
-
-const TheGame = dynamic(() => import('../../../features/game/components/MainGameView'), {
-  ssr: false,
-})
 
 export const GlobalProvider = ({
   children,
@@ -54,7 +49,6 @@ export const GlobalProvider = ({
             >
               {children}
             </MasterPage>
-            <TheGame />
           </WalletProvider>
         </LocalConfigContextProvider>
       </DeviceProvider>

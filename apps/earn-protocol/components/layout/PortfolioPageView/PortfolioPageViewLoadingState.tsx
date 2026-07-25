@@ -1,9 +1,8 @@
 'use client'
 
 import { type FC } from 'react'
-import { Icon, NonOwnerPortfolioBanner, SkeletonLine, TabBar } from '@summerfi/app-earn-ui'
+import { NonOwnerPortfolioBanner, SkeletonLine, TabBar } from '@summerfi/app-earn-ui'
 
-import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
@@ -23,8 +22,6 @@ const SimplePortfolioSkeleton = (
 )
 
 export const PortfolioPageViewLoadingState: FC = () => {
-  const { features } = useSystemConfig()
-  const beachClubEnabled = !!features?.BeachClub
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
     defaultTab: PortfolioTabs.OVERVIEW,
@@ -46,26 +43,10 @@ export const PortfolioPageViewLoadingState: FC = () => {
       content: SimplePortfolioSkeleton,
     },
     {
-      id: PortfolioTabs.REBALANCE_ACTIVITY,
-      label: 'Rebalance Activity',
-      content: SimplePortfolioSkeleton,
-    },
-    {
       id: PortfolioTabs.REWARDS,
       label: '$SUMR Rewards',
       content: SimplePortfolioSkeleton,
     },
-    ...(beachClubEnabled
-      ? [
-          {
-            id: PortfolioTabs.BEACH_CLUB,
-            label: 'Beach Club',
-            icon: <Icon iconName="beach_club_icon" size={24} />,
-            content: SimplePortfolioSkeleton,
-            activeColor: 'var(--beach-club-tab-underline)',
-          },
-        ]
-      : []),
   ]
 
   return (

@@ -2,7 +2,6 @@
 
 import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 
-import { BeachClubFloatingBanner } from '@/components/molecules/BeachClubFloatingBanner/BeachClubFloatingBanner'
 import {
   LargeUserFloatingBanner,
   type SavedLargeUserBannerSettings,
@@ -13,17 +12,10 @@ interface FloatingBannersProps {
   largeUsersCookie: SavedLargeUserBannerSettings | null
 }
 
-export const FloatingBanners = ({ largeUsersData, largeUsersCookie }: FloatingBannersProps) => {
+export const FloatingBanners = ({ largeUsersData }: FloatingBannersProps) => {
   const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const isLargeUser = largeUsersData?.includes(userWalletAddress?.toLowerCase() ?? '')
 
-  return isLargeUser ? (
-    <>
-      <LargeUserFloatingBanner largeUsersData={largeUsersData} />
-      {largeUsersCookie?.isClosed && <BeachClubFloatingBanner />}
-    </>
-  ) : (
-    <BeachClubFloatingBanner />
-  )
+  return isLargeUser ? <LargeUserFloatingBanner largeUsersData={largeUsersData} /> : null
 }

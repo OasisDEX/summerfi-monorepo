@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect } from 'react'
+import { type FC, useEffect } from 'react'
 import { slugify } from '@summerfi/app-utils'
 import Link from 'next/link'
 
@@ -14,27 +14,16 @@ import footerStyles from '@/components/layout/Footer/Footer.module.css'
 
 interface FooterProps {
   logo: string
-  languageSwitcher?: ReactNode
-  newsletter: ReactNode
   onFooterItemClick?: (params: { buttonName: string; isEarnApp?: boolean }) => void
 }
 
-export const Footer: FC<FooterProps> = ({
-  logo,
-  newsletter,
-  languageSwitcher,
-  onFooterItemClick,
-}) => {
+export const Footer: FC<FooterProps> = ({ logo, onFooterItemClick }) => {
   const isAltPressed = useHoldAlt()
 
   const linksList = [
     {
       title: 'About',
       links: [
-        {
-          label: 'Team',
-          url: '/landing_page/team',
-        },
         {
           label: 'Contact',
           url: EXTERNAL_LINKS.KB.CONTACT,
@@ -63,10 +52,6 @@ export const Footer: FC<FooterProps> = ({
         {
           label: 'Knowledge base',
           url: EXTERNAL_LINKS.KB.HELP,
-        },
-        {
-          label: 'Bug bounty',
-          url: EXTERNAL_LINKS.BUG_BOUNTY,
         },
         {
           label: '$SUMR Governance',
@@ -160,7 +145,6 @@ export const Footer: FC<FooterProps> = ({
             </Link>
           </Text>
         )}
-        {languageSwitcher}
       </div>
       {linksList.map(({ links, title }, i) => (
         <div key={i}>
@@ -207,7 +191,6 @@ export const Footer: FC<FooterProps> = ({
           </ul>
         </div>
       ))}
-      {newsletter}
     </div>
   )
 }

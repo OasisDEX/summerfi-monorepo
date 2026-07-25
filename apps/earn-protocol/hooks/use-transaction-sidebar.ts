@@ -30,8 +30,6 @@ type UseTransactionSidebarParams = {
   isSettingChain: boolean
   vaultChainId: SupportedNetworkIds
   flow: 'open' | 'manage'
-  tokenBalanceLoading: boolean
-  tokenBalance: BigNumber | undefined
   isSwitch: boolean
   // synchronous balance checks from useTransactionValidation, used to disable the button
   isDepositAmountOverBalance: boolean
@@ -51,7 +49,6 @@ type UseTransactionSidebarParams = {
   login: () => void
   setChain: (params: { chain: number }) => void
   buttonClickEventHandler: (event: string) => void
-  setIsTransakOpen: (open: boolean) => void
   getTransactionsList: () => void
   executeNextTransaction: () => void
   push: (href: string) => void
@@ -76,8 +73,6 @@ export const useTransactionSidebar = ({
   isSettingChain,
   vaultChainId,
   flow,
-  tokenBalanceLoading,
-  tokenBalance,
   isSwitch,
   isDepositAmountOverBalance,
   isWithdrawAmountOverPosition,
@@ -94,7 +89,6 @@ export const useTransactionSidebar = ({
   login,
   setChain,
   buttonClickEventHandler,
-  setIsTransakOpen,
   getTransactionsList,
   executeNextTransaction,
   push,
@@ -143,17 +137,6 @@ export const useTransactionSidebar = ({
           loading: isSettingChain,
         }
       },
-      () =>
-        !tokenBalanceLoading && tokenBalance && tokenBalance.isZero() && flow === 'open'
-          ? {
-              label: 'Buy crypto',
-              action: () => {
-                buttonClickEventHandler(`vault-${flow}-buy-crypto`)
-                setIsTransakOpen(true)
-              },
-              disabled: false,
-            }
-          : undefined,
       // deposit balance check
       () =>
         isDepositAmountOverBalance
@@ -262,8 +245,6 @@ export const useTransactionSidebar = ({
     ownerView,
     isProperChainSelected,
     isSettingChain,
-    tokenBalanceLoading,
-    tokenBalance,
     flow,
     isDepositAmountOverBalance,
     amount,
@@ -285,7 +266,6 @@ export const useTransactionSidebar = ({
     userWalletAddress,
     selectedSwitchVault,
     push,
-    setIsTransakOpen,
     vault.protocol.network,
   ])
 

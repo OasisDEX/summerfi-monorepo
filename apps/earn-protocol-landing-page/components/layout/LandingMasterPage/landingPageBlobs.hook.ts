@@ -3,7 +3,13 @@ import { type RefObject, useEffect } from 'react'
 import { debounce } from 'lodash-es'
 
 import {
+  AFTER_PULSE_STRENGTH,
+  AFTER_SPAWN_FRACTION,
   BLACKHOLE_DEATH_FADE,
+  COLLAPSE_DEBRIS_BOOST,
+  COLLAPSE_MAX_PULSE_STRENGTH,
+  COLLAPSE_RADIUS_MULTIPLIER,
+  COLLAPSE_SPAWN_BOOST,
   COMET_DEBRIS_CAP_MULTIPLIER,
   COMET_DEBRIS_DRAG,
   COMET_DEBRIS_LIFETIME_MAX,
@@ -23,19 +29,30 @@ import {
   GRAVITY_LERP_SPEED,
   GRAVITY_MOUSE_RADIUS,
   GRAVITY_RADIUS_GROW_SPEED,
-  GRAVITY_RADIUS_SHRINK_SPEED,
+  GRID_HORIZON_BOOST,
   LARGE_BLOB_ACTIVE_ALPHA_BOOST,
   LARGE_BLOB_ACTIVE_SCALE_BOOST,
   LARGE_BLOB_CENTER_PULL,
   LARGE_BLOB_IDLE_ALPHA,
   LARGE_BLOB_RESPONSE_LERP_SPEED,
+  LARGE_FADE_ATTACK,
+  LARGE_FADE_RELEASE,
   LARGE_FRAG,
   LARGE_VERT,
+  LENS_UNIFORM_SMOOTHING,
+  RADIUS_MULT_ATTACK,
+  RADIUS_MULT_RELEASE,
   SMALL_FRAG,
   SMALL_VERT,
+  SPAWN_TARGET_ATTACK,
+  SPAWN_TARGET_RELEASE,
   TAIL_FRAG,
   TAIL_VERT,
+  TIME_WARP_FACTOR,
+  WELL_ENERGY_ATTACK,
+  WELL_ENERGY_RELEASE,
 } from '@/components/layout/LandingMasterPage/landingPageBlobs.constants'
+import { createEnvelope } from '@/components/layout/LandingMasterPage/landingPageBlobs.envelope'
 import {
   calcGravityPull,
   createLargeBlob,
@@ -46,6 +63,12 @@ import {
   spawnSmallBlob,
   updateSmallBlob,
 } from '@/components/layout/LandingMasterPage/landingPageBlobs.helpers'
+import { createLensPipeline } from '@/components/layout/LandingMasterPage/landingPageBlobs.lens'
+import {
+  FINALE_CALM_END_S,
+  FINALE_FLASH_START_S,
+  finalePhase,
+} from '@/components/layout/LandingMasterPage/landingPageBlobs.timeline'
 import {
   type DebrisParticle,
   type LargeBlob,
@@ -57,16 +80,29 @@ export const useLandingPageBlobs = ({
   canvasRectRef,
   smallBlobCount,
   largeBlobCount,
+  gridSrc,
+  noiseSrc,
+  onFinale,
 }: {
   canvasRef?: RefObject<HTMLCanvasElement | null>
   canvasRectRef: RefObject<DOMRect | null>
   smallBlobCount: number
   largeBlobCount: number
+  gridSrc: string
+  noiseSrc: string
+  onFinale: () => void
 }) => {
   useEffect(() => {
     const canvas = canvasRef?.current
 
     if (!canvas) return undefined
+
+    let finaleFired = false
+    const fireFinale = () => {
+      if (finaleFired) return
+      finaleFired = true
+      onFinale()
+    }
 
     // ---- WebGL2 context ----
     const gl = canvas.getContext('webgl2', {
@@ -75,7 +111,11 @@ export const useLandingPageBlobs = ({
       antialias: false,
     }) as WebGL2RenderingContext | null
 
-    if (!gl) return undefined
+    if (!gl) {
+      const fallbackTimer = window.setTimeout(fireFinale, FINALE_FLASH_START_S * 1000)
+
+      return () => window.clearTimeout(fallbackTimer)
+    }
 
     gl.enable(gl.BLEND)
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA) // premultiplied
@@ -92,7 +132,9 @@ export const useLandingPageBlobs = ({
       debrisProg = linkProgram(gl, DEBRIS_VERT, DEBRIS_FRAG)
       largeProg = linkProgram(gl, LARGE_VERT, LARGE_FRAG)
     } catch {
-      return undefined
+      const fallbackTimer = window.setTimeout(fireFinale, FINALE_FLASH_START_S * 1000)
+
+      return () => window.clearTimeout(fallbackTimer)
     }
 
     // ---- small blob geometry: unit quad (-1..1) ----
@@ -221,6 +263,10 @@ export const useLandingPageBlobs = ({
 
     gl.bindVertexArray(null)
 
+    // ---- lens/finale pipeline ----
+    const lens = createLensPipeline(gl, canvas, gridSrc, noiseSrc)
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
     // ---- simulation state ----
     let width = 0
     let height = 0
@@ -234,8 +280,14 @@ export const useLandingPageBlobs = ({
     let resizeObserver: ResizeObserver | null = null
     let smallBlobs: SmallBlob[] = []
     let largeBlobs: LargeBlob[] = []
+    let elapsedS = 0
+    let reducedMotionTimer = 0
     const debrisParticles: DebrisParticle[] = []
     const debrisParticleCap = Math.max(200, smallBlobCount * COMET_DEBRIS_CAP_MULTIPLIER)
+
+    if (reducedMotion) {
+      reducedMotionTimer = window.setTimeout(fireFinale, FINALE_CALM_END_S * 1000)
+    }
 
     // cached typed arrays (grown as needed)
     let smallInstData = new Float32Array(smallBlobCount * SMALL_STRIDE)
@@ -249,7 +301,42 @@ export const useLandingPageBlobs = ({
     let pulseElapsed = 0
     let pulseStrength = 0
     let pulseRadiusMultiplier = 1
-    let autoPulseStrength = 0
+
+    // phases set targets; asymmetric smoothing produces the actual values —
+    // boundary snaps are impossible by construction
+    const wellEnergy = createEnvelope({
+      attackRate: WELL_ENERGY_ATTACK,
+      releaseRate: WELL_ENERGY_RELEASE,
+    })
+    const radiusMultiplierEnv = createEnvelope({
+      attackRate: RADIUS_MULT_ATTACK,
+      releaseRate: RADIUS_MULT_RELEASE,
+      initial: 1,
+    })
+    const spawnTargetEnv = createEnvelope({
+      attackRate: SPAWN_TARGET_ATTACK,
+      releaseRate: SPAWN_TARGET_RELEASE,
+      initial: smallBlobCount,
+    })
+    const largeBlobFadeEnv = createEnvelope({
+      attackRate: LARGE_FADE_ATTACK,
+      releaseRate: LARGE_FADE_RELEASE,
+      initial: 1,
+    })
+    const lensStrengthEnv = createEnvelope({
+      attackRate: LENS_UNIFORM_SMOOTHING,
+      releaseRate: LENS_UNIFORM_SMOOTHING,
+    })
+    const horizonEnv = createEnvelope({
+      attackRate: LENS_UNIFORM_SMOOTHING,
+      releaseRate: LENS_UNIFORM_SMOOTHING,
+    })
+    const flashEnv = createEnvelope({
+      attackRate: LENS_UNIFORM_SMOOTHING,
+      releaseRate: LENS_UNIFORM_SMOOTHING,
+    })
+    let shaderTime = 0
+    let largeBlobFadeValue = 1
 
     const resize = () => {
       const container = canvas.parentElement
@@ -263,6 +350,7 @@ export const useLandingPageBlobs = ({
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
       gl.viewport(0, 0, canvas.width, canvas.height)
+      lens?.resize(width, height, dpr)
       canvasRectRef.current = rect
       dynamicMouseRadius = Math.max(width, height) * GRAVITY_MOUSE_RADIUS
       largeBlobs = Array.from({ length: largeBlobCount }, (_, i) =>
@@ -277,9 +365,14 @@ export const useLandingPageBlobs = ({
       )
     }
 
-    const ensureSmallBlobs = () => {
-      while (smallBlobs.length < smallBlobCount) {
-        smallBlobs.push(spawnSmallBlob(width, height, undefined))
+    const ensureSmallBlobs = (target: number, matured = false) => {
+      while (smallBlobs.length < target) {
+        const sb = spawnSmallBlob(width, height, undefined)
+
+        // post-collapse spawns skip the slow fade-in (it scales with lifetime,
+        // 20-200s) so the black hole's food is visible from the moment it appears
+        if (matured) sb.age = sb.lifetime * rand(0.16, 0.5)
+        smallBlobs.push(sb)
       }
     }
 
@@ -305,54 +398,91 @@ export const useLandingPageBlobs = ({
         frameAccumulator -= FRAME_DURATION_MS
         const dt = FRAME_DT
 
+        elapsedS += dt
+        const finale = reducedMotion
+          ? { phase: 'CALM' as const, collapseProgress: 0, flash: 0, lensStrength: 0, horizon: 0 }
+          : finalePhase(elapsedS)
+
+        if (finale.phase === 'FLASH' || finale.phase === 'AFTER') fireFinale()
+
         // ---------- gravity ----------
         const simGravCx = GRAVITY_CENTER_X * width
         const simGravCy = GRAVITY_CENTER_Y * height
         const simInvMaxDist = 1 / Math.sqrt(width * width + height * height)
         const baseMouseRadius = height * GRAVITY_MOUSE_RADIUS
 
-        if (pulseDuration > 0) {
-          pulseElapsed += dt
+        if (finale.phase === 'CALM') {
+          // pulse scheduling unchanged — but pulses now only push envelope targets
+          if (pulseDuration > 0) {
+            pulseElapsed += dt
 
-          if (pulseElapsed >= pulseDuration) {
-            pulseDuration = 0
-            pulseElapsed = 0
-            pulseCooldown = rand(3, 5)
+            if (pulseElapsed >= pulseDuration) {
+              pulseDuration = 0
+              pulseElapsed = 0
+              pulseCooldown = rand(3, 5)
+            }
+          } else {
+            pulseCooldown -= dt
+
+            if (pulseCooldown <= 0) {
+              pulseDuration = rand(2.5, 4)
+              pulseElapsed = 0
+              pulseStrength = rand(0.6, 1.2)
+              pulseRadiusMultiplier = rand(1.5, 3)
+            }
           }
+
+          const pulseT = pulseDuration > 0 ? Math.min(pulseElapsed / pulseDuration, 1) : 0
+
+          wellEnergy.target = pulseStrength * Math.sin(Math.PI * pulseT)
+          radiusMultiplierEnv.target = pulseDuration > 0 ? pulseRadiusMultiplier : 1
+          spawnTargetEnv.target = smallBlobCount
+          largeBlobFadeEnv.target = 1
+        } else if (finale.phase === 'COLLAPSE') {
+          // lensStrength is the LINEAR collapse ramp (collapseProgress is eased and
+          // surges mid-collapse) — a gradually rising target; an in-flight calm
+          // pulse is simply overtaken by it, never killed
+          wellEnergy.target = finale.lensStrength * COLLAPSE_MAX_PULSE_STRENGTH
+          radiusMultiplierEnv.target = COLLAPSE_RADIUS_MULTIPLIER
+          spawnTargetEnv.target =
+            smallBlobCount * (1 + finale.collapseProgress * COLLAPSE_SPAWN_BOOST)
+          largeBlobFadeEnv.target = 0
         } else {
-          pulseCooldown -= dt
-
-          if (pulseCooldown <= 0) {
-            pulseDuration = rand(2.5, 4)
-            pulseElapsed = 0
-            pulseStrength = rand(0.6, 1.2)
-            pulseRadiusMultiplier = rand(1.5, 3)
-          }
+          // FLASH / AFTER: relax toward a steady feeding pull — at full collapse
+          // strength new comets cross the screen in <1s and are never seen; the
+          // slow release glides down from full strength, no ad-hoc decay
+          wellEnergy.target = AFTER_PULSE_STRENGTH
+          radiusMultiplierEnv.target = COLLAPSE_RADIUS_MULTIPLIER
+          spawnTargetEnv.target = smallBlobCount * AFTER_SPAWN_FRACTION
+          largeBlobFadeEnv.target = 0
         }
 
-        const pulseT = pulseDuration > 0 ? Math.min(pulseElapsed / pulseDuration, 1) : 0
+        wellEnergy.update(dt)
+        radiusMultiplierEnv.update(dt)
+        spawnTargetEnv.update(dt)
+        largeBlobFadeValue = largeBlobFadeEnv.update(dt)
+        lensStrengthEnv.target = finale.lensStrength
+        horizonEnv.target = finale.horizon
+        flashEnv.target = finale.flash
+        lensStrengthEnv.update(dt)
+        horizonEnv.update(dt)
+        flashEnv.update(dt)
+        shaderTime += dt * (1 + wellEnergy.current * TIME_WARP_FACTOR)
 
-        const pulseEnvelope = Math.sin(Math.PI * pulseT)
-        const pulseTargetStrength = pulseStrength * pulseEnvelope
-
-        if (pulseTargetStrength >= autoPulseStrength) {
-          autoPulseStrength = pulseTargetStrength
-        } else {
-          const strengthDecayStep = dt * GRAVITY_RADIUS_SHRINK_SPEED * 0.0025
-
-          autoPulseStrength = Math.max(pulseTargetStrength, autoPulseStrength - strengthDecayStep)
-        }
-
-        const rawActivation = autoPulseStrength
+        const rawActivation = wellEnergy.current
         const targetRadius =
-          baseMouseRadius * (0.6 + pulseRadiusMultiplier * Math.max(autoPulseStrength, 0.05))
+          baseMouseRadius * (0.6 + radiusMultiplierEnv.current * Math.max(wellEnergy.current, 0.05))
 
         dynamicMouseRadius = lerp(
           dynamicMouseRadius,
           targetRadius,
           Math.min(dt * GRAVITY_RADIUS_GROW_SPEED * 0.02, 1),
         )
-        const targetActivation = easeInOutCubic(rawActivation)
+        // easeInOutCubic blows up cubically outside 0..1 — collapse pulse strength
+        // exceeds 1, so ease only the 0..1 part and add the excess back linearly
+        // (keeps the >1 gravity boost without the cubic explosion)
+        const targetActivation =
+          easeInOutCubic(Math.min(rawActivation, 1)) + Math.max(rawActivation - 1, 0)
 
         smoothedActivation = lerp(
           smoothedActivation,
@@ -366,7 +496,14 @@ export const useLandingPageBlobs = ({
         )
 
         // ---------- update small blobs ----------
-        ensureSmallBlobs()
+        // comets keep spawning forever: the envelope glides the population target
+        // between 1×, 1.4× and 0.5× of smallBlobCount — never a gap, never a jump
+        const spawnTarget = Math.floor(spawnTargetEnv.current)
+
+        // once the finale starts, replacements must be visible immediately — the
+        // default fade-in scales with lifetime (20-200s), so age-0 spawns are
+        // invisible while the gravity eats the visible field, draining the sky
+        ensureSmallBlobs(spawnTarget, finale.phase !== 'CALM')
 
         let writeIndex = 0
 
@@ -438,7 +575,17 @@ export const useLandingPageBlobs = ({
                   COMET_DEBRIS_MIN + normalizedSize * (COMET_DEBRIS_MAX - COMET_DEBRIS_MIN)
                 const emitCount = Math.max(
                   1,
-                  Math.min(COMET_DEBRIS_MAX, Math.floor(targetDebris * gravityFactor)),
+                  Math.min(
+                    Math.round(
+                      COMET_DEBRIS_MAX *
+                        (1 + finale.collapseProgress * (COLLAPSE_DEBRIS_BOOST - 1)),
+                    ),
+                    Math.floor(
+                      targetDebris *
+                        gravityFactor *
+                        (1 + finale.collapseProgress * COLLAPSE_DEBRIS_BOOST),
+                    ),
+                  ),
                 )
 
                 const shouldEmitDebris = sb.gravityInfluence > GRAVITY_DEBRIS_THRESHOLD
@@ -488,8 +635,17 @@ export const useLandingPageBlobs = ({
       }
 
       // ---------- build GPU data & render ----------
-      gl.clearColor(0, 0, 0, 0)
-      gl.clear(gl.COLOR_BUFFER_BIT)
+      if (lens) {
+        lens.beginScenePass()
+        // the grid brightens as the horizon forms — displacement + aberration
+        // read much better against a more visible grid
+        lens.drawGrid(1 + horizonEnv.current * GRID_HORIZON_BOOST)
+      } else {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+        gl.viewport(0, 0, canvas.width, canvas.height)
+        gl.clearColor(0, 0, 0, 0)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+      }
 
       const renderGravCx = GRAVITY_CENTER_X * width
       const renderGravCy = GRAVITY_CENTER_Y * height
@@ -705,7 +861,7 @@ export const useLandingPageBlobs = ({
         largeInstData = new Float32Array(largeBlobCount * LARGE_STRIDE * 2)
       }
 
-      const activationEased = easeInOutCubic(largeBlobActivation)
+      const activationEased = easeInOutCubic(Math.min(Math.max(largeBlobActivation, 0), 1))
       let lCount = 0
 
       const lrgInvMaxDist = 1 / Math.sqrt(width * width + height * height)
@@ -723,9 +879,12 @@ export const useLandingPageBlobs = ({
         const currentRadius = lb.size * wobble * activeScale
 
         const fadeAlpha =
-          LARGE_BLOB_IDLE_ALPHA +
-          activationEased * LARGE_BLOB_ACTIVE_ALPHA_BOOST +
-          0.2 * Math.sin(lb.fadeSpeed * t + lb.fadePhase)
+          (LARGE_BLOB_IDLE_ALPHA +
+            activationEased * LARGE_BLOB_ACTIVE_ALPHA_BOOST +
+            0.2 * Math.sin(lb.fadeSpeed * t + lb.fadePhase)) *
+          // large blobs die early in the collapse (slow-release envelope) so their
+          // pink bloom never halos the event horizon — only comets keep feeding it
+          largeBlobFadeValue
 
         const { pullX, pullY } = calcGravityPull(
           centeredCx,
@@ -772,6 +931,16 @@ export const useLandingPageBlobs = ({
         gl.bindVertexArray(null)
       }
 
+      if (lens) {
+        lens.drawLensPass({
+          lensStrength: lensStrengthEnv.current,
+          flash: flashEnv.current,
+          horizon: horizonEnv.current,
+          time: shaderTime,
+          energy: Math.min(wellEnergy.current / COLLAPSE_MAX_PULSE_STRENGTH, 1),
+        })
+      }
+
       rafId = requestAnimationFrame(tick)
     }
 
@@ -792,6 +961,8 @@ export const useLandingPageBlobs = ({
       cancelAnimationFrame(initRafId)
       cancelAnimationFrame(rafId)
       resizeObserver?.disconnect()
+      window.clearTimeout(reducedMotionTimer)
+      lens?.dispose()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [smallBlobCount, largeBlobCount])

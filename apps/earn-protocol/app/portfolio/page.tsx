@@ -6,36 +6,10 @@ import { Button, Card, Text, useEarnProtocolWallet } from '@summerfi/app-earn-ui
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import { BeachClubPalmBackground } from '@/features/beach-club/components/BeachClubPalmBackground/BeachClubPalmBackground'
 import { PortfolioTabs } from '@/features/portfolio/types'
-import WalletIconBeachClub from '@/public/img/misc/wallet_icon_beach_club.svg'
 import WalletIcon from '@/public/img/misc/wallet_icon_colorful.svg'
 
 import styles from './page.module.css'
-
-const getIcon = (tab: PortfolioTabs | null) => {
-  if (tab === PortfolioTabs.BEACH_CLUB) {
-    return WalletIconBeachClub
-  }
-
-  return WalletIcon
-}
-
-const getTitle = (tab: PortfolioTabs | null) => {
-  if (tab === PortfolioTabs.BEACH_CLUB) {
-    return 'Connect your wallet to access the Beach Club page'
-  }
-
-  return 'Connect your wallet to view your portfolio'
-}
-
-const getButtonVariant = (tab: PortfolioTabs | null) => {
-  if (tab === PortfolioTabs.BEACH_CLUB) {
-    return 'beachClubLarge'
-  }
-
-  return 'primaryLarge'
-}
 
 const PortfolioPage: FC = () => {
   const { address: userWalletAddress } = useEarnProtocolWallet()
@@ -56,25 +30,17 @@ const PortfolioPage: FC = () => {
   return (
     <div className={styles.pageWrapper}>
       <Card variant="cardSecondary" className={styles.card}>
-        <Image src={getIcon(tab)} alt="Wallet icon" width={90} height={90} />
+        <Image src={WalletIcon} alt="Wallet icon" width={90} height={90} />
         <Text
           as="h5"
           variant="h5"
           style={{ marginBottom: 'var(--general-space-20)', marginTop: 'var(--general-space-32)' }}
         >
-          {getTitle(tab)}
+          Connect your wallet to view your portfolio
         </Text>
-        <Button variant={getButtonVariant(tab)} onClick={login} style={{ minWidth: 'unset' }}>
+        <Button variant="primaryLarge" onClick={login} style={{ minWidth: 'unset' }}>
           Connect wallet
         </Button>
-        {tab === PortfolioTabs.BEACH_CLUB && (
-          <BeachClubPalmBackground
-            rightPalmSyles={{ top: 'unset', bottom: '0', opacity: 0.4 }}
-            leftPalmSyles={{ top: 'unset', bottom: '0', opacity: 0.4 }}
-            bottomGradientStyles={{ display: 'none' }}
-            topGradientStyles={{ display: 'none' }}
-          />
-        )}
       </Card>
     </div>
   )

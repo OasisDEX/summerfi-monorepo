@@ -1,6 +1,0 @@
-.transakInitialStepWrapper {
-  display: flex;
-  flex-direction: column;
-  max-width: 398px;
-  margin-bottom: var(--general-space-24);
-}

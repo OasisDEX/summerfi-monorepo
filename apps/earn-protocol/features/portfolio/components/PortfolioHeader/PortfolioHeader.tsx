@@ -1,50 +1,18 @@
 import { type FC, useState } from 'react'
 import {
-  Button,
   DataBlock,
-  Dropdown,
   Icon,
   LoadableAvatar,
   SkeletonLine,
   Text,
   useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption } from '@summerfi/app-types'
 import { formatAddress, formatCryptoBalance, safeBTOA } from '@summerfi/app-utils'
 import clsx from 'clsx'
-import Link from 'next/link'
 
-import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
-import { SendWidget } from '@/features/send/components/SendWidget/SendWidget'
-import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
-import { transakNetworkOptions } from '@/features/transak/consts'
-import { type TransakNetworkOption } from '@/features/transak/types'
 import { useRevalidateUser } from '@/hooks/use-revalidate'
 
 import classNames from './PortfolioHeader.module.css'
-
-const TransakTrigger = ({
-  isOpen,
-  isDisabled = false,
-}: {
-  isOpen: boolean
-  isDisabled?: boolean
-}) => (
-  <Button variant="primaryMedium" style={{ minWidth: '130px' }} disabled={isDisabled}>
-    <Text as="span" variant="p3semi">
-      Buy crypto
-    </Text>
-    <Icon
-      iconName={isOpen ? 'chevron_up' : 'chevron_down'}
-      style={{
-        color: isDisabled
-          ? 'var(--earn-protocol-secondary-40)'
-          : 'var(--earn-protocol-secondary-100)',
-      }}
-      variant="xs"
-    />
-  </Button>
-)
 
 interface PortfolioHeaderProps {
   viewWalletAddress: string
@@ -57,23 +25,11 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   viewWalletAddress,
   totalSumr,
   isLoading = false,
-  isOwner,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const { address: userWallet } = useEarnProtocolWallet()
-  const [isTransakOpen, setIsTransakOpen] = useState(false)
-  const [isSendOpen, setIsSendOpen] = useState(false)
-  const [transakNetwork, setTransakNetwork] = useState<TransakNetworkOption | null>(null)
 
-  const { features } = useSystemConfig()
   const revalidateUser = useRevalidateUser()
-
-  const sendEnabled = !!features?.Send
-
-  const handleNetworkSelect = (option: DropdownRawOption) => {
-    setTransakNetwork(transakNetworkOptions.find((item) => item.value === option.value) ?? null)
-    setIsTransakOpen(true)
-  }
 
   const handleUserRefresh = () => {
     revalidateUser(userWallet)
@@ -98,48 +54,6 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             <Icon iconName="refresh" size={16} />
           </div>
         </Text>
-        <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)' }}>
-          {sendEnabled && (
-            <Button
-              variant="secondaryMedium"
-              style={{ minWidth: 'unset' }}
-              disabled={userWallet?.toLowerCase() !== viewWalletAddress.toLowerCase()}
-              onClick={() => {
-                setIsSendOpen(true)
-              }}
-            >
-              Send
-            </Button>
-          )}
-          {/* Bringing pack the SUMR bridge view */}
-          <Link href={`/bridge/${viewWalletAddress}?via=portfolio`}>
-            <Button
-              variant="secondaryMedium"
-              style={{ minWidth: 'unset' }}
-              disabled={userWallet?.toLowerCase() !== viewWalletAddress.toLowerCase()}
-            >
-              Bridge
-            </Button>
-          </Link>
-
-          <Dropdown
-            dropdownValue={{ value: transakNetwork?.value ?? '', content: null }}
-            trigger={TransakTrigger}
-            isDisabled={userWallet?.toLowerCase() !== viewWalletAddress.toLowerCase()}
-            options={transakNetworkOptions.map((option) => ({
-              value: option.value,
-              content: (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Icon iconName={option.iconName} />
-                  <span>{option.label}</span>
-                </div>
-              ),
-            }))}
-            onChange={handleNetworkSelect}
-          >
-            {null}
-          </Dropdown>
-        </div>
       </div>
       <div className={classNames.secondRowWrapper}>
         <div className={classNames.secondRowContainer}>
@@ -185,27 +99,6 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           />
         </div>
       </div>
-      {userWallet && transakNetwork && (
-        <TransakWidget
-          cryptoCurrency="USDC"
-          walletAddress={userWallet}
-          isOpen={isTransakOpen}
-          onClose={() => {
-            setIsTransakOpen(false)
-            setTransakNetwork(null)
-          }}
-          injectedNetwork={transakNetwork}
-        />
-      )}
-
-      {sendEnabled && (
-        <SendWidget
-          walletAddress={viewWalletAddress}
-          isOpen={isSendOpen}
-          onClose={() => setIsSendOpen(false)}
-          isOwner={isOwner}
-        />
-      )}
     </>
   )
 }
