@@ -13,8 +13,14 @@ import { linkProgram } from '@/components/layout/LandingMasterPage/landingPageBl
 export interface LensPipeline {
   resize: (cssWidth: number, cssHeight: number, dpr: number) => void
   beginScenePass: () => void
-  drawGrid: () => void
-  drawLensPass: (opts: { lensStrength: number; flash: number; horizon: number }) => void
+  drawGrid: (boost: number) => void
+  drawLensPass: (opts: {
+    lensStrength: number
+    flash: number
+    horizon: number
+    time: number
+    energy: number
+  }) => void
   dispose: () => void
 }
 
@@ -22,6 +28,7 @@ export const createLensPipeline = (
   gl: WebGL2RenderingContext,
   canvas: HTMLCanvasElement,
   gridSrc: string,
+  noiseSrc: string,
 ): LensPipeline | null => {
   let gridProg: WebGLProgram
   let lensProg: WebGLProgram
@@ -130,6 +137,27 @@ export const createLensPipeline = (
   }
   gridImg.src = gridSrc
 
+  // ---- noise texture for the molten horizon; the shader falls back to the
+  // inverted-sky look until it's ready (512² power-of-two, so REPEAT is legal) ----
+  const noiseTex = gl.createTexture() as WebGLTexture
+  let noiseReady = false
+  const noiseImg = new Image()
+
+  noiseImg.onload = () => {
+    if (disposed) return
+    gl.bindTexture(gl.TEXTURE_2D, noiseTex)
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false)
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, noiseImg)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
+    gl.bindTexture(gl.TEXTURE_2D, null)
+    noiseReady = true
+  }
+  noiseImg.src = noiseSrc
+
   const beginScenePass = () => {
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo)
     gl.viewport(0, 0, fboWidth, fboHeight)
@@ -137,13 +165,14 @@ export const createLensPipeline = (
     gl.clear(gl.COLOR_BUFFER_BIT)
   }
 
-  const drawGrid = () => {
+  const drawGrid = (boost: number) => {
     if (!gridReady) return
     const w = gridW * GRID_SCALE
     const h = gridH * GRID_SCALE
 
     gl.useProgram(gridProg)
     gl.uniform2f(gl.getUniformLocation(gridProg, 'u_resolution'), cssW, cssH)
+    gl.uniform1f(gl.getUniformLocation(gridProg, 'u_boost'), boost)
     // anchored to the top-right corner, like the old DOM <Image>
     gl.uniform4f(gl.getUniformLocation(gridProg, 'u_rect'), cssW - w, 0, w, h)
     gl.activeTexture(gl.TEXTURE0)
@@ -159,10 +188,14 @@ export const createLensPipeline = (
     lensStrength,
     flash,
     horizon,
+    time,
+    energy,
   }: {
     lensStrength: number
     flash: number
     horizon: number
+    time: number
+    energy: number
   }) => {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.viewport(0, 0, canvas.width, canvas.height)
@@ -179,12 +212,21 @@ export const createLensPipeline = (
     gl.uniform1f(gl.getUniformLocation(lensProg, 'u_lensStrength'), lensStrength)
     gl.uniform1f(gl.getUniformLocation(lensProg, 'u_flash'), flash)
     gl.uniform1f(gl.getUniformLocation(lensProg, 'u_horizon'), horizon)
+    gl.uniform1f(gl.getUniformLocation(lensProg, 'u_time'), time)
+    gl.uniform1f(gl.getUniformLocation(lensProg, 'u_energy'), energy)
+    gl.uniform1f(gl.getUniformLocation(lensProg, 'u_texReady'), noiseReady ? 1 : 0)
+    gl.activeTexture(gl.TEXTURE1)
+    gl.bindTexture(gl.TEXTURE_2D, noiseTex)
+    gl.uniform1i(gl.getUniformLocation(lensProg, 'u_noiseTex'), 1)
     gl.activeTexture(gl.TEXTURE0)
     gl.bindTexture(gl.TEXTURE_2D, sceneTex)
     gl.uniform1i(gl.getUniformLocation(lensProg, 'u_scene'), 0)
     gl.bindVertexArray(lensVAO)
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
     gl.bindVertexArray(null)
+    gl.activeTexture(gl.TEXTURE1)
+    gl.bindTexture(gl.TEXTURE_2D, null)
+    gl.activeTexture(gl.TEXTURE0)
     gl.bindTexture(gl.TEXTURE_2D, null)
   }
 
@@ -193,6 +235,7 @@ export const createLensPipeline = (
     gl.deleteFramebuffer(fbo)
     gl.deleteTexture(sceneTex)
     gl.deleteTexture(gridTex)
+    gl.deleteTexture(noiseTex)
     gl.deleteBuffer(quadBuf)
     gl.deleteVertexArray(gridVAO)
     gl.deleteVertexArray(lensVAO)

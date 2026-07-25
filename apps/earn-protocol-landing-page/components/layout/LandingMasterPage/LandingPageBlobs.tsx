@@ -8,6 +8,8 @@ import landingPageGrid from '@/public/img/landing-page/grid.svg'
 
 import landingPageBlobsStyles from '@/components/layout/LandingMasterPage/landingPageBlobs.module.css'
 
+import landingPagePebbles from '@/public/img/misc/pebbles.png'
+
 type LandingPageBlobsProps = {
   smallBlobCount?: number
   largeBlobCount?: number
@@ -39,6 +41,7 @@ export const LandingPageBlobs = ({
     smallBlobCount: localSmallBlobCount,
     largeBlobCount,
     gridSrc: landingPageGrid.src,
+    noiseSrc: landingPagePebbles.src,
     onFinale: handleFinale,
   })
 

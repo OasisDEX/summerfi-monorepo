@@ -2,11 +2,11 @@
 
 // Pure mirror of the LENS_FRAG shader math — keep the two in sync.
 export const LENS_FALLOFF_RADIUS = 0.82
-export const LENS_MIN_DIST = 0.02
-export const LENS_MAX_DISPLACEMENT = 0.22
-export const LENS_ABERRATION = 0.45
+export const LENS_MIN_DIST = 0.08
+export const LENS_MAX_DISPLACEMENT = 0.32
+export const LENS_ABERRATION = 0.35
 export const EINSTEIN_RING_RADIUS = 0.1
-export const EINSTEIN_RING_WIDTH = 0.002
+export const EINSTEIN_RING_WIDTH = 0.001
 export const EVENT_HORIZON_RADIUS = 0.14
 
 const FALLOFF_AT_MIN = LENS_FALLOFF_RADIUS / LENS_MIN_DIST - 1

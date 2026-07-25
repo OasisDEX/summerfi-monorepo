@@ -275,6 +275,34 @@ export const COLLAPSE_DEBRIS_BOOST = 0.8
 export const COLLAPSE_SPAWN_BOOST = 0.4 // extra comets at full collapse (fraction of smallBlobCount)
 export const AFTER_PULSE_STRENGTH = 1.2 // steady post-collapse feeding pull (calm pulses peak ~1.2)
 export const AFTER_SPAWN_FRACTION = 0.5 // post-collapse comet count (fraction of smallBlobCount)
+
+// ---- transition smoothing envelopes (attack = rise speed, release = fall speed, 1/s) ----
+export const WELL_ENERGY_ATTACK = 2.5
+export const WELL_ENERGY_RELEASE = 0.8
+export const RADIUS_MULT_ATTACK = 1.5
+export const RADIUS_MULT_RELEASE = 0.6
+export const SPAWN_TARGET_ATTACK = 0.8
+export const SPAWN_TARGET_RELEASE = 0.3
+export const LARGE_FADE_ATTACK = 3.0
+// slow release ≈ large blobs gone within the first ~third of the 14s collapse
+export const LARGE_FADE_RELEASE = 0.7
+// light symmetric smoothing that rounds the derivative kinks at phase
+// boundaries without visibly lagging the 14s collapse ramp
+export const LENS_UNIFORM_SMOOTHING = 3.0
+// collapse energy accelerates the shader clock (borrowed sun-blob time-warp)
+export const TIME_WARP_FACTOR = 0.35
+
+// ---- molten horizon (textured accretion swirl outside the event horizon rim) ----
+export const HORIZON_TEX_ITERATIONS = 10 // rotated noise samples accumulated per pixel
+export const HORIZON_TEX_SCALE = 1.6 // hole-space → texture-space zoom
+export const HORIZON_SWIRL_WIDTH = 0.06 // swirl band extent beyond the rim (fraction of hole radius)
+export const HORIZON_SWIRL_SPIN = 0.01 // per-layer rotation speed (radians per warped second)
+// coverage window: lower LOW → more pebbles visible; lower HIGH → hotter veins
+export const HORIZON_VEIN_LOW = 0.04
+export const HORIZON_VEIN_HIGH = 0.6
+// the background grid brightens as the horizon forms — the displacement +
+// aberration of the lens reads much better against a more visible grid
+export const GRID_HORIZON_BOOST = 1.4
 export const GRID_SCALE = 1.5 // matches the old DOM <Image> transform: scale(1.5)
 
 // --- grid pass: the background grid SVG as a GL texture so the lens can bend it ---
@@ -303,13 +331,15 @@ precision mediump float;
 in vec2 v_uv;
 
 uniform sampler2D u_texture;
+uniform float u_boost; // >= 1; grid brightens as the event horizon forms
 
 out vec4 fragColor;
 
 void main() {
   vec4 tex = texture(u_texture, v_uv);
+  float a = min(tex.a * u_boost, 1.0);
   // premultiply to match the pipeline blend mode
-  fragColor = vec4(tex.rgb * tex.a, tex.a);
+  fragColor = vec4(tex.rgb * a, a);
 }
 `
 
@@ -339,15 +369,19 @@ uniform vec2  u_wellCenter;   // uv, y-down (same space as v_uv after flip below
 uniform float u_lensStrength; // 0..1
 uniform float u_flash;        // 0..1 blackout toward the page background color
 uniform float u_horizon;      // 0..1 event-horizon presence (stays 1 forever after collapse)
+uniform sampler2D u_noiseTex; // tiling grayscale noise (pebbles)
+uniform float u_time;         // warped shader clock (accelerates with energy)
+uniform float u_energy;       // 0..1 normalized well energy
+uniform float u_texReady;     // 0 until the noise texture has loaded
 
 out vec4 fragColor;
 
 const float FALLOFF_RADIUS = 0.82;
-const float MIN_DIST = 0.07;
+const float MIN_DIST = 0.08;
 const float MAX_DISPLACEMENT = 0.32;
-const float ABERRATION = 0.45;
+const float ABERRATION = 0.35;
 const float RING_RADIUS = 0.1;
-const float RING_WIDTH = 0.001;
+const float RING_WIDTH = 0.0;
 const float HOLE_RADIUS = 0.14;
 const float HOLE_DIMMING = 0.4;
 
@@ -356,6 +390,12 @@ float lensFalloff(float dist) {
   float falloffAtMin = FALLOFF_RADIUS / MIN_DIST - 1.0;
   float raw = max(FALLOFF_RADIUS / d - 1.0, 0.0);
   return min(raw / falloffAtMin, 1.0);
+}
+
+mat2 rot2(float a) {
+  float c = cos(a);
+  float s = sin(a);
+  return mat2(c, s, -s, c);
 }
 
 void main() {
@@ -398,6 +438,8 @@ void main() {
   vec3 holeColor = vec3(0.0);
 
   if (hole > 0.0 && holeR > MIN_DIST) {
+    // interior: refract the sky through the hole — classic lens inversion
+    // (r -> R²/r) with heavy chromatic aberration
     float invDist = min(holeR * holeR / max(dist, MIN_DIST * 0.25), FALLOFF_RADIUS);
     vec2 invUvR = u_wellCenter - dir * invDist * (1.0 + ABERRATION * 0.5);
     vec2 invUvG = u_wellCenter - dir * invDist;
@@ -416,6 +458,59 @@ void main() {
 
   color = mix(color, holeColor, hole);
   a = mix(a, 1.0, hole);
+
+  // event-horizon accretion swirl: molten textured band hugging the OUTSIDE of
+  // the rim (iterated rotated noise samples — sun-blob technique), flaring as
+  // comets feed the well; the interior above stays a dark refracted ball
+  if (u_texReady > 0.5 && holeR > MIN_DIST) {
+    // band straddles the rim: full width outside, a 35%-of-width bleed inside —
+    // both scale with HORIZON_SWIRL_WIDTH so shrinking it can't leave an
+    // inside-only ring with a hard outer cutoff
+    float swirlOuter = holeR * (1.0 + ${HORIZON_SWIRL_WIDTH.toFixed(3)});
+    float swirlInner = holeR * (1.0 - ${HORIZON_SWIRL_WIDTH.toFixed(3)} * 0.35);
+    float band = smoothstep(swirlInner, holeR, dist) *
+      (1.0 - smoothstep(holeR, swirlOuter, dist));
+
+    if (band > 0.001) {
+      vec2 p = toWellAspect * (${HORIZON_TEX_SCALE.toFixed(2)} / max(holeR, MIN_DIST));
+
+      // overlay-composite the rotating layers (Photoshop overlay: darks
+      // multiply, brights screen) — self-normalizing for any layer count,
+      // overlapping patches marble into veins instead of averaging to specks
+      float acc = 0.5;
+
+      for (int i = 0; i < ${HORIZON_TEX_ITERATIONS}; i++) {
+        float io = 6.28318 * float(i) / 7.0;
+        float s = texture(u_noiseTex,
+          p * 0.35 + vec2(-0.014 * u_time, 0.006 * u_time)).r;
+
+        // the pebbles texture skews dark — lift the samples before folding so
+        // repeated overlays don't collapse the whole band to black
+        s = pow(s, 0.9);
+        float ov = acc < 0.5
+          ? 2.0 * acc * s
+          : 1.0 - 2.0 * (1.0 - acc) * (1.0 - s);
+
+        acc = mix(acc, ov, 0.7);
+        p = rot2(${HORIZON_SWIRL_SPIN.toFixed(3)} * u_time + io) * (p * 1.13);
+      }
+
+      // dark gaps stay dark, overlapping veins glow — then tint with the
+      // palette pinks and flare with feeding energy
+      float veins = smoothstep(${HORIZON_VEIN_LOW.toFixed(2)}, ${HORIZON_VEIN_HIGH.toFixed(2)}, acc);
+      vec3 pink1 = vec3(0.859, 0.439, 0.647); // #DB70A5
+      vec3 pink2 = vec3(0.871, 0.125, 0.498); // #DE207F
+      vec3 molten = mix(pink2, pink1, veins) * (0.3 + 1.45 * veins);
+      float presence = max(u_horizon, u_lensStrength * 0.6);
+      // the block above is hard-gated on holeR > MIN_DIST — fade the swirl in
+      // as the growing hole crosses that threshold so it never pops in whole
+      float grow = smoothstep(MIN_DIST, MIN_DIST * 2.0, holeR);
+      vec3 swirl = molten * (0.6 + 0.8 * u_energy) * band * presence * grow;
+
+      color += swirl;
+      a = min(a + max(swirl.r, max(swirl.g, swirl.b)), 1.0);
+    }
+  }
 
   // Einstein ring: thin sharp annulus on the horizon's edge, drawn last so it never fades
   float ring = max(u_lensStrength, u_horizon * 0.85) *

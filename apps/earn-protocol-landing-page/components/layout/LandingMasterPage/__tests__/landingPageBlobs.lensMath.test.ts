@@ -33,8 +33,10 @@ describe('lensFalloff', () => {
 
 describe('lensDisplacement', () => {
   it('is 0 at strength 0 and scales linearly with strength', () => {
-    expect(lensDisplacement(0.1, 0)).toBe(0)
-    expect(lensDisplacement(0.1, 1)).toBeCloseTo(lensDisplacement(0.1, 0.5) * 2, 10)
+    expect(lensDisplacement(0.4, 0)).toBe(0)
+    // sampled far enough out that the "never past the well center" clamp
+    // (displacement > dist near MIN_DIST) cannot mask the linear scaling
+    expect(lensDisplacement(0.4, 1)).toBeCloseTo(lensDisplacement(0.4, 0.5) * 2, 10)
   })
 
   it('never displaces beyond the sampled distance (no UV overshoot past the well)', () => {
