@@ -127,7 +127,7 @@ export const EXTERNAL_LINKS = {
     OLD: 'https://old-ajna.summer.fi',
   },
   TWITTER: 'https://twitter.com/summerfinance_',
-  DISCORD: 'https://discord.gg/summerfi',
+  DISCORD: 'https://chat.summer.fi',
   GITHUB: 'https://github.com/OasisDEX/oasis-borrow',
   BUG_BOUNTY: 'https://immunefi.com/bounty/summerfi',
   ETHERSCAN: 'https://etherscan.io',
