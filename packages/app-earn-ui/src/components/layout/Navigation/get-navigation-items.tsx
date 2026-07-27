@@ -71,15 +71,6 @@ export const getNavigationItems = ({
       onClick: handleButtonClick('email-support'),
     },
     {
-      title: 'Institutional sales and support',
-      id: 'institutional-sales-and-support',
-      description: 'Connect with a member of the Summer.fi institutional team',
-      url: !isEarnApp ? `/institutions` : `/landing_page/institutions`,
-      icon: 'earn_institution' as IconNamesList,
-      prefetchDisabled: !isEarnApp,
-      onClick: handleButtonClick('institutional-sales-and-support'),
-    },
-    {
       title: 'Join the Discord Community',
       id: 'join-discord-community',
       description: 'Get live help from the team and community',
