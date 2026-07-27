@@ -59,7 +59,7 @@ export const VaultOpenLoadingView = (
       }
       sidebarContent={
         <Sidebar
-          title="Deposit"
+          title=""
           content={
             <div
               style={{

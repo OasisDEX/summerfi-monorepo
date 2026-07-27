@@ -1,5 +1,3 @@
-import { ArmadaMigrationType } from '@summerfi/sdk-common'
-
 import aaveLogo from '@/public/img/platform_icons/platform_logo_aave.svg'
 import compoundLogo from '@/public/img/platform_icons/platform_logo_compound.svg'
 import morphoLogo from '@/public/img/platform_icons/platform_logo_morpho.svg'
@@ -12,10 +10,4 @@ export const platformLogoMap = {
   spark: sparkLogo,
   summer: summerLogo,
   compound: compoundLogo,
-}
-
-export const platformLogoMapByMigrationType = {
-  [ArmadaMigrationType.AaveV3]: 'aave',
-  [ArmadaMigrationType.Compound]: 'compound',
-  [ArmadaMigrationType.Morpho]: 'morpho',
 }

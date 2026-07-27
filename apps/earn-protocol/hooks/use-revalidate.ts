@@ -149,27 +149,3 @@ export const useRevalidatePositionData = () => {
     })
   }
 }
-
-export const useRevalidateMigrationData = () => {
-  const { refresh: refreshView } = useRouter()
-  const queryClient = useQueryClient()
-
-  return ({ walletAddress }: { walletAddress?: string }) => {
-    queryClient.refetchQueries({
-      queryKey: [
-        CACHE_TAGS.MIGRATION_DATA,
-        walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
-      ].filter(Boolean),
-      type: 'all',
-    })
-
-    fetchRevalidate({
-      tags: [
-        CACHE_TAGS.MIGRATION_DATA,
-        walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
-      ].filter(Boolean),
-    }).then(() => {
-      refreshView()
-    })
-  }
-}

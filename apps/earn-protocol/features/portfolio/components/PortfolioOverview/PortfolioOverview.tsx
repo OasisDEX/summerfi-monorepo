@@ -28,15 +28,11 @@ import {
 } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-// import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-// import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
-// import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
 import { usePortfolioPositionHistoryQuery } from '@/features/portfolio/api/get-portfolio-position-history-data'
 import { LazyPositionHistoryChart } from '@/features/portfolio/components/PortfolioOverview/LazyPositionHistoryChart'
-// import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSummerPro/PortfolioSummerPro'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
@@ -309,14 +305,6 @@ export const PortfolioOverview = ({
             rewardTokenPrices={rewardTokenPrices}
           />
         </Card>
-        {/* {migrationsEnabled && (
-          <PortfolioSummerPro
-            viewWalletAddress={viewWalletAddress}
-            migratablePositions={migratablePositions}
-            migrationBestVaultApy={migrationBestVaultApy}
-            carouselId="portfolio-overview-migrate-carousel"
-          />
-        )} */}
         <NewsAndUpdates />
       </div>
     </div>

@@ -1,20 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import {
-  Card,
   ControlsDepositWithdraw,
-  ControlsSwitch,
   getDisplayToken,
   getPositionValues,
-  Icon,
   NonOwnerPositionBanner,
   ProjectedEarningsCombined,
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
-  SidebarMobileHeader,
   type SidebarProps,
   SkeletonLine,
-  Text,
   useAmount,
   useAmountWithSwap,
   useEarnProtocolWallet,
@@ -33,12 +28,10 @@ import {
   type GetVaultsApyResponse,
   type IArmadaPosition,
   type IArmadaVaultInfo,
-  type NetworkIds,
   type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
-  SupportedNetworkIds,
   type SupportedSDKNetworks,
   TOSStatus,
   TransactionAction,
@@ -54,19 +47,14 @@ import {
 import { TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
-// import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
 import { RewardTokenClaimBox } from '@/components/layout/VaultManageView/RewardTokenClaimBox'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
-import { OrderInfoIntentSwap } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-// import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
-// import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
-// import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { UnstakeVaultToken } from '@/features/unstake-vault-token/components/UnstakeVaultToken/UnstakeVaultToken'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -92,42 +80,10 @@ const ControlsApproval = dynamic(
   { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
 )
 
-const ControlsSwitchTransactionView = dynamic(
-  () =>
-    import('@/components/molecules/SidebarElements/ControlsSwitchTransactionView').then(
-      (mod) => mod.ControlsSwitchTransactionView,
-    ),
-  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
-)
-
-const ControlsSwitchSuccessErrorView = dynamic(
-  () =>
-    import('@/components/molecules/SidebarElements/ControlsSwitchSuccessErrorView').then(
-      (mod) => mod.ControlsSwitchSuccessErrorView,
-    ),
-  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
-)
-
-const OrderInfoDeposit = dynamic(
-  () =>
-    import('@/components/molecules/SidebarElements/OrderInfoDeposit').then(
-      (mod) => mod.OrderInfoDeposit,
-    ),
-  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
-)
-
 const OrderInfoWithdraw = dynamic(
   () =>
     import('@/components/molecules/SidebarElements/OrderInfoWithdraw').then(
       (mod) => mod.OrderInfoWithdraw,
-    ),
-  { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
-)
-
-const ControlsPermit2Authorization = dynamic(
-  () =>
-    import('@/components/molecules/SidebarElements/ControlsPermit2Authorization').then(
-      (mod) => mod.ControlsPermit2Authorization,
     ),
   { ssr: false, loading: () => <SkeletonLine width="100%" height="100%" /> },
 )
@@ -142,9 +98,6 @@ export const VaultManageViewComponent = ({
   position,
   viewWalletAddress,
   vaultsApyByNetworkMap,
-  // migratablePositions,
-  // migrationBestVaultApy,
-  systemConfig,
   rewardTokenPrices,
   rewardTokensClaimableNow,
 }: {
@@ -157,9 +110,7 @@ export const VaultManageViewComponent = ({
   noOfDeposits: number
   viewWalletAddress: string
   vaultsApyByNetworkMap: GetVaultsApyResponse
-  // migratablePositions: MigratablePosition[]
-  // migrationBestVaultApy: MigrationEarningsDataByChainId
-  systemConfig: Partial<EarnAppConfigType>
+  systemConfig?: Partial<EarnAppConfigType>
   rewardTokenPrices: RewardTokenPrices
   rewardTokensClaimableNow: {
     [tokenSymbol: string]: {
@@ -181,26 +132,15 @@ export const VaultManageViewComponent = ({
   const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const { publicClient } = useNetworkAlignedClient()
-  const [sidebarTransactionType, setSidebarTransactionType] = useState<TransactionAction>(
-    TransactionAction.DEPOSIT,
-  )
-  const [isDepositWithSwap, setIsDepositWithSwap] = useState<boolean>(false)
+  const sidebarTransactionType = TransactionAction.WITHDRAW
   const revalidatePositionData = useRevalidatePositionData()
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
-
-  // const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
-  //   migratablePositions[0]?.id,
-  // )
 
   const vaultApyData =
     vaultsApyByNetworkMap[
       `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
     ] ?? {}
-
-  // const handleSelectPosition = (id: string) => {
-  //   setSelectedPosition(id)
-  // }
 
   const {
     handleTokenSelectionChange,
@@ -238,7 +178,7 @@ export const VaultManageViewComponent = ({
     [buttonClickEventHandler, vault, handleTokenSelectionChange, handleSetTokenBalanceLoading],
   )
 
-  const { netValue, netValueUSD } = getPositionValues({
+  const { netValue } = getPositionValues({
     position,
     vault,
   })
@@ -252,7 +192,7 @@ export const VaultManageViewComponent = ({
     onBlur,
     onFocus,
   } = useAmount({
-    // withdraw/deposit amount
+    // withdraw amount
     tokenDecimals: vault.inputToken.decimals,
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
@@ -278,70 +218,27 @@ export const VaultManageViewComponent = ({
   })
 
   const {
-    manualSetAmount: switchManualSetAmount,
-    amountDisplay: switchAmountDisplay,
-    amountParsed: switchAmountParsed,
-    onBlur: switchOnBlur,
-    onFocus: switchOnFocus,
-    resetToInitialAmount: switchResetToInitialAmount,
-  } = useAmount({
-    // switch amount
-    tokenDecimals: vault.inputToken.decimals,
-    tokenPrice: vault.inputTokenPriceUSD,
-    selectedToken,
-    initialAmount: netValue.toString(),
-    inputChangeHandler,
-    inputName: 'manage-switch-amount',
-  })
-
-  const transactionAmount = useMemo(() => {
-    if (sidebarTransactionType === TransactionAction.SWITCH) {
-      return switchAmountParsed
-    }
-
-    return amountParsed
-  }, [sidebarTransactionType, switchAmountParsed, amountParsed])
-
-  const transactionManualSetAmount = useMemo(() => {
-    if (sidebarTransactionType === TransactionAction.SWITCH) {
-      return switchManualSetAmount
-    }
-
-    return manualSetAmount
-  }, [sidebarTransactionType, switchManualSetAmount, manualSetAmount])
-
-  const {
     sidebar,
-    reset,
     nextTransaction,
     approvalType,
     approvalTokenSymbol,
     setApprovalType,
     backToInit,
-    setSelectedSwitchVault,
-    selectedSwitchVault,
     transactions,
-    txStatus,
-    setIsEditingSwitchAmount,
-    isEditingSwitchAmount,
-    setSidebarTransactionError,
   } = useTransaction({
     vault,
     vaultChainId,
-    amount: transactionAmount,
-    manualSetAmount: transactionManualSetAmount,
+    amount: amountParsed,
+    manualSetAmount,
     publicClient,
     vaultToken,
     token: selectedToken,
-    tokenBalance: selectedTokenBalance,
     flow: 'manage',
     ownerView,
     positionAmount: netValue,
     approvalCustomValue: approvalAmountParsed,
     sidebarTransactionType,
-    setSidebarTransactionType,
-    isDepositWithSwap,
-    setIsDepositWithSwap,
+    setSidebarTransactionType: () => null,
   })
 
   const sdk = useAppSDK()
@@ -350,13 +247,8 @@ export const VaultManageViewComponent = ({
     state: { slippageConfig },
   } = useLocalConfig()
 
-  // const { features } = useSystemConfig()
-
-  // const migrationsEnabled = !!features?.Migrations
-
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const isMobileOrTablet = isMobile || isTablet
 
@@ -376,18 +268,14 @@ export const VaultManageViewComponent = ({
     rawToTokenAmount,
   })
 
-  const forecastDisabled = !ownerView || sidebarTransactionType === TransactionAction.SWITCH
+  const forecastDisabled = !ownerView
 
   const { isLoadingForecast, oneYearEarningsForecast, forecast, forecastSummaryMap } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
-    amount: {
-      [TransactionAction.DEPOSIT]: resolvedAmountParsed.plus(netValue),
-      [TransactionAction.WITHDRAW]: netValue.minus(resolvedAmountParsed).lt(zero)
-        ? zero
-        : netValue.minus(resolvedAmountParsed),
-      [TransactionAction.SWITCH]: zero,
-    }[sidebarTransactionType].toString(),
+    amount: netValue.minus(resolvedAmountParsed).lt(zero)
+      ? zero.toString()
+      : netValue.minus(resolvedAmountParsed).toString(),
     disabled: forecastDisabled,
     isEarnApp: true,
   })
@@ -424,17 +312,6 @@ export const VaultManageViewComponent = ({
     publicClient,
   })
 
-  // reset the depositWithSwap state when changing between tabs
-  useEffect(() => {
-    setIsDepositWithSwap((state) => {
-      if (state) {
-        return false
-      }
-
-      return state
-    })
-  }, [sidebarTransactionType])
-
   useEffect(() => {
     const savedVaultsListData = getStorageOnce()
 
@@ -450,180 +327,28 @@ export const VaultManageViewComponent = ({
     }
   })
 
-  const potentialVaultsToSwitchTo = useMemo(() => {
-    return vaults
-      .filter((potentialVault) => {
-        return (
-          subgraphNetworkToSDKId(supportedSDKNetwork(potentialVault.protocol.network)) ===
-            vaultChainId && potentialVault.id !== vault.id
-        )
-      })
-      .sort((a, b) => {
-        const vaultApyA = vaultsApyByNetworkMap[`${a.id}-${vaultChainId}`]
-        const vaultApyB = vaultsApyByNetworkMap[`${b.id}-${vaultChainId}`]
-
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (!vaultApyA || !vaultApyB) {
-          return 0
-        }
-
-        return vaultApyB.apy - vaultApyA.apy
-      })
-  }, [vault.id, vaultChainId, vaults, vaultsApyByNetworkMap])
-
-  const potentialVaultsToSwitchToTokens = useMemo(() => {
-    return [
-      ...new Set(
-        potentialVaultsToSwitchTo.map((aultsToSwitchTo) => aultsToSwitchTo.inputToken.symbol),
-      ),
-    ].sort()
-  }, [potentialVaultsToSwitchTo])
-
-  const considerSwitchingContent = useMemo(() => {
-    return potentialVaultsToSwitchToTokens.length > 0 &&
-      vaultChainId !== SupportedNetworkIds.Hyperliquid &&
-      sidebarTransactionType === TransactionAction.WITHDRAW ? (
-      <Card onClick={() => setSidebarTransactionType(TransactionAction.SWITCH)}>
-        <Text variant="p4semi" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <Icon iconName="summer_illustration_switch" style={{ marginRight: '8px' }} />
-          Consider switching to another vault: {potentialVaultsToSwitchToTokens.join(', ')}
-        </Text>
-      </Card>
-    ) : null
-  }, [potentialVaultsToSwitchToTokens, sidebarTransactionType, vaultChainId])
-
-  const sidebarTabsList = useMemo(() => {
-    return [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW, TransactionAction.SWITCH].filter(
-      (action) => {
-        const disabledByConfig = !systemConfig.features?.VaultSwitching
-        const noVaults = potentialVaultsToSwitchTo.length === 0
-
-        if (disabledByConfig || noVaults || netValueUSD.lt(0.1)) {
-          return action !== TransactionAction.SWITCH
-        }
-
-        return true
-      },
-    )
-  }, [netValueUSD, potentialVaultsToSwitchTo.length, systemConfig.features?.VaultSwitching])
-
-  const isSwitch = sidebarTransactionType === TransactionAction.SWITCH
-  const isDeposit = sidebarTransactionType === TransactionAction.DEPOSIT
-  const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
-  const isDepositOrWithdraw = isDeposit || isWithdraw
-
   const sidebarContent = useMemo(() => {
-    // TODO: this hook needs a rework after vault switching is done
-    // trying to make this simple - if there is no next transaction, we are in the entry points
-    // also adding a fail safe for the mapping missing here at the end
     if (!nextTransaction) {
-      if (isSwitch) {
-        if (txStatus === 'txSuccess' && selectedSwitchVault) {
-          // a success screen specially for the switch action
-          return (
-            <ControlsSwitchSuccessErrorView
-              currentVault={vault}
-              selectedSwitchVault={selectedSwitchVault}
-              vaultsList={potentialVaultsToSwitchTo}
-              transactions={transactions}
-              chainId={vaultChainId as unknown as NetworkIds}
-            />
-          )
-        }
-
-        return (
-          <ControlsSwitch
-            currentPosition={position}
-            currentVault={vault}
-            potentialVaults={potentialVaultsToSwitchTo}
-            chainId={vaultChainId as unknown as NetworkIds}
-            vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-            selectVault={setSelectedSwitchVault}
-            selectedVault={selectedSwitchVault}
-          />
-        )
-      } else if (
-        isDepositWithSwap &&
-        sidebarTransactionType === TransactionAction.DEPOSIT &&
-        userWalletAddress &&
-        vaultToken &&
-        selectedToken
-      ) {
-        return (
-          <OrderInfoIntentSwap
-            amount={transactionAmount}
-            chainId={vaultChainId}
-            fleetAddressValue={vault.id as `0x${string}`}
-            publicClient={publicClient}
-            userWalletAddress={userWalletAddress as `0x${string}`}
-            fromToken={selectedToken}
-            toToken={vaultToken}
-            slippagePercentage={Number(slippageConfig.slippage)}
-            onStartAgain={() => {
-              setIsDepositWithSwap(false)
-            }}
-          />
-        )
-      } else if (isDepositOrWithdraw) {
-        return (
-          <ControlsDepositWithdraw
-            amountDisplay={amountDisplay}
-            amountDisplayUSD={amountDisplayUSDWithSwap}
-            handleAmountChange={handleAmountChange}
-            handleDropdownChange={handleTokenSelectionChangeWrapper}
-            transactionType={sidebarTransactionType}
-            options={
-              sidebarTransactionType === TransactionAction.WITHDRAW
-                ? baseTokenOptions
-                : tokenOptions
-            }
-            dropdownValue={selectedTokenOption}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            ownerView={ownerView}
-            tokenSymbol={
-              sidebarTransactionType === TransactionAction.DEPOSIT
-                ? selectedTokenOption.value
-                : getDisplayToken(vault.inputToken.symbol)
-            }
-            tokenBalance={
-              sidebarTransactionType === TransactionAction.DEPOSIT
-                ? selectedTokenBalance
-                : ownerView
-                  ? netValue
-                  : undefined
-            }
-            tokenBalanceLoading={selectedTokenBalanceLoading}
-            manualSetAmount={manualSetAmount}
-            contentAfterInput={considerSwitchingContent}
-          />
-        )
-      } else {
-        return <div>Sidebar TX type not supported</div>
-      }
-    }
-    if (isSwitch && selectedSwitchVault) {
       return (
-        <ControlsSwitchTransactionView
-          currentVault={vault}
-          currentVaultNetValue={netValue}
-          vaultsList={potentialVaultsToSwitchTo}
-          selectedSwitchVault={selectedSwitchVault}
-          vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-          transactions={transactions}
-          switchingAmount={switchAmountDisplay}
-          setSwitchingAmount={switchManualSetAmount}
-          isLoading={sidebar.primaryButton.loading}
-          switchingAmountOnBlur={switchOnBlur}
-          switchingAmountOnFocus={switchOnFocus}
-          transactionFee={transactionFee}
-          transactionFeeLoading={transactionFeeLoading}
-          resetToInitialAmount={switchResetToInitialAmount}
-          isEditingSwitchAmount={isEditingSwitchAmount}
-          setIsEditingSwitchAmount={setIsEditingSwitchAmount}
+        <ControlsDepositWithdraw
+          amountDisplay={amountDisplay}
+          amountDisplayUSD={amountDisplayUSDWithSwap}
+          handleAmountChange={handleAmountChange}
+          handleDropdownChange={handleTokenSelectionChangeWrapper}
+          transactionType={sidebarTransactionType}
+          options={baseTokenOptions}
+          dropdownValue={selectedTokenOption}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          ownerView={ownerView}
+          tokenSymbol={getDisplayToken(vault.inputToken.symbol)}
+          tokenBalance={ownerView ? netValue : undefined}
+          tokenBalanceLoading={selectedTokenBalanceLoading}
+          manualSetAmount={manualSetAmount}
         />
       )
     }
+
     if (nextTransaction.type === TransactionType.Approve) {
       return (
         <ControlsApproval
@@ -639,17 +364,6 @@ export const VaultManageViewComponent = ({
           sidebarTransactionType={sidebarTransactionType}
         />
       )
-    } else if (nextTransaction.type === TransactionType.Deposit) {
-      return (
-        <OrderInfoDeposit
-          chainId={vaultChainId}
-          transaction={nextTransaction}
-          amountParsed={amountParsed}
-          amountDisplayUSD={amountDisplayUSDWithSwap}
-          transactionFee={transactionFee}
-          transactionFeeLoading={transactionFeeLoading}
-        />
-      )
     } else if (nextTransaction.type === TransactionType.Withdraw) {
       return (
         <OrderInfoWithdraw
@@ -661,62 +375,25 @@ export const VaultManageViewComponent = ({
           transactionFeeLoading={transactionFeeLoading}
         />
       )
-    } else if (nextTransaction.type === TransactionType.Permit2Authorization) {
-      if (!vaultToken) {
-        return <div>Loading...</div>
-      }
-
-      return <ControlsPermit2Authorization tokenSymbol={vaultToken.symbol} />
     } else {
-      // this is a fail safe for the mapping missing here at the end
-      // we should never get here
       return <div>Transaction type ({nextTransaction.type}) not supported</div>
     }
   }, [
     nextTransaction,
-    isSwitch,
-    selectedSwitchVault,
-    isDepositWithSwap,
-    userWalletAddress,
-    vaultToken,
-    selectedToken,
-    isDepositOrWithdraw,
-    txStatus,
-    position,
-    vault,
-    potentialVaultsToSwitchTo,
-    vaultChainId,
-    vaultsApyByNetworkMap,
-    setSelectedSwitchVault,
-    transactions,
-    transactionAmount,
-    publicClient,
     amountDisplay,
     amountDisplayUSDWithSwap,
     handleAmountChange,
     handleTokenSelectionChangeWrapper,
     sidebarTransactionType,
     baseTokenOptions,
-    tokenOptions,
     selectedTokenOption,
     onFocus,
     onBlur,
     ownerView,
-    selectedTokenBalance,
+    vault.inputToken.symbol,
     netValue,
     selectedTokenBalanceLoading,
     manualSetAmount,
-    considerSwitchingContent,
-    switchAmountDisplay,
-    switchManualSetAmount,
-    sidebar.primaryButton.loading,
-    switchOnBlur,
-    switchOnFocus,
-    transactionFee,
-    transactionFeeLoading,
-    switchResetToInitialAmount,
-    isEditingSwitchAmount,
-    setIsEditingSwitchAmount,
     approvalTokenSymbol,
     approvalType,
     setApprovalType,
@@ -725,77 +402,23 @@ export const VaultManageViewComponent = ({
     approvalManualSetAmount,
     approvalOnBlur,
     approvalOnFocus,
+    selectedTokenBalance,
+    vaultChainId,
     amountParsed,
-    slippageConfig.slippage,
+    transactionFee,
+    transactionFeeLoading,
   ])
-
-  const sidebarTitle = useMemo(() => {
-    if (!nextTransaction) {
-      if (isSwitch && txStatus === 'txSuccess') {
-        return sidebar.title
-      } else if (isDepositWithSwap) {
-        return sidebar.title
-      }
-
-      return sidebarTransactionType
-    }
-
-    return sidebar.title
-  }, [
-    isDepositWithSwap,
-    isSwitch,
-    nextTransaction,
-    sidebar.title,
-    sidebarTransactionType,
-    txStatus,
-  ])
-
-  const sidebarTitleTabs = useMemo(() => {
-    if (!nextTransaction) {
-      if (isSwitch && txStatus === 'txSuccess') {
-        return undefined
-      } else if (isDepositWithSwap) {
-        return undefined
-      }
-
-      return sidebarTabsList
-    }
-
-    return undefined
-  }, [nextTransaction, sidebarTabsList, isSwitch, txStatus, isDepositWithSwap])
 
   const sidebarProps: SidebarProps = {
-    title: sidebarTitle,
-    titleTabs: sidebarTitleTabs,
-    onTitleTabChange: (action) => {
-      buttonClickEventHandler(`vault-manage-title-tab-${action}`)
-      setSidebarTransactionType(action as TransactionAction)
-      setSidebarTransactionError(undefined)
-      if (amountParsed.gt(0)) {
-        reset()
-      }
-    },
+    title: sidebar.title,
     content: (
       <>
         {sidebarContent}
         <PendingTransactionsList transactions={transactions} chainId={vaultChainId} />
       </>
     ),
-    customHeader:
-      !isDrawerOpen && isMobile ? (
-        <SidebarMobileHeader
-          type="manage"
-          sidebarTransactionType={sidebarTransactionType}
-          setSidebarTransactionType={setSidebarTransactionType}
-        />
-      ) : undefined,
-    handleIsDrawerOpen: (flag: boolean) => setIsDrawerOpen(flag),
-    goBackAction: (nextTransaction?.type ?? isDepositWithSwap) ? backToInit : undefined,
-    primaryButton: {
-      ...sidebar.primaryButton,
-      hidden: isDepositWithSwap,
-      disabled: sidebar.primaryButton.disabled,
-    },
+    goBackAction: nextTransaction?.type ? backToInit : undefined,
+    primaryButton: sidebar.primaryButton,
     secondaryButton: sidebar.secondaryButton,
     footnote: (
       <>
@@ -827,9 +450,7 @@ export const VaultManageViewComponent = ({
   const resovledSidebarProps =
     tosState.status !== TOSStatus.DONE &&
     nextTransactionType &&
-    [TransactionType.Approve, TransactionType.Deposit, TransactionType.Withdraw].includes(
-      nextTransactionType,
-    )
+    [TransactionType.Approve, TransactionType.Withdraw].includes(nextTransactionType)
       ? tosSidebarProps
       : sidebarProps
 
@@ -881,21 +502,6 @@ export const VaultManageViewComponent = ({
               rewardTokenPrices={rewardTokenPrices}
               viewWalletAddress={viewWalletAddress}
             />
-            {/* {migrationsEnabled && migratablePositions.length > 0 && (
-                <MigrationBox
-                  migratablePositions={migratablePositions}
-                  selectedPosition={selectedPosition}
-                  onSelectPosition={handleSelectPosition}
-                  cta={{
-                    link: getMigrationLandingPageUrl({
-                      walletAddress: viewWalletAddress,
-                      selectedPosition,
-                    }),
-                    disabled: !selectedPosition,
-                  }}
-                  migrationBestVaultApy={migrationBestVaultApy}
-                />
-              )} */}
             <UnstakeVaultToken vault={vault} walletAddress={viewWalletAddress} />
           </>
         }

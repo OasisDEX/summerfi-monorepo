@@ -95,17 +95,17 @@ export const VaultsListViewLoading = () => {
       rightContent={
         <div style={{ position: 'relative', width: '100%', padding: '2px' }}>
           <Sidebar
-            title="Deposit"
+            title=""
             content={
               <div
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '12px',
-                  margin: '32px 0 32px',
+                  margin: '16px 0 24px',
                 }}
               >
-                <SkeletonLine width="100%" height={25} radius="var(--radius-roundish)" />
+                <SkeletonLine width="60%" height={25} radius="var(--radius-roundish)" />
                 <SkeletonLine width="100%" height={40} radius="var(--radius-roundish)" />
               </div>
             }
@@ -114,7 +114,6 @@ export const VaultsListViewLoading = () => {
               action: () => null,
               loading: true,
             }}
-            footnote={<SkeletonLine width="30%" height={15} radius="var(--radius-roundish)" />}
           />
         </div>
       }

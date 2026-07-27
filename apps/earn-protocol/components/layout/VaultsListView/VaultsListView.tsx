@@ -15,28 +15,28 @@ import {
   type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
-  type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { convertWethToEth, slugifyVault, supportedSDKNetwork } from '@summerfi/app-utils'
+import { slugifyVault, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { useSumrStakingRewards } from '@/components/layout/VaultsListView/use-sumr-staking-rewards'
-import { useVaultSimulation } from '@/components/layout/VaultsListView/use-vault-simulation'
 import { useVaultsListFiltering } from '@/components/layout/VaultsListView/use-vaults-list-filtering'
 import { useVaultsListQuery } from '@/components/layout/VaultsListView/useVaultsListQuery'
-import { VaultSimulationSidebar } from '@/components/layout/VaultsListView/VaultSimulationSidebar'
 import { VaultsListCards } from '@/components/layout/VaultsListView/VaultsListCards'
 import { VaultsListMetrics } from '@/components/layout/VaultsListView/VaultsListMetrics'
+import { VaultsListSidebar } from '@/components/layout/VaultsListView/VaultsListSidebar'
 import { VaultsListViewEmpty } from '@/components/layout/VaultsListView/VaultsListViewEmpty'
 import {
   VaultsListLeftContentLoading,
   VaultsListViewLoading,
 } from '@/components/layout/VaultsListView/VaultsListViewLoading'
+import { VaultsInfoSidebarBlock } from '@/components/molecules/VaultsInfoSidebarBlock/VaultsInfoSidebarBlock'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
+import { usePosition } from '@/hooks/use-position'
 import { useRevalidateVaultsListData } from '@/hooks/use-revalidate'
 
 type VaultsListViewInnerProps = {
@@ -147,7 +147,13 @@ const VaultsListViewInner = ({
     }
   }, [filteredAndSortedVaults, filteredSafeVaultsList, selectedVaultId])
 
-  const simulation = useVaultSimulation(activeVaultData)
+  const { position } = usePosition({
+    vaultId: activeVaultData.id,
+    chainId: subgraphNetworkToSDKId(supportedSDKNetwork(activeVaultData.protocol.network)),
+    onlyActive: true,
+    cached: true,
+  })
+  const positionExists = Boolean(position)
   const { maxApy, sumrRewardApy, isLoadingRewardRates } = useSumrStakingRewards(sumrPriceUsd)
 
   const handleChangeVault = (nextselectedVaultId: string) => {
@@ -156,7 +162,7 @@ const VaultsListViewInner = ({
         `vaults-list-vault-card-${slugifyVault(activeVaultData)}-double-click`,
       )
       const vaultUrl =
-        simulation.positionExists && userWalletAddress
+        positionExists && userWalletAddress
           ? getVaultPositionUrl({
               network: supportedSDKNetwork(activeVaultData.protocol.network),
               vaultId: activeVaultData.id,
@@ -172,17 +178,8 @@ const VaultsListViewInner = ({
     setSelectedVaultId(nextselectedVaultId)
   }
 
-  const handleSelectVault = (vault: SDKVaultishType, id: string) => {
+  const handleSelectVault = (_vault: SDKVaultishType, id: string) => {
     handleChangeVault(id)
-    // we want to use ETH as native deposit token for WETH vaults
-    const resolvedTokenSymbol = convertWethToEth(vault.inputToken.symbol) as TokenSymbolsList
-
-    simulation.setSelectedTokenOption({
-      value: resolvedTokenSymbol,
-      label: resolvedTokenSymbol,
-      tokenSymbol: resolvedTokenSymbol,
-    })
-    simulation.tokenBalances.handleSetTokenBalanceLoading(true)
   }
 
   const handleRefresh = () => {
@@ -250,14 +247,15 @@ const VaultsListViewInner = ({
         )
       }
       rightContent={
-        <VaultSimulationSidebar
-          activeVaultData={activeVaultData}
-          isMobileOrTablet={isMobileOrTablet}
-          userWalletAddress={userWalletAddress}
-          daoManagedVaultsEnabled={daoManagedVaultsEnabled}
-          onButtonClick={buttonClickEventHandler}
-          simulation={simulation}
-        />
+        <>
+          <VaultsListSidebar
+            activeVaultData={activeVaultData}
+            positionExists={positionExists}
+            userWalletAddress={userWalletAddress}
+            onButtonClick={buttonClickEventHandler}
+          />
+          {daoManagedVaultsEnabled && <VaultsInfoSidebarBlock />}
+        </>
       }
     />
   )

@@ -65,8 +65,14 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
-  if (!parsedVaultId || !isAddress(vaultId)) {
+  if (!parsedVaultId) {
     redirect('/not-found')
+  }
+
+  // Slug-named vault URLs (from getVaultUrl/getVaultDetailsUrl, old /position/ bookmarks,
+  // and the post-withdraw redirect) resolve to the canonical address URL instead of 404ing.
+  if (!isAddress(vaultId)) {
+    redirect(`/${network.toLowerCase()}/details/${parsedVaultId}`)
   }
 
   return (

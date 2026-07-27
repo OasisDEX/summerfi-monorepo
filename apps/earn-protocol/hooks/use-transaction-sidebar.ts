@@ -1,13 +1,12 @@
 import { useMemo } from 'react'
-import { getEarnProtocolChainById, getVaultPositionUrl } from '@summerfi/app-earn-ui'
+import { getEarnProtocolChainById } from '@summerfi/app-earn-ui'
 import {
   type EarnTransactionViewStates,
-  type SDKVaultishType,
   type SupportedNetworkIds,
   TransactionAction,
   type TransactionWithStatus,
 } from '@summerfi/app-types'
-import { slugify, supportedSDKNetwork } from '@summerfi/app-utils'
+import { slugify } from '@summerfi/app-utils'
 import { type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
@@ -21,8 +20,6 @@ type SidebarButton = {
 }
 
 type UseTransactionSidebarParams = {
-  // state / flags
-  isEditingSwitchAmount: boolean
   userWalletAddress?: `0x${string}`
   isAuthModalOpen: boolean
   ownerView?: boolean
@@ -30,9 +27,6 @@ type UseTransactionSidebarParams = {
   isSettingChain: boolean
   vaultChainId: SupportedNetworkIds
   flow: 'open' | 'manage'
-  isSwitch: boolean
-  // synchronous balance checks from useTransactionValidation, used to disable the button
-  isDepositAmountOverBalance: boolean
   isWithdrawAmountOverPosition: boolean
   amount: BigNumber | undefined
   txStatus: EarnTransactionViewStates
@@ -40,32 +34,21 @@ type UseTransactionSidebarParams = {
   nextTransaction?: TransactionWithStatus
   approvalTokenSymbol: string
   sidebarTransactionType: TransactionAction
-  selectedSwitchVault?: `${string}-${number}`
   referralCodeError?: string | null
-  // CoW (manage-view) deposit-with-swap flow; never set on the open view.
-  isDepositWithSwap?: boolean
-  vault: SDKVaultishType
-  // callbacks
   login: () => void
   setChain: (params: { chain: number }) => void
   buttonClickEventHandler: (event: string) => void
   getTransactionsList: () => void
   executeNextTransaction: () => void
-  push: (href: string) => void
   reset: () => void
   refreshView: () => void
 }
 
 /**
  * Builds the transaction sidebar view-model (title + primary/secondary buttons) from
- * the current transaction state. Extracted from `useTransaction` so the large button
- * decision tree lives on its own and can be shared with the manage-view (CoW) flow.
- *
- * The primary button is expressed as an ordered list of rules: the first rule that
- * returns a button wins. The order is significant and mirrors the original cascade.
+ * the current transaction state.
  */
 export const useTransactionSidebar = ({
-  isEditingSwitchAmount,
   userWalletAddress,
   isAuthModalOpen,
   ownerView,
@@ -73,8 +56,6 @@ export const useTransactionSidebar = ({
   isSettingChain,
   vaultChainId,
   flow,
-  isSwitch,
-  isDepositAmountOverBalance,
   isWithdrawAmountOverPosition,
   amount,
   txStatus,
@@ -82,16 +63,12 @@ export const useTransactionSidebar = ({
   nextTransaction,
   approvalTokenSymbol,
   sidebarTransactionType,
-  selectedSwitchVault,
   referralCodeError,
-  isDepositWithSwap = false,
-  vault,
   login,
   setChain,
   buttonClickEventHandler,
   getTransactionsList,
   executeNextTransaction,
-  push,
   reset,
   refreshView,
 }: UseTransactionSidebarParams) => {
@@ -110,10 +87,8 @@ export const useTransactionSidebar = ({
   }, [nextTransaction, refreshView, reset, txStatus, userWalletAddress])
 
   const primaryButton = useMemo((): SidebarButton => {
-    // Ordered rules — first match wins. Order mirrors the original cascade.
+    // Ordered rules — first match wins.
     const rules: (() => SidebarButton | undefined)[] = [
-      // special case for editing the switch amount - it has its own button
-      () => (isEditingSwitchAmount ? { label: '', hidden: true, loading: false } : undefined),
       // missing data
       () =>
         !userWalletAddress
@@ -137,16 +112,6 @@ export const useTransactionSidebar = ({
           loading: isSettingChain,
         }
       },
-      // deposit balance check
-      () =>
-        isDepositAmountOverBalance
-          ? {
-              label: capitalize(sidebarTransactionType),
-              action: () => null,
-              disabled: true,
-              loading: false,
-            }
-          : undefined,
       // withdraw balance check
       () =>
         isWithdrawAmountOverPosition
@@ -157,9 +122,8 @@ export const useTransactionSidebar = ({
               loading: false,
             }
           : undefined,
-      // we want to check that only on deposit/withdraw
       () =>
-        (!amount || amount.isZero()) && !isSwitch
+        !amount || amount.isZero()
           ? { label: capitalize(sidebarTransactionType), action: () => null, disabled: true }
           : undefined,
       // if there are transactions pending
@@ -193,36 +157,7 @@ export const useTransactionSidebar = ({
               action: executeNextTransaction,
             }
           : undefined,
-      // switch check
-      () => {
-        if (!isSwitch) {
-          return undefined
-        }
-        if (txStatus === 'txSuccess' && !nextTransaction && userWalletAddress) {
-          return {
-            label: 'Go to new position',
-            action: () => {
-              buttonClickEventHandler(`vault-${flow}-go-to-new-position`)
-              push(
-                getVaultPositionUrl({
-                  network: supportedSDKNetwork(vault.protocol.network),
-                  vaultId: selectedSwitchVault?.split('-')[0] ?? '',
-                  walletAddress: userWalletAddress,
-                }),
-              )
-            },
-          }
-        }
-
-        return {
-          label: `Preview ${capitalize(sidebarTransactionType)}`,
-          action: getTransactionsList,
-          disabled: !selectedSwitchVault,
-        }
-      },
       // if there are no transactions, and the last one was successful
-      // if this is what you're seeing it means it should automatically refresh the view
-      // if it didnt, it's a bug
       () =>
         txStatus === 'txSuccess'
           ? { label: 'Success', action: () => null, disabled: true }
@@ -241,72 +176,37 @@ export const useTransactionSidebar = ({
 
     return { label: 'Preview', action: getTransactionsList }
   }, [
-    isEditingSwitchAmount,
+    userWalletAddress,
+    login,
+    isAuthModalOpen,
     ownerView,
     isProperChainSelected,
     isSettingChain,
+    vaultChainId,
+    buttonClickEventHandler,
     flow,
-    isDepositAmountOverBalance,
-    amount,
+    setChain,
     isWithdrawAmountOverPosition,
-    isSwitch,
+    sidebarTransactionType,
+    amount,
     txStatus,
     token,
     nextTransaction,
-    referralCodeError,
-    getTransactionsList,
-    login,
-    isAuthModalOpen,
-    vaultChainId,
-    setChain,
-    buttonClickEventHandler,
-    sidebarTransactionType,
     approvalTokenSymbol,
     executeNextTransaction,
-    userWalletAddress,
-    selectedSwitchVault,
-    push,
-    vault.protocol.network,
+    referralCodeError,
+    getTransactionsList,
   ])
 
   const title = useMemo(() => {
-    // switch has slightly different title
-    if (
-      sidebarTransactionType === TransactionAction.SWITCH &&
-      nextTransaction?.type === TransactionType.Approve
-    ) {
-      return 'Switch your position'
-    }
-    if (
-      sidebarTransactionType === TransactionAction.SWITCH &&
-      !nextTransaction &&
-      txStatus === 'txSuccess'
-    ) {
-      return 'Position switched!'
-    }
-    if (nextTransaction?.type === TransactionType.Deposit) {
-      return 'Preview deposit'
-    }
-
     if (nextTransaction?.type === TransactionType.Withdraw) {
       return 'Preview withdraw'
     }
 
-    if (nextTransaction?.type === TransactionType.VaultSwitch) {
-      return 'Preview switch'
-    }
-
-    if (nextTransaction?.type === TransactionType.Permit2Authorization) {
-      return 'Permit2 authorization'
-    }
-    if (isDepositWithSwap) {
-      return 'Preview deposit with swap'
-    }
-
     return nextTransaction?.type
       ? capitalize(nextTransaction.type)
-      : capitalize(TransactionAction.DEPOSIT)
-  }, [nextTransaction, sidebarTransactionType, txStatus, isDepositWithSwap])
+      : capitalize(TransactionAction.WITHDRAW)
+  }, [nextTransaction])
 
   return {
     title,

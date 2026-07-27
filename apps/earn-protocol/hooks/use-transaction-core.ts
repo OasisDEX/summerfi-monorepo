@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Safe from '@safe-global/safe-apps-sdk'
 import { useEarnProtocolSendUserOperation, useIsIframe } from '@summerfi/app-earn-ui'
-import {
-  type EarnAllowanceTypes,
-  type EarnTransactionViewStates,
-  type SDKVaultishType,
+import type {
+  EarnAllowanceTypes,
+  EarnTransactionViewStates,
+  SDKVaultishType,
   TransactionAction,
-  type TransactionWithStatus,
+  TransactionWithStatus,
 } from '@summerfi/app-types'
 import { slugify, slugifyVault, supportedSDKNetwork, ten } from '@summerfi/app-utils'
 import { type IToken, TransactionType } from '@summerfi/sdk-common'
@@ -29,40 +29,27 @@ type UseTransactionCoreParams = {
   vault: SDKVaultishType
   amount: BigNumber | undefined
   token: IToken | undefined
-  isDeposit: boolean
   isWithdraw: boolean
-  isSwitch: boolean
   sidebarTransactionType: TransactionAction
   publicClient?: PublicClient
   flow: 'open' | 'manage'
   approvalCustomValue?: BigNumber
   userWalletAddress?: `0x${string}`
-  // Called from the send error handler on the switch flow to re-fetch the tx list
-  // (a switch can fail in the gap between approval and switching).
-  onSwitchSendError?: () => void
 }
 
 /**
- * The shared transaction state machine + sender used by both the open-view
- * (`useTransaction`) and manage-view (`useTransactionsWithCow`) hooks. It owns the
- * prepared-transactions queue, the User-Operation / Safe send path, per-transaction
- * status tracking, and the wait-for-receipt + error effects. Flow-specific concerns
- * (building the tx list, validation, the sidebar view-model, post-success navigation)
- * live in the wrapper hooks, which feed this core via the returned setters.
+ * The shared transaction state machine + sender used by the manage-view hook.
  */
 export const useTransactionCore = ({
   vault,
   amount,
   token,
-  isDeposit,
   isWithdraw,
-  isSwitch,
   sidebarTransactionType,
   publicClient,
   flow,
   approvalCustomValue,
   userWalletAddress,
-  onSwitchSendError,
 }: UseTransactionCoreParams) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const transactionEventHandler = useHandleTransactionEvent()
@@ -97,7 +84,7 @@ export const useTransactionCore = ({
     waitForTxn: true,
     onSuccess: ({ hash }) => {
       transactionEventHandler({
-        transactionType: isWithdraw ? 'withdraw' : isDeposit ? 'deposit' : 'vault-switch',
+        transactionType: isWithdraw ? 'withdraw' : 'deposit',
         txEvent: 'transactionSubmitted',
         txAmount: formatTxAmount(amount, token),
         result: 'success',
@@ -126,13 +113,8 @@ export const useTransactionCore = ({
       }
     },
     onError: (err) => {
-      if (isSwitch) {
-        // when switching sometimes the transaction fails due to the time between approval and switching
-        // we need to refresh the transactions list then to fetch the new swap
-        onSwitchSendError?.()
-      }
       transactionEventHandler({
-        transactionType: isWithdraw ? 'withdraw' : isDeposit ? 'deposit' : 'vault-switch',
+        transactionType: isWithdraw ? 'withdraw' : 'deposit',
         txEvent: 'transactionSubmitted',
         txAmount: formatTxAmount(amount, token),
         result: 'failure',
@@ -285,22 +267,13 @@ export const useTransactionCore = ({
     if (waitingForTx && txStatus !== 'txSuccess' && publicClient) {
       waitForTransaction({ publicClient, hash: waitingForTx })
         .then(() => {
-          // if its switch and its the last transaction, we want the success screen a _LITTLE_ later
-          // this is because on the next (success) screen we want to show the new position
-          if (sidebarTransactionType === TransactionAction.SWITCH && !nextTransaction) {
-            setTimeout(() => {
-              setTxStatus('txSuccess')
-            }, 3000)
-          } else {
-            setTxStatus('txSuccess')
-          }
+          setTxStatus('txSuccess')
 
           // Mark the completed transaction as executed: true
           setTransactions((prevTransactions) =>
             prevTransactions?.map((tx) => {
-              // Use the hash stored in waitingForTx to identify the transaction
               if (
-                tx.transaction.calldata === nextTransaction?.transaction.calldata && // A way to identify the transaction, might need a better unique ID
+                tx.transaction.calldata === nextTransaction?.transaction.calldata &&
                 !tx.executed
               ) {
                 return { ...tx, executed: true }
@@ -309,7 +282,7 @@ export const useTransactionCore = ({
               return tx
             }),
           )
-          setWaitingForTx(undefined) // Clear waitingForTx after successful execution and state update
+          setWaitingForTx(undefined)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

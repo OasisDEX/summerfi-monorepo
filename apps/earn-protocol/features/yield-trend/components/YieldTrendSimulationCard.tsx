@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import {
-  Button,
   Card,
   Dropdown,
   getDisplayToken,
@@ -229,7 +228,7 @@ export const YieldTrendSimulationCard = ({
           )}
         >
           <Text variant="p2semi" style={{ color: 'var(--color-text-secondary)' }}>
-            Deposit
+            Amount
           </Text>
           <Card className={yieldTrendViewStyles.depositCard}>
             <Dropdown
@@ -273,9 +272,6 @@ export const YieldTrendSimulationCard = ({
             You would earn an extra (a year)
           </Text>
           <TextNumberAnimated variant="h3colorful" prefix="$" value={earnDifference.toNumber()} />
-          <Button variant="primaryMedium" style={{ marginTop: 'var(--spacing-space-medium)' }}>
-            Deposit
-          </Button>
         </Card>
       </div>
     </Card>
