@@ -132,14 +132,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       ? [
           {
             id: PortfolioTabs.REWARDS,
-            label: (
-              <>
-                SUMR Rewards{' '}
-                <Text variant="p4semi" className={classNames.nowTradingLabel}>
-                  Staking V2 - Earn SUMR + USDC
-                </Text>
-              </>
-            ),
+            label: '$SUMR Rewards',
             content: (
               <PortfolioRewardsV2
                 rewardsData={rewardsData}
