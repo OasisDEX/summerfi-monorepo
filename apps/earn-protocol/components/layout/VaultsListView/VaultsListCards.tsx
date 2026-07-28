@@ -40,7 +40,6 @@ type VaultsListCardsProps = {
   vaultsInfo?: IArmadaVaultInfo[]
   vaultsPausedMap?: { [key: string]: boolean }
   onSelectVault: (vault: SDKVaultishType, id: string) => void
-  onTooltipOpen: (tooltipName: string) => void
   showStakeCard: boolean
   sumrAvailableToStake: number
   sumrAvailableToStakeUSD: number
@@ -70,7 +69,6 @@ export const VaultsListCards = ({
   vaultsInfo,
   vaultsPausedMap,
   onSelectVault,
-  onTooltipOpen,
   showStakeCard,
   sumrAvailableToStake,
   sumrAvailableToStakeUSD,
@@ -117,8 +115,6 @@ export const VaultsListCards = ({
                 withTokenBonus={withSumr}
                 rewardTokenPrices={rewardTokenPrices}
                 vaultApyData={vaultsApyByNetworkMap[getVaultApySelector(vault)]}
-                tooltipName="vaults-list-vault-card"
-                onTooltipOpen={onTooltipOpen}
                 merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
               />
               {isVaultPaused(vault) && (
@@ -161,8 +157,6 @@ export const VaultsListCards = ({
           yieldTokenApy={isLoadingRewardRates ? '-' : Number(maxApy / 100).toString()}
           yieldToken="USDC"
           apy={sumrRewardApy}
-          tooltipName="sumr-stake-bonus-label"
-          onTooltipOpen={onTooltipOpen}
           handleClick={onStakeCardClick}
         />
       )}

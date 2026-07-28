@@ -30,7 +30,6 @@ import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTab
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
 import { formatStakeLockupPeriod } from '@/helpers/format-stake-lockup-period'
-import { useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import sumrV2PageStyles from './SumrV2StakingLandingPageView.module.css'
 
@@ -43,7 +42,6 @@ interface SumrV2StakingPageViewProps {
 const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
   sumrStakingV2LandingPageData,
 }) => {
-  const tooltipEventHandler = useHandleTooltipOpenEvent()
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { login } = useEarnProtocolLogin()
 
@@ -236,8 +234,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
                       </Text>
                     }
                     tooltipWrapperStyles={{ minWidth: '240px' }}
-                    tooltipName="sumr-staking-usd-yield-info"
-                    onTooltipOpen={tooltipEventHandler}
                   >
                     <Icon iconName="info" variant="s" />
                   </Tooltip>
@@ -281,8 +277,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
                       </Text>
                     }
                     tooltipWrapperStyles={{ minWidth: '240px' }}
-                    tooltipName="sumr-staking-apy-info"
-                    onTooltipOpen={tooltipEventHandler}
                   >
                     <Icon iconName="info" variant="s" />
                   </Tooltip>
@@ -327,8 +321,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
                       </Text>
                     }
                     tooltipWrapperStyles={{ minWidth: '240px' }}
-                    tooltipName="sumr-annulized-revenue-info"
-                    onTooltipOpen={tooltipEventHandler}
                   >
                     <Icon iconName="info" variant="s" />
                   </Tooltip>

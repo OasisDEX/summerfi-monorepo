@@ -6,7 +6,6 @@ import {
   TransactionAction,
   type TransactionWithStatus,
 } from '@summerfi/app-types'
-import { slugify } from '@summerfi/app-utils'
 import { type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
@@ -26,7 +25,6 @@ type UseTransactionSidebarParams = {
   isProperChainSelected: boolean
   isSettingChain: boolean
   vaultChainId: SupportedNetworkIds
-  flow: 'open' | 'manage'
   isWithdrawAmountOverPosition: boolean
   amount: BigNumber | undefined
   txStatus: EarnTransactionViewStates
@@ -37,7 +35,6 @@ type UseTransactionSidebarParams = {
   referralCodeError?: string | null
   login: () => void
   setChain: (params: { chain: number }) => void
-  buttonClickEventHandler: (event: string) => void
   getTransactionsList: () => void
   executeNextTransaction: () => void
   reset: () => void
@@ -55,7 +52,6 @@ export const useTransactionSidebar = ({
   isProperChainSelected,
   isSettingChain,
   vaultChainId,
-  flow,
   isWithdrawAmountOverPosition,
   amount,
   txStatus,
@@ -66,7 +62,6 @@ export const useTransactionSidebar = ({
   referralCodeError,
   login,
   setChain,
-  buttonClickEventHandler,
   getTransactionsList,
   executeNextTransaction,
   reset,
@@ -105,7 +100,6 @@ export const useTransactionSidebar = ({
         return {
           label: `Change network to ${nextChain.name}`,
           action: () => {
-            buttonClickEventHandler(`vault-${flow}-change-network-to-${slugify(nextChain.name)}`)
             setChain({ chain: vaultChainId })
           },
           disabled: isSettingChain,
@@ -183,8 +177,6 @@ export const useTransactionSidebar = ({
     isProperChainSelected,
     isSettingChain,
     vaultChainId,
-    buttonClickEventHandler,
-    flow,
     setChain,
     isWithdrawAmountOverPosition,
     sidebarTransactionType,

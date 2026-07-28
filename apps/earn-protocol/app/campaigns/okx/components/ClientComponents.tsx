@@ -11,7 +11,6 @@ import {
   Text,
 } from '@summerfi/app-earn-ui'
 
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import chainSecurityLogo from '@/public/img/campaigns/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/campaigns/auditor-logos/prototech-labs.svg'
 import sherlockLogo from '@/public/img/campaigns/auditor-logos/sherlock.svg'
@@ -109,12 +108,6 @@ const quests = [
 ]
 
 export const OkxClientComponents = () => {
-  const handleButtonClick = useHandleButtonClickEvent()
-
-  const buttonEventHandler = (buttonName: string) => () => {
-    handleButtonClick(buttonName)
-  }
-
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '64px' }}>
@@ -155,15 +148,11 @@ export const OkxClientComponents = () => {
           liquidityImage,
           nonCustodialImage,
         }}
-        handleLearnMoreClick={buttonEventHandler('okx-enhanced-risk-management-learn-more')}
       />
       <Audits
         chainSecurityLogo={chainSecurityLogo}
         prototechLabsLogo={prototechLabsLogo}
         sherlockLogo={sherlockLogo}
-        onAuditClick={(auditId: string) => () => {
-          handleButtonClick(`audit-${auditId}-learn-more`)
-        }}
       />
       <FaqSection
         customTitle="Frequently Asked Questions"
@@ -189,7 +178,6 @@ export const OkxClientComponents = () => {
             content: <div>TBD</div>,
           },
         ]}
-        onExpand={buttonEventHandler('okx-faq-expand')}
       />
     </>
   )

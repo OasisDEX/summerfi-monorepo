@@ -2,8 +2,10 @@
 
 import { type AnalyticsCookieName } from '@summerfi/app-earn-ui'
 
-import { mixpanelBrowser } from '@/helpers/mixpanel-init'
-
+/**
+ * Consent handlers for the cookie banner. No analytics provider is wired up, so
+ * both categories are no-ops — the banner only persists the user's choice.
+ */
 export const manageAnalyticsCookies: {
   [key in AnalyticsCookieName]: { enable: () => void; disable: () => void }
 } = {
@@ -12,7 +14,7 @@ export const manageAnalyticsCookies: {
     disable: () => {},
   },
   analytics: {
-    enable: () => mixpanelBrowser.opt_in_tracking(),
-    disable: () => mixpanelBrowser.opt_out_tracking(),
+    enable: () => {},
+    disable: () => {},
   },
 }

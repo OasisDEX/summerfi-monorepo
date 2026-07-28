@@ -8,23 +8,19 @@ import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { YieldsChart } from '@/components/organisms/Charts/components/Yields'
 import { POINTS_REQUIRED_FOR_CHART } from '@/constants/charts'
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useTimeframes } from '@/hooks/use-timeframes'
 
 type ArkHistoricalYieldChartProps = {
   chartData: ArksHistoricalChartData
   summerVaultName: string
   vaultBenchmarkName: string
-  chartId: string
 }
 
 export const ArkHistoricalYieldChart = ({
   chartData,
   summerVaultName,
   vaultBenchmarkName,
-  chartId,
 }: ArkHistoricalYieldChartProps) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
   const {
     timeframe,
     setTimeframe,
@@ -89,12 +85,10 @@ export const ArkHistoricalYieldChart = ({
 
   const handleSetNextTimeframe = (nextTimeframe: string) => {
     setTimeframe(nextTimeframe as TimeframesType)
-    buttonClickEventHandler(`${chartId}-arks-historical-chart-timeframe-set-${nextTimeframe}`)
   }
 
   const handleSetCompare = (nextCompare: boolean) => {
     setCompare(nextCompare)
-    buttonClickEventHandler(`${chartId}-arks-historical-chart-compare-set-${nextCompare}`)
   }
 
   return (

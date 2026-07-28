@@ -14,7 +14,6 @@ import {
   formatAddress,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
-  slugifyVault,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
@@ -70,9 +69,6 @@ interface VaultOpenGridProps {
   }
   disableDropdownOptionsByChainId?: SupportedNetworkIds
   getOptionUrl?: (option: SDKVaultishType) => string
-  tooltipEventHandler: (tooltipName: string) => void
-  buttonClickEventHandler: (buttonName: string) => void
-  dropdownChangeHandler: ({ inputName, value }: { inputName: string; value: string }) => void
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
@@ -96,9 +92,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   },
   disableDropdownOptionsByChainId,
   getOptionUrl,
-  buttonClickEventHandler,
-  tooltipEventHandler,
-  dropdownChangeHandler,
   rewardTokenPrices,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -155,7 +148,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   }, [displaySimulationGraph])
 
   const handleUserRefresh = () => {
-    buttonClickEventHandler(`vault-open-refresh-button`)
     onRefresh?.({
       chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
       vaultId: vault.id,
@@ -177,12 +169,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
         <VaultTitleDropdownContent
           vault={item}
           link={getOptionUrl?.(item) ?? getVaultUrl(item)}
-          linkOnClick={() =>
-            dropdownChangeHandler({
-              inputName: 'vault-open-vault-dropdown',
-              value: slugifyVault(item),
-            })
-          }
           isDisabled={
             disableDropdownOptionsByChainId &&
             subgraphNetworkToSDKId(supportedSDKNetwork(item.protocol.network)) !==
@@ -192,7 +178,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
         />
       ),
     }),
-    [disableDropdownOptionsByChainId, dropdownChangeHandler, getOptionUrl],
+    [disableDropdownOptionsByChainId, getOptionUrl],
   )
 
   const vaultsDropdownOptions: DropdownRawOption[] = useMemo(() => {
@@ -268,10 +254,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     <>
       <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Link
-            href={headerLink.href}
-            onClick={() => buttonClickEventHandler(`vault-open-header-link`)}
-          >
+          <Link href={headerLink.href}>
             <Text as="p" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               {headerLink.label} / &nbsp;
             </Text>
@@ -314,8 +297,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 symbol={getDisplayToken(vault.inputToken.symbol)}
                 risk={vault.customFields?.risk ?? 'lower'}
                 networkName={supportedSDKNetwork(vault.protocol.network)}
-                tooltipName="vault-open-risk-label"
-                onTooltipOpen={tooltipEventHandler}
                 isNewVault={isNewVault}
                 isDaoManagedVault={vault.isDaoManaged}
                 isRwaVault={vault.isRwaVault}
@@ -327,8 +308,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 apy={vaultApyData.apy}
                 managementFee={managementFee}
                 externalTokenBonus={vault.customFields?.bonus}
-                tooltipName="vault-open-bonus-label"
-                onTooltipOpen={tooltipEventHandler}
                 totalAnnualRewardsPerToken={totalAnnualRewardsPerToken}
               />
             </div>
@@ -342,7 +321,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               rwaMarketValue={rwaMarketValue}
               rwaMarketValueLoading={rwaMarketValueLoading}
               isMobileOrTablet={isMobileOrTablet}
-              tooltipEventHandler={tooltipEventHandler}
             />
           ) : (
             <StandardVaultStatsGrid
@@ -350,7 +328,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               vaultApyData={vaultApyData}
               medianDefiYield={medianDefiYield}
               isMobileOrTablet={isMobileOrTablet}
-              tooltipEventHandler={tooltipEventHandler}
               apy30d={apy30d}
             />
           )}

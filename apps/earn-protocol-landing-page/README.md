@@ -13,7 +13,7 @@ build-your-own-vault, team, and legal pages (terms and privacy).
   `GlobalStyles`.
 - `app/page.tsx` — homepage, pulls components from `@summerfi/app-earn-ui`.
 - `next.config.ts` — enforces `output: 'export'`, enables `optimizePackageImports` for the six
-  `@summerfi/*` workspace packages plus `mixpanel-browser` and `zod`, and exposes `EARN_APP_URL` to
+  `@summerfi/*` workspace packages plus `zod`, and exposes `EARN_APP_URL` to
   the runtime.
 
 ## Commands
@@ -47,8 +47,6 @@ Both `dev` and `build:apps` load `../../.env` and `../../.env.local` via `dotenv
 **Required environment variables:**
 
 - `EARN_APP_URL` — injected into the Next.js runtime via `next.config.ts`; must be set before build.
-- `NEXT_PUBLIC_EARN_MIXPANEL_KEY` — Mixpanel tracking key; analytics silently disables itself when
-  absent.
 
 **Gotcha — CSS module types:** The generated `.d.ts` files from `tcm` are not committed. Run
 `pnpm generate-module-types` (or start `dev`) before TypeScript will accept `*.module.css` imports;

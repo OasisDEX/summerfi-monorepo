@@ -22,8 +22,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             resolve/handshake before the lazy-loaded scripts fire. */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://api-js.mixpanel.com" />
-        <link rel="dns-prefetch" href="https://api-js.mixpanel.com" />
         <meta
           name="talentapp:project_verification"
           content="0b75101e3702b2f9ca1955662da1a08a4f0b2e5ca2bc8a4fb1b0ba65fe3d559da836a94b02a805e584bf3ad9f52f7011858049ead3a179a93a3d6d3a72b2b01b"

@@ -1,7 +1,4 @@
 import { SectionTabs, Text } from '@summerfi/app-earn-ui'
-import { usePathname } from 'next/navigation'
-
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import classNames from './BeachClubAutomatedExposure.module.css'
 
@@ -42,14 +39,6 @@ const sectionTabs = [
 ]
 
 export const BeachClubAutomatedExposure = () => {
-  const pathname = usePathname()
-  const handleSectionTabChange = (sectionId: string) => {
-    EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-beach-club-tabs-${sectionId}`,
-      page: pathname,
-    })
-  }
-
   return (
     <div className={classNames.beachClubAutomatedExposureWrapper}>
       <Text as="h2" variant="h2" style={{ marginBottom: 'var(--general-space-16)' }}>
@@ -69,7 +58,6 @@ export const BeachClubAutomatedExposure = () => {
         sections={sectionTabs}
         activeSectionColor="p1semiColorfulBeachClub"
         activeTabColor="var(--beach-club-tab-underline)"
-        additionalOnTabChange={handleSectionTabChange}
       />
     </div>
   )

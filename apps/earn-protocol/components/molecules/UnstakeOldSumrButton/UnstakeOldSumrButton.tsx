@@ -16,7 +16,6 @@ import { formatDecimalToBigInt } from '@summerfi/app-utils'
 
 import { MINIMUM_OLD_STAKED_SUMR_TO_WITHDRAW } from '@/constants/sumr-staking-v2'
 import { useUnstakeSumrTransaction } from '@/features/claim-and-delegate/hooks/use-unstake-sumr-transaction'
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useRevalidateUser } from '@/hooks/use-revalidate'
 
 export const UnstakeOldSumrButton = ({
@@ -28,7 +27,6 @@ export const UnstakeOldSumrButton = ({
   walletAddress: string
   onFinished?: () => void
 }) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
   const { chain, isSettingChain, setChain } = useEarnProtocolChain()
   const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
@@ -65,22 +63,13 @@ export const UnstakeOldSumrButton = ({
       return
     }
     unstakeSumrTransaction()
-    buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-add-remove-stake`)
-  }, [
-    buttonClickEventHandler,
-    isCorrectNetwork,
-    resolvedWalletAddress,
-    setChain,
-    userWalletAddress,
-    unstakeSumrTransaction,
-  ])
+  }, [isCorrectNetwork, resolvedWalletAddress, setChain, userWalletAddress, unstakeSumrTransaction])
 
   const handleConnect = useCallback(() => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-connect`)
     if (!userWalletAddress) {
       login()
     }
-  }, [buttonClickEventHandler, login, userWalletAddress])
+  }, [login, userWalletAddress])
 
   const button = useMemo(() => {
     if (isLoading) {

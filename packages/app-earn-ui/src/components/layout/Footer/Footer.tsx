@@ -1,7 +1,6 @@
 'use client'
 
 import { type FC, useEffect } from 'react'
-import { slugify } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -14,10 +13,9 @@ import footerStyles from '@/components/layout/Footer/Footer.module.css'
 
 interface FooterProps {
   logo: string
-  onFooterItemClick?: (params: { buttonName: string; isEarnApp?: boolean }) => void
 }
 
-export const Footer: FC<FooterProps> = ({ logo, onFooterItemClick }) => {
+export const Footer: FC<FooterProps> = ({ logo }) => {
   const isAltPressed = useHoldAlt()
 
   const linksList = [
@@ -88,12 +86,7 @@ export const Footer: FC<FooterProps> = ({ logo, onFooterItemClick }) => {
         <img src={logo} alt="Summer.fi" className={footerStyles.logo} />
         <ul className={footerStyles.socialsList}>
           <li>
-            <Link
-              href="https://twitter.com/summerfinance_"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => onFooterItemClick?.({ buttonName: 'twitter' })}
-            >
+            <Link href="https://twitter.com/summerfinance_" target="_blank" rel="noreferrer">
               <Icon
                 iconName="brand_icon_twitter"
                 size={20}
@@ -102,12 +95,7 @@ export const Footer: FC<FooterProps> = ({ logo, onFooterItemClick }) => {
             </Link>
           </li>
           <li>
-            <Link
-              href="https://chat.summer.fi"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => onFooterItemClick?.({ buttonName: 'discord' })}
-            >
+            <Link href="https://chat.summer.fi" target="_blank" rel="noreferrer">
               <Icon
                 iconName="brand_icon_discord"
                 size={20}
@@ -116,12 +104,7 @@ export const Footer: FC<FooterProps> = ({ logo, onFooterItemClick }) => {
             </Link>
           </li>
           <li>
-            <Link
-              href="https://github.com/OasisDEX"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => onFooterItemClick?.({ buttonName: 'github' })}
-            >
+            <Link href="https://github.com/OasisDEX" target="_blank" rel="noreferrer">
               <Icon
                 iconName="brand_icon_github"
                 size={20}
@@ -139,7 +122,6 @@ export const Footer: FC<FooterProps> = ({ logo, onFooterItemClick }) => {
                   ? `https://github.com/OasisDEX/summerfi-monorepo/commit/${process.env.NEXT_PUBLIC_SHA}`
                   : '#'
               }
-              onClick={() => onFooterItemClick?.({ buttonName: 'sha-commit' })}
             >
               SHA Commit:&nbsp;{process.env.NEXT_PUBLIC_SHA ?? 'none'}
             </Link>
@@ -172,16 +154,11 @@ export const Footer: FC<FooterProps> = ({ logo, onFooterItemClick }) => {
                       href={resolvedUrl}
                       target={isOutsideLink ? '_blank' : undefined}
                       rel="noreferrer"
-                      onClick={() => onFooterItemClick?.({ buttonName: slugify(label) })}
                     >
                       {textNode}
                     </a>
                   ) : (
-                    <Link
-                      prefetch
-                      href={resolvedUrl}
-                      onClick={() => onFooterItemClick?.({ buttonName: slugify(label) })}
-                    >
+                    <Link prefetch href={resolvedUrl}>
                       {textNode}
                     </Link>
                   )}

@@ -17,7 +17,6 @@ import {
   formatFiatBalance,
   formatWithSeparators,
   sdkNetworkToHumanNetwork,
-  slugifyVault,
   supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
@@ -71,9 +70,6 @@ interface VaultManageGridProps {
   }) => void
   vaultApyData: VaultApyData
   rightExtraContent?: ReactNode
-  tooltipEventHandler: (tooltipName: string) => void
-  buttonClickEventHandler: (buttonName: string) => void
-  dropdownChangeHandler: ({ inputName, value }: { inputName: string; value: string }) => void
   noOfDeposits: number
 }
 
@@ -92,9 +88,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   displaySimulationGraph,
   onRefresh,
   rightExtraContent,
-  buttonClickEventHandler,
-  tooltipEventHandler,
-  dropdownChangeHandler,
   noOfDeposits,
   rewardTokenPrices,
 }) => {
@@ -173,7 +166,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   })
 
   const handleUserRefresh = () => {
-    buttonClickEventHandler(`vault-manage-refresh-button`)
     onRefresh?.({
       chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
       vaultId: vault.id,
@@ -196,17 +188,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
         <VaultTitleDropdownContent
           vault={item}
           link={getVaultUrl(item)}
-          linkOnClick={() =>
-            dropdownChangeHandler({
-              inputName: 'vault-manage-vault-dropdown',
-              value: slugifyVault(item),
-            })
-          }
           isDaoManaged={item.isDaoManaged}
         />
       ),
     }),
-    [dropdownChangeHandler],
+    [],
   )
 
   const vaultsDropdownOptions: DropdownRawOption[] = useMemo(() => {
@@ -281,7 +267,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     <>
       <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
-          <Link href="/" onClick={() => buttonClickEventHandler(`vault-manage-header-link`)}>
+          <Link href="/">
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               Earn
             </Text>
@@ -289,11 +275,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
           <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
             &nbsp;/&nbsp;
           </Text>
-          <Link
-            href={getVaultUrl(vault)}
-            style={{ color: 'white' }}
-            onClick={() => buttonClickEventHandler(`vault-manage-header-link-vault`)}
-          >
+          <Link href={getVaultUrl(vault)} style={{ color: 'white' }}>
             <Text as="span" variant="p3">
               {vault.customFields?.name ?? formatAddress(vault.id)}
             </Text>
@@ -302,11 +284,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             &nbsp;/&nbsp;
           </Text>
           <Text as="span" variant="p3" color="white">
-            <Link
-              href={`/portfolio/${viewWalletAddress}`}
-              style={{ color: 'white' }}
-              onClick={() => buttonClickEventHandler(`vault-manage-header-link-portfolio`)}
-            >
+            <Link href={`/portfolio/${viewWalletAddress}`} style={{ color: 'white' }}>
               {viewWalletAddress.toLowerCase() === connectedWalletAddress?.toLowerCase()
                 ? 'Your'
                 : formatAddress(viewWalletAddress)}{' '}
@@ -343,8 +321,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 symbol={getDisplayToken(vault.inputToken.symbol)}
                 risk={vault.customFields?.risk ?? 'lower'}
                 networkName={supportedSDKNetwork(vault.protocol.network)}
-                tooltipName="vault-manage-risk-label"
-                onTooltipOpen={tooltipEventHandler}
                 isNewVault={isNewVault}
                 isDaoManagedVault={vault.isDaoManaged}
                 isRwaVault={vault.isRwaVault}
@@ -356,8 +332,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 apy={vaultApyData.apy}
                 managementFee={managementFee}
                 externalTokenBonus={vault.customFields?.bonus}
-                tooltipName="vault-manage-bonus-label"
-                onTooltipOpen={tooltipEventHandler}
                 totalAnnualRewardsPerToken={totalAnnualRewardsPerToken}
               />
             </div>
@@ -370,7 +344,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               vault={vault}
               positionMarketValue={{ netValue, netValueUSD }}
               isMobileOrTablet={isMobile}
-              tooltipEventHandler={tooltipEventHandler}
             />
           ) : (
             <SimpleGrid
@@ -389,8 +362,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                       tooltip={
                         <>USD&nbsp;Market&nbsp;Value:&nbsp;${formatFiatBalance(netValueUSD)}</>
                       }
-                      onTooltipOpen={tooltipEventHandler}
-                      tooltipName="vault-manage-market-value-label"
                       tooltipWrapperStyles={{
                         maxWidth: '455px',
                       }}
@@ -407,8 +378,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                       tooltipWrapperStyles={{
                         maxWidth: '455px',
                       }}
-                      onTooltipOpen={tooltipEventHandler}
-                      tooltipName="vault-manage-usd-earned-label"
                     >
                       <>
                         Earned:&nbsp;
@@ -462,8 +431,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                           isAltPressed={isAltPressed}
                         />
                       }
-                      tooltipName="vault-manage-live-apy-info"
-                      onTooltipOpen={tooltipEventHandler}
                       tooltipWrapperStyles={{
                         maxWidth: '455px',
                       }}

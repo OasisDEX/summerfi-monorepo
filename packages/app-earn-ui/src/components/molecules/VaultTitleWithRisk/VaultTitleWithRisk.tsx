@@ -22,8 +22,6 @@ interface VaultTitleWithRiskProps {
   selected?: boolean
   isVaultCard?: boolean
   titleVariant?: keyof typeof TextVariants
-  tooltipName?: string
-  onTooltipOpen?: (tooltipName: string) => void
   isNewVault?: boolean
   isDaoManagedVault?: boolean
   isRwaVault?: boolean
@@ -39,8 +37,6 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
   selected,
   isVaultCard,
   titleVariant = 'h4semi',
-  tooltipName,
-  onTooltipOpen,
   isNewVault = false,
   isDaoManagedVault,
   isRwaVault,
@@ -73,8 +69,6 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
             tooltip={riskTooltipLabel}
             tooltipWrapperStyles={{ minWidth: '300px' }}
             stopPropagation
-            tooltipName={tooltipName}
-            onTooltipOpen={onTooltipOpen}
           >
             <Icon iconName="question_o" variant="s" color={color} />
           </Tooltip>

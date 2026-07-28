@@ -17,7 +17,6 @@ type SectionTabsProps = {
   wrapperStyle?: CSSProperties
   activeSectionColor?: keyof typeof textStyles
   activeTabColor?: string
-  additionalOnTabChange?: (sectionId: string) => void
 }
 
 export const SectionTabs = ({
@@ -25,7 +24,6 @@ export const SectionTabs = ({
   wrapperStyle,
   activeSectionColor,
   activeTabColor,
-  additionalOnTabChange,
 }: SectionTabsProps): ReactNode => {
   const [fadingOut, setFadingOut] = useState(false)
   const [activeSection, setActiveSection] = useState(sections[0].id)
@@ -37,10 +35,9 @@ export const SectionTabs = ({
       setTimeout(() => {
         setActiveSection(sectionId)
         setFadingOut(false)
-        additionalOnTabChange?.(sectionId)
       }, 200)
     },
-    [fadingOut, additionalOnTabChange],
+    [fadingOut],
   )
 
   return (

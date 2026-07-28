@@ -12,8 +12,6 @@ import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrap
 import { FloatingBanners } from '@/components/molecules/FloatingBanners/FloatingBanners'
 import { type SavedLargeUserBannerSettings } from '@/components/molecules/LargeUserFloatingBanner/LargeUserFloatingBanner'
 import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
-import { useScrollTracker } from '@/hooks/use-scroll-tracker'
 
 import masterPageStyles from './MasterPage.module.css'
 
@@ -35,13 +33,6 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   sumrPriceUsd,
 }) => {
   const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
-  const handleButtonClick = useHandleButtonClickEvent()
-
-  useScrollTracker({})
-
-  const onFooterItemClick = ({ buttonName }: { buttonName: string }) => {
-    handleButtonClick(buttonName)
-  }
 
   return (
     <div className={masterPageStyles.mainContainer}>
@@ -58,7 +49,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
           gap: '20px',
         }}
       >
-        <Footer logo="/earn/img/branding/logo-light.svg" onFooterItemClick={onFooterItemClick} />
+        <Footer logo="/earn/img/branding/logo-light.svg" />
       </div>
       <CookieBanner
         value={cookieSettings}

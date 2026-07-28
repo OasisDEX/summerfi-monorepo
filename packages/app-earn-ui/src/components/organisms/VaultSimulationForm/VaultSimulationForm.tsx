@@ -8,7 +8,6 @@ import {
 } from '@summerfi/app-types'
 import {
   sdkNetworkToHumanNetwork,
-  slugifyVault,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
@@ -52,7 +51,6 @@ type VaultSimulationFormProps = {
   positionExists?: boolean
   userWalletAddress?: string
   isLoading?: boolean
-  onButtonClick: (buttonId: string) => void
 }
 
 export const VaultSimulationForm = ({
@@ -72,7 +70,6 @@ export const VaultSimulationForm = ({
   positionExists,
   userWalletAddress,
   isLoading = false,
-  onButtonClick,
 }: VaultSimulationFormProps): React.ReactNode => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isGradientBorder, setIsGradientBorder] = useState(false)
@@ -157,9 +154,6 @@ export const VaultSimulationForm = ({
                   url: `${vaultUrl}/${userWalletAddress}`,
                   disabled: isLoading,
                   action: () => {
-                    onButtonClick(
-                      `vaults-list-view-position-${slugifyVault(vaultData)}-${userWalletAddress}`,
-                    )
                     setStorageOnce({
                       amount: amountParsed.toString(),
                       token: selectedTokenOption.value,
@@ -170,7 +164,6 @@ export const VaultSimulationForm = ({
                   label: 'Deposit',
                   url: vaultUrl,
                   action: () => {
-                    onButtonClick(`vaults-list-view-deposit-${slugifyVault(vaultData)}`)
                     setStorageOnce({
                       amount: amountParsed.toString(),
                       token: selectedTokenOption.value,
@@ -181,12 +174,7 @@ export const VaultSimulationForm = ({
           footnote: (
             <>
               {!positionExists ? (
-                <Link
-                  href={vaultUrl}
-                  onClick={() =>
-                    onButtonClick(`vaults-list-view-strategy-${slugifyVault(vaultData)}`)
-                  }
-                >
+                <Link href={vaultUrl}>
                   <WithArrow variant="p3semi">View strategy</WithArrow>
                 </Link>
               ) : null}

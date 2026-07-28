@@ -20,11 +20,6 @@ import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBa
 import { useVaultOpenDetailsQuery } from '@/components/layout/VaultOpenView/useVaultOpenQuery'
 import { VaultsListSidebar } from '@/components/layout/VaultsListView/VaultsListSidebar'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import {
-  useHandleButtonClickEvent,
-  useHandleDropdownChangeEvent,
-  useHandleTooltipOpenEvent,
-} from '@/hooks/use-mixpanel-event'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
@@ -59,9 +54,6 @@ export const VaultOpenViewComponent = ({
   const { data: details } = useVaultOpenDetailsQuery(network, vaultId)
 
   const { deviceType } = useDeviceType()
-  const tooltipEventHandler = useHandleTooltipOpenEvent()
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const revalidatePositionData = useRevalidatePositionData()
@@ -88,9 +80,6 @@ export const VaultOpenViewComponent = ({
         medianDefiYield={medianDefiYield}
         onRefresh={revalidatePositionData}
         vaultApyData={vaultApyData}
-        tooltipEventHandler={tooltipEventHandler}
-        buttonClickEventHandler={buttonClickEventHandler}
-        dropdownChangeHandler={dropdownChangeHandler}
         simulationGraph={null}
         detailsContent={
           details ? (
@@ -114,7 +103,6 @@ export const VaultOpenViewComponent = ({
             activeVaultData={vault}
             positionExists={Boolean(position)}
             userWalletAddress={userWalletAddress}
-            onButtonClick={buttonClickEventHandler}
             strategyLink={{ label: 'View details', href: getVaultDetailsUrl(vault) }}
           />
         }

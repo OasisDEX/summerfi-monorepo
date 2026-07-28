@@ -1,6 +1,6 @@
 'use client'
 
-import { type ChangeEvent, type FC, useCallback, useState } from 'react'
+import { type ChangeEvent, type FC, useState } from 'react'
 import {
   AnimateHeight,
   Button,
@@ -12,13 +12,9 @@ import {
   ToggleButton,
 } from '@summerfi/app-earn-ui'
 import { handleCaptcha, RECAPTCHA_SITE_KEY } from '@summerfi/app-utils'
-import { throttle } from 'lodash-es'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import Script from 'next/script'
 import { z } from 'zod'
-
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import institutionsContactFormStyles from './InstitutionsContactForm.module.css'
 
@@ -176,21 +172,6 @@ export const InstitutionsContactForm = () => {
   const [formErrors, setFormErrors] = useState<Partial<InstitutionsContactFormErrors>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const pathname = usePathname()
-
-  const handleInputChangeEvent = ({
-    inputName,
-    inputValue,
-  }: {
-    inputName: keyof InstitutionsContactFormValues
-    inputValue: string | boolean
-  }) => {
-    EarnProtocolEvents.inputChanged({
-      inputName: `lp-institutions-self-managed-cf-${inputName}`,
-      value: inputValue,
-      page: pathname,
-    })
-  }
 
   const handleToggleChange = (field: keyof typeof formValues) => () => {
     // remove this field from errors
@@ -199,27 +180,11 @@ export const InstitutionsContactForm = () => {
       [field]: [],
     }))
 
-    handleInputChangeEvent({
-      inputName: field,
-      inputValue: !formValues[field],
-    })
-
     setFormValues((prev) => ({
       ...prev,
       [field]: !prev[field], // Toggle the boolean value
     }))
   }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const throttledInputChangeEvent = useCallback(
-    throttle((inputName: keyof InstitutionsContactFormValues, inputValue: string) => {
-      handleInputChangeEvent({
-        inputName,
-        inputValue,
-      })
-    }, 2000),
-    [],
-  )
 
   const handleChange = (e: FormChangeEvent) => {
     const { name: key, value } = e.target
@@ -229,8 +194,6 @@ export const InstitutionsContactForm = () => {
       ...prev,
       [key]: [],
     }))
-
-    throttledInputChangeEvent(key as keyof InstitutionsContactFormValues, value)
 
     setFormValues((prev) => ({
       ...prev,
@@ -253,10 +216,6 @@ export const InstitutionsContactForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-institutions-self-managed-cf-submit`,
-      page: pathname,
-    })
     setIsSubmitting(true)
     // Reset errors
     setFormErrors({})
@@ -265,12 +224,6 @@ export const InstitutionsContactForm = () => {
 
     if (!result.success) {
       const errors = result.error.flatten().fieldErrors
-
-      EarnProtocolEvents.errorOccurred({
-        errorId: `lp-institutions-self-managed-cf-submit-error`,
-        errorMessage: JSON.stringify(errors),
-        page: pathname,
-      })
 
       setFormErrors(errors)
       setIsSubmitting(false)

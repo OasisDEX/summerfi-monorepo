@@ -12,23 +12,19 @@ import classNames from './SumrStakeCard.module.css'
 
 interface SumrStakeCardProps {
   apy?: number | string
-  tooltipName: string
   availableToStake: number
   availableToStakeUSD: number
   yieldToken: string
   yieldTokenApy: string
-  onTooltipOpen?: (tooltipName: string) => void
   handleClick?: () => void
 }
 
 export const SumrStakeCard: FC<SumrStakeCardProps> = ({
   apy,
-  tooltipName,
   availableToStake,
   availableToStakeUSD,
   yieldToken,
   yieldTokenApy,
-  onTooltipOpen,
   handleClick,
 }) => {
   return (
@@ -42,8 +38,6 @@ export const SumrStakeCard: FC<SumrStakeCardProps> = ({
           {apy ? (
             <SimpleBonusLabel
               bonusLabel={`SUMR Reward APY up to ${apy}`}
-              tooltipName={tooltipName}
-              onTooltipOpen={onTooltipOpen}
               tooltip={
                 <div>
                   <Text variant="p3semi" as="p">

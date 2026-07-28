@@ -20,7 +20,6 @@ import BigNumber from 'bignumber.js'
 
 import { type PortfolioWalletAsset } from '@/app/server-handlers/cached/get-wallet-assets/types'
 import { valueColorResolver } from '@/helpers/value-color-resolver'
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioAssetsList.module.css'
 
@@ -108,7 +107,6 @@ export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({
   isWalletDataPending,
 }) => {
   const [isSeeAll, setIsSeeAll] = useState(false)
-  const buttonClickEventHandler = useHandleButtonClickEvent()
 
   return (
     <div className={classNames.wrapper}>
@@ -132,7 +130,6 @@ export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({
       <div
         onClick={() => {
           if ((walletAssets?.length ?? 0) > 3 && !isWalletDataPending) {
-            buttonClickEventHandler(`portfolio-wallet-see-all-${isSeeAll ? 'hide' : 'show'}`)
             setIsSeeAll((prev) => !prev)
           }
         }}

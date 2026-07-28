@@ -1,16 +1,10 @@
 'use client'
 
-import { type FC, useLayoutEffect, useMemo, useState } from 'react'
-import {
-  FloatingBanner,
-  type FloatingBannerActionType,
-  Text,
-  useEarnProtocolWallet,
-} from '@summerfi/app-earn-ui'
+import { type FC, useMemo, useState } from 'react'
+import { FloatingBanner, Text, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 import Image from 'next/image'
 
-import { useDisplayBannerEvent, useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import summerLogo from '@/public/img/branding/dot-dark.svg'
 
 import { largeUsersCookieName } from './config'
@@ -30,9 +24,6 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
   const cookie = getCookie(largeUsersCookieName)
   const { address: userWalletAddress } = useEarnProtocolWallet()
 
-  const handleButtonClick = useHandleButtonClickEvent()
-  const handleDisplayBanner = useDisplayBannerEvent()
-
   const cookieSettings = useMemo(() => {
     try {
       return cookie ? (JSON.parse(cookie) as SavedLargeUserBannerSettings) : { isClosed: false }
@@ -46,14 +37,6 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
   }
 
   const isLargerUser = largeUsersData?.includes(userWalletAddress?.toLowerCase() ?? '')
-
-  useLayoutEffect(() => {
-    if (!cookieSettings.isClosed && isLargerUser) {
-      handleDisplayBanner({
-        bannerName: 'large-user-banner',
-      })
-    }
-  }, [cookieSettings.isClosed, handleDisplayBanner, isLargerUser])
 
   return cookieSettings.isClosed || isClosed || !isLargerUser ? null : (
     <FloatingBanner
@@ -76,8 +59,7 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
         </Text>
       }
       closeButton={{
-        action: (type: FloatingBannerActionType) => {
-          handleButtonClick(`large-user-banner-${type}`)
+        action: () => {
           setValue({ isClosed: true })
           setIsClosed(true)
         },

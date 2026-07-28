@@ -1,20 +1,9 @@
 import { Button, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import classNames from './BeachClubHeading.module.css'
 
 export const BeachClubHeading = () => {
-  const pathname = usePathname()
-  const handleShareCodeClick = () => {
-    EarnProtocolEvents.buttonClicked({
-      buttonName: 'lp-beach-club-share-code',
-      page: pathname,
-    })
-  }
-
   return (
     <div className={classNames.beachClubHeadingWrapper}>
       <Text
@@ -36,7 +25,7 @@ export const BeachClubHeading = () => {
         Share Lazy Summer and earn more while you relax. Soon it will be Summer. Time to chill, not
         chase yields.
       </Text>
-      <Link href="/earn/portfolio?tab=beach-club" prefetch={false} onClick={handleShareCodeClick}>
+      <Link href="/earn/portfolio?tab=beach-club" prefetch={false}>
         <Button variant="beachClubLarge" style={{ minWidth: 'unset', maxWidth: '180px' }}>
           Share your code
         </Button>

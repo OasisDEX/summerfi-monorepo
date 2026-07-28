@@ -5,19 +5,13 @@ import { type EarnNavigationProps } from '@/components/layout/Navigation/Navigat
 export const getNavigationItems = ({
   userWalletAddress,
   isEarnApp = false,
-  onNavItemClick,
   logIn,
 }: {
   userWalletAddress?: string
   isEarnApp?: boolean
-  onNavItemClick?: (params: { buttonName: string; isEarnApp?: boolean }) => void
   logIn?: () => Promise<string | undefined>
 }): EarnNavigationProps['links'] => {
   const prefix = isEarnApp ? `` : `/earn`
-
-  const handleButtonClick = (buttonName: string) => () => {
-    onNavItemClick?.({ buttonName, isEarnApp })
-  }
 
   const itemsListSumr = [
     {
@@ -27,7 +21,6 @@ export const getNavigationItems = ({
       url: `${prefix}/sumr`,
       icon: 'sumr' as IconNamesList,
       prefetchDisabled: !isEarnApp,
-      onClick: handleButtonClick('sumr'),
     },
     {
       title: 'SUMR staking',
@@ -36,7 +29,6 @@ export const getNavigationItems = ({
       url: `${prefix}/staking`,
       icon: 'earn_staking' as IconNamesList,
       prefetchDisabled: !isEarnApp,
-      onClick: handleButtonClick('sumr-stake'),
     },
     {
       title: 'Lazy Summer Forum',
@@ -46,7 +38,6 @@ export const getNavigationItems = ({
       target: '_blank',
       icon: 'earn_forum' as IconNamesList,
       prefetchDisabled: !isEarnApp,
-      onClick: handleButtonClick('forum'),
     },
     {
       title: 'Lazy Summer Governance',
@@ -56,7 +47,6 @@ export const getNavigationItems = ({
       target: '_blank',
       icon: 'earn_dao_governance' as IconNamesList,
       prefetchDisabled: !isEarnApp,
-      onClick: handleButtonClick('governance'),
     },
   ]
 
@@ -68,7 +58,6 @@ export const getNavigationItems = ({
       url: 'mailto:support@summer.fi',
       icon: 'sumr' as IconNamesList,
       prefetchDisabled: !isEarnApp,
-      onClick: handleButtonClick('email-support'),
     },
     {
       title: 'Join the Discord Community',
@@ -78,7 +67,6 @@ export const getNavigationItems = ({
       target: '_blank',
       icon: 'earn_rebalance_activities' as IconNamesList,
       prefetchDisabled: !isEarnApp,
-      onClick: handleButtonClick('join-discord-community'),
     },
   ]
 
@@ -94,7 +82,6 @@ export const getNavigationItems = ({
       onClick:
         logIn && !userWalletAddress
           ? async () => {
-              handleButtonClick('portfolio')()
               await logIn().then((address) => {
                 if (address) {
                   window.location.href = `/earn/portfolio/${address}`
@@ -104,7 +91,7 @@ export const getNavigationItems = ({
                 }
               })
             }
-          : handleButtonClick('portfolio'),
+          : undefined,
     },
     {
       label: '$SUMR',

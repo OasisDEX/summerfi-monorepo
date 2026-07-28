@@ -37,8 +37,6 @@ import {
   TransactionAction,
 } from '@summerfi/app-types'
 import {
-  slugify,
-  slugifyVault,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
@@ -59,12 +57,6 @@ import { UnstakeVaultToken } from '@/features/unstake-vault-token/components/Uns
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
-import {
-  useHandleButtonClickEvent,
-  useHandleDropdownChangeEvent,
-  useHandleInputChangeEvent,
-  useHandleTooltipOpenEvent,
-} from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
@@ -125,10 +117,6 @@ export const VaultManageViewComponent = ({
   }>({
     key: `${vault.id}-amount`,
   })
-  const tooltipEventHandler = useHandleTooltipOpenEvent()
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const inputChangeHandler = useHandleInputChangeEvent()
-  const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const { publicClient } = useNetworkAlignedClient()
@@ -169,13 +157,10 @@ export const VaultManageViewComponent = ({
   // wrapper to show skeleton immediately when changing token
   const handleTokenSelectionChangeWrapper = useCallback(
     (option: DropdownRawOption) => {
-      buttonClickEventHandler(
-        `vault-manage-${slugifyVault(vault)}-change-token-to-${slugify(option.value)}`,
-      )
       handleTokenSelectionChange(option)
       handleSetTokenBalanceLoading(true)
     },
-    [buttonClickEventHandler, vault, handleTokenSelectionChange, handleSetTokenBalanceLoading],
+    [handleTokenSelectionChange, handleSetTokenBalanceLoading],
   )
 
   const { netValue } = getPositionValues({
@@ -196,8 +181,6 @@ export const VaultManageViewComponent = ({
     tokenDecimals: vault.inputToken.decimals,
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
-    inputChangeHandler,
-    inputName: 'manage-amount',
   })
 
   const {
@@ -213,8 +196,6 @@ export const VaultManageViewComponent = ({
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
     initialAmount: amountParsed.toString(),
-    inputChangeHandler,
-    inputName: 'manage-approval-amount',
   })
 
   const {
@@ -436,8 +417,6 @@ export const VaultManageViewComponent = ({
           title={sidebarFootnote.title}
           list={sidebarFootnote.list}
           tooltip={sidebarFootnote.tooltip}
-          handleTooltipOpen={tooltipEventHandler}
-          tooltipName="vault-manage"
         />
       </>
     ),
@@ -470,9 +449,6 @@ export const VaultManageViewComponent = ({
         viewWalletAddress={viewWalletAddress}
         connectedWalletAddress={userWalletAddress}
         displaySimulationGraph={displaySimulationGraph}
-        tooltipEventHandler={tooltipEventHandler}
-        buttonClickEventHandler={buttonClickEventHandler}
-        dropdownChangeHandler={dropdownChangeHandler}
         simulationGraph={
           !forecastDisabled && (
             <VaultSimulationGraph

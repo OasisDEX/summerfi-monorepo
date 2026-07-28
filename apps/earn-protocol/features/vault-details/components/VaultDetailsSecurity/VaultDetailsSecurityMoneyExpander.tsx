@@ -14,8 +14,6 @@ import { type SDKVaultishType } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
-
 const whitelistedActorsLinks = [{ title: 'BlockAnalytica ', link: 'https://blockanalitica.com/' }]
 
 type VaultDetailsSecurityMoneyExpanderProps = {
@@ -37,11 +35,6 @@ export const VaultDetailsSecurityMoneyExpander: FC<VaultDetailsSecurityMoneyExpa
       ),
     }
   })
-  const handleButtonClick = useHandleButtonClickEvent()
-
-  const handleExpanderToggle = (expanderId: string) => (isOpen: boolean) => {
-    handleButtonClick(`vault-details-expander-${expanderId}-${isOpen ? 'open' : 'close'}`)
-  }
 
   return (
     <Card>
@@ -51,7 +44,6 @@ export const VaultDetailsSecurityMoneyExpander: FC<VaultDetailsSecurityMoneyExpa
             Where is your money going?
           </Text>
         }
-        onExpand={handleExpanderToggle('money')}
       >
         <Text
           as="p"

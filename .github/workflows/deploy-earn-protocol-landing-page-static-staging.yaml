@@ -49,9 +49,7 @@ jobs:
       CLUSTER_NAME: summer-fi-earn-lp-dev
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
-      EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
       FUNCTIONS_API_URL: ${{ vars.FUNCTIONS_API_URL }}
-      NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ vars.SUBGRAPH_BASE }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
       FORECAST_API_URL: ${{ secrets.FORECAST_API_URL }}

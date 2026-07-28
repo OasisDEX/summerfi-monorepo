@@ -102,9 +102,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
     onBlur: onDepositBlur,
     onFocus: onDepositFocus,
   } = useAmount({
-    inputName: `insti-${vault.id}-deposit`,
     tokenDecimals: vault.inputToken.decimals,
-    inputChangeHandler: () => {},
   })
 
   const {
@@ -114,9 +112,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
     onBlur: onWithdrawBlur,
     onFocus: onWithdrawFocus,
   } = useAmount({
-    inputName: `insti-${vault.id}-withdraw`,
     tokenDecimals: vault.inputToken.decimals,
-    inputChangeHandler: () => {},
   })
 
   const getWalletWhitelist = useCallback(

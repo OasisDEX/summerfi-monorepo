@@ -54,7 +54,6 @@ import { useStakeSumrTransactionV2 } from '@/features/claim-and-delegate/hooks/u
 import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
 import { getAvailabilityLabel } from '@/helpers/stakingv2-availability-label'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useStakePenaltySimulation } from '@/hooks/use-stake-penalty-simulation'
 import { useToken } from '@/hooks/use-token'
@@ -99,7 +98,6 @@ const SumrV2StakingManageComponent = ({
   isSettingChain?: boolean
   sumrPriceUsd: number
 }) => {
-  const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
   const [warningAccepted, setWarningAccepted] = useState(false)
   const [selectedLockupAndBoost, setSelectedLockupAndBoost] = useState<number>(0)
@@ -277,8 +275,6 @@ const SumrV2StakingManageComponent = ({
   } = useAmount({
     tokenDecimals: SUMR_DECIMALS,
     selectedToken: sumrToken,
-    inputChangeHandler,
-    inputName: 'sumr-staking-amount-input',
   })
 
   const handleAmountChangeWithPercentage = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -111,7 +111,6 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
                 )}
               </>
             }
-            tooltipName="claimable-sumr-tooltip"
             showAbove
             tooltipWrapperStyles={{
               top: '-40px',

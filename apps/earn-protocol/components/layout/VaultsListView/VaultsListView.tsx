@@ -16,7 +16,7 @@ import {
   type SDKVaultishType,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
-import { slugifyVault, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { useRouter, useSearchParams } from 'next/navigation'
 
@@ -35,7 +35,6 @@ import { VaultsInfoSidebarBlock } from '@/components/molecules/VaultsInfoSidebar
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
-import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 import { usePosition } from '@/hooks/use-position'
 import { useRevalidateVaultsListData } from '@/hooks/use-revalidate'
 
@@ -76,8 +75,6 @@ const VaultsListViewInner = ({
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
   const queryParams = useSearchParams()
-  const tooltipEventHandler = useHandleTooltipOpenEvent()
-  const buttonClickEventHandler = useHandleButtonClickEvent()
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const revalidateVaultsListData = useRevalidateVaultsListData()
   const { features } = useSystemConfig()
@@ -158,9 +155,6 @@ const VaultsListViewInner = ({
 
   const handleChangeVault = (nextselectedVaultId: string) => {
     if (nextselectedVaultId === selectedVaultId) {
-      buttonClickEventHandler(
-        `vaults-list-vault-card-${slugifyVault(activeVaultData)}-double-click`,
-      )
       const vaultUrl =
         positionExists && userWalletAddress
           ? getVaultPositionUrl({
@@ -174,7 +168,6 @@ const VaultsListViewInner = ({
 
       return
     }
-    buttonClickEventHandler(`vaults-list-vault-card-${slugifyVault(activeVaultData)}-select`)
     setSelectedVaultId(nextselectedVaultId)
   }
 
@@ -183,16 +176,12 @@ const VaultsListViewInner = ({
   }
 
   const handleRefresh = () => {
-    buttonClickEventHandler(`vaults-list-refresh-vaults-list`)
     revalidateVaultsListData()
   }
 
-  const handleWhatIsLazyClick = () => {
-    buttonClickEventHandler('vaults-list-what-is-lazy')
-  }
+  const handleWhatIsLazyClick = () => {}
 
   const handleStakeCardClick = () => {
-    buttonClickEventHandler('vaults-list-sumr-stake-card-click')
     push(`/staking`)
   }
 
@@ -208,7 +197,6 @@ const VaultsListViewInner = ({
           tvl={tvl}
           instantLiquidity={instantLiquidity}
           protocolsList={protocolsList}
-          onTooltipOpen={tooltipEventHandler}
         />
       }
       leftContent={
@@ -235,7 +223,6 @@ const VaultsListViewInner = ({
             vaultsInfo={vaultsInfo}
             vaultsPausedMap={vaultsPausedMap}
             onSelectVault={handleSelectVault}
-            onTooltipOpen={tooltipEventHandler}
             showStakeCard={showStakeCard}
             sumrAvailableToStake={sumrAvailableToStake}
             sumrAvailableToStakeUSD={sumrAvailableToStakeUSD}
@@ -252,7 +239,6 @@ const VaultsListViewInner = ({
             activeVaultData={activeVaultData}
             positionExists={positionExists}
             userWalletAddress={userWalletAddress}
-            onButtonClick={buttonClickEventHandler}
           />
           {daoManagedVaultsEnabled && <VaultsInfoSidebarBlock />}
         </>

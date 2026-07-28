@@ -24,7 +24,7 @@ export const SumrPageView: FC<SumrPageViewProps> = () => {
       <div className={classNames.sumrPageWrapper}>
         <SumrClaimSearch />
         <SumrConversionAndTotalSupply />
-        <SumrTransferabilityCounter counterId="sumr-page" />
+        <SumrTransferabilityCounter />
         <SumrWhatIsSumrToken />
         <SumrGovernance />
         <SumrFundamentalUtility />

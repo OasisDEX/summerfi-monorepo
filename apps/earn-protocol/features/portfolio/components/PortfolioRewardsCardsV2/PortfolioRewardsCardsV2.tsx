@@ -44,7 +44,6 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { type ClaimableRewards } from '@/features/portfolio/types'
 import { useClaimMerkleRewardsTransaction } from '@/hooks/use-claim-merkle-rewards-transaction'
-import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRevalidateUser } from '@/hooks/use-revalidate'
 
@@ -110,8 +109,6 @@ const getMerklClaimRewardsButtonLabel = ({
 }
 
 const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumrPriceUsd }) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const tooltipEventHandler = useHandleTooltipOpenEvent()
   const { walletAddress } = useParams()
   const { login } = useEarnProtocolLogin()
   const rawSumr = Number(rewardsData.sumrToClaim.aggregatedRewards.total)
@@ -123,12 +120,9 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumr
 
   const resolvedWalletAddress = walletAddress as string
 
-  const handleClaimEventButton = () => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-claim`)
-  }
+  const handleClaimEventButton = () => {}
 
   const handleConnect = () => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-claim-connect`)
     if (!userWalletAddress) {
       login()
     }
@@ -145,8 +139,6 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumr
               </Text>
             }
             tooltipWrapperStyles={{ minWidth: '240px' }}
-            tooltipName="portfolio-sumr-rewards-total-available-to-claim"
-            onTooltipOpen={tooltipEventHandler}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
               <Icon iconName="info" variant="s" />
@@ -536,7 +528,6 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData, sumrStakedV2, sumr
 }
 
 const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = walletAddress as string
   const { address: userWalletAddress } = useEarnProtocolWallet()
@@ -564,12 +555,9 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const subValue =
     sumrDelegatedTo !== ADDRESS_ZERO ? null : 'You have not delegated in Governance V2'
 
-  const handleChangeDelegateEventButton = () => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-change-delegate`)
-  }
+  const handleChangeDelegateEventButton = () => {}
 
   const handleConnect = () => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-change-delegate-connect`)
     if (!userWalletAddress) {
       login()
     }

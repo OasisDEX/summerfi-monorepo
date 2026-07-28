@@ -27,7 +27,6 @@ import { type VaultCurationEvent } from '@/features/curation-activity/types'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
-import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import { getDetailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
@@ -57,8 +56,6 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   vaultApyData,
   isDaoManaged,
 }) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const tooltipEventHandler = useHandleTooltipOpenEvent()
   const summerVaultName = getVaultNiceName({ vault })
   const vaultBenchmarkAsset = ['ETH', 'WETH'].includes(vault.inputToken.symbol.toUpperCase())
     ? 'ETH'
@@ -78,10 +75,6 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
     sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
   )
 
-  const handleExpanderToggle = (expanderId: string) => (isOpen: boolean) => {
-    buttonClickEventHandler(`vault-open-expander-${expanderId}-${isOpen ? 'open' : 'close'}`)
-  }
-
   return (
     <div className={styles.vaultOpenViewDetailsWrapper}>
       <VaultOpenHeaderBlock
@@ -90,7 +83,6 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         isDaoManaged={isDaoManaged}
       />
       <Expander
-        onExpand={handleExpanderToggle('historical-yield')}
         title={
           <Text as="p" variant="p1semi">
             Historical yield
@@ -100,7 +92,6 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
       >
         {arksHistoricalChartData && (
           <ArkHistoricalYieldChart
-            chartId="open-view"
             chartData={arksHistoricalChartData}
             summerVaultName={summerVaultName}
             vaultBenchmarkName={vaultBenchmarkName}
@@ -108,7 +99,6 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         )}
       </Expander>
       <Expander
-        onExpand={handleExpanderToggle('vault-exposure')}
         title={
           <Text as="p" variant="p1semi">
             Vault exposure
@@ -122,14 +112,11 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
             arksInterestRates={arksInterestRates}
             vaultApyData={vaultApyData}
             columnsToHide={vaultExposureColumnsToHideOpenManage}
-            tableId="vault-open"
-            buttonClickEventHandler={buttonClickEventHandler}
             isDaoManaged={isDaoManaged}
           />
         </VaultExposureDescription>
       </Expander>
       <Expander
-        onExpand={handleExpanderToggle('rebalancing-activity')}
         title={
           <Text as="p" variant="p1semi">
             Rebalancing activity
@@ -140,13 +127,9 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         <RebalancingActivity
           rebalanceActivity={rebalanceActivity}
           vaultId={getUniqueVaultId(vault)}
-          tableId="vault-open-rebalancing-activity"
-          buttonClickEventHandler={buttonClickEventHandler}
-          tooltipEventHandler={tooltipEventHandler}
         />
       </Expander>
       <Expander
-        onExpand={handleExpanderToggle('curation-activity')}
         title={
           <Text as="p" variant="p1semi">
             Portfolio Composition History
@@ -157,7 +140,6 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         <CurationActivity vault={vault} curationEvents={curationEvents} />
       </Expander>
       <Expander
-        onExpand={handleExpanderToggle('users-activity')}
         title={
           <Text as="p" variant="p1semi">
             Users activity
@@ -171,12 +153,9 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
           vaultId={getUniqueVaultId(vault)}
           page="open"
           noHighlight
-          tableId="vault-open-users-activity"
-          buttonClickEventHandler={buttonClickEventHandler}
         />
       </Expander>
       <Expander
-        onExpand={handleExpanderToggle('strategy-management-fee')}
         title={
           <Text as="p" variant="p1semi">
             Strategy fees

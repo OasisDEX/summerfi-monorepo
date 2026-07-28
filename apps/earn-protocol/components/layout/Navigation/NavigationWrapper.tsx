@@ -16,7 +16,6 @@ import { usePathname } from 'next/navigation'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
   ssr: false,
@@ -87,25 +86,11 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
     })
   }
 
-  const onNavItemClick = ({
-    buttonName,
-    isEarnApp,
-  }: {
-    buttonName: string
-    isEarnApp?: boolean
-  }) => {
-    EarnProtocolEvents.buttonClicked({
-      buttonName: `${isEarnApp ? 'ep' : 'lp'}-navigation-${buttonName}`,
-      page: currentPath,
-    })
-  }
-
   const isCampaignPage = currentPath.startsWith('/campaigns')
 
   const navigationItems = getNavigationItems({
     userWalletAddress,
     isEarnApp: true,
-    onNavItemClick,
     logIn: handleLogIn,
   })
 
@@ -129,7 +114,6 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
         </NavigationConfig>
       }
       onLogoClick={() => {
-        onNavItemClick({ buttonName: 'logo', isEarnApp: true })
         window.location.replace('/earn')
       }}
     />

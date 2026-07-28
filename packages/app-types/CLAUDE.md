@@ -18,7 +18,7 @@ documents that coupling.
 | `AppConfigType` (`types/src/generated/main-config.ts`) — **generated**                          | Shape of the main-app remote config (`CONFIG_URL`)                                       | `earn-protocol-landing-page`, apps                                                                       |
 | `EarnAppConfigType` / `EarnAppFleetCustomConfigType` (`types/src/generated/earn-app-config.ts`) — **generated** | Shape of the Earn remote config (`CONFIG_URL_EARN`); the `fleetMap` type      | `app-server-handlers`, `app-utils` (`decorateWithFleetConfig`), `app-earn-ui`, `earn-protocol`, `institutions` |
 | `AppRaysConfigType` (`types/src/generated/rays-config.ts`) — **generated**                      | Shape of the Rays remote config                                                          | apps                                                                                                     |
-| earn-protocol domain types, mixpanel events, ToS, automation kinds, migrations                 | see `types/index.ts`                                                                     | broad; see "Consumed by" in README                                                                       |
+| earn-protocol domain types, ToS, automation kinds, migrations                                  | see `types/index.ts`                                                                     | broad; see "Consumed by" in README                                                                       |
 
 ## Generated config types (build-time coupling)
 

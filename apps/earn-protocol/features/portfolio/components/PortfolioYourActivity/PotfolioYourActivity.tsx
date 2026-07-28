@@ -10,14 +10,12 @@ import {
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
-import { slugify } from '@summerfi/app-utils'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useLatestActivityInfiniteQuery } from '@/features/latest-activity/api/get-latest-activity'
 import { LatestActivityTable } from '@/features/latest-activity/components/LatestActivityTable/LatestActivityTable'
 import { mapMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
-import { useHandleDropdownChangeEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioYourActivity.module.css'
 
@@ -34,7 +32,6 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
-  const dropdownChangeHandler = useHandleDropdownChangeEvent()
 
   const [sortBy, setSortBy] = useState<TableSortedColumn<string> | undefined>()
   const [strategyFilter, setStrategyFilter] = useState<string[]>([])
@@ -60,10 +57,6 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
       options: strategiesOptions,
       label: 'Strategies',
       onChange: (strategies: string[]) => {
-        dropdownChangeHandler({
-          inputName: 'portfolio-your-activity-strategy-filter',
-          value: strategies.map(slugify).join(','),
-        })
         setStrategyFilter(strategies)
       },
       initialValues: strategyFilter,
@@ -72,10 +65,6 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
       options: tokensOptions,
       label: 'Tokens',
       onChange: (tokens: string[]) => {
-        dropdownChangeHandler({
-          inputName: 'portfolio-your-activity-token-filter',
-          value: tokens.map(slugify).join(','),
-        })
         setTokenFilter(tokens)
       },
       initialValues: tokenFilter,

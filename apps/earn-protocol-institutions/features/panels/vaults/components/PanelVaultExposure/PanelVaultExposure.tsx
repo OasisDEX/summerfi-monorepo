@@ -166,8 +166,6 @@ export const PanelVaultExposure: FC<PanelVaultExposureProps> = ({
           arksInterestRates={arkInterestRates}
           vaultApyData={vaultApyData}
           columnsToHide={columnsToHide}
-          tableId="vault-exposure"
-          buttonClickEventHandler={() => {}}
           isDaoManaged={false}
         />
       </Card>

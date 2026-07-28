@@ -2,18 +2,9 @@
 import { Button, Emphasis, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
-
 import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.css'
 
 export const LandingPageHero = () => {
-  const handleGetStartedClick = () => {
-    EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-get-started`,
-      page: '/',
-    })
-  }
-
   return (
     <div className={landingPageHeroStyles.landingPageHeroWrapper}>
       <div className={landingPageHeroStyles.heroHeader}>
@@ -27,12 +18,7 @@ export const LandingPageHero = () => {
           </Text>
         </div>
         <div className={landingPageHeroStyles.heroButtons}>
-          <Link
-            href="/earn"
-            prefetch={false}
-            className={landingPageHeroStyles.primaryCta}
-            onClick={() => handleGetStartedClick()}
-          >
+          <Link href="/earn" prefetch={false} className={landingPageHeroStyles.primaryCta}>
             <Button variant="primarySmall">Launch&nbsp;App</Button>
           </Link>
         </div>

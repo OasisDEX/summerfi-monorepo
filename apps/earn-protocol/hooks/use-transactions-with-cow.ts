@@ -14,7 +14,7 @@ import {
   TransactionAction,
   type TransactionWithStatus,
 } from '@summerfi/app-types'
-import { sdkNetworkToHumanNetwork, slugifyVault, supportedSDKNetwork } from '@summerfi/app-utils'
+import { sdkNetworkToHumanNetwork, supportedSDKNetwork } from '@summerfi/app-utils'
 import {
   Address,
   getChainInfoByChainId,
@@ -26,10 +26,8 @@ import type BigNumber from 'bignumber.js'
 import { useRouter } from 'next/navigation'
 import { type PublicClient } from 'viem'
 
-import { formatTxAmount } from '@/helpers/transaction-analytics'
 import { transactionErrorsMap as errorsMap } from '@/helpers/transaction-errors'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useHandleButtonClickEvent, useHandleTransactionEvent } from '@/hooks/use-mixpanel-event'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 import { useTransactionCore } from '@/hooks/use-transaction-core'
 import { useTransactionSidebar } from '@/hooks/use-transaction-sidebar'
@@ -75,8 +73,6 @@ export const useTransaction = ({
   onTransactionSuccess,
 }: UseTransactionParams) => {
   const { refresh: refreshView, push } = useRouter()
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const transactionEventHandler = useHandleTransactionEvent()
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { getWithdrawTx: getWithdrawTX } = useAppSDK()
   const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
@@ -116,7 +112,6 @@ export const useTransaction = ({
     isWithdraw,
     sidebarTransactionType,
     publicClient,
-    flow,
     approvalCustomValue,
     userWalletAddress,
   })
@@ -140,14 +135,6 @@ export const useTransaction = ({
           ...(referralCode ? { referralCode } : {}),
         })
 
-        transactionEventHandler({
-          transactionType: 'withdraw',
-          txAmount: formatTxAmount(amount, token),
-          txEvent: 'transactionSimulated',
-          vaultSlug: slugifyVault(vault),
-          result: 'success',
-        })
-
         if (transactionsList.length <= 0) {
           throw new Error('Error getting the transactions list')
         }
@@ -156,13 +143,6 @@ export const useTransaction = ({
         )
         setTxStatus('txPrepared')
       } catch (err) {
-        transactionEventHandler({
-          transactionType: 'withdraw',
-          txEvent: 'transactionSimulated',
-          txAmount: formatTxAmount(amount, token),
-          vaultSlug: slugifyVault(vault),
-          result: 'failure',
-        })
         setSidebarTransactionError(
           err instanceof Error ? err.message : errorsMap.transactionRetrievalError,
         )
@@ -179,7 +159,6 @@ export const useTransaction = ({
     getWithdrawTX,
     vaultChainId,
     referralCode,
-    transactionEventHandler,
     vault,
     setTransactions,
     setSidebarTransactionError,
@@ -195,12 +174,9 @@ export const useTransaction = ({
     setSidebarTransactionError(undefined)
     clearValidationError()
     setSidebarTransactionType?.(TransactionAction.WITHDRAW)
-    buttonClickEventHandler(`vault-${flow}-sidebar-reset`)
   }, [
     backToInit,
-    buttonClickEventHandler,
     clearValidationError,
-    flow,
     manualSetAmount,
     setSidebarTransactionError,
     setSidebarTransactionType,
@@ -217,7 +193,6 @@ export const useTransaction = ({
     isProperChainSelected,
     isSettingChain,
     vaultChainId,
-    flow,
     isWithdrawAmountOverPosition,
     amount,
     txStatus,
@@ -228,7 +203,6 @@ export const useTransaction = ({
     referralCodeError,
     login,
     setChain,
-    buttonClickEventHandler,
     getTransactionsList,
     executeNextTransaction,
     reset,

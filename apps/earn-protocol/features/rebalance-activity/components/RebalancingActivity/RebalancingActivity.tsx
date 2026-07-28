@@ -14,17 +14,11 @@ import { RebalanceActivityTable } from '@/features/rebalance-activity/components
 interface RebalancingActivityProps {
   rebalanceActivity: RebalanceActivityPagination
   vaultId: string
-  tableId?: string
-  tooltipEventHandler: (tooltipName: string) => void
-  buttonClickEventHandler: (buttonName: string) => void
 }
 
 export const RebalancingActivity: FC<RebalancingActivityProps> = ({
   rebalanceActivity,
   vaultId,
-  tableId,
-  buttonClickEventHandler,
-  tooltipEventHandler,
 }) => {
   const { totalItems } = rebalanceActivity.pagination
 
@@ -33,10 +27,6 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
     () => getRebalanceSavedGasCost(rebalanceActivity.totalItemsPerStrategyId),
     [rebalanceActivity.totalItemsPerStrategyId],
   )
-
-  const handleButtonClick = (buttonName: string) => () => {
-    buttonClickEventHandler(buttonName)
-  }
 
   const description =
     'Continuous monitoring and rebalancing is crucial in attaining the best possible yield for any strategy. It is responsible for reallocating assets from lower performing protocols and markets to higher performing ones; strict risk thresholds are set by an independant Risk Manager.'
@@ -67,8 +57,6 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
                 <Tooltip
                   tooltip="Time users avoid spending on manual position upkeep, estimated at about five minutes for every transaction the keeper network automates."
                   tooltipWrapperStyles={{ minWidth: '230px' }}
-                  tooltipName={`${tableId}-user-saved-time`}
-                  onTooltipOpen={tooltipEventHandler}
                 >
                   <Icon iconName="info" size={18} />
                 </Tooltip>
@@ -84,8 +72,6 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
                 <Tooltip
                   tooltip="Gas fees users sidestep when the keeper handles their trades, using typical mainnet-dollar and L2-cent costs for each transaction."
                   tooltipWrapperStyles={{ minWidth: '230px' }}
-                  tooltipName={`${tableId}-gas-cost-savings`}
-                  onTooltipOpen={tooltipEventHandler}
                 >
                   <Icon iconName="info" size={18} />
                 </Tooltip>
@@ -113,7 +99,6 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
         <Link
           href={`/rebalance-activity?strategies=${vaultId}`}
           style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}
-          onClick={handleButtonClick(`${tableId}-view-all-rebalances`)}
         >
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all rebalances

@@ -11,14 +11,12 @@ import Link from 'next/link'
 import { isAddress } from 'viem'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './SumrClaimSearch.module.css'
 
 export const SumrClaimSearch = () => {
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { login } = useEarnProtocolLogin()
-  const handleButtonClick = useHandleButtonClickEvent()
 
   const [inputError, setInputError] = useState('')
   const [inputValue, setInputValue] = useState('')
@@ -37,7 +35,6 @@ export const SumrClaimSearch = () => {
   }
 
   const handleSumrButtonClick = () => {
-    handleButtonClick('ep-sumr-claim-search')
     if (isAddress(resolvedAddress ?? '')) {
       return
     }

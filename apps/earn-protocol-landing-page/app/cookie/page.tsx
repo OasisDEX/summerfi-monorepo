@@ -474,39 +474,6 @@ export default function CookiePolicyPage() {
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>Session</td>
               </tr>
-              <tr>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>Mixpanel</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>Third party</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  mp_5372a8300dc764fd08c9bd883eaf6
-                </td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  Analytics for Summer.fi
-                </td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>12 months</td>
-              </tr>
-              <tr>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>Mixpanel</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>Third party</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  mp_b10850880cb0a8557d878c2e602
-                </td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  Analytics for Summer.fi
-                </td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>12 months</td>
-              </tr>
-              <tr>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>Mixpanel</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>Third party</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  mp_eceeaac79053a2f9538c8e404607c4
-                </td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  Analytics for Summer.fi
-                </td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>12 months</td>
-              </tr>
             </tbody>
           </table>
         </div>
