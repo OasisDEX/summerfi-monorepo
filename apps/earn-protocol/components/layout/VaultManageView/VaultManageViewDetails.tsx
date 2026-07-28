@@ -42,7 +42,6 @@ import { CurationActivity } from '@/features/curation-activity/components/Curati
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
-import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import vaultManageViewStyles from './VaultManageView.module.css'
 
@@ -66,8 +65,6 @@ export const VaultManageViewDetails: FC<{
     ? 'ETH'
     : 'USD'
   const vaultBenchmarkName = `${vaultBenchmarkAsset} Vault Benchmark`
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const tooltipEventHandler = useHandleTooltipOpenEvent()
   // Prefer the on-chain management fee (tipRate) decorated server-side; fall back to the
   // token-symbol heuristic for any path that didn't fetch fees.
   const managementFee = vault.managementFee ?? getManagementFee(vault.inputToken.symbol)
@@ -128,7 +125,6 @@ export const VaultManageViewDetails: FC<{
   const handleExpand =
     (expanderId: string, setOpen: (open: boolean) => void) => (isOpen: boolean) => {
       setOpen(isOpen)
-      buttonClickEventHandler(`vault-manage-expander-${expanderId}-${isOpen ? 'open' : 'close'}`)
     }
 
   const detailsLinks = getDetailsLinks()
@@ -214,7 +210,6 @@ export const VaultManageViewDetails: FC<{
         {yieldQuery.data ? (
           yieldQuery.data.arksHistoricalChartData && (
             <ArkHistoricalYieldChart
-              chartId="manage-view"
               chartData={yieldQuery.data.arksHistoricalChartData}
               summerVaultName={getVaultNiceName({ vault })}
               vaultBenchmarkName={vaultBenchmarkName}
@@ -239,8 +234,6 @@ export const VaultManageViewDetails: FC<{
               arksInterestRates={exposureQuery.data.arksInterestRates}
               vaultApyData={vaultApyData}
               columnsToHide={vaultExposureColumnsToHideOpenManage}
-              tableId="vault-manage"
-              buttonClickEventHandler={buttonClickEventHandler}
             />
           </VaultExposureDescription>
         ) : (
@@ -300,9 +293,6 @@ export const VaultManageViewDetails: FC<{
           <RebalancingActivity
             rebalanceActivity={rebalancingQuery.data.rebalanceActivity}
             vaultId={getUniqueVaultId(vault)}
-            tableId="vault-manage-rebalancing-activity"
-            buttonClickEventHandler={buttonClickEventHandler}
-            tooltipEventHandler={tooltipEventHandler}
           />
         ) : (
           <SectionLoader />
@@ -338,8 +328,6 @@ export const VaultManageViewDetails: FC<{
             page="manage"
             noHighlight
             walletAddress={viewWalletAddress}
-            tableId="vault-manage-user-activity"
-            buttonClickEventHandler={buttonClickEventHandler}
           />
         ) : (
           <SectionLoader />

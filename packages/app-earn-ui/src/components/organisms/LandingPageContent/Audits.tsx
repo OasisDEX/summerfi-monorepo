@@ -11,12 +11,10 @@ const AuditBlock = ({
   description,
   image,
   auditUrl,
-  onAuditClick,
 }: {
   description: string
   image: StaticImageData
   auditUrl: string
-  onAuditClick: () => void
 }) => {
   return (
     <div className={auditsStyles.auditBlock}>
@@ -24,7 +22,7 @@ const AuditBlock = ({
       <Text variant="p2" as="p" className={auditsStyles.auditDescription}>
         {description}
       </Text>
-      <Link href={auditUrl} target="_blank" rel="noreferrer" onClick={onAuditClick}>
+      <Link href={auditUrl} target="_blank" rel="noreferrer">
         <WithArrow>
           <Text variant="p2semi">Learn more</Text>
         </WithArrow>
@@ -38,21 +36,15 @@ export const Audits = ({
   chainSecurityLogo,
   prototechLabsLogo,
   sherlockLogo,
-  onAuditClick,
   noHeader,
   fullWidth,
 }: {
   chainSecurityLogo?: StaticImageData
   prototechLabsLogo?: StaticImageData
   sherlockLogo?: StaticImageData
-  onAuditClick: (auditId: string) => void
   noHeader?: boolean
   fullWidth?: boolean
 }): ReactNode => {
-  const handleAuditClick = (auditId: string) => () => {
-    onAuditClick(auditId)
-  }
-
   return (
     <div>
       <div
@@ -87,7 +79,6 @@ export const Audits = ({
             auditUrl="https://docs.summer.fi/summer.fi/audits"
             image={chainSecurityLogo}
             description="ChainSecurity works with top-tier DeFi protocols, research institutions, central banks, and large organizations."
-            onAuditClick={handleAuditClick('chain-security')}
           />
         )}
         {prototechLabsLogo && (
@@ -95,7 +86,6 @@ export const Audits = ({
             auditUrl="https://docs.summer.fi/summer.fi/audits"
             image={prototechLabsLogo}
             description="Prototech Labs is a DeFi & Web3 professional services consultancy helping businesses, DAOs, and protocols implement innovative blockchain solutions."
-            onAuditClick={handleAuditClick('prototech-labs')}
           />
         )}
         {sherlockLogo && (
@@ -103,7 +93,6 @@ export const Audits = ({
             auditUrl="https://docs.summer.fi/summer.fi/audits"
             image={sherlockLogo}
             description="Sherlock secures leading Web3 protocols, elite independent security experts, DAOs, and top-tier DeFi projects. "
-            onAuditClick={handleAuditClick('sherlock')}
           />
         )}
       </div>

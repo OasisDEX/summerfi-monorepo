@@ -12,27 +12,21 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 interface SimpleBonusLabelProps {
   isLoading?: boolean
   deviceType?: DeviceType
-  tooltipName?: string
   bonusLabel: ReactNode
   tooltip: ReactNode
-  onTooltipOpen?: (tooltipName: string) => void
 }
 
 // a simplfied version of the BonusLabel for custom content
 export const SimpleBonusLabel: FC<SimpleBonusLabelProps> = ({
   isLoading,
   deviceType,
-  tooltipName,
   bonusLabel,
   tooltip,
-  onTooltipOpen,
 }): React.ReactNode => {
   return (
     <Tooltip
       deviceType={deviceType}
       stopPropagation
-      tooltipName={tooltipName}
-      onTooltipOpen={onTooltipOpen}
       tooltip={tooltip}
       tooltipWrapperStyles={{
         minWidth: '240px',

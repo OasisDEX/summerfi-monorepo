@@ -2,19 +2,15 @@
 import { type FC } from 'react'
 import { Card, TabBar, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { slugify } from '@summerfi/app-utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { vaultDetailsHowItWorksLinks } from '@/features/vault-details/components/VaultDetailsHowItWorks/config'
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import governance from '@/public/img/vault_details/governance.svg'
 import howItWorksDao from '@/public/img/vault_details/how_it_works_dao.svg'
 import howItWorksRegular from '@/public/img/vault_details/how_it_works_regular.svg'
 
 const LinksAndDescription = () => {
-  const handleButtonClick = useHandleButtonClickEvent()
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <Text
@@ -30,14 +26,7 @@ const LinksAndDescription = () => {
       </Text>
       <div style={{ display: 'flex', gap: '45px', flexWrap: 'wrap' }}>
         {vaultDetailsHowItWorksLinks.map((link) => (
-          <Link
-            href={link.href}
-            key={link.label}
-            target="_blank"
-            onClick={() => {
-              handleButtonClick(`vault-details-how-it-all-works-${slugify(link.label)}`)
-            }}
-          >
+          <Link href={link.href} key={link.label} target="_blank">
             <WithArrow
               as="p"
               variant="p3semi"
@@ -79,7 +68,6 @@ const ImageWrapper = ({ children }: { children: React.ReactNode }) => {
 }
 
 export const VaultDetailsHowItWorks = ({ vault }: { vault?: SDKVaultishType }) => {
-  const handleButtonClick = useHandleButtonClickEvent()
   const tabs = [
     {
       label: 'Rebalance mechanism',
@@ -123,10 +111,6 @@ export const VaultDetailsHowItWorks = ({ vault }: { vault?: SDKVaultishType }) =
     },
   ]
 
-  const handleTabChange = (tab: { id: string }) => {
-    handleButtonClick(`vault-details-how-it-all-works-${tab.id}`)
-  }
-
   return (
     <Card variant="cardSecondary">
       <div
@@ -142,7 +126,7 @@ export const VaultDetailsHowItWorks = ({ vault }: { vault?: SDKVaultishType }) =
           How it all works
         </Text>
 
-        <TabBar tabs={tabs} handleTabChange={handleTabChange} />
+        <TabBar tabs={tabs} />
       </div>
     </Card>
   )

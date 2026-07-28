@@ -2,9 +2,9 @@
 
 `@summerfi/app-server-handlers` provides Next.js server-side handler functions shared across the
 Summer.fi Earn and Pro apps. It covers Armada vault data fetching (vault info, APY, historical APY),
-per-ark interest rates (latest and historical), remote app-config retrieval, a singleton Mixpanel
-client, and a pre-configured backend SDK instance — all intended to run exclusively in Node.js /
-Next.js Server Components or Route Handlers.
+per-ark interest rates (latest and historical), remote app-config retrieval, and a pre-configured
+backend SDK instance — all intended to run exclusively in Node.js / Next.js Server Components or
+Route Handlers.
 
 ## Key exports (`src/index.ts`)
 
@@ -16,7 +16,6 @@ Next.js Server Components or Route Handlers.
 | `getVaultsInfo` / `getVaultsInfoByNetwork`     | `vaults-info`           | Armada vault metadata for all chains or one network via `backendSDK`                                                    |
 | `getVaultInfo`                                 | `vault-info`            | Single-vault metadata                                                                                                   |
 | `configEarnAppFetcher` / `configProAppFetcher` | `system-config`         | Fetch remote JSON app config (`CONFIG_URL_EARN` / `CONFIG_URL`)                                                         |
-| `getMixpanel` / `trackEventHandler`            | `mixpanel`              | Singleton Mixpanel init and server-side event tracking                                                                  |
 
 The package also exports sub-path entry points (`@summerfi/app-server-handlers/*`) built from
 `dist/<module>/index.js`.
@@ -61,7 +60,6 @@ handler functions as Next.js Server Actions (`'use server'`) or inside Route Han
 | `SDK_API_URL`                   | `sdk/sdk-backend-client.ts` — backend SDK tRPC endpoint                     |
 | `CONFIG_URL_EARN`               | `configEarnAppFetcher`                                                      |
 | `CONFIG_URL`                    | `configProAppFetcher`                                                       |
-| `MIXPANEL_ENV` / `MIXPANEL_LOG` | `trackEventHandler` — controls whether events are sent or logged            |
 
 **Adding a new chain:** Add a `GraphQLClient` entry to the `graphqlClients` map in
 `src/arks-interest-rates/constants.ts` keyed by the new `SupportedSDKNetworks` value and pointing to

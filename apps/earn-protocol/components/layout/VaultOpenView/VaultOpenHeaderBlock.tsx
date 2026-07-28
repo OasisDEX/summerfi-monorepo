@@ -1,11 +1,9 @@
 import { type FC } from 'react'
 import { getVaultDetailsUrl, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { slugify } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { DaoManagedInfoBlock } from '@/components/molecules/DaoManagedInfoBlock/DaoManagedInfoBlock'
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 interface VaultOpenHeaderBlockProps {
   vault?: SDKVaultishType
@@ -18,8 +16,6 @@ export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({
   vault,
   isDaoManaged = false,
 }) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-
   const resolveHeader = () => {
     if (isDaoManaged) {
       return 'What are DAO Risk-Managed Vaults? '
@@ -80,11 +76,7 @@ export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({
         }}
       >
         {detailsLinks.map(({ label, id, url }) => (
-          <Link
-            key={label}
-            href={url ?? `${getVaultDetailsUrl(vault)}#${id}`}
-            onClick={() => buttonClickEventHandler(`vault-open-details-${slugify(label)}`)}
-          >
+          <Link key={label} href={url ?? `${getVaultDetailsUrl(vault)}#${id}`}>
             <Text
               as="p"
               variant="p3semi"

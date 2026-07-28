@@ -1,9 +1,6 @@
 import { type FC } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
-import { slugify } from '@summerfi/app-utils'
 import Link from 'next/link'
-
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './NewsAndUpdatesList.module.css'
 
@@ -12,17 +9,13 @@ interface NewsAndUpdatesListProps {
 }
 
 export const NewsAndUpdatesList: FC<NewsAndUpdatesListProps> = ({ items }) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-
   return items.map((item) => (
     <Link
       href={item.link}
       key={item.title + item.timestamp}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={() => {
-        buttonClickEventHandler(`news-and-updates-${slugify(item.title)}-click`)
-      }}
+      onClick={() => {}}
     >
       <div className={classNames.wrapper}>
         <div className={classNames.dot} />

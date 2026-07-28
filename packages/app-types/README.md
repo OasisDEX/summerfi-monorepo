@@ -5,7 +5,7 @@ Shared TypeScript types and enums for the Summer.fi frontend apps.
 Covers: network identifiers (`NetworkIds`, `NetworkHexIds`, `NetworkNames`), the frontend-facing
 chain switchboard (`SupportedNetworkIds`, `SupportedSDKNetworks`), icon and token symbol unions
 (`IconNamesList`, `TokenSymbolsList`), Earn Protocol domain types (vaults, positions, fleets,
-charts), UI state enums, auth, ToS, Mixpanel events, and automation kinds.
+charts), UI state enums, auth, ToS, and automation kinds.
 
 Two types are generated at build time and are not committed: `AppConfigType` (from `CONFIG_URL`) and
 `EarnAppConfigType` (from `CONFIG_URL_EARN`). Run `pnpm dev` (requires `.env`/`.env.local` with both

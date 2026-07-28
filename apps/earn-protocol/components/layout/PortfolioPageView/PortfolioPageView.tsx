@@ -25,7 +25,6 @@ import { PortfolioYourActivity } from '@/features/portfolio/components/Portfolio
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 
 import classNames from './PortfolioPageView.module.css'
@@ -46,7 +45,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   rewardTokenPrices,
 }) => {
   const { features } = useSystemConfig()
-  const handleButtonClick = useHandleButtonClickEvent()
   const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
@@ -83,7 +81,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   const stakingV2Enabled = !!features?.StakingV2
 
   const handleTabChange = (tab: { id: string }) => {
-    handleButtonClick(`portfolio-tab-${tab.id}`)
     updateTab(tab.id as PortfolioTabs)
   }
 

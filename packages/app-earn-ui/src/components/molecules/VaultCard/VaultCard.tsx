@@ -11,7 +11,6 @@ import {
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
-  slugifyVault,
   supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
@@ -45,9 +44,7 @@ type VaultCardProps = SDKVaultishType & {
   wrapperStyle?: React.CSSProperties
   disabled?: boolean
   deviceType?: DeviceType
-  tooltipName?: string
   rewardTokenPrices: RewardTokenPrices
-  onTooltipOpen?: (tooltipName: string) => void
   merklRewards?: IArmadaVaultInfo['merklRewards'] | undefined
 }
 
@@ -70,8 +67,6 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     disabled,
     depositCap,
     deviceType,
-    onTooltipOpen,
-    tooltipName,
     createdTimestamp,
     isDaoManaged,
     rewardTokenPrices,
@@ -140,8 +135,6 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             networkName={supportedSDKNetwork(protocol.network)}
             selected={selected}
             isVaultCard
-            tooltipName={`${tooltipName}-${slugifyVault(props)}-risk-label`}
-            onTooltipOpen={onTooltipOpen}
             isNewVault={isNewVault}
             isRwaVault={isRwaVault}
             vaultName={customFields?.name}
@@ -155,8 +148,6 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
                 externalTokenBonus={customFields?.bonus}
                 apyUpdatedAt={apyUpdatedAt}
                 deviceType={deviceType}
-                tooltipName={`${tooltipName}-${slugifyVault(props)}-bonus-label`}
-                onTooltipOpen={onTooltipOpen}
               />
             </Text>
           </div>

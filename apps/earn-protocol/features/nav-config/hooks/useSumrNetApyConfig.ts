@@ -4,12 +4,9 @@ import {
   LocalConfigDispatchActions,
   type SumrNetApyConfig,
   sumrNetApyConfigCookieName,
-  useEarnProtocolWallet,
   useLocalConfig,
 } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
-
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 /**
  * Custom hook to manage SUMR Net APY configuration.
@@ -25,17 +22,10 @@ export const useSumrNetApyConfig = (): [SumrNetApyConfig, (value: SumrNetApyConf
     dispatch,
   } = useLocalConfig()
   const cookie = getCookie(sumrNetApyConfigCookieName)
-  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const setValue = (value: SumrNetApyConfig) => {
     const nextValue = { ...value, dilutedValuation: value.dilutedValuation.replaceAll(',', '') }
 
-    EarnProtocolEvents.inputChanged({
-      inputName: 'SUMRNetAPYConfig',
-      page: '/#settings-modal',
-      walletAddress: userWalletAddress,
-      value: JSON.stringify(nextValue),
-    })
     setCookie(sumrNetApyConfigCookieName, JSON.stringify(nextValue), 365, { secure: true })
     dispatch({ type: LocalConfigDispatchActions.UPDATE_SUMR_NET_APY_CONFIG, payload: value })
   }

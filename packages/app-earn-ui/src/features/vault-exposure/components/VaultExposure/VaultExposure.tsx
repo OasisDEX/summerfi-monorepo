@@ -22,8 +22,6 @@ interface VaultExposureProps {
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   columnsToHide?: string[]
-  tableId: string
-  buttonClickEventHandler: (buttonName: string) => void
   isDaoManaged?: boolean
 }
 
@@ -32,8 +30,6 @@ export const VaultExposure: FC<VaultExposureProps> = ({
   arksInterestRates,
   vaultApyData,
   columnsToHide,
-  tableId,
-  buttonClickEventHandler,
   isDaoManaged = false,
 }) => {
   const [seeAll, setSeeAll] = useState(false)
@@ -60,8 +56,6 @@ export const VaultExposure: FC<VaultExposureProps> = ({
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.ALL}
           hiddenColumns={columnsToHide}
-          tableId={tableId}
-          buttonClickEventHandler={buttonClickEventHandler}
         />
       ),
     },
@@ -83,8 +77,6 @@ export const VaultExposure: FC<VaultExposureProps> = ({
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.ALLOCATED}
           hiddenColumns={columnsToHide}
-          tableId={tableId}
-          buttonClickEventHandler={buttonClickEventHandler}
         />
       ),
     },
@@ -106,8 +98,6 @@ export const VaultExposure: FC<VaultExposureProps> = ({
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.UNALLOCATED}
           hiddenColumns={columnsToHide}
-          tableId={tableId}
-          buttonClickEventHandler={buttonClickEventHandler}
         />
       ),
     },
@@ -118,9 +108,6 @@ export const VaultExposure: FC<VaultExposureProps> = ({
       tabs={tabs}
       textVariant="p3semi"
       tabHeadersStyle={{ borderBottom: '1px solid var(--earn-protocol-neutral-80)' }}
-      handleTabChange={(tab) => {
-        buttonClickEventHandler(`${tableId}-vault-exposure-tab-${tab.id.toLowerCase()}`)
-      }}
     />
   )
 }

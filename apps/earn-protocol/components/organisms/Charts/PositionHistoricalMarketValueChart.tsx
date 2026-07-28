@@ -13,7 +13,6 @@ import {
 import { ChartHeader } from '@/components/organisms/Charts/ChartHeader'
 import { HistoricalChart } from '@/components/organisms/Charts/components/Historical'
 import { type HistoricalLegendItemKey } from '@/components/organisms/Charts/components/HistoricalLegend'
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useTimeframes } from '@/hooks/use-timeframes'
 
 type PositionHistoricalMarketValueChartProps = {
@@ -38,11 +37,9 @@ export const PositionHistoricalMarketValueChart = ({
   chartData,
   position,
   tokenSymbol,
-  chartId,
   legendInTooltip,
   legendItems,
 }: PositionHistoricalMarketValueChartProps) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
   const { timeframe, setTimeframe, timeframes } = useTimeframes({
     chartData: chartData?.data,
   })
@@ -57,9 +54,6 @@ export const PositionHistoricalMarketValueChart = ({
 
   const handleSetNextTimeframe = (nextTimeframe: string) => {
     setTimeframe(nextTimeframe as TimeframesType)
-    buttonClickEventHandler(
-      `${chartId}-position-historical-market-value-timeframe-set-${nextTimeframe}`,
-    )
   }
 
   return (

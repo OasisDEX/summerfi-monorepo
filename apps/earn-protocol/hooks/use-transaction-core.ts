@@ -10,20 +10,18 @@ import type {
   TransactionAction,
   TransactionWithStatus,
 } from '@summerfi/app-types'
-import { slugify, slugifyVault, supportedSDKNetwork, ten } from '@summerfi/app-utils'
+import { supportedSDKNetwork, ten } from '@summerfi/app-utils'
 import { type IToken, TransactionType } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
 import { type PublicClient } from 'viem'
 
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { resolveSafeTxHashAndStamp } from '@/helpers/resolve-safe-tx-hash'
-import { formatTxAmount } from '@/helpers/transaction-analytics'
 import {
   getTransactionExecutionErrorMessage,
   transactionErrorsMap as errorsMap,
 } from '@/helpers/transaction-errors'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
-import { useHandleButtonClickEvent, useHandleTransactionEvent } from '@/hooks/use-mixpanel-event'
 
 type UseTransactionCoreParams = {
   vault: SDKVaultishType
@@ -32,7 +30,6 @@ type UseTransactionCoreParams = {
   isWithdraw: boolean
   sidebarTransactionType: TransactionAction
   publicClient?: PublicClient
-  flow: 'open' | 'manage'
   approvalCustomValue?: BigNumber
   userWalletAddress?: `0x${string}`
 }
@@ -42,17 +39,12 @@ type UseTransactionCoreParams = {
  */
 export const useTransactionCore = ({
   vault,
-  amount,
   token,
-  isWithdraw,
   sidebarTransactionType,
   publicClient,
-  flow,
   approvalCustomValue,
   userWalletAddress,
 }: UseTransactionCoreParams) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const transactionEventHandler = useHandleTransactionEvent()
   const isIframe = useIsIframe()
 
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
@@ -83,14 +75,6 @@ export const useTransactionCore = ({
   } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess: ({ hash }) => {
-      transactionEventHandler({
-        transactionType: isWithdraw ? 'withdraw' : 'deposit',
-        txEvent: 'transactionSubmitted',
-        txAmount: formatTxAmount(amount, token),
-        result: 'success',
-        txHash: hash,
-        vaultSlug: slugifyVault(vault),
-      })
       if (isIframe) {
         resolveSafeTxHashAndStamp({
           hash,
@@ -113,13 +97,6 @@ export const useTransactionCore = ({
       }
     },
     onError: (err) => {
-      transactionEventHandler({
-        transactionType: isWithdraw ? 'withdraw' : 'deposit',
-        txEvent: 'transactionSubmitted',
-        txAmount: formatTxAmount(amount, token),
-        result: 'failure',
-        vaultSlug: slugifyVault(vault),
-      })
       // eslint-disable-next-line no-console
       console.error('Error executing the transaction:', err)
 
@@ -204,8 +181,6 @@ export const useTransactionCore = ({
       throw new Error('Token not loaded')
     }
 
-    buttonClickEventHandler(`vault-${flow}-next-transaction-${slugify(nextTransaction.type)}`)
-
     const txParams =
       nextTransaction.type === TransactionType.Approve &&
       approvalType !== 'deposit' &&
@@ -237,8 +212,6 @@ export const useTransactionCore = ({
     nextTransaction,
     publicClient,
     token,
-    buttonClickEventHandler,
-    flow,
     approvalType,
     approvalCustomValue,
     isIframe,

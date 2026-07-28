@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   Button,
   Card,
@@ -36,7 +36,6 @@ import { LazyPositionHistoryChart } from '@/features/portfolio/components/Portfo
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
-import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 import {
   allTimeframesAvailable,
   allTimeframesNotAvailable,
@@ -61,22 +60,16 @@ const PositionsListView = ({
   vaultsApyByNetworkMap,
   rewardTokenPrices,
   timeframe,
-  buttonClickEventHandler,
-  tooltipEventHandler,
   isMobile,
   isTablet,
-  handleButtonClick,
 }: {
   sortedPositions: PositionWithVault[]
   walletAddress: string
   vaultsApyByNetworkMap: GetVaultsApyResponse
   rewardTokenPrices: RewardTokenPrices
   timeframe: TimeframesType
-  buttonClickEventHandler: ReturnType<typeof useHandleButtonClickEvent>
-  tooltipEventHandler: ReturnType<typeof useHandleTooltipOpenEvent>
   isMobile: boolean
   isTablet: boolean
-  handleButtonClick: (event: string) => void
 }) => {
   return sortedPositions.length ? (
     sortedPositions.map((position) => (
@@ -84,8 +77,6 @@ const PositionsListView = ({
         isMobile={isMobile || isTablet}
         key={`Position_${position.position.id.id}_${position.vault.protocol.network}`}
         portfolioPosition={position}
-        buttonClickEventHandler={buttonClickEventHandler}
-        tooltipEventHandler={tooltipEventHandler}
         positionGraph={
           <LazyPositionHistoryChart
             walletAddress={walletAddress}
@@ -111,12 +102,7 @@ const PositionsListView = ({
         <br />
         Earn more, save time, and reduce costs.
       </Text>
-      <Link
-        href="/"
-        onClick={() => {
-          handleButtonClick('portfolio-overview-view-strategies')
-        }}
-      >
+      <Link href="/">
         <Button variant="primaryMedium">View strategies</Button>
       </Link>
     </div>
@@ -133,8 +119,6 @@ export const PortfolioOverview = ({
   viewWalletAddress,
 }: PortfolioOverviewProps) => {
   const [positionsTab, setPositionsTab] = useState<string>('positions')
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const tooltipEventHandler = useHandleTooltipOpenEvent()
 
   const [showEmptyPositions, setShowEmptyPositions] = useLocalStorage<boolean>(
     'showEmptyPositions',
@@ -182,7 +166,6 @@ export const PortfolioOverview = ({
 
   const handleSetNextTimeframe = (nextTimeframe: string) => {
     setTimeframe(nextTimeframe as TimeframesType)
-    buttonClickEventHandler(`portfolio-overview-positions-timeframe-set-${nextTimeframe}`)
   }
 
   const { deviceType } = useDeviceType()
@@ -196,17 +179,8 @@ export const PortfolioOverview = ({
 
   const overallSumr = calculateOverallSumr(rewardsData)
 
-  const handleButtonClick = useCallback(
-    (buttonName: string) => () => {
-      buttonClickEventHandler(`portfolio-overview-${buttonName}`)
-    },
-    [buttonClickEventHandler],
-  )
-
   const handleShowEmptyPositions = () => {
     setShowEmptyPositions((prev) => {
-      buttonClickEventHandler(`portfolio-overview-portfolio-overview-show-empty-positions-${!prev}`)
-
       return !prev
     })
   }
@@ -262,7 +236,6 @@ export const PortfolioOverview = ({
               activeTabId={positionsTab}
               onTabChange={(tab) => {
                 setPositionsTab(tab.id)
-                buttonClickEventHandler(`portfolio-overview-tab-changed-${tab.id}`)
               }}
             />
             {positionsTab === 'positions' ? (
@@ -289,11 +262,8 @@ export const PortfolioOverview = ({
               vaultsApyByNetworkMap={vaultsApyByNetworkMap}
               rewardTokenPrices={rewardTokenPrices}
               timeframe={timeframe}
-              buttonClickEventHandler={buttonClickEventHandler}
-              tooltipEventHandler={tooltipEventHandler}
               isMobile={isMobile}
               isTablet={isTablet}
-              handleButtonClick={handleButtonClick}
             />
           ) : null}
 

@@ -1,7 +1,6 @@
 'use client'
 import { type FC, useEffect, useRef, useState } from 'react'
 import { Card, TabBar, type TableSortedColumn, WithArrow } from '@summerfi/app-earn-ui'
-import { slugify } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -19,8 +18,6 @@ interface LatestActivityProps {
   topDepositors: TopDepositorsPagination
   latestActivity: LatestActivityPagination
   walletAddress?: string
-  tableId?: string
-  buttonClickEventHandler: (buttonName: string) => void
 }
 
 export const LatestActivity: FC<LatestActivityProps> = ({
@@ -30,8 +27,6 @@ export const LatestActivity: FC<LatestActivityProps> = ({
   page,
   noHighlight,
   walletAddress,
-  buttonClickEventHandler,
-  tableId,
 }) => {
   const latestActivityHiddenColumns = {
     open: ['strategy', 'position'],
@@ -122,14 +117,6 @@ export const LatestActivity: FC<LatestActivityProps> = ({
     }
   }, [])
 
-  const handleButtonClick = (buttonName: string) => () => {
-    buttonClickEventHandler(buttonName)
-  }
-
-  const handleTabChange = (tab: { id: string }) => {
-    buttonClickEventHandler(`${tableId}-tab-${slugify(tab.id)}`)
-  }
-
   const tabs = [
     {
       id: UserActivityTab.LATEST_ACTIVITY,
@@ -167,13 +154,8 @@ export const LatestActivity: FC<LatestActivityProps> = ({
           tabs={tabs}
           textVariant="p3semi"
           tabHeadersStyle={{ borderBottom: '1px solid var(--earn-protocol-neutral-80)' }}
-          handleTabChange={handleTabChange}
         />
-        <Link
-          href={`/user-activity?strategies=${vaultId}`}
-          style={{ width: 'fit-content' }}
-          onClick={handleButtonClick(`${tableId}-view-all-depositors`)}
-        >
+        <Link href={`/user-activity?strategies=${vaultId}`} style={{ width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all depositors
           </WithArrow>

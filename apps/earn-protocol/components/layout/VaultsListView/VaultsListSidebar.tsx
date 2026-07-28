@@ -9,7 +9,7 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { sdkNetworkToHumanNetwork, slugifyVault, supportedSDKNetwork } from '@summerfi/app-utils'
+import { sdkNetworkToHumanNetwork, supportedSDKNetwork } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
@@ -17,7 +17,6 @@ type VaultsListSidebarProps = {
   activeVaultData: SDKVaultishType
   positionExists: boolean
   userWalletAddress?: string
-  onButtonClick: (buttonId: string) => void
   // Where the "view" CTA leads; defaults to the vault open (strategy) page.
   strategyLink?: {
     label: string
@@ -29,7 +28,6 @@ export const VaultsListSidebar = ({
   activeVaultData,
   positionExists,
   userWalletAddress,
-  onButtonClick,
   strategyLink,
 }: VaultsListSidebarProps) => {
   const network = supportedSDKNetwork(activeVaultData.protocol.network)
@@ -62,28 +60,15 @@ export const VaultsListSidebar = ({
                   vaultId: activeVaultData.id,
                   walletAddress: userWalletAddress,
                 }),
-                action: () => {
-                  onButtonClick(
-                    `vaults-list-view-position-${slugifyVault(activeVaultData)}-${userWalletAddress}`,
-                  )
-                },
               }
             : {
                 label: resolvedStrategyLink.label,
                 url: resolvedStrategyLink.href,
-                action: () => {
-                  onButtonClick(`vaults-list-view-strategy-${slugifyVault(activeVaultData)}`)
-                },
               }
         }
         footnote={
           positionExists && userWalletAddress ? (
-            <Link
-              href={resolvedStrategyLink.href}
-              onClick={() =>
-                onButtonClick(`vaults-list-view-strategy-${slugifyVault(activeVaultData)}`)
-              }
-            >
+            <Link href={resolvedStrategyLink.href}>
               <WithArrow variant="p3semi">{resolvedStrategyLink.label}</WithArrow>
             </Link>
           ) : undefined

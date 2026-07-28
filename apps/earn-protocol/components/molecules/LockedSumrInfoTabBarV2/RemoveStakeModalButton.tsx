@@ -23,7 +23,6 @@ import { PendingTransactionsList } from '@/components/molecules/PendingTransacti
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useUnstakeV2SumrTransaction } from '@/features/claim-and-delegate/hooks/use-unstake-sumr-transaction'
-import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 
 import removeStakeModalContentStyles from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2.module.css'
 
@@ -45,14 +44,11 @@ const RemoveStakeModal: FC<{
   penaltyPercentage,
 }) => {
   const { chain, setChain } = useEarnProtocolChain()
-  const inputChangeHandler = useHandleInputChangeEvent()
 
   const isCorrectNetwork = chain.id === SupportedNetworkIds.Base
   const { onBlur, onFocus, manualSetAmount, amountDisplay, amountRaw, amountParsed } = useAmount({
     tokenDecimals: SUMR_DECIMALS,
     initialAmount: new BigNumber(stakedAmount).div(ten.pow(SUMR_DECIMALS)).toFixed(2),
-    inputChangeHandler,
-    inputName: 'unstake-sumr-amount',
   })
 
   const {

@@ -23,12 +23,10 @@ interface BonulsLabelProps {
     apyUpdatedAtAltLabel: string
   }
   deviceType?: DeviceType
-  tooltipName?: string
   apy?: number
   managementFee?: number
   totalAnnualRewardsPerToken?: { [tokenSymbol: string]: number }
   externalTokenBonus?: EarnAppFleetCustomConfigType['bonus']
-  onTooltipOpen?: (tooltipName: string) => void
 }
 
 export const BonusLabelTooltip = ({
@@ -152,8 +150,6 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
   isLoading,
   apyUpdatedAt,
   deviceType,
-  onTooltipOpen,
-  tooltipName,
 }): React.ReactNode => {
   const grossRewardsTokenBonus = totalAnnualRewardsPerToken
     ? Object.values(totalAnnualRewardsPerToken).reduce((acc, bonus) => acc + bonus, 0)
@@ -174,8 +170,6 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
     <Tooltip
       deviceType={deviceType}
       stopPropagation
-      tooltipName={tooltipName}
-      onTooltipOpen={onTooltipOpen}
       tooltip={
         <BonusLabelTooltip
           apy={apy}

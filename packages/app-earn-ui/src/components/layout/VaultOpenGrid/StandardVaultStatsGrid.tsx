@@ -23,7 +23,6 @@ interface StandardVaultStatsGridProps {
   vaultApyData: VaultApyData
   medianDefiYield?: number
   isMobileOrTablet?: boolean
-  tooltipEventHandler: (tooltipName: string) => void
   apy30d: ReactNode
 }
 
@@ -32,7 +31,6 @@ export const StandardVaultStatsGrid: FC<StandardVaultStatsGridProps> = ({
   vaultApyData,
   medianDefiYield,
   isMobileOrTablet,
-  tooltipEventHandler,
   apy30d,
 }) => {
   const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
@@ -151,8 +149,6 @@ export const StandardVaultStatsGrid: FC<StandardVaultStatsGridProps> = ({
             size="large"
             titleSize="small"
             title="30d Native Yield APY"
-            tooltipName="vault-open-30d-apy"
-            onTooltipOpen={tooltipEventHandler}
             value={
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Text variant="h4" style={{ marginRight: 'var(--general-space-8)' }}>
@@ -164,8 +160,6 @@ export const StandardVaultStatsGrid: FC<StandardVaultStatsGridProps> = ({
             subValue={
               medianBN && medianDefiYield30DDifference && isVaultAtLeast30dOld ? (
                 <Tooltip
-                  tooltipName="vault-open-30d-apy-median"
-                  onTooltipOpen={tooltipEventHandler}
                   tooltip={
                     <>
                       Median&nbsp;DeFi&nbsp;Yield:&nbsp;
@@ -189,12 +183,8 @@ export const StandardVaultStatsGrid: FC<StandardVaultStatsGridProps> = ({
           <DataBlock
             size="large"
             titleSize="small"
-            tooltipName="vault-open-live-apy"
-            onTooltipOpen={tooltipEventHandler}
             title={
               <Tooltip
-                tooltipName="vault-open-live-apy-info"
-                onTooltipOpen={tooltipEventHandler}
                 tooltip={
                   <LiveApyInfo
                     apyCurrent={apyCurrent}
@@ -224,8 +214,6 @@ export const StandardVaultStatsGrid: FC<StandardVaultStatsGridProps> = ({
             subValue={
               medianBN && medianDefiYieldLiveDifference ? (
                 <Tooltip
-                  tooltipName="vault-open-live-apy-median"
-                  onTooltipOpen={tooltipEventHandler}
                   tooltip={
                     <>
                       Median&nbsp;DeFi&nbsp;Yield:&nbsp;

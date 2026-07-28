@@ -26,7 +26,6 @@ export const EnhancedRiskManagement = ({
   protectedCapital,
   imagesMap,
   bottomBoxes = true,
-  handleLearnMoreClick,
 }: {
   protectedCapital: string
   imagesMap: {
@@ -39,7 +38,6 @@ export const EnhancedRiskManagement = ({
     sparkLogo: StaticImageData
   }
   bottomBoxes?: boolean
-  handleLearnMoreClick: () => void
 }): ReactNode => {
   return (
     <div className={enhancedRiskManagementStyles.enhancedRiskManagementWrapper}>
@@ -63,7 +61,6 @@ export const EnhancedRiskManagement = ({
             <Link
               href={EXTERNAL_LINKS.EARN.FORUM_BA_POST}
               target="_blank"
-              onClick={handleLearnMoreClick}
               style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
             >
               <WithArrow>
@@ -141,7 +138,6 @@ export const EnhancedRiskManagement = ({
 export const EnhancedRiskManagementCampaign = ({
   protectedCapital,
   imagesMap,
-  handleLearnMoreClick,
 }: {
   protectedCapital: string
   imagesMap: {
@@ -154,7 +150,6 @@ export const EnhancedRiskManagementCampaign = ({
     depositImage: StaticImageData
     nonCustodialImage: StaticImageData
   }
-  handleLearnMoreClick: () => void
 }): ReactNode => {
   return (
     <div
@@ -189,7 +184,6 @@ export const EnhancedRiskManagementCampaign = ({
               href={EXTERNAL_LINKS.EARN.FORUM_BA_POST}
               target="_blank"
               style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
-              onClick={handleLearnMoreClick}
             >
               <WithArrow>
                 <Text variant="p2">Learn more</Text>

@@ -1,37 +1,18 @@
 'use client' // Error boundaries must be Client Components
 
 import { useEffect } from 'react'
-import { Button, Text, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
+import { Button, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import errorImage from '@/public/img/misc/error.png'
 
 export default function GlobalErrorHandler({ error }: { error: Error & { digest?: string } }) {
-  const pathname = usePathname()
-  const { address: userWalletAddress } = useEarnProtocolWallet()
-
   useEffect(() => {
     // Log the error to an error reporting service
     // eslint-disable-next-line no-console
     console.error(error)
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      const errorMessage = String(error.message ?? 'unknown').slice(0, 300)
-
-      EarnProtocolEvents.errorOccurred({
-        page: pathname,
-        errorMessage,
-        walletAddress: userWalletAddress,
-        digest: error.digest,
-      })
-    } catch {
-      // swallow analytics errors
-    }
-  }, [error, pathname, userWalletAddress])
+  }, [error])
 
   return (
     <div

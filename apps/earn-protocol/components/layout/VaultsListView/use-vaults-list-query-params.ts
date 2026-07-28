@@ -2,8 +2,6 @@ import { useCallback } from 'react'
 import { type DropdownRawOption } from '@summerfi/app-types'
 import { type ReadonlyURLSearchParams, useRouter } from 'next/navigation'
 
-import { useHandleDropdownChangeEvent } from '@/hooks/use-mixpanel-event'
-
 export type VaultsListFiltersType = {
   assets?: string[]
   networks?: string[]
@@ -15,7 +13,6 @@ export type VaultsListFiltersType = {
 const defaultVaultTabs = new Set(['risk-managed', 'defi-vaults'])
 
 export const useVaultsListQueryParams = () => {
-  const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const { push } = useRouter()
 
   const routerPush = useCallback(
@@ -62,41 +59,13 @@ export const useVaultsListQueryParams = () => {
         }
       }
 
-      const isAssetsChange = newFilters.assets !== undefined
-      const isNetworksChange = newFilters.networks !== undefined
-      const isSortingChange = newFilters.sorting !== undefined
-      const isVaultsChange = newFilters.vaults !== undefined
-      const isWalletAddressChange = newFilters.walletAddress?.[0]?.toLowerCase() !== ''
-      const dropdownName = isAssetsChange
-        ? 'vaults-list-view-assets'
-        : isNetworksChange
-          ? 'vaults-list-view-networks'
-          : isSortingChange
-            ? 'vaults-list-view-sorting'
-            : isVaultsChange
-              ? 'vaults-list-view-vaults'
-              : isWalletAddressChange
-                ? 'vaults-list-view-walletAddress'
-                : ''
-
-      dropdownChangeHandler({
-        inputName: dropdownName,
-        value:
-          newFilters.assets?.join(',') ??
-          newFilters.networks?.join(',') ??
-          newFilters.vaults ??
-          newFilters.walletAddress?.[0] ??
-          newFilters.sorting?.value ??
-          'unknown',
-      })
-
       const newUrl = isSoftPush
         ? `/earn?${mergedQueryParams.toString()}`
         : `/?${mergedQueryParams.toString()}`
 
       routerPush(newUrl, isSoftPush)
     },
-    [dropdownChangeHandler, routerPush],
+    [routerPush],
   )
 
   return {

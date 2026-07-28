@@ -27,7 +27,6 @@ import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
-import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioRewardsCards.module.css'
 
@@ -37,8 +36,6 @@ interface SumrAvailableToClaimProps {
 }
 
 const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumrPriceUsd }) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const tooltipEventHandler = useHandleTooltipOpenEvent()
   const { walletAddress } = useParams()
   const { login } = useEarnProtocolLogin()
   const rawSumr = Number(rewardsData.sumrToClaim.aggregatedRewards.total)
@@ -50,12 +47,9 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumr
 
   const resolvedWalletAddress = walletAddress as string
 
-  const handleClaimEventButton = () => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-claim`)
-  }
+  const handleClaimEventButton = () => {}
 
   const handleConnect = () => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-claim-connect`)
     if (!userWalletAddress) {
       login()
     }
@@ -72,8 +66,6 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumr
               </Text>
             }
             tooltipWrapperStyles={{ minWidth: '240px' }}
-            tooltipName="portfolio-sumr-rewards-total-available-to-claim"
-            onTooltipOpen={tooltipEventHandler}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
               <Icon iconName="info" variant="s" />
@@ -120,7 +112,6 @@ interface StakedAndDelegatedSumrProps {
 }
 
 const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = walletAddress as string
   const { address: userWalletAddress } = useEarnProtocolWallet()
@@ -133,12 +124,9 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const value = formatCryptoBalance(rawStaked)
   const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
 
-  const handleStakeAndDelegateEventButton = () => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-add-remove-stake`)
-  }
+  const handleStakeAndDelegateEventButton = () => {}
 
   const handleConnect = () => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-connect`)
     if (!userWalletAddress) {
       login()
     }
@@ -237,7 +225,6 @@ interface YourDelegateProps {
 }
 
 const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
-  const buttonClickEventHandler = useHandleButtonClickEvent()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = walletAddress as string
   const { address: userWalletAddress } = useEarnProtocolWallet()
@@ -279,12 +266,9 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
       'You have not delegated'
     )
 
-  const handleChangeDelegateEventButton = () => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-change-delegate`)
-  }
+  const handleChangeDelegateEventButton = () => {}
 
   const handleConnect = () => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-change-delegate-connect`)
     if (!userWalletAddress) {
       login()
     }

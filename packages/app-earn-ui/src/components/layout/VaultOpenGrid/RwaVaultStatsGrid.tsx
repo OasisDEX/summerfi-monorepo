@@ -33,7 +33,6 @@ interface RwaVaultStatsGridProps {
   // user's current position value (token + USD) — instead of the vault-wide "Market Value".
   positionMarketValue?: { netValue: BigNumber; netValueUSD: BigNumber }
   isMobileOrTablet?: boolean
-  tooltipEventHandler: (tooltipName: string) => void
 }
 
 export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
@@ -42,7 +41,6 @@ export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
   rwaMarketValueLoading,
   positionMarketValue,
   isMobileOrTablet,
-  tooltipEventHandler,
 }) => {
   // Prefer the broader market value (includes not-yet-settled deposits); fall back to the subgraph
   // settled-only TVL until it loads.
@@ -111,8 +109,6 @@ export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
             titleSize="small"
             title={
               <Tooltip
-                tooltipName="vault-open-rwa-min-deposit"
-                onTooltipOpen={tooltipEventHandler}
                 tooltipWrapperStyles={{
                   minWidth: '200px',
                 }}
@@ -182,8 +178,6 @@ export const RwaVaultStatsGrid: FC<RwaVaultStatsGridProps> = ({
             size="large"
             titleSize="small"
             title="30D Net APY"
-            tooltipName="vault-open-30d-apy"
-            onTooltipOpen={tooltipEventHandler}
             tooltipIconName="info"
             titleTooltip={
               vault.navApy30dPartialDays != null

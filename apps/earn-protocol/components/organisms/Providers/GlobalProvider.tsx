@@ -9,7 +9,6 @@ import { type DeviceType, type EarnAppConfigType } from '@summerfi/app-types'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { type SavedLargeUserBannerSettings } from '@/components/molecules/LargeUserFloatingBanner/LargeUserFloatingBanner'
-import { GlobalEventTracker } from '@/components/organisms/Events/GlobalEventTracker'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
 import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { WalletProvider } from '@/providers/WalletProvider/WalletProvider'
@@ -40,7 +39,6 @@ export const GlobalProvider = ({
       <DeviceProvider value={deviceType}>
         <LocalConfigContextProvider value={localConfigContextState}>
           <WalletProvider>
-            <GlobalEventTracker />
             <MasterPage
               analyticsCookie={analyticsCookie}
               largeUsersData={largeUsersData}

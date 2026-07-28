@@ -14,10 +14,8 @@ import {
   type RewardTokenPrices,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
-import { slugifyVault, subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
+import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { useRouter } from 'next/navigation'
-
-import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 interface PortfolioVaultsCarouselProps {
   style?: CSSProperties
@@ -37,8 +35,6 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
   rewardTokenPrices,
 }) => {
   const { push } = useRouter()
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const tooltipEventHandler = useHandleTooltipOpenEvent()
 
   const { isMobile } = useMobileCheck()
 
@@ -47,7 +43,6 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
   } = useLocalConfig()
 
   const vaultOnClick = (vault: SDKVaultsListType[number]) => () => {
-    buttonClickEventHandler(`${carouselId}-vault-${slugifyVault(vault)}-click`)
     push(getVaultUrl(vault))
   }
 
@@ -64,8 +59,6 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
             onClick={vaultOnClick(vault)}
             withTokenBonus={sumrNetApyConfig.withSumr}
             rewardTokenPrices={rewardTokenPrices}
-            tooltipName={carouselId}
-            onTooltipOpen={tooltipEventHandler}
             vaultApyData={
               vaultsApyByNetworkMap[
                 `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
@@ -74,7 +67,6 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
           />
         ))}
         carouselId={carouselId}
-        handleButtonClick={buttonClickEventHandler}
         options={{ slidesToScroll: 'auto' }}
         title={
           <div style={{ display: 'flex', gap: 'var(--general-space-8)', alignItems: 'center' }}>

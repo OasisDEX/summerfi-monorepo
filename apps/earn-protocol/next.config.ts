@@ -38,7 +38,6 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
       '@tanstack/react-query',
       '@transak/transak-sdk',
       'graphql-request',
-      'mixpanel-browser',
       'pg',
       'recharts',
       'viem',

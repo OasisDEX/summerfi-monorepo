@@ -13,14 +13,12 @@ type VaultsListMetricsProps = {
     topProtocols: string[]
     allVaultsProtocols: string[]
   }
-  onTooltipOpen: (tooltipName: string) => void
 }
 
 export const VaultsListMetrics = ({
   tvl,
   instantLiquidity,
   protocolsList,
-  onTooltipOpen,
 }: VaultsListMetricsProps) => {
   const protocolsSupportedCount = protocolsList.allVaultsProtocols.length
 
@@ -31,8 +29,6 @@ export const VaultsListMetrics = ({
         titleTooltip="Protocol TVL is the total amount of Assets currently deployed across all of the strategies including institutional deployments."
         size="large"
         value={`$${formatCryptoBalance(tvl)}`}
-        tooltipName="vaults-list-protocol-tvl"
-        onTooltipOpen={onTooltipOpen}
       />
 
       <DataBlock
@@ -40,8 +36,6 @@ export const VaultsListMetrics = ({
         titleTooltip={`This is the total amount of assets in USD that is instantly withdrawable from the strategies. There are currently ${protocolsSupportedCount} different protocols or markets supported across all active strategies.`}
         size="large"
         value={`$${formatCryptoBalance(instantLiquidity)}`}
-        tooltipName="vaults-list-instant-liquidity"
-        onTooltipOpen={onTooltipOpen}
       />
       <DataBlock
         title="Protocols Supported"
@@ -53,8 +47,6 @@ export const VaultsListMetrics = ({
         } more.`}
         size="large"
         value={protocolsSupportedCount}
-        tooltipName="vaults-list-protocols-supported"
-        onTooltipOpen={onTooltipOpen}
       />
     </div>
   )

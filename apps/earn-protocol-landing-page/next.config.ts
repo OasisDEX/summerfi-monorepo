@@ -17,7 +17,6 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
       '@summerfi/sdk-client',
       '@summerfi/sdk-client-react',
       '@summerfi/sdk-common',
-      'mixpanel-browser',
       'zod',
     ],
   },

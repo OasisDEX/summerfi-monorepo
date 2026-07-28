@@ -23,8 +23,6 @@ interface VaultExposureTableSectionProps {
   arksInterestRates: InterestRates
   hiddenColumns?: string[]
   vaultApyData: VaultApyData
-  tableId: string
-  buttonClickEventHandler: (buttonName: string) => void
   isDaoManaged: boolean
 }
 
@@ -38,8 +36,6 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
   arksInterestRates,
   hiddenColumns,
   vaultApyData,
-  tableId,
-  buttonClickEventHandler,
   isDaoManaged,
 }) => {
   const vaultExposureFiltered = useMemo(
@@ -47,9 +43,8 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
     [allocationType, vault],
   )
 
-  const handleButtonClick = (buttonName: string) => () => {
+  const handleSeeAllToggle = () => {
     setSeeAll((prev) => !prev)
-    buttonClickEventHandler(buttonName)
   }
 
   return (
@@ -66,9 +61,7 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
         <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
           <Button
             variant="unstyled"
-            onClick={handleButtonClick(
-              `${tableId}-vault-exposure-tab--${allocationType.toLowerCase()}-${seeAll ? 'all' : 'less'}`,
-            )}
+            onClick={handleSeeAllToggle}
             style={{
               display: 'flex',
               alignItems: 'center',
