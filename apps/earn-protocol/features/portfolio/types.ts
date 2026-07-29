@@ -5,6 +5,14 @@ export enum PortfolioTabs {
   REWARDS = 'rewards',
 }
 
+export type UsdcAirdropClaimable = {
+  claimableNow: number
+  pendingNow: number
+  usdValue: number
+  pendingUsdValue: number
+  tokenAddress: string
+}
+
 export type ClaimableRewards = {
   rewards: {
     symbol: string

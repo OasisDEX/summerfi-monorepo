@@ -6,7 +6,10 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
-import { getCachedClaimableSUMRLVUSDCMerkleRewards } from '@/app/server-handlers/cached/claimable-merkle-rewards'
+import {
+  getCachedClaimableSUMRLVUSDCMerkleRewards,
+  getCachedClaimableUsdcAirdropMerkleRewards,
+} from '@/app/server-handlers/cached/claimable-merkle-rewards'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPortfolioSumrStakingV2Data } from '@/app/server-handlers/cached/get-portfolio-sumr-staking-v2-data'
 import { getCachedFleetTokenSharePrice } from '@/app/server-handlers/cached/get-share-price'
@@ -132,6 +135,7 @@ export async function GET(
     sumrToClaimResult,
     portfolioSumrStakingV2DataResult,
     claimableMerklRewardsResult,
+    usdcAirdropResult,
   ] = await Promise.allSettled([
     getCachedSumrDelegateStake({ walletAddress }),
     getCachedSumrBalances({ walletAddress }),
@@ -139,6 +143,7 @@ export async function GET(
     getCachedSumrToClaim(walletAddress),
     getCachedPortfolioSumrStakingV2Data({ walletAddress, sumrPriceUsd }),
     getCachedClaimableSUMRLVUSDCMerkleRewards(walletAddress),
+    getCachedClaimableUsdcAirdropMerkleRewards(walletAddress),
   ])
 
   const sumrStakeDelegate =
@@ -165,6 +170,7 @@ export async function GET(
     claimableMerklRewardsResult.status === 'fulfilled'
       ? claimableMerklRewardsResult.value
       : { perChain: {} }
+  const usdcAirdrop = usdcAirdropResult.status === 'fulfilled' ? usdcAirdropResult.value : null
 
   const currentDelegate =
     sumrStakeDelegate.delegatedToV2 !== emptyRewardsData.sumrStakeDelegate.delegatedToV2
@@ -212,5 +218,6 @@ export async function GET(
     rewardsData,
     portfolioSumrStakingV2Data,
     claimableRewards,
+    usdcAirdrop,
   })
 }
