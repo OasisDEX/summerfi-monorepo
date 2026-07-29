@@ -2,7 +2,7 @@ import { unstable_cache as unstableCache } from 'next/cache'
 
 import {
   getClaimableSUMRLVUSDCMerkleRewards,
-  getClaimableUsdcAirdropMerkleRewards,
+  getClaimableUsdcMerkleMerkleRewards,
   getClaimableWSTETHMerkleRewards,
 } from '@/app/server-handlers/raw-calls/claimable-merkle-rewards'
 import { CACHE_TIMES } from '@/constants/revalidation'
@@ -33,15 +33,15 @@ export const getCachedClaimableSUMRLVUSDCMerkleRewards = async (walletAddress: s
   }
 }
 
-export const getCachedClaimableUsdcAirdropMerkleRewards = async (walletAddress: string) => {
+export const getCachedClaimableUsdcMerkleMerkleRewards = async (walletAddress: string) => {
   try {
     return await unstableCache<
       (
         walletAddress: string,
       ) => Promise<
-        ReturnType<typeof getClaimableUsdcAirdropMerkleRewards> extends Promise<infer R> ? R : never
+        ReturnType<typeof getClaimableUsdcMerkleMerkleRewards> extends Promise<infer R> ? R : never
       >
-    >(getClaimableUsdcAirdropMerkleRewards, ['claimable-merkle-rewards-usdc-airdrop-v2'], {
+    >(getClaimableUsdcMerkleMerkleRewards, ['claimable-merkle-rewards-usdc-airdrop-v2'], {
       revalidate: CACHE_TIMES.CLAIMABLE_MERKLE_REWARDS,
       tags: [getMerkleRewardsTag(walletAddress)],
     })(walletAddress)

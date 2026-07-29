@@ -19,30 +19,30 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 
 import { delayPerNetwork } from '@/constants/delay-per-network'
-import { type UsdcAirdropClaimable } from '@/features/portfolio/types'
+import { type UsdcMerkleClaimable } from '@/features/portfolio/types'
 import { getMerkleRewardsTag } from '@/helpers/get-cache-handler-name'
 import { useClaimVaultMerkleRewardsTransaction } from '@/hooks/use-claim-vault-merkle-rewards-transaction'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRevalidateTags } from '@/hooks/use-revalidate'
 
-const airdropNetwork = chainIdToSDKNetwork(SupportedNetworkIds.Mainnet)
+const usdcMerkleClaimNetwork = chainIdToSDKNetwork(SupportedNetworkIds.Mainnet)
 
-export const PortfolioUsdcAirdropBanner: FC<{
-  usdcAirdrop: UsdcAirdropClaimable
-}> = ({ usdcAirdrop }) => {
+export const PortfolioUsdcMerkleBanner: FC<{
+  UsdcMerkle: UsdcMerkleClaimable
+}> = ({ UsdcMerkle }) => {
   const [isClaiming, setIsClaiming] = useState(false)
   const queryClient = useQueryClient()
   const { chain, setChain, isSettingChain } = useEarnProtocolChain()
   const { publicClient } = useNetworkAlignedClient({
-    overrideNetwork: sdkNetworkToHumanNetwork(airdropNetwork),
+    overrideNetwork: sdkNetworkToHumanNetwork(usdcMerkleClaimNetwork),
   })
   const { address: userWalletAddress } = useEarnProtocolWallet()
   const { revalidateTags } = useRevalidateTags()
 
   const isProperChainSelected = chain.id === SupportedNetworkIds.Mainnet
-  const isClaimable = usdcAirdrop.claimableNow > 0
-  const displayAmount = usdcAirdrop.claimableNow + usdcAirdrop.pendingNow
-  const displayUsdValue = usdcAirdrop.usdValue + usdcAirdrop.pendingUsdValue
+  const isClaimable = UsdcMerkle.claimableNow > 0
+  const displayAmount = UsdcMerkle.claimableNow + UsdcMerkle.pendingNow
+  const displayUsdValue = UsdcMerkle.usdValue + UsdcMerkle.pendingUsdValue
 
   const { claimVaultMerkleRewardsTransaction, isLoading } = useClaimVaultMerkleRewardsTransaction({
     onSuccess: () => {
@@ -69,9 +69,9 @@ export const PortfolioUsdcAirdropBanner: FC<{
       setIsClaiming(false)
       toast.error('Failed to claim USDC', ERROR_TOAST_CONFIG)
     },
-    network: airdropNetwork,
+    network: usdcMerkleClaimNetwork,
     publicClient,
-    rewardTokenAddress: usdcAirdrop.tokenAddress,
+    rewardTokenAddress: UsdcMerkle.tokenAddress,
   })
 
   const handleClaim = async () => {
@@ -80,7 +80,7 @@ export const PortfolioUsdcAirdropBanner: FC<{
       await claimVaultMerkleRewardsTransaction()
     } catch (err) {
       // eslint-disable-next-line no-console
-      console.error('Error claiming USDC airdrop merkle rewards:', err)
+      console.error('Error claiming USDC usdcMerkleClaim merkle rewards:', err)
       setIsClaiming(false)
     }
   }

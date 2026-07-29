@@ -20,7 +20,7 @@ import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
 import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewards/PortfolioRewards'
 import { PortfolioRewardsV2 } from '@/features/portfolio/components/PortfolioRewardsV2/PortfolioRewardsV2'
-import { PortfolioUsdcAirdropBanner } from '@/features/portfolio/components/PortfolioUsdcAirdropBanner/PortfolioUsdcAirdropBanner'
+import { PortfolioUsdcMerkleBanner } from '@/features/portfolio/components/PortfolioUsdcMerkleBanner/PortfolioUsdcMerkleBanner'
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
 import { PortfolioYourActivity } from '@/features/portfolio/components/PortfolioYourActivity/PotfolioYourActivity'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
@@ -175,8 +175,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           totalSumr={overallSumr}
           isOwner={ownerView}
         />
-        {ownerView && portfolioRewardsData?.usdcAirdrop && (
-          <PortfolioUsdcAirdropBanner usdcAirdrop={portfolioRewardsData.usdcAirdrop} />
+        {ownerView && portfolioRewardsData?.UsdcMerkle && features?.EthereumUSDCMerkleBanner && (
+          <PortfolioUsdcMerkleBanner UsdcMerkle={portfolioRewardsData.UsdcMerkle} />
         )}
         <TabBar
           tabs={tabs}

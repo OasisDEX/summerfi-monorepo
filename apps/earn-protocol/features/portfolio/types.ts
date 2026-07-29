@@ -5,7 +5,7 @@ export enum PortfolioTabs {
   REWARDS = 'rewards',
 }
 
-export type UsdcAirdropClaimable = {
+export type UsdcMerkleClaimable = {
   claimableNow: number
   pendingNow: number
   usdValue: number

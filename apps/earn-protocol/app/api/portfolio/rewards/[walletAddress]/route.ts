@@ -8,7 +8,7 @@ import { z } from 'zod'
 
 import {
   getCachedClaimableSUMRLVUSDCMerkleRewards,
-  getCachedClaimableUsdcAirdropMerkleRewards,
+  getCachedClaimableUsdcMerkleMerkleRewards,
 } from '@/app/server-handlers/cached/claimable-merkle-rewards'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPortfolioSumrStakingV2Data } from '@/app/server-handlers/cached/get-portfolio-sumr-staking-v2-data'
@@ -135,7 +135,7 @@ export async function GET(
     sumrToClaimResult,
     portfolioSumrStakingV2DataResult,
     claimableMerklRewardsResult,
-    usdcAirdropResult,
+    UsdcMerkleResult,
   ] = await Promise.allSettled([
     getCachedSumrDelegateStake({ walletAddress }),
     getCachedSumrBalances({ walletAddress }),
@@ -143,7 +143,7 @@ export async function GET(
     getCachedSumrToClaim(walletAddress),
     getCachedPortfolioSumrStakingV2Data({ walletAddress, sumrPriceUsd }),
     getCachedClaimableSUMRLVUSDCMerkleRewards(walletAddress),
-    getCachedClaimableUsdcAirdropMerkleRewards(walletAddress),
+    getCachedClaimableUsdcMerkleMerkleRewards(walletAddress),
   ])
 
   const sumrStakeDelegate =
@@ -170,7 +170,7 @@ export async function GET(
     claimableMerklRewardsResult.status === 'fulfilled'
       ? claimableMerklRewardsResult.value
       : { perChain: {} }
-  const usdcAirdrop = usdcAirdropResult.status === 'fulfilled' ? usdcAirdropResult.value : null
+  const UsdcMerkle = UsdcMerkleResult.status === 'fulfilled' ? UsdcMerkleResult.value : null
 
   const currentDelegate =
     sumrStakeDelegate.delegatedToV2 !== emptyRewardsData.sumrStakeDelegate.delegatedToV2
@@ -218,6 +218,6 @@ export async function GET(
     rewardsData,
     portfolioSumrStakingV2Data,
     claimableRewards,
-    usdcAirdrop,
+    UsdcMerkle,
   })
 }

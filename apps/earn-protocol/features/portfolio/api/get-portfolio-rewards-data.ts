@@ -2,14 +2,14 @@ import { useQuery } from '@tanstack/react-query'
 
 import { type PortfolioSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
-import { type ClaimableRewards, type UsdcAirdropClaimable } from '@/features/portfolio/types'
+import { type ClaimableRewards, type UsdcMerkleClaimable } from '@/features/portfolio/types'
 import { getUserDataCacheHandler } from '@/helpers/get-cache-handler-name'
 
 type PortfolioRewardsResponse = {
   rewardsData: ClaimDelegateExternalData
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   claimableRewards: ClaimableRewards
-  usdcAirdrop: UsdcAirdropClaimable | null
+  UsdcMerkle: UsdcMerkleClaimable | null
 }
 
 export const getPortfolioRewardsData = async (

@@ -1,7 +1,7 @@
 import { type AddressValue, ChainIds } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
-import { type UsdcAirdropClaimable } from '@/features/portfolio/types'
+import { type UsdcMerkleClaimable } from '@/features/portfolio/types'
 
 // Merkl JSON_AIRDROP "Lazy Summer Ethereum USDC Claim" — mainnet USDC compensation airdrop
 export const USDC_AIRDROP_CAMPAIGN_ID =
@@ -29,9 +29,9 @@ export const getClaimableSUMRLVUSDCMerkleRewards = async (walletAddress: string)
   return claimableRewardsPerChain
 }
 
-export const getClaimableUsdcAirdropMerkleRewards = async (
+export const getClaimableUsdcMerkleMerkleRewards = async (
   walletAddress: string,
-): Promise<UsdcAirdropClaimable | null> => {
+): Promise<UsdcMerkleClaimable | null> => {
   const usdcToken = await backendSDK.tokens.getTokenBySymbol({
     symbol: 'USDC',
     chainId: ChainIds.Mainnet,
