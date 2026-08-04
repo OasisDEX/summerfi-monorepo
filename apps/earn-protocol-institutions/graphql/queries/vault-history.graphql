@@ -41,12 +41,17 @@ query GetVaultHistory($vaultId: ID!) {
 
 query GetVaultActiveUsers($vaultId: ID!) {
   vault(id: $vaultId) {
-    positions {
+    positions(
+      first: 1000
+      where: {inputTokenBalance_gt: "0"}
+      orderBy: inputTokenBalance
+      orderDirection: desc
+    ) {
       account {
         id
       }
-      inputTokenDeposits
-      inputTokenDepositsNormalized
+      inputTokenBalance
+      inputTokenBalanceNormalized
       latestDeposit: deposits(first:1, orderBy: timestamp, orderDirection: desc) {
         timestamp
       }

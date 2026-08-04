@@ -11549,7 +11549,7 @@ export type GetVaultActiveUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetVaultActiveUsersQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', positions: Array<{ __typename?: 'Position', inputTokenDeposits: number, inputTokenDepositsNormalized: number, account: { __typename?: 'Account', id: string }, latestDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, latestWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }>, firstDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, firstWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }> }> } | null };
+export type GetVaultActiveUsersQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', positions: Array<{ __typename?: 'Position', inputTokenBalance: number, inputTokenBalanceNormalized: number, account: { __typename?: 'Account', id: string }, latestDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, latestWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }>, firstDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, firstWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }> }> } | null };
 
 export type GetVaultActivityLogByTimestampFromQueryVariables = Exact<{
   vaultId: Scalars['ID']['input'];
@@ -11607,12 +11607,17 @@ export const GetVaultHistoryDocument = /*#__PURE__*/ gql`
 export const GetVaultActiveUsersDocument = /*#__PURE__*/ gql`
     query GetVaultActiveUsers($vaultId: ID!) {
   vault(id: $vaultId) {
-    positions {
+    positions(
+      first: 1000
+      where: {inputTokenBalance_gt: "0"}
+      orderBy: inputTokenBalance
+      orderDirection: desc
+    ) {
       account {
         id
       }
-      inputTokenDeposits
-      inputTokenDepositsNormalized
+      inputTokenBalance
+      inputTokenBalanceNormalized
       latestDeposit: deposits(first: 1, orderBy: timestamp, orderDirection: desc) {
         timestamp
       }

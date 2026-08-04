@@ -51,8 +51,8 @@ export type InstiVaultPerformanceResponse = {
 
 export type InstiVaultActiveUsersResponse =
   | {
-      inputTokenDeposits: number
-      inputTokenDepositsNormalized: number
+      inputTokenBalance: number
+      inputTokenBalanceNormalized: number
       account: {
         id: string
       }

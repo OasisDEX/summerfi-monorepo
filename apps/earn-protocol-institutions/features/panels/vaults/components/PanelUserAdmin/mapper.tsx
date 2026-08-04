@@ -209,7 +209,7 @@ export const userActiveListMapper = ({
         return a.account.id.localeCompare(b.account.id) * direction
       }
       if (key === 'tvl') {
-        return (a.inputTokenDepositsNormalized - b.inputTokenDepositsNormalized) * direction
+        return (a.inputTokenBalanceNormalized - b.inputTokenBalanceNormalized) * direction
       }
       if (key === 'first-deposit') {
         const aFirst = Math.min(...a.firstDeposit.map((d) => d.timestamp))
@@ -264,7 +264,7 @@ export const userActiveListMapper = ({
           ),
           tvl: (
             <TableCellText style={{ marginLeft: '40px', gap: 'var(--spacing-space-small)' }}>
-              {formatCryptoBalance(userData.inputTokenDepositsNormalized)}
+              {formatCryptoBalance(userData.inputTokenBalanceNormalized)}
             </TableCellText>
           ),
           'first-deposit': (
